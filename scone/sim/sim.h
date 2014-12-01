@@ -10,7 +10,8 @@ namespace scone
 {
 	namespace sim
 	{
-		typedef std::shared_ptr< class Model > ModelSP;
-		typedef std::shared_ptr< class Body > BodySP;
+		typedef std::shared_ptr< class Model > ModelSharedPtr;
+		typedef std::shared_ptr< class Body > BodySharedPtr;
+		typedef std::shared_ptr< class Controller > ControllerSP;
 	}
 }

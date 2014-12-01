@@ -58,5 +58,8 @@
     <ClInclude Include="..\..\scone\sim\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

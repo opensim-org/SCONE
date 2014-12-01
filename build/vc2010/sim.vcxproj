@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\scone\sim\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Driver.h" />
     <ClInclude Include="..\..\scone\sim\Joint.h" />
     <ClInclude Include="..\..\scone\sim\Link.h" />
