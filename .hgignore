@@ -6,3 +6,4 @@ build/vc2010/*.suo
 build/vc2010/*.opensdf
 build/vc2010/*.sdf
 build/vc2010/*.user
+build/vc2010/ipch/
