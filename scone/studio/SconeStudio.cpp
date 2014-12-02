@@ -9,5 +9,4 @@ SconeStudio::SconeStudio(QWidget *parent, Qt::WFlags flags)
 
 SconeStudio::~SconeStudio()
 {
-
 }

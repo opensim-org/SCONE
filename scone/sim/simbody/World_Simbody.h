@@ -15,7 +15,7 @@ namespace scone
 			World_Simbody() { };
 			virtual ~World_Simbody() { };
 
-			virtual std::unique_ptr< Model > CreateModel( String& filename ) override;
+			virtual std::unique_ptr< Model > CreateModel( const String& filename ) override;
 		};
 	}
 }

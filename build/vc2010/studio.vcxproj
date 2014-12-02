@@ -147,6 +147,11 @@
   <ItemGroup>
     <ResourceCompile Include="..\..\scone\studio\studio.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="sim_simbody.vcxproj">
+      <Project>{c68ade62-2d92-4b76-9656-b631907ebba8}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

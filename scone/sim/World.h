@@ -14,7 +14,7 @@ namespace scone
 			World();;
 			virtual ~World();;
 
-			virtual std::unique_ptr< Model > CreateModel( String& filename ) = 0;
+			virtual std::unique_ptr< Model > CreateModel( const String& filename ) = 0;
 		};
 	}
 }

@@ -11,10 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\opt\Objective.h" />
     <ClInclude Include="..\..\scone\opt\opt.h" />
+    <ClInclude Include="..\..\scone\opt\Optimization.h" />
+    <ClInclude Include="..\..\scone\opt\Optimizer.h" />
+    <ClInclude Include="..\..\scone\opt\OptimizerCma.h" />
+    <ClInclude Include="..\..\scone\opt\Param.h" />
+    <ClInclude Include="..\..\scone\opt\ParamSet.h" />
     <ClInclude Include="..\..\scone\opt\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\opt\Objective.cpp" />
+    <ClCompile Include="..\..\scone\opt\ParamSet.cpp" />
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

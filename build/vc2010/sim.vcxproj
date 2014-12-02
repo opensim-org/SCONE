@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Driver.cpp" />
     <ClCompile Include="..\..\scone\sim\Joint.cpp" />
     <ClCompile Include="..\..\scone\sim\Link.cpp" />

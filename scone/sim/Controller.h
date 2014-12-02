@@ -9,16 +9,12 @@ namespace scone
 		class SIM_API Controller
 		{
 		public:
-			Controller() { };
-			virtual ~Controller() { };
-			
-			virtual void SetModel( ModelSharedPtr model ) = 0;
-			virtual ModelSharedPtr GetModel() = 0;
+			Controller();
+			virtual ~Controller();
 
-			virtual void Update( double timestamp ) = 0;
-
-		protected:
-		private:
+			virtual bool RegisterModel( class Model& model ) = 0;
+			virtual void UnregisterModel( class Model& model ) = 0;
+			virtual bool Update( class Model& model, double timestamp ) = 0;
 		};
 	}
 }
