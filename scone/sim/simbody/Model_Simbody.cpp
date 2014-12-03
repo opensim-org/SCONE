@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "Model_Simbody.h"
-#include "..\..\core\exceptions.h"
-#include "Link_Simbody.h"
+#include "..\..\core\Exception.h"
+#include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
-#include "World_Simbody.h"
+#include "Simulation_Simbody.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		Model_Simbody::Model_Simbody( World_Simbody& world ) :
+		Model_Simbody::Model_Simbody( Simulation_Simbody& world ) :
 		m_World( world )
 		{
 		}
@@ -38,12 +38,12 @@ namespace scone
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 		
-		size_t Model_Simbody::GetLinkCount()
+		size_t Model_Simbody::GetBodyCount()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 		
-		Link_Simbody& Model_Simbody::GetLink( size_t idx )
+		Body_Simbody& Model_Simbody::GetBody( size_t idx )
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}

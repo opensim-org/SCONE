@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../core/types.h"
-#include "../core/Vec3.h"
 #include "sim.h"
+#include "../core/core.h"
+
 #include <vector>
 
 namespace scone

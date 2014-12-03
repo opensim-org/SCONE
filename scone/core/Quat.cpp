@@ -1,8 +1,7 @@
 #include "StdAfx.h"
 
 #include "Quat.h"
-#include "exceptions.h"
-//#include "phaniTools.h"
+#include "Exception.h"
 
 namespace scone
 {

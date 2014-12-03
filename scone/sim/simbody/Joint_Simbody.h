@@ -13,8 +13,8 @@ namespace scone
 			Joint_Simbody() { };
 			virtual ~Joint_Simbody() { };
 			
-			virtual class Link& GetParentLink() override;
-			virtual class Link& GetChildLink() override;
+			virtual class Body& GetParentLink() override;
+			virtual class Body& GetChildLink() override;
 
 			virtual class Model& GetModel() override;
 		

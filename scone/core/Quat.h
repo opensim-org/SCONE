@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core.h"
-#include "types.h"
 #include "math.h"
 #include "Vec3.h"
 

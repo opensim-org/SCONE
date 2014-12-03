@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 
 #ifdef SIM_EXPORTS
@@ -10,8 +12,16 @@ namespace scone
 {
 	namespace sim
 	{
-		typedef std::unique_ptr< class World > WorldUP;
-		typedef std::unique_ptr< class Model > ModelUP;
-		typedef std::shared_ptr< class Controller > ControllerSP;
+		// forward declarations
+		class Simulation;
+		class Model;
+		class Body;
+		class Joint;
+		class Muscle;
+		class Controller;
+
+		typedef std::unique_ptr< Simulation > SimulationUP;
+		typedef std::shared_ptr< Model > ModelSP;
+		typedef std::shared_ptr< Controller > ControllerSP;
 	}
 }

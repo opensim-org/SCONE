@@ -1,19 +1,19 @@
 #pragma once
 
 #include "simbody.h"
-#include "..\Link.h"
+#include "..\Body.h"
 
 
 namespace scone
 {
 	namespace sim
 	{
-		class SIM_SIMBODY_API Link_Simbody : public Link
+		class SIM_SIMBODY_API Body_Simbody : public Body
 		{
 		public:
-			Link_Simbody( ) { };
-			Link_Simbody( const class Model& model ) { };
-			virtual ~Link_Simbody() { };
+			Body_Simbody( ) { };
+			Body_Simbody( const class Model& model ) { };
+			virtual ~Body_Simbody() { };
 
 			virtual Vec3 GetPos() override;
 			virtual Quat GetOri() override;

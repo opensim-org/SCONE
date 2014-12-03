@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/types.h"
+#include "../core/core.h"
 #include "sim.h"
 #include "../core/Vec3.h"
 #include "Controller.h"
@@ -20,8 +20,8 @@ namespace scone
 
 			virtual Real GetMass() = 0;
 
-			virtual size_t GetLinkCount() = 0;
-			virtual class Link& GetLink( size_t idx ) = 0;
+			virtual size_t GetBodyCount() = 0;
+			virtual class Body& GetBody( size_t idx ) = 0;
 
 			virtual size_t GetMuscleCount() = 0;
 			virtual class Muscle& GetMuscle( size_t idx ) = 0;

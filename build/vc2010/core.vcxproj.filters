@@ -14,9 +14,6 @@
     <ClInclude Include="..\..\scone\core\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\exceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -29,10 +26,10 @@
     <ClInclude Include="..\..\scone\core\tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\types.h">
+    <ClInclude Include="..\..\scone\core\Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\Vec3.h">
+    <ClInclude Include="..\..\scone\core\Exception.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -7,11 +7,11 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Link
+		class SIM_API Body
 		{
 		public:
-			Link();
-			virtual ~Link();
+			Body();
+			virtual ~Body();
 
 			virtual Vec3 GetPos() = 0;
 			virtual Quat GetOri() = 0;

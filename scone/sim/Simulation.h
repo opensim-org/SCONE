@@ -8,13 +8,13 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API World
+		class SIM_API Simulation
 		{
 		public:
-			World();;
-			virtual ~World();;
+			Simulation();
+			virtual ~Simulation();
 
-			virtual std::unique_ptr< Model > CreateModel( const String& filename ) = 0;
+			virtual ModelSP CreateModel( const String& filename ) = 0;
 		};
 	}
 }

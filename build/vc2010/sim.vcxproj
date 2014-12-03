@@ -76,28 +76,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\sim\Body.cpp" />
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Driver.cpp" />
     <ClCompile Include="..\..\scone\sim\Joint.cpp" />
-    <ClCompile Include="..\..\scone\sim\Link.cpp" />
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
+    <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\sim\Body.h" />
     <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Driver.h" />
     <ClInclude Include="..\..\scone\sim\Joint.h" />
-    <ClInclude Include="..\..\scone\sim\Link.h" />
     <ClInclude Include="..\..\scone\sim\Model.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
+    <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\stdafx.h" />
-    <ClInclude Include="..\..\scone\sim\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">

@@ -2,7 +2,7 @@
 
 #include "simbody.h"
 #include "../Model.h"
-#include "Link_Simbody.h"
+#include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 
 namespace scone
@@ -12,7 +12,7 @@ namespace scone
 		class SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody( class World_Simbody& world );
+			Model_Simbody( class Simulation_Simbody& world );
 			virtual ~Model_Simbody();
 
 			bool Load( const String& filename );
@@ -22,14 +22,14 @@ namespace scone
 
 			virtual Real GetMass() override;
 
-			virtual size_t GetLinkCount() override;
-			virtual Link_Simbody& GetLink( size_t idx ) override;
+			virtual size_t GetBodyCount() override;
+			virtual Body_Simbody& GetBody( size_t idx ) override;
 
 			virtual size_t GetMuscleCount() override;
 			virtual Muscle_Simbody& GetMuscle( size_t idx ) override;
 
 		private:
-			class World_Simbody& m_World;
+			class Simulation_Simbody& m_World;
 		};
 	}
 }

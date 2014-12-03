@@ -1,11 +1,34 @@
-// The following ifdef block is the standard way of creating macros which make exporting 
-// from a DLL simpler. All files within this DLL are compiled with the CORE_EXPORTS
-// symbol defined on the command line. This symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
-// CORE_API functions as being imported from a DLL, whereas this DLL sees symbols
-// defined with this macro as being exported.
+#pragma once
+
+#include <limits>
+
 #ifdef CORE_EXPORTS
 #define CORE_API __declspec(dllexport)
 #else
 #define CORE_API __declspec(dllimport)
 #endif
+
+namespace scone
+{
+	// types
+#ifdef SCONE_SINGLE_PRECISION_FLOAT
+	typedef float Real;
+#else
+	typedef double Real;
+#endif
+	typedef std::string String;
+
+	// constants
+	const Real REAL_PI = Real( 3.14159265358979323846 );
+	const Real REAL_HALF_PI = Real( 1.57079632679489661923 );
+	const Real REAL_EPSILON = std::numeric_limits< Real >::epsilon();
+	const Real REAL_0 = Real( 0 );
+	const Real REAL_1 = Real( 1 );
+	const Real REAL_NAN = std::numeric_limits< Real >::quiet_NaN();
+	const Real REAL_MIN = std::numeric_limits< Real >::min();
+	const Real REAL_MAX = std::numeric_limits< Real >::max();
+
+	// forward declarations
+	class Vec3;
+	class Quat;
+}

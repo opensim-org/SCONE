@@ -11,13 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\sim\simbody\Driver_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\sim\simbody\Joint_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\Link_Simbody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\simbody\Model_Simbody.cpp">
@@ -29,18 +23,15 @@
     <ClCompile Include="..\..\scone\sim\simbody\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\World_Simbody.cpp">
+    <ClCompile Include="..\..\scone\sim\simbody\Body_Simbody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\Simulation_Simbody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\sim\simbody\Driver_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\Link_Simbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Model_Simbody.h">
@@ -55,7 +46,10 @@
     <ClInclude Include="..\..\scone\sim\simbody\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\World_Simbody.h">
+    <ClInclude Include="..\..\scone\sim\simbody\Body_Simbody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\Simulation_Simbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

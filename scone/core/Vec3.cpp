@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
 #include "Vec3.h"
-#include "exceptions.h"
+#include "Exception.h"
 #include <sstream>
 #include "tools.h"
 

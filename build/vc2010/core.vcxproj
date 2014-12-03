@@ -12,12 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\core\core.h" />
-    <ClInclude Include="..\..\scone\core\exceptions.h" />
+    <ClInclude Include="..\..\scone\core\Exception.h" />
     <ClInclude Include="..\..\scone\core\math.h" />
     <ClInclude Include="..\..\scone\core\Quat.h" />
     <ClInclude Include="..\..\scone\core\stdafx.h" />
     <ClInclude Include="..\..\scone\core\tools.h" />
-    <ClInclude Include="..\..\scone\core\types.h" />
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>

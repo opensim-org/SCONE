@@ -1,5 +1,6 @@
 #pragma once
-#include "..\core\types.h"
+
+#include "..\core\core.h"
 #include "Param.h"
 #include <map>
 

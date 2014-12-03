@@ -1,8 +1,7 @@
 #pragma once
-#include "types.h"
 
-#include <iostream>
 #include "core.h"
+#include <iostream>
 
 namespace scone
 {

@@ -12,9 +12,9 @@ namespace scone
 			Controller();
 			virtual ~Controller();
 
-			virtual bool RegisterModel( class Model& model ) = 0;
-			virtual void UnregisterModel( class Model& model ) = 0;
-			virtual bool Update( class Model& model, double timestamp ) = 0;
+			virtual bool RegisterModel( ModelSP model ) = 0;
+			virtual void UnregisterModel( ModelSP model ) = 0;
+			virtual bool Update( ModelSP model, double timestamp ) = 0;
 		};
 	}
 }
