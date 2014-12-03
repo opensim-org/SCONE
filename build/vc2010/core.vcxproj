@@ -14,12 +14,14 @@
     <ClInclude Include="..\..\scone\core\core.h" />
     <ClInclude Include="..\..\scone\core\Exception.h" />
     <ClInclude Include="..\..\scone\core\math.h" />
+    <ClInclude Include="..\..\scone\core\PropNode.h" />
     <ClInclude Include="..\..\scone\core\Quat.h" />
     <ClInclude Include="..\..\scone\core\stdafx.h" />
     <ClInclude Include="..\..\scone\core\tools.h" />
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\core\PropNode.cpp" />
     <ClCompile Include="..\..\scone\core\Quat.cpp" />
     <ClCompile Include="..\..\scone\core\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -50,9 +52,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="boost.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="boost.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

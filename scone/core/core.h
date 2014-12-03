@@ -8,6 +8,9 @@
 #define CORE_API __declspec(dllimport)
 #endif
 
+// TODO: do this in a nicer way (i.e. push/pop warnings)
+#pragma warning( disable: 4251 )
+
 namespace scone
 {
 	// types
