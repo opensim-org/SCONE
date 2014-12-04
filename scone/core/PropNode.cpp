@@ -184,6 +184,13 @@ namespace scone
 		}
 	}
 
+	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
+	{
+		ptree& child = key.empty() ? tree : tree.add( key, props.GetValue().GetData() );
+		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
+			ToPropertyTree( child, *iter->second, iter->first );
+	}
+
 	void FromPropertyTree( PropNode& props, const ptree& tree )
 	{
 		props.Set( tree.get_value("") );
@@ -194,20 +201,19 @@ namespace scone
 		}
 	}
 
-	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
-	{
-		tree.put( key, props.GetValue().GetData() );
-		String sub_key = key.empty() ? "" : key + ".";
-		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
-			ToPropertyTree( tree, *iter->second, sub_key + iter->first );
-	}
-
-	void PropNode::ToXmlFile( const String& filename )
+	void PropNode::ToXmlFile( const String& filename, const String& rootname )
 	{
 		ptree pt;
-		ToPropertyTree( pt, *this, m_Value );
+		ToPropertyTree( pt, *this, rootname );
 		boost::property_tree::xml_writer_settings<char> settings('\t', 1);
 		write_xml( filename, pt, std::locale(), settings );
+	}
+
+	void PropNode::FromXmlFile( const String& filename, const String& rootname )
+	{
+		ptree pt;
+		read_xml( filename, pt, boost::property_tree::xml_parser::trim_whitespace );
+		FromPropertyTree( *this, rootname.empty() ? pt : pt.get_child( rootname ) );
 	}
 
 	void PropNode::ToIniFile( const String& filename )
@@ -217,25 +223,18 @@ namespace scone
 		write_ini( filename, pt );
 	}
 
-	void PropNode::ToInfoFile( const String& filename )
-	{
-		ptree pt;
-		ToPropertyTree( pt, *this, m_Value );
-		write_info( filename, pt );
-	}
-
-	void PropNode::FromXmlFile( const String& filename )
-	{
-		ptree pt;
-		read_xml( filename, pt, boost::property_tree::xml_parser::trim_whitespace );
-		FromPropertyTree( *this, pt );
-	}
-
 	void PropNode::FromIniFile( const String& filename )
 	{
 		ptree pt;
 		read_ini( filename, pt );
 		FromPropertyTree( *this, pt );
+	}
+
+	void PropNode::ToInfoFile( const String& filename )
+	{
+		ptree pt;
+		ToPropertyTree( pt, *this, m_Value );
+		write_info( filename, pt );
 	}
 
 	void PropNode::FromInfoFile( const String& filename )

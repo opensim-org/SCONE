@@ -9,6 +9,7 @@
 
 #include "Vec3.h"
 #include "Exception.h"
+#include "tools.h"
 
 namespace scone
 {
@@ -33,6 +34,12 @@ namespace scone
 			T value;
 			str >> value;
 			return value;
+		}
+
+		// string is a special case
+		operator String() const
+		{
+			return m_Data;
 		}
 
 		// set values to any type T
@@ -174,14 +181,15 @@ namespace scone
 		ConstChildIter Begin() const { return m_Children.cbegin(); }
 		ConstChildIter End() const { return m_Children.cend(); }
 
-		/// File I/O
-		void FromXmlFile( const String& filename );
-		void FromIniFile( const String& filename );
-		void FromInfoFile( const String& filename );
+		/// XML I/O, with optional root name in case there is more than one child
+		void ToXmlFile( const String& filename, const String& rootname = "" );
+		void FromXmlFile( const String& filename, const String& rootname = "" );
 
-		void ToXmlFile( const String& filename );
 		void ToIniFile( const String& filename );
+		void FromIniFile( const String& filename );
+
 		void ToInfoFile( const String& filename );
+		void FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
 		int GetInt( const String& key ) const { return Get< int >( key ); }
@@ -207,47 +215,4 @@ namespace scone
 		StringValue m_Value;
 		ChildContainer m_Children;
 	};
-
-	// top level write
-	template< typename T >
-	void WriteData( T& v, PropNode& props ) {
-		v.ProcessData( props, false );
-	}
-
-	// top level read
-	template< typename T >
-	void ReadData( T& v, PropNode& props ) {
-		v.ProcessData( props, true );
-	}
-
-	// class types process
-	template< typename T >
-	void ProcessData( PropNode& props, bool read, const char* name, T& v, typename std::enable_if<std::is_class<T>::value >::type* = 0 )
-	{
-		if ( read )
-		{
-			PropNodePtr p = props.GetChildPtr( name );
-			v.ProcessData( *p, true );
-		}
-		else
-		{
-			PropNodePtr p = props.AddChild( name );
-			v.ProcessData( *p, false );
-		}
-	}
-
-	// fundamental types process
-	template< typename T >
-	void ProcessData( PropNode& props, bool read, const char* name, T& v, typename std::enable_if<std::is_fundamental<T>::value >::type* = 0 )
-	{
-		if ( read )
-		{
-			v = props.Get<T>( name );
-		}
-		else
-		{
-			props.Add( name, v );
-		}
-	}
 };
-
