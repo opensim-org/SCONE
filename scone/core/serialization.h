@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 #include <list>
-#include "has_member.hpp"
+//#include "has_member.hpp"
 
 namespace scone
 {
@@ -14,6 +14,11 @@ namespace scone
 	#define SCONE_PROCESS_DATA_MEMBER_NAMED( _var_, _name_ ) ::scone::ProcessData( _archive_, _read_, _name_, _var_ );
 	#define SCONE_PROCESS_DATA_MEMBERS template< typename Archive > void ProcessData( Archive& _archive_, bool _read_ )
 
+	struct Serializable
+	{
+		//virtual void ProcessPropNode( PropNode& p, bool read ) { };
+	};
+
 	// is_container
 	template<class T> struct is_container : public std::false_type {};
 	template<class T, class Alloc> 
@@ -21,21 +26,21 @@ namespace scone
 	template<class T, class Alloc> 
 	struct is_container<std::list<T, Alloc>> : public std::true_type {};
 
-	// testing
-	template<class T> struct has_process_data : public std::false_type {};
+	//// testing
+	//template<class T> struct has_process_data : public std::false_type {};
 
-	// has_member test
-	struct check_has_test
-	{
-		template <typename T, void (T::*)() const = &T::test>
-		struct get
-		{ };
-	};
+	//// has_member test
+	//struct check_has_test
+	//{
+	//	template <typename T, void (T::*)() const = &T::test>
+	//	struct get
+	//	{ };
+	//};
 
-	template <typename T>
-	struct has_test :
-		has_member<T, check_has_test>
-	{ };
+	//template <typename T>
+	//struct has_test :
+	//	has_member<T, check_has_test>
+	//{ };
 
 	// top level PropNode write
 	template< typename T >
@@ -51,7 +56,7 @@ namespace scone
 
 	// PropNode vector process
 	template< typename T >
-	void ProcessData( PropNode& props, bool read, const String& name, std::vector< T >& v )
+	void ProcessData( PropNode& props, bool read, const String& name, T& v, typename std::enable_if< is_container< T >::value >::type* = 0 )
 	{
 		if ( read )
 		{
@@ -59,7 +64,7 @@ namespace scone
 			PropNodePtr vec_node = props.GetChildPtr( name );
 			for ( PropNode::ConstChildIter iter = vec_node->Begin(); iter != vec_node->End(); ++iter )
 			{
-				v.push_back( T() );
+				v.push_back( T::value_type() );
 				ProcessData( *vec_node, true, iter->first, v.back() );
 			}
 		}
@@ -67,7 +72,7 @@ namespace scone
 		{
 			int element = 0;
 			PropNodePtr vec_node = props.AddChild( name );
-			for ( std::vector< T >::iterator iter = v.begin(); iter != v.end(); ++iter )
+			for ( T::iterator iter = v.begin(); iter != v.end(); ++iter )
 			{
 				ProcessData( *vec_node, false, GetStringF( "item%d", element++ ), *iter );
 			}
@@ -76,7 +81,7 @@ namespace scone
 
 	// PropNode for types that have a ProcessData function
 	template< typename T >
-	void ProcessData( PropNode& props, bool read, const String& name, T& v, typename std::enable_if< has_process_data< T >::value >::type* = 0 )
+	void ProcessData( PropNode& props, bool read, const String& name, T& v, typename std::enable_if< std::is_base_of< Serializable, T >::value >::type* = 0 )
 	{
 		if ( read )
 		{
@@ -92,7 +97,7 @@ namespace scone
 
 	// PropNode for other types
 	template< typename T >
-	void ProcessData( PropNode& props, bool read, const String& name, T& v, typename std::enable_if< !has_process_data< T >::value >::type* = 0 )
+	void ProcessData( PropNode& props, bool read, const String& name, T& v, typename std::enable_if< !std::is_base_of< Serializable, T >::value && !is_container< T >::value >::type* = 0 )
 	{
 		if ( read )
 			v = props.Get<T>( name );

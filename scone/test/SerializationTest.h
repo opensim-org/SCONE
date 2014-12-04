@@ -8,7 +8,7 @@
 
 using namespace scone;
 
-struct TestStructA
+struct TestStructA : public Serializable
 {
 	TestStructA() : a( 1.1 ), soepkip(67) { integers.push_back( -999 ); }
 
@@ -17,7 +17,13 @@ struct TestStructA
 	std::vector< int > integers;
 	std::string str;
 
-	void test() { };
+	//void ProcessPropNode( PropNode& _archive_, bool _read_ ) override
+	//{
+	//	SCONE_PROCESS_DATA_MEMBER( a );
+	//	SCONE_PROCESS_DATA_MEMBER( soepkip );
+	//	SCONE_PROCESS_DATA_MEMBER_NAMED( integers, "array_of_integers" );
+	//	SCONE_PROCESS_DATA_MEMBER( str );
+	//}
 
 	SCONE_PROCESS_DATA_MEMBERS
 	{
@@ -28,9 +34,9 @@ struct TestStructA
 	}
 };
 
-SCONE_ENABLE_SERIALIZATION( TestStructA );
+//SCONE_ENABLE_SERIALIZATION( TestStructA );
 
-struct TestStructB
+struct TestStructB : public Serializable
 {
 	TestStructB() : floep(100) { }
 
@@ -38,7 +44,12 @@ struct TestStructB
 	TestStructA stuff;
 	std::vector< TestStructA > stuff_vec;
 
-	void test() { };
+	//void ProcessPropNode( PropNode& _archive_, bool _read_ ) override
+	//{
+	//	SCONE_PROCESS_DATA_MEMBER( floep );
+	//	SCONE_PROCESS_DATA_MEMBER( stuff );
+	//	SCONE_PROCESS_DATA_MEMBER( stuff_vec );
+	//}
 
 	SCONE_PROCESS_DATA_MEMBERS
 	{
@@ -48,7 +59,7 @@ struct TestStructB
 	}
 };
 
-SCONE_ENABLE_SERIALIZATION( TestStructB );
+//SCONE_ENABLE_SERIALIZATION( TestStructB );
 
 void SerializationTest()
 {
