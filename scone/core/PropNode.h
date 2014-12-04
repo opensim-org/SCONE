@@ -23,6 +23,8 @@ namespace scone
 		StringValue( const char* value ) : m_Data( value ) { };
 		StringValue( const StringValue& other ) : m_Data( other.m_Data ) { };
 		StringValue& operator=( const StringValue& other ) { m_Data = other.m_Data; return (*this); }
+		bool operator==( const StringValue& other ) const { return m_Data == other.m_Data; }
+		bool operator!=( const StringValue& other ) const { return !(*this == other); }
 		template< typename T > StringValue( const T& value ) { *this = value; }
 		~StringValue() { };
 
@@ -75,6 +77,10 @@ namespace scone
 
 		// assignment
 		PropNode& operator=( const PropNode& other );
+
+		// comparison
+		bool operator==( const PropNode& other ) const;
+		bool operator!=( const PropNode& other ) const { return !(*this == other); }
 
 		// check if empty
 		bool IsEmpty()

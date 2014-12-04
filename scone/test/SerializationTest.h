@@ -17,6 +17,8 @@ struct TestStructA
 	std::vector< int > integers;
 	std::string str;
 
+	void test() { };
+
 	SCONE_PROCESS_DATA_MEMBERS
 	{
 		SCONE_PROCESS_DATA_MEMBER( a );
@@ -26,6 +28,8 @@ struct TestStructA
 	}
 };
 
+SCONE_ENABLE_SERIALIZATION( TestStructA );
+
 struct TestStructB
 {
 	TestStructB() : floep(100) { }
@@ -34,6 +38,8 @@ struct TestStructB
 	TestStructA stuff;
 	std::vector< TestStructA > stuff_vec;
 
+	void test() { };
+
 	SCONE_PROCESS_DATA_MEMBERS
 	{
 		SCONE_PROCESS_DATA_MEMBER( floep );
@@ -41,6 +47,8 @@ struct TestStructB
 		SCONE_PROCESS_DATA_MEMBER( stuff_vec );
 	}
 };
+
+SCONE_ENABLE_SERIALIZATION( TestStructB );
 
 void SerializationTest()
 {
@@ -63,6 +71,7 @@ void SerializationTest()
 
 	PropNode prop2;
 	prop2.FromXmlFile( "d:/test.xml", "XML_ROOT" );
+
 	TestStructB tsb2;
 	ReadData( prop2, tsb2 );
 
@@ -75,6 +84,8 @@ void SerializationTest()
 	PropNode prop4;
 	prop4.FromInfoFile( "d:/test.info" );
 
-	//std::cout << prop1 == prop4;
+	std::cout << (prop1 == prop4) << std::endl;
+	std::cout << (prop1 == prop2) << std::endl;
+	std::cout << (prop3 == prop4) << std::endl;
 	//std::cout << prop4;
 }

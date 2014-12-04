@@ -256,4 +256,23 @@ namespace scone
 			iter->second->ToStream( str, prefix + "  " );
 		}
 	}
+
+	bool PropNode::operator==( const PropNode& other ) const
+	{
+		if ( m_Value != other.m_Value )
+			return false;
+
+		if ( m_Children.size() != other.m_Children.size() )
+			return false;
+
+		for ( size_t i = 0; i < m_Children.size(); ++i )
+		{
+			if ( m_Children[i].first != other.m_Children[i].first )
+				return false;
+			if ( *m_Children[i].second != *other.m_Children[i].second )
+				return false;
+		}
+
+		return true;
+	}
 }
