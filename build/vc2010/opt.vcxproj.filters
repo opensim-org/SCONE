@@ -32,9 +32,6 @@
     <ClInclude Include="..\..\scone\opt\ParamSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\opt\types.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">

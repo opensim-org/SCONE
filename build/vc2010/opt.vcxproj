@@ -18,7 +18,6 @@
     <ClInclude Include="..\..\scone\opt\Param.h" />
     <ClInclude Include="..\..\scone\opt\ParamSet.h" />
     <ClInclude Include="..\..\scone\opt\stdafx.h" />
-    <ClInclude Include="..\..\scone\opt\types.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\Objective.cpp" />
