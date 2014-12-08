@@ -16,6 +16,8 @@ namespace scone
 			virtual ~Simulation_Simbody() { };
 
 			virtual ModelSP CreateModel( const String& filename ) override;
+			virtual ModelSP GetModel( size_t idx = 0 ) override;
+			virtual void Run() override;
 		};
 	}
 }

@@ -15,5 +15,9 @@ namespace scone
 	{
 		class Measure;
 		typedef std::unique_ptr< Measure > MeasureUP;
+		typedef std::shared_ptr< Measure > MeasureSP;
+
+		class ParameterizableController;
+		typedef std::shared_ptr< ParameterizableController > ParameterizableControllerSP;
 	}
 }

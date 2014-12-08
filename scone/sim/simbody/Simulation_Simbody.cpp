@@ -10,5 +10,15 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
+
+		ModelSP Simulation_Simbody::GetModel( size_t idx )
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+		void Simulation_Simbody::Run()
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
 	}
 }

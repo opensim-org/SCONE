@@ -2,17 +2,22 @@
 
 #include "..\core\core.h"
 #include "Param.h"
-#include <map>
+#include "opt.h"
+#include <vector>
 
 namespace scone
 {
 	namespace opt
 	{
-		class ParamSet
+		class OPT_API ParamSet
 		{
 		public:
-			ParamSet() { };
+			typedef enum Mode { CONSTRUCTION_MODE, UPDATE_MODE };
+
+			ParamSet( Mode m = UPDATE_MODE ) : m_Mode( m ) { };
 			virtual ~ParamSet() { };
+
+			void ProcessParam( const String& name, double& value, double init_mean, double init_var, double min, double max );
 
 			void SetParam( const String& name, const Param& param );
 			void GetParam( const String& name, Param& param );
@@ -23,7 +28,17 @@ namespace scone
 			void SetParamValues( const std::vector< double >& values );
 			
 		private:
-			std::map< String, Param > m_Params;
+			Mode m_Mode;
+			std::vector< std::pair< String, Param > > m_Params;
+		};
+
+		class OPT_API Parameterizable
+		{
+		public:
+			Parameterizable() { };
+			virtual ~Parameterizable() { };
+
+			virtual void ProcessParamSet( ParamSet& par ) = 0;
 		};
 	}
 }

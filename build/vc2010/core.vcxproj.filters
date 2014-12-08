@@ -38,7 +38,7 @@
     <ClInclude Include="..\..\scone\core\serialization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\has_member.hpp">
+    <ClInclude Include="..\..\scone\core\Propertyable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\PropNode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\Propertyable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

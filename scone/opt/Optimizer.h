@@ -1,17 +1,19 @@
 #pragma once
+#include "opt.h"
+#include "Objective.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class Optimizer
+		class OPT_API Optimizer
 		{
 		public:
-			Optimizer() { };
-			virtual ~Optimizer() { };
+			Optimizer( Objective& obj );
+			virtual ~Optimizer();
 			
-		protected:
 		private:
+			Objective& m_Objective;
 		};
 	}
 }

@@ -46,5 +46,8 @@
     <ClCompile Include="..\..\scone\opt\ParamSet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\opt\Optimizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

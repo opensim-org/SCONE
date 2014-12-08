@@ -26,7 +26,7 @@ namespace scone
 			virtual size_t GetMuscleCount() = 0;
 			virtual class Muscle& GetMuscle( size_t idx ) = 0;
 
-			virtual void SetController( ControllerSP controller ) = 0;
+			virtual void AddController( ControllerSP controller ) = 0;
 		};
 	}
 }

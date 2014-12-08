@@ -21,6 +21,7 @@ namespace scone
 		class Controller;
 
 		typedef std::unique_ptr< Simulation > SimulationUP;
+		typedef std::shared_ptr< Simulation > SimulationSP;
 		typedef std::shared_ptr< Model > ModelSP;
 		typedef std::shared_ptr< Controller > ControllerSP;
 	}

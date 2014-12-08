@@ -1,12 +1,23 @@
 #include "stdafx.h"
 #include "Simulation.h"
 
-scone::sim::Simulation::Simulation()
+namespace scone
 {
+	namespace sim
+	{
+		Simulation::Simulation()
+		{
 
-}
+		}
 
-scone::sim::Simulation::~Simulation()
-{
+		Simulation::~Simulation()
+		{
 
+		}
+
+		void Simulation::ProcessPropNode( PropNode& props )
+		{
+
+		}
+	}
 }

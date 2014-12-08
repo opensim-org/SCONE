@@ -27,4 +27,9 @@ namespace scone
 	
 		return buf;
 	}
+
+	String CORE_API GetCleanVarName( const String& str )
+	{
+		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
+	}
 }

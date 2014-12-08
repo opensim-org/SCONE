@@ -1,12 +1,18 @@
 #include "stdafx.h"
 #include "Model.h"
 
-scone::sim::Model::Model()
+namespace scone
 {
-
-}
-
-scone::sim::Model::~Model()
-{
-
+	namespace sim
+	{
+		Model::Model()
+		{
+		
+		}
+		
+		Model::~Model()
+		{
+		
+		}
+	}
 }
