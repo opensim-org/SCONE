@@ -46,7 +46,7 @@ namespace scone
 		m_Value = other.m_Value;
 		m_Children.clear();
 		for ( ConstChildIter iter = other.m_Children.begin(); iter != other.m_Children.end(); ++iter )
-			m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
+			m_Children.push_back( std::make_pair( iter->first, std::make_shared< PropNode >( *iter->second ) ) );
 		return *this;
 	}
 
@@ -66,7 +66,7 @@ namespace scone
 			}
 
 			if ( child == nullptr )
-				m_Children.push_back( std::make_pair( other_it->first, PropNodePtr( new PropNode( *other_it->second ) ) ) );
+				m_Children.push_back( std::make_pair( other_it->first, std::make_shared< PropNode >( *other_it->second ) ) );
 			else child->Merge( *other_it->second, overwrite );
 		}
 
@@ -83,7 +83,7 @@ namespace scone
 		if ( ofs == String::npos )
 		{
 			// create first-level child
-			m_Children.push_back( std::make_pair( key, PropNodePtr( new PropNode ) ) );
+			m_Children.push_back( std::make_pair( key, std::make_shared< PropNode >() ) );
 			return m_Children.back().second;
 		}
 		else
