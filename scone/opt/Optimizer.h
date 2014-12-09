@@ -15,8 +15,8 @@ namespace scone
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 
-
 		private:
+			size_t max_threads;
 		};
 	}
 }

@@ -27,6 +27,9 @@
     <ProjectReference Include="core.vcxproj">
       <Project>{6cee1f34-42af-4180-baa7-938a98847704}</Project>
     </ProjectReference>
+    <ProjectReference Include="cs.vcxproj">
+      <Project>{571cdb11-c939-47f4-a561-7da836717aa4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}</ProjectGuid>

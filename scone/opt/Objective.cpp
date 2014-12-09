@@ -1,13 +1,18 @@
 #include "stdafx.h"
 #include "Objective.h"
 
-
-scone::opt::Objective::Objective()
+namespace scone
 {
+	namespace opt
+	{
+		Objective::Objective()
+		{
 
-}
+		}
 
-scone::opt::Objective::~Objective()
-{
+		Objective::~Objective()
+		{
 
+		}
+	}
 }

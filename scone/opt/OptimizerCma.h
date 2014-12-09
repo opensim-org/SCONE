@@ -12,9 +12,14 @@ namespace scone
 		public:
 			OptimizerCma();
 			virtual ~OptimizerCma();
-			
-		protected:
+
+			virtual void ProcessProperties( const PropNode& props ) override;
+
 		private:
+			double mu;
+			double lambda;
+			double sigma;
+			int max_generations;
 		};
 	}
 }

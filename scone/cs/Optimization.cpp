@@ -19,13 +19,12 @@ namespace scone
 		{
 			PropNode prop;
 			prop.FromXmlFile( script_file );
-			ProcessProperties( prop );
+			ProcessProperty( prop, *this, "Optimization" );
 		}
 
 		void Optimization::ProcessProperties( const PropNode& props )
 		{
 			ProcessProperty( props, m_Objective, "Objective" );
-			ProcessProperty( props, m_Test, "Test" );
 			ProcessProperty( props, m_Optimizer, "Optimizer" );
 		}
 	}

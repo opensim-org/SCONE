@@ -5,7 +5,8 @@ namespace scone
 {
 	namespace opt
 	{
-		Optimizer::Optimizer()
+		Optimizer::Optimizer() :
+		max_threads ( 1 )
 		{
 
 		}
@@ -17,8 +18,7 @@ namespace scone
 
 		void Optimizer::ProcessProperties( const PropNode& props )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			PROCESS_PROPERTY( props, max_threads );
 		}
-
 	}
 }

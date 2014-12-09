@@ -78,6 +78,5 @@ namespace scone
 
 			return o;
 		}
-
 	}
 }
