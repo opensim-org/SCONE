@@ -2,6 +2,7 @@
 
 #include "..\cs\Optimization.h"
 #include "..\opt\Objective.h"
+#include "..\opt\OptimizerCma.h"
 
 namespace scone
 {
@@ -19,8 +20,11 @@ namespace scone
 	};
 }
 
+opt::Optimizer* CreateOptimizerCma() { return new opt::OptimizerCma; }
+
 void OptimizationTest()
 {
+	GetFactory().RegisterType< opt::Optimizer >( "CMA", CreateOptimizerCma );
 	cs::Optimization opt;
 	opt.Run("config/optimization_test.xml");
 };

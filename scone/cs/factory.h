@@ -7,9 +7,12 @@
 #include "../core/PropNode.h"
 #include "Objective.h"
 #include "../opt/Optimizer.h"
+#include "../core/Factory.h"
 
 namespace scone
 {
+	//template<> CS_API Factory< cs::Objective >& GetFactory();
+
 	namespace factory
 	{
 		// generic create template

@@ -30,6 +30,9 @@
     <ProjectReference Include="cs.vcxproj">
       <Project>{571cdb11-c939-47f4-a561-7da836717aa4}</Project>
     </ProjectReference>
+    <ProjectReference Include="opt.vcxproj">
+      <Project>{ed224c0c-1d96-4ede-9389-25f595e5d7c8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}</ProjectGuid>

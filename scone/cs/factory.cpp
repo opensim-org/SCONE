@@ -7,6 +7,10 @@
 
 namespace scone
 {
+	//Factory< cs::Objective > g_ObjectiveFactory;
+	//template<> Factory< cs::Objective >& GetFactory() { return g_ObjectiveFactory; }
+
+
 	namespace factory
 	{
 		template<>

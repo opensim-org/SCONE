@@ -1,6 +1,7 @@
 #pragma once
 #include "PropNode.h"
 #include <string>
+#include "Factory.h"
 
 namespace scone
 {
@@ -27,7 +28,10 @@ namespace scone
 		void ProcessProperty( const PropNode& prop, std::shared_ptr< T >& var, const String& name )
 		{
 			if ( prop.HasKey( name ) )
-				var = std::shared_ptr< T >( factory::Create< T >( prop.GetChild( name ) ) );
+			{
+				var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ) ) );
+				ProcessProperty( prop, *var, name );
+			}
 		}
 
 		// process vector< shared_ptr > type (requires factory definition)
