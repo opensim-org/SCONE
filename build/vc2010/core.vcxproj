@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\scone\core\core.h" />
     <ClInclude Include="..\..\scone\core\Exception.h" />
+    <ClInclude Include="..\..\scone\core\Factory.h" />
     <ClInclude Include="..\..\scone\core\math.h" />
     <ClInclude Include="..\..\scone\core\Propertyable.h" />
     <ClInclude Include="..\..\scone\core\PropNode.h" />
