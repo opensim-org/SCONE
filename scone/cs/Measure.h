@@ -14,12 +14,11 @@ namespace scone
 			virtual ~Measure() { };
 
 			virtual bool Update( sim::ModelSP model, double timestamp ) = 0;
-			virtual void ProcessPropNode( PropNode& props ) override;
+			virtual void ProcessProperties( const PropNode& props ) override;
 
 			virtual double GetValue() = 0;
 
 		private:
-			double m_Weight;
 		};
 	}
 }

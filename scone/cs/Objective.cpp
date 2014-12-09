@@ -19,7 +19,7 @@ namespace scone
 		{
 			opt::ParamSet par( opt::ParamSet::CONSTRUCTION_MODE );
 
-			ParameterizableControllerSP c = factory::CreateSP< cs::ParameterizableController >( m_ControllerProps );
+			ParameterizableControllerSP c( factory::Create< cs::ParameterizableController >( m_ControllerProps ) );
 
 			c->ProcessParamSet( par );
 
@@ -28,9 +28,9 @@ namespace scone
 
 		double Objective::Evaluate( const opt::ParamSet& params )
 		{
-			sim::SimulationSP s = factory::CreateSP< sim::Simulation >( m_SimulationProps );
-			ParameterizableControllerSP c = factory::CreateSP< cs::ParameterizableController >( m_ControllerProps );
-			MeasureSP m = factory::CreateSP< cs::Measure >( m_MeasureProps );
+			sim::SimulationSP s( factory::Create< sim::Simulation >( m_SimulationProps ) );
+			ParameterizableControllerSP c( factory::Create< cs::ParameterizableController >( m_ControllerProps ) );
+			MeasureSP m( factory::Create< cs::Measure >( m_MeasureProps ) );
 
 			s->GetModel()->AddController( c );
 			s->GetModel()->AddController( m );
@@ -40,7 +40,7 @@ namespace scone
 			return m->GetValue();
 		}
 
-		void Objective::ProcessPropNode( PropNode& props )
+		void Objective::ProcessProperties( const PropNode& props )
 		{
 			// copy properties
 			m_SimulationProps = *props.GetChildPtr( "Simulation" );

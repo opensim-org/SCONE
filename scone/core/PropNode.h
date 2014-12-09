@@ -175,6 +175,7 @@ namespace scone
 
 		/// Get Child
 		const PropNodePtr GetChildPtr( const String& key ) const;
+		const PropNode& GetChild( const String& key ) const { return *GetChildPtr( key ); }
 
 		/// create child node
 		PropNodePtr AddChild( const String& key );

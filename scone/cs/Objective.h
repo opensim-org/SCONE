@@ -29,7 +29,7 @@ namespace scone
 			virtual opt::ParamSet GetParamSet() override;
 			virtual double Evaluate( const opt::ParamSet& params ) override;
 
-			virtual void ProcessPropNode(PropNode& props) override;
+			virtual void ProcessProperties(const PropNode& props) override;
 
 		private:
 			PropNode m_SimulationProps;

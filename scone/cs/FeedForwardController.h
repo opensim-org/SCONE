@@ -15,7 +15,7 @@ namespace scone
 			FeedForwardController() { };
 			virtual ~FeedForwardController() { };
 
-			virtual void ProcessPropNode( PropNode& props ) override;
+			virtual void ProcessProperties( const PropNode& props ) override;
 
 			virtual void ProcessParamSet( opt::ParamSet& par ) override;
 

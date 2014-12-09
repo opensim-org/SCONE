@@ -196,8 +196,16 @@ namespace scone
 		props.Set( tree.get_value("") );
 		BOOST_FOREACH( const ptree::value_type &v, tree )
 		{
-			PropNodePtr child = props.AddChild( v.first );
-			FromPropertyTree( *child, v.second );
+			if ( v.first == "<xmlattr>" )
+			{
+				// directly add XML attributes as children
+				FromPropertyTree( props, v.second );
+			}
+			else
+			{
+				PropNodePtr child = props.AddChild( v.first );
+				FromPropertyTree( *child, v.second );
+			}
 		}
 	}
 

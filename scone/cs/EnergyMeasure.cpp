@@ -10,7 +10,7 @@ namespace scone
 			throw std::logic_error("The method or operation is not implemented.");
 		}
 
-		void EnergyMeasure::ProcessPropNode( PropNode& props )
+		void EnergyMeasure::ProcessProperties( const PropNode& props )
 		{
 			throw std::logic_error("The method or operation is not implemented.");
 		}

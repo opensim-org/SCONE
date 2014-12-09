@@ -13,7 +13,7 @@ namespace scone
 		{
 		}
 
-		void Controller::ProcessPropNode( PropNode& props )
+		void Controller::ProcessProperties( const PropNode& props )
 		{
 			throw std::logic_error("The method or operation is not implemented.");
 		}

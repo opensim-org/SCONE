@@ -15,7 +15,7 @@ namespace scone
 
 		}
 
-		void Simulation::ProcessPropNode( PropNode& props )
+		void Simulation::ProcessProperties( const PropNode& props )
 		{
 
 		}

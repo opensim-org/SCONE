@@ -13,7 +13,7 @@ namespace scone
 
 			virtual bool Update( sim::ModelSP model, double timestamp ) override;
 
-			virtual void ProcessPropNode( PropNode& props ) override;
+			virtual void ProcessProperties( const PropNode& props ) override;
 
 			virtual double GetValue() override;
 

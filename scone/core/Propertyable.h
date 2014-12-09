@@ -1,23 +1,58 @@
 #pragma once
 #include "PropNode.h"
+#include <string>
 
 namespace scone
 {
+	namespace factory { }
+
 	class CORE_API Propertyable
 	{
 	public:
 		Propertyable();
 		virtual ~Propertyable();
 
-		virtual void ProcessPropNode( PropNode& props ) = 0;
+		virtual void ProcessProperties( const PropNode& props ) = 0;
 
 	protected:
-		template< typename T >
-		void ProcessProp( PropNode& props, T& var, const String& name )
+		// process Propertyable type
+		void ProcessProperty( const PropNode& prop, Propertyable& var, const String& name )
 		{
-			var = props.Get< T >( name );
+			if ( prop.HasKey( name ) )
+				var.ProcessProperties( prop.GetChild( name ) );
+		}
+
+		// process shared_ptr type (requires factory definition)
+		template< typename T >
+		void ProcessProperty( const PropNode& prop, std::shared_ptr< T >& var, const String& name )
+		{
+			if ( prop.HasKey( name ) )
+				var = std::shared_ptr< T >( factory::Create< T >( prop.GetChild( name ) ) );
+		}
+
+		// process vector< shared_ptr > type (requires factory definition)
+		template< typename T >
+		void ProcessProperty( const PropNode& prop, std::vector< std::shared_ptr< T > >& var, const String& name )
+		{ 
+			if ( prop.HasKey( name ) )
+			{
+				PropNode& node = prop.GetChild( name );
+				var.clear();
+				for ( auto iter = node.Begin(); iter != node.End(); ++iter )
+					vec.push_back( std::shared_ptr< T >( factory::Create< T >( *iter->second ) ) );
+				return vec;
+			}
+		}
+
+		// process fundamental types and String
+		template< typename T >
+		void ProcessProperty( const PropNode& prop, T& var, const String& name, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
+		{
+			if ( prop.HasKey( name ) )
+				var = prop.Get< T >( name );
 		}
 	};
 
-#define PROCESS_PROP( _props_, _var_ ) ProcessProp( props, _var_, GetCleanVarName( #_var_ ) )
+	// convenience macro that automatically derives name from variable name
+	#define PROCESS_PROPERTY( _prop_, _var_ ) ProcessProperty( _prop_, _var_, GetCleanVarName( #_var_ ) )
 }

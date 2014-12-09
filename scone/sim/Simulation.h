@@ -15,7 +15,7 @@ namespace scone
 			Simulation();
 			virtual ~Simulation();
 			virtual ModelSP CreateModel( const String& filename ) = 0;
-			virtual void ProcessPropNode(PropNode& props);
+			virtual void ProcessProperties(const PropNode& props);
 
 			virtual ModelSP GetModel( size_t idx = 0 ) = 0;
 			virtual void Run() = 0;

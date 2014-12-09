@@ -5,9 +5,8 @@ namespace scone
 {
 	namespace cs
 	{
-		void Measure::ProcessPropNode( PropNode& props )
+		void Measure::ProcessProperties( const PropNode& props )
 		{
-			PROCESS_PROP( props, m_Weight );
 		}
 	}
 }

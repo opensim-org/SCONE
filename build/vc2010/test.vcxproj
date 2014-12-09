@@ -18,8 +18,10 @@
     <ClCompile Include="..\..\scone\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\test\OptimizationTest.h" />
     <ClInclude Include="..\..\scone\test\SerializationTest.h" />
     <ClInclude Include="..\..\scone\test\stdafx.h" />
+    <ClInclude Include="..\..\scone\test\XmlParseTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">

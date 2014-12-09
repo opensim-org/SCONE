@@ -3,10 +3,11 @@
 
 #include "stdafx.h"
 #include "SerializationTest.h"
+#include "XmlParseTest.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	SerializationTest();
+	XmlParseTest();
 
 	_getch();
 

@@ -22,11 +22,17 @@
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\Objective.cpp" />
     <ClCompile Include="..\..\scone\opt\Optimizer.cpp" />
+    <ClCompile Include="..\..\scone\opt\OptimizerCma.cpp" />
     <ClCompile Include="..\..\scone\opt\ParamSet.cpp" />
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="core.vcxproj">
+      <Project>{6cee1f34-42af-4180-baa7-938a98847704}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ED224C0C-1D96-4EDE-9389-25F595E5D7C8}</ProjectGuid>

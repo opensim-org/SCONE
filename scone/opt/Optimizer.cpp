@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace opt
 	{
-		Optimizer::Optimizer( Objective& obj ) : m_Objective( obj )
+		Optimizer::Optimizer()
 		{
 
 		}
@@ -14,5 +14,11 @@ namespace scone
 		{
 
 		}
+
+		void Optimizer::ProcessProperties( const PropNode& props )
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
 	}
 }
