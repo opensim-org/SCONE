@@ -12,7 +12,6 @@ namespace scone
 	};
 }
 
-
 // assertion and exceptions
 #define SCONE_THROW_NOT_IMPLEMENTED throw scone::LogicException(""__FUNCTION__" not implemented");
 
@@ -27,5 +26,3 @@ namespace scone
 	if (!(expression)) throw scone::RuntimeException("Assertion Failure: "#expression" in function "__FUNCTION__"");
 
 #define SCONE_THROW( message ) throw scone::RuntimeException(std::string(""__FUNCTION__": ") + (message) )
-
-
