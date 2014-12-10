@@ -13,11 +13,14 @@ namespace scone
 			CmaOptimizer();
 			virtual ~CmaOptimizer();
 
-			virtual void ProcessProperties( const PropNode& props ) override;
-
 			SCONE_GENERATE_FACTORY_MEMBERS( CmaOptimizer );
 
+			virtual void ProcessProperties( const PropNode& props ) override;
+			virtual void Run( ObjectiveSP m_Objective ) override;
+
 		private:
+			ObjectiveSP m_Objective;
+
 			double mu;
 			double lambda;
 			double sigma;

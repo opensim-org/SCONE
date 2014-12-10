@@ -21,11 +21,6 @@ namespace scone
 			SimulationObjective();
 			virtual ~SimulationObjective();
 
-		private: // make class non-copyable by declaring copy-ctor and assignment private
-			SimulationObjective( const SimulationObjective& );
-			SimulationObjective& operator=( const SimulationObjective& );
-
-		public:
 			virtual double Evaluate() override;
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;

@@ -26,5 +26,9 @@ namespace scone
 			PROCESS_PROPERTY( props, sigma );
 			PROCESS_PROPERTY( props, max_generations );
 		}
+
+		void CmaOptimizer::Run( ObjectiveSP m_Objective )
+		{
+		}
 	}
 }

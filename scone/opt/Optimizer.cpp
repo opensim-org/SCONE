@@ -8,12 +8,10 @@ namespace scone
 		Optimizer::Optimizer() :
 		max_threads ( 1 )
 		{
-
 		}
 
 		Optimizer::~Optimizer()
 		{
-
 		}
 
 		void Optimizer::ProcessProperties( const PropNode& props )

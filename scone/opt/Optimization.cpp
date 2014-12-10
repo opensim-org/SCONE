@@ -19,6 +19,8 @@ namespace scone
 			PropNode prop;
 			prop.FromXmlFile( script_file );
 			ProcessProperty( prop, *this, "Optimization" );
+
+			m_Optimizer->Run( m_Objective );
 		}
 
 		void Optimization::ProcessProperties( const PropNode& props )

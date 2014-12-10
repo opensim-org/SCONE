@@ -15,6 +15,7 @@ namespace scone
 			virtual ~Optimizer();
 
 			virtual void ProcessProperties( const PropNode& props ) override;
+			virtual void Run( ObjectiveSP m_Objective ) = 0;
 
 		private:
 			size_t max_threads;
