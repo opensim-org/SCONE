@@ -3,7 +3,7 @@
 #include "FeedForwardController.h"
 #include "JumpingMeasure.h"
 #include "EnergyMeasure.h"
-#include "..\opt\OptimizerCma.h"
+#include "..\opt\CmaOptimizer.h"
 
 namespace scone
 {
@@ -61,9 +61,9 @@ namespace scone
 		}
 
 		template<>
-		cs::Objective* Create( const PropNode& props )
+		cs::SimulationObjective* Create( const PropNode& props )
 		{
-			cs::Objective* o = new cs::Objective();
+			cs::SimulationObjective* o = new cs::SimulationObjective();
 			o->ProcessProperties( props );
 			return o;
 		}
@@ -75,7 +75,7 @@ namespace scone
 
 			String type = props.GetStr( "type" );
 			if ( type == "CMA" )
-				o = new opt::OptimizerCma();
+				o = new opt::CmaOptimizer();
 			else SCONE_THROW( "Unknown optimizer type: " + type );
 
 			o->ProcessProperties( props );

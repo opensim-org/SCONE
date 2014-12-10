@@ -1,17 +1,15 @@
 #pragma once
 
-#include "cs.h"
-#include "factory.h"
-#include "..\opt\opt.h"
-#include "..\core\core.h"
+#include "opt.h"
 #include "..\core\Propertyable.h"
-#include <string>
+#include "Optimizer.h"
+#include "Objective.h"
 
 namespace scone
 {
-	namespace cs
+	namespace opt
 	{
-		class CS_API Optimization : public Propertyable
+		class OPT_API Optimization : public Propertyable
 		{
 		public:
 			Optimization();
@@ -22,9 +20,8 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 
 		private:
-			Objective m_Objective;
-			opt::OptimizerSP m_Optimizer;
-			std::string m_Test;
+			std::shared_ptr< Objective > m_Objective;
+			std::shared_ptr< Optimizer > m_Optimizer;
 		};
 	}
 }

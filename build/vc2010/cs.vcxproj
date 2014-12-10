@@ -17,8 +17,7 @@
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
     <ClInclude Include="..\..\scone\cs\JumpingMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
-    <ClInclude Include="..\..\scone\cs\Objective.h" />
-    <ClInclude Include="..\..\scone\cs\Optimization.h" />
+    <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
     <ClInclude Include="..\..\scone\cs\ParameterizableController.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
   </ItemGroup>
@@ -28,8 +27,7 @@
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp" />
     <ClCompile Include="..\..\scone\cs\JumpingMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
-    <ClCompile Include="..\..\scone\cs\Objective.cpp" />
-    <ClCompile Include="..\..\scone\cs\Optimization.cpp" />
+    <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

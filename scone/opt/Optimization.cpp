@@ -1,11 +1,10 @@
 #include "stdafx.h"
-#include "factory.h"
 #include "Optimization.h"
 #include "..\core\PropNode.h"
 
 namespace scone
 {
-	namespace cs
+	namespace opt
 	{
 		Optimization::Optimization()
 		{

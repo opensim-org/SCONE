@@ -17,7 +17,7 @@ namespace scone
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 
-			virtual void ProcessParamSet( opt::ParamSet& par ) override;
+			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			virtual bool RegisterModel( sim::ModelSP model ) override;
 

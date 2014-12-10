@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimization>
+	<Objective type="ExampleObjective">
+		<num_params>50</num_params>
+	</Objective>
+	<Optimizer type="CMA">
+		<lambda>0</lambda>
+		<mu>0</mu>
+		<sigma>1</sigma>
+		<max_generations>1000</max_generations>
+		<max_threads>4</max_threads>
+	</Optimizer>
+</Optimization>

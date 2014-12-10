@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "OptimizerCma.h"
+#include "CmaOptimizer.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		OptimizerCma::OptimizerCma() :
+		CmaOptimizer::CmaOptimizer() :
 		mu( 0.0 ),
 		lambda( 0.0 ),
 		sigma( 1.0 ),
@@ -13,11 +13,11 @@ namespace scone
 		{
 		}
 
-		OptimizerCma::~OptimizerCma()
+		CmaOptimizer::~CmaOptimizer()
 		{
 		}
 
-		void OptimizerCma::ProcessProperties( const PropNode& props )
+		void CmaOptimizer::ProcessProperties( const PropNode& props )
 		{
 			Optimizer::ProcessProperties( props );
 

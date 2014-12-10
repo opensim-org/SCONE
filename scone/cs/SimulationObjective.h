@@ -15,21 +15,20 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API Objective : public opt::Objective, public Propertyable
+		class CS_API SimulationObjective : public opt::Objective
 		{
 		public:
-			Objective();
-			virtual ~Objective();
+			SimulationObjective();
+			virtual ~SimulationObjective();
 
 		private: // make class non-copyable by declaring copy-ctor and assignment private
-			Objective( const Objective& );
-			Objective& operator=( const Objective& );
+			SimulationObjective( const SimulationObjective& );
+			SimulationObjective& operator=( const SimulationObjective& );
 
 		public:
-			virtual opt::ParamSet GetParamSet() override;
-			virtual double Evaluate( const opt::ParamSet& params ) override;
-
+			virtual double Evaluate() override;
 			virtual void ProcessProperties(const PropNode& props) override;
+			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
 			PropNode m_SimulationProps;

@@ -23,13 +23,16 @@
     <ClInclude Include="..\..\scone\opt\Optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\opt\OptimizerCma.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\opt\Param.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\opt\ParamSet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\CmaOptimizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\Optimization.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -46,7 +49,13 @@
     <ClCompile Include="..\..\scone\opt\Optimizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\opt\OptimizerCma.cpp">
+    <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\Optimization.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\opt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

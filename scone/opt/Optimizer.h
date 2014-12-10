@@ -1,4 +1,5 @@
 #pragma once
+
 #include "opt.h"
 #include "Objective.h"
 #include "..\core\Propertyable.h"

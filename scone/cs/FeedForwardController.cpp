@@ -11,7 +11,7 @@ namespace scone
 			throw std::logic_error("The method or operation is not implemented.");
 		}
 
-		void FeedForwardController::ProcessParamSet( opt::ParamSet& par )
+		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
 		{
 			throw std::logic_error("The method or operation is not implemented.");
 		}

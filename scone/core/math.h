@@ -23,6 +23,9 @@ namespace scone
 		return ( fabs( v1 - v2 ) <= fabs( v1 ) * tolerance );
 	}
 
+	// square function
+	template< typename T > T Square( T value ) { return value * value; }
+
 	// Degree struct
 	struct Rad;
 	struct CORE_API Deg

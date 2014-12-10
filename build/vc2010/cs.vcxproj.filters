@@ -17,12 +17,6 @@
     <ClInclude Include="..\..\scone\cs\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\Optimization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\cs\Objective.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\Measure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -41,15 +35,12 @@
     <ClInclude Include="..\..\scone\cs\ParameterizableController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\SimulationObjective.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\cs\Optimization.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\cs\Objective.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\factory.cpp">
@@ -65,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\EnergyMeasure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

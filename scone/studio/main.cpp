@@ -1,15 +1,14 @@
 #include "stdafx.h"
 #include "SconeStudio.h"
 #include <QtGui/QApplication>
-
-#include "../cs/Optimization.h"
+#include "../opt/Optimization.h"
 
 using namespace scone;
 
 int main(int argc, char *argv[])
 {
-	cs::Optimization opt;
-	opt.Run( "../../scripts/optimizations/test.opt" );
+	opt::Optimization o;
+	o.Run( "../../scripts/optimizations/test.opt" );
 
 	//QApplication a(argc, argv);
 	//SconeStudio w;

@@ -7,13 +7,15 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API OptimizerCma : public Optimizer
+		class OPT_API CmaOptimizer : public Optimizer
 		{
 		public:
-			OptimizerCma();
-			virtual ~OptimizerCma();
+			CmaOptimizer();
+			virtual ~CmaOptimizer();
 
 			virtual void ProcessProperties( const PropNode& props ) override;
+
+			SCONE_GENERATE_FACTORY_MEMBERS( CmaOptimizer );
 
 		private:
 			double mu;

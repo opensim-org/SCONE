@@ -20,6 +20,7 @@ namespace scone
 	typedef double Real;
 #endif
 	typedef std::string String;
+	typedef size_t Index;
 
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );
@@ -30,6 +31,7 @@ namespace scone
 	const Real REAL_NAN = std::numeric_limits< Real >::quiet_NaN();
 	const Real REAL_MIN = std::numeric_limits< Real >::min();
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
+	const Index NO_INDEX = std::numeric_limits< Index >::max();
 
 	// forward declarations
 	class Vec3;

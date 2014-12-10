@@ -1,30 +1,28 @@
 #pragma once
 
-#include "..\cs\Optimization.h"
 #include "..\opt\Objective.h"
-#include "..\opt\OptimizerCma.h"
+#include "..\opt\CmaOptimizer.h"
+#include "..\opt\Optimization.h"
+#include "..\opt\ParamSet.h"
+#include "..\core\math.h"
 
 namespace scone
 {
 	class ExampleObjective : public opt::Objective
 	{
-		virtual opt::ParamSet GetParamSet() override
-		{
-			throw std::logic_error("The method or operation is not implemented.");
-		}
+	public:
+		SCONE_GENERATE_FACTORY_MEMBERS( ExampleObjective );
 
-		virtual double Evaluate( const opt::ParamSet& params ) override
-		{
-			throw std::logic_error("The method or operation is not implemented.");
-		}
+		ExampleObjective() : num_params( 0 ) { };
+		virtual double Evaluate() override;
+		virtual void ProcessProperties( const PropNode& props ) override;
+		virtual void ProcessParameters( opt::ParamSet& par ) override;
+
+	private:
+		int num_params;
+		std::vector< double > params;
 	};
+
+	void OptimizationTest();
 }
 
-opt::Optimizer* CreateOptimizerCma() { return new opt::OptimizerCma; }
-
-void OptimizationTest()
-{
-	GetFactory().RegisterType< opt::Optimizer >( "CMA", CreateOptimizerCma );
-	cs::Optimization opt;
-	opt.Run("config/optimization_test.xml");
-};

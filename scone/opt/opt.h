@@ -12,6 +12,9 @@ namespace scone
 {
 	namespace opt
 	{
+		// register factory types
+		void OPT_API RegisterFactoryTypes();
+
 		// forward declarations
 		class Param;
 		class ParamSet;
