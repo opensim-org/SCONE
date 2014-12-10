@@ -6,6 +6,10 @@
 
 namespace scone
 {
+	/// Get Single Factory instance
+	CORE_API class Factory& GetFactory();
+
+	/// Factory class
 	class Factory
 	{
 	public:
@@ -15,20 +19,13 @@ namespace scone
 		template< typename T >
 		void RegisterType( const String& type, T* (*func)(void) )
 		{
-			m_CreateFuncs[ typeid(T).name() + type ] = (void*(*)(void))func;
-		}
-
-		template< typename T >
-		T* Create( const PropNode& props )
-		{
-			return Create< T >( props.GetStr( "type" ) );
+			m_CreateFuncs[ GetFullTypeName< T >( type ) ] = (void*(*)(void))func;
 		}
 
 		template< typename T >
 		T* Create( const String& type )
 		{
-			String full_name = typeid(T).name() + type;
-			auto iter = m_CreateFuncs.find( full_name );
+			auto iter = m_CreateFuncs.find( GetFullTypeName< T >( type ) );
 			if ( iter != m_CreateFuncs.end() )
 			{
 				// create the item
@@ -39,10 +36,7 @@ namespace scone
 
 	private:
 		std::map< String, void*(*)(void) > m_CreateFuncs;
+		template< typename T >
+		String GetFullTypeName( const String& type ) { return String( typeid( T ).name() ) + "." + type; }
 	};
-
-	CORE_API Factory& GetFactory();
-
-	//template< typename T >
-	//Factory< T >& GetFactory() { SCONE_THROW( "Factory is not available" ); }
 }

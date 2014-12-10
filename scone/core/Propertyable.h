@@ -29,7 +29,7 @@ namespace scone
 		{
 			if ( prop.HasKey( name ) )
 			{
-				var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ) ) );
+				var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ).GetStr( "type" ) ) );
 				ProcessProperty( prop, *var, name );
 			}
 		}

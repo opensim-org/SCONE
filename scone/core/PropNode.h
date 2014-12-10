@@ -175,7 +175,13 @@ namespace scone
 
 		/// Get Child
 		const PropNodePtr GetChildPtr( const String& key ) const;
-		const PropNode& GetChild( const String& key ) const { return *GetChildPtr( key ); }
+		const PropNode& GetChild( const String& key ) const
+		{
+			PropNodePtr p = GetChildPtr( key );
+			if ( p == nullptr )
+				SCONE_THROW( "Could not find key: " + key );
+			else return *p;
+		}
 
 		/// create child node
 		PropNodePtr AddChild( const String& key );
