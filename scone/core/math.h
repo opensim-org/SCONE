@@ -5,8 +5,8 @@ namespace scone
 	// math helper functions
 	inline Real DegToRad( Real d ) { return d / 180 * REAL_PI; }
 	inline Real RadToDeg( Real d ) { return d / REAL_PI * 180; }
-	template< typename T > void Limit( T& value, const T& min, const T& max ) { if ( value > max ) value = max; else if ( value < min ) value = min; }
-	template< typename T > T GetLimited( const T& value, const T& min, const T& max ) {
+	template< typename T > void Restrain( T& value, const T& min, const T& max ) { if ( value > max ) value = max; else if ( value < min ) value = min; }
+	template< typename T > T GetRestrained( const T& value, const T& min, const T& max ) {
 		if ( value > max ) return max; else if ( value < min ) return min; else return value;
 	}
 	template< typename T > bool IsWithinRange( const T& value, const T& min, const T& max ) { return ( value >= min ) && ( value <= max ); }

@@ -17,9 +17,15 @@ namespace scone
 
 		double SimulationObjective::Evaluate()
 		{
-			sim::SimulationSP s( factory::Create< sim::Simulation >( m_SimulationProps ) );
-			ParameterizableControllerSP c( factory::Create< cs::ParameterizableController >( m_ControllerProps ) );
-			MeasureSP m( factory::Create< cs::Measure >( m_MeasureProps ) );
+			sim::SimulationSP s;
+			ParameterizableControllerSP c;
+			MeasureSP m;
+
+			ProcessProperty( m_Props, s, "Simulation" );
+			ProcessProperty( m_Props, c, "Controller" );
+			ProcessProperty( m_Props, m, "Measure" );
+
+			c->ProcessParameters( m_Params );
 
 			s->GetModel()->AddController( c );
 			s->GetModel()->AddController( m );
@@ -31,15 +37,14 @@ namespace scone
 
 		void SimulationObjective::ProcessProperties( const PropNode& props )
 		{
-			// copy properties
-			m_SimulationProps = *props.GetChildPtr( "Simulation" );
-			m_ControllerProps = *props.GetChildPtr( "Controller" );
-			m_MeasureProps = *props.GetChildPtr( "Measure" );
+			// just copy properties
+			m_Props = props;
 		}
 
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			// just copy parameters
+			m_Params = par;
 		}
 
 	}

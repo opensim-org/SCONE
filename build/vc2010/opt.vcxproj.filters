@@ -23,9 +23,6 @@
     <ClInclude Include="..\..\scone\opt\Optimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\opt\Param.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\opt\ParamSet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -33,6 +30,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\opt\Optimization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\ParamInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

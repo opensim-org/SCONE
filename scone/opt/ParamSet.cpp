@@ -1,6 +1,8 @@
 #include "stdafx.h"
+
+#include "Rng/GlobalRng.h"
 #include "ParamSet.h"
-#include "..\core\Exception.h"
+#include "../core/Exception.h"
 #include <algorithm>
 
 namespace scone
@@ -9,22 +11,84 @@ namespace scone
 	{
 		void ParamSet::ProcessParameter( double& par, const String& name, double init_mean, double init_var, double min, double max )
 		{
+			ProcessParameter( par, ParamInfo( name, init_mean, init_var, min, max ) );
+		}
+		void ParamSet::ProcessParameter( double& par, const ParamInfo& info )
+		{
 			if ( m_Mode == CONSTRUCTION_MODE )
 			{
-				if ( m_ParamInfos.find( name ) != m_ParamInfos.end() )
-					SCONE_THROW( "Duplicate parameter: " + name );
+				if ( FindParamByName( info.name ) != m_Params.end() )
+					SCONE_THROW( "Duplicate parameter: " + info.name );
 
 				// add parameter description
-				m_ParamInfos[ name ] = ParamInfo( m_ParamInfos.size(), init_mean, init_var, min, max );
+				m_Params.push_back( std::make_pair( info, par ) );
 			}
 			else if ( m_Mode == UPDATE_MODE )
 			{
-				auto iter = m_ParamInfos.find( name );
-				if ( iter == m_ParamInfos.end() )
-					SCONE_THROW( "Could not find parameter: " + name );
+				auto iter = FindParamByName( info.name );
+				if ( iter == m_Params.end() )
+					SCONE_THROW( "Could not find parameter: " + info.name );
 
 				// update parameter value
-				par = m_ParamValues[ iter->second.index ];
+				par = iter->second;
+			}
+		}
+
+		std::vector< std::pair< ParamInfo, double > >::iterator ParamSet::FindParamByName( const String& name )
+		{
+			return std::find_if( m_Params.begin(), m_Params.end(), [&]( const std::pair< ParamInfo, double >& v ) { return v.first.name == name; } );
+		}
+
+		size_t ParamSet::GetFreeParamCount()
+		{
+			return std::count_if( m_Params.begin(), m_Params.end(), [&]( const std::pair< ParamInfo, double >& v ) { return v.first.is_free; } );
+		}
+
+		std::vector< double > ParamSet::GetFreeParams()
+		{
+			std::vector< double > vec;
+			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
+			{
+				if ( iter->first.is_free )
+					vec.push_back( iter->second );
+			}
+			return vec;
+		}
+
+		void ParamSet::SetFreeParams( std::vector< double >& values )
+		{
+			auto vecIter = values.begin();
+			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
+			{
+				if ( iter->first.is_free )
+				{
+					SCONE_ASSERT( vecIter != values.end() );
+					iter->second = *(vecIter++);
+				}
+			}
+		}
+
+		bool ParamSet::CheckValues()
+		{
+			return std::find_if( m_Params.begin(), m_Params.end(),
+				[&]( const std::pair< ParamInfo, double >& v ) { return !v.first.CheckValue( v.second ); } ) == m_Params.end();
+		}
+
+		void ParamSet::RestrainValues()
+		{
+			std::for_each( m_Params.begin(), m_Params.end(),
+				[&]( std::pair< ParamInfo, double >& v ) { v.first.RestrainValue( v.second ); } );
+		}
+
+		void ParamSet::InitRandom()
+		{
+			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
+			{
+				if ( iter->first.is_free )
+				{
+					iter->second = Rng::gauss( iter->first.init_mean, Square( iter->first.init_var ) );
+					iter->first.RestrainValue( iter->second );
+				}
 			}
 		}
 	}

@@ -27,13 +27,12 @@ namespace scone
 
 		public:
 			virtual double Evaluate() override;
-			virtual void ProcessProperties(const PropNode& props) override;
+			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
-			PropNode m_SimulationProps;
-			PropNode m_ControllerProps;
-			PropNode m_MeasureProps;
+			PropNode m_Props;
+			opt::ParamSet m_Params;
 		};
 	}
 }

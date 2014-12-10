@@ -40,11 +40,10 @@ namespace scone
 		{ 
 			if ( prop.HasKey( name ) )
 			{
-				PropNode& node = prop.GetChild( name );
-				var.clear();
-				for ( auto iter = node.Begin(); iter != node.End(); ++iter )
-					vec.push_back( std::shared_ptr< T >( factory::Create< T >( *iter->second ) ) );
-				return vec;
+				//PropNode& node = prop.GetChild( name );
+				//var.clear();
+				//for ( auto iter = node.Begin(); iter != node.End(); ++iter )
+				//	vec.push_back( std::shared_ptr< T >( factory::Create< T >( *iter->second ) ) );
 			}
 		}
 

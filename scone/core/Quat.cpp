@@ -87,7 +87,7 @@ namespace scone
 		Real v = -2 * ( X() * Z() - W() * Y() );
 
 		// make sure v is in range
-		Limit( v, Real( -1 ), Real( 1 ) );
+		Restrain( v, Real( -1 ), Real( 1 ) );
 
 		return asin( v );
 	}
@@ -149,7 +149,7 @@ namespace scone
 		if ( len > REAL_EPSILON )
 		{
 			Real lim_w = W();
-			Limit( lim_w, -1.0, 1.0 );
+			Restrain( lim_w, -1.0, 1.0 );
 			angle = Real( 2.0 * acos( lim_w ) );
 			Real invlen = Real( 1.0 / len );
 
@@ -219,21 +219,21 @@ namespace scone
 		switch( eulerOrder )
 		{
 		case EULER_ORDER_XYZ:
-			Limit( m[0][2], Real( -1 ), Real( 1 ) );
+			Restrain( m[0][2], Real( -1 ), Real( 1 ) );
 			y = asin( m[0][2] );
 			x = atan2( -m[1][2], m[2][2] );
 			z = atan2( -m[0][1], m[0][0] );
 			break;
 
 		case EULER_ORDER_ZYX:
-			Limit( m[2][0], Real( -1 ), Real( 1 ) );
+			Restrain( m[2][0], Real( -1 ), Real( 1 ) );
 			y = asin( -m[2][0] );
 			z = atan2( m[1][0], m[0][0] );
 			x = atan2( m[2][1], m[2][2] );
 			break;
 
 		case EULER_ORDER_YXZ:
-			Limit( m[1][2], Real( -1 ), Real( 1 ) );
+			Restrain( m[1][2], Real( -1 ), Real( 1 ) );
 			x = asin( -m[1][2] );
 			y = atan2( m[0][2], m[2][2] );
 			z = atan2( m[1][0], m[1][1] );

@@ -16,7 +16,7 @@
     <ClInclude Include="..\..\scone\opt\opt.h" />
     <ClInclude Include="..\..\scone\opt\Optimization.h" />
     <ClInclude Include="..\..\scone\opt\Optimizer.h" />
-    <ClInclude Include="..\..\scone\opt\Param.h" />
+    <ClInclude Include="..\..\scone\opt\ParamInfo.h" />
     <ClInclude Include="..\..\scone\opt\ParamSet.h" />
     <ClInclude Include="..\..\scone\opt\stdafx.h" />
   </ItemGroup>
@@ -59,9 +59,11 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\Hg-3rdPartyLibs\Shark\shark-2.3.4.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\Hg-3rdPartyLibs\Shark\shark-2.3.4.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
