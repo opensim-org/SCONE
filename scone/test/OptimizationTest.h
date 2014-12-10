@@ -6,23 +6,19 @@
 #include "..\opt\ParamSet.h"
 #include "..\core\math.h"
 
-namespace scone
+using namespace scone;
+
+class ExampleObjective : public opt::Objective, public Factoryable< opt::Objective, ExampleObjective >
 {
-	class ExampleObjective : public opt::Objective
-	{
-	public:
-		SCONE_GENERATE_FACTORY_MEMBERS( ExampleObjective );
+public:
+	ExampleObjective() : num_params( 0 ) { };
+	virtual double Evaluate() override;
+	virtual void ProcessProperties( const PropNode& props ) override;
+	virtual void ProcessParameters( opt::ParamSet& par ) override;
 
-		ExampleObjective() : num_params( 0 ) { };
-		virtual double Evaluate() override;
-		virtual void ProcessProperties( const PropNode& props ) override;
-		virtual void ProcessParameters( opt::ParamSet& par ) override;
+private:
+	int num_params;
+	std::vector< double > params;
+};
 
-	private:
-		int num_params;
-		std::vector< double > params;
-	};
-
-	void OptimizationTest();
-}
-
+void OptimizationTest();

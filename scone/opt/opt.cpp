@@ -9,7 +9,7 @@ namespace scone
 	{
 		void RegisterFactoryTypes()
 		{
-			CmaOptimizer::FactoryRegister();
+			CmaOptimizer::RegisterFactory();
 		}
 
 	}

@@ -3,7 +3,7 @@
 	<Objective type="ExampleObjective">
 		<num_params>50</num_params>
 	</Objective>
-	<Optimizer type="CMA">
+	<Optimizer type="CmaOptimizer">
 		<lambda>0</lambda>
 		<mu>0</mu>
 		<sigma>1</sigma>

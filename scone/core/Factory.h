@@ -9,10 +9,14 @@ namespace scone
 	/// Get Single Factory instance
 	CORE_API class Factory& GetFactory();
 
-	// generate create and register functions in class
-	#define SCONE_GENERATE_FACTORY_MEMBERS( _class_ ) \
-	static _class_* FactoryCreate() { return new _class_; } \
-	static void FactoryRegister() { GetFactory().RegisterType( #_class_, FactoryCreate ); }
+	/// Factoryable class
+	template< typename Base, typename Derived >
+	class Factoryable
+	{
+	public:
+		static Base* Create() { return new Derived; }
+		static void RegisterFactory() { GetFactory().Register< Base, Derived >(); }
+	};
 
 	/// Factory class
 	class Factory
@@ -21,20 +25,19 @@ namespace scone
 		Factory() { };
 		virtual ~Factory() { };
 
-		template< typename T >
-		void RegisterType( const String& type, T* (*func)(void) )
+		template< typename Base, typename Derived >
+		void Register()
 		{
-			m_CreateFuncs[ type ] = (void*(*)(void))func;
+			m_CreateFuncs[ GetFullTypeName< Base >( GetCleanClassName< Derived >() ) ] = (void*(*)(void))Derived::Create;
 		}
 
 		template< typename T >
 		T* Create( const String& type )
 		{
-			auto iter = m_CreateFuncs.find( type );
+			auto iter = m_CreateFuncs.find( GetFullTypeName< T >( type ) );
 			if ( iter != m_CreateFuncs.end() )
 			{
 				// create the item
-				// TODO: validate type using RTTI?
 				return ((T*(*)(void))iter->second)();
 			}
 			else SCONE_THROW( "Could not find type " + type );
@@ -42,5 +45,18 @@ namespace scone
 
 	private:
 		std::map< String, void*(*)(void) > m_CreateFuncs;
+		template< typename T >
+		String GetFullTypeName( const String& type ) { return String( typeid( T ).name() ) + "-->" + type; }
+
+		template< typename T >
+		String GetCleanClassName()
+		{
+			String str = typeid( T ).name();
+			size_t pos1 = str.find_last_of("::");
+			if (pos1 != std::string::npos) str = str.substr(pos1 + 1);
+			size_t pos2 = str.find_last_of(" ");
+			if (pos2 != std::string::npos) str = str.substr(pos2 + 1);
+			return str;
+		}
 	};
 }

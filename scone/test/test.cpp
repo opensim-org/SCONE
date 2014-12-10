@@ -8,7 +8,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	scone::OptimizationTest();
+	OptimizationTest();
 
 	_getch();
 

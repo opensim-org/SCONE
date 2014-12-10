@@ -7,13 +7,13 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API CmaOptimizer : public Optimizer
+		class OPT_API CmaOptimizer : public Optimizer, public Factoryable< Optimizer, CmaOptimizer >
 		{
 		public:
 			CmaOptimizer();
 			virtual ~CmaOptimizer();
 
-			SCONE_GENERATE_FACTORY_MEMBERS( CmaOptimizer );
+			static Optimizer* Create() { return new CmaOptimizer; }
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void Run( ObjectiveSP m_Objective ) override;
