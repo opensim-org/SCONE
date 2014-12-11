@@ -8,6 +8,7 @@ namespace scone
 	{
 		Optimization::Optimization()
 		{
+			RegisterFactoryTypes();
 		}
 
 		Optimization::~Optimization()

@@ -2,6 +2,7 @@
 
 #include "opt.h"
 #include "Optimizer.h"
+#include "..\core\AutoInitType.h"
 
 namespace scone
 {
@@ -13,18 +14,21 @@ namespace scone
 			CmaOptimizer();
 			virtual ~CmaOptimizer();
 
-			static Optimizer* Create() { return new CmaOptimizer; }
-
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void Run( ObjectiveSP m_Objective ) override;
 
 		private:
 			ObjectiveSP m_Objective;
 
-			double mu;
-			double lambda;
-			double sigma;
-			int max_generations;
+			int m_Mu;
+			int m_Lambda;
+			double m_Sigma;
+			size_t max_generations;
+
+			struct Impl;
+			std::unique_ptr< Impl > m_pImpl;
+			size_t num_elitists;
+			int max_attempts;
 		};
 	}
 }

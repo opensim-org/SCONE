@@ -25,8 +25,10 @@ namespace scone
 			void InitRandom();
 
 			size_t GetFreeParamCount();
-			std::vector< double > GetFreeParams();
-			void SetFreeParams( std::vector< double >& values );
+			std::vector< double > GetFreeParamValues();
+			void SetFreeParamValues( std::vector< double >& values );
+
+			void SetMode( Mode m ) { m_Mode = m; }
 
 		private:
 			Mode m_Mode;

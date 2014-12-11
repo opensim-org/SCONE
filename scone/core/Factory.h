@@ -9,15 +9,6 @@ namespace scone
 	/// Get Single Factory instance
 	CORE_API class Factory& GetFactory();
 
-	/// Factoryable class
-	template< typename Base, typename Derived >
-	class Factoryable
-	{
-	public:
-		static Base* Create() { return new Derived; }
-		static void RegisterFactory() { GetFactory().Register< Base, Derived >(); }
-	};
-
 	/// Factory class
 	class Factory
 	{
@@ -58,5 +49,21 @@ namespace scone
 			if (pos2 != std::string::npos) str = str.substr(pos2 + 1);
 			return str;
 		}
+	};
+
+	/// Factoryable registerer
+	template< typename T >
+	struct FactoryableRegisterer
+	{
+		FactoryableRegisterer() { T::RegisterFactory(); }
+	};
+
+	/// Factoryable class
+	template< typename Base, typename Derived >
+	class Factoryable
+	{
+	public:
+		static Base* Create() { return new Derived; }
+		static void RegisterFactory() { GetFactory().Register< Base, Derived >(); }
 	};
 }

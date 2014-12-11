@@ -21,12 +21,11 @@ void ExampleObjective::ProcessProperties( const PropNode& props )
 void ExampleObjective::ProcessParameters( opt::ParamSet& par )
 {
 	for ( size_t i = 0; i < params.size(); ++i )
-		par.ProcessParameter( params[ i ], GetStringF( "Param%d", i), 0.5, 1.0, 0.0, 1.0 );
+		par.ProcessParameter( params[ i ], GetStringF( "Param%d", i), 1.0, 10.0, -1000.0, 1000.0 );
 }
 
 void OptimizationTest()
 {
-	opt::RegisterFactoryTypes();
 	ExampleObjective::RegisterFactory();
 	opt::Optimization opt;
 	opt.Run("config/example_optimization.xml");

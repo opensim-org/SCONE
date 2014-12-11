@@ -58,4 +58,5 @@ namespace scone
 
 	// convenience macro that automatically derives name from variable name
 	#define PROCESS_PROPERTY( _prop_, _var_ ) ProcessProperty( _prop_, _var_, GetCleanVarName( #_var_ ) )
+	#define PROCESS_PROPERTY_NAMED( _prop_, _var_, _name_ ) ProcessProperty( _prop_, _var_, _name_ )
 }

@@ -11,6 +11,5 @@ namespace scone
 		{
 			CmaOptimizer::RegisterFactory();
 		}
-
 	}
 }

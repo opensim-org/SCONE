@@ -44,7 +44,7 @@ namespace scone
 			return std::count_if( m_Params.begin(), m_Params.end(), [&]( const std::pair< ParamInfo, double >& v ) { return v.first.is_free; } );
 		}
 
-		std::vector< double > ParamSet::GetFreeParams()
+		std::vector< double > ParamSet::GetFreeParamValues()
 		{
 			std::vector< double > vec;
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
@@ -55,7 +55,7 @@ namespace scone
 			return vec;
 		}
 
-		void ParamSet::SetFreeParams( std::vector< double >& values )
+		void ParamSet::SetFreeParamValues( std::vector< double >& values )
 		{
 			auto vecIter = values.begin();
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
