@@ -2,7 +2,6 @@
 
 #include "opt.h"
 #include "Optimizer.h"
-#include "..\core\AutoInitType.h"
 
 namespace scone
 {

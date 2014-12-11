@@ -3,6 +3,7 @@
 #include "opt.h"
 #include "ParamSet.h"
 #include "..\core\Propertyable.h"
+#include "..\core\Exception.h"
 
 namespace scone
 {

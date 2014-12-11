@@ -100,16 +100,17 @@ namespace scone
 			{
 				printf("%04d:", gen );
 
-				// evaluate all individuals
+				// setup parameter sets
+				std::vector< ParamSet > parsets( m_Lambda, par );
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
-				{
-					// copy values into par
-					par.SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );
-					double fitness = obj->Evaluate( par );
-					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitness );
-					printf(" %3.0f", fitness );
-				}
+					parsets[ ind_idx ].SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );
 
+				// evaluate parameter sets
+				std::vector< double > fitnesses = EvaluateSingleThreaded( parsets, obj );
+				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
+					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
+
+				// report results
 				printf(" M=%5.2f", (*m_pImpl->m_pOffspring).meanFitness() );
 				if ( (*m_pImpl->m_pOffspring).best().fitnessValue() < best )
 				{
