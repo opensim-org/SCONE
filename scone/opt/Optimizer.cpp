@@ -36,7 +36,7 @@ namespace scone
 			return fitnesses;
 		}
 
-		std::vector< double > Optimizer::EvaluateMultiThreaded( std::vector< ParamSet >& parsets, std::vector< ObjectiveSP >& objectives )
+		std::vector< double > Optimizer::EvaluateMultiThreaded( std::vector< ParamSet >& parsets, ObjectiveSP& objective )
 		{
 			// evaluate individuals
 			size_t next_idx = 0;
@@ -49,7 +49,7 @@ namespace scone
 				// add threads
 				while ( active_threads < max_threads && next_idx < parsets.size() )
 				{
-					std::shared_ptr< boost::thread > t( new boost::thread( EvaluateFunc, objectives[ next_idx ], parsets[ next_idx ], &fitnesses[ next_idx ] ) );
+					std::shared_ptr< boost::thread > t( new boost::thread( EvaluateFunc, objective, parsets[ next_idx ], &fitnesses[ next_idx ] ) );
 					threads.push_back( t );
 					active_threads++;
 					next_idx++;

@@ -3,13 +3,16 @@
 
 double ExampleObjective::Evaluate()
 {
-	// Rosenbrock function
-	double sum = 0.0;
-	for( unsigned int i = 0; i < params.size()-1; i++ ) {
-		sum += 100 * Square( params[i+1] - Square( params[ i ] ) ) + Square( 1. - params[ i ] );
-	}
+	SCONE_THROW( "don't get here" );
+	return Rosenbrock( params );
+}
 
-	return( sum );
+double ExampleObjective::Evaluate( opt::ParamSet& par )
+{
+	for ( int i = 0; i < 1000; ++i )
+		Rosenbrock( par.GetFreeParamValues() );
+
+	return Rosenbrock( par.GetFreeParamValues() );
 }
 
 void ExampleObjective::ProcessProperties( const PropNode& props )
@@ -21,7 +24,17 @@ void ExampleObjective::ProcessProperties( const PropNode& props )
 void ExampleObjective::ProcessParameters( opt::ParamSet& par )
 {
 	for ( size_t i = 0; i < params.size(); ++i )
-		par.ProcessParameter( params[ i ], GetStringF( "Param%d", i), 1.0, 1.0, -1000.0, 1000.0 );
+		par.ProcessParameter( params[ i ], GetStringF( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
+}
+
+double ExampleObjective::Rosenbrock( const std::vector< double >& v )
+{
+	// Rosenbrock function
+	double sum = 0.0;
+	for( unsigned int i = 0; i < v.size()-1; i++ ) {
+		sum += 100 * Square( v[i+1] - Square( v[ i ] ) ) + Square( 1. - v[ i ] );
+	}
+	return( sum );
 }
 
 void OptimizationTest()

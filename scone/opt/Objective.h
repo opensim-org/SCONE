@@ -19,7 +19,7 @@ namespace scone
 			ParamSet GetParSet();
 
 			// update all parameters and call Evaluate
-			double Evaluate( ParamSet& par );
+			virtual double Evaluate( ParamSet& par );
 
 			// virtual evaluation function
 			virtual double Evaluate() = 0;

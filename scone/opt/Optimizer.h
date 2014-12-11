@@ -19,7 +19,7 @@ namespace scone
 
 		protected:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets, ObjectiveSP objective );
-			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets, std::vector< ObjectiveSP >& objectives );
+			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets, ObjectiveSP& objective );
 
 		private:
 			static void Optimizer::EvaluateFunc( ObjectiveSP obj, ParamSet& par, double* fitness );

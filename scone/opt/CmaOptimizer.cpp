@@ -106,7 +106,8 @@ namespace scone
 					parsets[ ind_idx ].SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );
 
 				// evaluate parameter sets
-				std::vector< double > fitnesses = EvaluateSingleThreaded( parsets, obj );
+				//std::vector< double > fitnesses = EvaluateSingleThreaded( parsets, obj );
+				std::vector< double > fitnesses = EvaluateMultiThreaded( parsets, obj );
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
 					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
 

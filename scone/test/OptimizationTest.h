@@ -15,6 +15,8 @@ public:
 	virtual double Evaluate() override;
 	virtual void ProcessProperties( const PropNode& props ) override;
 	virtual void ProcessParameters( opt::ParamSet& par ) override;
+	virtual double Evaluate( opt::ParamSet& par ) override;
+	static double Rosenbrock( const std::vector< double >& v );
 
 private:
 	int num_params;
