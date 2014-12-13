@@ -5,6 +5,7 @@
 #include <EALib/PopulationT.h>
 
 #include <boost/format.hpp>
+#include "../core/Timer.h"
 
 namespace scone
 {
@@ -49,10 +50,10 @@ namespace scone
 			PROCESS_PROPERTY( props, max_generations );
 		}
 
-		void CmaOptimizer::Run( ObjectiveSP obj )
+		void CmaOptimizer::Run()
 		{
 			// get info from objective
-			ParamSet par = obj->GetParSet();
+			ParamSet par = GetObjective()->GetParamSet();
 			size_t dim = par.GetFreeParamCount();
 
 			// init lambda and mu
@@ -95,6 +96,7 @@ namespace scone
 			m_pImpl->m_CMA.init( dim, var, m_Sigma, *m_pImpl->m_pParents, rc_type, CMA::rankmu );
 
 			// optimization loop
+			Timer timer;
 			double best = REAL_MAX;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
@@ -106,8 +108,7 @@ namespace scone
 					parsets[ ind_idx ].SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );
 
 				// evaluate parameter sets
-				//std::vector< double > fitnesses = EvaluateSingleThreaded( parsets, obj );
-				std::vector< double > fitnesses = EvaluateMultiThreaded( parsets, obj );
+				std::vector< double > fitnesses = Evaluate( parsets );
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
 					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
 
@@ -118,6 +119,8 @@ namespace scone
 					best = (*m_pImpl->m_pOffspring).best().fitnessValue();
 					printf(" B=%5.2f", best );
 				}
+
+				if ( (gen + 1) % 5 == 0 ) printf( " T=%.2f", timer.GetTime() );
 
 				// update next generation
 				m_pImpl->m_pParents->selectMuLambda( *m_pImpl->m_pOffspring, num_elitists );

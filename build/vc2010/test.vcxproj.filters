@@ -17,7 +17,7 @@
     <ClCompile Include="..\..\scone\test\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\test\OptimizationTest.cpp">
+    <ClCompile Include="..\..\scone\test\ExampleObjective.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,6 +32,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\test\OptimizationTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\test\ExampleObjective.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,7 +20,6 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 
 		private:
-			std::shared_ptr< Objective > m_Objective;
 			std::shared_ptr< Optimizer > m_Optimizer;
 		};
 	}

@@ -21,12 +21,11 @@ namespace scone
 			prop.FromXmlFile( script_file );
 			ProcessProperty( prop, *this, "Optimization" );
 
-			m_Optimizer->Run( m_Objective );
+			m_Optimizer->Run();
 		}
 
 		void Optimization::ProcessProperties( const PropNode& props )
 		{
-			ProcessProperty( props, m_Objective, "Objective" );
 			ProcessProperty( props, m_Optimizer, "Optimizer" );
 		}
 	}

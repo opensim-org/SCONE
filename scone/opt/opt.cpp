@@ -11,5 +11,13 @@ namespace scone
 		{
 			CmaOptimizer::RegisterFactory();
 		}
+
+		OptimizerSP CreateOptimizer( PropNode& prop, const String& key )
+		{
+			CmaOptimizer::RegisterFactory();
+			OptimizerSP opt;
+			ProcessProperty( prop, opt, key );
+			return opt;
+		}
 	}
 }

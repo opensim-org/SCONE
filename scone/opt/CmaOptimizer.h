@@ -14,11 +14,9 @@ namespace scone
 			virtual ~CmaOptimizer();
 
 			virtual void ProcessProperties( const PropNode& props ) override;
-			virtual void Run( ObjectiveSP m_Objective ) override;
+			virtual void Run() override;
 
 		private:
-			ObjectiveSP m_Objective;
-
 			int m_Mu;
 			int m_Lambda;
 			double m_Sigma;

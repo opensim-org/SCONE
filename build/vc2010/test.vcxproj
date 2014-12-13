@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\test\OptimizationTest.cpp" />
+    <ClCompile Include="..\..\scone\test\ExampleObjective.cpp" />
     <ClCompile Include="..\..\scone\test\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\scone\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\test\ExampleObjective.h" />
     <ClInclude Include="..\..\scone\test\OptimizationTest.h" />
     <ClInclude Include="..\..\scone\test\SerializationTest.h" />
     <ClInclude Include="..\..\scone\test\stdafx.h" />
