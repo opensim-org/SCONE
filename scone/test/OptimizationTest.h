@@ -9,8 +9,7 @@ using namespace scone;
 void OptimizationTest()
 {
 	// register new objective
-	//ExampleObjective::RegisterFactory();
-
+	ExampleObjective::RegisterFactory();
 	opt::OptimizerSP opt = opt::CreateOptimizerFromXml( "config/example_optimization.xml" );
 
 	opt->Run();

@@ -43,10 +43,8 @@ namespace scone
 		String GetCleanClassName()
 		{
 			String str = typeid( T ).name();
-			size_t pos1 = str.find_last_of("::");
-			if (pos1 != std::string::npos) str = str.substr(pos1 + 1);
-			size_t pos2 = str.find_last_of(" ");
-			if (pos2 != std::string::npos) str = str.substr(pos2 + 1);
+			size_t pos = str.find_last_of(": ");
+			if (pos != std::string::npos) str = str.substr(pos + 1);
 			return str;
 		}
 	};
