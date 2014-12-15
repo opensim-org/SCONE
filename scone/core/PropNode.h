@@ -14,7 +14,7 @@
 namespace scone
 {
 	class PropNode;
-	typedef std::shared_ptr< PropNode > PropNodePtr;
+	typedef std::unique_ptr< PropNode > PropNodePtr;
 
 	class StringValue
 	{
@@ -131,27 +131,15 @@ namespace scone
 		template< typename T >
 		T Get( const String& key ) const
 		{
-			PropNodePtr p = GetChildPtr( key );
-			if ( p == nullptr )
-				SCONE_THROW( "Could not find key: " + key );
-			else return p->Get<T>();
+			return GetChild( key ).Get< T >();
 		}
 
 		/// Get value, returns default if key doesn't exist
 		template< typename T >
 		T Get( const String& key, const T& default_value ) const
 		{
-			PropNodePtr p = GetChildPtr( key );
-			return p ? p->Get<T>() : default_value;
-		}
-
-		/// Copy child properties, empty if not existing
-		PropNode CopyChild( const String& key ) const
-		{
-			PropNodePtr p = GetChildPtr( key );
-			if ( p == nullptr )
-				return PropNode();
-			else return PropNode( *p );
+			const PropNode* p = GetChildPtr( key );
+			return p ? p->Get< T >() : default_value;
 		}
 
 		/// Set a value, overwriting existing (if any) or adding new key
@@ -174,17 +162,16 @@ namespace scone
 		}
 
 		/// Get Child
-		const PropNodePtr GetChildPtr( const String& key ) const;
 		const PropNode& GetChild( const String& key ) const
 		{
-			PropNodePtr p = GetChildPtr( key );
+			const PropNode* p = GetChildPtr( key );
 			if ( p == nullptr )
 				SCONE_THROW( "Could not find key: " + key );
 			else return *p;
 		}
 
 		/// create child node
-		PropNodePtr AddChild( const String& key );
+		PropNode& AddChild( const String& key );
 
 		/// Merge existing properties
 		PropNode& Merge( const PropNode& props, bool overwrite = true );
@@ -220,6 +207,8 @@ namespace scone
 		friend std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }
 
 	private:
+
+		PropNode* GetChildPtr( const String& key ) const;
 
 		void ToStream( std::ostream& str, const std::string& prefix = "" ) const;
 		void RemoveChildren( const String& key );

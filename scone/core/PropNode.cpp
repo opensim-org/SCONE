@@ -32,7 +32,7 @@ namespace scone
 		{
 			size_t pos = iter->find_first_of('=');
 			if (pos != std::string::npos)
-				AddChild( trim_copy( iter->substr(0, pos) ) )->m_Value = StringValue( trim_copy( iter->substr(pos + 1) ) );
+				AddChild( trim_copy( iter->substr(0, pos) ) ).m_Value = StringValue( trim_copy( iter->substr(pos + 1) ) );
 		}
 	}
 
@@ -46,7 +46,7 @@ namespace scone
 		m_Value = other.m_Value;
 		m_Children.clear();
 		for ( ConstChildIter iter = other.m_Children.begin(); iter != other.m_Children.end(); ++iter )
-			m_Children.push_back( std::make_pair( iter->first, std::make_shared< PropNode >( *iter->second ) ) );
+			m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
 		return *this;
 	}
 
@@ -58,15 +58,15 @@ namespace scone
 		for ( ConstChildIter other_it = other.m_Children.begin(); other_it != other.m_Children.end(); ++other_it )
 		{
 			// see if we already have the key
-			PropNodePtr child = nullptr;
+			PropNode* child = nullptr;
 			for ( ChildContainer::iterator this_it = m_Children.begin(); this_it != m_Children.end(); ++this_it )
 			{
 				if ( this_it->first == other_it->first )
-					child = this_it->second;
+					child = this_it->second.get();
 			}
 
 			if ( child == nullptr )
-				m_Children.push_back( std::make_pair( other_it->first, std::make_shared< PropNode >( *other_it->second ) ) );
+				m_Children.push_back( std::make_pair( other_it->first, PropNodePtr( new PropNode( *other_it->second ) ) ) );
 			else child->Merge( *other_it->second, overwrite );
 		}
 
@@ -77,29 +77,30 @@ namespace scone
 	{
 	}
 
-	PropNodePtr PropNode::AddChild( const String& key )
+	PropNode& PropNode::AddChild( const String& key )
 	{
 		size_t ofs = key.find_first_of( '.' );
 		if ( ofs == String::npos )
 		{
 			// create first-level child
-			m_Children.push_back( std::make_pair( key, std::make_shared< PropNode >() ) );
-			return m_Children.back().second;
+			m_Children.push_back( std::make_pair( key, PropNodePtr( new PropNode ) ) );
+			return *m_Children.back().second;
 		}
 		else
 		{
 			// create sub-children if necessary
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
-			PropNodePtr head_child = GetChildPtr( head_key );
-			if ( head_child == nullptr )
-				head_child = AddChild( head_key );
 
-			return head_child->AddChild( tail_key );
+			PropNode* child = GetChildPtr( head_key );
+			if ( child )
+				return child->AddChild( head_key );
+			else 
+				return AddChild( head_key ).AddChild( tail_key );
 		}
 	}
 
-	const PropNodePtr PropNode::GetChildPtr( const String& key ) const
+	PropNode* PropNode::GetChildPtr( const String& key ) const
 	{
 		size_t ofs = key.find_first_of( '.' );
 		if ( ofs == String::npos )
@@ -108,7 +109,7 @@ namespace scone
 			for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 			{
 				if ( iter->first == key )
-					return iter->second;
+					return iter->second.get();
 			}
 			return nullptr;
 		}
@@ -121,11 +122,7 @@ namespace scone
 			for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 			{
 				if ( iter->first == head_key )
-				{
-					PropNodePtr p = iter->second->GetChildPtr( tail_key );
-					if ( p != nullptr )
-						return p; // child has been found
-				}
+					return iter->second->GetChildPtr( tail_key );
 			}
 			return nullptr;
 		}
@@ -151,7 +148,7 @@ namespace scone
 			// search sub keys
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
-			PropNodePtr head_child = GetChildPtr( head_key );
+			PropNode* head_child = GetChildPtr( head_key );
 			head_child->RemoveChild( tail_key );
 			if ( head_child->IsEmpty() )
 				RemoveChild( head_key );
@@ -177,7 +174,7 @@ namespace scone
 			// search sub keys
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
-			PropNodePtr head_child = GetChildPtr( head_key );
+			PropNode* head_child = GetChildPtr( head_key );
 			head_child->RemoveChildren( tail_key );
 			if ( head_child->IsEmpty() )
 				RemoveChild( head_key );
@@ -203,8 +200,8 @@ namespace scone
 			}
 			else
 			{
-				PropNodePtr child = props.AddChild( v.first );
-				FromPropertyTree( *child, v.second );
+				PropNode& child = props.AddChild( v.first );
+				FromPropertyTree( child, v.second );
 			}
 		}
 	}

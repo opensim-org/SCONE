@@ -85,13 +85,13 @@ namespace scone
 	{
 		if ( read )
 		{
-			PropNodePtr p = props.GetChildPtr( name );
-			v.ProcessData( *p, true );
+			const PropNode& p = props.GetChild( name );
+			v.ProcessData( p, true );
 		}
 		else
 		{
-			PropNodePtr p = props.AddChild( name );
-			v.ProcessData( *p, false );
+			const PropNode& p = props.AddChild( name );
+			v.ProcessData( p, false );
 		}
 	}
 
