@@ -12,11 +12,15 @@ namespace scone
 			CmaOptimizer::RegisterFactory();
 		}
 
-		OptimizerSP CreateOptimizer( PropNode& prop, const String& key )
+		OptimizerSP CreateOptimizerFromXml( const String& xml_file, const String& key )
 		{
 			CmaOptimizer::RegisterFactory();
+
+			PropNode p = LoadXmlFile( xml_file );
+
 			OptimizerSP opt;
-			ProcessProperty( prop, opt, key );
+			ProcessProperty( p, opt, key );
+
 			return opt;
 		}
 	}

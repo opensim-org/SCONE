@@ -32,4 +32,18 @@ namespace scone
 	{
 		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
 	}
+
+	String CORE_API GetFilenameExt( const String& str )
+	{
+		size_t n = str.find_last_of(".");
+
+		if (n == std::string::npos) 
+			return std::string(""); // no extension found
+		
+		// dot could be part of a folder name
+		if (str.substr(n).find_last_of("/\\") != std::string::npos)
+			return std::string(""); // no extension found
+
+		return str.substr(n);
+	}
 }

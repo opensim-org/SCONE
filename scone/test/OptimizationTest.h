@@ -8,12 +8,10 @@ using namespace scone;
 
 void OptimizationTest()
 {
-	ExampleObjective::RegisterFactory();
+	// register new objective
+	//ExampleObjective::RegisterFactory();
 
-	PropNode prop;
-	prop.FromXmlFile( "config/example_optimization.xml" );
-
-	opt::OptimizerSP opt = opt::CreateOptimizer( prop, "Optimizer" );
+	opt::OptimizerSP opt = opt::CreateOptimizerFromXml( "config/example_optimization.xml" );
 
 	opt->Run();
 }

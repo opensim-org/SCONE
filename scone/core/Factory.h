@@ -31,7 +31,7 @@ namespace scone
 				// create the item
 				return ((T*(*)(void))iter->second)();
 			}
-			else SCONE_THROW( "Could not find type " + type );
+			else SCONE_THROW( "Unknown type " + type + ", make sure you call " + type + "::RegisterFactory()" );
 		}
 
 	private:
@@ -49,13 +49,6 @@ namespace scone
 			if (pos2 != std::string::npos) str = str.substr(pos2 + 1);
 			return str;
 		}
-	};
-
-	/// Factoryable registerer
-	template< typename T >
-	struct FactoryableRegisterer
-	{
-		FactoryableRegisterer() { T::RegisterFactory(); }
 	};
 
 	/// Factoryable class

@@ -280,4 +280,11 @@ namespace scone
 
 		return true;
 	}
+
+	PropNode CORE_API LoadXmlFile( const String& filename )
+	{
+		PropNode p;
+		p.FromXmlFile( filename );
+		return p;
+	}
 }

@@ -14,6 +14,9 @@ namespace scone
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
 
+	/// Get file extension (without dot)
+	String CORE_API GetFileNameExt( const String& str );
+
 	/// convert any streamable type to string
 	template < typename T >
 	String ToString( const T& value )

@@ -26,6 +26,6 @@ namespace scone
 
 		// register factory types
 		void OPT_API RegisterFactoryTypes();
-		OptimizerSP OPT_API CreateOptimizer( PropNode& prop, const String& key = "Optimizer" );
+		OptimizerSP OPT_API CreateOptimizerFromXml( const String& xml_file, const String& key = "Optimizer" );
 	}
 }

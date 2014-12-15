@@ -146,10 +146,10 @@ namespace scone
 		template< typename T >
 		PropNode& Set( const String& key, const T& value )
 		{
-			PropNodePtr p = GetChildPtr( key );
+			PropNode* p = GetChildPtr( key );
 			if ( p == nullptr )
-				p = AddChild( key );
-			p->Set( value );
+				AddChild( key ).Set( value );
+			else p->Set( value );
 			return *this;
 		}
 
@@ -207,7 +207,6 @@ namespace scone
 		friend std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }
 
 	private:
-
 		PropNode* GetChildPtr( const String& key ) const;
 
 		void ToStream( std::ostream& str, const std::string& prefix = "" ) const;
@@ -217,4 +216,7 @@ namespace scone
 		StringValue m_Value;
 		ChildContainer m_Children;
 	};
+
+	// shortcut file readers for lazy people
+	PropNode CORE_API LoadXmlFile( const String& filename );
 };
