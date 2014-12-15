@@ -11,8 +11,22 @@ namespace scone
 {
 	namespace sim
 	{
+		class Model_Simbody::ControllerAdapter : public OpenSim::Controller
+		{
+		public:
+			ControllerAdapter( ControllerSP controller ) : m_pController( controller ) { };
+			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override
+			{
+				m_pController->Update( s.getTime() );
+			}
+
+		private:
+			ControllerSP m_pController;
+		};
+
 		Model_Simbody::Model_Simbody( Simulation_Simbody* simulation ) :
-		m_pSimulation( simulation )
+		m_pSimulation( simulation ),
+		m_pModel( nullptr )
 		{
 		}
 

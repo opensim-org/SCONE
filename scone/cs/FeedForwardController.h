@@ -23,7 +23,7 @@ namespace scone
 
 			virtual void UnregisterModel( sim::ModelSP model ) override;
 
-			virtual bool Update( sim::ModelSP model, double timestamp ) override;
+			virtual bool Update( double timestamp ) override;
 		};
 	}
 }

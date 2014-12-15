@@ -15,10 +15,9 @@ namespace scone
 
 			virtual bool RegisterModel( ModelSP model ) { return true; }
 			virtual void UnregisterModel( ModelSP model ) { };
-			virtual bool Update( ModelSP model, double timestamp ) = 0;
+			virtual bool Update( double timestamp ) = 0;
 
 			virtual void ProcessProperties( const PropNode& props );
-
 		};
 	}
 }

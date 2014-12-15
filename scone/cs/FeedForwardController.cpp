@@ -26,7 +26,7 @@ namespace scone
 			throw std::logic_error("The method or operation is not implemented.");
 		}
 
-		bool FeedForwardController::Update( sim::ModelSP model, double timestamp )
+		bool FeedForwardController::Update( double timestamp )
 		{
 			throw std::logic_error("The method or operation is not implemented.");
 		}

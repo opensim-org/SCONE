@@ -40,6 +40,8 @@ namespace scone
 			class Simulation_Simbody* m_pSimulation;
 			std::unique_ptr< OpenSim::Model > m_pModel;
 
+			class ControllerAdapter;
+			std::vector< std::unique_ptr< ControllerAdapter > > m_Controllers;
 		};
 	}
 }
