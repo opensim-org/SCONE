@@ -11,13 +11,21 @@ namespace scone
 {
 	namespace sim
 	{
+		/// Adapter class for Simbody controller
 		class Model_Simbody::ControllerAdapter : public OpenSim::Controller
 		{
 		public:
 			ControllerAdapter( ControllerSP controller ) : m_pController( controller ) { };
-			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override
-			{
+			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override {
 				m_pController->Update( s.getTime() );
+			}
+
+			virtual Controller* clone() const override {
+				return new ControllerAdapter( m_pController );
+			}
+
+			virtual const std::string& getConcreteClassName() const override {
+				throw std::logic_error("The method or operation is not implemented.");
 			}
 
 		private:
@@ -77,7 +85,7 @@ namespace scone
 
 		void Model_Simbody::AddController( ControllerSP controller )
 		{
-
+			m_Controllers.push_back( std::unique_ptr< ControllerAdapter >( new ControllerAdapter( controller ) ) );
 		}
 	}
 }
