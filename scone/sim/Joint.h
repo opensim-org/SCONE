@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Joint
+		class SCONE_SIM_API Joint
 		{
 		public:
 			Joint();

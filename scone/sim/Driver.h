@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Driver
+		class SCONE_SIM_API Driver
 		{
 		public:
 			Driver();

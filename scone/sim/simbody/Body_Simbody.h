@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simbody.h"
+#include "sim_simbody.h"
 #include "..\Body.h"
 
 
@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_SIMBODY_API Body_Simbody : public Body
+		class SCONE_SIM_SIMBODY_API Body_Simbody : public Body
 		{
 		public:
 			Body_Simbody( ) { };

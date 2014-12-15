@@ -1,23 +1,23 @@
 #pragma once
 
-#include "simbody.h"
+#include "sim_simbody.h"
 #include "..\Simulation.h"
-
-#include <memory>
 
 namespace scone
 {
 	namespace sim
 	{
-		class SIM_SIMBODY_API Simulation_Simbody : public Simulation
+		class SCONE_SIM_SIMBODY_API Simulation_Simbody : public Simulation, public Factoryable< Simulation, Simulation_Simbody >
 		{
 		public:
 			Simulation_Simbody() { };
 			virtual ~Simulation_Simbody() { };
 
-			virtual ModelSP CreateModel( const String& filename ) override;
-			virtual ModelSP GetModel( size_t idx = 0 ) override;
+			virtual void ProcessProperties(const PropNode& props);
 			virtual void Run() override;
+
+		protected:
+			virtual ModelSP CreateModel() override;
 		};
 	}
 }

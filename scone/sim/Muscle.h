@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Muscle
+		class SCONE_SIM_API Muscle
 		{
 		public:
 			Muscle();

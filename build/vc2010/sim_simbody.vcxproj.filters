@@ -40,9 +40,6 @@
     <ClInclude Include="..\..\scone\sim\simbody\Muscle_Simbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -50,6 +47,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Simulation_Simbody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\sim_simbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

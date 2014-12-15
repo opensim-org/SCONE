@@ -5,12 +5,14 @@
 #include "Muscle_Simbody.h"
 #include "Simulation_Simbody.h"
 
+#include <OpenSim/OpenSim.h>
+
 namespace scone
 {
 	namespace sim
 	{
-		Model_Simbody::Model_Simbody( Simulation_Simbody& world ) :
-		m_World( world )
+		Model_Simbody::Model_Simbody( Simulation_Simbody* simulation ) :
+		m_pSimulation( simulation )
 		{
 		}
 
@@ -20,7 +22,8 @@ namespace scone
 
 		bool Model_Simbody::Load( const String& filename )
 		{
-			return false;
+			m_pModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
+			return true;
 		}
 
 		Vec3 Model_Simbody::GetComPos()
@@ -57,5 +60,10 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-}
+
+		void Model_Simbody::AddController( ControllerSP controller )
+		{
+
+		}
+	}
 }

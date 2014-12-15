@@ -1,7 +1,7 @@
 #include "stdafx.h"
+
 #include "SimulationObjective.h"
 #include "..\core\Exception.h"
-#include "factory.h"
 
 namespace scone
 {

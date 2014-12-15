@@ -20,3 +20,5 @@ public:
 extern VIS_API int nvis;
 
 VIS_API int fnvis(void);
+
+#include <Simbody/sim_simbody.h>

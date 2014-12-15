@@ -1,4 +1,5 @@
 #pragma once
+
 #include "PropNode.h"
 #include <string>
 #include "Factory.h"

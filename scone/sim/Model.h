@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Model
+		class SCONE_SIM_API Model
 		{
 		public:
 			Model();

@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Controller : virtual public Propertyable
+		class SCONE_SIM_API Controller : virtual public Propertyable
 		{
 		public:
 			Controller();

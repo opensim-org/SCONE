@@ -1,4 +1,5 @@
 #pragma once
+
 #include "sim.h"
 #include "..\core\Vec3.h"
 #include "..\core\Quat.h"
@@ -7,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_API Body
+		class SCONE_SIM_API Body
 		{
 		public:
 			Body();

@@ -2,10 +2,10 @@
 
 #include <memory>
 
-#ifdef SIM_EXPORTS
-#define SIM_API __declspec(dllexport)
+#ifdef SCONE_SIM_EXPORTS
+#define SCONE_SIM_API __declspec(dllexport)
 #else
-#define SIM_API __declspec(dllimport)
+#define SCONE_SIM_API __declspec(dllimport)
 #endif
 
 namespace scone

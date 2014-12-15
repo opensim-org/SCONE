@@ -1,21 +1,22 @@
 #pragma once
 
 #include "cs.h"
-#include "Measure.h"
-
 #include "..\sim\sim.h"
 #include "..\opt\Objective.h"
 #include "..\opt\ParamSet.h"
 #include "..\sim\Simulation.h"
 #include "..\core\PropNode.h"
-#include <vector>
+
+#include "Measure.h"
 #include "ParameterizableController.h"
+
+#include <vector>
 
 namespace scone
 {
 	namespace cs
 	{
-		class CS_API SimulationObjective : public opt::Objective
+		class CS_API SimulationObjective : public opt::Objective, public Factoryable< opt::Objective, SimulationObjective >
 		{
 		public:
 			SimulationObjective();

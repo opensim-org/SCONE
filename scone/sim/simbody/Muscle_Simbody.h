@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simbody.h"
+#include "sim_simbody.h"
 #include "../Muscle.h"
 
 #include <vector>
@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SIM_SIMBODY_API Muscle_Simbody : public Muscle
+		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public Muscle
 		{
 		public:
 			Muscle_Simbody() { };
