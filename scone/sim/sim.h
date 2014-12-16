@@ -24,5 +24,7 @@ namespace scone
 		typedef std::shared_ptr< Simulation > SimulationSP;
 		typedef std::shared_ptr< Model > ModelSP;
 		typedef std::shared_ptr< Controller > ControllerSP;
+		typedef std::shared_ptr< Muscle > MuscleSP;
+		typedef std::shared_ptr< Muscle > BodySP;
 	}
 }

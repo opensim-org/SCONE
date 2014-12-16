@@ -45,6 +45,8 @@ namespace scone
 		bool Model_Simbody::Load( const String& filename )
 		{
 			m_pModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
+
+			// TODO: create muscle and body adapters
 			return true;
 		}
 
@@ -57,32 +59,12 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-		
+
 		Real Model_Simbody::GetMass()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 		
-		size_t Model_Simbody::GetBodyCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		Body_Simbody& Model_Simbody::GetBody( size_t idx )
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t Model_Simbody::GetMuscleCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		Muscle_Simbody& Model_Simbody::GetMuscle( size_t idx )
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-
 		void Model_Simbody::AddController( ControllerSP controller )
 		{
 			m_Controllers.push_back( std::unique_ptr< ControllerAdapter >( new ControllerAdapter( controller ) ) );

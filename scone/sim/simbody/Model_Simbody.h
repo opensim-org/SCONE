@@ -25,14 +25,7 @@ namespace scone
 
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
-
 			virtual Real GetMass() override;
-
-			virtual size_t GetBodyCount() override;
-			virtual Body_Simbody& GetBody( size_t idx ) override;
-
-			virtual size_t GetMuscleCount() override;
-			virtual Muscle_Simbody& GetMuscle( size_t idx ) override;
 
 			virtual void AddController( ControllerSP controller ) override;
 
@@ -42,6 +35,8 @@ namespace scone
 
 			class ControllerAdapter;
 			std::vector< std::unique_ptr< ControllerAdapter > > m_Controllers;
+
+
 		};
 	}
 }

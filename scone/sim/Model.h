@@ -17,16 +17,16 @@ namespace scone
 
 			virtual Vec3 GetComPos() = 0;
 			virtual Vec3 GetComVel() = 0;
-
 			virtual Real GetMass() = 0;
 
-			virtual size_t GetBodyCount() = 0;
-			virtual class Body& GetBody( size_t idx ) = 0;
-
-			virtual size_t GetMuscleCount() = 0;
-			virtual class Muscle& GetMuscle( size_t idx ) = 0;
+			std::vector< MuscleSP >& GetMuscles() { return m_Muscles; }
+			std::vector< BodySP >& GetBodies() { return m_Bodies; }
 
 			virtual void AddController( ControllerSP controller ) = 0;
+
+		protected:
+			std::vector< MuscleSP > m_Muscles;
+			std::vector< BodySP > m_Bodies;
 		};
 	}
 }

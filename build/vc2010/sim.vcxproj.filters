@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\scone\sim\Body.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Actuator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Driver.h">
@@ -62,6 +65,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Actuator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
