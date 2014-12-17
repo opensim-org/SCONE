@@ -70,5 +70,8 @@
     <ClInclude Include="..\..\scone\sim\Actuator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Link.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

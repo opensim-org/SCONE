@@ -89,6 +89,9 @@ namespace scone
 			for ( int idx = 0; idx < m_osModel->getJointSet().getSize(); ++idx )
 				m_Joints.push_back( JointUP( new Joint_Simbody( m_osModel->getJointSet().get( idx ) ) ) );
 
+			// setup hierarchy and create wrappers
+			CreateLinkHierarchy( m_RootLink, m_osModel->getGroundBody() );
+
 			return true;
 		}
 
@@ -109,6 +112,16 @@ namespace scone
 		Real Model_Simbody::GetMass()
 		{
 			return m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_osModel->getWorkingState() );
+		}
+
+		void Model_Simbody::CreateLinkHierarchy( LinkUP& link, OpenSim::Body& osBody )
+		{
+			// find the sim::Body and sim::Joint
+			auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ){ return dynamic_cast< Body_Simbody& >( *body.get() ).m_osBody == osBody; } );
+			auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body.get() ).m_osJoint == osBody; } );
+
+			link = LinkUP( new Link( **itBody, **itJoint ) );
+			// TODO: add children
 		}
 	}
 }

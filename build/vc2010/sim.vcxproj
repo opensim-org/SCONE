@@ -96,6 +96,7 @@
     <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Driver.h" />
     <ClInclude Include="..\..\scone\sim\Joint.h" />
+    <ClInclude Include="..\..\scone\sim\Link.h" />
     <ClInclude Include="..\..\scone\sim\Model.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />

@@ -31,6 +31,8 @@ namespace scone
 			OpenSim::Model& GetOpenSimModel() { return *m_osModel; }
 
 		private:
+			void CreateLinkHierarchy( LinkUP& link, OpenSim::Body& osBody );
+
 			std::unique_ptr< OpenSim::Model > m_osModel;
 
 			class ControllerDispatcher;

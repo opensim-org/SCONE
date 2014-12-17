@@ -4,6 +4,7 @@
 #include "sim.h"
 #include "../core/Vec3.h"
 #include "Controller.h"
+#include "Link.h"
 
 namespace scone
 {
@@ -22,11 +23,13 @@ namespace scone
 			std::vector< ActuatorUP >& GetActuators() { return m_Actuators; }
 			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
+			Link& GetRootLink() { return *m_RootLink; }
 
 			virtual void AddController( ControllerSP controller );
 			std::vector< ControllerSP >& GetControllers() { return m_Controllers; }
 
 		protected:
+			std::unique_ptr< Link > m_RootLink;
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
