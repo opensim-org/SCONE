@@ -6,6 +6,12 @@ namespace scone
 {
 	namespace sim
 	{
+		Body_Simbody::Body_Simbody( OpenSim::Body& body ) :
+		Body(),
+		m_osBody( body )
+		{
+		}
+
 		scone::Vec3 scone::sim::Body_Simbody::GetPos()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
@@ -25,50 +31,5 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-		
-		class Model& scone::sim::Body_Simbody::GetModel()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetParentJointCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		class Joint& scone::sim::Body_Simbody::GetParentJoint(size_t idx)
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetChildJointCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		class Joint& scone::sim::Body_Simbody::GetChildJoint(size_t idx)
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetParentLinkCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetParentLink(size_t idx)
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetChildLinkCount()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		size_t scone::sim::Body_Simbody::GetChildLink(size_t idx)
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-	}
+}
 }

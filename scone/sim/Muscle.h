@@ -4,12 +4,13 @@
 #include "../core/core.h"
 
 #include <vector>
+#include "Actuator.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle
+		class SCONE_SIM_API Muscle : public virtual Actuator
 		{
 		public:
 			Muscle();

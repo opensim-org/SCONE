@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace sim
 	{
-		Actuator::Actuator()
+		Actuator::Actuator() : m_ActuatorControlValue( 0.0 )
 		{
 		}
 

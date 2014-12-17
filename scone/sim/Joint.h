@@ -10,12 +10,6 @@ namespace scone
 		public:
 			Joint();
 			virtual ~Joint();
-			
-			virtual class Body& GetParentLink() = 0;
-			virtual class Body& GetChildLink() = 0;
-
-			virtual class Model& GetModel() = 0;
-		
 		};
 	}
 }

@@ -27,8 +27,8 @@ namespace scone
 
 			c->ProcessParameters( m_Params );
 
-			s->GetModel()->AddController( c );
-			s->GetModel()->AddController( m );
+			s->GetModel().AddController( c );
+			s->GetModel().AddController( m );
 
 			s->Run();
 

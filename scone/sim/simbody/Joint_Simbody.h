@@ -3,6 +3,11 @@
 #include "sim_simbody.h"
 #include "..\Joint.h"
 
+namespace OpenSim
+{
+	class Joint;
+}
+
 namespace scone
 {
 	namespace sim
@@ -10,14 +15,11 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Joint_Simbody : public Joint
 		{
 		public:
-			Joint_Simbody() { };
-			virtual ~Joint_Simbody() { };
-			
-			virtual class Body& GetParentLink() override;
-			virtual class Body& GetChildLink() override;
+			Joint_Simbody( OpenSim::Joint& osJoint );
+			virtual ~Joint_Simbody();
 
-			virtual class Model& GetModel() override;
-		
+		private:
+			OpenSim::Joint& m_osJoint;
 		};
 	}
 }

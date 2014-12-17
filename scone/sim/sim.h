@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "..\core\core.h"
 
 #ifdef SCONE_SIM_EXPORTS
 #define SCONE_SIM_API __declspec(dllexport)
@@ -13,18 +14,12 @@ namespace scone
 	namespace sim
 	{
 		// forward declarations
-		class Simulation;
-		class Model;
-		class Body;
-		class Joint;
-		class Muscle;
-		class Controller;
-
-		typedef std::unique_ptr< Simulation > SimulationUP;
-		typedef std::shared_ptr< Simulation > SimulationSP;
-		typedef std::shared_ptr< Model > ModelSP;
-		typedef std::shared_ptr< Controller > ControllerSP;
-		typedef std::shared_ptr< Muscle > MuscleSP;
-		typedef std::shared_ptr< Muscle > BodySP;
+		SCONE_DECLARE_CLASS_AND_PTR( Simulation );
+		SCONE_DECLARE_CLASS_AND_PTR( Model );
+		SCONE_DECLARE_CLASS_AND_PTR( Body );
+		SCONE_DECLARE_CLASS_AND_PTR( Joint );
+		SCONE_DECLARE_CLASS_AND_PTR( Actuator );
+		SCONE_DECLARE_CLASS_AND_PTR( Muscle );
+		SCONE_DECLARE_CLASS_AND_PTR( Controller );
 	}
 }

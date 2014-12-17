@@ -18,7 +18,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody( class Simulation_Simbody* simulation );
+			Model_Simbody();
 			virtual ~Model_Simbody();
 
 			bool Load( const String& filename );
@@ -27,16 +27,14 @@ namespace scone
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;
 
-			virtual void AddController( ControllerSP controller ) override;
+			/// Get the OpenSim model attached to this model
+			OpenSim::Model& GetOpenSimModel() { return *m_osModel; }
 
 		private:
-			class Simulation_Simbody* m_pSimulation;
-			std::unique_ptr< OpenSim::Model > m_pModel;
+			std::unique_ptr< OpenSim::Model > m_osModel;
 
-			class ControllerAdapter;
-			std::vector< std::unique_ptr< ControllerAdapter > > m_Controllers;
-
-
+			class ControllerDispatcher;
+			std::unique_ptr< ControllerDispatcher > m_pControllerDispatcher;
 		};
 	}
 }

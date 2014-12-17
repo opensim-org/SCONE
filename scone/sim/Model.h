@@ -19,14 +19,23 @@ namespace scone
 			virtual Vec3 GetComVel() = 0;
 			virtual Real GetMass() = 0;
 
-			std::vector< MuscleSP >& GetMuscles() { return m_Muscles; }
-			std::vector< BodySP >& GetBodies() { return m_Bodies; }
+			std::vector< ActuatorUP >& GetActuators() { return m_Actuators; }
+			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
+			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 
-			virtual void AddController( ControllerSP controller ) = 0;
+			virtual void AddController( ControllerSP controller );
+			std::vector< ControllerSP >& GetControllers() { return m_Controllers; }
 
 		protected:
-			std::vector< MuscleSP > m_Muscles;
-			std::vector< BodySP > m_Bodies;
+			std::vector< MuscleUP > m_Muscles;
+			std::vector< BodyUP > m_Bodies;
+			std::vector< JointUP > m_Joints;
+			std::vector< ActuatorUP > m_Actuators;
+			std::vector< ControllerSP > m_Controllers;
+
+		private:
+			Model( const Model& );
+			Model& operator=( const Model& );
 		};
 	}
 }

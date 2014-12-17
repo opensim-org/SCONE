@@ -20,17 +20,16 @@ namespace scone
 
 		}
 
-		scone::sim::ModelSP Simulation::AddModel()
+		Model& Simulation::AddModel()
 		{
-			ModelSP m = CreateModel();
-			m_Models.push_back( m );
-			return m;
+			m_Models.emplace_back( CreateModel() );
+			return *m_Models.back();
 		}
 
-		scone::sim::ModelSP Simulation::GetModel( size_t idx )
+		Model& Simulation::GetModel( size_t idx )
 		{
 			SCONE_ASSERT( idx < m_Models.size() );
-			return m_Models[ idx ];
+			return *m_Models[ idx ];
 		}
 	}
 }

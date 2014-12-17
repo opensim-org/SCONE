@@ -5,6 +5,11 @@
 
 #include <vector>
 
+namespace OpenSim
+{
+	class Muscle;
+}
+
 namespace scone
 {
 	namespace sim
@@ -12,8 +17,8 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public Muscle
 		{
 		public:
-			Muscle_Simbody() { };
-			virtual ~Muscle_Simbody() { };
+			Muscle_Simbody( OpenSim::Muscle& mus );
+			virtual ~Muscle_Simbody();
 
 			virtual Real GetLength() override;
 			virtual Real GetFiberLength() override;
@@ -24,6 +29,9 @@ namespace scone
 			virtual Real GetActivation() override;
 			virtual Real GetExcitation() override;
 			virtual void SetExcitation( Real u ) override;
+
+		private:
+			OpenSim::Muscle& m_osMus;
 		};
 	}
 }

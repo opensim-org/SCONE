@@ -6,6 +6,15 @@ namespace scone
 {
 	namespace sim
 	{
+		Muscle_Simbody::Muscle_Simbody( OpenSim::Muscle& mus ) : m_osMus( mus )
+		{
+		}
+
+		Muscle_Simbody::~Muscle_Simbody()
+		{
+
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetLength()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
@@ -45,5 +54,5 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-	}
+}
 }

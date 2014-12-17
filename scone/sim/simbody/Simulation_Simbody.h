@@ -17,7 +17,7 @@ namespace scone
 			virtual void Run() override;
 
 		protected:
-			virtual ModelSP CreateModel() override;
+			virtual ModelUP CreateModel() override;
 		};
 	}
 }

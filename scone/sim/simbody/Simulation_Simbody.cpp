@@ -7,9 +7,9 @@ namespace scone
 {
 	namespace sim
 	{
-		ModelSP Simulation_Simbody::CreateModel()
+		ModelUP Simulation_Simbody::CreateModel()
 		{
-			return std::make_shared< Model_Simbody >( this );
+			return ModelUP( new Model_Simbody() );
 		}
 
 		void Simulation_Simbody::Run()

@@ -14,3 +14,5 @@
 
 #include <string>
 #include <vector>
+
+#include <OpenSim/OpenSim.h>

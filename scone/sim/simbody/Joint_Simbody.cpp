@@ -7,19 +7,12 @@ namespace scone
 {
 	namespace sim
 	{
-		class Body& scone::sim::Joint_Simbody::GetParentLink()
+		Joint_Simbody::Joint_Simbody( OpenSim::Joint& osJoint ) : m_osJoint( osJoint )
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-		
-		class Body& scone::sim::Joint_Simbody::GetChildLink()
+
+		Joint_Simbody::~Joint_Simbody()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-		}
-		
-		class Model& scone::sim::Joint_Simbody::GetModel()
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 	}
 }

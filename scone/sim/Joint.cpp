@@ -1,12 +1,18 @@
 #include "stdafx.h"
 #include "Joint.h"
 
-scone::sim::Joint::Joint()
+namespace scone
 {
-
-}
-
-scone::sim::Joint::~Joint()
-{
-
+	namespace sim
+	{
+		Joint::Joint()
+		{
+		
+		}
+		
+		scone::sim::Joint::~Joint()
+		{
+		
+		}
+	}
 }

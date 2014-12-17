@@ -14,17 +14,19 @@ namespace scone
 		public:
 			Simulation();
 			virtual ~Simulation();
-			virtual ModelSP AddModel();
-			virtual ModelSP GetModel( size_t idx = 0 );
+			virtual Model& AddModel();
+			virtual Model& GetModel( size_t idx = 0 );
 			virtual void ProcessProperties( const PropNode& props );
 
 			virtual void Run() = 0;
 
 		protected:
-			virtual ModelSP CreateModel() = 0;
+			virtual ModelUP CreateModel() = 0;
 
 		private:
-			std::vector< ModelSP > m_Models;
+			std::vector< ModelUP > m_Models;
+			Simulation( const Simulation& );
+			Simulation& operator=( const Simulation& );
 		};
 	}
 }

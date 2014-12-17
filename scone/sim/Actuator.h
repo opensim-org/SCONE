@@ -12,7 +12,12 @@ namespace scone
 			Actuator();
 			virtual ~Actuator();
 
-			virtual void AddControlValue( double v ) = 0;
+			virtual void AddControlValue( double v ) { m_ActuatorControlValue += v; }
+			virtual void ResetControlValue() { m_ActuatorControlValue = 0.0; }
+			double GetControlValue() { return m_ActuatorControlValue; }
+
+		protected:
+			double m_ActuatorControlValue;
 		};
 	}
 }
