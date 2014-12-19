@@ -17,7 +17,7 @@ namespace scone
 
 #ifdef _DEBUG
 #define SCONE_ASSERT( expression ) \
-	if (!(expression)) throw scone::RuntimeException("Assertion Failure: "#expression" in function "__FUNCTION__"");
+	if (!(expression)) throw scone::LogicException("Assertion Failure: "#expression" in function "__FUNCTION__"");
 #else
 #define SCONE_ASSERT( expression )
 #endif

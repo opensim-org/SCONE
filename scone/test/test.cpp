@@ -10,7 +10,7 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	XmlParseTest();
+	//XmlParseTest();
 	OptimizationTest();
 
 	_getch();

@@ -216,9 +216,16 @@ namespace scone
 
 	void PropNode::FromXmlFile( const String& filename, const String& rootname )
 	{
-		ptree pt;
-		read_xml( filename, pt, boost::property_tree::xml_parser::trim_whitespace );
-		FromPropertyTree( *this, rootname.empty() ? pt : pt.get_child( rootname ) );
+		try
+		{
+			ptree pt;
+			read_xml( filename, pt, boost::property_tree::xml_parser::trim_whitespace );
+			FromPropertyTree( *this, rootname.empty() ? pt : pt.get_child( rootname ) );
+		}
+		catch (file_parser_error& e)
+		{
+			SCONE_THROW( e.what() );
+		}
 	}
 
 	void PropNode::ToIniFile( const String& filename )
