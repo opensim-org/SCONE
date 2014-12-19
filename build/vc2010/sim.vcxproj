@@ -82,6 +82,7 @@
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Driver.cpp" />
     <ClCompile Include="..\..\scone\sim\Joint.cpp" />
+    <ClCompile Include="..\..\scone\sim\Link.cpp" />
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />

@@ -20,9 +20,9 @@ namespace scone
 
 		}
 
-		Model& Simulation::AddModel()
+		Model& Simulation::AddModel( const String& filename )
 		{
-			m_Models.emplace_back( CreateModel() );
+			m_Models.emplace_back( CreateModel( filename ) );
 			return *m_Models.back();
 		}
 

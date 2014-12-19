@@ -18,10 +18,8 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody();
+			Model_Simbody( const String& filename = "" );
 			virtual ~Model_Simbody();
-
-			bool Load( const String& filename );
 
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
@@ -31,7 +29,7 @@ namespace scone
 			OpenSim::Model& GetOpenSimModel() { return *m_osModel; }
 
 		private:
-			void CreateLinkHierarchy( LinkUP& link, OpenSim::Body& osBody );
+			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			std::unique_ptr< OpenSim::Model > m_osModel;
 

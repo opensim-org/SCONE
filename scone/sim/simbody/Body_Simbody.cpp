@@ -12,6 +12,11 @@ namespace scone
 		{
 		}
 
+		const String& Body_Simbody::GetName()
+		{
+			return m_osBody.getName();
+		}
+
 		scone::Vec3 scone::sim::Body_Simbody::GetPos()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;

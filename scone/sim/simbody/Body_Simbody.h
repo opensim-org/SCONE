@@ -24,6 +24,8 @@ namespace scone
 			virtual Vec3 GetLinVel() override;
 			virtual Vec3 GetAngVel() override;
 
+			virtual const String& GetName();
+
 			OpenSim::Body& m_osBody;
 		};
 	}

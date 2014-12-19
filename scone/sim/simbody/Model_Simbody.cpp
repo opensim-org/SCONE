@@ -8,6 +8,8 @@
 #include "Simulation_Simbody.h"
 #include <OpenSim/OpenSim.h>
 #include "Joint_Simbody.h"
+#include "tools.h"
+#include "../../core/Log.h"
 
 namespace scone
 {
@@ -21,8 +23,8 @@ namespace scone
 			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override
 			{
 				// reset actuator values
-				std::vector< ActuatorUP >& actvec = m_Model.GetActuators();
-				for ( auto iter = actvec.begin(); iter != actvec.end(); ++iter )
+				std::vector< MuscleUP >& musvec = m_Model.GetMuscles();
+				for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
 					(*iter)->ResetControlValue();
 
 				// update all controllers
@@ -30,12 +32,11 @@ namespace scone
 					(*iter)->Update( s.getTime() );
 
 				// inject actuator values into controls
-				SCONE_ASSERT( getActuatorSet().getSize() == actvec.size() );
 				SimTK::Vector controlValue( 1 );
-				for ( size_t idx = 0; idx < actvec.size(); ++idx )
+				for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
 				{
-					controlValue[ 0 ] = actvec[ idx ]->GetControlValue();
-					m_Model.GetOpenSimModel().getActuators().get( idx ).addInControls( controlValue, controls );
+					controlValue[ 0 ] = (*iter)->GetControlValue();
+					dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOSMuscle().addInControls( controlValue, controls );
 				}
 			}
 
@@ -51,17 +52,10 @@ namespace scone
 			Model_Simbody& m_Model;
 		};
 
-		Model_Simbody::Model_Simbody() :
+		Model_Simbody::Model_Simbody( const String& filename ) :
 		m_osModel( nullptr )
 		{
-		}
-
-		Model_Simbody::~Model_Simbody()
-		{
-		}
-
-		bool Model_Simbody::Load( const String& filename )
-		{
+			OpenSim::Object::setSerializeAllDefaults(true);
 			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
 
 			// Create wrappers for actuators
@@ -72,7 +66,6 @@ namespace scone
 				try // see if it's a muscle
 				{
 					OpenSim::Muscle& osMus = dynamic_cast< OpenSim::Muscle& >( osAct );
-					m_Actuators.push_back( MuscleUP( new Muscle_Simbody( osMus ) ) );
 					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( osMus ) ) );
 				}
 				catch ( std::bad_cast& )
@@ -80,33 +73,41 @@ namespace scone
 					SCONE_THROW( "Unsupported actuator type" );
 				}
 			}
+			SCONE_LOG( "Muscles created: " << m_Muscles.size() );
 
 			// Create wrappers for bodies
 			for ( int idx = 0; idx < m_osModel->getBodySet().getSize(); ++idx )
 				m_Bodies.push_back( BodyUP( new Body_Simbody( m_osModel->getBodySet().get( idx ) ) ) );
+			SCONE_LOG( "Bodies created: " << m_Bodies.size() );
 
 			// Create wrappers for joints
 			for ( int idx = 0; idx < m_osModel->getJointSet().getSize(); ++idx )
 				m_Joints.push_back( JointUP( new Joint_Simbody( m_osModel->getJointSet().get( idx ) ) ) );
+			SCONE_LOG( "Joints created: " << m_Joints.size() );
 
 			// setup hierarchy and create wrappers
-			CreateLinkHierarchy( m_RootLink, m_osModel->getGroundBody() );
+			m_RootLink = CreateLinkHierarchy( m_osModel->getGroundBody() );
 
-			return true;
+			// debug print
+			SCONE_LOG( m_RootLink->ToString() );
+		}
+
+		Model_Simbody::~Model_Simbody()
+		{
 		}
 
 		Vec3 Model_Simbody::GetComPos()
 		{
 			SimTK::Vec3 osVec = m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMassCenterLocationInGround( m_osModel->getWorkingState() );
 
-			return Vec3( osVec[0], osVec[1], osVec[2] ); // TODO: faster initialization?
+			return ToVec3( osVec );
 		}
 		
 		Vec3 Model_Simbody::GetComVel()
 		{
 			SimTK::Vec3 osVec = m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMassCenterVelocityInGround( m_osModel->getWorkingState() );
 			
-			return Vec3( osVec[0], osVec[1], osVec[2] ); // TODO: faster initialization?
+			return ToVec3( osVec );
 		}
 
 		Real Model_Simbody::GetMass()
@@ -114,14 +115,43 @@ namespace scone
 			return m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_osModel->getWorkingState() );
 		}
 
-		void Model_Simbody::CreateLinkHierarchy( LinkUP& link, OpenSim::Body& osBody )
+		bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
 		{
-			// find the sim::Body and sim::Joint
-			auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ){ return dynamic_cast< Body_Simbody& >( *body.get() ).m_osBody == osBody; } );
-			auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body.get() ).m_osJoint == osBody; } );
+			return dynamic_cast< Body_Simbody& >( *body ).m_osBody == osBody;
+		}
 
-			link = LinkUP( new Link( **itBody, **itJoint ) );
-			// TODO: add children
+		LinkUP Model_Simbody::CreateLinkHierarchy( OpenSim::Body& osBody )
+		{
+			LinkUP link;
+
+			// find the sim::Body
+			auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ){ return dynamic_cast< Body_Simbody& >( *body ).m_osBody == osBody; } );
+			SCONE_ASSERT( itBody != m_Bodies.end() );
+
+			// find the sim::Joint (if any)
+			if ( osBody.hasJoint() )
+			{
+				auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body ).m_osJoint == osBody.getJoint(); } );
+				SCONE_ASSERT( itJoint != m_Joints.end() );
+				link = LinkUP( new Link( **itBody, **itJoint ) );
+			}
+			else
+			{
+				link = LinkUP( new Link( **itBody ) );
+			}
+
+			// add children
+			for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
+			{
+				Body_Simbody& childBody = dynamic_cast< Body_Simbody& >( **iter );
+				if ( childBody.m_osBody.hasJoint() && childBody.m_osBody.getJoint().getParentBody() == osBody )
+				{
+					// create child link
+					link->children().push_back( CreateLinkHierarchy( childBody.m_osBody ) );
+				}
+			}
+
+			return link;
 		}
 	}
 }

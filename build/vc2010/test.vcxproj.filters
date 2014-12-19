@@ -37,5 +37,8 @@
     <ClInclude Include="..\..\scone\test\ExampleObjective.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\test\SimulationTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

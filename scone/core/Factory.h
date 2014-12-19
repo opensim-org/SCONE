@@ -23,13 +23,13 @@ namespace scone
 		}
 
 		template< typename T >
-		T* Create( const String& type )
+		std::unique_ptr< T > Create( const String& type )
 		{
 			auto iter = m_CreateFuncs.find( GetFullTypeName< T >( type ) );
 			if ( iter != m_CreateFuncs.end() )
 			{
 				// create the item
-				return ((T*(*)(void))iter->second)();
+				return std::unique_ptr< T >( ( ( T*(*)(void) )iter->second )() );
 			}
 			else SCONE_THROW( "Unknown type " + type + ", make sure you call " + type + "::RegisterFactory()" );
 		}

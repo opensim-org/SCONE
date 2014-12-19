@@ -95,6 +95,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\simbody\Body_Simbody.h" />
@@ -104,6 +105,7 @@
     <ClInclude Include="..\..\scone\sim\simbody\sim_simbody.h" />
     <ClInclude Include="..\..\scone\sim\simbody\Simulation_Simbody.h" />
     <ClInclude Include="..\..\scone\sim\simbody\stdafx.h" />
+    <ClInclude Include="..\..\scone\sim\simbody\tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">

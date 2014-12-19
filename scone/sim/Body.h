@@ -3,12 +3,13 @@
 #include "sim.h"
 #include "..\core\Vec3.h"
 #include "..\core\Quat.h"
+#include "..\core\Named.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Body
+		class SCONE_SIM_API Body : public Named
 		{
 		public:
 			Body();

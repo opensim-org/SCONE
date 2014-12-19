@@ -18,6 +18,8 @@ namespace scone
 			Joint_Simbody( OpenSim::Joint& osJoint );
 			virtual ~Joint_Simbody();
 
+			virtual const String& GetName();
+
 			OpenSim::Joint& m_osJoint;
 		};
 	}

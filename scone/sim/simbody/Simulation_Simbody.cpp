@@ -7,9 +7,9 @@ namespace scone
 {
 	namespace sim
 	{
-		ModelUP Simulation_Simbody::CreateModel()
-		{
-			return ModelUP( new Model_Simbody() );
+		scone::sim::ModelUP Simulation_Simbody::CreateModel( const String& filename )
+{
+			return ModelUP( new Model_Simbody( filename ) );
 		}
 
 		void Simulation_Simbody::Run()

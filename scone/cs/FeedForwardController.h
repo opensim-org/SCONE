@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API FeedForwardController : public ParameterizableController
+		class CS_API FeedForwardController : public ParameterizableController, public Factoryable< sim::Controller, FeedForwardController >
 		{
 		public:
 			FeedForwardController() { };

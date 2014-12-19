@@ -14,14 +14,14 @@ namespace scone
 		public:
 			Simulation();
 			virtual ~Simulation();
-			virtual Model& AddModel();
+			virtual Model& AddModel( const String& filename );
 			virtual Model& GetModel( size_t idx = 0 );
 			virtual void ProcessProperties( const PropNode& props );
 
 			virtual void Run() = 0;
 
 		protected:
-			virtual ModelUP CreateModel() = 0;
+			virtual ModelUP CreateModel( const String& filename ) = 0;
 
 		private:
 			std::vector< ModelUP > m_Models;

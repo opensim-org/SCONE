@@ -7,11 +7,21 @@
 #include "XmlParseTest.h"
 #include "OptimizationTest.h"
 #include <conio.h>
+#include "SimulationTest.h"
+#include "..\core\Log.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//XmlParseTest();
-	OptimizationTest();
+	try
+	{
+		//XmlParseTest();
+		//OptimizationTest();
+		SimulationTest();
+	}
+	catch (std::exception& e)
+	{
+		SCONE_LOG( "Exception: " << e.what() );		
+	}
 
 	_getch();
 

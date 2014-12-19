@@ -24,6 +24,16 @@ namespace scone
 			var.ProcessProperties( prop.GetChild( name ) );
 	}
 
+	// process unique_ptr type (requires factory definition)
+	template< typename T >
+	void ProcessProperty( const PropNode& prop, std::unique_ptr< T >& var, const String& name )
+	{
+		if ( prop.HasKey( name ) )
+		{
+			var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ).GetStr( "type" ) ) );
+			ProcessProperty( prop, *var, name );
+		}
+	}
 	// process shared_ptr type (requires factory definition)
 	template< typename T >
 	void ProcessProperty( const PropNode& prop, std::shared_ptr< T >& var, const String& name )

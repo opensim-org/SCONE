@@ -21,6 +21,7 @@
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\cs\cs.cpp" />
     <ClCompile Include="..\..\scone\cs\EnergyMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp" />
     <ClCompile Include="..\..\scone\cs\JumpingMeasure.cpp" />

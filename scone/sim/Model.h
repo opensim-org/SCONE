@@ -20,9 +20,10 @@ namespace scone
 			virtual Vec3 GetComVel() = 0;
 			virtual Real GetMass() = 0;
 
-			std::vector< ActuatorUP >& GetActuators() { return m_Actuators; }
 			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
+			std::vector< JointUP >& GetJoints() { return m_Joints; }
+
 			Link& GetRootLink() { return *m_RootLink; }
 
 			virtual void AddController( ControllerSP controller );
@@ -33,7 +34,6 @@ namespace scone
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
-			std::vector< ActuatorUP > m_Actuators;
 			std::vector< ControllerSP > m_Controllers;
 
 		private:

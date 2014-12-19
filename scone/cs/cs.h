@@ -1,4 +1,5 @@
 #pragma once
+#include "..\core\core.h"
 
 #ifdef CS_EXPORTS
 #define CS_API __declspec(dllexport)
@@ -13,11 +14,12 @@ namespace scone
 {
 	namespace cs
 	{
-		class Measure;
-		typedef std::unique_ptr< Measure > MeasureUP;
-		typedef std::shared_ptr< Measure > MeasureSP;
+		void CS_API RegisterFactoryTypes();
 
-		class ParameterizableController;
-		typedef std::shared_ptr< ParameterizableController > ParameterizableControllerSP;
+		SCONE_DECLARE_CLASS_AND_PTR( Measure );
+		SCONE_DECLARE_CLASS_AND_PTR( SimulationObjective );
+		SCONE_DECLARE_CLASS_AND_PTR( ParameterizableController );
+		SCONE_DECLARE_CLASS_AND_PTR( FeedForwardController );
+		SCONE_DECLARE_CLASS_AND_PTR( JumpingMeasure );
 	}
 }
