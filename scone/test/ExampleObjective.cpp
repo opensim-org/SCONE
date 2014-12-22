@@ -20,7 +20,7 @@ namespace scone
 
 	void ExampleObjective::ProcessProperties( const PropNode& props )
 	{
-		PROCESS_PROPERTY( props, num_params, 0 );
+		INIT_FROM_PROP( props, num_params, 0 );
 		params.resize( num_params );
 	}
 

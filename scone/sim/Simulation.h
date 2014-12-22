@@ -18,7 +18,9 @@ namespace scone
 			virtual Model& GetModel( size_t idx = 0 );
 			virtual void ProcessProperties( const PropNode& props );
 
-			virtual void Run() = 0;
+			virtual void AdvanceSimulationTo( double time ) = 0;
+
+			double max_simulation_time;
 
 		protected:
 			virtual ModelUP CreateModel( const String& filename ) = 0;

@@ -8,8 +8,6 @@ using namespace scone;
 
 void SimulationTest()
 {
-	//OpenSim::Model m( "models/jumper10dof24musc.osim" );
-
 	sim::Simulation_Simbody s;
 	sim::Model& m = s.AddModel( "models/jumper10dof24musc.osim");
 }

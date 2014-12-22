@@ -44,10 +44,10 @@ namespace scone
 		{
 			Optimizer::ProcessProperties( props );
 
-			PROCESS_PROPERTY_NAMED( props, m_Lambda, "lamda", 0 );
-			PROCESS_PROPERTY_NAMED( props, m_Mu, "mu", 0 );
-			PROCESS_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
-			PROCESS_PROPERTY( props, max_generations, size_t( 10000 ) );
+			INIT_FROM_PROP_NAMED( props, m_Lambda, "lamda", 0 );
+			INIT_FROM_PROP_NAMED( props, m_Mu, "mu", 0 );
+			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
+			INIT_FROM_PROP( props, max_generations, 10000u );
 		}
 
 		void CmaOptimizer::Run()

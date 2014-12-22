@@ -78,7 +78,7 @@ namespace scone
 
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
-			PROCESS_PROPERTY( props, integration_accuracy, 1.0e-6 );
+			INIT_FROM_PROP( props, integration_accuracy, 1.0e-6 );
 
 		}
 

@@ -14,7 +14,7 @@ namespace scone
 			virtual ~Simulation_Simbody() { };
 
 			virtual void ProcessProperties(const PropNode& props);
-			virtual void Run() override;
+			virtual void AdvanceSimulationTo( double time ) override;
 
 		protected:
 			virtual ModelUP CreateModel( const String& filename ) override;

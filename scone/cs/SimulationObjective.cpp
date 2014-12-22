@@ -21,16 +21,16 @@ namespace scone
 			ParameterizableControllerSP c;
 			MeasureSP m;
 
-			ProcessPropNode( m_Props, s, "Simulation" );
-			ProcessPropNode( m_Props, c, "Controller" );
-			ProcessPropNode( m_Props, m, "Measure" );
+			InitFromPropNode( m_Props, s, "Simulation" );
+			InitFromPropNode( m_Props, c, "Controller" );
+			InitFromPropNode( m_Props, m, "Measure" );
 
 			c->ProcessParameters( m_Params );
 
 			s->GetModel().AddController( c );
 			s->GetModel().AddController( m );
 
-			s->Run();
+			s->AdvanceSimulationTo( s->max_simulation_time );
 
 			return m->GetValue();
 		}
