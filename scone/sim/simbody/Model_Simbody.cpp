@@ -11,6 +11,7 @@
 #include "tools.h"
 
 #include <OpenSim/OpenSim.h>
+#include "boost/foreach.hpp"
 
 namespace scone
 {
@@ -30,10 +31,10 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( const String& filename ) :
+		Model_Simbody::Model_Simbody( Simulation_Simbody& simulation, const String& filename ) :
 		m_osModel( nullptr ),
 		m_tkState( nullptr ),
-		integration_accuracy( 1.0e-6 )
+		m_Simulation( simulation )
 		{
 			OpenSim::Object::setSerializeAllDefaults(true);
 			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
@@ -78,20 +79,18 @@ namespace scone
 
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
-			INIT_FROM_PROP( props, integration_accuracy, 1.0e-6 );
-
 		}
 
 		Vec3 Model_Simbody::GetComPos()
 		{
-			SimTK::Vec3 osVec = m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMassCenterLocationInGround( m_osModel->getWorkingState() );
+			SimTK::Vec3 osVec = m_osModel->calcMassCenterPosition( GetTkState() );
 
 			return ToVec3( osVec );
 		}
 		
 		Vec3 Model_Simbody::GetComVel()
 		{
-			SimTK::Vec3 osVec = m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMassCenterVelocityInGround( m_osModel->getWorkingState() );
+			SimTK::Vec3 osVec = m_osModel->calcMassCenterVelocity( GetTkState() );
 			
 			return ToVec3( osVec );
 		}
@@ -143,24 +142,21 @@ namespace scone
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			// reset actuator values
-			std::vector< MuscleUP >& musvec = m_Model.GetMuscles();
-			for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
-				(*iter)->ResetControlValue();
+			BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+				mus->ResetControlValue();
 
 			// update all controllers
-			for ( auto iter = m_Model.GetControllers().begin(); iter != m_Model.GetControllers().end(); ++iter )
-				(*iter)->Update( s.getTime() );
+			BOOST_FOREACH( ControllerSP& con, m_Model.GetControllers() )
+				con->Update( s.getTime() );
 
 			// inject actuator values into controls
 			SimTK::Vector controlValue( 1 );
-			for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
+			BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
 			{
-				controlValue[ 0 ] = (*iter)->GetControlValue();
-				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().addInControls( controlValue, controls );
+				controlValue[ 0 ] = mus->GetControlValue();
+				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 			}
 		}
-
-
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
@@ -186,19 +182,19 @@ namespace scone
 
 			// Create the integrator for the simulation.
 			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
-			m_tkIntegrator->setAccuracy( integration_accuracy );
+			m_tkIntegrator->setAccuracy( m_Simulation.integration_accuracy );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			//Manager manager(osimModel, integrator);
-			////manager.setWriteToStorage(false);
-			//manager.setPerformAnalyses(false);
+			OpenSim::Manager manager( *m_osModel, *m_tkIntegrator );
+			manager.setWriteToStorage( true );
+			manager.setPerformAnalyses( false );
 
-			//// Integrate from initial time to final time and integrate
-			//manager.setInitialTime(initialTime);
-			//manager.setFinalTime(finalTime);
-			//manager.integrate(osimState);
+			// Integrate from initial time to final time and integrate
+			manager.setInitialTime( 0.0 );
+			manager.setFinalTime( time );
+			manager.integrate( GetTkState() );
 
+			manager.getStateStorage().print("test_output.sto");
 		}
-
 	}
 }

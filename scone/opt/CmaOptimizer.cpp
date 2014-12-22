@@ -5,6 +5,7 @@
 #include <EALib/PopulationT.h>
 
 #include <boost/format.hpp>
+#include <boost/foreach.hpp>
 #include "../core/Timer.h"
 
 namespace scone

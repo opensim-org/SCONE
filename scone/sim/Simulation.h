@@ -14,19 +14,20 @@ namespace scone
 		public:
 			Simulation();
 			virtual ~Simulation();
-			virtual Model& AddModel( const String& filename );
-			virtual Model& GetModel( size_t idx = 0 );
-			virtual void ProcessProperties( const PropNode& props );
+			Model& AddModel( const String& filename );
+			size_t GetModelCount() { return m_Models.size(); }
+			Model& GetModel( size_t idx = 0 );
 
+			virtual void ProcessProperties( const PropNode& props );
 			virtual void AdvanceSimulationTo( double time ) = 0;
 
 			double max_simulation_time;
 
 		protected:
 			virtual ModelUP CreateModel( const String& filename ) = 0;
-
-		private:
 			std::vector< ModelUP > m_Models;
+
+		private: // non-copyable and non-assignable
 			Simulation( const Simulation& );
 			Simulation& operator=( const Simulation& );
 		};

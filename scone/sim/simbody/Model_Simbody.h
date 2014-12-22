@@ -20,10 +20,12 @@ namespace scone
 {
 	namespace sim
 	{
+		class Simulation_Simbody;
+
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody( const String& filename = "" );
+			Model_Simbody( Simulation_Simbody& simulation, const String& filename = "" );
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() override;
@@ -41,13 +43,14 @@ namespace scone
 		private:
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
+			Simulation_Simbody& m_Simulation;
+
 			std::unique_ptr< OpenSim::Model > m_osModel;
 			SimTK::State* m_tkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;
 
 			class ControllerDispatcher;
 			std::unique_ptr< ControllerDispatcher > m_pControllerDispatcher;
-			double integration_accuracy;
 		};
 	}
 }
