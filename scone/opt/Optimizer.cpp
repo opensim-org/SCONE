@@ -10,7 +10,7 @@ namespace scone
 	namespace opt
 	{
 		Optimizer::Optimizer() :
-		max_threads ( 1 ),
+		max_threads( 1 ),
 		thread_priority( 0 )
 		{
 		}
@@ -21,13 +21,13 @@ namespace scone
 
 		void Optimizer::ProcessProperties( const PropNode& props )
 		{
-			PROCESS_PROPERTY( props, max_threads );
-			PROCESS_PROPERTY( props, thread_priority );
+			PROCESS_PROPERTY( props, max_threads, 1u );
+			PROCESS_PROPERTY( props, thread_priority, 0 );
 
 			// create max_threads objective instances
 			m_Objectives.resize( max_threads );
 			for ( size_t i = 0; i < max_threads; ++i )
-				ProcessProperty( props, m_Objectives[ i ], "Objective" );
+				ProcessPropNode( props, m_Objectives[ i ], "Objective" );
 		}
 
 		// evaluate individuals

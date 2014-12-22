@@ -9,14 +9,16 @@
 #include <conio.h>
 #include "SimulationTest.h"
 #include "..\core\Log.h"
+#include "SerializationTest.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	try
 	{
 		//XmlParseTest();
-		//OptimizationTest();
-		SimulationTest();
+		//SerializationTest();
+		OptimizationTest();
+		//SimulationTest();
 	}
 	catch (std::exception& e)
 	{

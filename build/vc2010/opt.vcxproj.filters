@@ -29,9 +29,6 @@
     <ClInclude Include="..\..\scone\opt\CmaOptimizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\opt\Optimization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\opt\ParamInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -50,9 +47,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\opt\Optimization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\opt\opt.cpp">

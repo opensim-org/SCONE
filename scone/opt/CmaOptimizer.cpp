@@ -44,10 +44,10 @@ namespace scone
 		{
 			Optimizer::ProcessProperties( props );
 
-			PROCESS_PROPERTY_NAMED( props, m_Lambda, "lamda" );
-			PROCESS_PROPERTY_NAMED( props, m_Mu, "mu" );
-			PROCESS_PROPERTY_NAMED( props, m_Sigma, "sigma" );
-			PROCESS_PROPERTY( props, max_generations );
+			PROCESS_PROPERTY_NAMED( props, m_Lambda, "lamda", 0 );
+			PROCESS_PROPERTY_NAMED( props, m_Mu, "mu", 0 );
+			PROCESS_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
+			PROCESS_PROPERTY( props, max_generations, size_t( 10000 ) );
 		}
 
 		void CmaOptimizer::Run()
@@ -55,6 +55,8 @@ namespace scone
 			// get info from objective
 			ParamSet par = GetObjective()->GetParamSet();
 			size_t dim = par.GetFreeParamCount();
+
+			SCONE_ASSERT( dim > 0 );
 
 			// init lambda and mu
 			if ( m_Lambda == 0 ) m_Lambda = CMA::suggestLambda( dim );

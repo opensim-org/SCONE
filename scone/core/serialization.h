@@ -61,20 +61,20 @@ namespace scone
 		if ( read )
 		{
 			v.clear();
-			PropNodePtr vec_node = props.GetChildPtr( name );
-			for ( PropNode::ConstChildIter iter = vec_node->Begin(); iter != vec_node->End(); ++iter )
+			PropNode& vec_node = const_cast< PropNode& >( props.GetChild( name ) );
+			for ( PropNode::ConstChildIter iter = vec_node.Begin(); iter != vec_node.End(); ++iter )
 			{
 				v.push_back( T::value_type() );
-				ProcessData( *vec_node, true, iter->first, v.back() );
+				ProcessData( vec_node, true, iter->first, v.back() );
 			}
 		}
 		else
 		{
 			int element = 0;
-			PropNodePtr vec_node = props.AddChild( name );
+			PropNode& vec_node = props.AddChild( name );
 			for ( T::iterator iter = v.begin(); iter != v.end(); ++iter )
 			{
-				ProcessData( *vec_node, false, GetStringF( "item%d", element++ ), *iter );
+				ProcessData( vec_node, false, GetStringF( "item%d", element++ ), *iter );
 			}
 		}
 	}
@@ -85,12 +85,12 @@ namespace scone
 	{
 		if ( read )
 		{
-			const PropNode& p = props.GetChild( name );
+			PropNode& p = const_cast< PropNode& >( props.GetChild( name ) );
 			v.ProcessData( p, true );
 		}
 		else
 		{
-			const PropNode& p = props.AddChild( name );
+			PropNode& p = props.AddChild( name );
 			v.ProcessData( p, false );
 		}
 	}

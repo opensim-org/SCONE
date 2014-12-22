@@ -14,7 +14,6 @@
     <ClInclude Include="..\..\scone\opt\CmaOptimizer.h" />
     <ClInclude Include="..\..\scone\opt\Objective.h" />
     <ClInclude Include="..\..\scone\opt\opt.h" />
-    <ClInclude Include="..\..\scone\opt\Optimization.h" />
     <ClInclude Include="..\..\scone\opt\Optimizer.h" />
     <ClInclude Include="..\..\scone\opt\ParamInfo.h" />
     <ClInclude Include="..\..\scone\opt\ParamSet.h" />
@@ -24,7 +23,6 @@
     <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp" />
     <ClCompile Include="..\..\scone\opt\Objective.cpp" />
     <ClCompile Include="..\..\scone\opt\opt.cpp" />
-    <ClCompile Include="..\..\scone\opt\Optimization.cpp" />
     <ClCompile Include="..\..\scone\opt\Optimizer.cpp" />
     <ClCompile Include="..\..\scone\opt\ParamSet.cpp" />
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">

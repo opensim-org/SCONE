@@ -1,8 +1,7 @@
 #pragma once
 
-#include "..\opt\Optimization.h"
 #include "ExampleObjective.h"
-#include "..\opt\opt.h"
+#include "..\opt\Optimizer.h"
 #include "..\cs\SimulationObjective.h"
 
 using namespace scone;
@@ -13,7 +12,7 @@ void OptimizationTest()
 	ExampleObjective::RegisterFactory();
 	cs::RegisterFactoryTypes();
 
-	opt::OptimizerSP opt = opt::CreateOptimizerFromXml( "config/optimization_test.xml" );
+	opt::OptimizerSP opt = opt::CreateOptimizerFromXml( "config/example_optimization.xml" );
 
 	opt->Run();
 }

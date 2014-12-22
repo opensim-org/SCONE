@@ -32,7 +32,7 @@ namespace scone
 		{
 			size_t pos = iter->find_first_of('=');
 			if (pos != std::string::npos)
-				AddChild( trim_copy( iter->substr(0, pos) ) ).m_Value = StringValue( trim_copy( iter->substr(pos + 1) ) );
+				AddChild( trim_copy( iter->substr(0, pos) ) ).m_Value = trim_copy( iter->substr(pos + 1) );
 		}
 	}
 
@@ -183,14 +183,14 @@ namespace scone
 
 	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
 	{
-		ptree& child = key.empty() ? tree : tree.add( key, props.GetValue().GetData() );
+		ptree& child = key.empty() ? tree : tree.add( key, props.GetValue() );
 		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
 			ToPropertyTree( child, *iter->second, iter->first );
 	}
 
 	void FromPropertyTree( PropNode& props, const ptree& tree )
 	{
-		props.Set( tree.get_value("") );
+		props.SetValue( tree.get_value("") );
 		BOOST_FOREACH( const ptree::value_type &v, tree )
 		{
 			if ( v.first == "<xmlattr>" )
@@ -262,7 +262,7 @@ namespace scone
 		{
 			str << prefix << iter->first;
 			if ( iter->second->HasValue() )
-				str << " = " << iter->second->GetValue().GetData();
+				str << " = " << iter->second->GetValue();
 			str << std::endl;
 
 			iter->second->ToStream( str, prefix + "  " );

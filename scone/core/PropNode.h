@@ -13,53 +13,10 @@
 
 namespace scone
 {
+	class Propertyable;
+
 	class PropNode;
 	typedef std::unique_ptr< PropNode > PropNodePtr;
-
-	class StringValue
-	{
-	public:
-		StringValue() { };
-		StringValue( const char* value ) : m_Data( value ) { };
-		StringValue( const StringValue& other ) : m_Data( other.m_Data ) { };
-		StringValue& operator=( const StringValue& other ) { m_Data = other.m_Data; return (*this); }
-		bool operator==( const StringValue& other ) const { return m_Data == other.m_Data; }
-		bool operator!=( const StringValue& other ) const { return !(*this == other); }
-		template< typename T > StringValue( const T& value ) { *this = value; }
-		~StringValue() { };
-
-		// get value of any type T
-		template< typename T >
-		operator T() const
-		{
-			std::istringstream str( m_Data );
-			T value;
-			str >> value;
-			return value;
-		}
-
-		// string is a special case
-		operator String() const
-		{
-			return m_Data;
-		}
-
-		// set values to any type T
-		template< typename T >
-		StringValue& operator=( const T& value )
-		{
-			std::ostringstream str;
-			str << value;
-			m_Data = str.str();
-			return (*this);
-		}
-
-		const String& GetData() const { return m_Data; }
-		bool IsEmpty() const { return m_Data.empty(); }
-
-	private:
-		String m_Data;
-	};
 
 	class CORE_API PropNode
 	{
@@ -83,48 +40,38 @@ namespace scone
 		bool operator!=( const PropNode& other ) const { return !(*this == other); }
 
 		// check if empty
-		bool IsEmpty()
-		{
-			return m_Children.empty() && m_Value.IsEmpty();
-		}
+		bool IsEmpty() { return m_Children.empty() && !HasValue(); }
 
-		// check if empty
-		void Clear()
-		{
-			m_Children.clear();
-			m_Value = "";
-		}
+		// clear
+		void Clear() { m_Children.clear(); m_Value.clear(); }
 
 		// check if child key exists
-		bool HasKey( const String& key ) const
-		{
-			return GetChildPtr( key ) != nullptr;
-		}
+		bool HasKey( const String& key ) const { return GetChildPtr( key ) != nullptr; }
 
 		// get value
-		const StringValue& GetValue() const
-		{
-			return m_Value;
-		}
+		bool HasValue() const {	return !m_Value.empty(); }
 
 		// get value
-		bool HasValue() const
-		{
-			return !m_Value.IsEmpty();
-		}
-
-		// get and cast value
-		template< typename T >
-		T Get() const
-		{
-			return static_cast< T >( m_Value );
-		}
+		const String& GetValue() const { return m_Value; }
 
 		// set value
+		void SetValue( const String& value ) { m_Value = value; }
+
+		// get and cast value of fundamental or Vec3 types
 		template< typename T >
-		void Set( const T& value )
+		T Get( typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, Vec3 >::value >::type* = 0 ) const
 		{
-			m_Value = value;
+			T value;
+			std::istringstream str( m_Value );
+			str >> value;
+			return value;
+		}
+
+		// get string value
+		template< typename T >
+		T Get( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
+		{
+			return m_Value;
 		}
 
 		/// Get value, throws exception if key doesn't exist
@@ -142,6 +89,15 @@ namespace scone
 			return p ? p->Get< T >() : default_value;
 		}
 
+		// set value
+		template< typename T >
+		void Set( const T& value )
+		{
+			std::ostringstream str;
+			str << value;
+			m_Value = str.str();
+		}
+
 		/// Set a value, overwriting existing (if any) or adding new key
 		template< typename T >
 		PropNode& Set( const String& key, const T& value )
@@ -157,7 +113,7 @@ namespace scone
 		template< typename T >
 		PropNode& Add( const String& key, const T& value )
 		{
-			AddChild( key )->Set( value );
+			AddChild( key ).Set( value );
 			return *this;
 		}
 
@@ -204,19 +160,21 @@ namespace scone
 		String GetStr( const String& key, const String& def ) const { return Get< String >( key, def ); }
 		Vec3 GetVec3( const String& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
-		friend std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }
+		void ToStream( std::ostream& str, const std::string& prefix = "" ) const;
 
 	private:
 		PropNode* GetChildPtr( const String& key ) const;
 
-		void ToStream( std::ostream& str, const std::string& prefix = "" ) const;
 		void RemoveChildren( const String& key );
 		void RemoveChild( const String& key );
 
-		StringValue m_Value;
+		String m_Value;
 		ChildContainer m_Children;
 	};
 
 	// shortcut file readers for lazy people
 	PropNode CORE_API LoadXmlFile( const String& filename );
+
+	// stream operator
+	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }
 };

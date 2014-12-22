@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model
+		class SCONE_SIM_API Model : public Propertyable
 		{
 		public:
 			Model();
@@ -28,6 +28,8 @@ namespace scone
 
 			virtual void AddController( ControllerSP controller );
 			std::vector< ControllerSP >& GetControllers() { return m_Controllers; }
+
+			virtual void ProcessProperties( const PropNode& props ) override;
 
 		protected:
 			std::unique_ptr< Link > m_RootLink;

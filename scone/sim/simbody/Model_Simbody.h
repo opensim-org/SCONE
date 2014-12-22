@@ -11,6 +11,11 @@ namespace OpenSim
 	class Model;
 }
 
+namespace SimTK
+{
+	class State;
+}
+
 namespace scone
 {
 	namespace sim
@@ -25,16 +30,24 @@ namespace scone
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;
 
+			virtual void AdvanceSimulationTo( double time );
+
 			/// Get the OpenSim model attached to this model
-			OpenSim::Model& GetOpenSimModel() { return *m_osModel; }
+			OpenSim::Model& GetOsModel() { return *m_osModel; }
+			SimTK::State& GetTkState() { return *m_tkState; }
+
+			virtual void ProcessProperties( const PropNode& props ) override;
 
 		private:
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			std::unique_ptr< OpenSim::Model > m_osModel;
+			SimTK::State* m_tkState; // non-owning state reference
+			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;
 
 			class ControllerDispatcher;
 			std::unique_ptr< ControllerDispatcher > m_pControllerDispatcher;
+			double integration_accuracy;
 		};
 	}
 }

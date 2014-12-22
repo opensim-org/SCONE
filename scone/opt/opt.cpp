@@ -18,8 +18,7 @@ namespace scone
 
 			PropNode p = LoadXmlFile( xml_file );
 
-			OptimizerSP opt;
-			ProcessProperty( p, opt, key );
+			OptimizerSP opt = CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
 
 			return opt;
 		}

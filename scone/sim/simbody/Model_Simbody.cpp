@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
-#include "..\..\core\Exception.h"
+#include "../../core/Exception.h"
+#include "../../core/Log.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
@@ -8,7 +9,6 @@
 #include "Simulation_Simbody.h"
 #include "Joint_Simbody.h"
 #include "tools.h"
-#include "../../core/Log.h"
 
 #include <OpenSim/OpenSim.h>
 
@@ -21,40 +21,19 @@ namespace scone
 		{
 		public:
 			ControllerDispatcher( Model_Simbody& model ) : m_Model( model ) { };
-			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override
-			{
-				// reset actuator values
-				std::vector< MuscleUP >& musvec = m_Model.GetMuscles();
-				for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
-					(*iter)->ResetControlValue();
-
-				// update all controllers
-				for ( auto iter = m_Model.GetControllers().begin(); iter != m_Model.GetControllers().end(); ++iter )
-					(*iter)->Update( s.getTime() );
-
-				// inject actuator values into controls
-				SimTK::Vector controlValue( 1 );
-				for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
-				{
-					controlValue[ 0 ] = (*iter)->GetControlValue();
-					dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOSMuscle().addInControls( controlValue, controls );
-				}
-			}
-
-			virtual ControllerDispatcher* clone() const override {
-				return new ControllerDispatcher( *this );
-			}
-
-			virtual const std::string& getConcreteClassName() const override {
-				throw std::logic_error("The method or operation is not implemented.");
-			}
+			virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override;
+			virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
+			virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
 
 		private:
 			Model_Simbody& m_Model;
 		};
 
+		/// Constructor
 		Model_Simbody::Model_Simbody( const String& filename ) :
-		m_osModel( nullptr )
+		m_osModel( nullptr ),
+		m_tkState( nullptr ),
+		integration_accuracy( 1.0e-6 )
 		{
 			OpenSim::Object::setSerializeAllDefaults(true);
 			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
@@ -95,6 +74,12 @@ namespace scone
 
 		Model_Simbody::~Model_Simbody()
 		{
+		}
+
+		void Model_Simbody::ProcessProperties( const PropNode& props )
+		{
+			PROCESS_PROPERTY( props, integration_accuracy, 1.0e-6 );
+
 		}
 
 		Vec3 Model_Simbody::GetComPos()
@@ -154,5 +139,66 @@ namespace scone
 
 			return link;
 		}
+
+		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
+		{
+			// reset actuator values
+			std::vector< MuscleUP >& musvec = m_Model.GetMuscles();
+			for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
+				(*iter)->ResetControlValue();
+
+			// update all controllers
+			for ( auto iter = m_Model.GetControllers().begin(); iter != m_Model.GetControllers().end(); ++iter )
+				(*iter)->Update( s.getTime() );
+
+			// inject actuator values into controls
+			SimTK::Vector controlValue( 1 );
+			for ( auto iter = musvec.begin(); iter != musvec.end(); ++iter )
+			{
+				controlValue[ 0 ] = (*iter)->GetControlValue();
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().addInControls( controlValue, controls );
+			}
+		}
+
+
+
+		void Model_Simbody::AdvanceSimulationTo( double time )
+		{
+			// Initialize the system. initSystem() cannot be used here because adding the event handler
+			// must be done between buildSystem() and initializeState().
+			m_osModel->buildSystem();
+
+			// TODO: add termination event handler
+			//TerminateSimulation *terminate = new TerminateSimulation(osimModel, forceThreshold);
+			//osimModel.updMultibodySystem().addEventHandler(terminate);
+
+			// create model state and keep pointer (non-owning)
+			m_tkState = &m_osModel->initializeState();
+
+			// initial call to all controllers
+			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
+				(*iter)->Update( 0.0 );
+
+			// update initial muscle activations and equilibrate
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetTkState(), (*iter)->GetControlValue() );
+			m_osModel->equilibrateMuscles( GetTkState() );
+
+			// Create the integrator for the simulation.
+			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
+			m_tkIntegrator->setAccuracy( integration_accuracy );
+
+			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			//Manager manager(osimModel, integrator);
+			////manager.setWriteToStorage(false);
+			//manager.setPerformAnalyses(false);
+
+			//// Integrate from initial time to final time and integrate
+			//manager.setInitialTime(initialTime);
+			//manager.setFinalTime(finalTime);
+			//manager.integrate(osimState);
+
+		}
+
 	}
 }

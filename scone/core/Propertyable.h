@@ -17,57 +17,75 @@ namespace scone
 		virtual void ProcessProperties( const PropNode& props ) = 0;
 	};
 
-	// process Propertyable type
-	inline void ProcessProperty( const PropNode& prop, Propertyable& var, const String& name )
+	// process named property type
+	template< typename T >
+	void ProcessPropNode( const PropNode& prop, T& var, const String& name )
 	{
 		if ( prop.HasKey( name ) )
-			var.ProcessProperties( prop.GetChild( name ) );
+			ProcessPropNode( prop.GetChild( name ), var );
+		else SCONE_THROW( "Could not find key: " + name );
+	}
+
+	// process named property type with default argument
+	template< typename T >
+	void ProcessPropNode( const PropNode& prop, T& var, const String& name, const T& default_value )
+	{
+		if ( prop.HasKey( name ) )
+			ProcessPropNode( prop.GetChild( name ), var );
+		else var = T( default_value );
+	}
+
+	// process Propertyable type
+	inline void ProcessPropNode( const PropNode& prop, Propertyable& var )
+	{
+		var.ProcessProperties( prop );
 	}
 
 	// process unique_ptr type (requires factory definition)
 	template< typename T >
-	void ProcessProperty( const PropNode& prop, std::unique_ptr< T >& var, const String& name )
+	void ProcessPropNode( const PropNode& prop, std::unique_ptr< T >& var )
 	{
-		if ( prop.HasKey( name ) )
-		{
-			var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ).GetStr( "type" ) ) );
-			ProcessProperty( prop, *var, name );
-		}
-	}
-	// process shared_ptr type (requires factory definition)
-	template< typename T >
-	void ProcessProperty( const PropNode& prop, std::shared_ptr< T >& var, const String& name )
-	{
-		if ( prop.HasKey( name ) )
-		{
-			var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetChild( name ).GetStr( "type" ) ) );
-			ProcessProperty( prop, *var, name );
-		}
+		var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
+		ProcessPropNode( prop, *var );
 	}
 
-	// process vector< shared_ptr > type (requires factory definition)
+	// process shared_ptr type (requires factory definition)
 	template< typename T >
-	void ProcessProperty( const PropNode& prop, std::vector< std::shared_ptr< T > >& var, const String& name )
+	void ProcessPropNode( const PropNode& prop, std::shared_ptr< T >& var )
+	{
+		var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
+		ProcessPropNode( prop, *var );
+	}
+
+	// process vector< unique_ptr > type (requires factory definition)
+	template< typename T >
+	void ProcessPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& var )
 	{ 
-		if ( prop.HasKey( name ) )
-		{
-			SCONE_THROW_NOT_IMPLEMENTED;
-			//PropNode& node = prop.GetChild( name );
-			//var.clear();
-			//for ( auto iter = node.Begin(); iter != node.End(); ++iter )
-			//	vec.push_back( std::shared_ptr< T >( factory::Create< T >( *iter->second ) ) );
-		}
+		SCONE_THROW_NOT_IMPLEMENTED; // TODO: must be tested
+
+		var.resize( prop.GetChildren().size(), nullptr );
+
+		for ( auto iter = node.Begin(); iter != node.End(); ++iter )
+			ProcessPropNode( prop, *iter );
 	}
 
 	// process fundamental types and String
 	template< typename T >
-	void ProcessProperty( const PropNode& prop, T& var, const String& name, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
+	void ProcessPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
 	{
-		if ( prop.HasKey( name ) )
-			var = prop.Get< T >( name );
+		var = prop.Get< T >();
+	}
+
+	// process fundamental types and String
+	template< typename T >
+	std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
+	{
+		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
+		ProcessPropNode( prop, *var );
+		return var;
 	}
 
 	// convenience macro that automatically derives name from variable name
-	#define PROCESS_PROPERTY( _prop_, _var_ ) ProcessProperty( _prop_, _var_, GetCleanVarName( #_var_ ) )
-	#define PROCESS_PROPERTY_NAMED( _prop_, _var_, _name_ ) ProcessProperty( _prop_, _var_, _name_ )
+	#define PROCESS_PROPERTY( _prop_, _var_, _default_ ) ProcessPropNode( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+	#define PROCESS_PROPERTY_NAMED( _prop_, _var_, _name_, _default_ ) ProcessPropNode( _prop_, _var_, _name_, _default_ )
 }

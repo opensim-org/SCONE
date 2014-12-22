@@ -30,7 +30,7 @@ namespace scone
 			virtual Real GetExcitation() override;
 			virtual void SetExcitation( Real u ) override;
 
-			OpenSim::Muscle& GetOSMuscle() { return m_osMus; }
+			OpenSim::Muscle& GetOsMuscle() { return m_osMus; }
 
 		private:
 			OpenSim::Muscle& m_osMus;

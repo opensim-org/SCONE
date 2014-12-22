@@ -21,9 +21,9 @@ namespace scone
 			ParameterizableControllerSP c;
 			MeasureSP m;
 
-			ProcessProperty( m_Props, s, "Simulation" );
-			ProcessProperty( m_Props, c, "Controller" );
-			ProcessProperty( m_Props, m, "Measure" );
+			ProcessPropNode( m_Props, s, "Simulation" );
+			ProcessPropNode( m_Props, c, "Controller" );
+			ProcessPropNode( m_Props, m, "Measure" );
 
 			c->ProcessParameters( m_Params );
 

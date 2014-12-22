@@ -21,5 +21,11 @@ namespace scone
 		{
 			m_Controllers.push_back( controller );
 		}
+
+		void Model::ProcessProperties( const PropNode& props )
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
 	}
 }
