@@ -2,6 +2,8 @@
 #include "Body_Simbody.h"
 #include "..\..\core\Exception.h"
 
+#include <OpenSim/OpenSim.h>
+
 namespace scone
 {
 	namespace sim

@@ -6,10 +6,11 @@
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include "Simulation_Simbody.h"
-#include <OpenSim/OpenSim.h>
 #include "Joint_Simbody.h"
 #include "tools.h"
 #include "../../core/Log.h"
+
+#include <OpenSim/OpenSim.h>
 
 namespace scone
 {
