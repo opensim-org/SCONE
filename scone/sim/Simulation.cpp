@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Simulation.h"
 
+#include <boost/foreach.hpp>
+
 namespace scone
 {
 	namespace sim
@@ -30,6 +32,12 @@ namespace scone
 		{
 			SCONE_ASSERT( idx < m_Models.size() );
 			return *m_Models[ idx ];
+		}
+
+		void Simulation::ProcessParameters( opt::ParamSet& par )
+		{
+			BOOST_FOREACH( ModelUP& model, m_Models )
+				model->ProcessParameters( par );
 		}
 	}
 }

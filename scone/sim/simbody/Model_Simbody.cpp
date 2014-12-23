@@ -146,8 +146,8 @@ namespace scone
 				mus->ResetControlValue();
 
 			// update all controllers
-			BOOST_FOREACH( ControllerSP& con, m_Model.GetControllers() )
-				con->Update( s.getTime() );
+			BOOST_FOREACH( ControllerUP& con, m_Model.GetControllers() )
+				con->UpdateControls( m_Model, s.getTime() );
 
 			// inject actuator values into controls
 			SimTK::Vector controlValue( 1 );
@@ -173,7 +173,7 @@ namespace scone
 
 			// initial call to all controllers
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
-				(*iter)->Update( 0.0 );
+				(*iter)->UpdateControls( *this, 0.0 );
 
 			// update initial muscle activations and equilibrate
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )

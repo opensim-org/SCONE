@@ -3,6 +3,8 @@
 #include "SimulationObjective.h"
 #include "FeedForwardController.h"
 
+#include <OpenSim/OpenSim.h>
+
 namespace scone
 {
 	namespace cs

@@ -4,6 +4,7 @@
 #include "Body.h"
 #include "Joint.h"
 #include "Muscle.h"
+#include "boost\foreach.hpp"
 
 namespace scone
 {
@@ -17,14 +18,22 @@ namespace scone
 		{
 		}
 
-		void Model::AddController( ControllerSP controller )
+		void Model::InitControllers()
 		{
-			m_Controllers.push_back( controller );
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+				c->ConnectModel( *this );
 		}
 
 		void Model::ProcessProperties( const PropNode& props )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
 		}
+
+		void Model::ProcessParameters( opt::ParamSet& par )
+		{
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+				c->ProcessParameters( par );
+		}
+
 	}
 }

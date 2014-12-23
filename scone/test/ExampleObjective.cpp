@@ -27,7 +27,7 @@ namespace scone
 	void ExampleObjective::ProcessParameters( opt::ParamSet& par )
 	{
 		for ( size_t i = 0; i < params.size(); ++i )
-			par.ProcessParameter( params[ i ], GetStringF( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
+			params[ i ] = par( GetStringF( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
 	double ExampleObjective::Rosenbrock( const std::vector< double >& v )

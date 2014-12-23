@@ -15,6 +15,11 @@ namespace scone
 
 		}
 
+		const String& Muscle_Simbody::GetName()
+		{
+			return m_osMus.getName();
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetLength()
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;

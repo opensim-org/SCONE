@@ -27,7 +27,7 @@ namespace scone
 			// create max_threads objective instances
 			m_Objectives.resize( max_threads );
 			for ( size_t i = 0; i < max_threads; ++i )
-				InitFromPropNode( props, m_Objectives[ i ], "Objective" );
+				m_Objectives[ i ] = ObjectiveSP( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
 		}
 
 		// evaluate individuals

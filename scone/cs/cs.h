@@ -18,7 +18,6 @@ namespace scone
 
 		SCONE_DECLARE_CLASS_AND_PTR( Measure );
 		SCONE_DECLARE_CLASS_AND_PTR( SimulationObjective );
-		SCONE_DECLARE_CLASS_AND_PTR( ParameterizableController );
 		SCONE_DECLARE_CLASS_AND_PTR( FeedForwardController );
 		SCONE_DECLARE_CLASS_AND_PTR( JumpingMeasure );
 	}

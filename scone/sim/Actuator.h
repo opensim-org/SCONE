@@ -1,12 +1,13 @@
 #pragma once
 
 #include "sim.h"
+#include "..\core\Named.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Actuator
+		class SCONE_SIM_API Actuator : public Named
 		{
 		public:
 			Actuator();

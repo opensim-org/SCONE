@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace cs
 	{
-		bool EnergyMeasure::Update( sim::ModelSP model, double timestamp )
+		bool EnergyMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			throw std::logic_error("The method or operation is not implemented.");
 		}

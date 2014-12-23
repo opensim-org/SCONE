@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API ParameterizableController : public sim::Controller, public opt::Parameterizable
+		class CS_API ParameterizableController : public sim::Controller
 		{
 		public:
 			ParameterizableController() { };

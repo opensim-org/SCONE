@@ -32,6 +32,8 @@ namespace scone
 
 			OpenSim::Muscle& GetOsMuscle() { return m_osMus; }
 
+			virtual const String& GetName() override;
+
 		private:
 			OpenSim::Muscle& m_osMus;
 		};

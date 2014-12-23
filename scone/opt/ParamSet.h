@@ -17,8 +17,11 @@ namespace scone
 			ParamSet( Mode m = UPDATE_MODE ) : m_Mode( m ) { };
 			virtual ~ParamSet() { };
 
-			void ProcessParameter( double& par, const ParamInfo& info );
-			void ProcessParameter( double& par, const String& name, double init_mean, double init_var, double min, double max );
+			double Get( const ParamInfo& info );
+			double GetMeanStd( const String& name, double init_mean, double init_std, double min, double max );
+			double GetMinMax( const String& name, double init_min, double init_max, double min, double max );
+			double operator()( const String& name, double init_mean, double init_std, double min, double max );
+			double operator()( const String& name, double min, double max );
 
 			bool CheckValues();
 			void RestrainValues();

@@ -11,7 +11,7 @@ namespace scone
 			JumpingMeasure() { };
 			virtual ~JumpingMeasure() { };
 
-			virtual bool Update( sim::ModelSP model, double timestamp ) override;
+			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
 
 			virtual double GetValue() override;
 

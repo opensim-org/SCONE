@@ -52,5 +52,8 @@
     <ClCompile Include="..\..\scone\opt\opt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\opt\ParamInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

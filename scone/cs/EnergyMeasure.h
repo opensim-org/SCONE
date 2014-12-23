@@ -11,7 +11,7 @@ namespace scone
 			EnergyMeasure() { };
 			virtual ~EnergyMeasure() { };
 
-			virtual bool Update( sim::ModelSP model, double timestamp ) override;
+			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 

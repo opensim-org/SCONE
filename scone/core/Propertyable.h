@@ -22,7 +22,7 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, T& var, const String& name )
 	{
 		if ( prop.HasKey( name ) )
-			InitFromPropNode( prop.GetChild( name ), var );
+			InitFromPropNode< T >( prop.GetChild( name ), var );
 		else SCONE_THROW( "Could not find key: " + name );
 	}
 
@@ -35,45 +35,53 @@ namespace scone
 		else var = T( default_value );
 	}
 
+	// process fundamental types and String
+	template< typename T >
+	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
+	{
+		var = prop.Get< T >();
+	}
+
 	// process Propertyable type
 	inline void InitFromPropNode( const PropNode& prop, Propertyable& var )
 	{
 		var.ProcessProperties( prop );
 	}
 
-	// process unique_ptr type (requires factory definition)
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
+	// process Propertyable type
+	inline void InitFromPropNode( const PropNode& prop, String& var )
 	{
-		var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
-		InitFromPropNode( prop, *var );
+		var = prop.GetValue();
 	}
 
-	// process shared_ptr type (requires factory definition)
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, std::shared_ptr< T >& var )
-	{
-		var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
-		InitFromPropNode( prop, *var );
-	}
+	//// process unique_ptr type (requires factory definition)
+	//template< typename T >
+	//void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
+	//{
+	//	var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
+	//	InitFromPropNode( prop, *var );
+	//}
+
+	//// process shared_ptr type (requires factory definition)
+	//template< typename T >
+	//void InitFromPropNode( const PropNode& prop, std::shared_ptr< T >& var )
+	//{
+	//	var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
+	//	InitFromPropNode( prop, *var );
+	//}
 
 	// process vector< unique_ptr > type (requires factory definition)
 	template< typename T >
-	void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& var )
+	void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& vec )
 	{ 
-		SCONE_THROW_NOT_IMPLEMENTED; // TODO: must be tested
+		//SCONE_THROW_NOT_IMPLEMENTED; // TODO: must be tested
 
-		var.resize( prop.GetChildren().size(), nullptr );
-
-		for ( auto iter = node.Begin(); iter != node.End(); ++iter )
-			InitFromPropNode( prop, *iter );
-	}
-
-	// process fundamental types and String
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
-	{
-		var = prop.Get< T >();
+		vec.clear();
+		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
+		{
+			vec.push_back( CreateFromPropNode< T >( *iter->second ) );
+			//InitFromPropNode( *iter, *vec.back() );
+		}
 	}
 
 	// process fundamental types and String
@@ -82,6 +90,7 @@ namespace scone
 	{
 		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
 		InitFromPropNode( prop, *var );
+
 		return var;
 	}
 

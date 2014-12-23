@@ -1,7 +1,10 @@
 #include "stdafx.h"
 
 #include "SimulationObjective.h"
-#include "..\core\Exception.h"
+#include "../core/Exception.h"
+
+#include <boost/foreach.hpp>
+#include <algorithm>
 
 namespace scone
 {
@@ -17,22 +20,24 @@ namespace scone
 
 		double SimulationObjective::Evaluate()
 		{
-			sim::SimulationSP s;
-			ParameterizableControllerSP c;
-			MeasureSP m;
+			sim::SimulationUP s = CreateFromPropNode< sim::Simulation >( m_Props );
+			s->ProcessParameters( m_Params );
 
-			InitFromPropNode( m_Props, s, "Simulation" );
-			InitFromPropNode( m_Props, c, "Controller" );
-			InitFromPropNode( m_Props, m, "Measure" );
+			// find measure controller
+			auto& controllers = s->GetModel( 0 ).GetControllers();
+			auto measureIter = std::find_if( controllers.begin(), controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } );
 
-			c->ProcessParameters( m_Params );
+			if ( measureIter == controllers.end() )
+				SCONE_THROW( "Could not find a measure" );
+			else if ( controllers.end() != std::find_if( measureIter, controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } ) )
+				SCONE_THROW( "More than one measure was found" );
 
-			s->GetModel().AddController( c );
-			s->GetModel().AddController( m );
+			Measure& m = dynamic_cast< Measure& >( **measureIter );
 
+			// run the simulation
 			s->AdvanceSimulationTo( s->max_simulation_time );
 
-			return m->GetValue();
+			return m.GetValue();
 		}
 
 		void SimulationObjective::ProcessProperties( const PropNode& props )

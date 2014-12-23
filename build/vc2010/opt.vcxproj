@@ -24,6 +24,7 @@
     <ClCompile Include="..\..\scone\opt\Objective.cpp" />
     <ClCompile Include="..\..\scone\opt\opt.cpp" />
     <ClCompile Include="..\..\scone\opt\Optimizer.cpp" />
+    <ClCompile Include="..\..\scone\opt\ParamInfo.cpp" />
     <ClCompile Include="..\..\scone\opt\ParamSet.cpp" />
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

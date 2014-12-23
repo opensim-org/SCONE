@@ -8,7 +8,6 @@
 #include "..\core\PropNode.h"
 
 #include "Measure.h"
-#include "ParameterizableController.h"
 
 #include <vector>
 

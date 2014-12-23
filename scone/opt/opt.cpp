@@ -17,8 +17,7 @@ namespace scone
 			CmaOptimizer::RegisterFactory();
 
 			PropNode p = LoadXmlFile( xml_file );
-
-			OptimizerSP opt = CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
+			OptimizerSP opt = OptimizerSP( CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) ) );
 
 			return opt;
 		}

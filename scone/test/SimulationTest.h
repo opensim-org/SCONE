@@ -5,16 +5,19 @@
 #include "../sim/Model.h"
 #include "../core/Log.h"
 #include "../core/Timer.h"
+#include "../core/Propertyable.h"
 
 using namespace scone;
 
 void SimulationTest()
 {
-	sim::Simulation_Simbody s;
-	sim::Model& m = s.AddModel( "models/jumper10dof24musc.osim");
+	cs::RegisterFactoryTypes();
 
-	SCONE_LOG( "Starting simulation" );
+	PropNode props = LoadXmlFile( "config/simulation_test.xml" );
+	sim::SimulationUP s = CreateFromPropNode< sim::Simulation >( props );
+
 	Timer t;
-	s.AdvanceSimulationTo( 0.5 );
+	SCONE_LOG( "Starting simulation" );
+	s->AdvanceSimulationTo( 0.5 );
 	SCONE_LOG( "Simulation ended in " << t.GetTime() );
 }
