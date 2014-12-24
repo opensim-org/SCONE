@@ -37,7 +37,7 @@ namespace scone
 			// run the simulation
 			s->AdvanceSimulationTo( max_duration );
 
-			return m.GetValue();
+			return m.GetResult( s->GetModel(0) );
 		}
 
 		void SimulationObjective::ProcessProperties( const PropNode& props )

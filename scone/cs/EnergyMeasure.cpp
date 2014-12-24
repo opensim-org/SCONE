@@ -7,17 +7,17 @@ namespace scone
 	{
 		bool EnergyMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 
 		void EnergyMeasure::ProcessProperties( const PropNode& props )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 
-		double EnergyMeasure::GetValue()
+		double EnergyMeasure::GetResult( sim::Model& model )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 	}
 }

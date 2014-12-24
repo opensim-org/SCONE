@@ -15,7 +15,7 @@ namespace scone
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 
-			virtual double GetValue() override;
+			virtual double GetResult(sim::Model& model ) override;
 
 
 		protected:

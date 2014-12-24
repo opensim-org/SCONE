@@ -16,7 +16,7 @@ namespace scone
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) = 0;
 			virtual void ProcessProperties( const PropNode& props ) override;
 
-			virtual double GetValue() = 0;
+			virtual double GetResult( sim::Model& model ) = 0;
 
 		private:
 		};

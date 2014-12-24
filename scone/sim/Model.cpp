@@ -34,6 +34,5 @@ namespace scone
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
 				c->ProcessParameters( par );
 		}
-
 	}
 }

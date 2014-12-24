@@ -6,6 +6,7 @@
 #include "../sim/Muscle.h"
 
 #include <OpenSim/OpenSim.h>
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -39,6 +40,8 @@ namespace scone
 
 		bool FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
+			SCONE_LOG( model.GetMuscleCount() );
+			SCONE_LOG( m_MuscleCount );
 			SCONE_ASSERT( model.GetMuscleCount() == m_MuscleCount );
 
 			SimTK::Vector xval( 1 );

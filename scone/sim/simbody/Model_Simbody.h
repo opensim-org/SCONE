@@ -42,9 +42,11 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 
 		private:
+			void CreateOsModel( const String& file );
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			double integration_accuracy;
+			String model_file;
 
 			std::unique_ptr< OpenSim::Model > m_osModel;
 			SimTK::State* m_tkState; // non-owning state reference

@@ -5,6 +5,7 @@
 
 #include <OpenSim/OpenSim.h>
 #include "../sim/simbody/sim_simbody.h"
+#include "JumpingMeasure.h"
 
 namespace scone
 {
@@ -18,6 +19,7 @@ namespace scone
 			// cs types
 			SimulationObjective::RegisterFactory();
 			FeedForwardController::RegisterFactory();
+			JumpingMeasure::RegisterFactory();
 		}
 	}
 }

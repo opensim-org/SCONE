@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "JumpingMeasure.h"
+#include "..\sim\Model.h"
 
 namespace scone
 {
@@ -7,12 +8,17 @@ namespace scone
 	{
 		bool JumpingMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			return true;
 		}
 
-		double JumpingMeasure::GetValue()
+		double JumpingMeasure::GetResult( sim::Model& model )
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			// TODO: add COM velocity
+			return -model.GetComPos().y;
+		}
+
+		void JumpingMeasure::ProcessParameters( opt::ParamSet& par )
+		{
 		}
 
 	}

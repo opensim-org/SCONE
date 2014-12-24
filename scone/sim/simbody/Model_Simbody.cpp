@@ -35,8 +35,15 @@ namespace scone
 		m_osModel( nullptr ),
 		m_tkState( nullptr )
 		{
-			OpenSim::Object::setSerializeAllDefaults(true);
-			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
+		}
+
+		Model_Simbody::~Model_Simbody()
+		{
+		}
+
+		void Model_Simbody::CreateOsModel( const String& file )
+		{
+			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
 
 			// Create wrappers for actuators
 			for ( int idx = 0; idx < m_osModel->getActuators().getSize(); ++idx )
@@ -72,13 +79,17 @@ namespace scone
 			SCONE_LOG( m_RootLink->ToString() );
 		}
 
-		Model_Simbody::~Model_Simbody()
-		{
-		}
-
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
+			Model::ProcessProperties( props );
+
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
+			INIT_FROM_PROP( props, model_file, String("") );
+			
+			if ( !model_file.empty() )
+				CreateOsModel( model_file );
+
+			InitControllers();
 		}
 
 		Vec3 Model_Simbody::GetComPos()

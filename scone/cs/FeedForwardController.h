@@ -38,6 +38,7 @@ namespace scone
 			size_t m_MuscleCount;
 			double init_mean;
 			double init_std;
+
 		private: // non-copyable and non-assignable
 			FeedForwardController( const FeedForwardController& );
 			FeedForwardController& operator=( const FeedForwardController& );
