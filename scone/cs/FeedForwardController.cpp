@@ -7,6 +7,7 @@
 
 #include <OpenSim/OpenSim.h>
 #include "../core/Log.h"
+#include <conio.h>
 
 namespace scone
 {
@@ -30,6 +31,7 @@ namespace scone
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 			{
 				String str = m_MuscleNames[ idx ] + ".";
+				printf( "Creating %d cp=%d\n", idx, m_Functions[ idx ]->getNumberOfPoints() );
 				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 				{
 					m_Functions[ idx ]->setX( cpidx, par( str + ToString( cpidx ) + ".X", init_mean, init_std, 0.0, 1.0 ) );
@@ -40,8 +42,6 @@ namespace scone
 
 		bool FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
-			SCONE_LOG( model.GetMuscleCount() );
-			SCONE_LOG( m_MuscleCount );
 			SCONE_ASSERT( model.GetMuscleCount() == m_MuscleCount );
 
 			SimTK::Vector xval( 1 );
@@ -49,6 +49,7 @@ namespace scone
 			{
 				xval[ 0 ] = time;
 				double result = m_Functions[ idx ]->calcValue( xval );
+				std::cout << result;
 				model.GetMuscle( idx ).AddControlValue( result );
 				if ( use_symmetric_actuators )
 					model.GetMuscle( m_Functions.size() + idx ).AddControlValue( result );
@@ -65,8 +66,10 @@ namespace scone
 			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;
 			for ( size_t idx = 0; idx < num_functions; ++idx )
 			{
-				std::vector< double > zeros( control_points, 0.0 ); // dummy vector for initialization
-				m_Functions.push_back( FunctionUP( new OpenSim::PiecewiseLinearFunction( (int)control_points, &zeros[0], &zeros[0] ) ) );
+				m_Functions.push_back( FunctionUP( new OpenSim::PiecewiseLinearFunction() ) );
+				for ( size_t cp = 0; cp < control_points; ++cp )
+					m_Functions.back()->addPoint( 0, 0 );
+
 				m_MuscleNames.push_back( model.GetMuscle( idx ).GetName() );
 			}
 		}

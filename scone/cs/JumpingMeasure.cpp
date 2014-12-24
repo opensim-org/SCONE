@@ -20,6 +20,5 @@ namespace scone
 		void JumpingMeasure::ProcessParameters( opt::ParamSet& par )
 		{
 		}
-
 	}
 }

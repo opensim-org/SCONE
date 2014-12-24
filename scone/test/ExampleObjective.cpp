@@ -9,7 +9,7 @@ namespace scone
 {
 	double ExampleObjective::Evaluate()
 	{
-		SCONE_VALIDATE( is_evaluating == false ); // thread safety check
+		SCONE_ASSERT( is_evaluating == false ); // thread safety check
 
 		is_evaluating = true; 
 		double result = Rosenbrock( params );

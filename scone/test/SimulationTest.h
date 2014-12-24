@@ -16,6 +16,11 @@ void SimulationTest()
 	PropNode props = LoadXmlFile( "config/simulation_test.xml" );
 	sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 
+	opt::ParamSet par;
+	m->ProcessParameters( par );
+
+	// TODO: debug print parameter set
+
 	Timer t;
 	SCONE_LOG( "Starting simulation" );
 	m->AdvanceSimulationTo( 0.5 );

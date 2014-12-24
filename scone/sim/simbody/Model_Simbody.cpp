@@ -77,6 +77,10 @@ namespace scone
 
 			// debug print
 			SCONE_LOG( m_RootLink->ToString() );
+
+			// create controller dispatcher
+			m_pControllerDispatcher = std::unique_ptr< ControllerDispatcher >( new ControllerDispatcher( *this ) );
+			m_osModel->addController( m_pControllerDispatcher.get() );
 		}
 
 		void Model_Simbody::ProcessProperties( const PropNode& props )
@@ -166,6 +170,12 @@ namespace scone
 			{
 				controlValue[ 0 ] = mus->GetControlValue();
 				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
+				std::cout << controlValue[0] << " ";
+			}
+
+			static int step = 0;
+			if ( step++ % 1000 == 0 )
+			{
 			}
 		}
 
