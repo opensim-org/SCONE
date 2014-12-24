@@ -44,6 +44,9 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
+			/// Simulate model
+			virtual void AdvanceSimulationTo( double time ) = 0;
+
 		protected:
 			std::unique_ptr< Link > m_RootLink;
 			std::vector< MuscleUP > m_Muscles;

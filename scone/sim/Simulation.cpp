@@ -2,12 +2,15 @@
 #include "Simulation.h"
 
 #include <boost/foreach.hpp>
+#include "../core/Propertyable.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		Simulation::Simulation()
+		Simulation::Simulation() :
+		max_simulation_time( 0.0 ),
+		integration_accuracy( 0.0 )
 		{
 
 		}
@@ -19,13 +22,10 @@ namespace scone
 
 		void Simulation::ProcessProperties( const PropNode& props )
 		{
+			INIT_FROM_PROP( props, integration_accuracy, 0.00001 );
+			INIT_FROM_PROP( props, max_simulation_time, 10000.0 );
 
-		}
-
-		Model& Simulation::AddModel( const String& filename )
-		{
-			m_Models.emplace_back( CreateModel( filename ) );
-			return *m_Models.back();
+			InitFromPropNode( props, m_Models );
 		}
 
 		Model& Simulation::GetModel( size_t idx )

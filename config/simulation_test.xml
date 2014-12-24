@@ -1,29 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Optimizer type="CmaOptimizer">
-	<max_threads>32</max_threads>
-	<thread_priority>-2</thread_priority>
-	<lambda>0</lambda>
-	<mu>0</mu>
-	<sigma>1</sigma>
-	<max_generations>1000</max_generations>
-	<Objective type="SimulationObjective">
-		<Simulation type="Simbody">
-			<Models>
-				<model_file>models/jumper10dof24musc.osim</model_file>
-				<Controllers>
-					<Controller type="FeedForwardController">
-						<function_type>PieceWiseLinear</function_type>
-						<use_symmetric_actuators>true</use_symmetric_actuators>
-						<control_points>3</control_points>
-						<initial_time_separation>0.1</initial_time_separation>
-						<initial_max_value>1.0</initial_max_value>
-						<use_fixed_time>false</use_fixed_time>
-					</Controller>
-					<Measure type="JumpingMeasure"/>
-				</Controllers>
-			</Models>
-			<accuracy>0.00001</accuracy>
-			<max_time>1.0</max_time>
-		</Simulation>
-	</Objective>
-</Optimizer>
+<Model type="Simbody">
+	<model_file>models/jumper10dof24musc.osim</model_file>
+	<Controllers>
+		<Controller type="FeedForwardController">
+			<function_type>PieceWiseLinear</function_type>
+			<use_symmetric_actuators>true</use_symmetric_actuators>
+			<control_points>3</control_points>
+			<initial_time_separation>0.1</initial_time_separation>
+			<initial_max_value>1.0</initial_max_value>
+			<use_fixed_time>false</use_fixed_time>
+		</Controller>
+		<Measure type="JumpingMeasure"/>
+	</Controllers>
+</Model>

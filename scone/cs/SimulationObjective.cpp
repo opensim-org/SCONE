@@ -35,13 +35,15 @@ namespace scone
 			Measure& m = dynamic_cast< Measure& >( **measureIter );
 
 			// run the simulation
-			s->AdvanceSimulationTo( s->max_simulation_time );
+			s->AdvanceSimulationTo( max_duration );
 
 			return m.GetValue();
 		}
 
 		void SimulationObjective::ProcessProperties( const PropNode& props )
 		{
+			INIT_FROM_PROP( props, max_duration, 6000.0 );
+
 			// just copy properties
 			m_Props = props;
 		}

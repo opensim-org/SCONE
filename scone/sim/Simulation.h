@@ -3,8 +3,9 @@
 #include "sim.h"
 #include "Model.h"
 #include <memory>
-#include "..\core\PropNode.h"
-#include "..\opt\ParamSet.h"
+
+#include "../core/PropNode.h"
+#include "../opt/ParamSet.h"
 
 namespace scone
 {
@@ -23,12 +24,12 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props );
 			virtual void AdvanceSimulationTo( double time ) = 0;
 
-			double max_simulation_time;
-
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
+			double max_simulation_time;
+			double integration_accuracy;
+
 		protected:
-			virtual ModelUP CreateModel( const String& filename ) = 0;
 			std::vector< ModelUP > m_Models;
 
 		private: // non-copyable and non-assignable

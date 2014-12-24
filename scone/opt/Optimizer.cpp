@@ -25,9 +25,9 @@ namespace scone
 			INIT_FROM_PROP( props, thread_priority, 0 );
 
 			// create max_threads objective instances
-			m_Objectives.resize( max_threads );
+			m_Objectives.clear();
 			for ( size_t i = 0; i < max_threads; ++i )
-				m_Objectives[ i ] = ObjectiveSP( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
+				m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
 		}
 
 		// evaluate individuals
@@ -68,7 +68,7 @@ namespace scone
 					// find next available slot
 					size_t next_thread_idx = std::find( threads.begin(), threads.end(), nullptr ) - threads.begin();
 					SCONE_ASSERT( next_thread_idx < max_threads );
-					threads[ next_thread_idx ] = std::unique_ptr< boost::thread >( new boost::thread( EvaluateFunc, m_Objectives[ next_thread_idx ], parsets[ next_idx ], &fitnesses[ next_idx ], thread_priority ) );
+					threads[ next_thread_idx ] = std::unique_ptr< boost::thread >( new boost::thread( EvaluateFunc, m_Objectives[ next_thread_idx ].get(), parsets[ next_idx ], &fitnesses[ next_idx ], thread_priority ) );
 
 					num_active_threads++;
 					next_idx++;
@@ -94,7 +94,7 @@ namespace scone
 			return fitnesses;
 		}
 
-		void Optimizer::EvaluateFunc( ObjectiveSP obj, ParamSet& par, double* fitness, int priority )
+		void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority )
 		{
 			::SetThreadPriority( ::GetCurrentThread(), priority );
 			*fitness = obj->Evaluate( par );

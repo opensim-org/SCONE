@@ -9,11 +9,6 @@ namespace scone
 {
 	namespace sim
 	{
-		scone::sim::ModelUP Simulation_Simbody::CreateModel( const String& filename )
-		{
-			return ModelUP( new Model_Simbody( *this, filename ) );
-		}
-
 		void Simulation_Simbody::AdvanceSimulationTo( double time )
 		{
 			for ( auto iter = m_Models.begin(); iter != m_Models.end(); ++iter )
@@ -23,8 +18,6 @@ namespace scone
 		void Simulation_Simbody::ProcessProperties( const PropNode& props )
 		{
 			Simulation::ProcessProperties( props );
-
-			INIT_FROM_PROP( props, integration_accuracy, 0.00001 );
 		}
 	}
 }

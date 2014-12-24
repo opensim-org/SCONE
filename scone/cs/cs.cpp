@@ -4,6 +4,7 @@
 #include "FeedForwardController.h"
 
 #include <OpenSim/OpenSim.h>
+#include "../sim/simbody/sim_simbody.h"
 
 namespace scone
 {
@@ -11,9 +12,12 @@ namespace scone
 	{
 		void CS_API RegisterFactoryTypes()
 		{
-			cs::SimulationObjective::RegisterFactory();
-			cs::FeedForwardController::RegisterFactory();
+			// simulation engines
+			sim::RegisterSimbody();
+
+			// cs types
+			SimulationObjective::RegisterFactory();
+			FeedForwardController::RegisterFactory();
 		}
 	}
 }
-

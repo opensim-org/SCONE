@@ -14,10 +14,10 @@ void SimulationTest()
 	cs::RegisterFactoryTypes();
 
 	PropNode props = LoadXmlFile( "config/simulation_test.xml" );
-	sim::SimulationUP s = CreateFromPropNode< sim::Simulation >( props );
+	sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 
 	Timer t;
 	SCONE_LOG( "Starting simulation" );
-	s->AdvanceSimulationTo( 0.5 );
+	m->AdvanceSimulationTo( 0.5 );
 	SCONE_LOG( "Simulation ended in " << t.GetTime() );
 }

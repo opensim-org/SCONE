@@ -54,7 +54,7 @@ namespace scone
 		void CmaOptimizer::Run()
 		{
 			// get info from objective
-			ParamSet par = GetObjective()->GetParamSet();
+			ParamSet par = GetObjective().GetParamSet();
 			size_t dim = par.GetFreeParamCount();
 
 			SCONE_ASSERT( dim > 0 );

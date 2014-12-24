@@ -5,6 +5,7 @@
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include <memory>
+#include "../../core/Factory.h"
 
 namespace OpenSim
 {
@@ -22,17 +23,17 @@ namespace scone
 	{
 		class Simulation_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
+		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
 		{
 		public:
-			Model_Simbody( Simulation_Simbody& simulation, const String& filename = "" );
+			Model_Simbody( const String& filename = "" );
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;
 
-			virtual void AdvanceSimulationTo( double time );
+			virtual void AdvanceSimulationTo( double time ) override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsModel() { return *m_osModel; }
@@ -43,7 +44,7 @@ namespace scone
 		private:
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
-			Simulation_Simbody& m_Simulation;
+			double integration_accuracy;
 
 			std::unique_ptr< OpenSim::Model > m_osModel;
 			SimTK::State* m_tkState; // non-owning state reference

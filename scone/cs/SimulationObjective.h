@@ -26,6 +26,7 @@ namespace scone
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
+			double max_duration;
 			PropNode m_Props;
 			opt::ParamSet m_Params;
 		};

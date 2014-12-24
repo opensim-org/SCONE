@@ -6,11 +6,11 @@
 namespace scone
 {
 	struct RuntimeException : public std::runtime_error {
-		RuntimeException(const std::string& msg) : runtime_error(msg) { std::cout << "scone::RuntimeException: " << msg << std::endl; }
+		RuntimeException(const std::string& msg) : runtime_error(msg) { }
 	};
 
 	struct LogicException : public std::logic_error {
-		LogicException(const std::string& msg) : logic_error(msg) { std::cout << "scone::LogicException: " << msg << std::endl; }
+		LogicException(const std::string& msg) : logic_error(msg) { }
 	};
 }
 

@@ -32,6 +32,9 @@
     <ClCompile Include="..\..\scone\sim\simbody\tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\sim_simbody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">

@@ -31,10 +31,9 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( Simulation_Simbody& simulation, const String& filename ) :
+		Model_Simbody::Model_Simbody( const String& filename ) :
 		m_osModel( nullptr ),
-		m_tkState( nullptr ),
-		m_Simulation( simulation )
+		m_tkState( nullptr )
 		{
 			OpenSim::Object::setSerializeAllDefaults(true);
 			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( filename ) );
@@ -79,6 +78,7 @@ namespace scone
 
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
+			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 		}
 
 		Vec3 Model_Simbody::GetComPos()
@@ -182,7 +182,7 @@ namespace scone
 
 			// Create the integrator for the simulation.
 			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
-			m_tkIntegrator->setAccuracy( m_Simulation.integration_accuracy );
+			m_tkIntegrator->setAccuracy( integration_accuracy );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			OpenSim::Manager manager( *m_osModel, *m_tkIntegrator );

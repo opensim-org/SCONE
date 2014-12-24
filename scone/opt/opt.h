@@ -15,17 +15,14 @@ namespace scone
 	namespace opt
 	{
 		// forward declarations
+		SCONE_DECLARE_CLASS_AND_PTR( Optimizer );
+		SCONE_DECLARE_CLASS_AND_PTR( Objective );
+
 		class Param;
 		class ParamSet;
-		class Optimizer;
-		class Objective;
-
-		// pointer types
-		typedef std::shared_ptr< Optimizer > OptimizerSP;
-		typedef std::shared_ptr< Objective > ObjectiveSP;
 
 		// register factory types
 		void OPT_API RegisterFactoryTypes();
-		OptimizerSP OPT_API CreateOptimizerFromXml( const String& xml_file, const String& key = "Optimizer" );
+		OptimizerUP OPT_API CreateOptimizerFromXml( const String& xml_file, const String& key = "Optimizer" );
 	}
 }

@@ -17,9 +17,9 @@ namespace scone
 		virtual ~Factory() { };
 
 		template< typename Base, typename Derived >
-		void Register()
+		void Register( const String& name = "" )
 		{
-			m_CreateFuncs[ GetFullTypeName< Base >( GetCleanClassName< Derived >() ) ] = (void*(*)(void))Derived::Create;
+			m_CreateFuncs[ GetFullTypeName< Base >( name.empty() ? GetCleanClassName< Derived >() : name ) ] = (void*(*)(void))Derived::Create;
 		}
 
 		template< typename T >
@@ -55,6 +55,6 @@ namespace scone
 	{
 	public:
 		static Base* Create() { return new Derived; }
-		static void RegisterFactory() { GetFactory().Register< Base, Derived >(); }
+		static void RegisterFactory( const String& name = "" ) { GetFactory().Register< Base, Derived >( name ); }
 	};
 }

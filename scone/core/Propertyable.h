@@ -74,14 +74,9 @@ namespace scone
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& vec )
 	{ 
-		//SCONE_THROW_NOT_IMPLEMENTED; // TODO: must be tested
-
 		vec.clear();
 		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
-		{
 			vec.push_back( CreateFromPropNode< T >( *iter->second ) );
-			//InitFromPropNode( *iter, *vec.back() );
-		}
 	}
 
 	// process fundamental types and String
