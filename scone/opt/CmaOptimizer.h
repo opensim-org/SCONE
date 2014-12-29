@@ -26,6 +26,7 @@ namespace scone
 			std::unique_ptr< Impl > m_pImpl;
 			size_t num_elitists;
 			int max_attempts;
+			long random_seed;
 
 		private: // non-copyable and non-assignable
 			CmaOptimizer( const CmaOptimizer& );

@@ -7,6 +7,7 @@
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
 #include "../core/Timer.h"
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -49,6 +50,7 @@ namespace scone
 			INIT_FROM_PROP_NAMED( props, m_Mu, "mu", 0 );
 			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_FROM_PROP( props, max_generations, 10000u );
+			INIT_FROM_PROP( props, random_seed, long( 123 ) );
 		}
 
 		void CmaOptimizer::Run()
@@ -70,7 +72,7 @@ namespace scone
 			m_pImpl->m_pOffspring->setMinimize();
 
 			// init random seed
-			Rng::seed( 123 );
+			Rng::seed( random_seed );
 
 			// generate random population
 			for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
@@ -97,6 +99,8 @@ namespace scone
 			// init CMA object
 			CMA::RecombType rc_type = static_cast< CMA::RecombType >( CMA::superlinear );
 			m_pImpl->m_CMA.init( dim, var, m_Sigma, *m_pImpl->m_pParents, rc_type, CMA::rankmu );
+
+			SCONE_LOG( "Starting optimization, dim=" << dim << " lambda=" << m_Lambda << " mu=" << m_Mu );
 
 			// optimization loop
 			Timer timer;
