@@ -8,21 +8,21 @@
 	<max_generations>1000</max_generations>
 
 	<Objective type="SimulationObjective">
-		<Simulation type="Simbody">
+		<max_duration>1.0</max_duration>
+		<Model type="Simbody">
 			<model_file>models/jumper10dof24musc.osim</model_file>
-			<accuracy>0.0000001</accuracy>
-			<max_time>2.0</max_time>
-		</Simulation>
-		<Controller type="FeedForwardController">
-			<FeedForwardController type="PieceWiseLinear">
-				<use_symmetric_actuators>true</use_symmetric_actuators>
-				<ControlPoints>
-					<count>3</count>
-					<time_separation>0.1</time_separation>
-					<fixed_time>true</fixed_time>
-				</ControlPoints>
-			</FeedForwardController>
-		</Controller>
-		<Measure type="JumpingMeasure"/>
+			<Controllers>
+				<Controller type="FeedForwardController">
+					<function_type>PieceWiseLinear</function_type>
+					<use_symmetric_actuators>1</use_symmetric_actuators>
+					<control_points>4</control_points>
+					<init_mean>0.5</init_mean>
+					<init_std>0.25</init_std>
+					<control_point_time_delta>0.2</control_point_time_delta>
+					<optimize_control_point_time>0</optimize_control_point_time>
+				</Controller>
+				<Measure type="JumpingMeasure"/>
+			</Controllers>
+		</Model>
 	</Objective>
 </Optimizer>

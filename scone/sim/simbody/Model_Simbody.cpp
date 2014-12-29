@@ -33,7 +33,8 @@ namespace scone
 		/// Constructor
 		Model_Simbody::Model_Simbody( const String& filename ) :
 		m_osModel( nullptr ),
-		m_tkState( nullptr )
+		m_tkState( nullptr ),
+		m_pControllerDispatcher( nullptr )
 		{
 		}
 
@@ -78,9 +79,9 @@ namespace scone
 			// debug print
 			SCONE_LOG( m_RootLink->ToString() );
 
-			// create controller dispatcher
-			m_pControllerDispatcher = std::unique_ptr< ControllerDispatcher >( new ControllerDispatcher( *this ) );
-			m_osModel->addController( m_pControllerDispatcher.get() );
+			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
+			m_pControllerDispatcher = new ControllerDispatcher( *this );
+			m_osModel->addController( m_pControllerDispatcher );
 		}
 
 		void Model_Simbody::ProcessProperties( const PropNode& props )
@@ -170,12 +171,6 @@ namespace scone
 			{
 				controlValue[ 0 ] = mus->GetControlValue();
 				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
-				std::cout << controlValue[0] << " ";
-			}
-
-			static int step = 0;
-			if ( step++ % 1000 == 0 )
-			{
 			}
 		}
 

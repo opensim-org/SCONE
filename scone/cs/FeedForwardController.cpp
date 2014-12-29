@@ -20,10 +20,10 @@ namespace scone
 			INIT_FROM_PROP( props, function_type, String("") );
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
 			INIT_FROM_PROP( props, control_points, 3u );
-			INIT_FROM_PROP( props, initial_time_separation, 0.3 );
+			INIT_FROM_PROP( props, control_point_time_delta, 0.3 );
 			INIT_FROM_PROP( props, init_mean, 0.5 );
 			INIT_FROM_PROP( props, init_std, 0.25 );
-			INIT_FROM_PROP( props, use_fixed_time, true );
+			INIT_FROM_PROP( props, optimize_control_point_time, true );
 		}
 
 		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
@@ -31,11 +31,12 @@ namespace scone
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 			{
 				String str = m_MuscleNames[ idx ] + ".";
-				printf( "Creating %d cp=%d\n", idx, m_Functions[ idx ]->getNumberOfPoints() );
 				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 				{
-					m_Functions[ idx ]->setX( cpidx, par( str + ToString( cpidx ) + ".X", cpidx * initial_time_separation, 0.01, 0.0, 60.0 ) );
-					m_Functions[ idx ]->setY( cpidx, par( str + ToString( cpidx ) + ".Y", init_mean, init_std, 0.0, 1.0 ) );
+					if ( optimize_control_point_time )
+						m_Functions[ idx ]->setX( cpidx, cpidx > 0 ? par( str + GetStringF( "X%d", cpidx ), cpidx * control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 ) : 0.0 );
+					else m_Functions[ idx ]->setX( cpidx, cpidx * control_point_time_delta );
+					m_Functions[ idx ]->setY( cpidx, par( str + GetStringF( "Y%d", cpidx ), init_mean, init_std, 0.0, 1.0 ) );
 				}
 			}
 		}
@@ -49,7 +50,6 @@ namespace scone
 			{
 				xval[ 0 ] = time;
 				double result = m_Functions[ idx ]->calcValue( xval );
-				std::cout << result;
 				model.GetMuscle( idx ).AddControlValue( result );
 				if ( use_symmetric_actuators )
 					model.GetMuscle( m_Functions.size() + idx ).AddControlValue( result );

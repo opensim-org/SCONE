@@ -53,7 +53,7 @@ namespace scone
 			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;
 
 			class ControllerDispatcher;
-			std::unique_ptr< ControllerDispatcher > m_pControllerDispatcher;
+			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel
 		};
 	}
 }

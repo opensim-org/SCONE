@@ -28,9 +28,9 @@ namespace scone
 			String function_type;
 			bool use_symmetric_actuators;
 			size_t control_points;
-			double initial_time_separation;
+			double control_point_time_delta;
 			double initial_max_value;
-			bool use_fixed_time;
+			bool optimize_control_point_time;
 
 			typedef std::unique_ptr< OpenSim::PiecewiseLinearFunction > FunctionUP;
 			std::vector< FunctionUP > m_Functions;

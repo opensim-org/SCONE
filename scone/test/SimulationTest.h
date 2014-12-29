@@ -19,8 +19,6 @@ void SimulationTest()
 	opt::ParamSet par;
 	m->ProcessParameters( par );
 
-	// TODO: debug print parameter set
-
 	Timer t;
 	SCONE_LOG( "Starting simulation" );
 	m->AdvanceSimulationTo( 0.5 );

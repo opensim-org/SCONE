@@ -10,7 +10,7 @@ namespace scone
 		double ParamInfo::GetRandomValue() const
 		{
 			double value = 0.0;
-			if ( init_min != 0.0 && init_std != 0.0 )
+			if ( init_min == 0.0 && init_max == 0.0 )
 			{
 				value = Rng::gauss( init_mean, Square( init_std ) );
 				RestrainValue( value );

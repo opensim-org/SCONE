@@ -4,11 +4,12 @@
 	<Controllers>
 		<Controller type="FeedForwardController">
 			<function_type>PieceWiseLinear</function_type>
-			<use_symmetric_actuators>true</use_symmetric_actuators>
-			<control_points>3</control_points>
-			<initial_time_separation>0.1</initial_time_separation>
-			<initial_max_value>1.0</initial_max_value>
-			<use_fixed_time>false</use_fixed_time>
+			<use_symmetric_actuators>1</use_symmetric_actuators>
+			<control_points>5</control_points>
+			<init_mean>0.5</init_mean>
+			<init_std>0.25</init_std>
+			<control_point_time_delta>0.1</control_point_time_delta>
+			<optimize_control_point_time>0</optimize_control_point_time>
 		</Controller>
 		<Measure type="JumpingMeasure"/>
 	</Controllers>
