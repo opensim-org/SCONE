@@ -31,7 +31,6 @@ namespace scone
 
 		void Model::ProcessParameters( opt::ParamSet& par )
 		{
-			printf( "Processing parameters\n" );
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
 				c->ProcessParameters( par );
 		}

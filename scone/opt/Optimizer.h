@@ -21,6 +21,9 @@ namespace scone
 		protected:
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 
+			PropNode m_ObjectiveProps;
+			std::vector< ObjectiveUP > m_Objectives;
+
 		private:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );
 			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets );
@@ -28,8 +31,6 @@ namespace scone
 
 			size_t max_threads;
 			int thread_priority;
-
-			std::vector< ObjectiveUP > m_Objectives;
 
 		private: // non-copyable and non-assignable
 			Optimizer( const Optimizer& );

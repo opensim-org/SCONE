@@ -19,6 +19,7 @@ namespace scone
 
 			// update all parameters and call Evaluate
 			double Evaluate( ParamSet& par );
+			virtual void WriteResults( const String& file ) { };
 
 		protected:
 			// virtual evaluation function

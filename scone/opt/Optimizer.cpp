@@ -24,15 +24,19 @@ namespace scone
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
 
-			// create max_threads objective instances
+			// create objective instances
 			m_Objectives.clear();
-			for ( size_t i = 0; i < max_threads; ++i )
-				m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
+			m_ObjectiveProps = props.GetChild( "Objective" );
+			m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
 		}
 
 		// evaluate individuals
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 		{
+			// make sure there are enough objectives
+			while ( m_Objectives.size() < parsets.size() )
+				m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
+
 			if ( max_threads == 1 )
 				return EvaluateSingleThreaded( parsets );
 			else return EvaluateMultiThreaded( parsets );
@@ -45,7 +49,7 @@ namespace scone
 			for ( size_t ind_idx = 0; ind_idx < parsets.size(); ++ind_idx )
 			{
 				// copy values into par
-				fitnesses[ ind_idx ] = m_Objectives[ 0 ]->Evaluate( parsets[ ind_idx ] );
+				fitnesses[ ind_idx ] = m_Objectives[ ind_idx ]->Evaluate( parsets[ ind_idx ] );
 				printf(" %3.0f", fitnesses[ ind_idx ] );
 			}
 			return fitnesses;
@@ -58,17 +62,15 @@ namespace scone
 			std::vector< double > fitnesses( parsets.size(), 999 );
 
 			size_t num_active_threads = 0;
-			std::vector< std::shared_ptr< boost::thread > > threads( max_threads, nullptr );
+			std::vector< std::shared_ptr< boost::thread > > threads( parsets.size(), nullptr );
 
 			while ( num_active_threads > 0 || ( next_idx < parsets.size() ) )
 			{
 				// add threads
 				while ( num_active_threads < max_threads && next_idx < parsets.size() )
 				{
-					// find next available slot
-					size_t next_thread_idx = std::find( threads.begin(), threads.end(), nullptr ) - threads.begin();
-					SCONE_ASSERT( next_thread_idx < max_threads );
-					threads[ next_thread_idx ] = std::unique_ptr< boost::thread >( new boost::thread( EvaluateFunc, m_Objectives[ next_thread_idx ].get(), parsets[ next_idx ], &fitnesses[ next_idx ], thread_priority ) );
+					// create new thread at next_idx
+					threads[ next_idx ] = std::unique_ptr< boost::thread >( new boost::thread( EvaluateFunc, m_Objectives[ next_idx ].get(), parsets[ next_idx ], &fitnesses[ next_idx ], thread_priority ) );
 
 					num_active_threads++;
 					next_idx++;
@@ -79,8 +81,6 @@ namespace scone
 				{
 					if ( threads[ thread_idx ] != nullptr && threads[ thread_idx ]->timed_join( boost::posix_time::milliseconds( 100 ) ) )
 					{
-						// TODO: something with result
-
 						// decrease number of active threads
 						threads[ thread_idx ].reset();
 						num_active_threads--;

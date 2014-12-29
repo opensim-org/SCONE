@@ -12,7 +12,8 @@ void OptimizationTest()
 	ExampleObjective::RegisterFactory();
 	cs::RegisterFactoryTypes();
 
-	opt::OptimizerUP opt = opt::CreateOptimizerFromXml( "config/example_optimization.xml" );
+	//opt::OptimizerUP opt = opt::CreateOptimizerFromXml( "config/example_optimization.xml" );
+	opt::OptimizerUP opt = opt::CreateOptimizerFromXml( "config/optimization_test.xml" );
 
 	opt->Run();
 }

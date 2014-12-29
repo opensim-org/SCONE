@@ -15,14 +15,14 @@ namespace scone
 	{
 		void FeedForwardController::ProcessProperties( const PropNode& props )
 		{
-			Controller::ProcessProperties( props );
+			sim::Controller::ProcessProperties( props );
 
 			INIT_FROM_PROP( props, function_type, String("") );
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
 			INIT_FROM_PROP( props, control_points, 3u );
 			INIT_FROM_PROP( props, control_point_time_delta, 0.3 );
-			INIT_FROM_PROP( props, init_mean, 0.5 );
-			INIT_FROM_PROP( props, init_std, 0.25 );
+			INIT_FROM_PROP( props, init_min, 0.0 );
+			INIT_FROM_PROP( props, init_max, 1.0 );
 			INIT_FROM_PROP( props, optimize_control_point_time, true );
 		}
 
@@ -36,7 +36,7 @@ namespace scone
 					if ( optimize_control_point_time )
 						m_Functions[ idx ]->setX( cpidx, cpidx > 0 ? par( str + GetStringF( "X%d", cpidx ), cpidx * control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 ) : 0.0 );
 					else m_Functions[ idx ]->setX( cpidx, cpidx * control_point_time_delta );
-					m_Functions[ idx ]->setY( cpidx, par( str + GetStringF( "Y%d", cpidx ), init_mean, init_std, 0.0, 1.0 ) );
+					m_Functions[ idx ]->setY( cpidx, par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, 0.0, 1.0 ) );
 				}
 			}
 		}

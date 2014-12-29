@@ -25,10 +25,11 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
+			virtual void WriteResults( const String& file ) override;
+
 		private:
 			double max_duration;
-			PropNode m_Props;
-			opt::ParamSet m_Params;
+			sim::ModelUP m_Model;
 		};
 	}
 }

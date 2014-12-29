@@ -61,23 +61,23 @@ namespace scone
 					SCONE_THROW( "Unsupported actuator type" );
 				}
 			}
-			SCONE_LOG( "Muscles created: " << m_Muscles.size() );
+			//SCONE_LOG( "Muscles created: " << m_Muscles.size() );
 
 			// Create wrappers for bodies
 			for ( int idx = 0; idx < m_osModel->getBodySet().getSize(); ++idx )
 				m_Bodies.push_back( BodyUP( new Body_Simbody( m_osModel->getBodySet().get( idx ) ) ) );
-			SCONE_LOG( "Bodies created: " << m_Bodies.size() );
+			//SCONE_LOG( "Bodies created: " << m_Bodies.size() );
 
 			// Create wrappers for joints
 			for ( int idx = 0; idx < m_osModel->getJointSet().getSize(); ++idx )
 				m_Joints.push_back( JointUP( new Joint_Simbody( m_osModel->getJointSet().get( idx ) ) ) );
-			SCONE_LOG( "Joints created: " << m_Joints.size() );
+			//SCONE_LOG( "Joints created: " << m_Joints.size() );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_osModel->getGroundBody() );
 
 			// debug print
-			SCONE_LOG( m_RootLink->ToString() );
+			//SCONE_LOG( m_RootLink->ToString() );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -99,21 +99,22 @@ namespace scone
 
 		Vec3 Model_Simbody::GetComPos()
 		{
-			SimTK::Vec3 osVec = m_osModel->calcMassCenterPosition( GetTkState() );
-
-			return ToVec3( osVec );
+			return ToVec3( m_osModel->calcMassCenterPosition( GetTkState() ) );
 		}
 		
 		Vec3 Model_Simbody::GetComVel()
 		{
-			SimTK::Vec3 osVec = m_osModel->calcMassCenterVelocity( GetTkState() );
-			
-			return ToVec3( osVec );
+			return ToVec3( m_osModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 
 		Real Model_Simbody::GetMass()
 		{
 			return m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_osModel->getWorkingState() );
+		}
+
+		scone::Vec3 Model_Simbody::GetGravity()
+		{
+			return ToVec3( m_osModel->getGravity() );
 		}
 
 		bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
@@ -201,16 +202,24 @@ namespace scone
 			m_tkIntegrator->setAccuracy( integration_accuracy );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			OpenSim::Manager manager( *m_osModel, *m_tkIntegrator );
-			manager.setWriteToStorage( true );
-			manager.setPerformAnalyses( false );
-
+			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
+			m_osManager->setWriteToStorage( true );
+			m_osManager->setPerformAnalyses( false );
+			
 			// Integrate from initial time to final time and integrate
-			manager.setInitialTime( 0.0 );
-			manager.setFinalTime( time );
-			manager.integrate( GetTkState() );
+			m_osManager->setInitialTime( 0.0 );
+			m_osManager->setFinalTime( time );
+			m_osManager->integrate( GetTkState() );
+		}
 
-			manager.getStateStorage().print("test_output.sto");
+		void Model_Simbody::WriteStateHistory( const String& file )
+		{
+			m_osManager->getStateStorage().print( file + ".sto" );
+		}
+
+		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
+		{
+			Model::ProcessParameters( par );
 		}
 	}
 }

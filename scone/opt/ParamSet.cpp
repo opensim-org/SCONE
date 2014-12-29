@@ -18,8 +18,6 @@ namespace scone
 				// add parameter info
 				m_Params.push_back( std::make_pair( info, info.GetRandomValue() ) );
 
-				printf("%s: %.2f\n", info.name.c_str(), m_Params.back().second );
-
 				return m_Params.back().second;
 			}
 			else if ( m_Mode == UPDATE_MODE )

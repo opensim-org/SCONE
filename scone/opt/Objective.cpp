@@ -18,7 +18,7 @@ namespace scone
 
 		scone::opt::ParamSet Objective::GetParamSet()
 		{
-			ParamSet par(  ParamSet::CONSTRUCTION_MODE );
+			ParamSet par( ParamSet::CONSTRUCTION_MODE );
 			ProcessParameters( par );
 			return par;
 		}

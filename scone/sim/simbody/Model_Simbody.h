@@ -10,6 +10,7 @@
 namespace OpenSim
 {
 	class Model;
+	class Manager;
 }
 
 namespace SimTK
@@ -32,14 +33,17 @@ namespace scone
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;
+			virtual Vec3 GetGravity() override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
+			virtual void WriteStateHistory( const String& file ) override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsModel() { return *m_osModel; }
 			SimTK::State& GetTkState() { return *m_tkState; }
 
 			virtual void ProcessProperties( const PropNode& props ) override;
+			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
 			void CreateOsModel( const String& file );
@@ -49,6 +53,7 @@ namespace scone
 			String model_file;
 
 			std::unique_ptr< OpenSim::Model > m_osModel;
+			std::unique_ptr< OpenSim::Manager > m_osManager;
 			SimTK::State* m_tkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;
 

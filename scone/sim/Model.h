@@ -20,6 +20,7 @@ namespace scone
 			virtual Vec3 GetComPos() = 0;
 			virtual Vec3 GetComVel() = 0;
 			virtual Real GetMass() = 0;
+			virtual Vec3 GetGravity() = 0;
 
 			/// muscle access
 			size_t GetMuscleCount() { return m_Muscles.size(); }
@@ -46,6 +47,7 @@ namespace scone
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;
+			virtual void WriteStateHistory( const String& file ) = 0;
 
 		protected:
 			std::unique_ptr< Link > m_RootLink;

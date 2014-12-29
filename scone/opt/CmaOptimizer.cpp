@@ -106,6 +106,7 @@ namespace scone
 				printf("%04d:", gen );
 
 				// setup parameter sets
+				par.SetMode( ParamSet::UPDATE_MODE );
 				std::vector< ParamSet > parsets( m_Lambda, par );
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
 					parsets[ ind_idx ].SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );
@@ -116,14 +117,17 @@ namespace scone
 					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
 
 				// report results
-				printf(" M=%5.2f", (*m_pImpl->m_pOffspring).meanFitness() );
+				printf(" M=%.2f", (*m_pImpl->m_pOffspring).meanFitness() );
 				if ( (*m_pImpl->m_pOffspring).best().fitnessValue() < best )
 				{
 					best = (*m_pImpl->m_pOffspring).best().fitnessValue();
-					printf(" B=%5.2f", best );
+					printf(" B=%.2f", best );
+
+					// write results
+					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( GetStringF( "%04d_%.3f", gen, best ) );
 				}
 
-				if ( (gen + 1) % 5 == 0 ) printf( " T=%.2f", timer.GetTime() );
+				//if ( (gen + 1) % 5 == 0 ) printf( " T=%.2f", timer.GetTime() );
 
 				// update next generation
 				m_pImpl->m_pParents->selectMuLambda( *m_pImpl->m_pOffspring, num_elitists );

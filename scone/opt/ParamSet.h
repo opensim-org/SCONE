@@ -32,6 +32,7 @@ namespace scone
 			void SetFreeParamValues( std::vector< double >& values );
 
 			void SetMode( Mode m ) { m_Mode = m; }
+			bool IsInConstructionMode() { return m_Mode == CONSTRUCTION_MODE; }
 
 		private:
 			Mode m_Mode;

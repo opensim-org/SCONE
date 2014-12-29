@@ -36,8 +36,8 @@ namespace scone
 			std::vector< FunctionUP > m_Functions;
 			std::vector< String > m_MuscleNames;
 			size_t m_MuscleCount;
-			double init_mean;
-			double init_std;
+			double init_min;
+			double init_max;
 
 		private: // non-copyable and non-assignable
 			FeedForwardController( const FeedForwardController& );
