@@ -34,7 +34,7 @@ namespace scone
 				printf( "Creating %d cp=%d\n", idx, m_Functions[ idx ]->getNumberOfPoints() );
 				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 				{
-					m_Functions[ idx ]->setX( cpidx, par( str + ToString( cpidx ) + ".X", init_mean, init_std, 0.0, 1.0 ) );
+					m_Functions[ idx ]->setX( cpidx, par( str + ToString( cpidx ) + ".X", cpidx * initial_time_separation, 0.01, 0.0, 60.0 ) );
 					m_Functions[ idx ]->setY( cpidx, par( str + ToString( cpidx ) + ".Y", init_mean, init_std, 0.0, 1.0 ) );
 				}
 			}
