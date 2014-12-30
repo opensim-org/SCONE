@@ -21,6 +21,7 @@ namespace scone
 			virtual Vec3 GetComVel() = 0;
 			virtual Real GetMass() = 0;
 			virtual Vec3 GetGravity() = 0;
+			virtual bool HasGroundContact() = 0;
 
 			/// muscle access
 			size_t GetMuscleCount() { return m_Muscles.size(); }
@@ -47,6 +48,8 @@ namespace scone
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;
+			virtual void RequestTermination() { m_ShouldTerminate = true; }
+			virtual bool ShouldTerminate() { return m_ShouldTerminate; }
 			virtual void WriteStateHistory( const String& file ) = 0;
 
 		protected:
@@ -55,6 +58,7 @@ namespace scone
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
 			std::vector< ControllerUP > m_Controllers;
+			bool m_ShouldTerminate;
 
 		private:
 			Model( const Model& );

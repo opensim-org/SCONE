@@ -34,6 +34,7 @@ namespace scone
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;
 			virtual Vec3 GetGravity() override;
+			virtual bool HasGroundContact() override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
@@ -59,6 +60,9 @@ namespace scone
 
 			class ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel
+
+			class TerminationEventHandler;
+			TerminationEventHandler *m_pTerminationEventHandler;
 		};
 	}
 }

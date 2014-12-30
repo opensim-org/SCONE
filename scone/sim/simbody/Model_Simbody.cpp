@@ -30,11 +30,33 @@ namespace scone
 			Model_Simbody& m_Model;
 		};
 
+		/// Simbody event handler to determine termination
+		class Model_Simbody::TerminationEventHandler : public SimTK::TriggeredEventHandler
+		{
+		public:
+			TerminationEventHandler( Model_Simbody& model ) : m_Model( model ), SimTK::TriggeredEventHandler( SimTK::Stage::Dynamics ) { };
+			//virtual Real getNextEventTime( const SimTK::State& state, bool includeCurrentTime ) const override { return state.getTime() + 0.001; }
+			virtual Real getValue( const SimTK::State& ) const override {
+				double value = (double)m_Model.ShouldTerminate() - 0.5;
+				//printf("bla%f ", value );
+				return value; }
+			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override
+			{
+				if ( m_Model.ShouldTerminate() )
+					printf("termination at time %f\n", state.getTime() );
+				shouldTerminate = m_Model.ShouldTerminate();
+			}
+
+		private:
+			Model_Simbody& m_Model;
+		};
+
 		/// Constructor
 		Model_Simbody::Model_Simbody( const String& filename ) :
 		m_osModel( nullptr ),
 		m_tkState( nullptr ),
-		m_pControllerDispatcher( nullptr )
+		m_pControllerDispatcher( nullptr ),
+		m_pTerminationEventHandler( nullptr )
 		{
 		}
 
@@ -177,13 +199,16 @@ namespace scone
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
+			// reset termination flag
+			m_ShouldTerminate = false;
+
 			// Initialize the system. initSystem() cannot be used here because adding the event handler
 			// must be done between buildSystem() and initializeState().
 			m_osModel->buildSystem();
 
-			// TODO: add termination event handler
-			//TerminateSimulation *terminate = new TerminateSimulation(osimModel, forceThreshold);
-			//osimModel.updMultibodySystem().addEventHandler(terminate);
+			// create termination event handler (TODO: verify ownership is passed)
+			m_pTerminationEventHandler = new TerminationEventHandler( *this );
+			m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
 
 			// create model state and keep pointer (non-owning)
 			m_tkState = &m_osModel->initializeState();
@@ -220,6 +245,17 @@ namespace scone
 		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
 		{
 			Model::ProcessParameters( par );
+		}
+
+		bool Model_Simbody::HasGroundContact()
+		{
+			// total vertical force applied to both feet
+			m_osModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
+			OpenSim::Array<double> force_foot_r = m_osModel->getForceSet().get("foot_r").getRecordValues( GetTkState() );
+			OpenSim::Array<double> force_foot_l = m_osModel->getForceSet().get("foot_l").getRecordValues( GetTkState() );
+			double netGRFVertical = force_foot_r[1] + force_foot_l[1];
+			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
+			return netGRFVertical < -1.0;
 		}
 	}
 }

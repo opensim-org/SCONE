@@ -10,7 +10,8 @@ namespace scone
 {
 	namespace sim
 	{
-		Model::Model()
+		Model::Model() :
+		m_ShouldTerminate( false )
 		{
 		}
 		

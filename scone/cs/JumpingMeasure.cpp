@@ -11,6 +11,10 @@ namespace scone
 			if ( timestamp == 0.0 )
 				m_Initial = GetCurrentComHeight( model );
 
+			// check if feet are still on the ground
+			if ( timestamp > 0.1 && !model.HasGroundContact() )
+				model.RequestTermination();
+
 			return true;
 		}
 
