@@ -15,11 +15,11 @@
 				<Controller type="FeedForwardController">
 					<function_type>PieceWiseLinear</function_type>
 					<use_symmetric_actuators>1</use_symmetric_actuators>
-					<control_points>4</control_points>
+					<control_points>3</control_points>
 					<init_min>0.25</init_min>
 					<init_max>0.75</init_max>
 					<control_point_time_delta>0.2</control_point_time_delta>
-					<optimize_control_point_time>0</optimize_control_point_time>
+					<optimize_control_point_time>1</optimize_control_point_time>
 				</Controller>
 				<Measure type="JumpingMeasure"/>
 			</Controllers>
