@@ -22,7 +22,7 @@ namespace scone
 		void Model::InitControllers()
 		{
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-				c->ConnectModel( *this );
+				c->Initialize( *this );
 		}
 
 		void Model::ProcessProperties( const PropNode& props )
@@ -34,6 +34,12 @@ namespace scone
 		{
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
 				c->ProcessParameters( par );
+		}
+
+		void Model::Reset()
+		{
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+				c->Initialize( *this );
 		}
 	}
 }

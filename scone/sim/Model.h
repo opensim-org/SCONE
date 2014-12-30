@@ -40,11 +40,12 @@ namespace scone
 			Link& GetRootLink() { return *m_RootLink; }
 
 			/// controller access
-			virtual void InitControllers();
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
 
+			// initialization
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
+			virtual void Reset();
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;
@@ -53,6 +54,7 @@ namespace scone
 			virtual void WriteStateHistory( const String& file ) = 0;
 
 		protected:
+			virtual void InitControllers();
 			std::unique_ptr< Link > m_RootLink;
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;

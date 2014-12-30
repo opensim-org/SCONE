@@ -45,6 +45,7 @@ namespace scone
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
+			virtual void Reset() override;
 
 		private:
 			void CreateOsModel( const String& file );

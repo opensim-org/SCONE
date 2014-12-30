@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<max_threads>32</max_threads>
+	<max_threads>1</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
 	<mu>0</mu>

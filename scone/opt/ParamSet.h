@@ -46,7 +46,7 @@ namespace scone
 			Parameterizable() { };
 			virtual ~Parameterizable() { };
 
-			virtual void ProcessParameters( ParamSet& par ) = 0;
+			virtual void ProcessParameters( opt::ParamSet& par ) = 0;
 		};
 	}
 }

@@ -58,7 +58,7 @@ namespace scone
 			return true;
 		}
 
-		void FeedForwardController::ConnectModel( sim::Model& model )
+		void FeedForwardController::Initialize( sim::Model& model )
 		{
 			SCONE_ASSERT( m_MuscleCount == 0 );
 

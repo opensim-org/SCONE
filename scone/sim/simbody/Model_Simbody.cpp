@@ -257,5 +257,10 @@ namespace scone
 			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
 			return netGRFVertical < -1.0;
 		}
+
+		void Model_Simbody::Reset()
+		{
+			Model::Reset();
+		}
 	}
 }

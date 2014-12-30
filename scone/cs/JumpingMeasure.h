@@ -16,10 +16,12 @@ namespace scone
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
+			virtual void Initialize( sim::Model& model ) override;
 
 		private:
 			double m_Initial;
-			double GetCurrentComHeight( sim::Model& model );
+			double m_Best;
+			bool m_Upward;
 		};
 	}
 }
