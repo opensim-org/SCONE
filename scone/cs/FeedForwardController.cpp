@@ -60,7 +60,10 @@ namespace scone
 
 		void FeedForwardController::Initialize( sim::Model& model )
 		{
-			SCONE_ASSERT( m_MuscleCount == 0 );
+			// check if already initialized
+			// TODO: this should be done differently, perhaps use a Reset() method
+			if ( m_MuscleCount > 0 )
+				return;
 
 			m_MuscleCount = model.GetMuscles().size();
 			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;

@@ -42,6 +42,7 @@ namespace scone
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsModel() { return *m_osModel; }
 			SimTK::State& GetTkState() { return *m_tkState; }
+			void SetTkState( SimTK::State& s ) { m_tkState = &s; }
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;

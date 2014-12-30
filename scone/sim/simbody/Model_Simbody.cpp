@@ -36,14 +36,14 @@ namespace scone
 		public:
 			TerminationEventHandler( Model_Simbody& model ) : m_Model( model ), SimTK::TriggeredEventHandler( SimTK::Stage::Dynamics ) { };
 			//virtual Real getNextEventTime( const SimTK::State& state, bool includeCurrentTime ) const override { return state.getTime() + 0.001; }
-			virtual Real getValue( const SimTK::State& ) const override {
+			virtual Real getValue( const SimTK::State& s ) const override {
 				double value = (double)m_Model.ShouldTerminate() - 0.5;
-				//printf("bla%f ", value );
+				//std::cout << s.getTime() << " " << m_Model.GetOsModel().calcMassCenterPosition( s )[1] << std::endl;
 				return value; }
 			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override
 			{
-				if ( m_Model.ShouldTerminate() )
-					printf("termination at time %f\n", state.getTime() );
+				//if ( m_Model.ShouldTerminate() )
+				//	printf("termination at time %f\n", state.getTime() );
 				shouldTerminate = m_Model.ShouldTerminate();
 			}
 
@@ -180,6 +180,9 @@ namespace scone
 
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
+			// update current state (TODO: remove const cast)
+			m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
+
 			// reset actuator values
 			BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
 				mus->ResetControlValue();
@@ -215,11 +218,14 @@ namespace scone
 
 			// initial call to all controllers
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
+			{
+				(*iter)->Initialize( *this );
 				(*iter)->UpdateControls( *this, 0.0 );
+			}
 
 			// update initial muscle activations and equilibrate
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetTkState(), (*iter)->GetControlValue() );
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
 			m_osModel->equilibrateMuscles( GetTkState() );
 
 			// Create the integrator for the simulation.
