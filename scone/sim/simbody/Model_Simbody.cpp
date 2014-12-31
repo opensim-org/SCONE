@@ -226,7 +226,7 @@ namespace scone
 			// update initial muscle activations and equilibrate
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
-			m_osModel->equilibrateMuscles( GetTkState() );
+			m_osModel->equilibrateMuscles( GetOsModel().updWorkingState() );
 
 			// Create the integrator for the simulation.
 			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
