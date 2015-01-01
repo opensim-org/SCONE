@@ -38,6 +38,7 @@ namespace scone
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
+			virtual void RequestTermination() override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsModel() { return *m_osModel; }

@@ -55,6 +55,8 @@ namespace scone
 
 		void CmaOptimizer::Run()
 		{
+			InitOutputFolder();
+
 			// get info from objective
 			ParamSet par = GetObjective().GetParamSet();
 			size_t dim = par.GetFreeParamCount();
@@ -128,10 +130,8 @@ namespace scone
 					printf(" B=%.2f", best );
 
 					// write results
-					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( GetStringF( "%04d_%.3f", gen, best ) );
+					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( GetOutputFolder() + GetStringF( "%04d_%.3f", gen, best ) );
 				}
-
-				//if ( (gen + 1) % 5 == 0 ) printf( " T=%.2f", timer.GetTime() );
 
 				// update next generation
 				m_pImpl->m_pParents->selectMuLambda( *m_pImpl->m_pOffspring, num_elitists );

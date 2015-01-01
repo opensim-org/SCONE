@@ -7,7 +7,7 @@
 	<mu>0</mu>
 	<sigma>1</sigma>
 	<max_generations>5000</max_generations>
-	<output_folder>../_SconeOutput/</output_folder>
+	<output_folder_base>../_SconeOutput/</output_folder_base>
 
 	<Objective type="SimulationObjective">
 		<max_duration>2.0</max_duration>

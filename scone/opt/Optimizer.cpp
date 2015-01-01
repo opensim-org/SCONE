@@ -5,6 +5,8 @@
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 
+using namespace boost::filesystem;
+
 namespace scone
 {
 	namespace opt
@@ -23,7 +25,7 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
-			INIT_FROM_PROP( props, output_folder, String() );
+			INIT_FROM_PROP( props, output_folder_base, String() );
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 
 			// create objective instances
@@ -100,6 +102,13 @@ namespace scone
 		{
 			::SetThreadPriority( ::GetCurrentThread(), priority );
 			*fitness = obj->Evaluate( par );
+		}
+
+		void Optimizer::InitOutputFolder()
+		{
+			// setup output folder
+			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + m_Name + "/";
+			create_directories( path( m_OutputFolder ) );
 		}
 	}
 }

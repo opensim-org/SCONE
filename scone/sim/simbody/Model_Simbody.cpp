@@ -130,8 +130,8 @@ namespace scone
 			m_osModel->buildSystem();
 
 			// create termination event handler (TODO: verify ownership is passed)
-			m_pTerminationEventHandler = new TerminationEventHandler( *this );
-			m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
+			//m_pTerminationEventHandler = new TerminationEventHandler( *this );
+			//m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
 
 			// create model state and keep pointer (non-owning)
 			m_tkState = &m_osModel->initializeState();
@@ -285,5 +285,12 @@ namespace scone
 			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
 			return netGRFVertical < -1.0;
 		}
+
+		void Model_Simbody::RequestTermination()
+		{
+			Model::RequestTermination();
+			m_osManager->halt();
+		}
+
 	}
 }

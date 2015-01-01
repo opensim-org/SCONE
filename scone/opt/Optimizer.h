@@ -18,9 +18,11 @@ namespace scone
 			Objective& GetObjective() { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
 			virtual void Run() = 0;
 
-		protected:
-			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
+			const String& GetOutputFolder() { return m_OutputFolder; }
 
+		protected:
+			void InitOutputFolder();
+			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 			PropNode m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
 
@@ -31,8 +33,10 @@ namespace scone
 
 			size_t max_threads;
 			int thread_priority;
-			String output_folder;
+			String output_folder_base;
 			String m_Name;
+
+			String m_OutputFolder;
 
 		private: // non-copyable and non-assignable
 			Optimizer( const Optimizer& );
