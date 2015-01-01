@@ -27,7 +27,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
 		{
 		public:
-			Model_Simbody( const String& filename = "" );
+			Model_Simbody();
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() override;
@@ -46,16 +46,17 @@ namespace scone
 
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
-			virtual void Reset() override;
 
 		private:
-			void CreateOsModel( const String& file );
+			void CreateModelFromFile( const String& file );
+			void ResetModel();
+			void PrepareSimulation();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			double integration_accuracy;
 			String model_file;
 
-			std::unique_ptr< OpenSim::Model > m_osModel;
+			std::unique_ptr< OpenSim::Model > m_osModel, m_osInitModel;
 			std::unique_ptr< OpenSim::Manager > m_osManager;
 			SimTK::State* m_tkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;

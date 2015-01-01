@@ -17,11 +17,11 @@ using namespace boost::property_tree;
 
 namespace scone
 {
-	PropNode::PropNode()
+	PropNode::PropNode() : m_Flag( false )
 	{
 	}
 
-	PropNode::PropNode( const char* prop_string )
+	PropNode::PropNode( const char* prop_string ) : m_Flag( false )
 	{
 		if ( prop_string == 0 || strlen(prop_string) == 0 )
 			return;
@@ -43,6 +43,7 @@ namespace scone
 
 	PropNode& PropNode::operator=( const PropNode& other )
 	{
+		m_Flag = other.m_Flag;
 		m_Value = other.m_Value;
 		m_Children.clear();
 		for ( ConstChildIter iter = other.m_Children.begin(); iter != other.m_Children.end(); ++iter )
@@ -256,16 +257,21 @@ namespace scone
 		FromPropertyTree( *this, pt );
 	}
 
-	void PropNode::ToStream( std::ostream& str, const std::string& prefix ) const
+	void PropNode::ToStream( std::ostream& str, const std::string& prefix, bool unflaggedOnly ) const
 	{
 		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
-			str << prefix << iter->first;
-			if ( iter->second->HasValue() )
-				str << " = " << iter->second->GetValue();
-			str << std::endl;
+			if ( !unflaggedOnly || !iter->second->GetFlag() )
+			{
+				str << prefix << iter->first;
+				if ( iter->second->HasValue() )
+					str << " = " << iter->second->GetValue();
+				if ( !unflaggedOnly && iter->second->GetFlag() )
+					str << " *"; // show asterisk on flagged items
+				str << std::endl;
+			}
 
-			iter->second->ToStream( str, prefix + "  " );
+			iter->second->ToStream( str, prefix + iter->first + ".", unflaggedOnly );
 		}
 	}
 

@@ -23,11 +23,13 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
+			INIT_FROM_PROP( props, output_folder, String() );
+			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 
 			// create objective instances
 			m_Objectives.clear();
 			m_ObjectiveProps = props.GetChild( "Objective" );
-			m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
+			m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
 		}
 
 		// evaluate individuals

@@ -31,6 +31,8 @@ namespace scone
 
 			size_t max_threads;
 			int thread_priority;
+			String output_folder;
+			String m_Name;
 
 		private: // non-copyable and non-assignable
 			Optimizer( const Optimizer& );

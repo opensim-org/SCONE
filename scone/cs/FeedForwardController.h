@@ -22,7 +22,7 @@ namespace scone
 			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual void Initialize( sim::Model& model ) override;
+			virtual void InitFromModel( sim::Model& model ) override;
 
 		private:
 			String function_type;

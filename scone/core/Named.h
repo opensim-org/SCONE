@@ -14,4 +14,3 @@ namespace scone
 		virtual void SetName( const String& ) { SCONE_THROW_NOT_IMPLEMENTED; }
 	};
 }
-

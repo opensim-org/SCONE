@@ -52,7 +52,7 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( const String& filename ) :
+		Model_Simbody::Model_Simbody() :
 		m_osModel( nullptr ),
 		m_tkState( nullptr ),
 		m_pControllerDispatcher( nullptr ),
@@ -64,11 +64,26 @@ namespace scone
 		{
 		}
 
-		void Model_Simbody::CreateOsModel( const String& file )
+		void Model_Simbody::CreateModelFromFile( const String& file )
 		{
-			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
+			m_osInitModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
+			ResetModel();
+		}
+
+		void Model_Simbody::ResetModel()
+		{
+			SCONE_ASSERT( m_osInitModel );
+
+			// explicitly reset existing objects
+			m_osModel.reset(); 
+			m_tkIntegrator.reset();
+			m_osManager.reset();
+
+			// create new osModel
+			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( *m_osInitModel ) );
 
 			// Create wrappers for actuators
+			m_Muscles.clear();
 			for ( int idx = 0; idx < m_osModel->getActuators().getSize(); ++idx )
 			{
 				OpenSim::Actuator& osAct = m_osModel->getActuators().get( idx );
@@ -83,40 +98,70 @@ namespace scone
 					SCONE_THROW( "Unsupported actuator type" );
 				}
 			}
-			//SCONE_LOG( "Muscles created: " << m_Muscles.size() );
 
 			// Create wrappers for bodies
+			m_Bodies.clear();
 			for ( int idx = 0; idx < m_osModel->getBodySet().getSize(); ++idx )
 				m_Bodies.push_back( BodyUP( new Body_Simbody( m_osModel->getBodySet().get( idx ) ) ) );
-			//SCONE_LOG( "Bodies created: " << m_Bodies.size() );
 
 			// Create wrappers for joints
+			m_Joints.clear();
 			for ( int idx = 0; idx < m_osModel->getJointSet().getSize(); ++idx )
 				m_Joints.push_back( JointUP( new Joint_Simbody( m_osModel->getJointSet().get( idx ) ) ) );
-			//SCONE_LOG( "Joints created: " << m_Joints.size() );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_osModel->getGroundBody() );
-
-			// debug print
-			//SCONE_LOG( m_RootLink->ToString() );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_osModel->addController( m_pControllerDispatcher );
 		}
 
+		void Model_Simbody::PrepareSimulation()
+		{
+			SCONE_ASSERT( m_osModel );
+
+			// reset termination flag
+			m_ShouldTerminate = false;
+
+			// Initialize the system. initSystem() cannot be used here because adding the event handler
+			// must be done between buildSystem() and initializeState().
+			m_osModel->buildSystem();
+
+			// create termination event handler (TODO: verify ownership is passed)
+			m_pTerminationEventHandler = new TerminationEventHandler( *this );
+			m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
+
+			// create model state and keep pointer (non-owning)
+			m_tkState = &m_osModel->initializeState();
+
+			// get initial controller values and equilibrate muscles
+			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
+				(*iter)->UpdateControls( *this, 0.0 );
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
+			m_osModel->equilibrateMuscles( GetOsModel().updWorkingState() );
+
+			// Create the integrator for the simulation.
+			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
+			m_tkIntegrator->setAccuracy( integration_accuracy );
+
+			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
+			m_osManager->setWriteToStorage( true );
+			m_osManager->setPerformAnalyses( false );
+		}
+
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
-			Model::ProcessProperties( props );
-
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 			INIT_FROM_PROP( props, model_file, String("") );
-			
-			if ( !model_file.empty() )
-				CreateOsModel( model_file );
 
-			InitControllers();
+			// create the model
+			CreateModelFromFile( model_file );
+
+			// create controllers using parent function
+			Model::ProcessProperties( props );
 		}
 
 		Vec3 Model_Simbody::GetComPos()
@@ -202,41 +247,8 @@ namespace scone
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
-			// reset termination flag
-			m_ShouldTerminate = false;
+			SCONE_ASSERT( m_osManager );
 
-			// Initialize the system. initSystem() cannot be used here because adding the event handler
-			// must be done between buildSystem() and initializeState().
-			m_osModel->buildSystem();
-
-			// create termination event handler (TODO: verify ownership is passed)
-			m_pTerminationEventHandler = new TerminationEventHandler( *this );
-			m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
-
-			// create model state and keep pointer (non-owning)
-			m_tkState = &m_osModel->initializeState();
-
-			// initial call to all controllers
-			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
-			{
-				(*iter)->Initialize( *this );
-				(*iter)->UpdateControls( *this, 0.0 );
-			}
-
-			// update initial muscle activations and equilibrate
-			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
-			m_osModel->equilibrateMuscles( GetOsModel().updWorkingState() );
-
-			// Create the integrator for the simulation.
-			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
-			m_tkIntegrator->setAccuracy( integration_accuracy );
-
-			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
-			m_osManager->setWriteToStorage( true );
-			m_osManager->setPerformAnalyses( false );
-			
 			// Integrate from initial time to final time and integrate
 			m_osManager->setInitialTime( 0.0 );
 			m_osManager->setFinalTime( time );
@@ -250,7 +262,16 @@ namespace scone
 
 		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
 		{
-			Model::ProcessParameters( par );
+			ResetModel();
+
+			// attach controllers to model and process parameters
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+			{
+				c->InitFromModel( *this );
+				c->ProcessParameters( par );
+			}
+
+			PrepareSimulation();
 		}
 
 		bool Model_Simbody::HasGroundContact()
@@ -262,11 +283,6 @@ namespace scone
 			double netGRFVertical = force_foot_r[1] + force_foot_l[1];
 			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
 			return netGRFVertical < -1.0;
-		}
-
-		void Model_Simbody::Reset()
-		{
-			Model::Reset();
 		}
 	}
 }

@@ -58,12 +58,10 @@ namespace scone
 			return true;
 		}
 
-		void FeedForwardController::Initialize( sim::Model& model )
+		void FeedForwardController::InitFromModel( sim::Model& model )
 		{
-			// check if already initialized
-			// TODO: this should be done differently, perhaps use a Reset() method
-			if ( m_MuscleCount > 0 )
-				return;
+			m_Functions.clear();
+			m_MuscleNames.clear();
 
 			m_MuscleCount = model.GetMuscles().size();
 			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;

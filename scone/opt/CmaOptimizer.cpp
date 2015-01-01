@@ -46,7 +46,7 @@ namespace scone
 		{
 			Optimizer::ProcessProperties( props );
 
-			INIT_FROM_PROP_NAMED( props, m_Lambda, "lamda", 0 );
+			INIT_FROM_PROP_NAMED( props, m_Lambda, "lambda", 0 );
 			INIT_FROM_PROP_NAMED( props, m_Mu, "mu", 0 );
 			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_FROM_PROP( props, max_generations, 10000u );

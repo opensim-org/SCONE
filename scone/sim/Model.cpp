@@ -19,12 +19,6 @@ namespace scone
 		{
 		}
 
-		void Model::InitControllers()
-		{
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-				c->Initialize( *this );
-		}
-
 		void Model::ProcessProperties( const PropNode& props )
 		{
 			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
@@ -34,12 +28,6 @@ namespace scone
 		{
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
 				c->ProcessParameters( par );
-		}
-
-		void Model::Reset()
-		{
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-				c->Initialize( *this );
 		}
 	}
 }

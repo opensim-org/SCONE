@@ -40,7 +40,7 @@ namespace scone
 		{
 		}
 
-		void JumpingMeasure::Initialize( sim::Model& model )
+		void JumpingMeasure::InitFromModel( sim::Model& model )
 		{
 			m_Upward = false;
 			m_Best = m_Initial = -999.999;

@@ -40,12 +40,12 @@ namespace scone
 		void SimulationObjective::ProcessProperties( const PropNode& props )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
-
 			m_Model = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 		}
 
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
+			// process model parameters (model should reset)
 			m_Model->ProcessParameters( par );
 		}
 

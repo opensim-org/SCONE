@@ -40,18 +40,21 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
 	{
 		var = prop.Get< T >();
+		prop.SetFlag();
 	}
 
 	// process Propertyable type
 	inline void InitFromPropNode( const PropNode& prop, Propertyable& var )
 	{
 		var.ProcessProperties( prop );
+		prop.SetFlag();
 	}
 
 	// process Propertyable type
 	inline void InitFromPropNode( const PropNode& prop, String& var )
 	{
 		var = prop.GetValue();
+		prop.SetFlag();
 	}
 
 	//// process unique_ptr type (requires factory definition)
@@ -77,6 +80,7 @@ namespace scone
 		vec.clear();
 		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
 			vec.push_back( CreateFromPropNode< T >( *iter->second ) );
+		prop.SetFlag();
 	}
 
 	// process fundamental types and String
@@ -85,6 +89,8 @@ namespace scone
 	{
 		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
 		InitFromPropNode( prop, *var );
+		prop.SetFlag();
+		prop.GetChild( "type" ).SetFlag();
 
 		return var;
 	}

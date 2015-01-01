@@ -17,7 +17,12 @@ namespace scone
 			RegisterFactoryTypes();
 
 			PropNode p = LoadXmlFile( xml_file );
-			return CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
+			OptimizerUP o = CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
+
+			// report unused parameters
+			p.ToStream( std::cout, "Unused parameter ", true );
+
+			return o;
 		}
 	}
 }
