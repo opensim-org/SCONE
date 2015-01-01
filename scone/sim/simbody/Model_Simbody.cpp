@@ -31,6 +31,7 @@ namespace scone
 		};
 
 		/// Simbody event handler to determine termination
+		// TODO: use halt instead of this
 		class Model_Simbody::TerminationEventHandler : public SimTK::TriggeredEventHandler
 		{
 		public:

@@ -9,16 +9,3 @@
 #else
 #define VIS_API __declspec(dllimport)
 #endif
-
-// This class is exported from the vis.dll
-class VIS_API Cvis {
-public:
-	Cvis(void);
-	// TODO: add your methods here.
-};
-
-extern VIS_API int nvis;
-
-VIS_API int fnvis(void);
-
-#include <Simbody/sim_simbody.h>
