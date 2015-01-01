@@ -34,7 +34,14 @@ namespace scone
 				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 				{
 					if ( optimize_control_point_time )
-						m_Functions[ idx ]->setX( cpidx, cpidx > 0 ? par( str + GetStringF( "X%d", cpidx ), cpidx * control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 ) : 0.0 );
+					{
+						if ( cpidx > 0 )
+						{
+							double duration = par( str + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
+							m_Functions[ idx ]->setX( cpidx, m_Functions[ idx ]->getX( cpidx - 1 ) + duration );
+						}
+						else m_Functions[ idx ]->setX( 0, 0.0 );
+					}
 					else m_Functions[ idx ]->setX( cpidx, cpidx * control_point_time_delta );
 					m_Functions[ idx ]->setY( cpidx, par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, 0.0, 1.0 ) );
 				}
