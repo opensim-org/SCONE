@@ -9,6 +9,6 @@ namespace scone
 {
 	namespace sim
 	{
-		inline Vec3 ToVec3( SimTK::Vec3& vec ) { return Vec3( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
+		inline Vec3 ToVec3( const SimTK::Vec3& vec ) { return Vec3( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
 	}
 }

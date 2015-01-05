@@ -103,7 +103,7 @@ namespace scone
 			// Create wrappers for bodies
 			m_Bodies.clear();
 			for ( int idx = 0; idx < m_osModel->getBodySet().getSize(); ++idx )
-				m_Bodies.push_back( BodyUP( new Body_Simbody( m_osModel->getBodySet().get( idx ) ) ) );
+				m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_osModel->getBodySet().get( idx ) ) ) );
 
 			// Create wrappers for joints
 			m_Joints.clear();

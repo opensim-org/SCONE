@@ -15,7 +15,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Body_Simbody : public Body
 		{
 		public:
-			Body_Simbody( OpenSim::Body& body );
+			Body_Simbody( class Model_Simbody& model, OpenSim::Body& body );
 			virtual ~Body_Simbody() { };
 
 			virtual Vec3 GetPos() override;
@@ -27,6 +27,7 @@ namespace scone
 			virtual const String& GetName();
 
 			OpenSim::Body& m_osBody;
+			class Model_Simbody& m_Model;
 		};
 	}
 }
