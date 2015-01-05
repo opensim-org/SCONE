@@ -146,6 +146,7 @@ namespace scone
 			// Create the integrator for the simulation.
 			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
 			m_tkIntegrator->setAccuracy( integration_accuracy );
+			m_tkIntegrator->setMaximumStepSize( max_step_size );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
@@ -156,6 +157,7 @@ namespace scone
 		void Model_Simbody::ProcessProperties( const PropNode& props )
 		{
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
+			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP( props, model_file, String("") );
 
 			// create the model

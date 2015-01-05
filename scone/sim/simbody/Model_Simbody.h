@@ -55,6 +55,7 @@ namespace scone
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			double integration_accuracy;
+			double max_step_size;
 			String model_file;
 
 			std::unique_ptr< OpenSim::Model > m_osModel, m_osInitModel;

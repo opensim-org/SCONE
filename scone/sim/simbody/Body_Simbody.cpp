@@ -24,9 +24,13 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetPos()
 		{
-			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
-			const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
-			return ToVec3( mob.getBodyOriginLocation( m_Model.GetTkState() ) );
+			//m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
+			//const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
+			//return ToVec3( mob.getBodyOriginLocation( m_Model.GetTkState() ) );
+			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
+			SimTK::Vec3 point;
+			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
+			return ToVec3( point );
 		}
 		
 		scone::Quat scone::sim::Body_Simbody::GetOri()
@@ -45,5 +49,5 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
-}
+	}
 }

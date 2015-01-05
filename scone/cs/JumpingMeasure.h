@@ -4,7 +4,6 @@
 #include "..\core\Factory.h"
 #include "../sim/Body.h"
 #include <functional>
-#include "../core/Ref.h"
 
 namespace scone
 {
@@ -13,7 +12,7 @@ namespace scone
 		class JumpingMeasure : public Measure, public Factoryable< sim::Controller, JumpingMeasure >
 		{
 		public:
-			JumpingMeasure();;
+			JumpingMeasure();
 			virtual ~JumpingMeasure() { };
 
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;

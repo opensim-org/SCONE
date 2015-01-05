@@ -25,7 +25,7 @@ namespace scone
 			if ( timestamp == 0.0 )
 				m_Initial = height;
 
-			//SCONE_LOG( "time=" << timestamp << " comHeight=" << comHeight << " best=" << m_Best );
+			SCONE_LOG( "time=" << timestamp << " height=" << height << " best=" << m_Best );
 			m_Best = std::max( m_Best, height );
 
 			// check if going upward

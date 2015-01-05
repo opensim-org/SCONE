@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Model type="Simbody">
 	<model_file>models/jumper10dof24musc.osim</model_file>
+	<integration_accuracy>0.00001</integration_accuracy>
+	<max_step_size>0.001</max_step_size>
 	<Controllers>
 		<Controller type="FeedForwardController">
 			<function_type>PieceWiseLinear</function_type>
 			<use_symmetric_actuators>1</use_symmetric_actuators>
-			<control_points>5</control_points>
-			<init_mean>0.5</init_mean>
-			<init_std>0.25</init_std>
-			<control_point_time_delta>0.1</control_point_time_delta>
+			<control_points>3</control_points>
+			<init_min>0.25</init_min>
+			<init_max>0.75</init_max>
+			<control_point_time_delta>0.2</control_point_time_delta>
 			<optimize_control_point_time>0</optimize_control_point_time>
 		</Controller>
-		<Measure type="JumpingMeasure"/>
+		<Measure type="JumpingMeasure">
+			<target_body>toes_r</target_body>
+		</Measure>
 	</Controllers>
 </Model>
