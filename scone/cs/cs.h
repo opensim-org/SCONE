@@ -15,6 +15,7 @@ namespace scone
 {
 	namespace cs
 	{
+		void CS_API PerformOptimization( const String& config_file );
 		void CS_API RegisterFactoryTypes();
 
 		SCONE_DECLARE_CLASS_AND_PTR( Measure );

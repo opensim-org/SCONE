@@ -81,6 +81,5 @@ namespace scone
 				m_MuscleNames.push_back( model.GetMuscle( idx ).GetName() );
 			}
 		}
-
 	}
 }

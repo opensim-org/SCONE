@@ -110,5 +110,12 @@ namespace scone
 			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + m_Name + "/";
 			create_directories( path( m_OutputFolder ) );
 		}
+
+		const String& Optimizer::GetOutputFolder()
+		{
+			if ( m_OutputFolder.empty() )
+				InitOutputFolder();
+			return m_OutputFolder;
+		}
 	}
 }

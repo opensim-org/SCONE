@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Jump.FF4V015</name>
+	<name>Jump.FF.12F005</name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -18,11 +18,11 @@
 				<Controller type="FeedForwardController">
 					<function_type>PieceWiseLinear</function_type>
 					<use_symmetric_actuators>1</use_symmetric_actuators>
-					<control_points>4</control_points>
-					<init_min>0.25</init_min>
-					<init_max>0.75</init_max>
-					<control_point_time_delta>0.15</control_point_time_delta>
-					<optimize_control_point_time>1</optimize_control_point_time>
+					<control_points>12</control_points>
+					<init_min>0.0</init_min>
+					<init_max>0.25</init_max>
+					<control_point_time_delta>0.05</control_point_time_delta>
+					<optimize_control_point_time>0</optimize_control_point_time>
 				</Controller>
 				<Measure type="JumpingMeasure"/>
 			</Controllers>

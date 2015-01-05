@@ -18,10 +18,10 @@ namespace scone
 			Objective& GetObjective() { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
 			virtual void Run() = 0;
 
-			const String& GetOutputFolder() { return m_OutputFolder; }
+			/// get the results output folder (creates it if it doesn't exist)
+			const String& GetOutputFolder();
 
 		protected:
-			void InitOutputFolder();
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 			PropNode m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
@@ -30,6 +30,7 @@ namespace scone
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );
 			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets );
 			static void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
+			void InitOutputFolder();
 
 			size_t max_threads;
 			int thread_priority;

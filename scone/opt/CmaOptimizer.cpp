@@ -6,6 +6,7 @@
 
 #include <boost/format.hpp>
 #include <boost/foreach.hpp>
+
 #include "../core/Timer.h"
 #include "../core/Log.h"
 
@@ -55,8 +56,6 @@ namespace scone
 
 		void CmaOptimizer::Run()
 		{
-			InitOutputFolder();
-
 			// get info from objective
 			ParamSet par = GetObjective().GetParamSet();
 			size_t dim = par.GetFreeParamCount();
