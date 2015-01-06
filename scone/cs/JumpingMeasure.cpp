@@ -21,19 +21,21 @@ namespace scone
 			else return true;
 
 			double g = -model.GetGravity()[1];
-
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
 
 			double height = pos; // + pow( vel, 2.0 ) / ( 2.0 * g );
 
 			// record initial height or update best
-			if ( timestamp == 0.0 )
+			if ( model.GetStep() == 0 )
 				m_Initial = height;
 
 			//printf( "ct=%.5f step=%d time/step=%.5f height=%.4f\n", timestamp, model.GetStep(), timestamp / model.GetStep(), height );
 			//SCONE_LOG( "time=" << timestamp << " height=" << height << " best=" << m_Best );
 			m_Best = std::max( m_Best, height );
+
+			if ( GetResult( model ) < -1000 )
+				printf( "ct=%.5f step=%d init=%.4f best=%.4f height=%.4f\n", timestamp, model.GetStep(), m_Initial, GetResult( model ), height );
 
 			// check if going upward
 			if ( timestamp > 0.1 && vel > 0.1 )
@@ -58,6 +60,10 @@ namespace scone
 		{
 			m_Upward = false;
 			m_Best = m_Initial = -999.999;
+
+			// TODO: it would be great if we could do this model-specific initialization all in the constructor
+			// it would prevent nasty bugs like the one we fixed below...
+			m_LastStep = size_t( -1 );
 
 			// find target body
 			if ( !target_body.empty() )

@@ -34,7 +34,7 @@ namespace scone
 
 			// copy config file to output folder
 			opt::OptimizerUP opt = opt::CreateOptimizerFromXml( config_file );
-			copy_file( path( config_file ), path( opt->GetOutputFolder() ) / path( config_file ).filename() );
+			copy_file( path( config_file ), path( opt->GetOutputFolder() ) / path( config_file ).filename(), copy_option::overwrite_if_exists );
 
 			// start the optimization
 			opt->Run();
