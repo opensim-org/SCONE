@@ -28,6 +28,7 @@ namespace scone
 			double m_Initial;
 			double m_Best;
 			bool m_Upward;
+			size_t m_LastStep;
 		};
 	}
 }

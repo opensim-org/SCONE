@@ -40,8 +40,12 @@ namespace scone
 			virtual void WriteStateHistory( const String& file ) override;
 			virtual void RequestTermination() override;
 
+			virtual double GetTime() override;
+			virtual size_t GetStep() override;
+
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsModel() { return *m_osModel; }
+			SimTK::Integrator& GetTkIntegrator() { return *m_tkIntegrator; }
 			SimTK::State& GetTkState() { return *m_tkState; }
 			void SetTkState( SimTK::State& s ) { m_tkState = &s; }
 

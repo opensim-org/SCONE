@@ -48,6 +48,8 @@ namespace scone
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			/// Simulate model
+			virtual double GetTime() = 0;
+			virtual size_t GetStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
 			virtual void RequestTermination() { m_ShouldTerminate = true; }
 			virtual bool ShouldTerminate() { return m_ShouldTerminate; }

@@ -31,7 +31,6 @@ namespace scone
 		};
 
 		/// Simbody event handler to determine termination
-		// TODO: use halt instead of this
 		class Model_Simbody::TerminationEventHandler : public SimTK::TriggeredEventHandler
 		{
 		public:
@@ -39,7 +38,7 @@ namespace scone
 			//virtual Real getNextEventTime( const SimTK::State& state, bool includeCurrentTime ) const override { return state.getTime() + 0.001; }
 			virtual Real getValue( const SimTK::State& s ) const override {
 				double value = (double)m_Model.ShouldTerminate() - 0.5;
-				//std::cout << s.getTime() << " " << m_Model.GetOsModel().calcMassCenterPosition( s )[1] << std::endl;
+				//printf( "tt=%8.5f, steps=%d\n", s.getTime(), m_Model.GetTkIntegrator().getNumStepsTaken() );
 				return value; }
 			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override
 			{
@@ -136,17 +135,18 @@ namespace scone
 			// create model state and keep pointer (non-owning)
 			m_tkState = &m_osModel->initializeState();
 
+			// Create the integrator for the simulation.
+			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
+			m_tkIntegrator->setAccuracy( integration_accuracy );
+			m_tkIntegrator->setMaximumStepSize( max_step_size );
+			m_tkIntegrator->resetAllStatistics();
+
 			// get initial controller values and equilibrate muscles
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
 				(*iter)->UpdateControls( *this, 0.0 );
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
 			m_osModel->equilibrateMuscles( GetOsModel().updWorkingState() );
-
-			// Create the integrator for the simulation.
-			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
-			m_tkIntegrator->setAccuracy( integration_accuracy );
-			m_tkIntegrator->setMaximumStepSize( max_step_size );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
@@ -294,5 +294,14 @@ namespace scone
 			m_osManager->halt();
 		}
 
+		double Model_Simbody::GetTime()
+		{
+			return GetTkState().getTime();
+		}
+
+		size_t Model_Simbody::GetStep()
+		{
+			return GetTkIntegrator().getNumStepsTaken();
+		}
 	}
 }

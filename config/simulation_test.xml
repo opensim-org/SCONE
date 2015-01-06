@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Model type="Simbody">
 	<model_file>models/jumper10dof24musc.osim</model_file>
-	<integration_accuracy>0.00001</integration_accuracy>
-	<max_step_size>0.001</max_step_size>
+	<integration_accuracy>0.0001</integration_accuracy>
+	<max_step_size>0.01</max_step_size>
 	<Controllers>
 		<Controller type="FeedForwardController">
 			<function_type>PieceWiseLinear</function_type>

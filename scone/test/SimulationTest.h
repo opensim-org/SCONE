@@ -21,6 +21,6 @@ void SimulationTest()
 
 	Timer t;
 	SCONE_LOG( "Starting simulation" );
-	m->AdvanceSimulationTo( 0.5 );
+	m->AdvanceSimulationTo( 1.0 );
 	SCONE_LOG( "Simulation ended in " << t.GetTime() );
 }

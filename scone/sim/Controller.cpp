@@ -16,6 +16,6 @@ namespace scone
 		void Controller::ProcessProperties( const PropNode& props )
 		{
 		}
-}
+	}
 }
 

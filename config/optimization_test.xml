@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Jump.FF.3V020.toes</name>
+	<name>Jump.FF.3V020.torso</name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -22,10 +22,10 @@
 					<init_min>0.25</init_min>
 					<init_max>0.75</init_max>
 					<control_point_time_delta>0.2</control_point_time_delta>
-					<optimize_control_point_time>0</optimize_control_point_time>
+					<optimize_control_point_time>1</optimize_control_point_time>
 				</Controller>
 				<Measure type="JumpingMeasure">
-					<target_body>toes_r</target_body>
+					<target_body>torso</target_body>
 				</Measure>
 			</Controllers>
 		</Model>
