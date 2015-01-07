@@ -21,7 +21,7 @@ namespace scone
 
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual void InitFromModel( sim::Model& model ) override;
+			virtual void Initialize( sim::Model& model ) override;
 
 		private:
 			String function_type;
@@ -30,6 +30,7 @@ namespace scone
 			double control_point_time_delta;
 			double initial_max_value;
 			bool optimize_control_point_time;
+			bool flat_extrapolation;
 
 			typedef std::unique_ptr< OpenSim::PiecewiseLinearFunction > FunctionUP;
 			std::vector< FunctionUP > m_Functions;

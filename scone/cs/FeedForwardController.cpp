@@ -8,6 +8,7 @@
 #include <OpenSim/OpenSim.h>
 #include "../core/Log.h"
 #include <conio.h>
+#include <xutility>
 
 namespace scone
 {
@@ -24,12 +25,29 @@ namespace scone
 			INIT_FROM_PROP( props, init_min, 0.0 );
 			INIT_FROM_PROP( props, init_max, 1.0 );
 			INIT_FROM_PROP( props, optimize_control_point_time, true );
+			INIT_FROM_PROP( props, flat_extrapolation, false );
+		}
+
+		void FeedForwardController::Initialize( sim::Model& model )
+		{
+			m_Functions.clear();
+			m_MuscleNames.clear();
+
+			m_MuscleCount = model.GetMuscles().size();
+			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;
+			for ( size_t idx = 0; idx < num_functions; ++idx )
+			{
+				m_Functions.push_back( FunctionUP( new OpenSim::PiecewiseLinearFunction() ) );
+				for ( size_t cp = 0; cp < control_points; ++cp )
+					m_Functions.back()->addPoint( 0, 0 );
+
+				m_MuscleNames.push_back( model.GetMuscle( idx ).GetName() );
+			}
 		}
 
 		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
 		{
 			SCONE_ASSERT( m_MuscleCount > 0 );
-
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 			{
 				String str = m_MuscleNames[ idx ] + ".";
@@ -57,7 +75,10 @@ namespace scone
 			SimTK::Vector xval( 1 );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 			{
-				xval[ 0 ] = time;
+				if ( flat_extrapolation )
+					xval[ 0 ] = std::min( time, m_Functions[ idx ]->getX( control_points - 1) );
+				else xval[ 0 ] = time;
+
 				double result = m_Functions[ idx ]->calcValue( xval );
 				model.GetMuscle( idx ).AddControlValue( result );
 				if ( use_symmetric_actuators )
@@ -65,23 +86,6 @@ namespace scone
 			}
 
 			return true;
-		}
-
-		void FeedForwardController::InitFromModel( sim::Model& model )
-		{
-			m_Functions.clear();
-			m_MuscleNames.clear();
-
-			m_MuscleCount = model.GetMuscles().size();
-			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;
-			for ( size_t idx = 0; idx < num_functions; ++idx )
-			{
-				m_Functions.push_back( FunctionUP( new OpenSim::PiecewiseLinearFunction() ) );
-				for ( size_t cp = 0; cp < control_points; ++cp )
-					m_Functions.back()->addPoint( 0, 0 );
-
-				m_MuscleNames.push_back( model.GetMuscle( idx ).GetName() );
-			}
 		}
 	}
 }

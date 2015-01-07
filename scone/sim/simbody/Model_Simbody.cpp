@@ -264,7 +264,7 @@ namespace scone
 			// attach controllers to model and process parameters
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
 			{
-				c->InitFromModel( *this );
+				c->Initialize( *this );
 				c->ProcessParameters( par );
 			}
 

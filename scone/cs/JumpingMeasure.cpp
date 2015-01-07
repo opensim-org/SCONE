@@ -15,6 +15,22 @@ namespace scone
 			INIT_FROM_PROP( props, target_body, String("") );
 		}
 
+		void JumpingMeasure::Initialize( sim::Model& model )
+		{
+			m_Upward = false;
+			m_Best = m_Initial = -999.999;
+			m_LastStep = size_t( -1 );
+
+			// find target body
+			if ( !target_body.empty() )
+				m_pTargetBody = &model.FindBody( target_body );
+			else m_pTargetBody = nullptr;
+		}
+
+		void JumpingMeasure::ProcessParameters( opt::ParamSet& par )
+		{
+		}
+
 		bool JumpingMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			// check if this is a new step
@@ -52,25 +68,6 @@ namespace scone
 		double JumpingMeasure::GetResult( sim::Model& model )
 		{
 			return -100 * ( m_Best - m_Initial );
-		}
-
-		void JumpingMeasure::ProcessParameters( opt::ParamSet& par )
-		{
-		}
-
-		void JumpingMeasure::InitFromModel( sim::Model& model )
-		{
-			m_Upward = false;
-			m_Best = m_Initial = -999.999;
-
-			// TODO: it would be great if we could do this model-specific initialization all in the constructor
-			// it would prevent nasty bugs like the one we fixed below...
-			m_LastStep = size_t( -1 );
-
-			// find target body
-			if ( !target_body.empty() )
-				m_pTargetBody = &model.FindBody( target_body );
-			else m_pTargetBody = nullptr;
 		}
 	}
 }

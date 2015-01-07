@@ -15,7 +15,7 @@ namespace scone
 			Controller( const PropNode& props );
 			virtual ~Controller();
 
-			virtual void InitFromModel( sim::Model& model ) { };
+			virtual void Initialize( sim::Model& model ) { };
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) = 0;
 		};
 	}

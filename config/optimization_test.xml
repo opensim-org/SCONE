@@ -18,6 +18,7 @@
 				<Controller type="FeedForwardController">
 					<function_type>PieceWiseLinear</function_type>
 					<use_symmetric_actuators>1</use_symmetric_actuators>
+					<flat_extrapolation>1</flat_extrapolation>
 					<control_points>3</control_points>
 					<init_min>0.25</init_min>
 					<init_max>0.75</init_max>
