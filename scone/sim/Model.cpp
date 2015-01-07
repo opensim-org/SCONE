@@ -11,24 +11,13 @@ namespace scone
 {
 	namespace sim
 	{
-		Model::Model() :
+		Model::Model( const PropNode& props ) :
 		m_ShouldTerminate( false )
 		{
 		}
 		
 		Model::~Model()
 		{
-		}
-
-		void Model::ProcessProperties( const PropNode& props )
-		{
-			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
-		}
-
-		void Model::ProcessParameters( opt::ParamSet& par )
-		{
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-				c->ProcessParameters( par );
 		}
 
 		Body& Model::FindBody( const String& name )

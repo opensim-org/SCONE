@@ -18,11 +18,10 @@ namespace scone
 		class CS_API SimulationObjective : public opt::Objective, public Factoryable< opt::Objective, SimulationObjective >
 		{
 		public:
-			SimulationObjective();
+			SimulationObjective( const PropNode& props );
 			virtual ~SimulationObjective();
 
 			virtual double Evaluate() override;
-			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			virtual void WriteResults( const String& file ) override;

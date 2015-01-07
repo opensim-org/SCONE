@@ -11,7 +11,7 @@ namespace scone
 		class OPT_API Objective : public Propertyable, public Parameterizable
 		{
 		public:
-			Objective();
+			Objective( const PropNode& props );
 			virtual ~Objective();
 
 			// Find all parameters in this objective

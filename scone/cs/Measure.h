@@ -10,12 +10,10 @@ namespace scone
 		class Measure : public sim::Controller
 		{
 		public:
-			Measure() { };
+			Measure( const PropNode& props );
 			virtual ~Measure() { };
 
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) = 0;
-			virtual void ProcessProperties( const PropNode& props ) override;
-
 			virtual double GetResult( sim::Model& model ) = 0;
 
 		private:

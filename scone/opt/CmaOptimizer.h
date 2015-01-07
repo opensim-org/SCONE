@@ -10,10 +10,9 @@ namespace scone
 		class OPT_API CmaOptimizer : public Optimizer, public Factoryable< Optimizer, CmaOptimizer >
 		{
 		public:
-			CmaOptimizer();
+			CmaOptimizer( const PropNode& props );
 			virtual ~CmaOptimizer();
 
-			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void Run() override;
 
 		private:

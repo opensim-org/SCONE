@@ -13,8 +13,6 @@ namespace scone
 	public:
 		Propertyable();
 		virtual ~Propertyable();
-
-		virtual void ProcessProperties( const PropNode& props ) = 0;
 	};
 
 	// process named property type
@@ -44,11 +42,11 @@ namespace scone
 	}
 
 	// process Propertyable type
-	inline void InitFromPropNode( const PropNode& prop, Propertyable& var )
-	{
-		var.ProcessProperties( prop );
-		prop.SetFlag();
-	}
+	//inline void InitFromPropNode( const PropNode& prop, Propertyable& var )
+	//{
+	//	var.ProcessProperties( prop );
+	//	prop.SetFlag();
+	//}
 
 	// process Propertyable type
 	inline void InitFromPropNode( const PropNode& prop, String& var )
@@ -87,8 +85,7 @@ namespace scone
 	template< typename T >
 	std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
 	{
-		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
-		InitFromPropNode( prop, *var );
+		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ), prop ) );
 		prop.SetFlag();
 		prop.GetChild( "type" ).SetFlag();
 

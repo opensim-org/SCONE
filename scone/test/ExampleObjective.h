@@ -8,8 +8,7 @@ namespace scone
 	class ExampleObjective : public opt::Objective, public Factoryable< opt::Objective, ExampleObjective >
 	{
 	public:
-		ExampleObjective() : num_params( 0 ), is_evaluating( false ) { };
-		virtual void ProcessProperties( const PropNode& props ) override;
+		ExampleObjective( const PropNode& props );;
 		virtual void ProcessParameters( opt::ParamSet& par ) override;
 		static double Rosenbrock( const std::vector< double >& v );
 

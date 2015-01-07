@@ -7,10 +7,12 @@ namespace scone
 {
 	namespace cs
 	{
-		JumpingMeasure::JumpingMeasure() :
+		JumpingMeasure::JumpingMeasure( const PropNode& props ) :
+		Measure( props ),
 		m_pTargetBody( nullptr ),
 		m_LastStep( size_t( -1 ) )
 		{
+			INIT_FROM_PROP( props, target_body, String("") );
 		}
 
 		bool JumpingMeasure::UpdateControls( sim::Model& model, double timestamp )
@@ -69,11 +71,6 @@ namespace scone
 			if ( !target_body.empty() )
 				m_pTargetBody = &model.FindBody( target_body );
 			else m_pTargetBody = nullptr;
-		}
-
-		void JumpingMeasure::ProcessProperties( const PropNode& props )
-		{
-			INIT_FROM_PROP( props, target_body, String("") );
 		}
 	}
 }

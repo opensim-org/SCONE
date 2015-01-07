@@ -7,6 +7,15 @@
 
 namespace scone
 {
+	ExampleObjective::ExampleObjective( const PropNode& props ) :
+	Objective( props ),
+	num_params( 0 ),
+	is_evaluating( false )
+	{
+		INIT_FROM_PROP( props, num_params, 0 );
+		params.resize( num_params );
+	}
+
 	double ExampleObjective::Evaluate()
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
@@ -16,12 +25,6 @@ namespace scone
 		is_evaluating = false;
 
 		return result;
-	}
-
-	void ExampleObjective::ProcessProperties( const PropNode& props )
-	{
-		INIT_FROM_PROP( props, num_params, 0 );
-		params.resize( num_params );
 	}
 
 	void ExampleObjective::ProcessParameters( opt::ParamSet& par )

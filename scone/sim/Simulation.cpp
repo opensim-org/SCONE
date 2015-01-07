@@ -8,24 +8,19 @@ namespace scone
 {
 	namespace sim
 	{
-		Simulation::Simulation() :
+		Simulation::Simulation( const PropNode& props ) :
 		max_simulation_time( 0.0 ),
 		integration_accuracy( 0.0 )
-		{
-
-		}
-
-		Simulation::~Simulation()
-		{
-
-		}
-
-		void Simulation::ProcessProperties( const PropNode& props )
 		{
 			INIT_FROM_PROP( props, integration_accuracy, 0.00001 );
 			INIT_FROM_PROP( props, max_simulation_time, 10000.0 );
 
 			InitFromPropNode( props, m_Models );
+		}
+
+		Simulation::~Simulation()
+		{
+
 		}
 
 		Model& Simulation::GetModel( size_t idx )

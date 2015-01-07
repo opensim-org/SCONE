@@ -12,12 +12,11 @@ namespace scone
 		class SCONE_SIM_API Controller : public Propertyable, public opt::Parameterizable
 		{
 		public:
-			Controller();
+			Controller( const PropNode& props );
 			virtual ~Controller();
 
 			virtual void InitFromModel( sim::Model& model ) { };
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) = 0;
-			virtual void ProcessProperties( const PropNode& props );
 		};
 	}
 }

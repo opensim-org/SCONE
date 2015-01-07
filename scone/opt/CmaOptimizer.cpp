@@ -28,7 +28,8 @@ namespace scone
 		};
 
 
-		CmaOptimizer::CmaOptimizer() :
+		CmaOptimizer::CmaOptimizer( const PropNode& props ) :
+		Optimizer( props ),
 		m_pImpl( new Impl ),
 		m_Mu( 0 ),
 		m_Lambda( 0 ),
@@ -37,21 +38,15 @@ namespace scone
 		num_elitists( 0 ),
 		max_attempts( 100 )
 		{
-		}
-
-		CmaOptimizer::~CmaOptimizer()
-		{
-		}
-
-		void CmaOptimizer::ProcessProperties( const PropNode& props )
-		{
-			Optimizer::ProcessProperties( props );
-
 			INIT_FROM_PROP_NAMED( props, m_Lambda, "lambda", 0 );
 			INIT_FROM_PROP_NAMED( props, m_Mu, "mu", 0 );
 			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_FROM_PROP( props, max_generations, 10000u );
 			INIT_FROM_PROP( props, random_seed, long( 123 ) );
+		}
+
+		CmaOptimizer::~CmaOptimizer()
+		{
 		}
 
 		void CmaOptimizer::Run()

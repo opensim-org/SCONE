@@ -27,7 +27,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
 		{
 		public:
-			Model_Simbody();
+			Model_Simbody( const PropNode& props );
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() override;
@@ -49,7 +49,6 @@ namespace scone
 			SimTK::State& GetTkState() { return *m_tkState; }
 			void SetTkState( SimTK::State& s ) { m_tkState = &s; }
 
-			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:

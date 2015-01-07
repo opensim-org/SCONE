@@ -14,7 +14,7 @@ namespace scone
 		class SCONE_SIM_API Model : public Propertyable, public opt::Parameterizable
 		{
 		public:
-			Model();
+			Model( const PropNode& props );
 			virtual ~Model();
 
 			virtual Vec3 GetComPos() = 0;
@@ -42,10 +42,6 @@ namespace scone
 
 			/// controller access
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
-
-			// initialization
-			virtual void ProcessProperties( const PropNode& props ) override;
-			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			/// Simulate model
 			virtual double GetTime() = 0;

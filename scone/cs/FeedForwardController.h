@@ -16,10 +16,9 @@ namespace scone
 		class CS_API FeedForwardController : public sim::Controller, public Factoryable< sim::Controller, FeedForwardController >
 		{
 		public:
-			FeedForwardController() : m_MuscleCount( 0 ) { };
+			FeedForwardController( const PropNode& props );
 			virtual ~FeedForwardController() { };
 
-			virtual void ProcessProperties( const PropNode& props ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual void InitFromModel( sim::Model& model ) override;

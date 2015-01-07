@@ -5,7 +5,8 @@ namespace scone
 {
 	namespace cs
 	{
-		void Measure::ProcessProperties( const PropNode& props )
+
+		Measure::Measure( const PropNode& props ) : Controller( props )
 		{
 		}
 	}

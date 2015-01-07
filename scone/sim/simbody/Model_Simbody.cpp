@@ -49,12 +49,22 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody() :
+		Model_Simbody::Model_Simbody( const PropNode& props ) :
+		Model( props ),
 		m_osModel( nullptr ),
 		m_tkState( nullptr ),
 		m_pControllerDispatcher( nullptr ),
 		m_pTerminationEventHandler( nullptr )
 		{
+			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
+			INIT_FROM_PROP( props, max_step_size, 0.001 );
+			INIT_FROM_PROP( props, model_file, String("") );
+
+			// create the model
+			CreateModelFromFile( model_file );
+
+			// create controllers
+			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
 		}
 
 		Model_Simbody::~Model_Simbody()
@@ -149,19 +159,6 @@ namespace scone
 			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
 			m_osManager->setWriteToStorage( true );
 			m_osManager->setPerformAnalyses( false );
-		}
-
-		void Model_Simbody::ProcessProperties( const PropNode& props )
-		{
-			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
-			INIT_FROM_PROP( props, max_step_size, 0.001 );
-			INIT_FROM_PROP( props, model_file, String("") );
-
-			// create the model
-			CreateModelFromFile( model_file );
-
-			// create controllers using parent function
-			Model::ProcessProperties( props );
 		}
 
 		Vec3 Model_Simbody::GetComPos()

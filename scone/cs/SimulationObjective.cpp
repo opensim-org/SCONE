@@ -10,8 +10,11 @@ namespace scone
 {
 	namespace cs
 	{
-		SimulationObjective::SimulationObjective()
+		SimulationObjective::SimulationObjective( const PropNode& props ) :
+		Objective( props )
 		{
+			INIT_FROM_PROP( props, max_duration, 6000.0 );
+			m_Model = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 		}
 
 		SimulationObjective::~SimulationObjective()
@@ -35,12 +38,6 @@ namespace scone
 			m_Model->AdvanceSimulationTo( max_duration );
 
 			return m.GetResult( *m_Model );
-		}
-
-		void SimulationObjective::ProcessProperties( const PropNode& props )
-		{
-			INIT_FROM_PROP( props, max_duration, 6000.0 );
-			m_Model = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 		}
 
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )

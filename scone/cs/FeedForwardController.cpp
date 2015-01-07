@@ -13,10 +13,10 @@ namespace scone
 {
 	namespace cs
 	{
-		void FeedForwardController::ProcessProperties( const PropNode& props )
+		FeedForwardController::FeedForwardController( const PropNode& props ) :
+		Controller( props ),
+		m_MuscleCount( 0 )
 		{
-			sim::Controller::ProcessProperties( props );
-
 			INIT_FROM_PROP( props, function_type, String("") );
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
 			INIT_FROM_PROP( props, control_points, 3u );
@@ -28,6 +28,8 @@ namespace scone
 
 		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
 		{
+			SCONE_ASSERT( m_MuscleCount > 0 );
+
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 			{
 				String str = m_MuscleNames[ idx ] + ".";

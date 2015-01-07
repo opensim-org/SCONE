@@ -5,15 +5,11 @@ namespace scone
 {
 	namespace sim
 	{
-		Controller::Controller()
+		Controller::Controller( const PropNode& props )
 		{
 		}
 
 		Controller::~Controller()
-		{
-		}
-
-		void Controller::ProcessProperties( const PropNode& props )
 		{
 		}
 	}

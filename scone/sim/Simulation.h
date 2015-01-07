@@ -14,14 +14,13 @@ namespace scone
 		class SCONE_SIM_API Simulation : public Propertyable, public opt::Parameterizable
 		{
 		public:
-			Simulation();
+			Simulation( const PropNode& props );
 			virtual ~Simulation();
 
 			Model& AddModel( const String& filename );
 			size_t GetModelCount() { return m_Models.size(); }
 			Model& GetModel( size_t idx = 0 );
 
-			virtual void ProcessProperties( const PropNode& props );
 			virtual void AdvanceSimulationTo( double time ) = 0;
 
 			virtual void ProcessParameters( opt::ParamSet& par ) override;

@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace opt
 	{
-		Objective::Objective()
+		Objective::Objective( const PropNode& props )
 		{
 
 		}

@@ -11,10 +11,9 @@ namespace scone
 		class OPT_API Optimizer : public Propertyable
 		{
 		public:
-			Optimizer();
+			Optimizer( const PropNode& props );
 			virtual ~Optimizer();
 
-			virtual void ProcessProperties( const PropNode& props ) override;
 			Objective& GetObjective() { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
 			virtual void Run() = 0;
 

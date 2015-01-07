@@ -11,17 +11,9 @@ namespace scone
 {
 	namespace opt
 	{
-		Optimizer::Optimizer() :
+		Optimizer::Optimizer( const PropNode& props ) :
 		max_threads( 1 ),
 		thread_priority( 0 )
-		{
-		}
-
-		Optimizer::~Optimizer()
-		{
-		}
-
-		void Optimizer::ProcessProperties( const PropNode& props )
 		{
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
@@ -32,6 +24,10 @@ namespace scone
 			m_Objectives.clear();
 			m_ObjectiveProps = props.GetChild( "Objective" );
 			m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
+		}
+
+		Optimizer::~Optimizer()
+		{
 		}
 
 		// evaluate individuals
