@@ -4,16 +4,17 @@
 #include "../core/Factory.h"
 #include "../sim/Body.h"
 #include <functional>
+#include "../core/MeasuredValue.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		class JumpingMeasure : public Measure, public Factoryable< sim::Controller, JumpingMeasure >
+		class HeightMeasure : public Measure, public Factoryable< sim::Controller, HeightMeasure >
 		{
 		public:
-			JumpingMeasure( const PropNode& props );
-			virtual ~JumpingMeasure() { };
+			HeightMeasure( const PropNode& props );
+			virtual ~HeightMeasure() { };
 
 			virtual void Initialize( sim::Model& model ) override;
 			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
@@ -22,9 +23,11 @@ namespace scone
 
 		private:
 			String target_body;
+			bool use_average_height;
+			bool terminate_on_peak;
+
 			sim::Body* m_pTargetBody; // non-owning pointer
-			double m_Initial;
-			double m_Best;
+			MeasuredValue< double > m_Height;
 			bool m_Upward;
 			size_t m_LastStep;
 		};

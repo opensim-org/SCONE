@@ -20,6 +20,9 @@ namespace scone
 			/// get the results output folder (creates it if it doesn't exist)
 			const String& GetOutputFolder();
 
+			bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
+			bool IsMinimizing() { return !maximize_objective; }
+
 		protected:
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 			PropNode m_ObjectiveProps;
@@ -33,6 +36,7 @@ namespace scone
 
 			size_t max_threads;
 			int thread_priority;
+			bool maximize_objective;
 			String output_folder_base;
 			String m_Name;
 

@@ -52,21 +52,4 @@ namespace scone
 	};
 
 	inline Deg::Deg( const Rad& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
-
-	// Average struct
-	template < typename T = double >
-	struct Average
-	{
-		Average() : m_Total( T( 0 ) ), m_Weight( 0 ) { };
-		void Add( const T& value, const double& weight = 1.0 ) { m_Total += weight * value; m_Weight += weight; }
-		void AddNoWeight( const T& value ) { m_Total += value; m_Weight = 1.0; }
-		void Set( const T& value ) { m_Total = value; m_Weight = 1.0; }
-		void SetIfHigher( const T& value ) { if ( value > GetAverage() ) Set( value ); }
-		void Clear() { m_Total = m_Weight = 0.0; }
-		T GetAverage() const { return ( m_Weight > 0.0 ) ? m_Total / m_Weight : 0.0; }
-
-	private:
-		T m_Total;
-		double m_Weight;
-	};
 }

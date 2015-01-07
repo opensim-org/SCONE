@@ -64,8 +64,17 @@ namespace scone
 			// init parents and offspring
 			m_pImpl->m_pParents = PopulationPtr( new Population( m_Mu, ChromosomeT<double>( dim ), ChromosomeT<double>( dim ) ) );
 			m_pImpl->m_pOffspring = PopulationPtr( new Population( m_Lambda, ChromosomeT<double>( dim ), ChromosomeT<double>( dim ) ) );
-			m_pImpl->m_pParents->setMinimize();
-			m_pImpl->m_pOffspring->setMinimize();
+
+			if ( IsMinimizing() )
+			{
+				m_pImpl->m_pParents->setMinimize();
+				m_pImpl->m_pOffspring->setMinimize();
+			}
+			else
+			{
+				m_pImpl->m_pParents->setMaximize();
+				m_pImpl->m_pOffspring->setMaximize();
+			}
 
 			// init random seed
 			Rng::seed( random_seed );
@@ -100,7 +109,7 @@ namespace scone
 
 			// optimization loop
 			Timer timer;
-			double best = REAL_MAX;
+			double best = IsMinimizing() ? REAL_MAX : REAL_MIN;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
 				printf("%04d:", gen );
@@ -118,7 +127,7 @@ namespace scone
 
 				// report results
 				printf(" M=%.2f", (*m_pImpl->m_pOffspring).meanFitness() );
-				if ( (*m_pImpl->m_pOffspring).best().fitnessValue() < best )
+				if ( IsBetterThan( (*m_pImpl->m_pOffspring).best().fitnessValue(), best ) )
 				{
 					best = (*m_pImpl->m_pOffspring).best().fitnessValue();
 					printf(" B=%.2f", best );

@@ -19,6 +19,7 @@ namespace scone
 			INIT_FROM_PROP( props, thread_priority, 0 );
 			INIT_FROM_PROP( props, output_folder_base, String() );
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
+			INIT_FROM_PROP( props, maximize_objective, true );
 
 			// create objective instances
 			m_Objectives.clear();

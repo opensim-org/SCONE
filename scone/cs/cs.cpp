@@ -25,7 +25,7 @@ namespace scone
 			// cs types
 			SimulationObjective::RegisterFactory();
 			FeedForwardController::RegisterFactory();
-			JumpingMeasure::RegisterFactory();
+			HeightMeasure::RegisterFactory();
 		}
 
 		void CS_API PerformOptimization( const String& config_file )
