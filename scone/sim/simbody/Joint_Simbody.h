@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "..\Joint.h"
+#include "../Joint.h"
 
 namespace OpenSim
 {

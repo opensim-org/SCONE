@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "Body.h"
 
-scone::sim::Body::Body()
+namespace scone
 {
-
-}
-
-scone::sim::Body::~Body()
-{
-
+	namespace sim
+	{
+		Body::Body()
+		{
+		}
+		
+		Body::~Body()
+		{
+		}
+	}
 }

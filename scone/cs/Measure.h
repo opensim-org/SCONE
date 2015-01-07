@@ -1,7 +1,7 @@
 #pragma once
-#include "..\sim\sim.h"
-#include "..\core\Propertyable.h"
-#include "..\sim\Controller.h"
+#include "../sim/sim.h"
+#include "../core/Propertyable.h"
+#include "../sim/Controller.h"
 
 namespace scone
 {

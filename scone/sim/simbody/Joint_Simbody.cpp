@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Joint_Simbody.h"
-#include "..\..\core\Exception.h"
+#include "../../core/Exception.h"
 
 #include <OpenSim/OpenSim.h>
 

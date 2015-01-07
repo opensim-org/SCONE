@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "..\..\core\Vec3.h"
+#include "../../core/Vec3.h"
 
 #include <OpenSim/OpenSim.h>
 

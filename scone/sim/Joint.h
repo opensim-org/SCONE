@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim.h"
-#include "..\core\Named.h"
+#include "../core/Named.h"
 
 namespace scone
 {

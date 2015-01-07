@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Muscle_Simbody.h"
-#include "..\..\core\Exception.h"
+#include "../../core/Exception.h"
 
 namespace scone
 {

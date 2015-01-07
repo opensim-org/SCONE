@@ -2,7 +2,7 @@
 
 #include "sim.h"
 #include <vector>
-#include "..\core\Exception.h"
+#include "../core/Exception.h"
 
 namespace scone
 {

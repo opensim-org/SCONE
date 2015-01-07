@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "JumpingMeasure.h"
-#include "..\sim\Model.h"
-#include "..\core\Log.h"
+#include "../sim/Model.h"
+#include "../core/Log.h"
 
 namespace scone
 {

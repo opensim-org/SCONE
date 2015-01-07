@@ -4,7 +4,7 @@
 #include "Body.h"
 #include "Joint.h"
 #include "Muscle.h"
-#include "boost\foreach.hpp"
+#include "boost/foreach.hpp"
 #include <algorithm>
 
 namespace scone

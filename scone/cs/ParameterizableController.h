@@ -1,6 +1,6 @@
 #pragma once
-#include "..\sim\Controller.h"
-#include "..\opt\ParamSet.h"
+#include "../sim/Controller.h"
+#include "../opt/ParamSet.h"
 
 namespace scone
 {

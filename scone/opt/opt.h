@@ -1,8 +1,8 @@
 #pragma once
 
 #include <memory>
-#include "..\core\core.h"
-#include "..\core\PropNode.h"
+#include "../core/core.h"
+#include "../core/PropNode.h"
 
 #ifdef OPT_EXPORTS
 #define OPT_API __declspec(dllexport)

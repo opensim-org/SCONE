@@ -8,7 +8,7 @@
 #include "OptimizationTest.h"
 #include <conio.h>
 #include "SimulationTest.h"
-#include "..\core\Log.h"
+#include "../core/Log.h"
 #include "SerializationTest.h"
 
 int _tmain(int argc, _TCHAR* argv[])

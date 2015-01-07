@@ -1,7 +1,7 @@
 #pragma once
 
-#include "..\opt\Objective.h"
-#include "..\core\Factory.h"
+#include "../opt/Objective.h"
+#include "../core/Factory.h"
 
 namespace scone
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "..\core\core.h"
+#include "../core/core.h"
 #include "opt.h"
-#include "..\core\math.h"
+#include "../core/math.h"
 
 namespace scone
 {

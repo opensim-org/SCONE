@@ -40,10 +40,7 @@ namespace scone
 				double value = (double)m_Model.ShouldTerminate() - 0.5;
 				//printf( "tt=%8.5f, steps=%d\n", s.getTime(), m_Model.GetTkIntegrator().getNumStepsTaken() );
 				return value; }
-			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override
-			{
-				//if ( m_Model.ShouldTerminate() )
-				//	printf("termination at time %f\n", state.getTime() );
+			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override {
 				shouldTerminate = m_Model.ShouldTerminate();
 			}
 

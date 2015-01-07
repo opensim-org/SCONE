@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ExampleObjective.h"
-#include "..\opt\Optimizer.h"
-#include "..\cs\SimulationObjective.h"
+#include "../opt/Optimizer.h"
+#include "../cs/SimulationObjective.h"
 
 using namespace scone;
 

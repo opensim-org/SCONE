@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\core\PropNode.h"
+#include "../core/PropNode.h"
 
 using namespace scone;
 

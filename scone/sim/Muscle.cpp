@@ -1,12 +1,17 @@
 #include "stdafx.h"
 #include "Muscle.h"
 
-scone::sim::Muscle::Muscle()
+namespace scone
 {
-
-}
-
-scone::sim::Muscle::~Muscle()
-{
-
+	namespace sim
+	{
+		Muscle::Muscle() :
+		Actuator()
+		{
+		}
+		
+		Muscle::~Muscle()
+		{
+		}
+	}
 }
