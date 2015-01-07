@@ -133,7 +133,9 @@ namespace scone
 					printf(" B=%.2f", best );
 
 					// write results
-					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( GetOutputFolder() + GetStringF( "%04d_%.3f", gen, best ) );
+					String file_base = GetOutputFolder() + GetStringF( "%04d_%.3f_%.3f", gen, (*m_pImpl->m_pOffspring).meanFitness(), best );
+					parsets[ (*m_pImpl->m_pOffspring).bestIndex() ].Write( file_base + ".par" );
+					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( file_base );
 				}
 
 				// update next generation

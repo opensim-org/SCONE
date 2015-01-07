@@ -13,8 +13,5 @@
 			<control_point_time_delta>0.2</control_point_time_delta>
 			<optimize_control_point_time>0</optimize_control_point_time>
 		</Controller>
-		<Measure type="JumpingMeasure">
-			<target_body>toes_r</target_body>
-		</Measure>
 	</Controllers>
 </Model>

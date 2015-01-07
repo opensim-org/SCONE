@@ -34,6 +34,9 @@ namespace scone
 			void SetMode( Mode m ) { m_Mode = m; }
 			bool IsInConstructionMode() { return m_Mode == CONSTRUCTION_MODE; }
 
+			void Write( const String& filename );
+			void Read( const String& filename );
+
 		private:
 			Mode m_Mode;
 			std::vector< std::pair< ParamInfo, double > > m_Params;

@@ -11,16 +11,31 @@ using namespace scone;
 
 void SimulationTest()
 {
+	const double simulation_time = 0.5;
+
 	cs::RegisterFactoryTypes();
-
 	PropNode props = LoadXmlFile( "config/simulation_test.xml" );
-	sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 
+	std::vector< String > models;
+	models.push_back( "models/ToyLandingModel.osim" );
+	models.push_back( "models/ToyLandingModel_Millard2012Eq.osim" );
+	//models.push_back( "models/ToyLandingModel_Millard2012Acc.osim" );
 	opt::ParamSet par;
-	m->ProcessParameters( par );
 
-	Timer t;
-	SCONE_LOG( "Starting simulation" );
-	m->AdvanceSimulationTo( 1.0 );
-	SCONE_LOG( "Simulation ended in " << t.GetTime() );
+	// run all models
+	for ( auto iter = models.begin(); iter != models.end(); ++iter )
+	{
+		props.Set( "Model.model_file", *iter );
+		sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
+		m->ProcessParameters( par );
+
+		Timer t;
+		m->AdvanceSimulationTo( simulation_time );
+		double time = t.GetTime();
+		SCONE_LOG( "Simulation time: " << time << " (" << simulation_time / time << "x real-time)");
+
+		if ( par.IsInConstructionMode() )
+			par.SetMode( opt::ParamSet::UPDATE_MODE );
+	}
+	SCONE_LOG( "Done!" );
 }

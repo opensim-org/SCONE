@@ -3,6 +3,9 @@
 #include "ParamSet.h"
 #include "../core/Exception.h"
 #include <algorithm>
+#include <fstream>
+#include <boost/format.hpp>
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -106,5 +109,45 @@ namespace scone
 					iter->second = iter->first.GetRandomValue();
 			}
 		}
-}
+
+		void ParamSet::Write( const String& filename )
+		{
+			std::ofstream ofstr( filename );
+
+			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
+				ofstr << boost::format( "%-20s\t%16.8f\n" ) % iter->first.name % iter->second;
+		}
+
+		void ParamSet::Read( const String& filename )
+		{
+			std::ifstream ifstr( filename );
+
+			size_t params_set = 0;
+			size_t params_not_found = 0;
+			size_t params_not_free = 0;
+
+			while ( ifstr.good() )
+			{
+				std::string name;
+				double value;
+				ifstr >> name >> value;
+
+				std::vector< std::pair< ParamInfo, double > >::iterator iter = FindParamByName( name );
+				if ( iter != m_Params.end() )
+				{
+					if ( iter->first.is_free )
+					{
+						iter->second = value;
+						++params_set;
+					}
+					else ++params_not_free;
+				}
+				else ++params_not_found;
+			}
+
+			// TODO: show statistics
+			if ( params_set == 0 )
+				SCONE_LOG( "Warning, no parameters were read from file" );
+		}
+	}
 }

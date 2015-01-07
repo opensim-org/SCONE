@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Jump.FF.3V020.com</name>
+	<name>Land.FF.3V020</name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -11,9 +11,9 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<max_duration>1.0</max_duration>
+		<max_duration>3.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/ToyLandingModel.osim</model_file>
+			<model_file>models/lander10dof24musc.osim</model_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="FeedForwardController">
