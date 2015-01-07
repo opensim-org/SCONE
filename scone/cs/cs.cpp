@@ -11,7 +11,7 @@ using namespace boost::filesystem;
 
 #include "SimulationObjective.h"
 #include "FeedForwardController.h"
-#include "JumpingMeasure.h"
+#include "HeightMeasure.h"
 
 namespace scone
 {

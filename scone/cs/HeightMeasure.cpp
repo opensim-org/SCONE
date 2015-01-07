@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "JumpingMeasure.h"
+#include "HeightMeasure.h"
 #include "../sim/Model.h"
 #include "../core/Log.h"
 
