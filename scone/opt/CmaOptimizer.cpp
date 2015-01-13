@@ -126,29 +126,30 @@ namespace scone
 					(*m_pImpl->m_pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
 
 				// report results
-				printf(" M=%.2f", (*m_pImpl->m_pOffspring).meanFitness() );
-				if ( IsBetterThan( (*m_pImpl->m_pOffspring).best().fitnessValue(), best ) )
+				printf(" M=%.2f", m_pImpl->Offspring().meanFitness() );
+				if ( IsBetterThan( m_pImpl->Offspring().best().fitnessValue(), best ) )
 				{
-					best = (*m_pImpl->m_pOffspring).best().fitnessValue();
+					best = m_pImpl->Offspring().best().fitnessValue();
 					printf(" B=%.2f", best );
 
 					// write results
-					String file_base = GetOutputFolder() + GetStringF( "%04d_%.3f_%.3f", gen, (*m_pImpl->m_pOffspring).meanFitness(), best );
-					parsets[ (*m_pImpl->m_pOffspring).bestIndex() ].Write( file_base + ".par" );
-					m_Objectives[ (*m_pImpl->m_pOffspring).bestIndex() ]->WriteResults( file_base );
+					String file_base = GetOutputFolder() + GetStringF( "%04d_%.3f_%.3f", gen, m_pImpl->Offspring().meanFitness(), best );
+					parsets[ m_pImpl->Offspring().bestIndex() ].UpdateMeanStd( parsets );
+					parsets[ m_pImpl->Offspring().bestIndex() ].Write( file_base + ".par" );
+					m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
 				}
 
 				// update next generation
-				m_pImpl->m_pParents->selectMuLambda( *m_pImpl->m_pOffspring, num_elitists );
-				m_pImpl->m_CMA.updateStrategyParameters( *m_pImpl->m_pParents );
+				m_pImpl->m_pParents->selectMuLambda( m_pImpl->Offspring(), num_elitists );
+				m_pImpl->m_CMA.updateStrategyParameters( m_pImpl->Parents() );
 
 				// create new offspring
 				for ( size_t i = 0; i < m_pImpl->m_pOffspring->size(); ++i )
 				{
 					for ( int attempt = 0; attempt < max_attempts; ++attempt )
 					{
-						m_pImpl->m_CMA.create( ( *m_pImpl->m_pOffspring )[i] );
-						par.SetFreeParamValues( ( *m_pImpl->m_pOffspring )[i][0] );
+						m_pImpl->m_CMA.create( m_pImpl->Offspring()[i] );
+						par.SetFreeParamValues( m_pImpl->Offspring()[i][0] );
 						if ( par.CheckValues() )
 							break;
 					}

@@ -115,7 +115,7 @@ namespace scone
 			std::ofstream ofstr( filename );
 
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
-				ofstr << boost::format( "%-20s\t%16.8f\n" ) % iter->first.name % iter->second;
+				ofstr << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
 		}
 
 		void ParamSet::Read( const String& filename )
@@ -129,15 +129,18 @@ namespace scone
 			while ( ifstr.good() )
 			{
 				std::string name;
-				double value;
-				ifstr >> name >> value;
+				double value, mean, std;
+				ifstr >> name >> value >> mean >> std;
 
 				std::vector< std::pair< ParamInfo, double > >::iterator iter = FindParamByName( name );
 				if ( iter != m_Params.end() )
 				{
+					// currently we only update free parameters (also for mean and std)
 					if ( iter->first.is_free )
 					{
 						iter->second = value;
+						iter->first.mean = mean;
+						iter->first.std = std;
 						++params_set;
 					}
 					else ++params_not_free;
@@ -148,6 +151,26 @@ namespace scone
 			// TODO: show statistics
 			if ( params_set == 0 )
 				SCONE_LOG( "Warning, no parameters were read from file" );
+		}
+
+		void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
+		{
+			for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
+			{
+				double weight = 1.0 / parsets.size();
+
+				double mean = 0.0;
+				for ( size_t setIdx = 0; setIdx < parsets.size(); ++setIdx )
+					mean += weight * parsets[ setIdx ].m_Params[ parIdx ].second;
+
+				double var = 0.0;
+				for ( size_t setIdx = 0; setIdx < parsets.size(); ++setIdx )
+					var += weight * Square( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
+
+				// update the result in ParInfo
+				m_Params[ parIdx ].first.mean = mean;
+				m_Params[ parIdx ].first.std = sqrt( var );
+			}
 		}
 	}
 }

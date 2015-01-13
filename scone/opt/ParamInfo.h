@@ -15,14 +15,14 @@ namespace scone
 				double i_init_min, double i_init_max,
 				double i_min, double i_max ) :
 				name( i_name ),
-				init_mean( i_init_mean ), init_std( i_init_std ),
+				mean( i_init_mean ), std( i_init_std ),
 				init_min( i_init_min ),	init_max( i_init_max ),
 				min( i_min ), max( i_max ),	is_free( true ) { };
 
 			/// public member variables
 			String name;
-			double init_mean;
-			double init_std;
+			double mean;
+			double std;
 			double init_min;
 			double init_max;
 			double min;

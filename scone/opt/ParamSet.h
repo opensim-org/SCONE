@@ -27,6 +27,8 @@ namespace scone
 			void RestrainValues();
 			void InitRandom();
 
+			void UpdateMeanStd( const std::vector< ParamSet >& parsets );
+
 			size_t GetFreeParamCount();
 			std::vector< double > GetFreeParamValues();
 			void SetFreeParamValues( std::vector< double >& values );

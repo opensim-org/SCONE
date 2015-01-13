@@ -12,7 +12,7 @@ namespace scone
 			double value = 0.0;
 			if ( init_min == 0.0 && init_max == 0.0 )
 			{
-				value = Rng::gauss( init_mean, Square( init_std ) );
+				value = Rng::gauss( mean, Square( std ) );
 				RestrainValue( value );
 			}
 			else
