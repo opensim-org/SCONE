@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{6E2F0CE4-E32
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcxproj", "{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sconeopt", "sconeopt.vcxproj", "{989E355F-4BB6-475A-B732-3AC5E376A77D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -57,6 +59,10 @@ Global
 		{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}.Debug|Win32.Build.0 = Debug|Win32
 		{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}.Release|Win32.ActiveCfg = Release|Win32
 		{43B352C7-0D3F-4751-A10E-4A3E7D01EB5C}.Release|Win32.Build.0 = Release|Win32
+		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Debug|Win32.Build.0 = Debug|Win32
+		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Release|Win32.ActiveCfg = Release|Win32
+		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
