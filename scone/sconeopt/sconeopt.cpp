@@ -25,6 +25,7 @@ int main(int argc, char* argv[])
 {
 	try
 	{
+		// register all types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
 
