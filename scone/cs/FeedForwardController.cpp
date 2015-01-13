@@ -33,6 +33,7 @@ namespace scone
 			m_Functions.clear();
 			m_MuscleNames.clear();
 
+			// TODO: look at actual names to detect symmetry, and create a mapping
 			m_MuscleCount = model.GetMuscles().size();
 			size_t num_functions = use_symmetric_actuators ? m_MuscleCount / 2 : m_MuscleCount;
 			for ( size_t idx = 0; idx < num_functions; ++idx )

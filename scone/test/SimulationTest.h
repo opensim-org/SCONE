@@ -14,7 +14,7 @@ void SimulationTest()
 	const double simulation_time = 0.5;
 
 	cs::RegisterFactoryTypes();
-	PropNode props = LoadXmlFile( "config/simulation_test.xml" );
+	PropNode props = ReadXmlFile( "config/simulation_test.xml" );
 
 	std::vector< String > models;
 	models.push_back( "models/ToyLandingModel.osim" );

@@ -15,9 +15,9 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	try
 	{
-		//XmlParseTest();
+		XmlParseTest();
 		//SerializationTest();
-		OptimizationTest();
+		//OptimizationTest();
 		//SimulationTest();
 	}
 	catch (std::exception& e)

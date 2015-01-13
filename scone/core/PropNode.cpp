@@ -215,7 +215,7 @@ namespace scone
 		write_xml( filename, pt, std::locale(), settings );
 	}
 
-	void PropNode::FromXmlFile( const String& filename, const String& rootname )
+	PropNode& PropNode::FromXmlFile( const String& filename, const String& rootname )
 	{
 		try
 		{
@@ -227,6 +227,8 @@ namespace scone
 		{
 			SCONE_THROW( e.what() );
 		}
+
+		return *this;
 	}
 
 	void PropNode::ToIniFile( const String& filename )
@@ -236,11 +238,13 @@ namespace scone
 		write_ini( filename, pt );
 	}
 
-	void PropNode::FromIniFile( const String& filename )
+	PropNode& PropNode::FromIniFile( const String& filename )
 	{
 		ptree pt;
 		read_ini( filename, pt );
 		FromPropertyTree( *this, pt );
+
+		return *this;
 	}
 
 	void PropNode::ToInfoFile( const String& filename )
@@ -250,11 +254,13 @@ namespace scone
 		write_info( filename, pt );
 	}
 
-	void PropNode::FromInfoFile( const String& filename )
+	PropNode& PropNode::FromInfoFile( const String& filename )
 	{
 		ptree pt;
 		read_info( filename, pt );
 		FromPropertyTree( *this, pt );
+
+		return *this;
 	}
 
 	void PropNode::ToStream( std::ostream& str, const std::string& prefix, bool unflaggedOnly ) const
@@ -294,10 +300,13 @@ namespace scone
 		return true;
 	}
 
-	PropNode CORE_API LoadXmlFile( const String& filename )
+	PropNode CORE_API ReadXmlFile( const String& filename )
 	{
-		PropNode p;
-		p.FromXmlFile( filename );
-		return p;
+		return PropNode().FromXmlFile( filename );
+	}
+
+	PropNode CORE_API ReadInfoFile( const String& filename )
+	{
+		return PropNode().FromInfoFile( filename );
 	}
 }

@@ -16,7 +16,7 @@ namespace scone
 		{
 			RegisterFactoryTypes();
 
-			PropNode p = LoadXmlFile( xml_file );
+			PropNode p = ReadXmlFile( xml_file );
 			OptimizerUP o = CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
 
 			// report unused parameters

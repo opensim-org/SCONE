@@ -21,7 +21,6 @@ namespace scone
 	class CORE_API PropNode
 	{
 	public:
-
 		typedef std::pair< String, PropNodePtr > KeyChildPair;
 		typedef std::vector< KeyChildPair > ChildContainer;
 		typedef ChildContainer::iterator ChildIter;
@@ -139,13 +138,13 @@ namespace scone
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const String& rootname = "" );
-		void FromXmlFile( const String& filename, const String& rootname = "" );
+		PropNode& FromXmlFile( const String& filename, const String& rootname = "" );
 
 		void ToIniFile( const String& filename );
-		void FromIniFile( const String& filename );
+		PropNode& FromIniFile( const String& filename );
 
 		void ToInfoFile( const String& filename );
-		void FromInfoFile( const String& filename );
+		PropNode& FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
 		int GetInt( const String& key ) const { return Get< int >( key ); }
@@ -179,7 +178,8 @@ namespace scone
 	};
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API LoadXmlFile( const String& filename );
+	PropNode CORE_API ReadXmlFile( const String& filename );
+	PropNode CORE_API ReadInfoFile( const String& filename );
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

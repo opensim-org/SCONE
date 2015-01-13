@@ -17,7 +17,9 @@ PropNode LoadProperties( const path& config_file )
 	SCONE_LOG( "Reading file " << config_file );
 
 	if ( config_file.extension() == ".xml" )
-		return LoadXmlFile( config_file.string() );
+		return ReadXmlFile( config_file.string() );
+	if ( config_file.extension() == ".info" )
+		return ReadInfoFile( config_file.string() );
 	else SCONE_THROW( "Unknown file type: " + config_file.string() );
 }
 
@@ -30,7 +32,7 @@ int main(int argc, char* argv[])
 		cs::RegisterFactoryTypes();
 
 		// get config file
-		path config_file( argc > 1 ? String( argv[ 1 ] ) : "config/optimization_test.xml" );
+		path config_file( argc > 1 ? String( argv[ 1 ] ) : "config/optimization_test.info" );
 
 		// load properties
 		PropNode p = LoadProperties( config_file );
