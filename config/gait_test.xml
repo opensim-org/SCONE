@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Walk1024.FF.10F025.M3</name>
+	<name>Walk1024.FF.10F025.M2</name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -23,11 +23,11 @@
 					<control_points>6</control_points>
 					<init_min>0.25</init_min>
 					<init_max>0.75</init_max>
-					<init_mode_weight_min>0</init_mode_weight_min>
-					<init_mode_weight_max>1</init_mode_weight_max>
+					<init_mode_weight_min>-0.5</init_mode_weight_min>
+					<init_mode_weight_max>0.5</init_mode_weight_max>
 					<control_point_time_delta>0.25</control_point_time_delta>
 					<optimize_control_point_time>0</optimize_control_point_time>
-					<number_of_modes>3</number_of_modes>
+					<number_of_modes>2</number_of_modes>
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
