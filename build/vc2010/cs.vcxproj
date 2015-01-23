@@ -20,6 +20,7 @@
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
     <ClInclude Include="..\..\scone\cs\ParameterizableController.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
+    <ClInclude Include="..\..\scone\cs\Tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\cs.cpp" />

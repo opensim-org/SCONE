@@ -24,20 +24,29 @@ namespace scone
 			virtual void Initialize( sim::Model& model ) override;
 
 		private:
+			// function parameters
 			String function_type;
+			bool flat_extrapolation;
 			bool use_symmetric_actuators;
+
+			// control point settings
 			size_t control_points;
 			double control_point_time_delta;
-			double initial_max_value;
 			bool optimize_control_point_time;
-			bool flat_extrapolation;
+			double init_min;
+			double init_max;
+
+			// mode settings
+			size_t number_of_modes;
+			double init_mode_weight_min;
+			double init_mode_weight_max;
 
 			typedef std::unique_ptr< OpenSim::PiecewiseLinearFunction > FunctionUP;
 			std::vector< FunctionUP > m_Functions;
+			std::vector< String > FunctionNames;
 			std::vector< String > m_MuscleNames;
-			size_t m_MuscleCount;
-			double init_min;
-			double init_max;
+			std::vector< size_t > m_MuscleIndices;
+			std::vector< std::vector< double > > m_MuscleModeWeights;
 
 		private: // non-copyable and non-assignable
 			FeedForwardController( const FeedForwardController& );

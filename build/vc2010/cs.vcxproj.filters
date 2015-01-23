@@ -38,6 +38,9 @@
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\Tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
