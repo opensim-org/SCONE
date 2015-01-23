@@ -20,6 +20,8 @@ namespace scone
 
 		void HeightMeasure::Initialize( sim::Model& model )
 		{
+			Measure::Initialize( model );
+
 			m_Upward = false;
 			m_Height.Reset();
 			m_LastStep = size_t( -1 );
@@ -34,12 +36,12 @@ namespace scone
 		{
 		}
 
-		bool HeightMeasure::UpdateControls( sim::Model& model, double timestamp )
+		void HeightMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			// check if this is a new step
 			if ( model.GetStep() != m_LastStep )
 				m_LastStep = model.GetStep();
-			else return true;
+			else return;
 
 			double g = -model.GetGravity()[1];
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
@@ -58,10 +60,8 @@ namespace scone
 				if ( timestamp > 0.1 && vel > 0.1 )
 					m_Upward = true;
 				if ( m_Upward && vel < 0.0 )
-					model.RequestTermination();
+					SetTerminationRequest();
 			}
-
-			return true;
 		}
 
 		double HeightMeasure::GetResult( sim::Model& model )

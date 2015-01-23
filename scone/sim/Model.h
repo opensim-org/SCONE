@@ -47,9 +47,11 @@ namespace scone
 			virtual double GetTime() = 0;
 			virtual size_t GetStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
+			virtual void WriteStateHistory( const String& file ) = 0;
+
+			// TODO: perhaps remove termination request here
 			virtual void RequestTermination() { m_ShouldTerminate = true; }
 			virtual bool ShouldTerminate() { return m_ShouldTerminate; }
-			virtual void WriteStateHistory( const String& file ) = 0;
 
 		protected:
 			std::unique_ptr< Link > m_RootLink;

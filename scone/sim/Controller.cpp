@@ -5,12 +5,17 @@ namespace scone
 {
 	namespace sim
 	{
-		Controller::Controller( const PropNode& props )
+		Controller::Controller( const PropNode& props ) : m_TerminationRequest( false )
 		{
 		}
 
 		Controller::~Controller()
 		{
+		}
+
+		void Controller::Initialize( sim::Model& model )
+		{
+			m_TerminationRequest = false;
 		}
 	}
 }

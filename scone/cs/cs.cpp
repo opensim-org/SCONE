@@ -12,6 +12,8 @@ using namespace boost::filesystem;
 #include "SimulationObjective.h"
 #include "FeedForwardController.h"
 #include "HeightMeasure.h"
+#include "GaitMeasure.h"
+#include "EnergyMeasure.h"
 
 namespace scone
 {
@@ -26,6 +28,8 @@ namespace scone
 			SimulationObjective::RegisterFactory();
 			FeedForwardController::RegisterFactory();
 			HeightMeasure::RegisterFactory();
+			GaitMeasure::RegisterFactory();
+			EnergyMeasure::RegisterFactory();
 		}
 
 		void CS_API PerformOptimization( const String& config_file )

@@ -35,6 +35,9 @@
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\GaitMeasure.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
@@ -56,6 +59,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

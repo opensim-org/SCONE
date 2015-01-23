@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace cs
 	{
-		bool EnergyMeasure::UpdateControls( sim::Model& model, double timestamp )
+		void EnergyMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}

@@ -20,7 +20,7 @@ namespace scone
 			virtual ~FeedForwardController() { };
 
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
-			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual void Initialize( sim::Model& model ) override;
 
 		private:

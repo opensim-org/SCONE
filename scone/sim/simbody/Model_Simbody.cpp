@@ -122,25 +122,24 @@ namespace scone
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_osModel->addController( m_pControllerDispatcher );
-		}
-
-		void Model_Simbody::PrepareSimulation()
-		{
-			SCONE_ASSERT( m_osModel );
 
 			// reset termination flag
 			m_ShouldTerminate = false;
 
-			// Initialize the system. initSystem() cannot be used here because adding the event handler
-			// must be done between buildSystem() and initializeState().
-			m_osModel->buildSystem();
+			// Initialize the system
+			m_tkState = &m_osModel->initSystem();
 
-			// create termination event handler (TODO: verify ownership is passed)
-			//m_pTerminationEventHandler = new TerminationEventHandler( *this );
-			//m_osModel->updMultibodySystem().addEventHandler( m_pTerminationEventHandler );
+			// reset controllers
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+			{
+				c->SetTerminationRequest( false );
+				c->Initialize( *this );
+			}
+		}
 
-			// create model state and keep pointer (non-owning)
-			m_tkState = &m_osModel->initializeState();
+		void Model_Simbody::PrepareSimulation()
+		{
+			SCONE_ASSERT( m_osModel && m_tkState );
 
 			// Create the integrator for the simulation.
 			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
@@ -231,7 +230,11 @@ namespace scone
 
 			// update all controllers
 			BOOST_FOREACH( ControllerUP& con, m_Model.GetControllers() )
+			{
 				con->UpdateControls( m_Model, s.getTime() );
+				if ( con->GetTerminationRequest() )
+					m_Model.RequestTermination();
+			}
 
 			// inject actuator values into controls
 			SimTK::Vector controlValue( 1 );

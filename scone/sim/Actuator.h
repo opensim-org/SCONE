@@ -17,7 +17,7 @@ namespace scone
 			virtual void ResetControlValue() { m_ActuatorControlValue = 0.0; }
 			double GetControlValue() { return m_ActuatorControlValue; }
 
-		protected:
+		private:
 			double m_ActuatorControlValue;
 		};
 	}

@@ -14,6 +14,7 @@
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\EnergyMeasure.h" />
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
+    <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
@@ -24,6 +25,7 @@
     <ClCompile Include="..\..\scone\cs\cs.cpp" />
     <ClCompile Include="..\..\scone\cs\EnergyMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp" />
+    <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
     <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />

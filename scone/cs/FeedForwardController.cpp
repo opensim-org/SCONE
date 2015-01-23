@@ -69,7 +69,7 @@ namespace scone
 			}
 		}
 
-		bool FeedForwardController::UpdateControls( sim::Model& model, double time )
+		void FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
 			SCONE_ASSERT( model.GetMuscleCount() == m_MuscleCount );
 
@@ -85,8 +85,6 @@ namespace scone
 				if ( use_symmetric_actuators )
 					model.GetMuscle( m_Functions.size() + idx ).AddControlValue( result );
 			}
-
-			return true;
 		}
 	}
 }

@@ -8,10 +8,10 @@
 
 	<ItemDefinitionGroup>
 		<ClCompile>
-			<AdditionalIncludeDirectories>$(OPENSIM_HOME)\sdk\include\SimTK\include;$(OPENSIM_HOME)\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<AdditionalIncludeDirectories>$(OPENSIM_DEV_HOME)\sdk\include\SimTK\include;$(OPENSIM_DEV_HOME)\sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
 		</ClCompile>
 		<Link>
-			<AdditionalLibraryDirectories>$(OPENSIM_HOME)/sdk/lib;$(OPENSIM_HOME)/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+			<AdditionalLibraryDirectories>$(OPENSIM_DEV_HOME)/sdk/lib;$(OPENSIM_DEV_HOME)/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 			<AdditionalDependencies>$(OPENSIM_DEPENDENCIES);%(AdditionalDependencies)</AdditionalDependencies>
 		</Link>
 	</ItemDefinitionGroup>

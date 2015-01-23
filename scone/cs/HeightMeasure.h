@@ -17,7 +17,7 @@ namespace scone
 			virtual ~HeightMeasure() { };
 
 			virtual void Initialize( sim::Model& model ) override;
-			virtual bool UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 

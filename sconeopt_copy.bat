@@ -1,0 +1,1 @@
+.\bin\ReleaseCopy\sconeopt.exe %1

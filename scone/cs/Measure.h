@@ -13,7 +13,7 @@ namespace scone
 			Measure( const PropNode& props );
 			virtual ~Measure() { };
 
-			virtual bool UpdateControls( sim::Model& model, double timestamp ) = 0;
+			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;
 			virtual double GetResult( sim::Model& model ) = 0;
 
 		private:
