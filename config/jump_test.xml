@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Jump1024.FF.5F010</name>
+	<name>Jump1024.FF.3V020.M2</name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -20,11 +20,16 @@
 					<function_type>PieceWiseLinear</function_type>
 					<use_symmetric_actuators>1</use_symmetric_actuators>
 					<flat_extrapolation>0</flat_extrapolation>
-					<control_points>5</control_points>
-					<init_min>0.75</init_min>
-					<init_max>0.25</init_max>
-					<control_point_time_delta>0.1</control_point_time_delta>
-					<optimize_control_point_time>0</optimize_control_point_time>
+					<control_points>3</control_points>
+					<init_min>0.25</init_min>
+					<init_max>0.75</init_max>
+					<control_point_time_delta>0.2</control_point_time_delta>
+					<optimize_control_point_time>1</optimize_control_point_time>
+					
+					<!--Mode specific settings-->
+					<number_of_modes>2</number_of_modes>
+					<init_mode_weight_min>0</init_mode_weight_min>
+					<init_mode_weight_max>1</init_mode_weight_max>
 				</Controller>
 				<Measure type="HeightMeasure">
 					<target_body></target_body>

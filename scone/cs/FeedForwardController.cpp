@@ -97,7 +97,7 @@ namespace scone
 					else m_Functions[ idx ]->setX( cpidx, cpidx * control_point_time_delta );
 
 					// Y value
-					m_Functions[ idx ]->setY( cpidx, par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, useModes ? -1.0 : 0.0, 1.0 ) );
+					m_Functions[ idx ]->setY( cpidx, par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, -1.0, 1.0 ) );
 				}
 			}
 

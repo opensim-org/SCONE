@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
 	<Model name="jumper10dof24musc.osim">
-		<credits>A planar reduced gait model with 10 degrees of freedom and 18 muscles by Ajay Seth.  Closely based on Delp S.L., Loan J.P., Hoy M.G., Zajac F.E., Topp E.L., Rosen J.M., Thelen D.G., Anderson F.C., Seth A. Notes: 3D, 23 DOF gait model created by D.G. Thelen, Univ. of Wisconsin-Madison, and Ajay Seth, Frank C. Anderson, and Scott L. Delp, Stanford University. Lower extremity joint defintions based on Delp et al. (1990). Low back joint and anthropometry based on Anderson and Pandy (1999, 2001). Planar knee model of Yamaguchi and Zajac (1989). Seth replaced tibia translation constraints with a CustomJoint for the knee and removed the patella to eliminate all kinematic constraints; insertions of the quadrucepts are handled with moving points in the tibia frame as defined by Delp 1990. Number of muscles was reduced by Anderson to improve simulation speed for demonstrations and is not intended to be used in research. License: Creative Commons (CCBY 3.0). You are free to distribute, remix, tweak, and build upon this work, even commercially, as long as you credit us for the original creation. http://creativecommons.org/licenses/by/3.0/ More Information: http://simtk-confluence.stanford.edu:8080/display/OpenSim/Gait+2392+and+2354+Models</credits>
+		<credits>A planar reduced gait model with 10 degrees of freedom and 18 muscles by Ajay Seth. Closely based on Delp S.L., Loan J.P., Hoy M.G., Zajac F.E., Topp E.L., Rosen J.M., Thelen D.G., Anderson F.C., Seth A. Notes: 3D, 23 DOF gait model created by D.G. Thelen, Univ. of Wisconsin-Madison, and Ajay Seth, Frank C. Anderson, and Scott L. Delp, Stanford University. Lower extremity joint defintions based on Delp et al. (1990). Low back joint and anthropometry based on Anderson and Pandy (1999, 2001). Planar knee model of Yamaguchi and Zajac (1989). Seth replaced tibia translation constraints with a CustomJoint for the knee and removed the patella to eliminate all kinematic constraints; insertions of the quadrucepts are handled with moving points in the tibia frame as defined by Delp 1990. Number of muscles was reduced by Anderson to improve simulation speed for demonstrations and is not intended to be used in research. License: Creative Commons (CCBY 3.0). You are free to distribute, remix, tweak, and build upon this work, even commercially, as long as you credit us for the original creation. http://creativecommons.org/licenses/by/3.0/ More Information: http://simtk-confluence.stanford.edu:8080/display/OpenSim/Gait+2392+and+2354+Models</credits>
 		<publications>Delp, S.L., Loan, J.P., Hoy, M.G., Zajac, F.E., Topp E.L., Rosen, J.M.: An interactive graphics-based model of the lower extremity to study orthopaedic surgical procedures, IEEE Transactions on Biomedical Engineering, vol. 37, pp. 757-767, 1990. Yamaguchi G.T., Zajac F.E.: A planar model of the knee joint to characterize the knee extensor mechanism." J . Biomech. vol. 22. pp. 1-10. 1989. Anderson F.C., Pandy M.G.: A dynamic optimization solution for vertical jumping in three dimensions. Computer Methods in Biomechanics and Biomedical Engineering 2:201-231, 1999. Anderson F.C., Pandy M.G.: Dynamic optimization of human walking. Journal of Biomechanical Engineering 123:381-390, 2001.</publications>
 		<length_units>meters</length_units>
 		<force_units>N</force_units>
@@ -196,9 +196,9 @@
 									<axis>0 0 1</axis>
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
-                    <Constant>
-                      <value>0.02</value>
-                    </Constant>
+										<Constant>
+											<value>0.02</value>
+										</Constant>
 									</function>
 								</TransformAxis>
 							</SpatialTransform>
@@ -389,7 +389,7 @@
 										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
 										<motion_type>rotational</motion_type>
 										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>-1.39626340</default_value>
+										<default_value>-1.3962634</default_value>
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -1752,7 +1752,7 @@
 									<coordinate>knee_angle_r</coordinate>
 								</ConditionalPathPoint>
 								<MovingPathPoint name="rect_fem_r-P3">
-									<location> 0.0617576 0.020984 0.0014</location>
+									<location> 0.0307614 0.0253146 0.0014</location>
 									<body>tibia_r</body>
 									<x_location>
 										<SimmSpline>
@@ -1857,7 +1857,7 @@
 									<coordinate>knee_angle_r</coordinate>
 								</ConditionalPathPoint>
 								<MovingPathPoint name="vas_int_r-P4">
-									<location> 0.0554632 0.0252923 0.0018</location>
+									<location> 0.0234582 0.0275151 0.0018</location>
 									<body>tibia_r</body>
 									<x_location>
 										<SimmSpline>
@@ -2176,6 +2176,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="ercspn_r-P1">
@@ -2189,7 +2190,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -2204,10 +2211,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -2247,6 +2250,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="intobl_r-P1">
@@ -2260,7 +2264,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -2275,10 +2285,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -2318,6 +2324,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="extobl_r-P1">
@@ -2331,7 +2338,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -2346,10 +2359,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -2729,7 +2738,7 @@
 									<coordinate>knee_angle_l</coordinate>
 								</ConditionalPathPoint>
 								<MovingPathPoint name="rect_fem_l-P3">
-									<location> 0.0617576 0.020984 -0.0014</location>
+									<location> 0.0307614 0.0253146 -0.0014</location>
 									<body>tibia_l</body>
 									<x_location>
 										<SimmSpline>
@@ -2834,7 +2843,7 @@
 									<coordinate>knee_angle_l</coordinate>
 								</ConditionalPathPoint>
 								<MovingPathPoint name="vas_int_l-P4">
-									<location> 0.0554632 0.0252923 -0.0018</location>
+									<location> 0.0234582 0.0275151 -0.0018</location>
 									<body>tibia_l</body>
 									<x_location>
 										<SimmSpline>
@@ -3153,6 +3162,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="ercspn_l-P1">
@@ -3166,7 +3176,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -3181,10 +3197,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -3224,6 +3236,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="intobl_l-P1">
@@ -3237,7 +3250,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -3252,10 +3271,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -3295,6 +3310,7 @@
 					<max_control>1</max_control>
 					<!--The set of points defining the path of the muscle.-->
 					<GeometryPath>
+						<!--The set of points defining the path-->
 						<PathPointSet>
 							<objects>
 								<PathPoint name="extobl_l-P1">
@@ -3308,7 +3324,13 @@
 							</objects>
 							<groups />
 						</PathPointSet>
-						<VisibleObject>
+						<!--The wrap objecs that are associated with this path-->
+						<PathWrapSet>
+							<objects />
+							<groups />
+						</PathWrapSet>
+						<!--Used to display the path in the 3D window-->
+						<VisibleObject name="display">
 							<!--Set of geometry files and associated attributes, allow .vtp, .stl, .obj-->
 							<GeometrySet>
 								<objects />
@@ -3323,10 +3345,6 @@
 							<!--Display Pref. 0:Hide 1:Wire 3:Flat 4:Shaded Can be overriden for individual geometries-->
 							<display_preference>4</display_preference>
 						</VisibleObject>
-						<PathWrapSet>
-							<objects />
-							<groups />
-						</PathWrapSet>
 					</GeometryPath>
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
@@ -3358,107 +3376,100 @@
 					<Flen>1.8</Flen>
 				</Thelen2003Muscle>
 				<HuntCrossleyForce name="foot_r">
-				 <isDisabled> false </isDisabled>
-				 <HuntCrossleyForce::ContactParametersSet name="">
-				   <objects>
-					<HuntCrossleyForce::ContactParameters name="">
-							<geometry> platform r_heel_lat r_heel_med r_toe_lat r_toe_med r_toe  </geometry>
-							<stiffness> 100000000.00000000000000000000 </stiffness>
-							<dissipation>       0.50000000000000000000 </dissipation>
-							<static_friction>       0.90000000000000002000 </static_friction>
-							<dynamic_friction>       0.90000000000000002000 </dynamic_friction>
-							<viscous_friction>       0.6 </viscous_friction>
-					</HuntCrossleyForce::ContactParameters>
-				   </objects>
-				   <groups/>
-				 </HuntCrossleyForce::ContactParametersSet>
-				 <transition_velocity>       0.10000000000000001000 </transition_velocity>
+					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+					<isDisabled>false</isDisabled>
+					<!--Material properties.-->
+					<HuntCrossleyForce::ContactParametersSet name="contact_parameters">
+						<objects>
+							<HuntCrossleyForce::ContactParameters>
+								<!--Names of geometry objects affected by these parameters.-->
+								<geometry>platform r_heel_lat r_heel_med r_toe_lat r_toe_med r_toe</geometry>
+								<stiffness>100000000</stiffness>
+								<dissipation>0.5</dissipation>
+								<static_friction>0.9</static_friction>
+								<dynamic_friction>0.9</dynamic_friction>
+								<viscous_friction>0.6</viscous_friction>
+							</HuntCrossleyForce::ContactParameters>
+						</objects>
+						<groups />
+					</HuntCrossleyForce::ContactParametersSet>
+					<!--Slip velocity (creep) at which peak static friction occurs.-->
+					<transition_velocity>0.1</transition_velocity>
 				</HuntCrossleyForce>
-                <HuntCrossleyForce name="foot_l">
-				 <isDisabled> false </isDisabled>
-				 <HuntCrossleyForce::ContactParametersSet name="">
-				   <objects>
-					<HuntCrossleyForce::ContactParameters name="">
-							<geometry> platform l_heel_lat l_heel_med l_toe_lat l_toe_med l_toe  </geometry>
-							<stiffness> 100000000.00000000000000000000 </stiffness>
-							<dissipation>       0.50000000000000000000 </dissipation>
-							<static_friction>       0.90000000000000002000 </static_friction>
-							<dynamic_friction>       0.90000000000000002000 </dynamic_friction>
-							<viscous_friction>       0.6 </viscous_friction>
-					</HuntCrossleyForce::ContactParameters>
-				   </objects>
-				   <groups/>
-				 </HuntCrossleyForce::ContactParametersSet>
-				 <transition_velocity>       0.10000000000000001000 </transition_velocity>
+				<HuntCrossleyForce name="foot_l">
+					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+					<isDisabled>false</isDisabled>
+					<!--Material properties.-->
+					<HuntCrossleyForce::ContactParametersSet name="contact_parameters">
+						<objects>
+							<HuntCrossleyForce::ContactParameters>
+								<!--Names of geometry objects affected by these parameters.-->
+								<geometry>platform l_heel_lat l_heel_med l_toe_lat l_toe_med l_toe</geometry>
+								<stiffness>100000000</stiffness>
+								<dissipation>0.5</dissipation>
+								<static_friction>0.9</static_friction>
+								<dynamic_friction>0.9</dynamic_friction>
+								<viscous_friction>0.6</viscous_friction>
+							</HuntCrossleyForce::ContactParameters>
+						</objects>
+						<groups />
+					</HuntCrossleyForce::ContactParametersSet>
+					<!--Slip velocity (creep) at which peak static friction occurs.-->
+					<transition_velocity>0.1</transition_velocity>
 				</HuntCrossleyForce>
 				<CoordinateLimitForce name="LumbarExtensionLimit">
-					<isDisabled> false </isDisabled>
-					<coordinate> lumbar_extension </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      25.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>     -75.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+					<isDisabled>false</isDisabled>
+					<!--Coordinate (name) to be limited.-->
+					<coordinate>lumbar_extension</coordinate>
+					<!--Stiffness of the passive limit force when coordinate exceeds upper limit. Note, rotational stiffness expected in N*m/degree.-->
+					<upper_stiffness>20</upper_stiffness>
+					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
+					<upper_limit>25</upper_limit>
+					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
+					<lower_stiffness>20</lower_stiffness>
+					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
+					<lower_limit>-75</lower_limit>
+					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
+					<damping>0.25</damping>
+					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
+					<transition>10</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="KneeLimit_r">
-					<isDisabled> false </isDisabled>
-					<coordinate> knee_angle_r </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      0.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>    -120.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+					<isDisabled>false</isDisabled>
+					<!--Coordinate (name) to be limited.-->
+					<coordinate>knee_angle_r</coordinate>
+					<!--Stiffness of the passive limit force when coordinate exceeds upper limit. Note, rotational stiffness expected in N*m/degree.-->
+					<upper_stiffness>20</upper_stiffness>
+					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
+					<upper_limit>0</upper_limit>
+					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
+					<lower_stiffness>20</lower_stiffness>
+					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
+					<lower_limit>-120</lower_limit>
+					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
+					<damping>0.25</damping>
+					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
+					<transition>10</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="KneeLimit_l">
-					<isDisabled> false </isDisabled>
-					<coordinate> knee_angle_l </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      0.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>    -120.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
+					<isDisabled>false</isDisabled>
+					<!--Coordinate (name) to be limited.-->
+					<coordinate>knee_angle_l</coordinate>
+					<!--Stiffness of the passive limit force when coordinate exceeds upper limit. Note, rotational stiffness expected in N*m/degree.-->
+					<upper_stiffness>20</upper_stiffness>
+					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
+					<upper_limit>0</upper_limit>
+					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
+					<lower_stiffness>20</lower_stiffness>
+					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
+					<lower_limit>-120</lower_limit>
+					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
+					<damping>0.25</damping>
+					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
+					<transition>10</transition>
 				</CoordinateLimitForce>
 			</objects>
 			<groups />
@@ -3472,69 +3483,102 @@
 		<ContactGeometrySet>
 			<objects>
 				<ContactHalfSpace name="platform">
-				<body_name> ground </body_name>
-				  <location>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000      -1.570796326794897 </orientation>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>ground</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0 0 0</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 -1.5707963267949</orientation>
 				</ContactHalfSpace>
 				<ContactSphere name="r_heel_lat">
-				  <body_name> calcn_r </body_name>
-				  <location>       0.00000000       0.00000000       0.025000000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_r</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0 0 0.025</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_heel_med">
-				  <body_name> calcn_r </body_name>
-				  <location>       0.00000000       0.00000000       -0.035000000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_r</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0 0 -0.035</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe_lat">
-				  <body_name> calcn_r </body_name>
-				  <location>      0.14250000       0.00000000       0.04100000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_r</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.1425 0 0.041</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe_med">
-				  <body_name> calcn_r </body_name>
-				  <location>      0.18500000       0.00000000       -0.02750000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_r</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.185 0 -0.0275</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe">
-				  <body_name> toes_r </body_name>
-				  <location>      0.071000       0.00200       0.01400 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>toes_r</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.071 0.002 0.014</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_heel_lat">
-				  <body_name> calcn_l </body_name>
-				  <location>       0.00000000       0.00000000       -0.025000000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_l</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0 0 -0.025</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_heel_med">
-				  <body_name> calcn_l </body_name>
-				  <location>       0.00000000       0.00000000       0.035000000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_l</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0 0 0.035</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe_lat">
-				  <body_name> calcn_l </body_name>
-				  <location>      0.14250000       0.00000000       -0.04100000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_l</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.1425 0 -0.041</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe_med">
-				  <body_name> calcn_l </body_name>
-				  <location>      0.18500000       0.00000000       0.02750000 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>calcn_l</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.185 0 0.0275</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe">
-				  <body_name> toes_l </body_name>
-				  <location>      0.071000       0.00200       -0.01400 </location>
-				  <orientation>       0.00000000000000000000       0.00000000000000000000       0.00000000000000000000 </orientation>
-				  <radius> 0.01 </radius>
+					<!--Body name to connect the contact geometry to-->
+					<body_name>toes_l</body_name>
+					<!--Location of geometry center in the body frame-->
+					<location>0.071 0.002 -0.014</location>
+					<!--Orientation of geometry in the body frame-->
+					<orientation>0 0 0</orientation>
+					<radius>0.01</radius>
 				</ContactSphere>
 			</objects>
 			<groups />
