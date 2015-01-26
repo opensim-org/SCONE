@@ -25,6 +25,7 @@ namespace scone
 			String target_body;
 			bool use_average_height;
 			bool terminate_on_peak;
+			double termination_height;
 
 			sim::Body* m_pTargetBody; // non-owning pointer
 			MeasuredValue< double > m_Height;

@@ -16,6 +16,7 @@ namespace scone
 			INIT_FROM_PROP( props, target_body, String("") );
 			INIT_FROM_PROP( props, use_average_height, false );
 			INIT_FROM_PROP( props, terminate_on_peak, true );
+			INIT_FROM_PROP( props, termination_height, 0.5 );
 		}
 
 		void HeightMeasure::Initialize( sim::Model& model )
@@ -53,6 +54,10 @@ namespace scone
 
 			//printf( "ct=%.5f step=%d time/step=%.5f height=%.4f\n", timestamp, model.GetStep(), timestamp / model.GetStep(), height );
 			//SCONE_LOG( "time=" << timestamp << " height=" << height << " best=" << m_Best );
+
+			// check height
+			if ( pos < termination_height * m_Height.GetInitial() )
+				SetTerminationRequest();
 
 			// check if there's a velocity flip
 			if ( terminate_on_peak )
