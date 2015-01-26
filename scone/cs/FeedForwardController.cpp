@@ -12,6 +12,7 @@
 #include "Tools.h"
 #include "PieceWiseLinearFunction.h"
 #include "Polynomial.h"
+#include "PieceWiseConstantFunction.h"
 
 namespace scone
 {
@@ -73,9 +74,12 @@ namespace scone
 			for ( size_t idx = 0; idx < num_functions; ++idx )
 			{
 				String str = useModes ? GetStringF( "Mode%d.", idx ) : m_MuscleNames[ idx ] + ".";
-				if ( function_type == "PieceWiseLinear" )
+				if ( function_type == "PieceWiseLinear" || function_type == "PieceWiseConstant" )
 				{
-					PieceWiseLinearFunction* pFunc = new PieceWiseLinearFunction( flat_extrapolation );
+					// TODO: fix this mess by creating a better parent class
+					bool lin = function_type == "PieceWiseLinear";
+					Function* pFunc;
+					if (lin) pFunc = new PieceWiseLinearFunction( flat_extrapolation ); else pFunc = new PieceWiseConstantFunction();
 					for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 					{
 						Real xVal = 0.0;
@@ -84,14 +88,15 @@ namespace scone
 							if ( cpidx > 0 )
 							{
 								double duration = par( str + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
-								xVal = pFunc->GetOsFunc().getX( cpidx - 1 ) + duration;
+								xVal = lin ? dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration : dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration;
 							}
 						}
 						else xVal = cpidx * control_point_time_delta;
 
 						// Y value
-						Real yVal = par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, -1.0, 1.0 );
-						pFunc->GetOsFunc().addPoint( xVal, yVal );
+						Real yVal = par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, useModes ? -1.0 : 0.0, 1.0 );
+						if ( lin ) dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
+						else dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
 					}
 					m_Functions.push_back( FunctionUP( pFunc ) );
 				}
@@ -99,7 +104,11 @@ namespace scone
 				{
 					Polynomial* pFunc = new Polynomial( control_points );
 					for ( size_t i = 0; i < pFunc->GetCoefficientCount(); ++i )
-						pFunc->SetCoefficient( i, par.GetMinMax( str + GetStringF( "Coeff%d", i ), i == 0 ? init_min : init_mode_weight_min, i == 0 ? init_max : init_mode_weight_max, -1.0, 1.0 ) );
+					{
+						if ( i == 0 )
+							pFunc->SetCoefficient( i, par.GetMinMax( str + GetStringF( "Coeff%d", i ), init_min, init_max, 0.0, 1.0 ) );
+						else pFunc->SetCoefficient( i, par.GetMinMax( str + GetStringF( "Coeff%d", i ), init_mode_weight_min, init_mode_weight_max, -1.0, 1.0 ) );
+					}
 					m_Functions.push_back( FunctionUP( pFunc ) );
 				}
 				else SCONE_THROW( "Unknown function type: " + function_type );

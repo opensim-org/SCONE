@@ -9,7 +9,7 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Function">
+    <Filter Include="Functions">
       <UniqueIdentifier>{171a4667-c07d-4e52-a90d-15108e1113d9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -45,13 +45,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\Function.h">
-      <Filter>Function</Filter>
+      <Filter>Functions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\PieceWiseLinearFunction.h">
-      <Filter>Function</Filter>
+      <Filter>Functions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\Polynomial.h">
-      <Filter>Function</Filter>
+      <Filter>Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h">
+      <Filter>Functions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,10 +83,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
-      <Filter>Function</Filter>
+      <Filter>Functions</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp">
+      <Filter>Functions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
