@@ -10,6 +10,8 @@
 #include <conio.h>
 #include <xutility>
 #include "Tools.h"
+#include "PieceWiseLinearFunction.h"
+#include "Polynomial.h"
 
 namespace scone
 {
@@ -59,49 +61,52 @@ namespace scone
 					m_MuscleIndices.push_back( m_MuscleNames.size() - 1 );
 				}
 			}
-
-			// init muscle mode weights
-			if ( number_of_modes > 0 )
-				m_MuscleModeWeights.resize( m_MuscleNames.size(), std::vector< double >( number_of_modes, 0.0 ) );
-
-			// create functions
-			size_t num_functions = number_of_modes > 0 ? number_of_modes : m_MuscleNames.size();
-			for ( size_t idx = 0; idx < num_functions; ++idx )
-			{
-				m_Functions.push_back( FunctionUP( new OpenSim::PiecewiseLinearFunction() ) );
-				for ( size_t cp = 0; cp < control_points; ++cp )
-					m_Functions.back()->addPoint( 0, 0 );
-			}
 		}
 
 		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
 		{
 			bool useModes = number_of_modes > 0;
+			size_t num_functions = number_of_modes > 0 ? number_of_modes : m_MuscleNames.size();
 
 			// process function parameters
-			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
+			m_Functions.clear();
+			for ( size_t idx = 0; idx < num_functions; ++idx )
 			{
 				String str = useModes ? GetStringF( "Mode%d.", idx ) : m_MuscleNames[ idx ] + ".";
-				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
+				if ( function_type == "PieceWiseLinear" )
 				{
-					// X value
-					if ( optimize_control_point_time )
+					PieceWiseLinearFunction* pFunc = new PieceWiseLinearFunction( flat_extrapolation );
+					for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
 					{
-						if ( cpidx > 0 )
+						Real xVal = 0.0;
+						if ( optimize_control_point_time )
 						{
-							double duration = par( str + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
-							m_Functions[ idx ]->setX( cpidx, m_Functions[ idx ]->getX( cpidx - 1 ) + duration );
+							if ( cpidx > 0 )
+							{
+								double duration = par( str + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
+								xVal = pFunc->GetOsFunc().getX( cpidx - 1 ) + duration;
+							}
 						}
-						else m_Functions[ idx ]->setX( 0, 0.0 );
-					}
-					else m_Functions[ idx ]->setX( cpidx, cpidx * control_point_time_delta );
+						else xVal = cpidx * control_point_time_delta;
 
-					// Y value
-					m_Functions[ idx ]->setY( cpidx, par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, -1.0, 1.0 ) );
+						// Y value
+						Real yVal = par.GetMinMax( str + GetStringF( "Y%d", cpidx ), init_min, init_max, -1.0, 1.0 );
+						pFunc->GetOsFunc().addPoint( xVal, yVal );
+					}
+					m_Functions.push_back( FunctionUP( pFunc ) );
 				}
+				else if ( function_type == "Polynomial" )
+				{
+					Polynomial* pFunc = new Polynomial( control_points );
+					for ( size_t i = 0; i < pFunc->GetCoefficientCount(); ++i )
+						pFunc->SetCoefficient( i, par.GetMinMax( str + GetStringF( "Coeff%d", i ), i == 0 ? init_min : init_mode_weight_min, i == 0 ? init_max : init_mode_weight_max, -1.0, 1.0 ) );
+					m_Functions.push_back( FunctionUP( pFunc ) );
+				}
+				else SCONE_THROW( "Unknown function type: " + function_type );
 			}
 
 			// process muscle mode weights
+			m_MuscleModeWeights.resize( m_MuscleNames.size(), std::vector< double >( number_of_modes, 0.0 ) );
 			for ( size_t mus = 0; mus < m_MuscleNames.size(); ++mus )
 			{
 				for ( size_t mode = 0; mode < number_of_modes; ++mode )
@@ -115,15 +120,11 @@ namespace scone
 			std::vector< double > funcresults( m_Functions.size() );
 			SimTK::Vector xval( 1 );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
-			{
-				xval[ 0 ] = flat_extrapolation ? std::min( time, m_Functions[ idx ]->getX( control_points - 1) ) : time;
-				funcresults[ idx ] = m_Functions[ idx ]->calcValue( xval );
-			}
+				funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
-			// apply results
 			if ( number_of_modes > 0 )
 			{
-				// apply result in case of modes
+				// apply result of each mode to all muscles
 				for ( size_t mode = 0; mode < number_of_modes; ++mode )
 				{
 					for ( size_t idx = 0; idx < m_MuscleIndices.size(); ++idx )
@@ -132,6 +133,7 @@ namespace scone
 			}
 			else
 			{
+				// apply results directly to control value
 				for ( size_t idx = 0; idx < m_MuscleIndices.size(); ++idx )
 					model.GetMuscle( idx ).AddControlValue( funcresults[ m_MuscleIndices[ idx ] ] );
 			}

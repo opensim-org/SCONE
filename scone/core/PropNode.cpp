@@ -199,7 +199,7 @@ namespace scone
 				// directly add XML attributes as children
 				FromPropertyTree( props, v.second );
 			}
-			else
+			else if ( v.first != "<xmlcomment>" )
 			{
 				PropNode& child = props.AddChild( v.first );
 				FromPropertyTree( child, v.second );

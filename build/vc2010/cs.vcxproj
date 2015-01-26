@@ -14,9 +14,12 @@
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\EnergyMeasure.h" />
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
+    <ClInclude Include="..\..\scone\cs\Function.h" />
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
+    <ClInclude Include="..\..\scone\cs\PieceWiseLinearFunction.h" />
+    <ClInclude Include="..\..\scone\cs\Polynomial.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
     <ClInclude Include="..\..\scone\cs\ParameterizableController.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
@@ -29,6 +32,8 @@
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
+    <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />
+    <ClCompile Include="..\..\scone\cs\Polynomial.cpp" />
     <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

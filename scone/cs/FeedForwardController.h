@@ -1,8 +1,10 @@
 #pragma once
-#include "../sim/Controller.h"
+
 #include "cs.h"
+#include "../sim/Controller.h"
 #include "../core/PropNode.h"
 #include "../opt/ParamSet.h"
+#include "Function.h"
 
 namespace OpenSim
 {
@@ -41,7 +43,7 @@ namespace scone
 			double init_mode_weight_min;
 			double init_mode_weight_max;
 
-			typedef std::unique_ptr< OpenSim::PiecewiseLinearFunction > FunctionUP;
+			typedef std::unique_ptr< Function > FunctionUP;
 			std::vector< FunctionUP > m_Functions;
 			std::vector< String > FunctionNames;
 			std::vector< String > m_MuscleNames;
