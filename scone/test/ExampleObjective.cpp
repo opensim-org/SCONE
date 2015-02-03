@@ -2,7 +2,7 @@
 #include "ExampleObjective.h"
 #include "../core/Exception.h"
 #include "../core/PropNode.h"
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 #include "../opt/ParamSet.h"
 
 namespace scone

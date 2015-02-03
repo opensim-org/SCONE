@@ -3,7 +3,7 @@
 #include "Simulation_Simbody.h"
 #include "../../core/Exception.h"
 #include "Model_Simbody.h"
-#include "../../core/Propertyable.h"
+#include "../../core/InitFromPropNode.h"
 
 namespace scone
 {

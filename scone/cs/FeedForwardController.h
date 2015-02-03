@@ -4,6 +4,7 @@
 #include "../sim/Controller.h"
 #include "../core/PropNode.h"
 #include "../opt/ParamSet.h"
+#include "../core/Factory.h"
 #include "Function.h"
 
 namespace OpenSim

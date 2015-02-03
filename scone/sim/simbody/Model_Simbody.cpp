@@ -9,6 +9,7 @@
 #include "Simulation_Simbody.h"
 #include "Joint_Simbody.h"
 #include "tools.h"
+#include "../../core/InitFromPropNode.h"
 
 #include <OpenSim/OpenSim.h>
 #include "boost/foreach.hpp"

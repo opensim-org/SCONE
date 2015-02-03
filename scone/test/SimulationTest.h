@@ -5,7 +5,7 @@
 #include "../sim/Model.h"
 #include "../core/Log.h"
 #include "../core/Timer.h"
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 
 using namespace scone;
 

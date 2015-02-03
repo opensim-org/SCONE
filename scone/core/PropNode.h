@@ -13,8 +13,6 @@
 
 namespace scone
 {
-	class Propertyable;
-
 	class PropNode;
 	typedef std::unique_ptr< PropNode > PropNodePtr;
 

@@ -2,6 +2,7 @@
 
 #include "sim_simbody.h"
 #include "../Simulation.h"
+#include "../../core/Factory.h"
 
 namespace scone
 {

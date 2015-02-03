@@ -2,7 +2,7 @@
 #include "Simulation.h"
 
 #include <boost/foreach.hpp>
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {

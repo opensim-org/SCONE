@@ -2,13 +2,13 @@
 
 #include "opt.h"
 #include "ParamSet.h"
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Objective : public Propertyable, public Parameterizable
+		class OPT_API Objective : public Parameterizable
 		{
 		public:
 			Objective( const PropNode& props );

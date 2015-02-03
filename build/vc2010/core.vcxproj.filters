@@ -1,86 +1,90 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Math">
+      <UniqueIdentifier>{26d2a4bf-2142-4e5f-bd68-8b8b45aca56a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{03f22d16-13c8-4931-ac34-187a90248d34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{d8e7ebd4-e97a-4d81-af5e-90ddedf56b03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{30dfae76-16ca-4d88-a9cf-25c55c7fc5b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{509cdda2-4a20-4dd7-a627-77cb840c9722}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\core\core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\math.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Quat.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\tools.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Vec3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Exception.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\PropNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\serialization.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Propertyable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Timer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Named.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\Log.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\MeasuredValue.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Timer.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\tools.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Log.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Factory.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\PropNode.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\serialization.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Exception.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Named.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\core.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\stdafx.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\InitFromPropNode.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\core\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\core\tools.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Vec3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\PropNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\core\Propertyable.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\core\tools.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Factory.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\PropNode.cpp">
+      <Filter>Serialization</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Named.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\stdafx.cpp">
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

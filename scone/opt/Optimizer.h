@@ -2,13 +2,13 @@
 
 #include "opt.h"
 #include "Objective.h"
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Optimizer : public Propertyable
+		class OPT_API Optimizer
 		{
 		public:
 			Optimizer( const PropNode& props );

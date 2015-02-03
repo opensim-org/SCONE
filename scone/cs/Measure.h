@@ -1,6 +1,6 @@
 #pragma once
 #include "../sim/sim.h"
-#include "../core/Propertyable.h"
+#include "../core/InitFromPropNode.h"
 #include "../sim/Controller.h"
 
 namespace scone

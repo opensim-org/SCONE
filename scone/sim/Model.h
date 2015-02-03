@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model : public Propertyable, public opt::Parameterizable
+		class SCONE_SIM_API Model : public opt::Parameterizable
 		{
 		public:
 			Model( const PropNode& props );

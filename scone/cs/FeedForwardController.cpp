@@ -4,6 +4,7 @@
 #include "../sim/Controller.h"
 #include "../sim/Model.h"
 #include "../sim/Muscle.h"
+#include "../core/InitFromPropNode.h"
 
 #include <OpenSim/OpenSim.h>
 #include "../core/Log.h"

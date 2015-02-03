@@ -8,12 +8,12 @@ namespace scone
 {
 	namespace factory { }
 
-	class CORE_API Propertyable
-	{
-	public:
-		Propertyable();
-		virtual ~Propertyable();
-	};
+	//class CORE_API Propertyable
+	//{
+	//public:
+	//	Propertyable();
+	//	virtual ~Propertyable();
+	//};
 
 	// process named property type
 	template< typename T >
