@@ -39,6 +39,8 @@ namespace scone
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
 	const Index NO_INDEX = std::numeric_limits< Index >::max();
 
+	enum Side { Left = -1, Middle = 0, Right = 1 };
+
 	// forward declarations
 	class Vec3;
 	class Quat;

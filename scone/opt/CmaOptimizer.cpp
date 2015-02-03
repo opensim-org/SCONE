@@ -51,6 +51,9 @@ namespace scone
 
 		void CmaOptimizer::Run()
 		{
+			// make sure there is at least 1 objective
+			CreateObjectives( 1 );
+
 			// get info from objective
 			ParamSet par = GetObjective().GetParamSet();
 			size_t dim = par.GetFreeParamCount();
@@ -60,6 +63,9 @@ namespace scone
 			// init lambda and mu
 			if ( m_Lambda == 0 ) m_Lambda = CMA::suggestLambda( dim );
 			if ( m_Mu == 0 ) m_Mu = CMA::suggestMu( m_Lambda );
+
+			// create m_Lambda objectives
+			CreateObjectives( m_Lambda );
 
 			// init parents and offspring
 			m_pImpl->m_pParents = PopulationPtr( new Population( m_Mu, ChromosomeT<double>( dim ), ChromosomeT<double>( dim ) ) );

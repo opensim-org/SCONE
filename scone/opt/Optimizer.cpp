@@ -21,9 +21,10 @@ namespace scone
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 			INIT_FROM_PROP( props, maximize_objective, true );
 
-			// create objective instances
-			m_Objectives.clear();
+			// copy objective props so that we can create them when we need
 			m_ObjectiveProps = props.GetChild( "Objective" );
+
+			// create at least one objective from props, so that all nodes are properly flagged
 			m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
 		}
 
@@ -35,8 +36,7 @@ namespace scone
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 		{
 			// make sure there are enough objectives
-			while ( m_Objectives.size() < parsets.size() )
-				m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
+			CreateObjectives( parsets.size() );
 
 			if ( max_threads == 1 )
 				return EvaluateSingleThreaded( parsets );
@@ -113,6 +113,13 @@ namespace scone
 			if ( m_OutputFolder.empty() )
 				InitOutputFolder();
 			return m_OutputFolder;
+		}
+
+		void Optimizer::CreateObjectives( size_t count )
+		{
+			// create at least one objective instance (required for finding number of parameters)
+			while ( m_Objectives.size() < count )
+				m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
 		}
 	}
 }

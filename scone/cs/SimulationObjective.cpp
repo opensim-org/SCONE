@@ -14,7 +14,8 @@ namespace scone
 		Objective( props )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
-			m_Model = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
+			//InitFromPropNodeChild( props, m_Model, "Model" );
+			InitFromPropNode( props.GetChild( "Model" ), m_Model );
 		}
 
 		SimulationObjective::~SimulationObjective()

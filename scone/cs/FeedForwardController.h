@@ -23,8 +23,13 @@ namespace scone
 			virtual ~FeedForwardController() { };
 
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
+
+			Function* CreateFunction( opt::ParamSet &par, const String& prefix );
+
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual void Initialize( sim::Model& model ) override;
+
+			bool UseModes() { return number_of_modes > 0; }
 
 		private:
 			// function parameters
@@ -44,12 +49,20 @@ namespace scone
 			double init_mode_weight_min;
 			double init_mode_weight_max;
 
+			// muscle info
+			struct ActInfo
+			{
+				ActInfo() : side( Middle ), function_idx( NO_INDEX ) {};
+				String name;
+				Side side;
+				String full_name;
+				size_t function_idx;
+				std::vector< double > mode_weights;
+			};
+
 			typedef std::unique_ptr< Function > FunctionUP;
 			std::vector< FunctionUP > m_Functions;
-			std::vector< String > FunctionNames;
-			std::vector< String > m_MuscleNames;
-			std::vector< size_t > m_MuscleIndices;
-			std::vector< std::vector< double > > m_MuscleModeWeights;
+			std::vector< ActInfo > m_ActInfos;
 
 		private: // non-copyable and non-assignable
 			FeedForwardController( const FeedForwardController& );

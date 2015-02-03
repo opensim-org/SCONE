@@ -12,8 +12,6 @@ namespace scone
 		public:
 			FiniteStateMachine( const PropNode& props );
 			virtual ~FiniteStateMachine();
-			
-
 		};
 	}
 }

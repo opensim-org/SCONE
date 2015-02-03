@@ -6,18 +6,9 @@
 
 namespace scone
 {
-	namespace factory { }
-
-	//class CORE_API Propertyable
-	//{
-	//public:
-	//	Propertyable();
-	//	virtual ~Propertyable();
-	//};
-
 	// process named property type
 	template< typename T >
-	void InitFromPropNode( const PropNode& prop, T& var, const String& name )
+	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
 	{
 		if ( prop.HasKey( name ) )
 			InitFromPropNode< T >( prop.GetChild( name ), var );
@@ -26,7 +17,7 @@ namespace scone
 
 	// process named property type with default argument
 	template< typename T >
-	void InitFromPropNode( const PropNode& prop, T& var, const String& name, const T& default_value )
+	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name, const T& default_value )
 	{
 		if ( prop.HasKey( name ) )
 			InitFromPropNode( prop.GetChild( name ), var );
@@ -81,7 +72,16 @@ namespace scone
 		prop.SetFlag();
 	}
 
-	// process fundamental types and String
+	// process pointer type
+	template< typename T >
+	void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
+	{
+		var = GetFactory().Create< T >( prop.GetStr( "type" ), prop );
+		prop.SetFlag();
+		prop.GetChild( "type" ).SetFlag();
+	}
+
+	// create function (TODO: remove?)
 	template< typename T >
 	std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
 	{
@@ -93,6 +93,6 @@ namespace scone
 	}
 
 	// convenience macro that automatically derives name from variable name
-	#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNode( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
-	#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNode( _prop_, _var_, _name_, _default_ )
+	#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+	#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
 }

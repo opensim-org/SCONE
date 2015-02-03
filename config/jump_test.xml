@@ -28,7 +28,7 @@
 					<optimize_control_point_time>1</optimize_control_point_time>
 					
 					<!--Mode specific settings-->
-					<number_of_modes>0</number_of_modes>
+					<number_of_modes>1</number_of_modes>
 					<init_mode_weight_min>-0.5</init_mode_weight_min>
 					<init_mode_weight_max>0.5</init_mode_weight_max>
 				</Controller>
