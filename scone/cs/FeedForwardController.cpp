@@ -124,10 +124,15 @@ namespace scone
 			if ( UseModes() )
 			{
 				// apply result of each mode to all muscles
-				for ( size_t mode = 0; mode < number_of_modes; ++mode )
+				for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
 				{
-					for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
-						model.GetMuscle( idx ).AddControlValue( funcresults[ mode ] * m_ActInfos[ idx ].mode_weights[ mode ] );
+					Real val = 0.0;
+					for ( size_t mode = 0; mode < number_of_modes; ++mode )
+						val += funcresults[ mode ] * m_ActInfos[ idx ].mode_weights[ mode ];
+
+					// add control value
+					model.GetMuscle( idx ).AddControlValue( val );
+
 				}
 			}
 			else
