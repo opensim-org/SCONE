@@ -20,6 +20,7 @@
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
+    <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseLinearFunction.h" />
     <ClInclude Include="..\..\scone\cs\Polynomial.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />

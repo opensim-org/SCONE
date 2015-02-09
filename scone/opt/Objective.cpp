@@ -18,14 +18,14 @@ namespace scone
 
 		scone::opt::ParamSet Objective::GetParamSet()
 		{
-			ParamSet par( ParamSet::CONSTRUCTION_MODE );
+			ParamSet par( ParamSet::ConstructionMode );
 			ProcessParameters( par );
 			return par;
 		}
 
 		double Objective::Evaluate( ParamSet& par )
 		{
-			par.SetMode( ParamSet::UPDATE_MODE );
+			par.SetMode( ParamSet::UpdateMode );
 			ProcessParameters( par );
 
 			return Evaluate();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <iomanip>
 
 // very basic logging
 #define SCONE_LOG( _MESSAGE_ ) std::cout << _MESSAGE_ << std::endl;

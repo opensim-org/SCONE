@@ -13,8 +13,8 @@ namespace scone
 		class OPT_API ParamSet
 		{
 		public:
-			typedef enum Mode { CONSTRUCTION_MODE, UPDATE_MODE };
-			ParamSet( Mode m = CONSTRUCTION_MODE ) : m_Mode( m ) { };
+			typedef enum Mode { ConstructionMode, UpdateMode };
+			ParamSet( Mode m = ConstructionMode ) : m_Mode( m ) { };
 			virtual ~ParamSet() { };
 
 			double Get( const ParamInfo& info );
@@ -34,7 +34,7 @@ namespace scone
 			void SetFreeParamValues( std::vector< double >& values );
 
 			void SetMode( Mode m ) { m_Mode = m; }
-			bool IsInConstructionMode() { return m_Mode == CONSTRUCTION_MODE; }
+			bool IsInConstructionMode() { return m_Mode == ConstructionMode; }
 
 			void Write( const String& filename );
 			void Read( const String& filename );

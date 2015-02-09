@@ -6,6 +6,7 @@
 #include "../opt/ParamSet.h"
 #include "../core/Factory.h"
 #include "Function.h"
+#include "../sim/Leg.h"
 
 namespace OpenSim
 {
@@ -52,7 +53,7 @@ namespace scone
 			// muscle info
 			struct ActInfo
 			{
-				ActInfo() : side( Middle ), function_idx( NO_INDEX ) {};
+				ActInfo() : side( NoSide ), function_idx( NO_INDEX ) {};
 				String name;
 				Side side;
 				String full_name;

@@ -50,24 +50,6 @@ namespace scone
 				ai.full_name = model.GetMuscle( idx ).GetName();
 				ExtractNameAndSide( model.GetMuscle( idx ).GetName(), ai.name, ai.side );
 				m_ActInfos.push_back( ai );
-
-				//if ( use_symmetric_actuators )
-				//{
-				//	// lookup muscle
-				//	String musName = GetSymmetricMuscleName( model.GetMuscle( idx ).GetName() );
-				//	auto iter = std::find( m_MuscleNames.begin(), m_MuscleNames.end(), musName );
-				//	if ( iter == m_MuscleNames.end() )
-				//	{
-				//		m_MuscleNames.push_back( musName );
-				//		m_MuscleIndices.push_back( m_MuscleNames.size() - 1 );
-				//	}
-				//	else m_MuscleIndices.push_back( iter - m_MuscleNames.begin() );
-				//}
-				//else
-				//{
-				//	m_MuscleNames.push_back( model.GetMuscle( idx ).GetName() );
-				//	m_MuscleIndices.push_back( m_MuscleNames.size() - 1 );
-				//}
 			}
 		}
 

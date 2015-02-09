@@ -15,7 +15,7 @@ namespace scone
 
 		}
 
-		const String& Muscle_Simbody::GetName()
+		const String& Muscle_Simbody::GetName() const
 		{
 			return m_osMus.getName();
 		}

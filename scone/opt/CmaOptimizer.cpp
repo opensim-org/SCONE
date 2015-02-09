@@ -121,7 +121,7 @@ namespace scone
 				printf("%04d:", gen );
 
 				// setup parameter sets
-				par.SetMode( ParamSet::UPDATE_MODE );
+				par.SetMode( ParamSet::UpdateMode );
 				std::vector< ParamSet > parsets( m_Lambda, par );
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
 					parsets[ ind_idx ].SetFreeParamValues( (*m_pImpl->m_pOffspring)[ind_idx][0] );

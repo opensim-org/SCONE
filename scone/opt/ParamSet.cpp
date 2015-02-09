@@ -13,7 +13,7 @@ namespace scone
 	{
 		double ParamSet::Get( const ParamInfo& info )
 		{
-			if ( m_Mode == CONSTRUCTION_MODE )
+			if ( m_Mode == ConstructionMode )
 			{
 				if ( FindParamByName( info.name ) != m_Params.end() )
 					SCONE_THROW( "Duplicate parameter: " + info.name );
@@ -23,7 +23,7 @@ namespace scone
 
 				return m_Params.back().second;
 			}
-			else if ( m_Mode == UPDATE_MODE )
+			else if ( m_Mode == UpdateMode )
 			{
 				auto iter = FindParamByName( info.name );
 				if ( iter == m_Params.end() )

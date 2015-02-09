@@ -11,31 +11,41 @@ using namespace scone;
 
 void SimulationTest()
 {
-	const double simulation_time = 0.5;
+	const double simulation_time = 1.0;
 
 	cs::RegisterFactoryTypes();
 	PropNode props = ReadXmlFile( "config/simulation_test.xml" );
 
 	std::vector< String > models;
-	models.push_back( "models/ToyLandingModel.osim" );
-	models.push_back( "models/ToyLandingModel_Millard2012Eq.osim" );
+	models.push_back( "models/jump1024.osim" );
+	//models.push_back( "models/gait2354.osim" );
+	//models.push_back( "models/jump2354.osim" );
+	//models.push_back( "models/gait1018.osim" );
+	//models.push_back( "models/gait1024.osim" );
+	//models.push_back( "models/ToyLandingModel.osim" );
+	//models.push_back( "models/ToyLandingModel_Millard2012Eq.osim" );
 	//models.push_back( "models/ToyLandingModel_Millard2012Acc.osim" );
-	opt::ParamSet par;
 
 	// run all models
 	for ( auto iter = models.begin(); iter != models.end(); ++iter )
 	{
+		opt::ParamSet par;
 		props.Set( "Model.model_file", *iter );
 		sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
 		m->ProcessParameters( par );
+
+		SCONE_LOG( "Muscles=" << m->GetMuscleCount() << " Bodies=" << m->GetBodyCount() << " Joints=" << m->GetJoints().size() );
+		SCONE_LOG( "Starting simulation..." );
 
 		Timer t;
 		m->AdvanceSimulationTo( simulation_time );
 		double time = t.GetTime();
 		SCONE_LOG( "Simulation time: " << time << " (" << simulation_time / time << "x real-time)");
 
-		if ( par.IsInConstructionMode() )
-			par.SetMode( opt::ParamSet::UPDATE_MODE );
+		std::cout << *m;
+
+		//if ( par.IsInConstructionMode() )
+		//	par.SetMode( opt::ParamSet::UpdateMode );
 	}
 	SCONE_LOG( "Done!" );
 }

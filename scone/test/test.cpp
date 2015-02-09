@@ -15,10 +15,10 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	try
 	{
-		XmlParseTest();
+		//XmlParseTest();
 		//SerializationTest();
 		//OptimizationTest();
-		//SimulationTest();
+		SimulationTest();
 	}
 	catch (std::exception& e)
 	{

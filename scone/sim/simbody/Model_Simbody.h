@@ -38,18 +38,22 @@ namespace scone
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
-			virtual void RequestTermination() override;
+			virtual void SetTerminationRequest() override;
 
 			virtual double GetTime() override;
 			virtual size_t GetStep() override;
 
-			/// Get the OpenSim model attached to this model
-			OpenSim::Model& GetOsModel() { return *m_osModel; }
-			SimTK::Integrator& GetTkIntegrator() { return *m_tkIntegrator; }
-			SimTK::State& GetTkState() { return *m_tkState; }
-			void SetTkState( SimTK::State& s ) { m_tkState = &s; }
-
+			// process parameters for this model and attached controllers
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
+
+			/// Get the OpenSim model attached to this model
+			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
+			const OpenSim::Model& GetOsimModel() const { return *m_pOsimModel; }
+			SimTK::Integrator& GetTkIntegrator() { return *m_pTkIntegrator; }
+			SimTK::State& GetTkState() { return *m_pTkState; }
+			void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
+
+			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		private:
 			void CreateModelFromFile( const String& file );
@@ -61,10 +65,10 @@ namespace scone
 			double max_step_size;
 			String model_file;
 
-			std::unique_ptr< OpenSim::Model > m_osModel, m_osInitModel;
-			std::unique_ptr< OpenSim::Manager > m_osManager;
-			SimTK::State* m_tkState; // non-owning state reference
-			std::unique_ptr< SimTK::Integrator > m_tkIntegrator;
+			std::unique_ptr< OpenSim::Model > m_pOsimModel, m_pInitOsimModel;
+			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
+			SimTK::State* m_pTkState; // non-owning state reference
+			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
 
 			class ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel

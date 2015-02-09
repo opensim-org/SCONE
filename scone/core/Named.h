@@ -10,7 +10,7 @@ namespace scone
 	public:
 		Named();
 		virtual ~Named();
-		virtual const String& GetName() { SCONE_THROW_NOT_IMPLEMENTED; }
+		virtual const String& GetName() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual void SetName( const String& ) { SCONE_THROW_NOT_IMPLEMENTED; }
 	};
 }

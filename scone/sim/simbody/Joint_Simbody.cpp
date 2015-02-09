@@ -16,7 +16,7 @@ namespace scone
 		{
 		}
 
-		const String& Joint_Simbody::GetName()
+		const String& Joint_Simbody::GetName() const
 		{
 			return m_osJoint.getName();
 		}

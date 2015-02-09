@@ -14,6 +14,8 @@
 #include <OpenSim/OpenSim.h>
 #include "boost/foreach.hpp"
 
+using std::endl;
+
 namespace scone
 {
 	namespace sim
@@ -38,11 +40,11 @@ namespace scone
 			TerminationEventHandler( Model_Simbody& model ) : m_Model( model ), SimTK::TriggeredEventHandler( SimTK::Stage::Dynamics ) { };
 			//virtual Real getNextEventTime( const SimTK::State& state, bool includeCurrentTime ) const override { return state.getTime() + 0.001; }
 			virtual Real getValue( const SimTK::State& s ) const override {
-				double value = (double)m_Model.ShouldTerminate() - 0.5;
+				double value = (double)m_Model.GetTerminationRequest() - 0.5;
 				//printf( "tt=%8.5f, steps=%d\n", s.getTime(), m_Model.GetTkIntegrator().getNumStepsTaken() );
 				return value; }
 			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override {
-				shouldTerminate = m_Model.ShouldTerminate();
+				shouldTerminate = m_Model.GetTerminationRequest();
 			}
 
 		private:
@@ -52,8 +54,8 @@ namespace scone
 		/// Constructor
 		Model_Simbody::Model_Simbody( const PropNode& props ) :
 		Model( props ),
-		m_osModel( nullptr ),
-		m_tkState( nullptr ),
+		m_pOsimModel( nullptr ),
+		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr ),
 		m_pTerminationEventHandler( nullptr )
 		{
@@ -74,27 +76,27 @@ namespace scone
 
 		void Model_Simbody::CreateModelFromFile( const String& file )
 		{
-			m_osInitModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
+			m_pInitOsimModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
 			ResetModel();
 		}
 
 		void Model_Simbody::ResetModel()
 		{
-			SCONE_ASSERT( m_osInitModel );
+			SCONE_ASSERT( m_pInitOsimModel );
 
 			// explicitly reset existing objects
-			m_osModel.reset(); 
-			m_tkIntegrator.reset();
-			m_osManager.reset();
+			m_pOsimModel.reset(); 
+			m_pTkIntegrator.reset();
+			m_pOsimManager.reset();
 
 			// create new osModel
-			m_osModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( *m_osInitModel ) );
+			m_pOsimModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( *m_pInitOsimModel ) );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
-			for ( int idx = 0; idx < m_osModel->getActuators().getSize(); ++idx )
+			for ( int idx = 0; idx < m_pOsimModel->getActuators().getSize(); ++idx )
 			{
-				OpenSim::Actuator& osAct = m_osModel->getActuators().get( idx );
+				OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
 
 				try // see if it's a muscle
 				{
@@ -109,26 +111,26 @@ namespace scone
 
 			// Create wrappers for bodies
 			m_Bodies.clear();
-			for ( int idx = 0; idx < m_osModel->getBodySet().getSize(); ++idx )
-				m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_osModel->getBodySet().get( idx ) ) ) );
+			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
+				m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) ) );
 
 			// Create wrappers for joints
 			m_Joints.clear();
-			for ( int idx = 0; idx < m_osModel->getJointSet().getSize(); ++idx )
-				m_Joints.push_back( JointUP( new Joint_Simbody( m_osModel->getJointSet().get( idx ) ) ) );
+			for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
+				m_Joints.push_back( JointUP( new Joint_Simbody( m_pOsimModel->getJointSet().get( idx ) ) ) );
 
 			// setup hierarchy and create wrappers
-			m_RootLink = CreateLinkHierarchy( m_osModel->getGroundBody() );
+			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
-			m_osModel->addController( m_pControllerDispatcher );
+			m_pOsimModel->addController( m_pControllerDispatcher );
 
 			// reset termination flag
 			m_ShouldTerminate = false;
 
 			// Initialize the system
-			m_tkState = &m_osModel->initSystem();
+			m_pTkState = &m_pOsimModel->initSystem();
 
 			// reset controllers
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )
@@ -140,45 +142,46 @@ namespace scone
 
 		void Model_Simbody::PrepareSimulation()
 		{
-			SCONE_ASSERT( m_osModel && m_tkState );
+			SCONE_ASSERT( m_pOsimModel && m_pTkState );
 
 			// Create the integrator for the simulation.
-			m_tkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_osModel->getMultibodySystem() ) );
-			m_tkIntegrator->setAccuracy( integration_accuracy );
-			m_tkIntegrator->setMaximumStepSize( max_step_size );
-			m_tkIntegrator->resetAllStatistics();
+			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			m_pTkIntegrator->setAccuracy( integration_accuracy );
+			m_pTkIntegrator->setMaximumStepSize( max_step_size );
+			m_pTkIntegrator->resetAllStatistics();
 
 			// get initial controller values and equilibrate muscles
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
 				(*iter)->UpdateControls( *this, 0.0 );
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsModel().updWorkingState(), (*iter)->GetControlValue() );
-			m_osModel->equilibrateMuscles( GetOsModel().updWorkingState() );
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), (*iter)->GetControlValue() );
+			m_pOsimModel->equilibrateMuscles( GetOsimModel().updWorkingState() );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_osManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_osModel, *m_tkIntegrator ) );
-			m_osManager->setWriteToStorage( true );
-			m_osManager->setPerformAnalyses( false );
+			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
+			m_pOsimManager->setWriteToStorage( true );
+			m_pOsimManager->setPerformAnalyses( false );
 		}
 
 		Vec3 Model_Simbody::GetComPos()
 		{
-			return ToVec3( m_osModel->calcMassCenterPosition( GetTkState() ) );
+			return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 		}
 		
 		Vec3 Model_Simbody::GetComVel()
 		{
-			return ToVec3( m_osModel->calcMassCenterVelocity( GetTkState() ) );
+			m_pOsimModel->getMultibodySystem().realize( *m_pTkState, SimTK::Stage::Velocity );
+			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 
 		Real Model_Simbody::GetMass()
 		{
-			return m_osModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_osModel->getWorkingState() );
+			return m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 		}
 
 		scone::Vec3 Model_Simbody::GetGravity()
 		{
-			return ToVec3( m_osModel->getGravity() );
+			return ToVec3( m_pOsimModel->getGravity() );
 		}
 
 		bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
@@ -213,7 +216,7 @@ namespace scone
 				if ( childBody.m_osBody.hasJoint() && childBody.m_osBody.getJoint().getParentBody() == osBody )
 				{
 					// create child link
-					link->children().push_back( CreateLinkHierarchy( childBody.m_osBody ) );
+					link->GetChildren().push_back( CreateLinkHierarchy( childBody.m_osBody ) );
 				}
 			}
 
@@ -234,7 +237,7 @@ namespace scone
 			{
 				con->UpdateControls( m_Model, s.getTime() );
 				if ( con->GetTerminationRequest() )
-					m_Model.RequestTermination();
+					m_Model.SetTerminationRequest();
 			}
 
 			// inject actuator values into controls
@@ -248,17 +251,17 @@ namespace scone
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
-			SCONE_ASSERT( m_osManager );
+			SCONE_ASSERT( m_pOsimManager );
 
 			// Integrate from initial time to final time and integrate
-			m_osManager->setInitialTime( 0.0 );
-			m_osManager->setFinalTime( time );
-			m_osManager->integrate( GetTkState() );
+			m_pOsimManager->setInitialTime( 0.0 );
+			m_pOsimManager->setFinalTime( time );
+			m_pOsimManager->integrate( GetTkState() );
 		}
 
 		void Model_Simbody::WriteStateHistory( const String& file )
 		{
-			m_osManager->getStateStorage().print( file + ".sto" );
+			m_pOsimManager->getStateStorage().print( file + ".sto" );
 		}
 
 		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
@@ -278,18 +281,18 @@ namespace scone
 		bool Model_Simbody::HasGroundContact()
 		{
 			// total vertical force applied to both feet
-			m_osModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
-			OpenSim::Array<double> force_foot_r = m_osModel->getForceSet().get("foot_r").getRecordValues( GetTkState() );
-			OpenSim::Array<double> force_foot_l = m_osModel->getForceSet().get("foot_l").getRecordValues( GetTkState() );
+			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
+			OpenSim::Array<double> force_foot_r = m_pOsimModel->getForceSet().get("foot_r").getRecordValues( GetTkState() );
+			OpenSim::Array<double> force_foot_l = m_pOsimModel->getForceSet().get("foot_l").getRecordValues( GetTkState() );
 			double netGRFVertical = force_foot_r[1] + force_foot_l[1];
 			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
 			return netGRFVertical < -1.0;
 		}
 
-		void Model_Simbody::RequestTermination()
+		void Model_Simbody::SetTerminationRequest()
 		{
-			Model::RequestTermination();
-			m_osManager->halt();
+			Model::SetTerminationRequest();
+			m_pOsimManager->halt();
 		}
 
 		double Model_Simbody::GetTime()
@@ -300,6 +303,25 @@ namespace scone
 		size_t Model_Simbody::GetStep()
 		{
 			return GetTkIntegrator().getNumStepsTaken();
+		}
+
+		std::ostream& Model_Simbody::ToStream( std::ostream& str ) const 
+		{
+			Model::ToStream( str );
+
+			GetOsimModel().getMultibodySystem().realize( *m_pTkState, SimTK::Stage::Dynamics );
+
+			str << endl << "Forces:" << endl;
+			const OpenSim::ForceSet& fset = GetOsimModel().getForceSet();
+			for ( int i = 0; i < fset.getSize(); ++i )
+			{
+				OpenSim::Force& f = fset.get( i );
+				str << f.getName() << endl;
+				for ( int rec = 0; rec < f.getRecordLabels().size(); ++rec )
+					str << "  " << f.getRecordLabels().get( rec ) << ": " << f.getRecordValues( *m_pTkState ).get( rec ) << endl;
+			}
+
+			return str;
 		}
 	}
 }

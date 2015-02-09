@@ -83,6 +83,7 @@
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Driver.cpp" />
     <ClCompile Include="..\..\scone\sim\Joint.cpp" />
+    <ClCompile Include="..\..\scone\sim\Leg.cpp" />
     <ClCompile Include="..\..\scone\sim\Link.cpp" />
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
@@ -98,12 +99,15 @@
     <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Driver.h" />
     <ClInclude Include="..\..\scone\sim\Joint.h" />
+    <ClInclude Include="..\..\scone\sim\Leg.h" />
     <ClInclude Include="..\..\scone\sim\Link.h" />
     <ClInclude Include="..\..\scone\sim\Model.h" />
+    <ClInclude Include="..\..\scone\sim\ModelInfo.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\stdafx.h" />
+    <ClInclude Include="..\..\scone\sim\Types.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">

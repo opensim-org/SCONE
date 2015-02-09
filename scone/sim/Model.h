@@ -6,6 +6,7 @@
 #include "Controller.h"
 #include "Link.h"
 #include "../opt/ParamSet.h"
+#include "Leg.h"
 
 namespace scone
 {
@@ -38,10 +39,13 @@ namespace scone
 			std::vector< JointUP >& GetJoints() { return m_Joints; }
 
 			/// link access
-			Link& GetRootLink() { return *m_RootLink; }
+			const Link& GetRootLink() const { return *m_RootLink; }
 
 			/// controller access
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
+
+			/// leg access
+			std::vector< Leg >& GetLegs();
 
 			/// Simulate model
 			virtual double GetTime() = 0;
@@ -50,16 +54,21 @@ namespace scone
 			virtual void WriteStateHistory( const String& file ) = 0;
 
 			// TODO: perhaps remove termination request here
-			virtual void RequestTermination() { m_ShouldTerminate = true; }
-			virtual bool ShouldTerminate() { return m_ShouldTerminate; }
+			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
+			virtual bool GetTerminationRequest() { return m_ShouldTerminate; }
+
+			// streaming operator (for debugging)
+			virtual std::ostream& ToStream( std::ostream& str ) const;
 
 		protected:
-			std::unique_ptr< Link > m_RootLink;
+			LinkUP m_RootLink;
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
 			std::vector< ControllerUP > m_Controllers;
 			bool m_ShouldTerminate;
 		};
+		
+		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }
 	}
 }

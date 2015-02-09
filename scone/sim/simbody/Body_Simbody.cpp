@@ -17,7 +17,7 @@ namespace scone
 		{
 		}
 
-		const String& Body_Simbody::GetName()
+		const String& Body_Simbody::GetName() const
 		{
 			return m_osBody.getName();
 		}

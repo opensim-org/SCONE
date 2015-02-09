@@ -7,6 +7,8 @@
 #include "boost/foreach.hpp"
 #include <algorithm>
 
+using std::endl;
+
 namespace scone
 {
 	namespace sim
@@ -27,6 +29,14 @@ namespace scone
 				SCONE_THROW( "Could not find body: " + name );
 
 			return **it;
+		}
+
+		std::ostream& Model::ToStream( std::ostream& str ) const
+		{
+			str << "Links:" << endl;
+			str << GetRootLink().ToString();
+
+			return str;
 		}
 
 	}
