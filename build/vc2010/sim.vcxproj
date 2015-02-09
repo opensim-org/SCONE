@@ -102,7 +102,6 @@
     <ClInclude Include="..\..\scone\sim\Leg.h" />
     <ClInclude Include="..\..\scone\sim\Link.h" />
     <ClInclude Include="..\..\scone\sim\Model.h" />
-    <ClInclude Include="..\..\scone\sim\ModelInfo.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />

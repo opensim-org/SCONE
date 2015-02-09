@@ -79,9 +79,6 @@
     <ClInclude Include="..\..\scone\sim\Link.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\ModelInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\Leg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
