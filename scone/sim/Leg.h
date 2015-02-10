@@ -2,35 +2,30 @@
 
 #include "Link.h"
 #include "Types.h"
+#include "../core/Vec3.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class Leg
+		class SCONE_SIM_API Leg
 		{
 		public:
-			enum State { UnknownState = 0, StanceState, LiftoffState, SwingState, LandingState };
+			Leg( const Link& upper, const Link& foot, Side side = NoSide, size_t rank = 0 );
+			virtual ~Leg();
 
-			Leg( Link& proximal, Link& foot, Side side = NoSide, size_t rank = 1 ) : m_pProximal( &proximal ), m_pFoot( &foot ), m_Side( side ), m_Rank( rank ), m_State( UnknownState ), m_StartTime( 0.0 ) { };
+			const Link& GetUpperLink() const { return m_Upper; }
+			const Link& GetFootLink() const { return m_Foot; }
+			Side GetSide() const { return m_Side; }
+			size_t GetRank() const { return m_Rank; }
 
-			Link& GetFootLink() { return *m_pFoot; }
-			Link& GetUpperLink() { return *m_pProximal; }
-
-			State GetState() { return m_State; }
-			double GetStateStartTime() { return m_StartTime; }
-			Side GetSide() { return m_Side; }
-
-			void UpdateState();
+			virtual Vec3 GetContactForce() const;
 
 		private:
-			State m_State;
-			double m_StartTime;
-
 			Side m_Side;
 			size_t m_Rank;
-			Link* m_pFoot;
-			Link* m_pProximal;
+			const Link& m_Foot;
+			const Link& m_Upper;
 		};
 	}
 }

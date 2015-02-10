@@ -18,16 +18,22 @@ namespace scone
 			// serialization, can be used for debug printing
 			String ToString( const String& prefix = "" ) const;
 			
-			// hierarchy methods
+			// get body
 			Body& GetBody() { return *m_Body; }
 			const Body& GetBody() const { return *m_Body; }
-			Joint& GetJoint() { SCONE_ASSERT( m_Joint != nullptr ); return *m_Joint; }
-			const Joint& GetJoint() const { SCONE_ASSERT( m_Joint != nullptr ); return *m_Joint; }
 
+			// get joint
 			bool HasJoint() const { return m_Joint != nullptr; }
+			Joint& GetJoint() { return *m_Joint; }
+			const Joint& GetJoint() const { return *m_Joint; }
 
+			// get children
 			std::vector< LinkUP >& GetChildren() { return m_Children; }
 			const std::vector< LinkUP >& GetChildren() const { return m_Children; }
+			const Link& GetChild( size_t i ) const { return *m_Children[ i ]; }
+
+			// find link
+			const Link* FindLink( const String& body ) const;
 
 			// link metadata
 			enum Type { UnknownLink, RootLink, LegLink, FootLink, ArmLink, HandLink, SpineLink, HeadLink };

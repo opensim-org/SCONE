@@ -45,7 +45,7 @@ namespace scone
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
 
 			/// leg access
-			std::vector< Leg >& GetLegs();
+			std::vector< LegUP >& GetLegs() { return m_Legs; }
 
 			/// Simulate model
 			virtual double GetTime() = 0;
@@ -65,6 +65,7 @@ namespace scone
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
+			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
 			bool m_ShouldTerminate;
 		};

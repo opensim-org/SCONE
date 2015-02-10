@@ -15,6 +15,7 @@ namespace scone
 		m_osBody( body ),
 		m_Model( model )
 		{
+			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( m_osBody.getName(), 0 );
 		}
 
 		const String& Body_Simbody::GetName() const
@@ -22,32 +23,48 @@ namespace scone
 			return m_osBody.getName();
 		}
 
-		scone::Vec3 scone::sim::Body_Simbody::GetPos()
+		scone::Vec3 scone::sim::Body_Simbody::GetPos() const
 		{
-			//m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
-			//const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
-			//return ToVec3( mob.getBodyOriginLocation( m_Model.GetTkState() ) );
 			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 			SimTK::Vec3 point;
 			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
 			return ToVec3( point );
 		}
-		
-		scone::Quat scone::sim::Body_Simbody::GetOri()
+
+		scone::Quat scone::sim::Body_Simbody::GetOri() const
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 		
-		scone::Vec3 scone::sim::Body_Simbody::GetLinVel()
+		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
 		{
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 			const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 			return ToVec3( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
 		}
 		
-		scone::Vec3 scone::sim::Body_Simbody::GetAngVel()
+		scone::Vec3 scone::sim::Body_Simbody::GetAngVel() const
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
+		}
+
+		Vec3 Body_Simbody::GetContactForce() const
+		{
+			if ( m_ForceIndex != -1 )
+			{
+				// TODO: find out if this can be done less clumsy in OpenSim
+				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
+				OpenSim::Array<double> force = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+
+				// assume total force is the first 3 values
+				return Vec3( -force[0], -force[1], -force[2] );
+			}
+			else return Vec3::ZERO;
+		}
+
+		Vec3 Body_Simbody::GetContactTorque() const
+		{
+			throw std::logic_error("The method or operation is not implemented.");
 		}
 	}
 }

@@ -13,6 +13,7 @@
 
 #include <OpenSim/OpenSim.h>
 #include "boost/foreach.hpp"
+#include "Leg_Simbody.h"
 
 using std::endl;
 
@@ -84,10 +85,11 @@ namespace scone
 		{
 			SCONE_ASSERT( m_pInitOsimModel );
 
-			// explicitly reset existing objects
+			// reset existing objects and flags
 			m_pOsimModel.reset(); 
 			m_pTkIntegrator.reset();
 			m_pOsimManager.reset();
+			m_ShouldTerminate = false;
 
 			// create new osModel
 			m_pOsimModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( *m_pInitOsimModel ) );
@@ -122,12 +124,17 @@ namespace scone
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
+			// create legs
+			const Link* left_femur = GetRootLink().FindLink( "femur_l" );
+			if ( left_femur )
+				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *left_femur, left_femur->GetChild( 0 ).GetChild( 0 ), LeftSide ) ) );
+			const Link* right_femur = GetRootLink().FindLink( "femur_r" );
+			if ( right_femur )
+				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), RightSide ) ) );
+
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_pOsimModel->addController( m_pControllerDispatcher );
-
-			// reset termination flag
-			m_ShouldTerminate = false;
 
 			// Initialize the system
 			m_pTkState = &m_pOsimModel->initSystem();
@@ -170,7 +177,6 @@ namespace scone
 		
 		Vec3 Model_Simbody::GetComVel()
 		{
-			m_pOsimModel->getMultibodySystem().realize( *m_pTkState, SimTK::Stage::Velocity );
 			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 

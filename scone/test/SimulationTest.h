@@ -11,15 +11,15 @@ using namespace scone;
 
 void SimulationTest()
 {
-	const double simulation_time = 1.0;
+	const double simulation_time = 0.1;
 
 	cs::RegisterFactoryTypes();
 	PropNode props = ReadXmlFile( "config/simulation_test.xml" );
 
 	std::vector< String > models;
-	models.push_back( "models/jump1024.osim" );
+	//models.push_back( "models/jump1024.osim" );
 	//models.push_back( "models/gait2354.osim" );
-	//models.push_back( "models/jump2354.osim" );
+	models.push_back( "models/jump2354.osim" );
 	//models.push_back( "models/gait1018.osim" );
 	//models.push_back( "models/gait1024.osim" );
 	//models.push_back( "models/ToyLandingModel.osim" );
@@ -35,6 +35,8 @@ void SimulationTest()
 		m->ProcessParameters( par );
 
 		SCONE_LOG( "Muscles=" << m->GetMuscleCount() << " Bodies=" << m->GetBodyCount() << " Joints=" << m->GetJoints().size() );
+		SCONE_LOG( "Controllers=" << m->GetControllers().size() );
+
 		SCONE_LOG( "Starting simulation..." );
 
 		Timer t;

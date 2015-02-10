@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\scone\sim\simbody\sim_simbody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\Leg_Simbody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">
@@ -59,6 +62,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\tools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\Leg_Simbody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

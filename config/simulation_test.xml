@@ -13,5 +13,11 @@
 			<control_point_time_delta>0.2</control_point_time_delta>
 			<optimize_control_point_time>0</optimize_control_point_time>
 		</Controller>
+		<Measure type="HeightMeasure">
+			<target_body></target_body>
+			<use_average_height>0</use_average_height>
+			<terminate_on_peak>0</terminate_on_peak>
+			<termination_height>0.0</termination_height>
+		</Measure>
 	</Controllers>
 </Model>

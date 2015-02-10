@@ -15,11 +15,14 @@ namespace scone
 			Body();
 			virtual ~Body();
 
-			virtual Vec3 GetPos() = 0;
-			virtual Quat GetOri() = 0;
+			virtual Vec3 GetPos() const = 0;
+			virtual Quat GetOri() const = 0;
 
-			virtual Vec3 GetLinVel() = 0;
-			virtual Vec3 GetAngVel() = 0;
+			virtual Vec3 GetLinVel() const = 0;
+			virtual Vec3 GetAngVel() const = 0;
+
+			virtual Vec3 GetContactForce() const = 0;
+			virtual Vec3 GetContactTorque() const = 0;
 		};
 	}
 }

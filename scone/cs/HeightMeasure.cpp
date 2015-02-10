@@ -49,6 +49,8 @@ namespace scone
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
 			double height = pos; // + pow( vel, 2.0 ) / ( 2.0 * g );
 
+			//SCONE_LOG( "Force: " << model.GetLegs()[ 0 ]->GetContactForce() );
+
 			// add sample
 			m_Height.AddSample( height, timestamp );
 
