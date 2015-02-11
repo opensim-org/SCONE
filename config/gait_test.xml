@@ -16,18 +16,43 @@
 			<model_file>models/gait1024.osim</model_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
-				<Controller type="FeedForwardController">
-					<function_type>PieceWiseLinear</function_type>
-					<use_symmetric_actuators>0</use_symmetric_actuators>
-					<flat_extrapolation>0</flat_extrapolation>
-					<control_points>6</control_points>
-					<init_min>0.25</init_min>
-					<init_max>0.75</init_max>
-					<control_point_time_delta>0.25</control_point_time_delta>
-					<optimize_control_point_time>0</optimize_control_point_time>
-					<number_of_modes>2</number_of_modes>
-					<init_mode_weight_min>-0.5</init_mode_weight_min>
-					<init_mode_weight_max>0.5</init_mode_weight_max>
+				<Controller type="StateController">
+					<ConditionalControllers>
+						<ConditionalController>
+							<condition_leg>Both</condition_leg>
+							<condition_states>Stance</condition_states>
+							<Controller type="FeedForwardController">
+								<function_type>PieceWiseLinear</function_type>
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<flat_extrapolation>0</flat_extrapolation>
+								<control_points>1</control_points>
+								<init_min>0.25</init_min>
+								<init_max>0.75</init_max>
+								<control_point_time_delta>0.25</control_point_time_delta>
+								<optimize_control_point_time>0</optimize_control_point_time>
+								<number_of_modes>2</number_of_modes>
+								<init_mode_weight_min>-0.5</init_mode_weight_min>
+								<init_mode_weight_max>0.5</init_mode_weight_max>
+							</Controller>
+						</ConditionalController>
+						<ConditionalController>
+							<condition_leg>Both</condition_leg>
+							<condition_states>Swing</condition_states>
+							<Controller type="FeedForwardController">
+								<function_type>PieceWiseLinear</function_type>
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<flat_extrapolation>0</flat_extrapolation>
+								<control_points>1</control_points>
+								<init_min>0.25</init_min>
+								<init_max>0.75</init_max>
+								<control_point_time_delta>0.25</control_point_time_delta>
+								<optimize_control_point_time>0</optimize_control_point_time>
+								<number_of_modes>2</number_of_modes>
+								<init_mode_weight_min>-0.5</init_mode_weight_min>
+								<init_mode_weight_max>0.5</init_mode_weight_max>
+							</Controller>
+						</ConditionalController>
+					</ConditionalControllers>
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>

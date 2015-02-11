@@ -23,6 +23,7 @@
     <ClInclude Include="..\..\scone\core\Quat.h" />
     <ClInclude Include="..\..\scone\core\serialization.h" />
     <ClInclude Include="..\..\scone\core\stdafx.h" />
+    <ClInclude Include="..\..\scone\core\TimedValue.h" />
     <ClInclude Include="..\..\scone\core\Timer.h" />
     <ClInclude Include="..\..\scone\core\tools.h" />
     <ClInclude Include="..\..\scone\core\Vec3.h" />

@@ -8,10 +8,11 @@ namespace scone
 {
 	namespace sim
 	{
-		Leg::Leg( const Link& proximal, const Link& foot, Side side, size_t rank ) :
+		Leg::Leg( const Link& proximal, const Link& foot, size_t index, Side side, size_t rank ) :
 		m_Upper( proximal ),
 		m_Foot( foot ),
 		m_Side( side ),
+		m_Index( index ),
 		m_Rank( rank )
 		{
 		}

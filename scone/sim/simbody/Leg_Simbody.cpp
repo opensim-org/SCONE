@@ -9,8 +9,8 @@ namespace scone
 {
 	namespace sim
 	{
-		Leg_Simbody::Leg_Simbody( class Model_Simbody& model, const Link& upper, const Link& foot, Side side, size_t rank ) :
-		Leg( upper, foot, side, rank ),
+		Leg_Simbody::Leg_Simbody( class Model_Simbody& model, const Link& upper, const Link& foot, Index index, Side side, size_t rank ) :
+		Leg( upper, foot, index, side, rank ),
 		m_Model( model )
 		{
 			// TODO: hopefully this can be done more generic in OpenSim

@@ -127,10 +127,10 @@ namespace scone
 			// create legs
 			const Link* left_femur = GetRootLink().FindLink( "femur_l" );
 			if ( left_femur )
-				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *left_femur, left_femur->GetChild( 0 ).GetChild( 0 ), LeftSide ) ) );
+				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *left_femur, left_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), LeftSide ) ) );
 			const Link* right_femur = GetRootLink().FindLink( "femur_r" );
 			if ( right_femur )
-				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), RightSide ) ) );
+				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );

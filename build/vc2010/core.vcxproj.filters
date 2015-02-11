@@ -63,6 +63,9 @@
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h">
       <Filter>Serialization</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\TimedValue.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">

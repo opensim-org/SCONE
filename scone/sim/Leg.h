@@ -11,17 +11,19 @@ namespace scone
 		class SCONE_SIM_API Leg
 		{
 		public:
-			Leg( const Link& upper, const Link& foot, Side side = NoSide, size_t rank = 0 );
+			Leg( const Link& upper, const Link& foot, size_t index, Side side = NoSide, size_t rank = 0 );
 			virtual ~Leg();
 
 			const Link& GetUpperLink() const { return m_Upper; }
 			const Link& GetFootLink() const { return m_Foot; }
 			Side GetSide() const { return m_Side; }
+			size_t GetIndex() const { return m_Index; }
 			size_t GetRank() const { return m_Rank; }
 
 			virtual Vec3 GetContactForce() const;
 
 		private:
+			size_t m_Index;
 			Side m_Side;
 			size_t m_Rank;
 			const Link& m_Foot;
