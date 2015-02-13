@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include <string>
 
 #ifdef CORE_EXPORTS
 #define CORE_API __declspec(dllexport)
