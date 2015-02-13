@@ -7,14 +7,17 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{03f22d16-13c8-4931-ac34-187a90248d34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Serialization">
-      <UniqueIdentifier>{d8e7ebd4-e97a-4d81-af5e-90ddedf56b03}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Base">
       <UniqueIdentifier>{30dfae76-16ca-4d88-a9cf-25c55c7fc5b9}</UniqueIdentifier>
     </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{509cdda2-4a20-4dd7-a627-77cb840c9722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{68c14adb-6aa8-41f7-9bec-efd1c0146b6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{d8e7ebd4-e97a-4d81-af5e-90ddedf56b03}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,13 +43,7 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Factory.h">
-      <Filter>Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\PropNode.h">
-      <Filter>Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\serialization.h">
-      <Filter>Serialization</Filter>
+      <Filter>Factory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Exception.h">
       <Filter>Base</Filter>
@@ -60,11 +57,20 @@
     <ClInclude Include="..\..\scone\core\stdafx.h">
       <Filter>System</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\TimedValue.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\ResourceCache.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h">
       <Filter>Serialization</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\TimedValue.h">
-      <Filter>Math</Filter>
+    <ClInclude Include="..\..\scone\core\PropNode.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\serialization.h">
+      <Filter>Serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,16 +84,16 @@
       <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Factory.cpp">
-      <Filter>Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\core\PropNode.cpp">
-      <Filter>Serialization</Filter>
+      <Filter>Factory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Named.cpp">
       <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\stdafx.cpp">
       <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\PropNode.cpp">
+      <Filter>Serialization</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

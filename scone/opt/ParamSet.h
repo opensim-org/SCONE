@@ -18,6 +18,7 @@ namespace scone
 			virtual ~ParamSet() { };
 
 			double Get( const ParamInfo& info );
+			double Get( const String& name, const PropNode& props );
 			double GetMeanStd( const String& name, double init_mean, double init_std, double min, double max );
 			double GetMinMax( const String& name, double init_min, double init_max, double min, double max );
 			double operator()( const String& name, double init_mean, double init_std, double min, double max );

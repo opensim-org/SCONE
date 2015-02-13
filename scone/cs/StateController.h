@@ -16,10 +16,17 @@ namespace scone
 		public:
 			struct LegState
 			{
-				LegState( const sim::Leg& l ) : leg( l ), state( UnknownState ) {};
+				LegState( const sim::Leg& l );
 				const sim::Leg& leg;
+
+				// current state
 				enum State { UnknownState = -1, StanceState, LiftoffState, SwingState, LandingState, StateCount };
 				TimedValue< State > state;
+
+				// current status
+				bool contact;
+				Real sagittal_pos;
+				Real coronal_pos;
 			};
 
 			StateController( const PropNode& props );
@@ -30,11 +37,13 @@ namespace scone
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			// public parameters
-			double contact_force_threshold;
+			Real contact_force_threshold;
+			Real saggital_anterior_threshold;
+			Real saggital_posterior_threshold;
 
 		protected:
-			virtual void UpdateLegStates( double timestamp );
-			void UpdateControllerStates( double timestamp );
+			virtual void UpdateLegStates( sim::Model& model, double timestamp );
+			void UpdateControllerStates( sim::Model& model, double timestamp );
 
 		private:
 			typedef std::unique_ptr< LegState > LegStateUP;

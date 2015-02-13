@@ -34,38 +34,19 @@ namespace scone
 			Model_Simbody& m_Model;
 		};
 
-		/// Simbody event handler to determine termination
-		class Model_Simbody::TerminationEventHandler : public SimTK::TriggeredEventHandler
-		{
-		public:
-			TerminationEventHandler( Model_Simbody& model ) : m_Model( model ), SimTK::TriggeredEventHandler( SimTK::Stage::Dynamics ) { };
-			//virtual Real getNextEventTime( const SimTK::State& state, bool includeCurrentTime ) const override { return state.getTime() + 0.001; }
-			virtual Real getValue( const SimTK::State& s ) const override {
-				double value = (double)m_Model.GetTerminationRequest() - 0.5;
-				//printf( "tt=%8.5f, steps=%d\n", s.getTime(), m_Model.GetTkIntegrator().getNumStepsTaken() );
-				return value; }
-			virtual void handleEvent( SimTK::State& state, Real accuracy, bool& shouldTerminate ) const override {
-				shouldTerminate = m_Model.GetTerminationRequest();
-			}
-
-		private:
-			Model_Simbody& m_Model;
-		};
-
 		/// Constructor
 		Model_Simbody::Model_Simbody( const PropNode& props ) :
 		Model( props ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
-		m_pControllerDispatcher( nullptr ),
-		m_pTerminationEventHandler( nullptr )
+		m_pControllerDispatcher( nullptr )
 		{
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP( props, model_file, String("") );
 
 			// create the model
-			CreateModelFromFile( model_file );
+			CreateModel();
 
 			// create controllers
 			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
@@ -75,24 +56,16 @@ namespace scone
 		{
 		}
 
-		void Model_Simbody::CreateModelFromFile( const String& file )
+		void Model_Simbody::CreateModel()
 		{
-			m_pInitOsimModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( file ) );
-			ResetModel();
-		}
-
-		void Model_Simbody::ResetModel()
-		{
-			SCONE_ASSERT( m_pInitOsimModel );
-
 			// reset existing objects and flags
 			m_pOsimModel.reset(); 
 			m_pTkIntegrator.reset();
 			m_pOsimManager.reset();
 			m_ShouldTerminate = false;
 
-			// create new osModel
-			m_pOsimModel = std::unique_ptr< OpenSim::Model >( new OpenSim::Model( *m_pInitOsimModel ) );
+			// create new osModel using resource cache
+			m_pOsimModel = g_ModelCache.CreateInstance( model_file );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
@@ -272,7 +245,7 @@ namespace scone
 
 		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
 		{
-			ResetModel();
+			CreateModel();
 
 			// attach controllers to model and process parameters
 			BOOST_FOREACH( ControllerUP& c, m_Controllers )

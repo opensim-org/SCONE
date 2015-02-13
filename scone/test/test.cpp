@@ -11,6 +11,9 @@
 #include "../core/Log.h"
 #include "SerializationTest.h"
 
+using std::cout;
+using std::endl;
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	try

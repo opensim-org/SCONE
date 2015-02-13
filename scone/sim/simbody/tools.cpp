@@ -6,6 +6,6 @@ namespace scone
 {
 	namespace sim
 	{
-
+		//ResourceCache< OpenSim::Model > g_ModelCache;
 	}
 }

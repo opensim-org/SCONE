@@ -56,8 +56,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		private:
-			void CreateModelFromFile( const String& file );
-			void ResetModel();
+			void CreateModel();
 			void PrepareSimulation();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
@@ -65,16 +64,13 @@ namespace scone
 			double max_step_size;
 			String model_file;
 
-			std::unique_ptr< OpenSim::Model > m_pOsimModel, m_pInitOsimModel;
+			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 			SimTK::State* m_pTkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
 
 			class ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel
-
-			class TerminationEventHandler;
-			TerminationEventHandler *m_pTerminationEventHandler;
 		};
 	}
 }

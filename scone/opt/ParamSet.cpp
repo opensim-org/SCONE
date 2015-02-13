@@ -35,6 +35,11 @@ namespace scone
 			SCONE_THROW( "Invalid mode: " + ToString( m_Mode ) );
 		}
 
+		double ParamSet::Get( const String& name, const PropNode& props )
+		{
+			return Get( ParamInfo( name, props ) );
+		}
+
 		double ParamSet::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )
 		{
 			return Get( ParamInfo( name, init_mean, init_std, 0.0, 0.0, min, max ) );

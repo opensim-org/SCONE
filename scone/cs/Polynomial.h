@@ -11,10 +11,10 @@ namespace scone
 		virtual ~Polynomial();
 
 		virtual Real GetValue( Real x ) override;
+		virtual void SetCoefficient( size_t idx, Real value );
+		virtual size_t GetCoefficientCount();
 
-		void SetCoefficient( size_t idx, Real value );
-		size_t GetCoefficientCount();
-	private:
+	protected:
 		std::vector< Real > m_Coeffs;
 	};
 }
