@@ -4,7 +4,7 @@
 #include "../sim/Controller.h"
 #include "../core/PropNode.h"
 #include "../opt/ParamSet.h"
-#include "../core/Factory.h"
+#include "../core/PropNodeFactory.h"
 #include "Function.h"
 #include "../sim/Leg.h"
 

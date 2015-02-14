@@ -2,7 +2,7 @@
 
 #include "PropNode.h"
 #include <string>
-#include "Factory.h"
+#include "PropNodeFactory.h"
 
 namespace scone
 {

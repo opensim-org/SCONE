@@ -2,7 +2,7 @@
 
 #include "cs.h"
 #include "../sim/Controller.h"
-#include "../core/Factory.h"
+#include "../core/PropNodeFactory.h"
 #include "../sim/Leg.h"
 #include <bitset>
 #include "../core/TimedValue.h"

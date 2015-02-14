@@ -6,6 +6,10 @@
 #include <boost/foreach.hpp>
 #include <algorithm>
 
+#include "FactoryTest.h"
+#include "../sim/Model.h"
+#include "../sim/Factories.h"
+
 namespace scone
 {
 	namespace cs
@@ -15,7 +19,13 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
 			//InitFromPropNodeChild( props, m_Model, "Model" );
-			InitFromPropNode( props.GetChild( "Model" ), m_Model );
+			//InitFromPropNode( props.GetChild( "Model" ), m_Model );
+			//ModelFactory f = GetModelFactories()[ props.GetChild( "Model" ).GetStr( "type" ) ];
+			const PropNode& p = props.GetChild( "Model" );
+
+			sim::CreateModelFunc f = sim::GetModelFactory().GetCreateFunc( "Simbody" );
+			//sim::Model* m = f( p );
+			m_Model = sim::ModelUP( f( p ) );
 		}
 
 		SimulationObjective::~SimulationObjective()

@@ -42,9 +42,6 @@
     <ClInclude Include="..\..\scone\core\Log.h">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\Factory.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\Exception.h">
       <Filter>Base</Filter>
     </ClInclude>
@@ -72,6 +69,12 @@
     <ClInclude Include="..\..\scone\core\ResourceCache.h">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\PropNodeFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\Factory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">
@@ -83,9 +86,6 @@
     <ClCompile Include="..\..\scone\core\tools.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\Factory.cpp">
-      <Filter>Factory</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\core\Named.cpp">
       <Filter>Base</Filter>
     </ClCompile>
@@ -94,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\core\PropNode.cpp">
       <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\PropNodeFactory.cpp">
+      <Filter>Factory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "opt.h"
-#include "../core/Factory.h"
+#include "../core/PropNodeFactory.h"
 #include "CmaOptimizer.h"
 
 namespace scone

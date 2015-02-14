@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "sim_simbody.h"
-#include "../../core/Factory.h"
+#include "../../core/PropNodeFactory.h"
 #include "Model_Simbody.h"
 
 namespace scone

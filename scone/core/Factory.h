@@ -1,60 +1,26 @@
 #pragma once
 
-#include "core.h"
-#include <map>
-#include "PropNode.h"
-
 namespace scone
 {
-	/// Get Single Factory instance
-	CORE_API class Factory& GetFactory();
-
-	/// Factory class
-	class Factory
+	template< typename F >
+	struct Factory
 	{
 	public:
-		Factory() { };
-		virtual ~Factory() { };
-
-		template< typename Base, typename Derived >
-		void Register( const String& name = "" )
+		F& GetCreateFunc( const String& name )
 		{
-			m_CreateFuncs[ GetFullTypeName< Base >( name.empty() ? GetCleanClassName< Derived >() : name ) ] = (void*(*)( const PropNode& ))Derived::Create;
+			auto it = m_CreateFuncs.find( name );
+			if ( it != m_CreateFuncs.end() )
+				return it->second;
+			else SCONE_THROW( "Unknown type: " + name );
 		}
 
-		template< typename T >
-		std::unique_ptr< T > Create( const String& type, const PropNode& props )
+		template< typename C >
+		void RegisterCreateFunc( const String& name )
 		{
-			auto iter = m_CreateFuncs.find( GetFullTypeName< T >( type ) );
-			if ( iter != m_CreateFuncs.end() )
-			{
-				// create the item
-				return std::unique_ptr< T >( ( ( T*(*)( const PropNode& ) )iter->second )( props ) );
-			}
-			else SCONE_THROW( "Unknown type " + type + ", make sure you call " + type + "::RegisterFactory()" );
+			m_CreateFuncs[ name ] = boost::factory< C* >();
 		}
 
 	private:
-		std::map< String, void*(*)( const PropNode& ) > m_CreateFuncs;
-		template< typename T >
-		String GetFullTypeName( const String& type ) { return String( typeid( T ).name() ) + "-->" + type; }
-
-		template< typename T >
-		String GetCleanClassName()
-		{
-			String str = typeid( T ).name();
-			size_t pos = str.find_last_of(": ");
-			if (pos != std::string::npos) str = str.substr(pos + 1);
-			return str;
-		}
-	};
-
-	/// Factoryable class
-	template< typename Base, typename Derived >
-	class Factoryable
-	{
-	public:
-		static Base* Create( const PropNode& props ) { return new Derived( props ); }
-		static void RegisterFactory( const String& name = "" ) { GetFactory().Register< Base, Derived >( name ); }
+		std::map< String, F > m_CreateFuncs;
 	};
 }

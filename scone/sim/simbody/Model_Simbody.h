@@ -5,7 +5,7 @@
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include <memory>
-#include "../../core/Factory.h"
+#include "../../core/PropNodeFactory.h"
 
 namespace OpenSim
 {
@@ -27,6 +27,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
 		{
 		public:
+			Model_Simbody( int test );
 			Model_Simbody( const PropNode& props );
 			virtual ~Model_Simbody();
 

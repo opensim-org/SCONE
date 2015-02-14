@@ -52,6 +52,12 @@ namespace scone
 			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
 		}
 
+		Model_Simbody::Model_Simbody( int test ) :
+		Model( test )
+		{
+			printf("yay!\n");
+		}
+
 		Model_Simbody::~Model_Simbody()
 		{
 		}

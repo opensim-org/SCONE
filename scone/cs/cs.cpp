@@ -14,6 +14,9 @@ using namespace boost::filesystem;
 #include "HeightMeasure.h"
 #include "GaitMeasure.h"
 #include "EnergyMeasure.h"
+#include "FactoryTest.h"
+#include "../sim/Factories.h"
+#include "../sim/simbody/Model_Simbody.h"
 
 namespace scone
 {
@@ -30,6 +33,10 @@ namespace scone
 			HeightMeasure::RegisterFactory();
 			GaitMeasure::RegisterFactory();
 			EnergyMeasure::RegisterFactory();
+
+			// test
+			//RegisterFactoryTest();
+			sim::GetModelFactory().RegisterCreateFunc< sim::Model_Simbody >( "Simbody" );
 		}
 
 		void CS_API PerformOptimization( const String& config_file )

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Measure.h"
-#include "../core/Factory.h"
+#include "../core/PropNodeFactory.h"
 #include "../sim/Body.h"
 #include <functional>
 #include "../core/MeasuredValue.h"

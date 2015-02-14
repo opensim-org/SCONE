@@ -17,7 +17,13 @@ namespace scone
 		m_ShouldTerminate( false )
 		{
 		}
-		
+
+		Model::Model( int test )
+		{
+
+		}
+
+
 		Model::~Model()
 		{
 		}
