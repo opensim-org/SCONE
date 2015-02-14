@@ -33,34 +33,11 @@ namespace scone
 	}
 
 	// process Propertyable type
-	//inline void InitFromPropNode( const PropNode& prop, Propertyable& var )
-	//{
-	//	var.ProcessProperties( prop );
-	//	prop.SetFlag();
-	//}
-
-	// process Propertyable type
 	inline void InitFromPropNode( const PropNode& prop, String& var )
 	{
 		var = prop.GetValue();
 		prop.SetFlag();
 	}
-
-	//// process unique_ptr type (requires factory definition)
-	//template< typename T >
-	//void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
-	//{
-	//	var = std::unique_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
-	//	InitFromPropNode( prop, *var );
-	//}
-
-	//// process shared_ptr type (requires factory definition)
-	//template< typename T >
-	//void InitFromPropNode( const PropNode& prop, std::shared_ptr< T >& var )
-	//{
-	//	var = std::shared_ptr< T >( GetFactory().Create< T >( prop.GetStr( "type" ) ) );
-	//	InitFromPropNode( prop, *var );
-	//}
 
 	// process vector< unique_ptr > type (requires factory definition)
 	template< typename T >

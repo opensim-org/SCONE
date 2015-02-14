@@ -129,7 +129,7 @@ namespace scone
 		{
 			if ( function_type == "PieceWiseLinear" || function_type == "PieceWiseConstant" )
 			{
-				// TODO: fix this mess by creating a better parent class
+				// TODO: fix this mess by creating a PieceWiseFunction parent class
 				Function* pFunc = nullptr;
 				bool lin = function_type == "PieceWiseLinear";
 				if (lin) pFunc = new PieceWiseLinearFunction( flat_extrapolation );

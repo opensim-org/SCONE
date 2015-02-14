@@ -60,9 +60,6 @@
     <ClInclude Include="..\..\scone\core\TimedValue.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\ResourceCache.h">
-      <Filter>Factory</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h">
       <Filter>Serialization</Filter>
     </ClInclude>
@@ -71,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\core\serialization.h">
       <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\ResourceCache.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

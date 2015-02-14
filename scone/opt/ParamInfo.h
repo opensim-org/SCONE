@@ -19,7 +19,7 @@ namespace scone
 			String name;
 
 			/// current state
-			double value; // TODO: use this
+			//double value; // TODO: use this
 			double mean;
 			double std;
 
