@@ -19,7 +19,7 @@ namespace scone
 		template< typename Base, typename Derived >
 		void Register( const String& name = "" )
 		{
-			m_CreateFuncs[ GetFullTypeName< Base >( name.empty() ? GetCleanClassName< Derived >() : name ) ] = (void*(*)( const PropNode& ))Derived::Create;
+			m_CreateFuncs[ GetFullTypeName< Base >( name.empty() ? GetCleanClassName( typeid( Derived ).name() ) : name ) ] = (void*(*)( const PropNode& ))Derived::Create;
 		}
 
 		template< typename T >
@@ -38,15 +38,6 @@ namespace scone
 		std::map< String, void*(*)( const PropNode& ) > m_CreateFuncs;
 		template< typename T >
 		String GetFullTypeName( const String& type ) { return String( typeid( T ).name() ) + "-->" + type; }
-
-		template< typename T >
-		String GetCleanClassName()
-		{
-			String str = typeid( T ).name();
-			size_t pos = str.find_last_of(": ");
-			if (pos != std::string::npos) str = str.substr(pos + 1);
-			return str;
-		}
 	};
 
 	/// Factoryable class
