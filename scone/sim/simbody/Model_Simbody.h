@@ -30,6 +30,8 @@ namespace scone
 			Model_Simbody( const PropNode& props );
 			virtual ~Model_Simbody();
 
+			virtual void Initialize( opt::ParamSet& par, const PropNode& props ) override;
+
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;

@@ -56,6 +56,25 @@ namespace scone
 		{
 		}
 
+		void Model_Simbody::Initialize( opt::ParamSet& par, const PropNode& props )
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
+		{
+			CreateModel();
+
+			// attach controllers to model and process parameters
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+			{
+				c->Initialize( *this );
+				c->ProcessParameters( par );
+			}
+
+			PrepareSimulation();
+		}
+
 		void Model_Simbody::CreateModel()
 		{
 			// reset existing objects and flags
@@ -241,20 +260,6 @@ namespace scone
 		void Model_Simbody::WriteStateHistory( const String& file )
 		{
 			m_pOsimManager->getStateStorage().print( file + ".sto" );
-		}
-
-		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
-		{
-			CreateModel();
-
-			// attach controllers to model and process parameters
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-			{
-				c->Initialize( *this );
-				c->ProcessParameters( par );
-			}
-
-			PrepareSimulation();
 		}
 
 		bool Model_Simbody::HasGroundContact()

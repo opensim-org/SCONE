@@ -18,6 +18,9 @@ namespace scone
 			Model( const PropNode& props );
 			virtual ~Model();
 
+			/// create model using parameters and properties
+			virtual void Initialize( opt::ParamSet& par, const PropNode& props ) {};
+
 			virtual Vec3 GetComPos() = 0;
 			virtual Vec3 GetComVel() = 0;
 			virtual Real GetMass() = 0;
