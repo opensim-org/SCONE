@@ -12,11 +12,14 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model : public opt::Parameterizable
+		class SCONE_SIM_API Model
 		{
 		public:
 			Model( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model();
+
+			/// create model using parameters and properties
+			virtual void Initialize( opt::ParamSet& par, const PropNode& props ) {};
 
 			virtual Vec3 GetComPos() = 0;
 			virtual Vec3 GetComVel() = 0;

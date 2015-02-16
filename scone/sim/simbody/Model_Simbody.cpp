@@ -35,8 +35,8 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( const PropNode& props, opt::ParamSet& par ) :
-		Model( props, par ),
+		Model_Simbody::Model_Simbody( const PropNode& props ) :
+		Model( props ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr )
@@ -45,15 +45,25 @@ namespace scone
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP( props, model_file, String("") );
 
-			// create the model
-			CreateModel();
-
-			// create controllers
-			//TOFIX: InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
 		}
 
 		Model_Simbody::~Model_Simbody()
 		{
+		}
+
+		void Model_Simbody::Initialize( opt::ParamSet& par, const PropNode& props )
+		{
+			// create the model
+			CreateModel();
+
+			SCONE_ASSERT( m_pOsimModel );
+
+			// create and initialize controllers
+			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
+			BOOST_FOREACH( ControllerUP& c, m_Controllers )
+				c->Initialize( *this, par, props );
+
+			PrepareSimulation();
 		}
 
 		void Model_Simbody::CreateModel()
@@ -111,13 +121,6 @@ namespace scone
 
 			// Initialize the system
 			m_pTkState = &m_pOsimModel->initSystem();
-
-			// reset controllers
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-			{
-				c->SetTerminationRequest( false );
-				c->Initialize( *this );
-			}
 		}
 
 		void Model_Simbody::PrepareSimulation()
@@ -241,20 +244,6 @@ namespace scone
 		void Model_Simbody::WriteStateHistory( const String& file )
 		{
 			m_pOsimManager->getStateStorage().print( file + ".sto" );
-		}
-
-		void Model_Simbody::ProcessParameters( opt::ParamSet& par )
-		{
-			CreateModel();
-
-			// attach controllers to model and process parameters
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-			{
-				c->Initialize( *this );
-				c->ProcessParameters( par );
-			}
-
-			PrepareSimulation();
 		}
 
 		bool Model_Simbody::HasGroundContact()

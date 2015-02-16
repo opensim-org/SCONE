@@ -28,11 +28,5 @@ namespace scone
 			SCONE_ASSERT( idx < m_Models.size() );
 			return *m_Models[ idx ];
 		}
-
-		void Simulation::ProcessParameters( opt::ParamSet& par )
-		{
-			BOOST_FOREACH( ModelUP& model, m_Models )
-				model->ProcessParameters( par );
-		}
 	}
 }

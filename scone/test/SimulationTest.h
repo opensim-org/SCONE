@@ -32,7 +32,7 @@ void SimulationTest()
 		opt::ParamSet par;
 		props.Set( "Model.model_file", *iter );
 		sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
-		m->ProcessParameters( par );
+		m->Initialize( par, props.GetChild( "Model" ) );
 
 		SCONE_LOG( "Muscles=" << m->GetMuscleCount() << " Bodies=" << m->GetBodyCount() << " Joints=" << m->GetJoints().size() );
 		SCONE_LOG( "Controllers=" << m->GetControllers().size() );

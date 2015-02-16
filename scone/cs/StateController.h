@@ -32,9 +32,8 @@ namespace scone
 			StateController( const PropNode& props );
 			virtual ~StateController();
 
-			virtual void Initialize( sim::Model& model ) override;
+			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			// public parameters
 			Real contact_force_threshold;

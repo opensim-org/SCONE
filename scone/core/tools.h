@@ -14,6 +14,9 @@ namespace scone
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
 
+	/// Get clean class, removes everything before "::" (if present)
+	String CORE_API GetCleanClassName( const String& str );
+
 	/// Get file extension (without dot)
 	String CORE_API GetFileNameExt( const String& str );
 

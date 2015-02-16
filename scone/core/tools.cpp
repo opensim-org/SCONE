@@ -46,4 +46,12 @@ namespace scone
 
 		return str.substr(n);
 	}
+
+	String CORE_API GetCleanClassName( const String& str )
+	{
+		size_t pos = str.find_last_of(": ");
+		if (pos != std::string::npos)
+			return str.substr(pos + 1);
+		else return str;
+	}
 }

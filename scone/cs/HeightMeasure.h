@@ -15,10 +15,9 @@ namespace scone
 			HeightMeasure( const PropNode& props );
 			virtual ~HeightMeasure() { };
 
-			virtual void Initialize( sim::Model& model ) override;
+			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
-			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
 			String target_body;
