@@ -32,6 +32,9 @@
     <ClInclude Include="..\..\scone\opt\ParamInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\opt\Factories.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\stdafx.cpp">
@@ -53,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\opt\ParamInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\Factories.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

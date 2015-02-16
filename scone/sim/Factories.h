@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Model.h"
-#include <boost/function.hpp>
 #include "../core/Factory.h"
 
 namespace scone

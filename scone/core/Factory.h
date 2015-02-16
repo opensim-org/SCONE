@@ -2,15 +2,15 @@
 
 #include <boost/function.hpp>
 #include <boost/functional/factory.hpp>
+#include <map>
 
 namespace scone
 {
 	#define DECLARE_FACTORY( _basetype_, _args_ ) \
-	typedef boost::function< _basetype_*_args_ > _basetype_##FactoryFunc; \
-	typedef Factory< _basetype_##FactoryFunc > _basetype_##Factory;
-	
+		typedef Factory< boost::function< _basetype_*_args_ > > _basetype_##Factory;
+
 	template< typename F >
-	struct Factory
+	class Factory
 	{
 	public:
 		F& Create( const String& name )

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Measure.h"
-#include "../core/PropNodeFactory.h"
 #include "../sim/Body.h"
 #include <functional>
 #include "../core/MeasuredValue.h"
@@ -10,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class HeightMeasure : public Measure, public Factoryable< sim::Controller, HeightMeasure >
+		class HeightMeasure : public Measure
 		{
 		public:
 			HeightMeasure( const PropNode& props );

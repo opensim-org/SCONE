@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class EnergyMeasure : public Measure, public Factoryable< sim::Controller, EnergyMeasure >
+		class EnergyMeasure : public Measure
 		{
 		public:
 			EnergyMeasure( const PropNode& props ) : Measure( props ) { };

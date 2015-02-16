@@ -4,7 +4,6 @@
 #include "../sim/Controller.h"
 #include "../core/PropNode.h"
 #include "../opt/ParamSet.h"
-#include "../core/PropNodeFactory.h"
 #include "Function.h"
 #include "../sim/Leg.h"
 
@@ -17,7 +16,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API FeedForwardController : public sim::Controller, public Factoryable< sim::Controller, FeedForwardController >
+		class CS_API FeedForwardController : public sim::Controller
 		{
 		public:
 			FeedForwardController( const PropNode& props );

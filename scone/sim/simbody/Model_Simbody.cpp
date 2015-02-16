@@ -49,7 +49,7 @@ namespace scone
 			CreateModel();
 
 			// create controllers
-			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
+			//TOFIX: InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
 		}
 
 		Model_Simbody::~Model_Simbody()

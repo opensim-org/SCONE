@@ -5,7 +5,6 @@
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include <memory>
-#include "../../core/PropNodeFactory.h"
 
 namespace OpenSim
 {

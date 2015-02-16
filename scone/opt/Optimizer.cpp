@@ -25,7 +25,7 @@ namespace scone
 			m_ObjectiveProps = props.GetChild( "Objective" );
 
 			// create at least one objective from props, so that all nodes are properly flagged
-			m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
+			//TOFIX: m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
 		}
 
 		Optimizer::~Optimizer()
@@ -118,8 +118,8 @@ namespace scone
 		void Optimizer::CreateObjectives( size_t count )
 		{
 			// create at least one objective instance (required for finding number of parameters)
-			while ( m_Objectives.size() < count )
-				m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
+			//TOFIX: while ( m_Objectives.size() < count )
+				//TOFIX: m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
 		}
 	}
 }

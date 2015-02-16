@@ -2,7 +2,6 @@
 
 #include "opt.h"
 #include "Objective.h"
-#include "../core/InitFromPropNode.h"
 
 namespace scone
 {

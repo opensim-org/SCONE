@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "opt.h"
-#include "../core/PropNodeFactory.h"
 #include "CmaOptimizer.h"
+#include "Factories.h"
 
 namespace scone
 {
@@ -9,7 +9,7 @@ namespace scone
 	{
 		void RegisterFactoryTypes()
 		{
-			CmaOptimizer::RegisterFactory();
+			//TOFIX: CmaOptimizer::RegisterFactory();
 		}
 
 		OptimizerUP CreateOptimizerFromXml( const String& xml_file, const String& key )
@@ -17,7 +17,8 @@ namespace scone
 			RegisterFactoryTypes();
 
 			PropNode p = ReadXmlFile( xml_file );
-			OptimizerUP o = CreateFromPropNode< Optimizer >( p.GetChild( "Optimizer" ) );
+			const PropNode& optprops = p.GetChild( "Optimizer" );
+			OptimizerUP o = CreateOptimizer( optprops );
 
 			// report unused parameters
 			p.ToStream( std::cout, "Unused parameter ", true );

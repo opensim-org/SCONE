@@ -14,7 +14,6 @@
     <ClInclude Include="..\..\scone\core\core.h" />
     <ClInclude Include="..\..\scone\core\Exception.h" />
     <ClInclude Include="..\..\scone\core\Factory.h" />
-    <ClInclude Include="..\..\scone\core\PropNodeFactory.h" />
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h" />
     <ClInclude Include="..\..\scone\core\Log.h" />
     <ClInclude Include="..\..\scone\core\math.h" />
@@ -31,7 +30,6 @@
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\core\PropNodeFactory.cpp" />
     <ClCompile Include="..\..\scone\core\Named.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />
     <ClCompile Include="..\..\scone\core\Quat.cpp" />

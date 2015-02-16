@@ -15,7 +15,7 @@ namespace scone
 			INIT_FROM_PROP( props, integration_accuracy, 0.00001 );
 			INIT_FROM_PROP( props, max_simulation_time, 10000.0 );
 
-			InitFromPropNode( props, m_Models );
+			//TOFIX: InitFromPropNode( props, m_Models );
 		}
 
 		Simulation::~Simulation()

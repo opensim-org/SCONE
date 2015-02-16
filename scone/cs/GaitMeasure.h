@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class GaitMeasure : public Measure, public Factoryable< sim::Controller, GaitMeasure >
+		class GaitMeasure : public Measure
 		{
 		public:
 			GaitMeasure( const PropNode& props );

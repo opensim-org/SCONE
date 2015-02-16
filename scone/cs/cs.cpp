@@ -14,7 +14,6 @@ using namespace boost::filesystem;
 #include "HeightMeasure.h"
 #include "GaitMeasure.h"
 #include "EnergyMeasure.h"
-#include "FactoryTest.h"
 #include "../sim/Factories.h"
 #include "../sim/simbody/Model_Simbody.h"
 
@@ -28,8 +27,8 @@ namespace scone
 			sim::RegisterSimbody();
 
 			// cs types
-			SimulationObjective::RegisterFactory();
-			FeedForwardController::RegisterFactory();
+			//SimulationObjective::RegisterFactory();
+			GetControllerFactory().Register< FeedForwardController >( "FeedForwardController" );
 			HeightMeasure::RegisterFactory();
 			GaitMeasure::RegisterFactory();
 			EnergyMeasure::RegisterFactory();
