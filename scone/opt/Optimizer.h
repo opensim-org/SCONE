@@ -2,7 +2,6 @@
 
 #include "opt.h"
 #include "Objective.h"
-#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
@@ -26,7 +25,7 @@ namespace scone
 		protected:
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 			void CreateObjectives( size_t count );
-			PropNode m_ObjectiveProps;
+			const PropNode& m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
 
 		private:

@@ -5,7 +5,6 @@
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include <memory>
-#include "../../core/Factory.h"
 
 namespace OpenSim
 {
@@ -24,14 +23,11 @@ namespace scone
 	{
 		class Simulation_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
+		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody( const PropNode& props );
+			Model_Simbody( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model_Simbody();
-
-			// create the model and its controllers. TODO: move to constructor with new factory?
-			virtual void Initialize( opt::ParamSet& par, const PropNode& props ) override;
 
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;

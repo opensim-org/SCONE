@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\opt\CmaOptimizer.h" />
+    <ClInclude Include="..\..\scone\opt\Factories.h" />
     <ClInclude Include="..\..\scone\opt\Objective.h" />
     <ClInclude Include="..\..\scone\opt\opt.h" />
     <ClInclude Include="..\..\scone\opt\Optimizer.h" />
@@ -21,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp" />
+    <ClCompile Include="..\..\scone\opt\Factories.cpp" />
     <ClCompile Include="..\..\scone\opt\Objective.cpp" />
     <ClCompile Include="..\..\scone\opt\opt.cpp" />
     <ClCompile Include="..\..\scone\opt\Optimizer.cpp" />

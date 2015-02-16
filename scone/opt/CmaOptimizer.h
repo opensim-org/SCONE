@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API CmaOptimizer : public Optimizer, public Factoryable< Optimizer, CmaOptimizer >
+		class OPT_API CmaOptimizer : public Optimizer
 		{
 		public:
 			CmaOptimizer( const PropNode& props );

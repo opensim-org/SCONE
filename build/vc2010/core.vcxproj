@@ -30,7 +30,6 @@
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\core\Factory.cpp" />
     <ClCompile Include="..\..\scone\core\Named.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />
     <ClCompile Include="..\..\scone\core\Quat.cpp" />

@@ -8,6 +8,7 @@
 #include "../core/Log.h"
 #include "../opt/Optimizer.h"
 #include "../cs/SimulationObjective.h"
+#include "../opt/Factories.h"
 
 using namespace boost::filesystem;
 using namespace scone;
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
 		PropNode p = LoadProperties( config_file );
 
 		// create optimizer and report unused parameters
-		opt::OptimizerUP o = CreateFromPropNode< opt::Optimizer >( p.GetChild( "Optimizer" ) );
+		opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
 		p.ToStream( std::cout, "Unused parameter ", true );
 
 		// copy config and model file

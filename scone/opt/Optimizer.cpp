@@ -4,6 +4,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
+#include "Factories.h"
 
 using namespace boost::filesystem;
 
@@ -13,7 +14,8 @@ namespace scone
 	{
 		Optimizer::Optimizer( const PropNode& props ) :
 		max_threads( 1 ),
-		thread_priority( 0 )
+		thread_priority( 0 ),
+		m_ObjectiveProps( props.GetChild( "Objective" ) )
 		{
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
@@ -21,11 +23,8 @@ namespace scone
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 			INIT_FROM_PROP( props, maximize_objective, true );
 
-			// copy objective props so that we can create them when we need
-			m_ObjectiveProps = props.GetChild( "Objective" );
-
 			// create at least one objective from props, so that all nodes are properly flagged
-			m_Objectives.push_back( CreateFromPropNode< Objective >( props.GetChild( "Objective" ) ) );
+			CreateObjectives( 1 );
 		}
 
 		Optimizer::~Optimizer()
@@ -119,7 +118,7 @@ namespace scone
 		{
 			// create at least one objective instance (required for finding number of parameters)
 			while ( m_Objectives.size() < count )
-				m_Objectives.push_back( CreateFromPropNode< Objective >( m_ObjectiveProps ) );
+				m_Objectives.push_back( CreateObjective( m_ObjectiveProps ) );
 		}
 	}
 }

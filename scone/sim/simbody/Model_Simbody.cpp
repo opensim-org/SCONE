@@ -14,6 +14,7 @@
 #include <OpenSim/OpenSim.h>
 #include "boost/foreach.hpp"
 #include "Leg_Simbody.h"
+#include "../Factories.h"
 
 using std::endl;
 
@@ -35,8 +36,8 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( const PropNode& props ) :
-		Model( props ),
+		Model_Simbody::Model_Simbody( const PropNode& props, opt::ParamSet& par ) :
+		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr )
@@ -45,25 +46,22 @@ namespace scone
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP( props, model_file, String("") );
 
-		}
-
-		Model_Simbody::~Model_Simbody()
-		{
-		}
-
-		void Model_Simbody::Initialize( opt::ParamSet& par, const PropNode& props )
-		{
 			// create the model
 			CreateModel();
 
 			SCONE_ASSERT( m_pOsimModel );
 
 			// create and initialize controllers
-			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
-			BOOST_FOREACH( ControllerUP& c, m_Controllers )
-				c->Initialize( *this, par, props );
+			const PropNode& cprops = props.GetChild( "Controllers" );
+			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
+					m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
+			cprops.SetFlag();
 
 			PrepareSimulation();
+		}
+
+		Model_Simbody::~Model_Simbody()
+		{
 		}
 
 		void Model_Simbody::CreateModel()

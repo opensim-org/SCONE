@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 
-//#include "SerializationTest.h"
 #include "XmlParseTest.h"
 #include "OptimizationTest.h"
 #include <conio.h>

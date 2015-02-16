@@ -11,11 +11,9 @@ namespace scone
 		class SCONE_SIM_API Controller
 		{
 		public:
-			Controller( const PropNode& props );
+			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~Controller();
 
-			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props );
-			//virtual void Initialize( sim::Model& model );
 			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;
 
 			void SetTerminationRequest( bool value = true ) { m_TerminationRequest = value; }

@@ -1,51 +1,41 @@
 #pragma once
 
-#include "core.h"
+#include <boost/function.hpp>
+#include <boost/functional/factory.hpp>
 #include <map>
-#include "PropNode.h"
 
 namespace scone
 {
-	/// Get Single Factory instance
-	CORE_API class Factory& GetFactory();
+	#define DECLARE_FACTORY( _basetype_, _args_ ) \
+		typedef Factory< boost::function< _basetype_*_args_ > > _basetype_##Factory;
 
-	/// Factory class
+	template< typename F >
 	class Factory
 	{
 	public:
-		Factory() { };
-		virtual ~Factory() { };
-
-		template< typename Base, typename Derived >
-		void Register( const String& name = "" )
+		F& Create( const String& name )
 		{
-			m_CreateFuncs[ GetFullTypeName< Base >( name.empty() ? GetCleanClassName( typeid( Derived ).name() ) : name ) ] = (void*(*)( const PropNode& ))Derived::Create;
+			auto it = m_CreateFuncs.find( name );
+			if ( it != m_CreateFuncs.end() )
+				return it->second;
+			else SCONE_THROW( "Unknown type: " + name );
 		}
 
-		template< typename T >
-		std::unique_ptr< T > Create( const String& type, const PropNode& props )
+		F& Create( const PropNode& props )
 		{
-			auto iter = m_CreateFuncs.find( GetFullTypeName< T >( type ) );
-			if ( iter != m_CreateFuncs.end() )
-			{
-				// create the item
-				return std::unique_ptr< T >( ( ( T*(*)( const PropNode& ) )iter->second )( props ) );
-			}
-			else SCONE_THROW( "Unknown type " + type + ", make sure you call " + type + "::RegisterFactory()" );
+			F& f = Create( props.GetStr( "type" ) );
+			props.SetFlag();
+			props.GetChild( "type" ).SetFlag();
+			return f;
+		}
+
+		template< typename C >
+		void Register( const String& name = GetCleanClassName< C >() )
+		{
+			m_CreateFuncs[ name ] = boost::factory< C* >();
 		}
 
 	private:
-		std::map< String, void*(*)( const PropNode& ) > m_CreateFuncs;
-		template< typename T >
-		String GetFullTypeName( const String& type ) { return String( typeid( T ).name() ) + "-->" + type; }
-	};
-
-	/// Factoryable class
-	template< typename Base, typename Derived >
-	class Factoryable
-	{
-	public:
-		static Base* Create( const PropNode& props ) { return new Derived( props ); }
-		static void RegisterFactory( const String& name = "" ) { GetFactory().Register< Base, Derived >( name ); }
+		std::map< String, F > m_CreateFuncs;
 	};
 }

@@ -14,6 +14,9 @@ using namespace boost::filesystem;
 #include "HeightMeasure.h"
 #include "GaitMeasure.h"
 #include "EnergyMeasure.h"
+#include "../sim/Factories.h"
+#include "../sim/simbody/Model_Simbody.h"
+#include "../opt/Factories.h"
 
 namespace scone
 {
@@ -24,12 +27,14 @@ namespace scone
 			// simulation engines
 			sim::RegisterSimbody();
 
-			// cs types
-			SimulationObjective::RegisterFactory();
-			FeedForwardController::RegisterFactory();
-			HeightMeasure::RegisterFactory();
-			GaitMeasure::RegisterFactory();
-			EnergyMeasure::RegisterFactory();
+			// register objective
+			opt::GetObjectiveFactory().Register< SimulationObjective >();
+
+			// register controllers
+			sim::GetControllerFactory().Register< FeedForwardController >();
+			sim::GetControllerFactory().Register< HeightMeasure >();
+			sim::GetControllerFactory().Register< GaitMeasure >();
+			sim::GetControllerFactory().Register< EnergyMeasure >();
 		}
 
 		void CS_API PerformOptimization( const String& config_file )

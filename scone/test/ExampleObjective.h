@@ -1,11 +1,10 @@
 #pragma once
 
 #include "../opt/Objective.h"
-#include "../core/Factory.h"
 
 namespace scone
 {
-	class ExampleObjective : public opt::Objective, public Factoryable< opt::Objective, ExampleObjective >
+	class ExampleObjective : public opt::Objective
 	{
 	public:
 		ExampleObjective( const PropNode& props );;

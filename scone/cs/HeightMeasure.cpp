@@ -8,8 +8,8 @@ namespace scone
 {
 	namespace cs
 	{
-		HeightMeasure::HeightMeasure( const PropNode& props ) :
-		Measure( props ),
+		HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		Measure( props, par, model ),
 		m_pTargetBody( nullptr ),
 		m_LastStep( size_t( -1 ) )
 		{
@@ -17,11 +17,6 @@ namespace scone
 			INIT_FROM_PROP( props, use_average_height, false );
 			INIT_FROM_PROP( props, terminate_on_peak, true );
 			INIT_FROM_PROP( props, termination_height, 0.5 );
-		}
-
-		void HeightMeasure::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
-		{
-			Measure::Initialize( model, par, props );
 
 			m_Upward = false;
 			m_Height.Reset();

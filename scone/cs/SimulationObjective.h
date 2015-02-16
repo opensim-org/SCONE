@@ -15,7 +15,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API SimulationObjective : public opt::Objective, public Factoryable< opt::Objective, SimulationObjective >
+		class CS_API SimulationObjective : public opt::Objective
 		{
 		public:
 			SimulationObjective( const PropNode& props );

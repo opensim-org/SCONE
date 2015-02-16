@@ -22,8 +22,8 @@ namespace scone
 {
 	namespace cs
 	{
-		FeedForwardController::FeedForwardController( const PropNode& props ) :
-		Controller( props )
+		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		Controller( props, par, model )
 		{
 			INIT_FROM_PROP( props, function_type, String("") );
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
@@ -36,12 +36,6 @@ namespace scone
 			INIT_FROM_PROP( props, optimize_control_point_time, true );
 			INIT_FROM_PROP( props, flat_extrapolation, false );
 			INIT_FROM_PROP( props, number_of_modes, 0u );
-		}
-
-		void FeedForwardController::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
-		{
-			m_Functions.clear();
-			m_ActInfos.clear();
 
 			// setup actuator info
 			for ( size_t idx = 0; idx < model.GetMuscleCount(); ++idx )

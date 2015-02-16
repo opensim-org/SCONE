@@ -2,7 +2,6 @@
 
 #include "PropNode.h"
 #include <string>
-#include "Factory.h"
 
 namespace scone
 {
@@ -40,34 +39,34 @@ namespace scone
 	}
 
 	// process vector< unique_ptr > type (requires factory definition)
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& vec )
-	{ 
-		vec.clear();
-		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
-			vec.push_back( CreateFromPropNode< T >( *iter->second ) );
-		prop.SetFlag();
-	}
+	//template< typename T >
+	//void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& vec )
+	//{ 
+	//	vec.clear();
+	//	for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
+	//		vec.push_back( CreateFromPropNode< T >( *iter->second ) );
+	//	prop.SetFlag();
+	//}
 
-	// process pointer type
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
-	{
-		var = GetFactory().Create< T >( prop.GetStr( "type" ), prop );
-		prop.SetFlag();
-		prop.GetChild( "type" ).SetFlag();
-	}
+	//// process pointer type
+	//template< typename T >
+	//void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
+	//{
+	//	var = GetFactory().Create< T >( prop.GetStr( "type" ), prop );
+	//	prop.SetFlag();
+	//	prop.GetChild( "type" ).SetFlag();
+	//}
 
-	// create function (TODO: remove?)
-	template< typename T >
-	std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
-	{
-		std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ), prop ) );
-		prop.SetFlag();
-		prop.GetChild( "type" ).SetFlag();
+	//// create function (TODO: remove?)
+	//template< typename T >
+	//std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
+	//{
+	//	std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ), prop ) );
+	//	prop.SetFlag();
+	//	prop.GetChild( "type" ).SetFlag();
 
-		return var;
-	}
+	//	return var;
+	//}
 
 	// convenience macro that automatically derives name from variable name
 	#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )

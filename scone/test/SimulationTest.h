@@ -6,6 +6,7 @@
 #include "../core/Log.h"
 #include "../core/Timer.h"
 #include "../core/InitFromPropNode.h"
+#include "../sim/Factories.h"
 
 using namespace scone;
 
@@ -31,8 +32,7 @@ void SimulationTest()
 	{
 		opt::ParamSet par;
 		props.Set( "Model.model_file", *iter );
-		sim::ModelUP m = CreateFromPropNode< sim::Model >( props.GetChild( "Model" ) );
-		m->Initialize( par, props.GetChild( "Model" ) );
+		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
 		SCONE_LOG( "Muscles=" << m->GetMuscleCount() << " Bodies=" << m->GetBodyCount() << " Joints=" << m->GetJoints().size() );
 		SCONE_LOG( "Controllers=" << m->GetControllers().size() );

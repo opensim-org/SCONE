@@ -6,6 +6,9 @@
 #include <boost/foreach.hpp>
 #include <algorithm>
 
+#include "../sim/Model.h"
+#include "../sim/Factories.h"
+
 namespace scone
 {
 	namespace cs
@@ -15,10 +18,7 @@ namespace scone
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
-
-			// create at least one model to flag used props
-			InitFromPropNode( m_ModelProps, m_Model );
-			m_Model->Initialize( opt::ParamSet(), m_ModelProps );
+			m_Model = sim::ModelUP( sim::CreateModel( m_ModelProps, opt::ParamSet() ) );
 		}
 
 		SimulationObjective::~SimulationObjective()
@@ -47,8 +47,7 @@ namespace scone
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
 			// create new model using stored model props
-			InitFromPropNode( m_ModelProps, m_Model );
-			m_Model->Initialize( par, m_ModelProps );
+			m_Model = sim::CreateModel( m_ModelProps, par );
 		}
 
 		void SimulationObjective::WriteResults( const String& file )
