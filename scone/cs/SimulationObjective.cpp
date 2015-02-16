@@ -22,10 +22,9 @@ namespace scone
 			//InitFromPropNode( props.GetChild( "Model" ), m_Model );
 			//ModelFactory f = GetModelFactories()[ props.GetChild( "Model" ).GetStr( "type" ) ];
 			const PropNode& p = props.GetChild( "Model" );
+			opt::ParamSet par;
 
-			sim::CreateModelFunc f = sim::GetModelFactory().GetCreateFunc( "Simbody" );
-			//sim::Model* m = f( p );
-			m_Model = sim::ModelUP( f( p ) );
+			m_Model = sim::ModelUP( sim::GetModelFactory().Create( p.GetStr( "type" ) )( p, par ) );
 		}
 
 		SimulationObjective::~SimulationObjective()

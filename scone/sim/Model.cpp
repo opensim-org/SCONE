@@ -13,16 +13,10 @@ namespace scone
 {
 	namespace sim
 	{
-		Model::Model( const PropNode& props ) :
+		Model::Model( const PropNode& props, opt::ParamSet& par ) :
 		m_ShouldTerminate( false )
 		{
 		}
-
-		Model::Model( int test )
-		{
-
-		}
-
 
 		Model::~Model()
 		{

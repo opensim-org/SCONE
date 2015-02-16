@@ -15,8 +15,7 @@ namespace scone
 		class SCONE_SIM_API Model : public opt::Parameterizable
 		{
 		public:
-			Model( int test );;
-			Model( const PropNode& props );
+			Model( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model();
 
 			virtual Vec3 GetComPos() = 0;

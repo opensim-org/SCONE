@@ -35,8 +35,8 @@ namespace scone
 		};
 
 		/// Constructor
-		Model_Simbody::Model_Simbody( const PropNode& props ) :
-		Model( props ),
+		Model_Simbody::Model_Simbody( const PropNode& props, opt::ParamSet& par ) :
+		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr )
@@ -50,12 +50,6 @@ namespace scone
 
 			// create controllers
 			InitFromPropNode( props.GetChild( "Controllers" ), m_Controllers );
-		}
-
-		Model_Simbody::Model_Simbody( int test ) :
-		Model( test )
-		{
-			printf("yay!\n");
 		}
 
 		Model_Simbody::~Model_Simbody()

@@ -1,12 +1,19 @@
 #pragma once
 
+#include <boost/function.hpp>
+#include <boost/functional/factory.hpp>
+
 namespace scone
 {
+	#define DECLARE_FACTORY( _basetype_, _args_ ) \
+	typedef boost::function< _basetype_*_args_ > _basetype_##FactoryFunc; \
+	typedef Factory< _basetype_##FactoryFunc > _basetype_##Factory;
+	
 	template< typename F >
 	struct Factory
 	{
 	public:
-		F& GetCreateFunc( const String& name )
+		F& Create( const String& name )
 		{
 			auto it = m_CreateFuncs.find( name );
 			if ( it != m_CreateFuncs.end() )
@@ -14,8 +21,16 @@ namespace scone
 			else SCONE_THROW( "Unknown type: " + name );
 		}
 
+		F& Create( const PropNode& props )
+		{
+			F& f = Create( props.GetStr( "type" ) );
+			props.SetFlag();
+			props.GetChild( "type" ).SetFlag();
+			return f;
+		}
+
 		template< typename C >
-		void RegisterCreateFunc( const String& name )
+		void Register( const String& name )
 		{
 			m_CreateFuncs[ name ] = boost::factory< C* >();
 		}

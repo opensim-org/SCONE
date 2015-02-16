@@ -33,10 +33,6 @@ namespace scone
 			HeightMeasure::RegisterFactory();
 			GaitMeasure::RegisterFactory();
 			EnergyMeasure::RegisterFactory();
-
-			// test
-			//RegisterFactoryTest();
-			sim::GetModelFactory().RegisterCreateFunc< sim::Model_Simbody >( "Simbody" );
 		}
 
 		void CS_API PerformOptimization( const String& config_file )

@@ -24,11 +24,10 @@ namespace scone
 	{
 		class Simulation_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model, public Factoryable< Model, Model_Simbody >
+		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
 		{
 		public:
-			Model_Simbody( int test );
-			Model_Simbody( const PropNode& props );
+			Model_Simbody( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() override;

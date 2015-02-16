@@ -63,7 +63,6 @@
     <ClInclude Include="..\..\scone\cs\StateController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\FactoryTest.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -102,6 +101,5 @@
     <ClCompile Include="..\..\scone\cs\StateController.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\FactoryTest.cpp" />
   </ItemGroup>
 </Project>
