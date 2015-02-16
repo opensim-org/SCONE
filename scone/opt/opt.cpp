@@ -9,7 +9,7 @@ namespace scone
 	{
 		void RegisterFactoryTypes()
 		{
-			//TOFIX: CmaOptimizer::RegisterFactory();
+			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
 		OptimizerUP CreateOptimizerFromXml( const String& xml_file, const String& key )

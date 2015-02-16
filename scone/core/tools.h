@@ -14,9 +14,6 @@ namespace scone
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
 
-	/// Get clean class, removes everything before "::" (if present)
-	String CORE_API GetCleanClassName( const String& str );
-
 	/// Get file extension (without dot)
 	String CORE_API GetFileNameExt( const String& str );
 
@@ -27,5 +24,16 @@ namespace scone
 		std::ostringstream str;
 		str << value;
 		return str.str();
+	}
+
+	/// Get clean class, removes everything before "::" (if present)
+	template< typename T >
+	String GetCleanClassName()
+	{
+		String str = typeid( T ).name();
+		size_t pos = str.find_last_of(": ");
+		if (pos != std::string::npos)
+			return str.substr(pos + 1);
+		else return str;
 	}
 }

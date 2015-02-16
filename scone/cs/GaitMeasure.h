@@ -8,19 +8,16 @@ namespace scone
 		class GaitMeasure : public Measure
 		{
 		public:
-			GaitMeasure( const PropNode& props );
+			GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~GaitMeasure();
 
-			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
 		private:
 			// settings
 			double termination_height;
-
 			Vec3 m_InitialComPos;
-
 		};
 	}
 }

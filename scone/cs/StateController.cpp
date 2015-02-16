@@ -22,22 +22,18 @@ namespace scone
 		{
 		}
 
-		StateController::StateController( const PropNode& props ) :
-		sim::Controller( props )
+		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		sim::Controller( props, par, model )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
-			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
+
+			// create leg states
+			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 		}
 
 		StateController::~StateController()
 		{
-		}
-
-		void StateController::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
-		{
-			// create leg states
-			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
-				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 		}
 
 		void StateController::UpdateControls( sim::Model& model, double timestamp )

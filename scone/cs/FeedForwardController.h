@@ -19,13 +19,11 @@ namespace scone
 		class CS_API FeedForwardController : public sim::Controller
 		{
 		public:
-			FeedForwardController( const PropNode& props );
+			FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~FeedForwardController() { };
 
 			Function* CreateFunction( opt::ParamSet &par, const String& prefix );
-
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 
 			bool UseModes() { return number_of_modes > 0; }
 

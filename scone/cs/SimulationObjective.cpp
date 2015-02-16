@@ -6,7 +6,6 @@
 #include <boost/foreach.hpp>
 #include <algorithm>
 
-#include "FactoryTest.h"
 #include "../sim/Model.h"
 #include "../sim/Factories.h"
 
@@ -19,13 +18,7 @@ namespace scone
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
-
-			//InitFromPropNode( props.GetChild( "Model" ), m_Model );
-			//ModelFactory f = GetModelFactories()[ props.GetChild( "Model" ).GetStr( "type" ) ];
-			const PropNode& p = props.GetChild( "Model" );
-			opt::ParamSet par;
-
-			m_Model = sim::ModelUP( sim::GetModelFactory().Create( p.GetStr( "type" ) )( p, par ) );
+			m_Model = sim::ModelUP( sim::CreateModel( m_ModelProps, opt::ParamSet() ) );
 		}
 
 		SimulationObjective::~SimulationObjective()
@@ -54,8 +47,7 @@ namespace scone
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
 			// create new model using stored model props
-			InitFromPropNode( m_ModelProps, m_Model );
-			m_Model->Initialize( par, m_ModelProps );
+			m_Model = sim::CreateModel( m_ModelProps, par );
 		}
 
 		void SimulationObjective::WriteResults( const String& file )

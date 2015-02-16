@@ -29,9 +29,6 @@ namespace scone
 			Model_Simbody( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model_Simbody();
 
-			// create the model and its controllers. TODO: move to constructor with new factory?
-			virtual void Initialize( opt::ParamSet& par, const PropNode& props ) override;
-
 			virtual Vec3 GetComPos() override;
 			virtual Vec3 GetComVel() override;
 			virtual Real GetMass() override;

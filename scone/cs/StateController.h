@@ -2,7 +2,6 @@
 
 #include "cs.h"
 #include "../sim/Controller.h"
-#include "../core/PropNodeFactory.h"
 #include "../sim/Leg.h"
 #include <bitset>
 #include "../core/TimedValue.h"
@@ -11,7 +10,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API StateController : public sim::Controller, public Factoryable< sim::Controller, StateController >
+		class CS_API StateController : public sim::Controller
 		{
 		public:
 			struct LegState
@@ -29,10 +28,9 @@ namespace scone
 				Real coronal_pos;
 			};
 
-			StateController( const PropNode& props );
+			StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~StateController();
 
-			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 
 			// public parameters

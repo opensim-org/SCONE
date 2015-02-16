@@ -6,23 +6,16 @@ namespace scone
 {
 	namespace cs
 	{
-
-
-		GaitMeasure::GaitMeasure( const PropNode& props ) : Measure( props )
+		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		Measure( props, par, model )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.8 );
+
+			m_InitialComPos = model.GetComPos();
 		}
 
 		GaitMeasure::~GaitMeasure()
 		{
-
-		}
-
-		void GaitMeasure::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
-		{
-			Measure::Initialize( model, par, props );
-
-			m_InitialComPos = model.GetComPos();
 		}
 
 		void GaitMeasure::UpdateControls( sim::Model& model, double timestamp )

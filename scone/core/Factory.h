@@ -30,7 +30,7 @@ namespace scone
 		}
 
 		template< typename C >
-		void Register( const String& name )
+		void Register( const String& name = GetCleanClassName< C >() )
 		{
 			m_CreateFuncs[ name ] = boost::factory< C* >();
 		}

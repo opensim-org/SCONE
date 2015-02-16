@@ -2,7 +2,6 @@
 
 #include "Measure.h"
 #include "../sim/Body.h"
-#include <functional>
 #include "../core/MeasuredValue.h"
 
 namespace scone
@@ -12,10 +11,9 @@ namespace scone
 		class HeightMeasure : public Measure
 		{
 		public:
-			HeightMeasure( const PropNode& props );
+			HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~HeightMeasure() { };
 
-			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 

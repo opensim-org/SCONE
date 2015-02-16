@@ -8,7 +8,7 @@ namespace scone
 		class EnergyMeasure : public Measure
 		{
 		public:
-			EnergyMeasure( const PropNode& props ) : Measure( props ) { };
+			EnergyMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) : Measure( props, par, model ) { };
 			virtual ~EnergyMeasure() { };
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
