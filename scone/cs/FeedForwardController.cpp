@@ -88,31 +88,40 @@ namespace scone
 
 		void FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
+			// update controls for both sides
+			UpdateControls( model, time, NoSide );
+		}
+
+		void FeedForwardController::UpdateControls( sim::Model& model, double time, Side side )
+		{
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );
 			SimTK::Vector xval( 1 );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 				funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
-			if ( UseModes() )
+			// apply result of each mode to all muscles
+			for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
 			{
-				// apply result of each mode to all muscles
-				for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
+				if ( side == NoSide || m_ActInfos[ idx ].side == side )
 				{
-					Real val = 0.0;
-					for ( size_t mode = 0; mode < number_of_modes; ++mode )
-						val += funcresults[ mode ] * m_ActInfos[ idx ].mode_weights[ mode ];
+					if ( UseModes() )
+					{
+						Real val = 0.0;
+						for ( size_t mode = 0; mode < number_of_modes; ++mode )
+							val += funcresults[ mode ] * m_ActInfos[ idx ].mode_weights[ mode ];
 
-					// add control value
-					model.GetMuscle( idx ).AddControlValue( val );
+						// add control value
+						model.GetMuscle( idx ).AddControlValue( val );
 
+					}
+					else
+					{
+						// apply results directly to control value
+						for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
+							model.GetMuscle( idx ).AddControlValue( funcresults[ m_ActInfos[ idx ].function_idx ] );
+					}
 				}
-			}
-			else
-			{
-				// apply results directly to control value
-				for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
-					model.GetMuscle( idx ).AddControlValue( funcresults[ m_ActInfos[ idx ].function_idx ] );
 			}
 		}
 

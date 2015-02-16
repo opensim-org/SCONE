@@ -8,20 +8,12 @@
 
 #include <boost/foreach.hpp>
 #include "../sim/Body.h"
+#include "../sim/Factories.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		StateController::LegState::LegState( const sim::Leg& l ) :
-		leg( l ),
-		state( UnknownState ),
-		contact( false ),
-		sagittal_pos( 0.0 ),
-		coronal_pos( 0.0 )
-		{
-		}
-
 		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
 		sim::Controller( props, par, model )
 		{
@@ -30,7 +22,23 @@ namespace scone
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
+
+			// create additional controllers
+			const PropNode& ccprops = props.GetChild( "ConditionalControllers" );
+			for ( PropNode::ConstChildIter it = ccprops.Begin(); it != ccprops.End(); ++it )
+			{
+				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( props, par, model ) ) );
+			}
 		}
+
+		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		active( false ),
+		active_since( 0.0 )
+		{
+			const PropNode& cprops = props.GetChild( "controller" );
+			controller = sim::CreateController( cprops, par, model );
+		}
+
 
 		StateController::~StateController()
 		{
@@ -41,10 +49,10 @@ namespace scone
 			UpdateLegStates( model, timestamp );
 			UpdateControllerStates( model, timestamp );
 
-			for ( auto it = m_Controllers.begin(); it != m_Controllers.end(); ++it )
+			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
-				if ( it->first.active )
-					it->second->UpdateControls( model, timestamp - it->first.active_since );
+				if ( cc->active )
+					cc->controller->UpdateControls( model, timestamp - cc->active_since );
 			}
 		}
 
@@ -68,18 +76,20 @@ namespace scone
 				switch( ls.state )
 				{
 				case LegState::StanceState:
-					// check for liftoff
 					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
 						ls.state = LegState::LiftoffState;
 					break;
+
 				case LegState::LiftoffState:
 					if ( !ls.contact )
 						ls.state = LegState::SwingState;
 					break;
+
 				case LegState::SwingState:
 					if ( ls.contact )
 						ls.state = LegState::StanceState;
 					break;
+
 				case LegState::LandingState:
 					if ( ls.contact )
 						ls.state = LegState::StanceState;
@@ -91,26 +101,24 @@ namespace scone
 		void StateController::UpdateControllerStates( sim::Model& model, double timestamp )
 		{
 			// update controller states
-			for ( size_t cidx = 0; cidx < m_Controllers.size(); ++cidx )
+			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
-				ControllerState& cstate = m_Controllers[ cidx ].first;
 				bool activate = false;
 				for ( size_t lidx = 0; lidx < m_LegStates.size(); ++lidx )
 				{
-					if ( cstate.leg_condition[ lidx ].test( m_LegStates[ lidx ]->state ) )
+					if ( cc->leg_condition[ lidx ].test( m_LegStates[ lidx ]->state ) )
 					{
 						activate = true;
 						break;
 					}
 				}
 
-				if ( activate && !cstate.active )
+				// activate or deactivate controller
+				if ( activate != cc->active )
 				{
-					cstate.active = true; // activate controller
-					cstate.active_since = timestamp;
+					cc->active = activate; 
+					cc->active_since = timestamp;
 				}
-				else if ( cstate.active )
-					cstate.active = false; // deactivate controller
 			}
 		}
 	}

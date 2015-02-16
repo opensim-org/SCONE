@@ -15,7 +15,7 @@ namespace scone
 		public:
 			struct LegState
 			{
-				LegState( const sim::Leg& l );
+				LegState( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
 				const sim::Leg& leg;
 
 				// current state
@@ -47,13 +47,18 @@ namespace scone
 			std::vector< LegStateUP > m_LegStates;
 
 			// struct that defines if a controller is active (vector denotes leg, bitset denotes state(s))
-			struct ControllerState
+			SCONE_DECLARE_CLASS_AND_PTR( ConditionalController );
+			class ConditionalController
 			{
+			public:
+				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+				virtual ~ConditionalController() {}
 				std::vector< std::bitset< LegState::StateCount > > leg_condition;
 				bool active;
 				double active_since;
+				sim::ControllerUP controller;
 			};
-			std::vector< std::pair< ControllerState, sim::ControllerUP > > m_Controllers;
+			std::vector< std::unique_ptr< ConditionalController > > m_ConditionalControllers;
 
 			StateController( const StateController& );
 			StateController& operator=( const StateController& );

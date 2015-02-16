@@ -14,7 +14,7 @@ namespace scone
 			Objective( const PropNode& props );
 			virtual ~Objective();
 
-			// Find all parameters in this objective
+			// get all parameters in this objective
 			ParamSet GetParamSet();
 
 			// update all parameters and call Evaluate

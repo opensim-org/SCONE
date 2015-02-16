@@ -51,10 +51,8 @@ namespace scone
 
 		void CmaOptimizer::Run()
 		{
-			// make sure there is at least 1 objective
+			// make sure there is at least 1 objective and get info
 			CreateObjectives( 1 );
-
-			// get info from objective
 			ParamSet par = GetObjective().GetParamSet();
 			size_t dim = par.GetFreeParamCount();
 

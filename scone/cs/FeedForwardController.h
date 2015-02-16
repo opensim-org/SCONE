@@ -24,6 +24,7 @@ namespace scone
 
 			Function* CreateFunction( opt::ParamSet &par, const String& prefix );
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			void UpdateControls( sim::Model& model, double timestamp, Side side );
 
 			bool UseModes() { return number_of_modes > 0; }
 
