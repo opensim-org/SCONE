@@ -23,12 +23,10 @@ namespace scone
 			FeedForwardController( const PropNode& props );
 			virtual ~FeedForwardController() { };
 
-			virtual void ProcessParameters( opt::ParamSet& par ) override;
-
 			Function* CreateFunction( opt::ParamSet &par, const String& prefix );
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual void Initialize( sim::Model& model ) override;
+			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 
 			bool UseModes() { return number_of_modes > 0; }
 

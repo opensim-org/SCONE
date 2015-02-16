@@ -11,11 +11,14 @@ namespace scone
 	namespace cs
 	{
 		SimulationObjective::SimulationObjective( const PropNode& props ) :
-		Objective( props )
+		Objective( props ),
+		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
-			//InitFromPropNodeChild( props, m_Model, "Model" );
-			InitFromPropNode( props.GetChild( "Model" ), m_Model );
+
+			// create at least one model to flag used props
+			InitFromPropNode( m_ModelProps, m_Model );
+			m_Model->Initialize( opt::ParamSet(), m_ModelProps );
 		}
 
 		SimulationObjective::~SimulationObjective()
@@ -43,8 +46,9 @@ namespace scone
 
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
-			// process model parameters (model should reset)
-			m_Model->ProcessParameters( par );
+			// create new model using stored model props
+			InitFromPropNode( m_ModelProps, m_Model );
+			m_Model->Initialize( par, m_ModelProps );
 		}
 
 		void SimulationObjective::WriteResults( const String& file )

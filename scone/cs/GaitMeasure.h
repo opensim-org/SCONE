@@ -11,10 +11,9 @@ namespace scone
 			GaitMeasure( const PropNode& props );
 			virtual ~GaitMeasure();
 
-			virtual void Initialize( sim::Model& model ) override;
+			virtual void Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props ) override;
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
-			virtual void ProcessParameters( opt::ParamSet& par ) override { };
 
 		private:
 			// settings

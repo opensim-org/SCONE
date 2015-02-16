@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Simulation : public opt::Parameterizable
+		class SCONE_SIM_API Simulation
 		{
 		public:
 			Simulation( const PropNode& props );
@@ -22,8 +22,6 @@ namespace scone
 			Model& GetModel( size_t idx = 0 );
 
 			virtual void AdvanceSimulationTo( double time ) = 0;
-
-			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 			double max_simulation_time;
 			double integration_accuracy;

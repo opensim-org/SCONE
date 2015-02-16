@@ -18,9 +18,9 @@ namespace scone
 
 		}
 
-		void GaitMeasure::Initialize( sim::Model& model )
+		void GaitMeasure::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
 		{
-			Measure::Initialize( model );
+			Measure::Initialize( model, par, props );
 
 			m_InitialComPos = model.GetComPos();
 		}

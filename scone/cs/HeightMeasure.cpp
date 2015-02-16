@@ -19,9 +19,9 @@ namespace scone
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 		}
 
-		void HeightMeasure::Initialize( sim::Model& model )
+		void HeightMeasure::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
 		{
-			Measure::Initialize( model );
+			Measure::Initialize( model, par, props );
 
 			m_Upward = false;
 			m_Height.Reset();
@@ -31,10 +31,6 @@ namespace scone
 			if ( !target_body.empty() )
 				m_pTargetBody = &model.FindBody( target_body );
 			else m_pTargetBody = nullptr;
-		}
-
-		void HeightMeasure::ProcessParameters( opt::ParamSet& par )
-		{
 		}
 
 		void HeightMeasure::UpdateControls( sim::Model& model, double timestamp )

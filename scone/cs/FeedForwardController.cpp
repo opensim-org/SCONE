@@ -38,7 +38,7 @@ namespace scone
 			INIT_FROM_PROP( props, number_of_modes, 0u );
 		}
 
-		void FeedForwardController::Initialize( sim::Model& model )
+		void FeedForwardController::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
 		{
 			m_Functions.clear();
 			m_ActInfos.clear();
@@ -51,10 +51,7 @@ namespace scone
 				ExtractNameAndSide( model.GetMuscle( idx ).GetName(), ai.name, ai.side );
 				m_ActInfos.push_back( ai );
 			}
-		}
 
-		void FeedForwardController::ProcessParameters( opt::ParamSet& par )
-		{
 			// create functions
 			if ( UseModes() )
 			{

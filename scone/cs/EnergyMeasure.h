@@ -13,7 +13,6 @@ namespace scone
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult(sim::Model& model ) override;
-			virtual void ProcessParameters( opt::ParamSet& par ) override { };
 
 		protected:
 		private:

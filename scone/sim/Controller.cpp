@@ -13,7 +13,7 @@ namespace scone
 		{
 		}
 
-		void Controller::Initialize( sim::Model& model )
+		void Controller::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
 		{
 			m_TerminationRequest = false;
 		}

@@ -33,15 +33,11 @@ namespace scone
 		{
 		}
 
-		void StateController::Initialize( sim::Model& model )
+		void StateController::Initialize( sim::Model& model, opt::ParamSet& par, const PropNode& props )
 		{
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
-		}
-
-		void StateController::ProcessParameters( opt::ParamSet& par )
-		{
 		}
 
 		void StateController::UpdateControls( sim::Model& model, double timestamp )
