@@ -22,7 +22,7 @@ namespace scone
 			FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~FeedForwardController() { };
 
-			Function* CreateFunction( opt::ParamSet &par, const String& prefix );
+			Function* CreateFunction( opt::ParamSet &par, const String& prefix, const PropNode& props );
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			void UpdateControls( sim::Model& model, double timestamp, Side side );
 
@@ -38,13 +38,9 @@ namespace scone
 			size_t control_points;
 			double control_point_time_delta;
 			bool optimize_control_point_time;
-			double init_min;
-			double init_max;
 
 			// mode settings
 			size_t number_of_modes;
-			double init_mode_weight_min;
-			double init_mode_weight_max;
 
 			// muscle info
 			struct ActInfo

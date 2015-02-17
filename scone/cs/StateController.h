@@ -20,6 +20,7 @@ namespace scone
 
 				// current state
 				enum State { UnknownState = -1, StanceState, LiftoffState, SwingState, LandingState, StateCount };
+				static const char* state_names[];
 				TimedValue< State > state;
 
 				// current status
@@ -53,7 +54,7 @@ namespace scone
 			public:
 				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 				virtual ~ConditionalController() {}
-				std::vector< std::bitset< LegState::StateCount > > leg_condition;
+				std::bitset< LegState::StateCount > state_mask;
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;

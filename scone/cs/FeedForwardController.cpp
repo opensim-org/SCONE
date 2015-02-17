@@ -29,10 +29,6 @@ namespace scone
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
 			INIT_FROM_PROP( props, control_points, 3u );
 			INIT_FROM_PROP( props, control_point_time_delta, 0.3 );
-			INIT_FROM_PROP( props, init_min, 0.0 );
-			INIT_FROM_PROP( props, init_max, 1.0 );
-			INIT_FROM_PROP( props, init_mode_weight_min, -1.0 );
-			INIT_FROM_PROP( props, init_mode_weight_max, 1.0 );
 			INIT_FROM_PROP( props, optimize_control_point_time, true );
 			INIT_FROM_PROP( props, flat_extrapolation, false );
 			INIT_FROM_PROP( props, number_of_modes, 0u );
@@ -51,7 +47,7 @@ namespace scone
 			{
 				// create mode functions
 				for ( size_t idx = 0; idx < number_of_modes; ++idx )
-					m_Functions.push_back( FunctionUP( CreateFunction( par, GetStringF( "Mode%d.", idx ) ) ) );
+					m_Functions.push_back( FunctionUP( CreateFunction( par, GetStringF( "Mode%d.", idx ), props ) ) );
 			}
 
 			BOOST_FOREACH( ActInfo& ai, m_ActInfos )
@@ -74,13 +70,13 @@ namespace scone
 					ai.mode_weights.resize( number_of_modes );
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
 					for ( size_t mode = 0; mode < number_of_modes; ++mode )
-						ai.mode_weights[ mode ] = par.GetMinMax( prefix + GetStringF( ".Mode%d", mode ), init_mode_weight_min, init_mode_weight_max, -1.0, 1.0 );
+						ai.mode_weights[ mode ] = par.Get( prefix + GetStringF( ".Mode%d", mode ), props.GetChild( "mode_weight" ) );
 				}
 				else
 				{
 					// create a new function
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
-					m_Functions.push_back( FunctionUP( CreateFunction( par, prefix + "." ) ) );
+					m_Functions.push_back( FunctionUP( CreateFunction( par, prefix + ".", props ) ) );
 					ai.function_idx = m_Functions.size() - 1;
 				}
 			}
@@ -125,7 +121,7 @@ namespace scone
 			}
 		}
 
-		Function* FeedForwardController::CreateFunction( opt::ParamSet &par, const String& prefix )
+		Function* FeedForwardController::CreateFunction( opt::ParamSet &par, const String& prefix, const PropNode& props )
 		{
 			if ( function_type == "PieceWiseLinear" || function_type == "PieceWiseConstant" )
 			{
@@ -149,7 +145,7 @@ namespace scone
 					else xVal = cpidx * control_point_time_delta;
 
 					// Y value
-					Real yVal = par.GetMinMax( prefix + GetStringF( "Y%d", cpidx ), init_min, init_max, UseModes() ? -1.0 : 0.0, 1.0 );
+					Real yVal = par.Get( prefix + GetStringF( "Y%d", cpidx ), props.GetChild( "control_point_y" ) );
 					if ( lin ) dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
 					else dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
 				}
@@ -161,8 +157,8 @@ namespace scone
 				for ( size_t i = 0; i < pFunc->GetCoefficientCount(); ++i )
 				{
 					if ( i == 0 )
-						pFunc->SetCoefficient( i, par.GetMinMax( prefix + GetStringF( "Coeff%d", i ), init_min, init_max, 0.0, 1.0 ) );
-					else pFunc->SetCoefficient( i, par.GetMinMax( prefix + GetStringF( "Coeff%d", i ), init_mode_weight_min, init_mode_weight_max, -1.0, 1.0 ) );
+						pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "Coeff%d", i ), props.GetChild( "control_point_y" ) ) );
+					else pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "Coeff%d", i ), props.GetChild( "control_point_y" ) ) );
 				}
 				return pFunc;
 			}

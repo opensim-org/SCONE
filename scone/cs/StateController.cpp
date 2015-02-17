@@ -14,6 +14,8 @@ namespace scone
 {
 	namespace cs
 	{
+		const char* StateController::LegState::state_names[] = { "Stance", "Liftoff", "Swing", "Landing" };
+
 		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
 		sim::Controller( props, par, model )
 		{
@@ -35,10 +37,14 @@ namespace scone
 		active( false ),
 		active_since( 0.0 )
 		{
+			// load condition
+			unsigned long long sm = props.Get< size_t >( "state", 0 );
+			state_mask = std::bitset< LegState::StateCount >( sm );
+
+			// create controller
 			const PropNode& cprops = props.GetChild( "controller" );
 			controller = sim::CreateController( cprops, par, model );
 		}
-
 
 		StateController::~StateController()
 		{
@@ -106,7 +112,7 @@ namespace scone
 				bool activate = false;
 				for ( size_t lidx = 0; lidx < m_LegStates.size(); ++lidx )
 				{
-					if ( cc->leg_condition[ lidx ].test( m_LegStates[ lidx ]->state ) )
+					if ( cc->state_mask.test( m_LegStates[ lidx ]->state ) )
 					{
 						activate = true;
 						break;
