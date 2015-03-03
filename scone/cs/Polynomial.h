@@ -4,10 +4,11 @@
 
 namespace scone
 {
-	class Polynomial : public Function
+	class CS_API Polynomial : public Function
 	{
 	public:
 		Polynomial( size_t degree );
+		Polynomial( const PropNode& props, opt::ParamSet& par );
 		virtual ~Polynomial();
 
 		virtual Real GetValue( Real x ) override;

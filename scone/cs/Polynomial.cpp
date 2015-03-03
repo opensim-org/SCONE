@@ -9,6 +9,13 @@ namespace scone
 		m_Coeffs.resize( degree );
 	}
 
+	Polynomial::Polynomial( const PropNode& props, opt::ParamSet& par )
+	{
+		m_Coeffs.resize( props.Get( "degree", 0u ) );
+		for ( size_t i = 0; i < m_Coeffs.size(); ++i )
+			SetCoefficient( i, par.Get( GetStringF( "C%d", i ), props.GetChild( GetStringF( "coefficient%d", i ) ) ) );
+	}
+
 	Polynomial::~Polynomial()
 	{
 	}
@@ -36,5 +43,4 @@ namespace scone
 	{
 		return m_Coeffs.size();
 	}
-
 }

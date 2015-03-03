@@ -300,12 +300,12 @@ namespace scone
 		return true;
 	}
 
-	PropNode CORE_API ReadXmlFile( const String& filename )
+	PropNode CORE_API CreatePropNodeFromXmlFile( const String& filename )
 	{
 		return PropNode().FromXmlFile( filename );
 	}
 
-	PropNode CORE_API ReadInfoFile( const String& filename )
+	PropNode CORE_API CreatePropNodeFromInfoFile( const String& filename )
 	{
 		return PropNode().FromInfoFile( filename );
 	}

@@ -13,6 +13,8 @@
 
 namespace scone
 {
+	SCONE_DECLARE_CLASS_AND_PTR( Function );
+
 	namespace cs
 	{
 		void CS_API RegisterFactoryTypes();

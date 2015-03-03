@@ -17,6 +17,10 @@ using namespace boost::filesystem;
 #include "../sim/Factories.h"
 #include "../sim/simbody/Model_Simbody.h"
 #include "../opt/Factories.h"
+#include "Factories.h"
+#include "PieceWiseConstantFunction.h"
+#include "PieceWiseLinearFunction.h"
+#include "Polynomial.h"
 
 namespace scone
 {
@@ -35,6 +39,11 @@ namespace scone
 			sim::GetControllerFactory().Register< HeightMeasure >();
 			sim::GetControllerFactory().Register< GaitMeasure >();
 			sim::GetControllerFactory().Register< EnergyMeasure >();
+
+			// register functions
+			GetFunctionFactory().Register< PieceWiseConstantFunction >();
+			GetFunctionFactory().Register< PieceWiseLinearFunction >();
+			GetFunctionFactory().Register< Polynomial >();
 		}
 
 		void CS_API PerformOptimization( const String& config_file )

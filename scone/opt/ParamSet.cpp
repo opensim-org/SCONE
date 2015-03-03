@@ -6,6 +6,7 @@
 #include <fstream>
 #include <boost/format.hpp>
 #include "../core/Log.h"
+#include <boost/foreach.hpp>
 
 namespace scone
 {
@@ -48,16 +49,6 @@ namespace scone
 		double ParamSet::GetMinMax( const String& name, double init_min, double init_max, double min, double max )
 		{
 			return Get( ParamInfo( name, 0.0, 0.0, init_min, init_max, min, max ) );
-		}
-
-		double ParamSet::operator()( const String& name, double init_mean, double init_std, double min, double max )
-		{
-			return GetMeanStd( name, init_mean, init_std, min, max );
-		}
-
-		double ParamSet::operator()( const String& name, double min, double max )
-		{
-			return GetMinMax( name, min, max, min, max );
 		}
 
 		std::vector< std::pair< ParamInfo, double > >::iterator ParamSet::FindParamByName( const String& name )
@@ -177,5 +168,26 @@ namespace scone
 				m_Params[ parIdx ].first.std = sqrt( var );
 			}
 		}
+
+		void ParamSet::PushNamePrefix( const String& prefix )
+		{
+			m_NamePrefixes.push_back( prefix );
+		}
+
+		void ParamSet::PopNamePrefix()
+		{
+			SCONE_ASSERT( m_NamePrefixes.size() > 0 );
+
+			m_NamePrefixes.pop_back();
+		}
+
+		String ParamSet::GetNamePrefix() const
+		{
+			String full_prefix;
+			BOOST_FOREACH( const String& s, m_NamePrefixes )
+				full_prefix += s;
+			return full_prefix;
+		}
+
 	}
 }

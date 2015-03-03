@@ -8,6 +8,11 @@ namespace scone
 
 	}
 
+	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, opt::ParamSet& par )
+	{
+
+	}
+
 	PieceWiseConstantFunction::~PieceWiseConstantFunction()
 	{
 
@@ -19,4 +24,20 @@ namespace scone
 		xval[ 0 ] = x;
 		return m_osFunc.calcValue( xval );
 	}
+
+	void PieceWiseConstantFunction::AddPoint( Real x, Real y )
+	{
+		m_osFunc.addPoint( x, y );
+	}
+
+	scone::Real PieceWiseConstantFunction::GetX( size_t index )
+	{
+		return m_osFunc.getX( index );
+	}
+
+	scone::Real PieceWiseConstantFunction::GetY( size_t index )
+	{
+		return m_osFunc.getY( index );
+	}
+
 }

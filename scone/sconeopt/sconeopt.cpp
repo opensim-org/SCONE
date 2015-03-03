@@ -9,18 +9,20 @@
 #include "../opt/Optimizer.h"
 #include "../cs/SimulationObjective.h"
 #include "../opt/Factories.h"
+#include "../cs/Polynomial.h"
 
 using namespace boost::filesystem;
 using namespace scone;
+using namespace std;
 
 PropNode LoadProperties( const path& config_file )
 {
 	SCONE_LOG( "Reading file " << config_file );
 
 	if ( config_file.extension() == ".xml" )
-		return ReadXmlFile( config_file.string() );
+		return CreatePropNodeFromXmlFile( config_file.string() );
 	if ( config_file.extension() == ".info" )
-		return ReadInfoFile( config_file.string() );
+		return CreatePropNodeFromInfoFile( config_file.string() );
 	else SCONE_THROW( "Unknown file type: " + config_file.string() );
 }
 

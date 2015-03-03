@@ -9,6 +9,11 @@ namespace scone
 
 	}
 
+	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, opt::ParamSet& par )
+	{
+
+	}
+
 	PieceWiseLinearFunction::~PieceWiseLinearFunction()
 	{
 
@@ -20,5 +25,20 @@ namespace scone
 		xval[ 0 ] = m_FlatExtrapolation ? std::min( x, m_osFunc.getX( m_osFunc.getNumberOfPoints() - 1) ) : x;
 
 		return m_osFunc.calcValue( xval );
+	}
+
+	void PieceWiseLinearFunction::AddPoint( Real x, Real y )
+	{
+		m_osFunc.addPoint( x, y );
+	}
+
+	scone::Real PieceWiseLinearFunction::GetX( size_t index )
+	{
+		return m_osFunc.getX( index );
+	}
+
+	scone::Real PieceWiseLinearFunction::GetY( size_t index )
+	{
+		return m_osFunc.getY( index );
 	}
 }

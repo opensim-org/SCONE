@@ -16,7 +16,7 @@ namespace scone
 		{
 			RegisterFactoryTypes();
 
-			PropNode p = ReadXmlFile( xml_file );
+			PropNode p = CreatePropNodeFromXmlFile( xml_file );
 			const PropNode& optprops = p.GetChild( "Optimizer" );
 			OptimizerUP o = CreateOptimizer( optprops );
 

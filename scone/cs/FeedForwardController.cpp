@@ -17,6 +17,7 @@
 #include <boost/foreach.hpp>
 #include <OpenSim/Common/PiecewiseLinearFunction.h>
 #include <OpenSim/Common/PiecewiseConstantFunction.h>
+#include "PieceWiseFunction.h"
 
 namespace scone
 {
@@ -92,7 +93,6 @@ namespace scone
 		{
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );
-			SimTK::Vector xval( 1 );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 				funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
@@ -114,8 +114,7 @@ namespace scone
 					else
 					{
 						// apply results directly to control value
-						for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
-							model.GetMuscle( idx ).AddControlValue( funcresults[ m_ActInfos[ idx ].function_idx ] );
+						model.GetMuscle( idx ).AddControlValue( funcresults[ m_ActInfos[ idx ].function_idx ] );
 					}
 				}
 			}
@@ -126,7 +125,7 @@ namespace scone
 			if ( function_type == "PieceWiseLinear" || function_type == "PieceWiseConstant" )
 			{
 				// TODO: fix this mess by creating a PieceWiseFunction parent class
-				Function* pFunc = nullptr;
+				PieceWiseFunction* pFunc = nullptr;
 				bool lin = function_type == "PieceWiseLinear";
 				if (lin) pFunc = new PieceWiseLinearFunction( flat_extrapolation );
 				else pFunc = new PieceWiseConstantFunction();
@@ -138,7 +137,7 @@ namespace scone
 					{
 						if ( cpidx > 0 )
 						{
-							double duration = par( prefix + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
+							double duration = par.GetMeanStd( prefix + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
 							xVal = lin ? dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration : dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration;
 						}
 					}
@@ -156,9 +155,7 @@ namespace scone
 				Polynomial* pFunc = new Polynomial( control_points );
 				for ( size_t i = 0; i < pFunc->GetCoefficientCount(); ++i )
 				{
-					if ( i == 0 )
-						pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "Coeff%d", i ), props.GetChild( "control_point_y" ) ) );
-					else pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "Coeff%d", i ), props.GetChild( "control_point_y" ) ) );
+					pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "C%d", i ), props.GetChild( GetStringF( "coefficient%d", i ) ) ) );
 				}
 				return pFunc;
 			}

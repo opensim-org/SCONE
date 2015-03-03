@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\EnergyMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\Factories.h" />
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
     <ClInclude Include="..\..\scone\cs\StateController.h" />
     <ClInclude Include="..\..\scone\cs\Function.h" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\cs.cpp" />
     <ClCompile Include="..\..\scone\cs\EnergyMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\Factories.cpp" />
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp" />
     <ClCompile Include="..\..\scone\cs\StateController.cpp" />
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
