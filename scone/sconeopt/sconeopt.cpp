@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 		cs::RegisterFactoryTypes();
 
 		// get config file
-		path config_file( argc > 1 ? String( argv[ 1 ] ) : "config/jump_test.xml" );
+		path config_file( argc > 1 ? String( argv[ 1 ] ) : "config/jump_test_pwf.xml" );
 
 		// load properties
 		PropNode p = LoadProperties( config_file );

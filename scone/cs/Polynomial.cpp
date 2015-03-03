@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include "Polynomial.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
 
 	Polynomial::Polynomial( size_t degree )
 	{
-		m_Coeffs.resize( degree );
+		m_Coeffs.resize( degree + 1 );
 	}
 
 	Polynomial::Polynomial( const PropNode& props, opt::ParamSet& par )
 	{
-		m_Coeffs.resize( props.Get( "degree", 0u ) );
+		size_t degree;
+		INIT_FROM_PROP( props, degree, 0u );
+		m_Coeffs.resize( degree + 1 );
 		for ( size_t i = 0; i < m_Coeffs.size(); ++i )
 			SetCoefficient( i, par.Get( GetStringF( "C%d", i ), props.GetChild( GetStringF( "coefficient%d", i ) ) ) );
 	}

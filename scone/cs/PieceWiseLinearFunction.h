@@ -9,7 +9,7 @@ namespace scone
 	class CS_API PieceWiseLinearFunction : public PieceWiseFunction
 	{
 	public:
-		PieceWiseLinearFunction( bool flat_extrapolation );
+		PieceWiseLinearFunction( bool flatExtrapolation );
 		PieceWiseLinearFunction( const PropNode& props, opt::ParamSet& par );
 		virtual ~PieceWiseLinearFunction();
 
@@ -23,6 +23,6 @@ namespace scone
 
 	private:
 		OpenSim::PiecewiseLinearFunction m_osFunc;
-		bool m_FlatExtrapolation;
+		bool flat_extrapolation;
 	};
 }

@@ -10,6 +10,8 @@ namespace scone
 	{
 		// TODO: rename to Param and store value as well. Why not?
 		// One possible reason: we only need these for optimization, but not for the end result
+		// But does that matter? we can throw the ParamSet away after a controller has been constructed
+		// Still, it may be better to keep only metadata in this class
 		struct OPT_API ParamInfo
 		{
 			ParamInfo( const String& i_name, double i_init_mean, double i_init_std, double i_init_min, double i_init_max, double i_min, double i_max );
@@ -20,7 +22,7 @@ namespace scone
 
 			/// current state
 			//double value; // TODO: use this
-			double mean;
+			double mean; // TODO: rename to init_mean?
 			double std;
 
 			/// initialization options

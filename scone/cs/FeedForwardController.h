@@ -22,22 +22,13 @@ namespace scone
 			FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 			virtual ~FeedForwardController() { };
 
-			Function* CreateFunction( opt::ParamSet &par, const String& prefix, const PropNode& props );
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			void UpdateControls( sim::Model& model, double timestamp, Side side );
-
 			bool UseModes() { return number_of_modes > 0; }
 
 		private:
-			// function parameters
-			String function_type;
-			bool flat_extrapolation;
+			// function settings
 			bool use_symmetric_actuators;
-
-			// control point settings
-			size_t control_points;
-			double control_point_time_delta;
-			bool optimize_control_point_time;
 
 			// mode settings
 			size_t number_of_modes;

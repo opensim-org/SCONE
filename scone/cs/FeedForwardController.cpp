@@ -1,23 +1,18 @@
 #include "stdafx.h"
 #include "FeedForwardController.h"
+
+#include <boost/foreach.hpp>
+
+#include "../core/InitFromPropNode.h"
+#include "../core/Log.h"
+
 #include "../sim/sim.h"
 #include "../sim/Controller.h"
 #include "../sim/Model.h"
 #include "../sim/Muscle.h"
-#include "../core/InitFromPropNode.h"
 
-#include "../core/Log.h"
-#include <conio.h>
-#include <xutility>
 #include "Tools.h"
-#include "PieceWiseLinearFunction.h"
-#include "Polynomial.h"
-#include "PieceWiseConstantFunction.h"
-
-#include <boost/foreach.hpp>
-#include <OpenSim/Common/PiecewiseLinearFunction.h>
-#include <OpenSim/Common/PiecewiseConstantFunction.h>
-#include "PieceWiseFunction.h"
+#include "Factories.h"
 
 namespace scone
 {
@@ -26,12 +21,7 @@ namespace scone
 		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
 		Controller( props, par, model )
 		{
-			INIT_FROM_PROP( props, function_type, String("") );
 			INIT_FROM_PROP( props, use_symmetric_actuators, true );
-			INIT_FROM_PROP( props, control_points, 3u );
-			INIT_FROM_PROP( props, control_point_time_delta, 0.3 );
-			INIT_FROM_PROP( props, optimize_control_point_time, true );
-			INIT_FROM_PROP( props, flat_extrapolation, false );
 			INIT_FROM_PROP( props, number_of_modes, 0u );
 
 			// setup actuator info
@@ -48,7 +38,11 @@ namespace scone
 			{
 				// create mode functions
 				for ( size_t idx = 0; idx < number_of_modes; ++idx )
-					m_Functions.push_back( FunctionUP( CreateFunction( par, GetStringF( "Mode%d.", idx ), props ) ) );
+				{
+					par.PushNamePrefix( GetStringF( "Mode%d.", idx ) );
+					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
+					par.PopNamePrefix();
+				}
 			}
 
 			BOOST_FOREACH( ActInfo& ai, m_ActInfos )
@@ -77,7 +71,9 @@ namespace scone
 				{
 					// create a new function
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
-					m_Functions.push_back( FunctionUP( CreateFunction( par, prefix + ".", props ) ) );
+					par.PushNamePrefix( prefix + "." );
+					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
+					par.PopNamePrefix();
 					ai.function_idx = m_Functions.size() - 1;
 				}
 			}
@@ -118,48 +114,6 @@ namespace scone
 					}
 				}
 			}
-		}
-
-		Function* FeedForwardController::CreateFunction( opt::ParamSet &par, const String& prefix, const PropNode& props )
-		{
-			if ( function_type == "PieceWiseLinear" || function_type == "PieceWiseConstant" )
-			{
-				// TODO: fix this mess by creating a PieceWiseFunction parent class
-				PieceWiseFunction* pFunc = nullptr;
-				bool lin = function_type == "PieceWiseLinear";
-				if (lin) pFunc = new PieceWiseLinearFunction( flat_extrapolation );
-				else pFunc = new PieceWiseConstantFunction();
-
-				for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
-				{
-					Real xVal = 0.0;
-					if ( optimize_control_point_time )
-					{
-						if ( cpidx > 0 )
-						{
-							double duration = par.GetMeanStd( prefix + GetStringF( "DT%d", cpidx - 1 ), control_point_time_delta, 0.1 * control_point_time_delta, 0.0, 60.0 );
-							xVal = lin ? dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration : dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().getX( cpidx - 1 ) + duration;
-						}
-					}
-					else xVal = cpidx * control_point_time_delta;
-
-					// Y value
-					Real yVal = par.Get( prefix + GetStringF( "Y%d", cpidx ), props.GetChild( "control_point_y" ) );
-					if ( lin ) dynamic_cast<PieceWiseLinearFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
-					else dynamic_cast<PieceWiseConstantFunction*>(pFunc)->GetOsFunc().addPoint( xVal, yVal );
-				}
-				return pFunc;
-			}
-			else if ( function_type == "Polynomial" )
-			{
-				Polynomial* pFunc = new Polynomial( control_points );
-				for ( size_t i = 0; i < pFunc->GetCoefficientCount(); ++i )
-				{
-					pFunc->SetCoefficient( i, par.Get( prefix + GetStringF( "C%d", i ), props.GetChild( GetStringF( "coefficient%d", i ) ) ) );
-				}
-				return pFunc;
-			}
-			else SCONE_THROW( "Unknown function type: " + function_type );
 		}
 	}
 }

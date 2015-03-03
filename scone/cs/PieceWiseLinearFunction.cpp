@@ -1,17 +1,32 @@
 #include "stdafx.h"
 #include "PieceWiseLinearFunction.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
-	PieceWiseLinearFunction::PieceWiseLinearFunction( bool flat_extrapolation ) :
-	m_FlatExtrapolation( flat_extrapolation )
+	PieceWiseLinearFunction::PieceWiseLinearFunction( bool flatExtrapolation ) :
+	flat_extrapolation( flatExtrapolation )
 	{
 
 	}
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, opt::ParamSet& par )
 	{
+		size_t control_points;
+		INIT_FROM_PROP( props, control_points, 0u );
+		INIT_FROM_PROP( props, flat_extrapolation, false );
 
+		for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
+		{
+			Real xVal = 0.0;
+			if ( cpidx > 0 )
+			{
+				double dt = par.Get( GetStringF( "DT%d", cpidx - 1 ), props.GetChild( "control_point_delta_time" ) );
+				xVal = GetX( cpidx - 1 ) + dt;
+			}
+			Real yVal = par.Get( GetStringF( "Y%d", cpidx ), props.GetChild( "control_point_y" ) );
+			AddPoint( xVal, yVal );
+		}
 	}
 
 	PieceWiseLinearFunction::~PieceWiseLinearFunction()
@@ -22,7 +37,7 @@ namespace scone
 	scone::Real PieceWiseLinearFunction::GetValue( Real x )
 	{
 		SimTK::Vector xval( 1 );
-		xval[ 0 ] = m_FlatExtrapolation ? std::min( x, m_osFunc.getX( m_osFunc.getNumberOfPoints() - 1) ) : x;
+		xval[ 0 ] = flat_extrapolation ? std::min( x, m_osFunc.getX( m_osFunc.getNumberOfPoints() - 1) ) : x;
 
 		return m_osFunc.calcValue( xval );
 	}

@@ -38,17 +38,17 @@ namespace scone
 
 		double ParamSet::Get( const String& name, const PropNode& props )
 		{
-			return Get( ParamInfo( name, props ) );
+			return Get( ParamInfo( GetNamePrefix() + name, props ) );
 		}
 
 		double ParamSet::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )
 		{
-			return Get( ParamInfo( name, init_mean, init_std, 0.0, 0.0, min, max ) );
+			return Get( ParamInfo( GetNamePrefix() + name, init_mean, init_std, 0.0, 0.0, min, max ) );
 		}
 
 		double ParamSet::GetMinMax( const String& name, double init_min, double init_max, double min, double max )
 		{
-			return Get( ParamInfo( name, 0.0, 0.0, init_min, init_max, min, max ) );
+			return Get( ParamInfo( GetNamePrefix() + name, 0.0, 0.0, init_min, init_max, min, max ) );
 		}
 
 		std::vector< std::pair< ParamInfo, double > >::iterator ParamSet::FindParamByName( const String& name )
@@ -188,6 +188,5 @@ namespace scone
 				full_prefix += s;
 			return full_prefix;
 		}
-
 	}
 }

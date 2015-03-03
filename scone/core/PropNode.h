@@ -56,17 +56,17 @@ namespace scone
 
 		// get and cast value of fundamental or Vec3 types
 		template< typename T >
-		T Get( typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, Vec3 >::value >::type* = 0 ) const
+		T GetValue( typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, Vec3 >::value >::type* = 0 ) const
 		{
-			T value;
-			std::istringstream str( m_Value );
+			T value = T();
+			std::stringstream str( m_Value );
 			str >> value;
 			return value;
 		}
 
 		// get string value
 		template< typename T >
-		T Get( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
+		T GetValue( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
 		{
 			return m_Value;
 		}
@@ -75,7 +75,7 @@ namespace scone
 		template< typename T >
 		T Get( const String& key ) const
 		{
-			return GetChild( key ).Get< T >();
+			return GetChild( key ).GetValue< T >();
 		}
 
 		/// Get value, returns default if key doesn't exist
@@ -83,7 +83,7 @@ namespace scone
 		T Get( const String& key, const T& default_value ) const
 		{
 			const PropNode* p = GetChildPtr( key );
-			return p ? p->Get< T >() : default_value;
+			return p ? p->GetValue< T >() : default_value;
 		}
 
 		// set value

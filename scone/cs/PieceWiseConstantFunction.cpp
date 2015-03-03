@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PieceWiseConstantFunction.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
@@ -10,7 +11,20 @@ namespace scone
 
 	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, opt::ParamSet& par )
 	{
+		size_t control_points;
+		INIT_FROM_PROP( props, control_points, 0u );
 
+		for ( size_t cpidx = 0; cpidx < control_points; ++cpidx )
+		{
+			Real xVal = 0.0;
+			if ( cpidx > 0 )
+			{
+				double dt = par.Get( GetStringF( "DT%d", cpidx - 1 ), props.GetChild( "control_point_delta_time" ) );
+				xVal = GetX( cpidx - 1 ) + dt;
+			}
+			Real yVal = par.Get( GetStringF( "Y%d", cpidx ), props.GetChild( "control_point_y" ) );
+			AddPoint( xVal, yVal );
+		}
 	}
 
 	PieceWiseConstantFunction::~PieceWiseConstantFunction()

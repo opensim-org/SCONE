@@ -27,7 +27,7 @@ namespace scone
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
 	{
-		var = prop.Get< T >();
+		var = prop.GetValue< T >();
 		prop.SetFlag();
 	}
 

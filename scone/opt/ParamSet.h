@@ -44,9 +44,11 @@ namespace scone
 
 		private:
 			Mode m_Mode;
-			std::vector< String > m_NamePrefixes;
 			std::vector< std::pair< ParamInfo, double > > m_Params;
 			std::vector< std::pair< ParamInfo, double > >::iterator FindParamByName( const String& name );
+
+			// current name prefixes
+			std::vector< String > m_NamePrefixes;
 		};
 
 		class OPT_API Parameterizable
