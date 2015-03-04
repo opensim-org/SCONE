@@ -51,6 +51,9 @@ namespace scone
 
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
+			// a signature describing the model
+			virtual String GetSignature();
+
 		private:
 			void CreateModel();
 			void PrepareSimulation();

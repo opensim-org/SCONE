@@ -28,18 +28,19 @@ namespace scone
 			const PropNode& m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
 
+			size_t max_threads;
+			int thread_priority;
+			bool maximize_objective;
+			bool show_optimization_time;
+
 		private:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );
 			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets );
 			static void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
 			void InitOutputFolder();
 
-			size_t max_threads;
-			int thread_priority;
-			bool maximize_objective;
 			String output_folder_base;
 			String m_Name;
-
 			String m_OutputFolder;
 
 		private: // non-copyable and non-assignable

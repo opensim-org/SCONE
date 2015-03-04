@@ -115,5 +115,14 @@ namespace scone
 				}
 			}
 		}
+
+		scone::String FeedForwardController::GetSignature()
+		{
+			String s = "FF." + m_Functions.front()->GetSignature();
+			if ( number_of_modes > 0 )
+				s += GetStringF( ".M%d", number_of_modes );
+
+			return s;
+		}
 	}
 }

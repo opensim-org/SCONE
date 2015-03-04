@@ -143,6 +143,13 @@ namespace scone
 					m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
 				}
 
+				// show time if needed
+				if ( show_optimization_time )
+					printf( " T=%.1f", timer.GetTime() );
+
+				// done reporting
+				printf( "\n" );
+
 				// update next generation
 				m_pImpl->m_pParents->selectMuLambda( m_pImpl->Offspring(), num_elitists );
 				m_pImpl->m_CMA.updateStrategyParameters( m_pImpl->Parents() );
@@ -165,7 +172,6 @@ namespace scone
 						m_pImpl->Offspring()[i][0] = par.GetFreeParamValues();
 					}
 				}
-				printf( "\n" );
 			}
 		}
 	}

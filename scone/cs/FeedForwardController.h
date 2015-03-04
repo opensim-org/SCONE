@@ -26,6 +26,9 @@ namespace scone
 			void UpdateControls( sim::Model& model, double timestamp, Side side );
 			bool UseModes() { return number_of_modes > 0; }
 
+			// a signature describing the controller
+			virtual String GetSignature() override;
+
 		private:
 			// function settings
 			bool use_symmetric_actuators;

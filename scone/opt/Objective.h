@@ -21,9 +21,11 @@ namespace scone
 			double Evaluate( ParamSet& par );
 			virtual void WriteResults( const String& file ) { };
 
-		protected:
 			// virtual evaluation function
 			virtual double Evaluate() = 0;
+
+			// a signature describing the objective
+			virtual String GetSignature() { return ""; }
 		};
 	}
 }

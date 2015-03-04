@@ -60,6 +60,9 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
+			// a signature describing the model
+			virtual String GetSignature() { return ""; }
+
 		protected:
 			LinkUP m_RootLink;
 			std::vector< MuscleUP > m_Muscles;

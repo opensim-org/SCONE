@@ -13,7 +13,10 @@ namespace scone
 
 		virtual Real GetValue( Real x ) override;
 		virtual void SetCoefficient( size_t idx, Real value );
-		virtual size_t GetCoefficientCount();
+		size_t GetCoefficientCount();
+
+		// a signature describing the function
+		virtual String GetSignature() override { return GetStringF( "P%d", m_Coeffs.size() - 1 ); }
 
 	protected:
 		std::vector< Real > m_Coeffs;

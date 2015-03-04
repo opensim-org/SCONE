@@ -16,12 +16,16 @@
 #include "Leg_Simbody.h"
 #include "../Factories.h"
 
+#include <boost/thread.hpp>
+
 using std::endl;
 
 namespace scone
 {
 	namespace sim
 	{
+		boost::mutex g_SimBodyMutex;
+
 		/// Simbody controller that calls scone controllers
 		class Model_Simbody::ControllerDispatcher : public OpenSim::Controller
 		{
@@ -118,7 +122,10 @@ namespace scone
 			m_pOsimModel->addController( m_pControllerDispatcher );
 
 			// Initialize the system
+			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
+			g_SimBodyMutex.lock();
 			m_pTkState = &m_pOsimModel->initSystem();
+			g_SimBodyMutex.unlock();
 		}
 
 		void Model_Simbody::PrepareSimulation()
@@ -288,6 +295,12 @@ namespace scone
 			}
 
 			return str;
+		}
+
+		scone::String Model_Simbody::GetSignature()
+		{
+			SCONE_ASSERT( GetControllers().size() > 0 );
+			return GetOsimModel().getName() + "." + GetControllers().front()->GetSignature();
 		}
 	}
 }

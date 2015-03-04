@@ -15,5 +15,8 @@ namespace scone
 		virtual ~Function() { };
 
 		virtual Real GetValue( Real x ) = 0;
+
+		// a signature describing the function
+		virtual String GetSignature() { return "UnknownFunction"; }
 	};
 }

@@ -5,6 +5,7 @@
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 #include "Factories.h"
+#include "../core/Log.h"
 
 using namespace boost::filesystem;
 
@@ -22,6 +23,7 @@ namespace scone
 			INIT_FROM_PROP( props, output_folder_base, String() );
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 			INIT_FROM_PROP( props, maximize_objective, true );
+			INIT_FROM_PROP( props, show_optimization_time, false );
 
 			// create at least one objective from props, so that all nodes are properly flagged
 			CreateObjectives( 1 );
@@ -102,9 +104,9 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			// setup output folder
-			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + m_Name + "/";
+			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
 			create_directories( path( m_OutputFolder ) );
+			SCONE_LOG( "Writing output to folder " << m_OutputFolder );
 		}
 
 		const String& Optimizer::GetOutputFolder()

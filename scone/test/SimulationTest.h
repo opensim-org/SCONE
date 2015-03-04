@@ -19,7 +19,7 @@ void SimulationTest()
 
 	std::vector< String > models;
 	//models.push_back( "models/jump1024.osim" );
-	//models.push_back( "models/gait2354.osim" );
+	//models.push_back( "models/test/gait2354.osim" );
 	models.push_back( "models/jump2354.osim" );
 	//models.push_back( "models/gait1018.osim" );
 	//models.push_back( "models/gait1024.osim" );

@@ -26,6 +26,8 @@ namespace scone
 
 			virtual void WriteResults( const String& file ) override;
 
+			virtual String GetSignature();
+
 		private:
 			double max_duration;
 			sim::ModelUP m_Model;

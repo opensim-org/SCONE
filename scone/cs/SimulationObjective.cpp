@@ -54,5 +54,10 @@ namespace scone
 		{
 			m_Model->WriteStateHistory( file );
 		}
+
+		String SimulationObjective::GetSignature()
+		{
+			return m_Model->GetSignature();
+		}
 	}
 }

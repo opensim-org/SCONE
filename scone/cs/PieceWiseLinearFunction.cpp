@@ -31,7 +31,6 @@ namespace scone
 
 	PieceWiseLinearFunction::~PieceWiseLinearFunction()
 	{
-
 	}
 
 	scone::Real PieceWiseLinearFunction::GetValue( Real x )

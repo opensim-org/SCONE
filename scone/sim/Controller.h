@@ -19,6 +19,9 @@ namespace scone
 			void SetTerminationRequest( bool value = true ) { m_TerminationRequest = value; }
 			bool GetTerminationRequest() { return m_TerminationRequest; }
 
+			// a signature describing the controller
+			virtual String GetSignature() { return ""; }
+
 		private:
 			bool m_TerminationRequest;
 		};
