@@ -23,18 +23,18 @@ namespace scone
 		else var = T( default_value );
 	}
 
+	// process String type
+	//inline void InitFromPropNode( const PropNode& prop, String& var )
+	//{
+	//	var = prop.GetValue();
+	//	prop.SetFlag();
+	//}
+
 	// process fundamental types and String
 	template< typename T >
-	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, String >::value >::type* = 0  )
+	void InitFromPropNode( const PropNode& prop, T& var )
 	{
 		var = prop.GetValue< T >();
-		prop.SetFlag();
-	}
-
-	// process Propertyable type
-	inline void InitFromPropNode( const PropNode& prop, String& var )
-	{
-		var = prop.GetValue();
 		prop.SetFlag();
 	}
 
@@ -70,5 +70,6 @@ namespace scone
 
 	// convenience macro that automatically derives name from variable name
 	#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+	#define INIT_FROM_PROP_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
 	#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
 }

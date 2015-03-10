@@ -22,7 +22,6 @@
 
 namespace scone
 {
-
 	template< typename F >
 	class Factory
 	{

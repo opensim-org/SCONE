@@ -52,7 +52,6 @@ namespace scone
 			virtual size_t GetStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
 			virtual void WriteStateHistory( const String& file ) = 0;
-			virtual void ReadState( const String& file ) = 0;
 
 			// TODO: perhaps remove termination request here
 			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }

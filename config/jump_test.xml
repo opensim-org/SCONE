@@ -12,9 +12,10 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<max_duration>3.0</max_duration>
+		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/jump2354v2.osim</model_file>
+			<model_file>models/f2354.osim</model_file>
+			<state_init_file>models/f2354_init_walk.sto</state_init_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="FeedForwardController">

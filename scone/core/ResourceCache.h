@@ -1,5 +1,9 @@
 #pragma once
 
+#include <map>
+#include <string>
+#include <boost/thread/mutex.hpp>
+
 namespace scone
 {
 	template< typename T >
@@ -10,6 +14,8 @@ namespace scone
 		~ResourceCache() { };
 		std::unique_ptr< T > CreateCopy( const String& name )
 		{
+			boost::lock_guard< boost::mutex > lock( m_Mutex );
+
 			auto it = m_Resources.find( name );
 			if ( it == m_Resources.end() )
 			{
@@ -22,6 +28,7 @@ namespace scone
 			
 	private:
 		T* CreateFirst( const String& name ) { SCONE_THROW_NOT_IMPLEMENTED; }
+		boost::mutex m_Mutex;
 		std::map< std::string, std::unique_ptr< T > > m_Resources;
 	};
 }

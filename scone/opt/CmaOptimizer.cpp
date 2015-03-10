@@ -113,7 +113,7 @@ namespace scone
 
 			// optimization loop
 			Timer timer;
-			double best = IsMinimizing() ? REAL_MAX : REAL_MIN;
+			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
 				printf("%04d:", gen );

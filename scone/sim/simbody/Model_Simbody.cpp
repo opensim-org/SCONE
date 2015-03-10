@@ -18,6 +18,7 @@
 
 #include <boost/thread.hpp>
 
+using std::cout;
 using std::endl;
 
 namespace scone
@@ -26,6 +27,7 @@ namespace scone
 	{
 		boost::mutex g_SimBodyMutex;
 		ResourceCache< OpenSim::Model > g_ModelCache;
+		ResourceCache< OpenSim::Storage > g_StorageCache;
 
 		/// Simbody controller that calls scone controllers
 		class Model_Simbody::ControllerDispatcher : public OpenSim::Controller
@@ -47,38 +49,61 @@ namespace scone
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr )
 		{
+			String model_file;
+			String state_init_file;
+
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
-			INIT_FROM_PROP( props, model_file, String("") );
+			INIT_FROM_PROP_REQUIRED( props, model_file );
+			INIT_FROM_PROP( props, state_init_file, String() );
+
+			// create new OpenSim Model using resource cache
+			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
 
 			// create the model
-			CreateModel();
+			CreateModelWrappers();
 
-			SCONE_ASSERT( m_pOsimModel );
+			// Initialize the system
+			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
+			g_SimBodyMutex.lock();
+			m_pTkState = &m_pOsimModel->initSystem();
+			g_SimBodyMutex.unlock();
 
 			// create and initialize controllers
-			const PropNode& cprops = props.GetChild( "Controllers" );
+			const PropNode& cprops = props.GetChild( "Controllers" ).SetFlag();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
 					m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
-			cprops.SetFlag();
 
-			PrepareSimulation();
+			// Create the integrator for the simulation.
+			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			m_pTkIntegrator->setAccuracy( integration_accuracy );
+			m_pTkIntegrator->setMaximumStepSize( max_step_size );
+			m_pTkIntegrator->resetAllStatistics();
+
+			// read initial state
+			if ( !state_init_file.empty() )
+				ReadState( state_init_file );
+
+			// get initial controller values and equilibrate muscles
+			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
+				(*iter)->UpdateControls( *this, 0.0 );
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), (*iter)->GetControlValue() );
+			m_pOsimModel->equilibrateMuscles( GetOsimModel().updWorkingState() );
+
+			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
+			m_pOsimManager->setWriteToStorage( true );
+			m_pOsimManager->setPerformAnalyses( false );
 		}
 
 		Model_Simbody::~Model_Simbody()
 		{
 		}
 
-		void Model_Simbody::CreateModel()
+		void Model_Simbody::CreateModelWrappers()
 		{
-			// reset existing objects and flags
-			m_pOsimModel.reset(); 
-			m_pTkIntegrator.reset();
-			m_pOsimManager.reset();
-			m_ShouldTerminate = false;
-
-			// create new osModel using resource cache
-			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
+			SCONE_ASSERT( m_pOsimModel );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
@@ -121,35 +146,44 @@ namespace scone
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_pOsimModel->addController( m_pControllerDispatcher );
-
-			// Initialize the system
-			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
-			g_SimBodyMutex.lock();
-			m_pTkState = &m_pOsimModel->initSystem();
-			g_SimBodyMutex.unlock();
 		}
 
-		void Model_Simbody::PrepareSimulation()
+		void Model_Simbody::ReadState( const String& file )
 		{
-			SCONE_ASSERT( m_pOsimModel && m_pTkState );
+			// OpenSim: why is there no normal way to get a value using a label???
 
-			// Create the integrator for the simulation.
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
-			m_pTkIntegrator->setAccuracy( integration_accuracy );
-			m_pTkIntegrator->setMaximumStepSize( max_step_size );
-			m_pTkIntegrator->resetAllStatistics();
+			// create a copy of the storage
+			auto store = g_StorageCache.CreateCopy( file );
+			OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
+			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
+			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
 
-			// get initial controller values and equilibrate muscles
-			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
-				(*iter)->UpdateControls( *this, 0.0 );
-			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), (*iter)->GetControlValue() );
-			m_pOsimModel->equilibrateMuscles( GetOsimModel().updWorkingState() );
+			for ( int i = 1; i < storeLabels.getSize(); i++ )
+			{
+				int dataIdx = store->getStateIndex( storeLabels[i] );
+				try
+				{
+					GetOsimModel().setStateVariable( GetTkState(), storeLabels[i], data[dataIdx] );
+				}
+				catch (...)
+				{
+				}
+			}
+		}
 
-			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
-			m_pOsimManager->setWriteToStorage( true );
-			m_pOsimManager->setPerformAnalyses( false );
+		void Model_Simbody::AdvanceSimulationTo( double time )
+		{
+			SCONE_ASSERT( m_pOsimManager );
+
+			// Integrate from initial time to final time and integrate
+			m_pOsimManager->setInitialTime( 0.0 );
+			m_pOsimManager->setFinalTime( time );
+			m_pOsimManager->integrate( GetTkState() );
+		}
+
+		void Model_Simbody::WriteStateHistory( const String& file )
+		{
+			m_pOsimManager->getStateStorage().print( file + ".sto" );
 		}
 
 		Vec3 Model_Simbody::GetComPos()
@@ -237,21 +271,6 @@ namespace scone
 			}
 		}
 
-		void Model_Simbody::AdvanceSimulationTo( double time )
-		{
-			SCONE_ASSERT( m_pOsimManager );
-
-			// Integrate from initial time to final time and integrate
-			m_pOsimManager->setInitialTime( 0.0 );
-			m_pOsimManager->setFinalTime( time );
-			m_pOsimManager->integrate( GetTkState() );
-		}
-
-		void Model_Simbody::WriteStateHistory( const String& file )
-		{
-			m_pOsimManager->getStateStorage().print( file + ".sto" );
-		}
-
 		bool Model_Simbody::HasGroundContact()
 		{
 			// total vertical force applied to both feet
@@ -303,27 +322,5 @@ namespace scone
 			SCONE_ASSERT( GetControllers().size() > 0 );
 			return GetOsimModel().getName() + "." + GetControllers().front()->GetSignature();
 		}
-
-		void Model_Simbody::ReadState( const String& file )
-		{
-			// open the sto file
-			OpenSim::Storage tempStore( file );
-			OpenSim::Storage store;
-			GetOsimModel().formStateStorage( tempStore, store );
-
-			// get values for state variables in rawData then assign by name to model
-			int numStateValriables = GetOsimModel().getNumStateVariables();
-			OpenSim::Array<double> rawData = OpenSim::Array<double>(0.0, numStateValriables);
-
-			// set the initial states
-			int startIndexForYStore = 0;
-			store.getData( startIndexForYStore, numStateValriables, &rawData[0] );
-
-			// TODO: see if we can just set the states that are in the sto file
-			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
-			for ( int i = 0; i < numStateValriables; i++ )
-				GetOsimModel().setStateVariable( GetTkState(), stateNames[i], rawData[i] );
-		}
-
 	}
 }

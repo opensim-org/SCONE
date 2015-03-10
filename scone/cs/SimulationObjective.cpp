@@ -9,10 +9,14 @@
 #include "../sim/Model.h"
 #include "../sim/Factories.h"
 
+#include <boost/thread.hpp>
+
 namespace scone
 {
 	namespace cs
 	{
+		boost::mutex g_ModelMutex;
+
 		SimulationObjective::SimulationObjective( const PropNode& props ) :
 		Objective( props ),
 		m_ModelProps( props.GetChild( "Model" ) )
@@ -47,6 +51,8 @@ namespace scone
 		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 		{
 			// create new model using stored model props
+			// TODO: make locking optional
+			//boost::lock_guard< boost::mutex > lock( g_ModelMutex );
 			m_Model = sim::CreateModel( m_ModelProps, par );
 		}
 

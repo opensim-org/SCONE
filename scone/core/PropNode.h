@@ -160,8 +160,8 @@ namespace scone
 		void ToStream( std::ostream& str, const std::string& prefix = "", bool unflaggedOnly = false ) const;
 
 		// flagging (can be used to detect unused properties)
-		void SetFlag() const { m_Flag = true; }
-		void ClearFlag() const { m_Flag = false; }
+		const PropNode& SetFlag() const { m_Flag = true; return *this; }
+		const PropNode& ClearFlag() const { m_Flag = false; return *this; }
 		bool GetFlag() const { return m_Flag; }
 
 	private:

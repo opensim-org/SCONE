@@ -38,6 +38,7 @@ namespace scone
 	const Real REAL_NAN = std::numeric_limits< Real >::quiet_NaN();
 	const Real REAL_MIN = std::numeric_limits< Real >::min();
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
+	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
 	const Index NO_INDEX = std::numeric_limits< Index >::max();
 
 	// forward declarations

@@ -37,7 +37,6 @@ namespace scone
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
-			virtual void ReadState( const String& file ) override;
 
 			virtual void SetTerminationRequest() override;
 
@@ -57,8 +56,8 @@ namespace scone
 			virtual String GetSignature();
 
 		private:
-			void CreateModel();
-			void PrepareSimulation();
+			void ReadState( const String& file );
+			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
 
 			double integration_accuracy;

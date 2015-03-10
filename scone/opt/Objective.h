@@ -26,6 +26,8 @@ namespace scone
 
 			// a signature describing the objective
 			virtual String GetSignature() { return ""; }
+
+			int debug_idx;
 		};
 	}
 }
