@@ -37,6 +37,8 @@ namespace scone
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
+			virtual void ReadState( const String& file ) override;
+
 			virtual void SetTerminationRequest() override;
 
 			virtual double GetTime() override;

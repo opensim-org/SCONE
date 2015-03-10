@@ -10,7 +10,7 @@ namespace scone
 {
 	// opensim model resource cache
 	template <>
-	OpenSim::Model* ResourceCache< OpenSim::Model >::Load( const String& name )
+	OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
 	{
 		return new OpenSim::Model( name );
 	}
@@ -18,7 +18,5 @@ namespace scone
 	namespace sim
 	{
 		inline Vec3 ToVec3( const SimTK::Vec3& vec ) { return Vec3( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
-
-		static ResourceCache< OpenSim::Model > g_ModelCache;
 	}
 }

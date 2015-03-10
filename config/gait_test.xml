@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>Walk1024.FF.10F025.M2</name>
+	<name></name>
 	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
@@ -13,7 +13,8 @@
 	<Objective type="SimulationObjective">
 		<max_duration>3.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/gait1024.osim</model_file>
+			<model_file>models/f2354.osim</model_file>
+			<init_state>models/f2354_init_walk.sto</init_state>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="StateController">
@@ -22,34 +23,22 @@
 							<condition_leg>Both</condition_leg>
 							<condition_states>Stance</condition_states>
 							<Controller type="FeedForwardController">
-								<function_type>PieceWiseLinear</function_type>
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<flat_extrapolation>0</flat_extrapolation>
-								<control_points>1</control_points>
-								<init_min>0.25</init_min>
-								<init_max>0.75</init_max>
-								<control_point_time_delta>0.25</control_point_time_delta>
-								<optimize_control_point_time>0</optimize_control_point_time>
-								<number_of_modes>2</number_of_modes>
-								<init_mode_weight_min>-0.5</init_mode_weight_min>
-								<init_mode_weight_max>0.5</init_mode_weight_max>
+								<Function type="PieceWiseConstantFunction">
+									<control_points>2</control_points>
+									<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
+									<control_point_delta_time mean="0.2" std="0.02" is_free="1"/>
+								</Function>
 							</Controller>
 						</ConditionalController>
 						<ConditionalController>
 							<condition_leg>Both</condition_leg>
 							<condition_states>Swing</condition_states>
 							<Controller type="FeedForwardController">
-								<function_type>PieceWiseLinear</function_type>
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<flat_extrapolation>0</flat_extrapolation>
-								<control_points>1</control_points>
-								<init_min>0.25</init_min>
-								<init_max>0.75</init_max>
-								<control_point_time_delta>0.25</control_point_time_delta>
-								<optimize_control_point_time>0</optimize_control_point_time>
-								<number_of_modes>2</number_of_modes>
-								<init_mode_weight_min>-0.5</init_mode_weight_min>
-								<init_mode_weight_max>0.5</init_mode_weight_max>
+								<Function type="PieceWiseConstantFunction">
+									<control_points>2</control_points>
+									<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
+									<control_point_delta_time mean="0.2" std="0.02" is_free="1"/>
+								</Function>
 							</Controller>
 						</ConditionalController>
 					</ConditionalControllers>

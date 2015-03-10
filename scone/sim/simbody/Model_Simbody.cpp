@@ -25,6 +25,7 @@ namespace scone
 	namespace sim
 	{
 		boost::mutex g_SimBodyMutex;
+		ResourceCache< OpenSim::Model > g_ModelCache;
 
 		/// Simbody controller that calls scone controllers
 		class Model_Simbody::ControllerDispatcher : public OpenSim::Controller
@@ -77,7 +78,7 @@ namespace scone
 			m_ShouldTerminate = false;
 
 			// create new osModel using resource cache
-			m_pOsimModel = g_ModelCache.CreateInstance( model_file );
+			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
@@ -302,5 +303,27 @@ namespace scone
 			SCONE_ASSERT( GetControllers().size() > 0 );
 			return GetOsimModel().getName() + "." + GetControllers().front()->GetSignature();
 		}
+
+		void Model_Simbody::ReadState( const String& file )
+		{
+			// open the sto file
+			OpenSim::Storage tempStore( file );
+			OpenSim::Storage store;
+			GetOsimModel().formStateStorage( tempStore, store );
+
+			// get values for state variables in rawData then assign by name to model
+			int numStateValriables = GetOsimModel().getNumStateVariables();
+			OpenSim::Array<double> rawData = OpenSim::Array<double>(0.0, numStateValriables);
+
+			// set the initial states
+			int startIndexForYStore = 0;
+			store.getData( startIndexForYStore, numStateValriables, &rawData[0] );
+
+			// TODO: see if we can just set the states that are in the sto file
+			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
+			for ( int i = 0; i < numStateValriables; i++ )
+				GetOsimModel().setStateVariable( GetTkState(), stateNames[i], rawData[i] );
+		}
+
 	}
 }
