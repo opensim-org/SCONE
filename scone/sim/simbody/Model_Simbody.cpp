@@ -47,7 +47,8 @@ namespace scone
 		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
-		m_pControllerDispatcher( nullptr )
+		m_pControllerDispatcher( nullptr ),
+		m_PrevIntStep( -1 )
 		{
 			String model_file;
 			String state_init_file;
@@ -63,16 +64,15 @@ namespace scone
 			// create the model
 			CreateModelWrappers();
 
+			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
+			m_pControllerDispatcher = new ControllerDispatcher( *this );
+			m_pOsimModel->addController( m_pControllerDispatcher );
+
 			// Initialize the system
 			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
 			g_SimBodyMutex.lock();
 			m_pTkState = &m_pOsimModel->initSystem();
 			g_SimBodyMutex.unlock();
-
-			// create and initialize controllers
-			const PropNode& cprops = props.GetChild( "Controllers" ).SetFlag();
-			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
-					m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
 
 			// Create the integrator for the simulation.
 			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
@@ -83,6 +83,11 @@ namespace scone
 			// read initial state
 			if ( !state_init_file.empty() )
 				ReadState( state_init_file );
+
+			// create and initialize controllers
+			const PropNode& cprops = props.GetChild( "Controllers" ).SetFlag();
+			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
+				m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
 
 			// get initial controller values and equilibrate muscles
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
@@ -142,10 +147,6 @@ namespace scone
 			const Link* right_femur = GetRootLink().FindLink( "femur_r" );
 			if ( right_femur )
 				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
-
-			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
-			m_pControllerDispatcher = new ControllerDispatcher( *this );
-			m_pOsimModel->addController( m_pControllerDispatcher );
 		}
 
 		void Model_Simbody::ReadState( const String& file )
@@ -269,6 +270,9 @@ namespace scone
 				controlValue[ 0 ] = mus->GetControlValue();
 				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 			}
+
+			// update previous control step
+			m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
 		}
 
 		bool Model_Simbody::HasGroundContact()
@@ -293,9 +297,14 @@ namespace scone
 			return GetTkState().getTime();
 		}
 
-		size_t Model_Simbody::GetStep()
+		int Model_Simbody::GetIntegrationStep()
 		{
 			return GetTkIntegrator().getNumStepsTaken();
+		}
+
+		int Model_Simbody::GetPreviousIntegrationStep()
+		{
+			return m_PrevIntStep;
 		}
 
 		std::ostream& Model_Simbody::ToStream( std::ostream& str ) const 

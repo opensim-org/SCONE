@@ -9,7 +9,7 @@ namespace scone
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
 		Measure( props, par, model )
 		{
-			INIT_FROM_PROP( props, termination_height, 0.8 );
+			INIT_FROM_PROP( props, termination_height, 0.5 );
 
 			m_InitialComPos = model.GetComPos();
 		}
@@ -20,6 +20,10 @@ namespace scone
 
 		void GaitMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
+			// check if this is a new step
+			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
+				return;
+
 			// check if com is too low
 			Vec3 com = model.GetComPos();
 

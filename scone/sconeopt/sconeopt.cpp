@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 		cs::RegisterFactoryTypes();
 
 		// get config file
-		String config_file( argc > 1 ? String( argv[ 1 ] ) : "config/gait_test.xml" );
+		String config_file( argc > 1 ? String( argv[ 1 ] ) : "gait_test.xml" );
 
 		// perform the optimization
 		opt::PerformOptimization( config_file );

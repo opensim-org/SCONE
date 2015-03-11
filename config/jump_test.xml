@@ -8,14 +8,14 @@
 	<sigma>1</sigma>
 	<random_seed>123</random_seed>
 	<max_generations>5000</max_generations>
-	<output_folder_base>../_SconeOutput/</output_folder_base>
+	<output_folder_base>../../_SconeOutput/</output_folder_base>
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
 		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/f2354.osim</model_file>
-			<state_init_file>models/f2354_init_walk.sto</state_init_file>
+			<model_file>../models/f2354.osim</model_file>
+			<!--state_init_file>../models/f2354_init_walk.sto</state_init_file-->
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="FeedForwardController">

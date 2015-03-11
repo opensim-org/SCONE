@@ -41,7 +41,8 @@ namespace scone
 			virtual void SetTerminationRequest() override;
 
 			virtual double GetTime() override;
-			virtual size_t GetStep() override;
+			virtual int GetIntegrationStep() override;
+			virtual int GetPreviousIntegrationStep() override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
@@ -64,12 +65,15 @@ namespace scone
 			double max_step_size;
 			String model_file;
 
+			int m_PrevIntStep;
+
 			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 			SimTK::State* m_pTkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
 
 			class ControllerDispatcher;
+			friend ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel
 		};
 	}

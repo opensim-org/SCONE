@@ -28,7 +28,6 @@ namespace scone
 			sim::Body* m_pTargetBody; // non-owning pointer
 			MeasuredValue< double > m_Height;
 			bool m_Upward;
-			size_t m_LastStep;
 		};
 	}
 }

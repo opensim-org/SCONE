@@ -10,8 +10,7 @@ namespace scone
 	{
 		HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
 		Measure( props, par, model ),
-		m_pTargetBody( nullptr ),
-		m_LastStep( size_t( -1 ) )
+		m_pTargetBody( nullptr )
 		{
 			INIT_FROM_PROP( props, target_body, String("") );
 			INIT_FROM_PROP( props, use_average_height, false );
@@ -20,7 +19,6 @@ namespace scone
 
 			m_Upward = false;
 			m_Height.Reset();
-			m_LastStep = size_t( -1 );
 
 			// find target body
 			if ( !target_body.empty() )
@@ -31,9 +29,8 @@ namespace scone
 		void HeightMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			// check if this is a new step
-			if ( model.GetStep() != m_LastStep )
-				m_LastStep = model.GetStep();
-			else return;
+			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
+				return;
 
 			double g = -model.GetGravity()[1];
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];

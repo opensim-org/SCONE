@@ -92,6 +92,8 @@
     <ClCompile Include="..\..\scone\core\PropNode.cpp">
       <Filter>Serialization</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\Log.cpp" />
+    <ClCompile Include="..\..\scone\core\Log.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

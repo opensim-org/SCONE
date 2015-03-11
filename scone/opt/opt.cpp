@@ -20,8 +20,10 @@ namespace scone
 			// load properties
 			PropNode p = ReadProperties( config_file );
 
-			// get config file
+			// set current path to config file path
 			path config_path( config_file );
+			if ( config_path.has_parent_path() )
+				current_path( config_path.parent_path() );
 
 			// create optimizer and report unused parameters
 			opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
@@ -29,7 +31,7 @@ namespace scone
 
 			// copy config and model file
 			path outdir( o->GetOutputFolder() );
-			copy_file( config_file, outdir / ( "config" + config_path.extension().string() ), copy_option::overwrite_if_exists );
+			copy_file( config_path.filename(), outdir / ( "config" + config_path.extension().string() ), copy_option::overwrite_if_exists );
 
 			o->Run();
 		}
