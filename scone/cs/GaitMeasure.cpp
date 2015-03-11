@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "GaitMeasure.h"
 #include "../sim/Model.h"
+#include "../sim/Body.h"
+
+#include <boost/foreach.hpp>
+#include <boost/tokenizer.hpp>
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -11,6 +16,21 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 
+			// get string of gait bodies
+			String gait_bodies;
+			INIT_FROM_PROP( props, gait_bodies, String() );
+
+			// tokenize
+			boost::char_separator< char > separator(", ");
+			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
+			BOOST_FOREACH( const String& t, tokens )
+			{
+				size_t idx = model.FindBodyIndex( t );
+				if ( idx != INVALID_INDEX )
+					m_GaitBodies.push_back( &model.GetBody( idx ) );
+			}
+
+			m_InitialGaitDist = GetGaitDist( model );
 			m_InitialComPos = model.GetComPos();
 		}
 
@@ -26,19 +46,31 @@ namespace scone
 
 			// check if com is too low
 			Vec3 com = model.GetComPos();
-
 			if ( com.y < termination_height * m_InitialComPos.y )
 				SetTerminationRequest();
 		}
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			return 100 * (model.GetComPos().x - m_InitialComPos.x);
+			return 100 * ( GetGaitDist( model ) - m_InitialGaitDist );
 		}
 
 		scone::String GaitMeasure::GetSignature()
 		{
 			return "Gait";
+		}
+
+		Real GaitMeasure::GetGaitDist( sim::Model& model )
+		{
+			if ( m_GaitBodies.empty() )
+				return model.GetComPos().x;
+
+			// compute average pos of bodies
+			double dist = REAL_MAX;
+			BOOST_FOREACH( sim::Body* body, m_GaitBodies )
+				dist = std::min( body->GetPos().x, dist );
+
+			return dist;
 		}
 	}
 }

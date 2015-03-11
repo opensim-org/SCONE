@@ -39,7 +39,7 @@ namespace scone
 			// muscle info
 			struct ActInfo
 			{
-				ActInfo() : side( NoSide ), function_idx( NO_INDEX ) {};
+				ActInfo() : side( NoSide ), function_idx( INVALID_INDEX ) {};
 				String name;
 				Side side;
 				String full_name;

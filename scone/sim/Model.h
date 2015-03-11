@@ -33,6 +33,7 @@ namespace scone
 			size_t GetBodyCount() { return m_Bodies.size(); }
 			Body& GetBody( size_t idx ) { return *m_Bodies[ idx ]; }
 			Body& FindBody( const String& name );
+			Index FindBodyIndex( const String& name );
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 
 			/// joint access

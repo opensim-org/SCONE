@@ -25,6 +25,10 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetPos() const
 		{
+			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
+
+			// TODO: OSIM: find what is the most efficient (compare to linvel)
 			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 			SimTK::Vec3 point;
 			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
@@ -38,7 +42,10 @@ namespace scone
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
 		{
+			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+
+			// TODO: OSIM: see if we can do this more efficient
 			const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 			return ToVec3( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
 		}

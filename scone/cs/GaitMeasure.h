@@ -18,7 +18,11 @@ namespace scone
 
 		private:
 			// settings
+			std::vector< sim::Body* > m_GaitBodies;
+			Real GetGaitDist( sim::Model& model );
+
 			double termination_height;
+			double m_InitialGaitDist;
 			Vec3 m_InitialComPos;
 		};
 	}

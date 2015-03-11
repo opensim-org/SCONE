@@ -1,1 +1,1 @@
-.\bin\ReleaseCopy\sconeopt.exe %1
+"%~dp0\bin\ReleaseCopy\sconeopt.exe" %1

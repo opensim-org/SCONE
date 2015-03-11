@@ -84,6 +84,9 @@ namespace scone
 			if ( !state_init_file.empty() )
 				ReadState( state_init_file );
 
+			// TODO: perhaps realize velocity from here, so that controllers have access valid properties
+			// right now, this is not needed because each individual call realizes the correct state
+
 			// create and initialize controllers
 			const PropNode& cprops = props.GetChild( "Controllers" ).SetFlag();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
@@ -151,7 +154,7 @@ namespace scone
 
 		void Model_Simbody::ReadState( const String& file )
 		{
-			// OpenSim: why is there no normal way to get a value using a label???
+			// OSIM: why is there no normal way to get a value using a label???
 
 			// create a copy of the storage
 			auto store = g_StorageCache.CreateCopy( file );
