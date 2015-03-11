@@ -19,9 +19,6 @@ namespace scone
 	{
 		void CS_API RegisterFactoryTypes();
 
-		// TODO: remove PerformOptimization, it does not belong in cs
-		void CS_API PerformOptimization( const String& config_file );
-
 		SCONE_DECLARE_CLASS_AND_PTR( Measure );
 		SCONE_DECLARE_CLASS_AND_PTR( SimulationObjective );
 		SCONE_DECLARE_CLASS_AND_PTR( FeedForwardController );

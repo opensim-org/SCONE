@@ -31,5 +31,10 @@ namespace scone
 		{
 			return 100 * (model.GetComPos().x - m_InitialComPos.x);
 		}
+
+		scone::String GaitMeasure::GetSignature()
+		{
+			return "Gait";
+		}
 	}
 }

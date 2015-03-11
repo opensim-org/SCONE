@@ -11,6 +11,7 @@
 #include <boost/property_tree/info_parser.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 
 using namespace boost;
 using namespace boost::property_tree;
@@ -300,13 +301,24 @@ namespace scone
 		return true;
 	}
 
-	PropNode CORE_API CreatePropNodeFromXmlFile( const String& filename )
+	PropNode CORE_API ReadPropertiesFromXml( const String& filename )
 	{
 		return PropNode().FromXmlFile( filename );
 	}
 
-	PropNode CORE_API CreatePropNodeFromInfoFile( const String& filename )
+	PropNode CORE_API ReadPropertiesFromInfo( const String& filename )
 	{
 		return PropNode().FromInfoFile( filename );
 	}
+
+	scone::PropNode ReadProperties( const String& config_file )
+	{
+		String ext = boost::filesystem::path( config_file ).extension().string();
+		if ( ext == ".xml" )
+			return ReadPropertiesFromXml( config_file );
+		if ( ext == ".info" )
+			return ReadPropertiesFromInfo( config_file );
+		else SCONE_THROW( "Unknown file type: " + config_file );
+	}
+
 }

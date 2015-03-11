@@ -17,6 +17,8 @@ namespace scone
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
+			virtual String GetSignature() override;
+
 		private:
 			String target_body;
 			bool use_average_height;

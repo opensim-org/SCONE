@@ -158,16 +158,16 @@ namespace scone
 			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
 			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
 
-			for ( int i = 1; i < storeLabels.getSize(); i++ )
+			// run over all labels
+			for ( int i = 0; i < storeLabels.getSize(); i++ )
 			{
-				int dataIdx = store->getStateIndex( storeLabels[i] );
-				try
+				// check if the label is corresponds to a state
+				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
 				{
-					GetOsimModel().setStateVariable( GetTkState(), storeLabels[i], data[dataIdx] );
+					double value = data[ store->getStateIndex( storeLabels[i] ) ];
+					GetOsimModel().setStateVariable( GetTkState(), storeLabels[i], value );
 				}
-				catch (...)
-				{
-				}
+				//else SCONE_LOG( "Unused state parameter: " << storeLabels[ i ] );
 			}
 		}
 
@@ -319,8 +319,7 @@ namespace scone
 
 		scone::String Model_Simbody::GetSignature()
 		{
-			SCONE_ASSERT( GetControllers().size() > 0 );
-			return GetOsimModel().getName() + "." + GetControllers().front()->GetSignature();
+			return GetOsimModel().getName();
 		}
 	}
 }

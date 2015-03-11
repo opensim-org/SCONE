@@ -45,18 +45,5 @@ namespace scone
 			GetFunctionFactory().Register< PieceWiseLinearFunction >();
 			GetFunctionFactory().Register< Polynomial >();
 		}
-
-		void CS_API PerformOptimization( const String& config_file )
-		{
-			RegisterFactoryTypes();
-
-			// copy config file to output folder
-			opt::OptimizerUP opt = opt::CreateOptimizerFromXml( config_file );
-			copy_file( path( config_file ), path( opt->GetOutputFolder() ) / path( config_file ).filename(), copy_option::overwrite_if_exists );
-
-			// start the optimization
-			opt->Run();
-		}
-
 	}
 }

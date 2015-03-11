@@ -15,7 +15,7 @@ void SimulationTest()
 	const double simulation_time = 0.1;
 
 	cs::RegisterFactoryTypes();
-	PropNode props = CreatePropNodeFromXmlFile( "config/simulation_test.xml" );
+	PropNode props = ReadPropertiesFromXml( "config/simulation_test.xml" );
 
 	std::vector< String > models;
 	//models.push_back( "models/jump1024.osim" );

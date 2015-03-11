@@ -11,40 +11,24 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<max_duration>3.0</max_duration>
+		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/f2354.osim</model_file>
-			<init_state>models/f2354_init_walk.sto</init_state>
+			<model_file>models/f1024.osim</model_file>
+			<state_init_file>models/f2354_init_walk.sto</state_init_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
-				<Controller type="StateController">
-					<ConditionalControllers>
-						<ConditionalController>
-							<condition_leg>Both</condition_leg>
-							<condition_states>Stance</condition_states>
-							<Controller type="FeedForwardController">
-								<Function type="PieceWiseConstantFunction">
-									<control_points>2</control_points>
-									<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
-									<control_point_delta_time mean="0.2" std="0.02" is_free="1"/>
-								</Function>
-							</Controller>
-						</ConditionalController>
-						<ConditionalController>
-							<condition_leg>Both</condition_leg>
-							<condition_states>Swing</condition_states>
-							<Controller type="FeedForwardController">
-								<Function type="PieceWiseConstantFunction">
-									<control_points>2</control_points>
-									<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
-									<control_point_delta_time mean="0.2" std="0.02" is_free="1"/>
-								</Function>
-							</Controller>
-						</ConditionalController>
-					</ConditionalControllers>
+				<Controller type="FeedForwardController">
+					<use_symmetric_actuators>0</use_symmetric_actuators>
+					<Function type="PieceWiseConstantFunction">
+						<control_points>2</control_points>
+						<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
+						<control_point_delta_time mean="0.3" std="0.1" is_free="1"/>
+					</Function>
+					<number_of_modes>0</number_of_modes>
+					<!--mode_weight init_min="0.0" init_max="1.0" min="-1" max="1"/-->
 				</Controller>
 				<Measure type="GaitMeasure">
-					<termination_height>0.9</termination_height>
+					<termination_height>0.95</termination_height>
 				</Measure>
 			</Controllers>
 		</Model>

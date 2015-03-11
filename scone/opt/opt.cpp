@@ -3,6 +3,9 @@
 #include "CmaOptimizer.h"
 #include "Factories.h"
 
+#include <boost/filesystem.hpp>
+using namespace boost::filesystem;
+
 namespace scone
 {
 	namespace opt
@@ -12,18 +15,23 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
-		OptimizerUP CreateOptimizerFromXml( const String& xml_file, const String& key )
+		void OPT_API PerformOptimization( const String& config_file )
 		{
-			RegisterFactoryTypes();
+			// load properties
+			PropNode p = ReadProperties( config_file );
 
-			PropNode p = CreatePropNodeFromXmlFile( xml_file );
-			const PropNode& optprops = p.GetChild( "Optimizer" );
-			OptimizerUP o = CreateOptimizer( optprops );
+			// get config file
+			path config_path( config_file );
 
-			// report unused parameters
-			p.ToStream( std::cout, "Unused parameter ", true );
+			// create optimizer and report unused parameters
+			opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
+			p.ToStream( std::cout, "! Unused parameter ", true );
 
-			return o;
+			// copy config and model file
+			path outdir( o->GetOutputFolder() );
+			copy_file( config_file, outdir / ( "config" + config_path.extension().string() ), copy_option::overwrite_if_exists );
+
+			o->Run();
 		}
 	}
 }

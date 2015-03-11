@@ -63,7 +63,11 @@ namespace scone
 
 		String SimulationObjective::GetSignature()
 		{
-			return m_Model->GetSignature();
+			String str = m_Model->GetSignature();
+			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
+				str += "." + c->GetSignature();
+
+			return str;
 		}
 	}
 }
