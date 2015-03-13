@@ -11,7 +11,7 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix>BackPos</signature_postfix>
+		<signature_postfix>BackPosCom</signature_postfix>
 		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>

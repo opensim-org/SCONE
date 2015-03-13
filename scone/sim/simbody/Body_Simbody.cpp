@@ -30,8 +30,12 @@ namespace scone
 
 			// TODO: OSIM: find what is the most efficient (compare to linvel)
 			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
+			SimTK::Vec3 com;
 			SimTK::Vec3 point;
-			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
+
+			// TODO: validate this!
+			m_osBody.getMassCenter( com );
+			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
 			return ToVec3( point );
 		}
 
