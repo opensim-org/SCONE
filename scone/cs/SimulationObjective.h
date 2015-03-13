@@ -32,6 +32,7 @@ namespace scone
 			double max_duration;
 			sim::ModelUP m_Model;
 			const PropNode& m_ModelProps;
+			String signature_postfix;
 		};
 	}
 }

@@ -46,6 +46,8 @@ namespace scone
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
 
 			/// leg access
+			size_t GetLegCount() { return m_Legs.size(); }
+			Leg& GetLeg( size_t idx ) { return *m_Legs[ idx ]; }
 			std::vector< LegUP >& GetLegs() { return m_Legs; }
 
 			/// Simulate model

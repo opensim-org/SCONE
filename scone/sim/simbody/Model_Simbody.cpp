@@ -17,6 +17,7 @@
 #include "../Factories.h"
 
 #include <boost/thread.hpp>
+#include <boost/filesystem.hpp>
 
 using std::cout;
 using std::endl;
@@ -187,7 +188,9 @@ namespace scone
 
 		void Model_Simbody::WriteStateHistory( const String& file )
 		{
-			m_pOsimManager->getStateStorage().print( file + ".sto" );
+			boost::filesystem::path path( file + ".sto" );
+			m_pOsimManager->getStateStorage().setName( ( path.parent_path().stem() / path.stem() ).string() );
+			m_pOsimManager->getStateStorage().print( path.string() );
 		}
 
 		Vec3 Model_Simbody::GetComPos()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<name></name>
-	<max_threads>1</max_threads>
+	<max_threads>32</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>
 	<mu>0</mu>
@@ -11,6 +11,7 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
+		<signature_postfix>BackPos</signature_postfix>
 		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
@@ -29,7 +30,7 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.98</termination_height>
-					<gait_bodies>calcn_r calcn_l pelvis</gait_bodies>
+					<gait_bodies>calcn_r calcn_l pelvis torso</gait_bodies>
 				</Measure>
 			</Controllers>
 		</Model>

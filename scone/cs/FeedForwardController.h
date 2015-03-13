@@ -30,9 +30,6 @@ namespace scone
 			virtual String GetSignature() override;
 
 		private:
-			// function settings
-			bool use_symmetric_actuators;
-
 			// mode settings
 			size_t number_of_modes;
 
@@ -47,7 +44,6 @@ namespace scone
 				std::vector< double > mode_weights;
 			};
 
-			typedef std::unique_ptr< Function > FunctionUP;
 			std::vector< FunctionUP > m_Functions;
 			std::vector< ActInfo > m_ActInfos;
 

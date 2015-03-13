@@ -22,6 +22,7 @@ namespace scone
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
+			INIT_FROM_PROP( props, signature_postfix, String() );
 			m_Model = sim::ModelUP( sim::CreateModel( m_ModelProps, opt::ParamSet() ) );
 		}
 
@@ -66,6 +67,9 @@ namespace scone
 			String str = m_Model->GetSignature();
 			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
 				str += "." + c->GetSignature();
+
+			if ( !signature_postfix.empty() )
+				str += "." + signature_postfix;
 
 			return str;
 		}

@@ -23,6 +23,7 @@ namespace scone
 
 			double termination_height;
 			double m_InitialGaitDist;
+			double m_BestGaitDist;
 			Vec3 m_InitialComPos;
 		};
 	}

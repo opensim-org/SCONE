@@ -30,8 +30,7 @@ namespace scone
 					m_GaitBodies.push_back( &model.GetBody( idx ) );
 			}
 
-			// TODO: set initial gate dist to be the average of feet positions
-			m_InitialGaitDist = GetGaitDist( model, true );
+			m_InitialGaitDist = m_BestGaitDist = GetGaitDist( model, true );
 			m_InitialComPos = model.GetComPos();
 		}
 
@@ -45,6 +44,9 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
+			// update best score
+			m_BestGaitDist = std::max( m_BestGaitDist, GetGaitDist( model, false ) );
+
 			// check if com is too low
 			Vec3 com = model.GetComPos();
 			if ( com.y < termination_height * m_InitialComPos.y )
@@ -53,7 +55,7 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			return 100 * ( GetGaitDist( model, false ) - m_InitialGaitDist );
+			return 100 * ( m_BestGaitDist - m_InitialGaitDist );
 		}
 
 		scone::String GaitMeasure::GetSignature()
@@ -63,29 +65,27 @@ namespace scone
 
 		Real GaitMeasure::GetGaitDist( sim::Model& model, bool init )
 		{
-			// get average position of legs that are in contact with the ground
-			Real dist = 0.0;
-			int nlegs = 0;
-			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
-			{
-				if ( leg->GetContactForce().y > 0 || init )
-				{
-					dist += leg->GetFootLink().GetBody().GetPos().x;
-					++nlegs;
-				}
-			}
+			static Real contact_threshold = 0.1;
 
-			if ( nlegs > 0 )
-				return dist / nlegs;
-			else return 0.0;
+			//// get average position of legs that are in contact with the ground
+			//SCONE_ASSERT( model.GetLegs().size() == 2 );
+			//Real d0 = model.GetLeg( 0 ).GetFootLink().GetBody().GetPos().x;
+			//Real d1 = model.GetLeg( 1 ).GetFootLink().GetBody().GetPos().x;
+			//Real grf0 = model.GetLeg( 0 ).GetContactForce().y;
+			//Real grf1 = model.GetLeg( 1 ).GetContactForce().y;
+			//Real dist = model.GetComPos().x;
+			//dist = std::min( dist, std::max( d0, d1 ) );
+			//if ( grf0 > contact_threshold && grf1 > contact_threshold )
+			//	return dist;
+			//else return 0.0;
 
-			//if ( m_GaitBodies.empty() )
-			//	return model.GetComPos().x;
+			if ( m_GaitBodies.empty() )
+				return model.GetComPos().x;
 
-			//// compute average pos of bodies
-			//double dist = REAL_MAX;
-			//BOOST_FOREACH( sim::Body* body, m_GaitBodies )
-			//	dist = std::min( body->GetPos().x, dist );
+			// compute average pos of bodies
+			double dist = REAL_MAX;
+			BOOST_FOREACH( sim::Body* body, m_GaitBodies )
+				dist = std::min( body->GetPos().x, dist );
 
 			return dist;
 		}
