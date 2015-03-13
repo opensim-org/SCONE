@@ -20,7 +20,7 @@ namespace scone
 			String gait_bodies;
 			INIT_FROM_PROP( props, gait_bodies, String() );
 
-			// tokenize
+			// extract individual body names from gait_bodies string
 			boost::char_separator< char > separator(", ");
 			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
 			BOOST_FOREACH( const String& t, tokens )
@@ -30,7 +30,8 @@ namespace scone
 					m_GaitBodies.push_back( &model.GetBody( idx ) );
 			}
 
-			m_InitialGaitDist = GetGaitDist( model );
+			// TODO: set initial gate dist to be the average of feet positions
+			m_InitialGaitDist = GetGaitDist( model, true );
 			m_InitialComPos = model.GetComPos();
 		}
 
@@ -52,7 +53,7 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			return 100 * ( GetGaitDist( model ) - m_InitialGaitDist );
+			return 100 * ( GetGaitDist( model, false ) - m_InitialGaitDist );
 		}
 
 		scone::String GaitMeasure::GetSignature()
@@ -60,15 +61,31 @@ namespace scone
 			return "Gait";
 		}
 
-		Real GaitMeasure::GetGaitDist( sim::Model& model )
+		Real GaitMeasure::GetGaitDist( sim::Model& model, bool init )
 		{
-			if ( m_GaitBodies.empty() )
-				return model.GetComPos().x;
+			// get average position of legs that are in contact with the ground
+			Real dist = 0.0;
+			int nlegs = 0;
+			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+			{
+				if ( leg->GetContactForce().y > 0 || init )
+				{
+					dist += leg->GetFootLink().GetBody().GetPos().x;
+					++nlegs;
+				}
+			}
 
-			// compute average pos of bodies
-			double dist = REAL_MAX;
-			BOOST_FOREACH( sim::Body* body, m_GaitBodies )
-				dist = std::min( body->GetPos().x, dist );
+			if ( nlegs > 0 )
+				return dist / nlegs;
+			else return 0.0;
+
+			//if ( m_GaitBodies.empty() )
+			//	return model.GetComPos().x;
+
+			//// compute average pos of bodies
+			//double dist = REAL_MAX;
+			//BOOST_FOREACH( sim::Body* body, m_GaitBodies )
+			//	dist = std::min( body->GetPos().x, dist );
 
 			return dist;
 		}
