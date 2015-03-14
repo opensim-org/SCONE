@@ -11,7 +11,7 @@
 	<maximize_objective>1</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix>AtDualStanceBack</signature_postfix>
+		<signature_postfix>2BackPosToes</signature_postfix>
 		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
@@ -30,7 +30,7 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.98</termination_height>
-					<gait_bodies>calcn_r calcn_l pelvis torso</gait_bodies>
+					<gait_bodies>toes_r toes_l pelvis torso</gait_bodies>
 				</Measure>
 			</Controllers>
 		</Model>
