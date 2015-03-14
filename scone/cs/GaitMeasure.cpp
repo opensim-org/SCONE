@@ -67,27 +67,35 @@ namespace scone
 		{
 			static Real contact_threshold = 0.1;
 
-			//// get average position of legs that are in contact with the ground
-			//SCONE_ASSERT( model.GetLegs().size() == 2 );
-			//Real d0 = model.GetLeg( 0 ).GetFootLink().GetBody().GetPos().x;
-			//Real d1 = model.GetLeg( 1 ).GetFootLink().GetBody().GetPos().x;
-			//Real grf0 = model.GetLeg( 0 ).GetContactForce().y;
-			//Real grf1 = model.GetLeg( 1 ).GetContactForce().y;
-			//Real dist = model.GetComPos().x;
-			//dist = std::min( dist, std::max( d0, d1 ) );
-			//if ( grf0 > contact_threshold && grf1 > contact_threshold )
-			//	return dist;
-			//else return 0.0;
+			std::vector< bool > contact( 2 );
 
-			if ( m_GaitBodies.empty() )
-				return model.GetComPos().x;
+			// get average position of legs that are in contact with the ground
+			SCONE_ASSERT( model.GetLegs().size() == 2 );
+			Real d0 = model.GetLeg( 0 ).GetFootLink().GetBody().GetPos().x;
+			Real d1 = model.GetLeg( 1 ).GetFootLink().GetBody().GetPos().x;
+			Real grf0 = model.GetLeg( 0 ).GetContactForce().y;
+			Real grf1 = model.GetLeg( 1 ).GetContactForce().y;
 
-			// compute average pos of bodies
-			double dist = REAL_MAX;
-			BOOST_FOREACH( sim::Body* body, m_GaitBodies )
-				dist = std::min( body->GetPos().x, dist );
+			bool dual_stance = ( grf0 > contact_threshold ) && ( grf1 > contact_threshold );
 
-			return dist;
+			if ( dual_stance != m_DualStance || init )
+			{
+				m_DualStance = dual_stance;
+				if ( m_DualStance )
+					return model.GetComPos().x;
+				else return 0.0;
+			}
+			return 0.0;
+
+			//if ( m_GaitBodies.empty() )
+			//	return model.GetComPos().x;
+
+			//// compute average pos of bodies
+			//double dist = REAL_MAX;
+			//BOOST_FOREACH( sim::Body* body, m_GaitBodies )
+			//	dist = std::min( body->GetPos().x, dist );
+
+			//return dist;
 		}
 	}
 }
