@@ -68,31 +68,35 @@ namespace scone
 		{
 			static const Real contact_threshold = 0.1;
 			bool contact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
-			double dist = ( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x + model.GetComPos().x ) / 2;
 
 			if ( init )
 			{
 				m_ActiveLegContact = contact;
-				m_ActiveLegInitDist = dist;
+				m_ActiveLegInitDist = model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x;
 				m_TotalDist = 0.0;
 			}
+
+			// compute distance, taking into account goals
+			static const Real stride_max = 1.0;
+			double leg_dist = std::min( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x - m_ActiveLegInitDist, stride_max );
+			double com_dist = std::min( model.GetComPos().x - m_ActiveLegInitDist, stride_max * 0.75 );
 
 			if ( contact && !m_ActiveLegContact )
 			{
 				// end of step
-				m_TotalDist += dist - m_ActiveLegInitDist;
+				m_TotalDist += ( leg_dist + com_dist ) / 2;
 
 				// init new step
 				m_ActiveLegIndex ^= 1;
-				m_ActiveLegInitDist = ( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x + model.GetComPos().x ) / 2;
 				m_ActiveLegContact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
+				m_ActiveLegInitDist = model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x;
 
 				return m_TotalDist;
 			}
 			else
 			{
 				m_ActiveLegContact = contact;
-				return m_TotalDist + dist - m_ActiveLegInitDist;
+				return m_TotalDist + ( leg_dist + com_dist ) / 2;
 			}
 
 			//if ( m_GaitBodies.empty() )
