@@ -12,7 +12,8 @@ namespace scone
 	namespace cs
 	{
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
-		Measure( props, par, model )
+		Measure( props, par, model ),
+		m_ActiveLegIndex( 0 )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 
@@ -65,39 +66,47 @@ namespace scone
 
 		Real GaitMeasure::GetGaitDist( sim::Model& model, bool init )
 		{
-			//static const Real contact_threshold = 0.1;
-			//std::vector< bool > contact( 2 );
+			static const Real contact_threshold = 0.1;
+			bool contact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
+			double dist = ( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x + model.GetComPos().x ) / 2;
 
-			//// get average position of legs that are in contact with the ground
-			//SCONE_ASSERT( model.GetLegs().size() == 2 );
-			//Real d0 = model.GetLeg( 0 ).GetFootLink().GetBody().GetPos().x;
-			//Real d1 = model.GetLeg( 1 ).GetFootLink().GetBody().GetPos().x;
-			//Real grf0 = model.GetLeg( 0 ).GetContactForce().y;
-			//Real grf1 = model.GetLeg( 1 ).GetContactForce().y;
+			if ( init )
+			{
+				m_ActiveLegContact = contact;
+				m_ActiveLegInitDist = dist;
+				m_TotalDist = 0.0;
+			}
 
-			//bool dual_stance = ( grf0 > contact_threshold ) && ( grf1 > contact_threshold );
+			if ( contact && !m_ActiveLegContact )
+			{
+				// end of step
+				m_TotalDist += dist - m_ActiveLegInitDist;
 
-			//if ( dual_stance != m_DualStance || init )
-			//{
-			//	m_DualStance = dual_stance;
-			//	if ( m_DualStance )
-			//		return model.GetComPos().x;
-			//	else return 0.0;
-			//}
-			//return 0.0;
+				// init new step
+				m_ActiveLegIndex ^= 1;
+				m_ActiveLegInitDist = ( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x + model.GetComPos().x ) / 2;
+				m_ActiveLegContact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
 
-			if ( m_GaitBodies.empty() )
-				return model.GetComPos().x;
+				return m_TotalDist;
+			}
+			else
+			{
+				m_ActiveLegContact = contact;
+				return m_TotalDist + dist - m_ActiveLegInitDist;
+			}
 
-			// compute average pos of bodies
-			std::set< double > distances;
-			double dist = REAL_MAX;
-			BOOST_FOREACH( sim::Body* body, m_GaitBodies )
-				distances.insert( body->GetPos().x );
+			//if ( m_GaitBodies.empty() )
+			//	return model.GetComPos().x;
 
-			SCONE_ASSERT( distances.size() >= 2 );
-			auto iter = distances.begin();
-			return ( *iter + *(++iter) ) / 2;
+			//// compute average pos of bodies
+			//std::set< double > distances;
+			//double dist = REAL_MAX;
+			//BOOST_FOREACH( sim::Body* body, m_GaitBodies )
+			//	distances.insert( body->GetPos().x );
+
+			//SCONE_ASSERT( distances.size() >= 2 );
+			//auto iter = distances.begin();
+			//return ( *iter + *(++iter) ) / 2;
 		}
 	}
 }

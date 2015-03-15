@@ -26,7 +26,10 @@ namespace scone
 			double m_BestGaitDist;
 			Vec3 m_InitialComPos;
 
-			bool m_DualStance;
+			double m_ActiveLegInitDist;
+			double m_TotalDist;
+			size_t m_ActiveLegIndex;
+			bool m_ActiveLegContact;
 		};
 	}
 }
