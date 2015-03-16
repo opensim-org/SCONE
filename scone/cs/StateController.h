@@ -47,7 +47,7 @@ namespace scone
 			typedef std::unique_ptr< LegState > LegStateUP;
 			std::vector< LegStateUP > m_LegStates;
 
-			// struct that defines if a controller is active (vector denotes leg, bitset denotes state(s))
+			// struct that defines if a controller is active (bitset denotes state(s), leg target should be part of controller)
 			SCONE_DECLARE_CLASS_AND_PTR( ConditionalController );
 			class ConditionalController
 			{
@@ -58,8 +58,9 @@ namespace scone
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;
+				bool TestLegState( size_t leg_idx, LegState::State state ) { return state_mask.test( size_t( state ) ); }
 			};
-			std::vector< std::unique_ptr< ConditionalController > > m_ConditionalControllers;
+			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 
 			StateController( const StateController& );
 			StateController& operator=( const StateController& );
