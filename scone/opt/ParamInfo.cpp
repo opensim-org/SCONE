@@ -30,19 +30,16 @@ namespace scone
 			props.SetFlag();
 		}
 
-		double ParamInfo::GetRandomValue() const
+		double ParamInfo::GetInitialValue() const
 		{
-			double value = 0.0;
-			if ( init_min == 0.0 && init_max == 0.0 )
+			if ( is_free )
 			{
-				value = Rng::gauss( mean, Square( std ) );
-				RestrainValue( value );
+				if ( init_min == 0.0 && init_max == 0.0 )
+					return GetRestrained( Rng::gauss( mean, Square( std ) ), min, max );
+				else
+					return Rng::uni( init_min, init_max );
 			}
-			else
-			{
-				value = Rng::uni( init_min, init_max );
-			}
-			return value;
+			else return mean;
 		}
 	}
 }

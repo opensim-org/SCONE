@@ -54,8 +54,9 @@ namespace scone
 			class ConditionalController
 			{
 			public:
-				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Leg& leg );
 				virtual ~ConditionalController() {}
+				size_t leg_index;
 				std::bitset< LegState::StateCount > state_mask;
 				bool active;
 				double active_since;

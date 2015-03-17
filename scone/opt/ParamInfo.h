@@ -36,7 +36,7 @@ namespace scone
 
 			bool CheckValue( const double& value ) const { return value >= min && value <= max; }
 			void RestrainValue( double& value ) const { Restrain( value, min, max ); }
-			double GetRandomValue() const;
+			double GetInitialValue() const;
 		};
 	}
 }

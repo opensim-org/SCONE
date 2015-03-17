@@ -25,28 +25,31 @@ namespace scone
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 
-			// create additional controllers for each side
-			// TODO: make this more generic (based on legs instead of sides)
+			// create additional controllers for each leg
 			const PropNode& ccprops = props.GetChild( "ConditionalControllers" ).SetFlag();
 			for ( PropNode::ConstChildIter it = ccprops.Begin(); it != ccprops.End(); ++it )
 			{
 				it->second->SetFlag();
-				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *it->second, par, model, sim::Area::LEFT_SIDE ) ) );
-				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *it->second, par, model, sim::Area::RIGHT_SIDE ) ) );
+				BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *it->second, par, model, *leg ) ) );
 			}
 		}
 
-		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Leg& leg ) :
 		active( false ),
 		active_since( 0.0 )
 		{
-			// load state_mask directly from propnode (using streaming operator)
+			leg_index = leg.GetIndex();
+
+			// load state_mask directly from PropNode (using streaming operator)
 			INIT_FROM_PROP_REQUIRED( props, state_mask );
 
 			// create controller
 			const PropNode& cprops = props.GetChild( "Controller" );
 			par.PushNamePrefix( "S" + state_mask.to_string() + "." );
-			controller = sim::CreateController( cprops, par, model, target_area );
+
+			// TODO: allow neater definition of target area instead of just taking the leg side
+			controller = sim::CreateController( cprops, par, model, leg.GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE );
 			par.PopNamePrefix();
 		}
 
@@ -105,12 +108,12 @@ namespace scone
 					switch( ls.state )
 					{
 					case LegState::UnknownState:
-					case LegState::StanceState:
 					case LegState::LiftoffState:
-					case LegState::SwingState:
 						ls.state = LegState::SwingState;
 						break;
 
+					case LegState::SwingState:
+					case LegState::StanceState:
 					case LegState::LandingState:
 						break;
 					}
@@ -123,15 +126,7 @@ namespace scone
 			// update controller states
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
-				bool activate = false;
-				for ( size_t lidx = 0; lidx < m_LegStates.size(); ++lidx )
-				{
-					if ( cc->state_mask.test( m_LegStates[ lidx ]->state ) )
-					{
-						activate = true;
-						break;
-					}
-				}
+				bool activate = cc->state_mask.test( m_LegStates[ cc->leg_index ]->state );
 
 				// activate or deactivate controller
 				if ( activate != cc->active )

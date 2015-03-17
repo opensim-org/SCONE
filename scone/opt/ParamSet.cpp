@@ -25,7 +25,7 @@ namespace scone
 				}
 
 				// add parameter info
-				m_Params.push_back( std::make_pair( info, info.GetRandomValue() ) );
+				m_Params.push_back( std::make_pair( info, info.GetInitialValue() ) );
 
 				return m_Params.back().second;
 			}

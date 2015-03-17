@@ -12,7 +12,7 @@
 
 	<Objective type="SimulationObjective">
 		<max_duration>3.0</max_duration>
-		<signature_postfix></signature_postfix>
+		<signature_postfix>025</signature_postfix>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
@@ -26,8 +26,8 @@
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Function type="PieceWiseConstantFunction">
 									<control_points>2</control_points>
-									<control_point_y init_min="0.1" init_max="0.5" min="0" max="1"/>
-									<control_point_delta_time mean="0.5" std="0.0" is_free="0"/>
+									<control_point_y init_min="0.1" init_max="0.5" min="0.01" max="1"/>
+									<control_point_delta_time mean="0.25" std="0.025" is_free="1"/>
 								</Function>
 							</Controller>
 						</ConditionalController>
@@ -37,8 +37,8 @@
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Function type="PieceWiseConstantFunction">
 									<control_points>2</control_points>
-									<control_point_y init_min="0.1" init_max="0.5" min="0" max="1"/>
-									<control_point_delta_time mean="0.5" std="0.0" is_free="0"/>
+									<control_point_y init_min="0.1" init_max="0.5" min="0.01" max="1"/>
+									<control_point_delta_time mean="0.25" std="0.025" is_free="1"/>
 								</Function>
 							</Controller>
 						</ConditionalController>
