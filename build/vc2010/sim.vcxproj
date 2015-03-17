@@ -88,6 +88,7 @@
     <ClCompile Include="..\..\scone\sim\Link.cpp" />
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
+    <ClCompile Include="..\..\scone\sim\Area.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -105,6 +106,7 @@
     <ClInclude Include="..\..\scone\sim\Link.h" />
     <ClInclude Include="..\..\scone\sim\Model.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
+    <ClInclude Include="..\..\scone\sim\Area.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\stdafx.h" />

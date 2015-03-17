@@ -11,7 +11,7 @@ namespace scone
 		class HeightMeasure : public Measure
 		{
 		public:
-			HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~HeightMeasure() { };
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;

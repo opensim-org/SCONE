@@ -124,7 +124,7 @@ namespace scone
 
 		/** To string. */
 		std::string ToString() const;
-		static Vec3 FromString( std::string& str );
+		Vec3& FromString( std::string& str );
 
 		/** To stream. */
 		friend std::ostream& operator<<( std::ostream& str, const Vec3& v ) {

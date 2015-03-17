@@ -8,11 +8,11 @@ namespace scone
 		class EnergyMeasure : public Measure
 		{
 		public:
-			EnergyMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) : Measure( props, par, model ) { };
+			EnergyMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) : Measure( props, par, model, area ) { };
 			virtual ~EnergyMeasure() { };
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual double GetResult(sim::Model& model ) override;
+			virtual double GetResult( sim::Model& model ) override;
 
 		protected:
 		private:

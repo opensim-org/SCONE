@@ -165,12 +165,11 @@ namespace scone
 		return GetStringF( "(%4f,%4f,%4f)", X(), Y(), Z() );
 	}
 
-	scone::Vec3 Vec3::FromString( std::string& str )
+	Vec3& Vec3::FromString( std::string& str )
 	{
 		std::stringstream s( str );
-		Vec3 v;
-		s >> v;
-		return v;
+		s >> *this;
+		return *this;
 	}
 
 	Real Vec3::GetAngleOnPlane( const Vec3& v1, const Vec3& v2 ) const

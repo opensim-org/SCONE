@@ -8,7 +8,7 @@ namespace scone
 		class GaitMeasure : public Measure
 		{
 		public:
-			GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~GaitMeasure();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;

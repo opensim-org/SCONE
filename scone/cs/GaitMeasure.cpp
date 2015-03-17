@@ -11,8 +11,8 @@ namespace scone
 {
 	namespace cs
 	{
-		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
-		Measure( props, par, model ),
+		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		Measure( props, par, model, area ),
 		m_ActiveLegIndex( 0 )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );

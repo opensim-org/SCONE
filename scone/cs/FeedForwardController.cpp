@@ -18,8 +18,8 @@ namespace scone
 {
 	namespace cs
 	{
-		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
-		Controller( props, par, model )
+		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+		Controller( props, par, model, target_area )
 		{
 			DECLARE_AND_INIT( props, bool, use_symmetric_actuators, true );
 			INIT_FROM_PROP( props, number_of_modes, 0u );

@@ -3,6 +3,7 @@
 #include "sim.h"
 #include <vector>
 #include "../core/Exception.h"
+#include "Types.h"
 
 namespace scone
 {
@@ -36,8 +37,7 @@ namespace scone
 			const Link* FindLink( const String& body ) const;
 
 			// link metadata
-			enum Type { UnknownLink, RootLink, LegLink, FootLink, ArmLink, HandLink, SpineLink, HeadLink };
-			Type type;
+			LinkType type;
 
 		private:
 			Body* m_Body;

@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace sim
 	{
-		Controller::Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		Controller::Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		m_TerminationRequest( false )
 		{
 		}

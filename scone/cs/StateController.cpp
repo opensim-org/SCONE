@@ -16,8 +16,8 @@ namespace scone
 	{
 		const char* StateController::LegState::state_names[] = { "Stance", "Liftoff", "Swing", "Landing" };
 
-		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
-		sim::Controller( props, par, model )
+		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
 

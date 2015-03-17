@@ -8,8 +8,8 @@ namespace scone
 {
 	namespace cs
 	{
-		HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
-		Measure( props, par, model ),
+		HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 		{
 			INIT_FROM_PROP( props, target_body, String("") );

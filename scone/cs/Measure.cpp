@@ -6,7 +6,7 @@ namespace scone
 	namespace cs
 	{
 
-		Measure::Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model ) : Controller( props, par, model )
+		Measure::Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) : Controller( props, par, model, area )
 		{
 		}
 	}

@@ -11,7 +11,7 @@ namespace scone
 		class SCONE_SIM_API Controller
 		{
 		public:
-			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual ~Controller();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;

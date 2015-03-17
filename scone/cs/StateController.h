@@ -29,7 +29,7 @@ namespace scone
 				Real coronal_pos;
 			};
 
-			StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 			virtual ~StateController();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;

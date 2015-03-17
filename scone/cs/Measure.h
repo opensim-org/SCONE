@@ -10,7 +10,7 @@ namespace scone
 		class Measure : public sim::Controller
 		{
 		public:
-			Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~Measure() { };
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;
