@@ -107,7 +107,7 @@ namespace scone
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 			{
 				if ( iter->first.is_free )
-					iter->second = iter->first.GetRandomValue();
+					iter->second = iter->first.GetInitialValue();
 			}
 		}
 
