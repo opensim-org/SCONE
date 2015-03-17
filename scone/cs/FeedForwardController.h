@@ -23,7 +23,6 @@ namespace scone
 			virtual ~FeedForwardController() { };
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-			void UpdateControls( sim::Model& model, double timestamp, Side side );
 			bool UseModes() { return number_of_modes > 0; }
 
 			// a signature describing the controller
@@ -41,6 +40,7 @@ namespace scone
 				Side side;
 				String full_name;
 				size_t function_idx;
+				size_t muscle_idx;
 				std::vector< double > mode_weights;
 			};
 

@@ -25,25 +25,29 @@ namespace scone
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 
-			// create additional controllers
-			const PropNode& ccprops = props.GetChild( "ConditionalControllers" );
+			// create additional controllers for each side
+			// TODO: make this more generic (based on legs instead of sides)
+			const PropNode& ccprops = props.GetChild( "ConditionalControllers" ).SetFlag();
 			for ( PropNode::ConstChildIter it = ccprops.Begin(); it != ccprops.End(); ++it )
 			{
-				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( props, par, model ) ) );
+				it->second->SetFlag();
+				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *it->second, par, model, sim::Area::LEFT_SIDE ) ) );
+				m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *it->second, par, model, sim::Area::RIGHT_SIDE ) ) );
 			}
 		}
 
-		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model ) :
+		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		active( false ),
 		active_since( 0.0 )
 		{
-			// load condition
-			unsigned long long sm = props.Get< size_t >( "state", 0 );
-			state_mask = std::bitset< LegState::StateCount >( sm );
+			// load state_mask directly from propnode (using streaming operator)
+			INIT_FROM_PROP_REQUIRED( props, state_mask );
 
 			// create controller
-			const PropNode& cprops = props.GetChild( "controller" );
-			controller = sim::CreateController( cprops, par, model );
+			const PropNode& cprops = props.GetChild( "Controller" );
+			par.PushNamePrefix( "S" + state_mask.to_string() + "." );
+			controller = sim::CreateController( cprops, par, model, target_area );
+			par.PopNamePrefix();
 		}
 
 		StateController::~StateController()
@@ -79,27 +83,37 @@ namespace scone
 				LegState& ls = *m_LegStates[ idx ];
 				LegState& mir_ls = *m_LegStates[ idx ^ 1 ];
 
-				switch( ls.state )
+				if ( ls.contact )
 				{
-				case LegState::StanceState:
-					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
-						ls.state = LegState::LiftoffState;
-					break;
+					switch( ls.state )
+					{
+					case LegState::UnknownState:
+					case LegState::StanceState:
+					case LegState::SwingState:
+					case LegState::LandingState:
+						if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
+							ls.state = LegState::LiftoffState;
+						else ls.state = LegState::StanceState;
+						break;
 
-				case LegState::LiftoffState:
-					if ( !ls.contact )
+					case LegState::LiftoffState:
+						break;
+					}
+				}
+				else
+				{
+					switch( ls.state )
+					{
+					case LegState::UnknownState:
+					case LegState::StanceState:
+					case LegState::LiftoffState:
+					case LegState::SwingState:
 						ls.state = LegState::SwingState;
-					break;
+						break;
 
-				case LegState::SwingState:
-					if ( ls.contact )
-						ls.state = LegState::StanceState;
-					break;
-
-				case LegState::LandingState:
-					if ( ls.contact )
-						ls.state = LegState::StanceState;
-					break;
+					case LegState::LandingState:
+						break;
+					}
 				}
 			}
 		}
@@ -126,6 +140,11 @@ namespace scone
 					cc->active_since = timestamp;
 				}
 			}
+		}
+
+		scone::String StateController::GetSignature()
+		{
+			return "SC." + m_ConditionalControllers.front()->controller->GetSignature();
 		}
 	}
 }

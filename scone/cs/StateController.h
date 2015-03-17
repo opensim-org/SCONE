@@ -19,7 +19,7 @@ namespace scone
 				const sim::Leg& leg;
 
 				// current state
-				enum State { UnknownState = -1, StanceState, LiftoffState, SwingState, LandingState, StateCount };
+				enum State { UnknownState = -1, StanceState = 0, LiftoffState = 1, SwingState = 2, LandingState = 3, StateCount };
 				static const char* state_names[];
 				TimedValue< State > state;
 
@@ -33,6 +33,8 @@ namespace scone
 			virtual ~StateController();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+
+			virtual String GetSignature() override;
 
 			// public parameters
 			Real contact_force_threshold;
@@ -52,7 +54,7 @@ namespace scone
 			class ConditionalController
 			{
 			public:
-				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 				virtual ~ConditionalController() {}
 				std::bitset< LegState::StateCount > state_mask;
 				bool active;
@@ -64,6 +66,7 @@ namespace scone
 
 			StateController( const StateController& );
 			StateController& operator=( const StateController& );
+
 		};
 	}
 }

@@ -16,8 +16,13 @@ namespace scone
 		{
 			if ( m_Mode == ConstructionMode )
 			{
-				if ( FindParamByName( info.name ) != m_Params.end() )
-					SCONE_THROW( "Duplicate parameter: " + info.name );
+				// check if a parameter with the same name already exists
+				auto iter = FindParamByName( info.name );
+				if ( iter != m_Params.end() )
+				{
+					//SCONE_LOG( "Duplicate parameter during construction: " << info.name );
+					return iter->second;
+				}
 
 				// add parameter info
 				m_Params.push_back( std::make_pair( info, info.GetRandomValue() ) );
@@ -111,7 +116,10 @@ namespace scone
 			std::ofstream ofstr( filename );
 
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
-				ofstr << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
+			{
+				if ( iter->first.is_free )
+					ofstr << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
+			}
 		}
 
 		void ParamSet::Read( const String& filename )

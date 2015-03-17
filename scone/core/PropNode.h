@@ -54,21 +54,21 @@ namespace scone
 		// set value
 		void SetValue( const String& value ) { m_Value = value; }
 
-		// get and cast value of fundamental or Vec3 types
+		// get string value (avoid stream operator to make sure spaces are included)
 		template< typename T >
-		T GetValue( typename std::enable_if< std::is_fundamental< T >::value || std::is_same< T, Vec3 >::value >::type* = 0 ) const
+		T GetValue( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
+		{
+			return m_Value;
+		}
+
+		// get value of non-string streamable types
+		template< typename T >
+		T GetValue( typename std::enable_if< !std::is_same< T, String >::value >::type* = 0 ) const
 		{
 			T value = T();
 			std::stringstream str( m_Value );
 			str >> value;
 			return value;
-		}
-
-		// get string value
-		template< typename T >
-		T GetValue( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
-		{
-			return m_Value;
 		}
 
 		/// Get value, throws exception if key doesn't exist

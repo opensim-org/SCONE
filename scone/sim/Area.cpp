@@ -6,8 +6,10 @@ namespace scone
 	namespace sim
 	{
 		const Area Area::WHOLE_BODY = Area( NoSide, ( 1 << LinkTypeCount ) - 1 );
-		const Area Area::RIGHT_LEG = MakeLegArea( RightSide );
+		const Area Area::LEFT_SIDE = Area( LeftSide, ( 1 << LinkTypeCount ) - 1 );
+		const Area Area::RIGHT_SIDE = Area( RightSide, ( 1 << LinkTypeCount ) - 1 );
 		const Area Area::LEFT_LEG = MakeLegArea( LeftSide );
+		const Area Area::RIGHT_LEG = MakeLegArea( RightSide );
 		const Area Area::ROOT = Area( NoSide, RootLink );
 
 		Area::Area( Side i_side, unsigned long long i_mask ) :

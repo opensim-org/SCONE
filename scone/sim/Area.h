@@ -18,6 +18,8 @@ namespace scone
 			Side side;
 
 			static const Area WHOLE_BODY;
+			static const Area LEFT_SIDE;
+			static const Area RIGHT_SIDE;
 			static const Area ROOT;
 			static const Area LEFT_LEG;
 			static const Area RIGHT_LEG;

@@ -13,6 +13,7 @@
 
 #include "Tools.h"
 #include "Factories.h"
+#include "../sim/Area.h"
 
 namespace scone
 {
@@ -29,8 +30,13 @@ namespace scone
 			{
 				ActInfo ai;
 				ai.full_name = model.GetMuscle( idx ).GetName();
-				ExtractNameAndSide( model.GetMuscle( idx ).GetName(), ai.name, ai.side );
-				m_ActInfos.push_back( ai );
+				ai.name = ExtractMuscleName( ai.full_name );
+				ai.side = ExtractMuscleSide( ai.full_name );
+				ai.muscle_idx = idx;
+
+				// see if this muscle is on the right side
+				if ( target_area.side == NoSide || target_area.side == ai.side )
+					m_ActInfos.push_back( ai );
 			}
 
 			// create functions
@@ -81,37 +87,27 @@ namespace scone
 
 		void FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
-			// update controls for both sides
-			UpdateControls( model, time, NoSide );
-		}
-
-		void FeedForwardController::UpdateControls( sim::Model& model, double time, Side side )
-		{
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )
 				funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
-			// apply result of each mode to all muscles
-			for ( size_t idx = 0; idx < m_ActInfos.size(); ++idx )
+			// apply results to all actuators
+			BOOST_FOREACH( ActInfo& ai, m_ActInfos )
 			{
-				if ( side == NoSide || m_ActInfos[ idx ].side == side )
+				if ( UseModes() )
 				{
-					if ( UseModes() )
-					{
-						Real val = 0.0;
-						for ( size_t mode = 0; mode < number_of_modes; ++mode )
-							val += funcresults[ mode ] * m_ActInfos[ idx ].mode_weights[ mode ];
+					Real val = 0.0;
+					for ( size_t mode = 0; mode < number_of_modes; ++mode )
+						val += ai.mode_weights[ mode ] * funcresults[ mode ];
 
-						// add control value
-						model.GetMuscle( idx ).AddControlValue( val );
-
-					}
-					else
-					{
-						// apply results directly to control value
-						model.GetMuscle( idx ).AddControlValue( funcresults[ m_ActInfos[ idx ].function_idx ] );
-					}
+					// add control value
+					model.GetMuscle( ai.muscle_idx ).AddControlValue( val );
+				}
+				else
+				{
+					// apply results directly to control value
+					model.GetMuscle( ai.muscle_idx ).AddControlValue( funcresults[ ai.function_idx ] );
 				}
 			}
 		}
