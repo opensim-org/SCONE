@@ -77,9 +77,20 @@ namespace scone
 
 			// create probe (ownership is automatically passed to OpenSim::Model)
 			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
-				m_pProbe = SetupEnergyConsumptionProbe( GetOsimModel(), new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true ) );
-			//else if ( probe_class == "Bhargava2004MuscleMetabolicsProbe" )
-			//	m_pProbe = SetupEnergyConsumptionProbe( GetOsimModel(), new OpenSim::Bhargava2004MuscleMetabolicsProbe( true, true, true, true, true ) );
+			{
+				auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
+				GetOsimModel().addProbe( probe );
+				for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
+				{
+					OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
+					//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Derived from [Wang2012]
+					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
+					probe->addMuscle( mus.getName(), 0.5 );
+				}
+				probe->setInitialConditions( SimTK::Vector( 1 ) );
+				probe->setOperation("integrate");
+				m_pProbe = probe;
+			}
 
 			// Initialize the system
 			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
