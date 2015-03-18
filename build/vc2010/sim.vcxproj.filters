@@ -1,101 +1,93 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="API">
+      <UniqueIdentifier>{3f49b442-b75c-4b1b-9571-1380506db887}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="System">
+      <UniqueIdentifier>{7829c4b4-90ae-4d57-a953-b1d5c397a4c2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\sim\Driver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Joint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Muscle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Simulation.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\sim\Actuator.cpp">
+      <Filter>API</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Body.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Actuator.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\sim\Controller.cpp">
+      <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Link.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\sim\Joint.cpp">
+      <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Leg.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\sim\Model.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Muscle.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Simulation.cpp">
+      <Filter>API</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Factories.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\stdafx.cpp">
+      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Area.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Leg.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Link.cpp">
+      <Filter>API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\sim\Driver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Joint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Muscle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\sim.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Simulation.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\Actuator.h">
+      <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Body.h">
-      <Filter>Header Files</Filter>
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Actuator.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\Controller.h">
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Link.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\Joint.h">
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Leg.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\Model.h">
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Types.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\Muscle.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Simulation.h">
+      <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Factories.h">
-      <Filter>Header Files</Filter>
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\sim.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\stdafx.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Types.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Link.h">
+      <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Area.h">
-      <Filter>Header Files</Filter>
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Leg.h">
+      <Filter>API</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

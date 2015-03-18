@@ -54,17 +54,17 @@
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\Tools.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h">
       <Filter>Functions</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\StateController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\Factories.h">
+    <ClInclude Include="..\..\scone\cs\tools.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\Factories.h">
+      <Filter>System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +105,7 @@
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\Factories.cpp">
-      <Filter>Tools</Filter>
+      <Filter>System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

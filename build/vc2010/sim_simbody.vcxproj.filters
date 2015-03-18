@@ -1,71 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="API">
+      <UniqueIdentifier>{c59fc8e5-101f-4fae-917f-b875823db9ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{9bd1ab2d-eb20-4aa9-b7a2-f897534fd622}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{75110d97-1a38-410d-bc03-5f55150c3aed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\sim\simbody\Joint_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\Model_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\Muscle_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\sim\simbody\Body_Simbody.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\Simulation_Simbody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\tools.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\sim_simbody.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\sim\simbody\Joint_Simbody.cpp">
+      <Filter>API</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\simbody\Leg_Simbody.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\Model_Simbody.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\Muscle_Simbody.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\Simulation_Simbody.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\stdafx.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\sim_simbody.cpp">
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\simbody\tools.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\Model_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\Muscle_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Body_Simbody.h">
-      <Filter>Header Files</Filter>
+      <Filter>API</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\Simulation_Simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\sim_simbody.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\tools.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">
+      <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Leg_Simbody.h">
-      <Filter>Header Files</Filter>
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\Model_Simbody.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\Muscle_Simbody.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\Simulation_Simbody.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\stdafx.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\sim_simbody.h">
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\simbody\tools.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

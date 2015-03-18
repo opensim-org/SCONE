@@ -12,15 +12,16 @@ using namespace scone;
 
 void SimulationTest()
 {
-	const double simulation_time = 0.1;
+	const double simulation_time = 0.5;
 
 	cs::RegisterFactoryTypes();
-	PropNode props = ReadPropertiesFromXml( "config/simulation_test.xml" );
+	PropNode props = ReadPropertiesFromXml( "simulation_test.xml" );
 
 	std::vector< String > models;
-	//models.push_back( "models/jump1024.osim" );
+	//models.push_back( "../models/f1024.osim" );
+	models.push_back( "../models/f2354.osim" );
 	//models.push_back( "models/test/gait2354.osim" );
-	models.push_back( "models/jump2354.osim" );
+	//models.push_back( "models/jump2354.osim" );
 	//models.push_back( "models/gait1018.osim" );
 	//models.push_back( "models/gait1024.osim" );
 	//models.push_back( "models/ToyLandingModel.osim" );
@@ -44,7 +45,10 @@ void SimulationTest()
 		double time = t.GetTime();
 		SCONE_LOG( "Simulation time: " << time << " (" << simulation_time / time << "x real-time)");
 
-		std::cout << *m;
+		//std::cout << *m;
+
+		std::cout << "Total metabolic energy: " << m->GetTotalEnergyConsumption() << std::endl;
+		std::cout << "Metabolic energy rate per Kg: " << m->GetTotalEnergyConsumption() / simulation_time / m->GetMass() << std::endl;
 
 		//if ( par.IsInConstructionMode() )
 		//	par.SetMode( opt::ParamSet::UpdateMode );

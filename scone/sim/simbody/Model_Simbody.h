@@ -2,14 +2,17 @@
 
 #include "sim_simbody.h"
 #include "../Model.h"
+
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
+
 #include <memory>
 
 namespace OpenSim
 {
 	class Model;
 	class Manager;
+	class Probe;
 }
 
 namespace SimTK
@@ -34,6 +37,7 @@ namespace scone
 			virtual Real GetMass() override;
 			virtual Vec3 GetGravity() override;
 			virtual bool HasGroundContact() override;
+			virtual Real GetTotalEnergyConsumption() override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
 			virtual void WriteStateHistory( const String& file ) override;
@@ -69,12 +73,13 @@ namespace scone
 
 			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
-			SimTK::State* m_pTkState; // non-owning state reference
 			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
+			SimTK::State* m_pTkState; // non-owning state reference
+			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
 
 			class ControllerDispatcher;
 			friend ControllerDispatcher;
-			ControllerDispatcher* m_pControllerDispatcher; // owned by m_osModel
+			ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model
 		};
 	}
 }

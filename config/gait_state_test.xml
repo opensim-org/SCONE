@@ -16,6 +16,7 @@
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
+			<probe_class>Umberger2010MuscleMetabolicsProbe</probe_class>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="StateController">

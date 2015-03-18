@@ -16,9 +16,6 @@
     <Filter Include="Serialization">
       <UniqueIdentifier>{68c14adb-6aa8-41f7-9bec-efd1c0146b6c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Factory">
-      <UniqueIdentifier>{d8e7ebd4-e97a-4d81-af5e-90ddedf56b03}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\core\math.h">
@@ -70,7 +67,7 @@
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Factory.h">
-      <Filter>Factory</Filter>
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,44 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
+    <ClCompile Include="..\..\scone\test\ExampleObjective.cpp" />
+    <ClCompile Include="..\..\scone\test\test.cpp" />
+    <ClCompile Include="..\..\scone\test\stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\test\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\test\test.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\test\ExampleObjective.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\scone\test\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\test\SerializationTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\test\XmlParseTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\test\OptimizationTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\test\ExampleObjective.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\test\SimulationTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\scone\test\ExampleObjective.h" />
+    <ClInclude Include="..\..\scone\test\XmlParseTest.h" />
+    <ClInclude Include="..\..\scone\test\OptimizationTest.h" />
+    <ClInclude Include="..\..\scone\test\SerializationTest.h" />
+    <ClInclude Include="..\..\scone\test\SimulationTest.h" />
+    <ClInclude Include="..\..\scone\test\stdafx.h" />
   </ItemGroup>
 </Project>

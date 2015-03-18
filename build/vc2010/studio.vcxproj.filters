@@ -74,6 +74,8 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\scone\studio\studio.rc" />
+    <ResourceCompile Include="..\..\scone\studio\studio.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

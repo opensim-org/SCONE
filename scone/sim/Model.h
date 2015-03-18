@@ -18,12 +18,6 @@ namespace scone
 			Model( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model();
 
-			virtual Vec3 GetComPos() = 0;
-			virtual Vec3 GetComVel() = 0;
-			virtual Real GetMass() = 0;
-			virtual Vec3 GetGravity() = 0;
-			virtual bool HasGroundContact() = 0;
-
 			/// muscle access
 			size_t GetMuscleCount() { return m_Muscles.size(); }
 			Muscle& GetMuscle( size_t idx ) { return *m_Muscles[ idx ]; }
@@ -56,6 +50,14 @@ namespace scone
 			virtual int GetPreviousIntegrationStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
 			virtual void WriteStateHistory( const String& file ) = 0;
+
+			// get model statistics
+			virtual Vec3 GetComPos() = 0;
+			virtual Vec3 GetComVel() = 0;
+			virtual Real GetMass() = 0;
+			virtual Vec3 GetGravity() = 0;
+			virtual bool HasGroundContact() = 0;
+			virtual Real GetTotalEnergyConsumption() { SCONE_THROW_NOT_IMPLEMENTED; }
 
 			// TODO: perhaps remove termination request here
 			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }

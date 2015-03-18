@@ -1,65 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="API">
+      <UniqueIdentifier>{a56d5d43-60cb-4302-9589-9ef94ac35a6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="System">
+      <UniqueIdentifier>{34d30cc1-ad28-4617-890c-6720b7fd45a1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\opt\opt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\opt\stdafx.h">
-      <Filter>Header Files</Filter>
+      <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\opt\Objective.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\opt\Optimizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\opt\ParamSet.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\opt\CmaOptimizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\opt\ParamInfo.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\..\scone\opt\opt.h">
+      <Filter>System</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\opt\Factories.h">
-      <Filter>Header Files</Filter>
+      <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\CmaOptimizer.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\ParamSet.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\Objective.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\Optimizer.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\opt\ParamInfo.h">
+      <Filter>API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\opt\stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\opt\Objective.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\opt\ParamSet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\opt\Optimizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\opt\opt.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\opt\ParamInfo.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="..\..\scone\opt\stdafx.cpp">
+      <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\opt\Factories.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\CmaOptimizer.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\ParamSet.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\Objective.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\Optimizer.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\opt\ParamInfo.cpp">
+      <Filter>API</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

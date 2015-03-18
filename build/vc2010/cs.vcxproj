@@ -26,7 +26,7 @@
     <ClInclude Include="..\..\scone\cs\Polynomial.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
-    <ClInclude Include="..\..\scone\cs\Tools.h" />
+    <ClInclude Include="..\..\scone\cs\tools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\cs.cpp" />

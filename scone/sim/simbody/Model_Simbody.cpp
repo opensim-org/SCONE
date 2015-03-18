@@ -12,6 +12,9 @@
 #include "../../core/InitFromPropNode.h"
 
 #include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
+#include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
+
 #include "boost/foreach.hpp"
 #include "Leg_Simbody.h"
 #include "../Factories.h"
@@ -49,15 +52,18 @@ namespace scone
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr ),
-		m_PrevIntStep( -1 )
+		m_PrevIntStep( -1 ),
+		m_pProbe( 0 )
 		{
 			String model_file;
 			String state_init_file;
+			String probe_class;
 
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP_REQUIRED( props, model_file );
 			INIT_FROM_PROP( props, state_init_file, String() );
+			INIT_FROM_PROP( props, probe_class, String() );
 
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
@@ -68,6 +74,12 @@ namespace scone
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_pOsimModel->addController( m_pControllerDispatcher );
+
+			// create probe (ownership is automatically passed to OpenSim::Model)
+			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
+				m_pProbe = SetupEnergyConsumptionProbe( GetOsimModel(), new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true ) );
+			//else if ( probe_class == "Bhargava2004MuscleMetabolicsProbe" )
+			//	m_pProbe = SetupEnergyConsumptionProbe( GetOsimModel(), new OpenSim::Bhargava2004MuscleMetabolicsProbe( true, true, true, true, true ) );
 
 			// Initialize the system
 			// This is not thread-safe in case an exception is thrown, so we add a mutex guard
@@ -335,6 +347,13 @@ namespace scone
 		scone::String Model_Simbody::GetSignature()
 		{
 			return GetOsimModel().getName();
+		}
+
+		scone::Real Model_Simbody::GetTotalEnergyConsumption()
+		{
+			SCONE_ASSERT( m_pProbe != nullptr );
+
+			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		}
 	}
 }
