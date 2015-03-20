@@ -1,5 +1,6 @@
 #pragma once
 #include "Measure.h"
+#include "../core/MeasuredValue.h"
 
 namespace scone
 {
@@ -16,20 +17,19 @@ namespace scone
 
 			virtual String GetSignature() override;
 
+			// parameters
+			Real termination_height;
+			Real min_velocity;
+			Real duration;
+
 		private:
 			// settings
 			std::vector< sim::Body* > m_GaitBodies;
-			Real GetGaitDist( sim::Model& model, bool init );
+			Real GetBackDist( sim::Model &model );
 
-			double termination_height;
-			double m_InitialGaitDist;
-			double m_BestGaitDist;
 			Vec3 m_InitialComPos;
-
-			double m_ActiveLegInitDist;
-			double m_TotalDist;
-			size_t m_ActiveLegIndex;
-			bool m_ActiveLegContact;
+			MeasuredReal m_MinVelocityMeasure;
+			Real m_InitBackDist;
 		};
 	}
 }

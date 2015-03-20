@@ -12,7 +12,7 @@
 
 	<Objective type="SimulationObjective">
 		<max_duration>3.0</max_duration>
-		<signature_postfix>025</signature_postfix>
+		<signature_postfix>EffPen</signature_postfix>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
@@ -47,6 +47,8 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
+					<min_velocity>0.5</min_velocity>
+					<duration>3</duration>
 				</Measure>
 			</Controllers>
 		</Model>

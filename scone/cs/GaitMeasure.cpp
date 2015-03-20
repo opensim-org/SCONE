@@ -12,10 +12,11 @@ namespace scone
 	namespace cs
 	{
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area ),
-		m_ActiveLegIndex( 0 )
+		Measure( props, par, model, area )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
+			INIT_FROM_PROP( props, min_velocity, 0.5 );
+			INIT_FROM_PROP( props, duration, 3.0 );
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -31,7 +32,7 @@ namespace scone
 					m_GaitBodies.push_back( &model.GetBody( idx ) );
 			}
 
-			m_InitialGaitDist = m_BestGaitDist = GetGaitDist( model, true );
+			m_InitBackDist = GetBackDist( model );
 			m_InitialComPos = model.GetComPos();
 		}
 
@@ -45,18 +46,39 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			// update best score
-			m_BestGaitDist = std::max( m_BestGaitDist, GetGaitDist( model, false ) );
+			// find normalized min velocity
+			Real vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
+			m_MinVelocityMeasure.AddSample( vel, timestamp );
+
+			// check termination
+			bool terminate = timestamp >= duration;
 
 			// check if com is too low
 			Vec3 com = model.GetComPos();
-			if ( com.y < termination_height * m_InitialComPos.y )
+			terminate |= com.y < termination_height * m_InitialComPos.y;
+			if ( terminate )
+			{
+				if ( timestamp < duration )
+				{
+					// add penalty to min_velocity measure
+					m_MinVelocityMeasure.AddSample( 0, timestamp );
+					m_MinVelocityMeasure.AddSample( 0, duration );
+				}
 				SetTerminationRequest();
+			}
 		}
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			return 100 * ( m_BestGaitDist - m_InitialGaitDist );
+			// find efficiency
+			double dist = GetBackDist( model ) - m_InitBackDist;
+			double cost = model.GetTotalEnergyConsumption() / 1000;
+			double eff = dist / cost;
+
+			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
+			//printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, cost, eff, m_MinVelocityMeasure.GetAverage(), score );
+
+			return score;
 		}
 
 		scone::String GaitMeasure::GetSignature()
@@ -64,41 +86,8 @@ namespace scone
 			return "Gait";
 		}
 
-		Real GaitMeasure::GetGaitDist( sim::Model& model, bool init )
+		scone::Real GaitMeasure::GetBackDist( sim::Model &model )
 		{
-			static const Real contact_threshold = 0.1;
-
-			//bool contact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
-			//if ( init )
-			//{
-			//	m_ActiveLegContact = contact;
-			//	m_ActiveLegInitDist = model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x;
-			//	m_TotalDist = 0.0;
-			//}
-
-			//// compute distance, taking into account goals
-			//static const Real stride_max = 1.0;
-			//double leg_dist = std::min( model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x - m_ActiveLegInitDist, stride_max );
-			//double com_dist = std::min( model.GetComPos().x - m_ActiveLegInitDist, stride_max * 0.75 );
-
-			//if ( contact && !m_ActiveLegContact )
-			//{
-			//	// end of step
-			//	m_TotalDist += ( leg_dist + com_dist ) / 2;
-
-			//	// init new step
-			//	m_ActiveLegIndex ^= 1;
-			//	m_ActiveLegContact = model.GetLeg( m_ActiveLegIndex ).GetContactForce().y > contact_threshold;
-			//	m_ActiveLegInitDist = model.GetLeg( m_ActiveLegIndex ).GetFootLink().GetBody().GetPos().x;
-
-			//	return m_TotalDist;
-			//}
-			//else
-			//{
-			//	m_ActiveLegContact = contact;
-			//	return m_TotalDist + ( leg_dist + com_dist ) / 2;
-			//}
-
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;
 			double dist = REAL_MAX;

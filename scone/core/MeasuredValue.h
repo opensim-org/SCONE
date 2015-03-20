@@ -56,4 +56,6 @@ namespace scone
 	private:
 		T m_Total, m_Weight, m_Initial, m_Highest, m_Lowest, m_PrevTime, m_PrevValue;
 	};
+
+	typedef MeasuredValue< Real > MeasuredReal;
 }
