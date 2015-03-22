@@ -63,7 +63,7 @@ namespace scone
 		private:
 			void ReadState( const String& file );
 			void CreateModelWrappers();
-			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody );
+			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 
 			double integration_accuracy;
 			double max_step_size;

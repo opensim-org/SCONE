@@ -207,6 +207,7 @@ namespace scone
 			m_pOsimManager->setInitialTime( 0.0 );
 			m_pOsimManager->setFinalTime( time );
 			m_pOsimManager->integrate( GetTkState() );
+
 		}
 
 		void Model_Simbody::WriteStateHistory( const String& file )
@@ -241,7 +242,7 @@ namespace scone
 			return dynamic_cast< Body_Simbody& >( *body ).m_osBody == osBody;
 		}
 
-		LinkUP Model_Simbody::CreateLinkHierarchy( OpenSim::Body& osBody )
+		scone::sim::LinkUP Model_Simbody::CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent )
 		{
 			LinkUP link;
 
@@ -254,10 +255,11 @@ namespace scone
 			{
 				auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body ).m_osJoint == osBody.getJoint(); } );
 				SCONE_ASSERT( itJoint != m_Joints.end() );
-				link = LinkUP( new Link( **itBody, **itJoint ) );
+				link = LinkUP( new Link( **itBody, **itJoint, parent ) );
 			}
 			else
 			{
+				// this is the root Link
 				link = LinkUP( new Link( **itBody ) );
 			}
 
@@ -268,7 +270,7 @@ namespace scone
 				if ( childBody.m_osBody.hasJoint() && childBody.m_osBody.getJoint().getParentBody() == osBody )
 				{
 					// create child link
-					link->GetChildren().push_back( CreateLinkHierarchy( childBody.m_osBody ) );
+					link->GetChildren().push_back( CreateLinkHierarchy( childBody.m_osBody, link.get() ) );
 				}
 			}
 

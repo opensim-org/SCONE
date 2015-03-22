@@ -27,6 +27,7 @@ namespace scone
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 
 			// create additional controllers for each leg
+			// TODO: allow definition of leg and state instances for each controller
 			const PropNode& ccprops = props.GetChild( "ConditionalControllers" ).SetFlag();
 			for ( PropNode::ConstChildIter it = ccprops.Begin(); it != ccprops.End(); ++it )
 			{
@@ -46,7 +47,7 @@ namespace scone
 			INIT_FROM_PROP_REQUIRED( props, state_mask );
 
 			// create controller
-			const PropNode& cprops = props.GetChild( "Controller" );
+			const PropNode& cprops = props.GetChild( "Controller" ).SetFlag();
 			par.PushNamePrefix( "S" + state_mask.to_string() + "." );
 
 			// TODO: allow neater definition of target area instead of just taking the leg side
@@ -77,8 +78,8 @@ namespace scone
 			{
 				LegState& ls = *m_LegStates[ idx ];
 				ls.contact = ls.leg.GetContactForce().y > contact_force_threshold;
-				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetPos().x - model.GetRootLink().GetBody().GetPos().x;
-				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - model.GetRootLink().GetBody().GetPos().z;
+				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetBaseLink().GetBody().GetPos().x;
+				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
 			}
 
 			// update states
@@ -115,7 +116,8 @@ namespace scone
 
 					case LegState::SwingState:
 						// check Swing -> Landing
-						if ( ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetUpperLink().GetParent().GetBody().GetPos().x > landing_offset )
+						if ( ls.sagittal_pos > landing_offset )
+							ls.state = LegState::LandingState;
 
 					case LegState::StanceState:
 					case LegState::LandingState:
@@ -143,7 +145,7 @@ namespace scone
 
 		scone::String StateController::GetSignature()
 		{
-			return "SC." + m_ConditionalControllers.front()->controller->GetSignature();
+			return GetStringF( "SC%d.", m_ConditionalControllers.size() / 2 ) + m_ConditionalControllers.front()->controller->GetSignature();
 		}
 	}
 }

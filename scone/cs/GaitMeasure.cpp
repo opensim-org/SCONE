@@ -72,11 +72,14 @@ namespace scone
 		{
 			// find efficiency
 			double dist = GetBackDist( model ) - m_InitBackDist;
-			double cost = model.GetTotalEnergyConsumption() / 1000;
-			double eff = dist / cost;
-
+			double cost = model.GetTotalEnergyConsumption();
+			if ( cost != cost ) // check if cost is not NaN
+				cost = 1000;
+			double eff = dist / ( 0.001 * cost );
 			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
-			//printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, cost, eff, m_MinVelocityMeasure.GetAverage(), score );
+
+			if ( _isnan( score ) )
+				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, cost, eff, m_MinVelocityMeasure.GetAverage(), score );
 
 			return score;
 		}

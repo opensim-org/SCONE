@@ -16,6 +16,7 @@ namespace scone
 
 			const Link& GetUpperLink() const { return m_Upper; }
 			const Link& GetFootLink() const { return m_Foot; }
+			const Link& GetBaseLink() const { return m_Upper.GetParent(); }
 			Side GetSide() const { return m_Side; }
 			size_t GetIndex() const { return m_Index; }
 			size_t GetRank() const { return m_Rank; }
