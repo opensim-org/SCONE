@@ -64,10 +64,9 @@ namespace scone
 				bool TestLegState( size_t leg_idx, LegState::State state ) { return state_mask.test( size_t( state ) ); }
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
-
+			Real landing_offset;
 			StateController( const StateController& );
 			StateController& operator=( const StateController& );
-
 		};
 	}
 }

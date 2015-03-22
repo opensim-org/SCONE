@@ -20,6 +20,7 @@ namespace scone
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
+			INIT_FROM_PROP( props, landing_offset, 0.1 );
 
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
@@ -113,6 +114,9 @@ namespace scone
 						break;
 
 					case LegState::SwingState:
+						// check Swing -> Landing
+						if ( ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetUpperLink().GetParent().GetBody().GetPos().x > landing_offset )
+
 					case LegState::StanceState:
 					case LegState::LandingState:
 						break;
