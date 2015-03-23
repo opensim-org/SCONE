@@ -15,6 +15,7 @@ namespace scone
 		public:
 			typedef enum Mode { ConstructionMode, UpdateMode };
 			ParamSet( Mode m = ConstructionMode ) : m_Mode( m ) { };
+			ParamSet( const String& filename );
 			virtual ~ParamSet() { };
 
 			double Get( const ParamInfo& info );

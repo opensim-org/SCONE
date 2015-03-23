@@ -7,8 +7,8 @@
 
 namespace scone
 {
-	ExampleObjective::ExampleObjective( const PropNode& props ) :
-	Objective( props ),
+	ExampleObjective::ExampleObjective( const PropNode& props, opt::ParamSet& par ) :
+	Objective( props, par ),
 	num_params( 0 ),
 	is_evaluating( false )
 	{

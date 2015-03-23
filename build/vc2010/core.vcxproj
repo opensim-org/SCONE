@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\core\system.h" />
     <ClInclude Include="..\..\scone\core\core.h" />
     <ClInclude Include="..\..\scone\core\Exception.h" />
     <ClInclude Include="..\..\scone\core\Factory.h" />
@@ -30,13 +31,16 @@
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\scone\core\Log.cpp" />
     <ClCompile Include="..\..\scone\core\Named.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />
     <ClCompile Include="..\..\scone\core\Quat.cpp" />
+    <ClCompile Include="..\..\scone\core\system.cpp" />
     <ClCompile Include="..\..\scone\core\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\scone\core\Timer.cpp" />
     <ClCompile Include="..\..\scone\core\tools.cpp" />
     <ClCompile Include="..\..\scone\core\Vec3.cpp" />
   </ItemGroup>

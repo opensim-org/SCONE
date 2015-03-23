@@ -1,29 +1,68 @@
-<UI version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SconeStudioClass</class>
- <widget class="QMainWindow" name="SconeStudioClass" >
-  <property name="objectName" >
-   <string notr="true">SconeStudioClass</string>
-  </property>
-  <property name="geometry" >
+ <widget class="QMainWindow" name="SconeStudioClass">
+  <property name="geometry">
    <rect>
-	<x>0</x>
-	<y>0</y>
-	<width>600</width>
-	<height>400</height>
+    <x>0</x>
+    <y>0</y>
+    <width>367</width>
+    <height>519</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>SconeStudio</string>
   </property>
-  <widget class="QMenuBar" name="menuBar" />
-  <widget class="QToolBar" name="mainToolBar" />
-  <widget class="QWidget" name="centralWidget" />
-  <widget class="QStatusBar" name="statusBar" />
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QTreeView" name="browserView"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>367</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <layoutDefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
+ <layoutdefault spacing="6" margin="11"/>
  <resources>
-   <include location="SconeStudio.qrc"/>
+  <include location="SconeStudio.qrc"/>
  </resources>
- <connections/>
-</UI>
+ <connections>
+  <connection>
+   <sender>browserView</sender>
+   <signal>activated(QModelIndex)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>activateBrowserItem(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>183</x>
+     <y>265</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>183</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>activateBrowserItem(QModelIndex)</slot>
+ </slots>
+</ui>

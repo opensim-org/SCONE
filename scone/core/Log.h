@@ -10,5 +10,5 @@
 namespace scone
 {
 	// thread safe logging
-	inline void Log( const String& message ) { std::cout << message << std::endl; }
+	void CORE_API Log( const String& message );
 }

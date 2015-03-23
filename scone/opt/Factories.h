@@ -12,8 +12,8 @@ namespace scone
 		OPT_API OptimizerFactory& GetOptimizerFactory();
 		OPT_API OptimizerUP CreateOptimizer( const PropNode& props );
 
-		DECLARE_FACTORY( Objective, ( const PropNode& ) );
+		DECLARE_FACTORY( Objective, ( const PropNode&, ParamSet& ) );
 		OPT_API ObjectiveFactory& GetObjectiveFactory();
-		OPT_API ObjectiveUP CreateObjective( const PropNode& props );
+		OPT_API ObjectiveUP CreateObjective( const PropNode& props, ParamSet& par );
 	}
 }

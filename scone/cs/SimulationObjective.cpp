@@ -15,15 +15,14 @@ namespace scone
 {
 	namespace cs
 	{
-		boost::mutex g_ModelMutex;
-
-		SimulationObjective::SimulationObjective( const PropNode& props ) :
-		Objective( props ),
+		SimulationObjective::SimulationObjective( const PropNode& props, opt::ParamSet& par ) :
+		Objective( props, par ),
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_FROM_PROP( props, max_duration, 6000.0 );
 			INIT_FROM_PROP( props, signature_postfix, String() );
-			m_Model = sim::ModelUP( sim::CreateModel( m_ModelProps, opt::ParamSet() ) );
+
+			ProcessParameters( par );
 		}
 
 		SimulationObjective::~SimulationObjective()
@@ -32,6 +31,18 @@ namespace scone
 
 		double SimulationObjective::Evaluate()
 		{
+			SCONE_ASSERT( m_Model && m_Measure );
+
+			// run the simulation
+			m_Model->AdvanceSimulationTo( max_duration );
+			return m_Measure->GetResult( *m_Model );
+		}
+
+		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
+		{
+			// (re)create new model using stored model props
+			m_Model = sim::CreateModel( m_ModelProps, par );
+
 			// find measure controller
 			auto& controllers = m_Model->GetControllers();
 			auto measureIter = std::find_if( controllers.begin(), controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } );
@@ -41,20 +52,7 @@ namespace scone
 			else if ( controllers.end() != std::find_if( measureIter + 1, controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } ) )
 				SCONE_THROW( "More than one measure was found" );
 
-			Measure& m = dynamic_cast< Measure& >( **measureIter );
-
-			// run the simulation
-			m_Model->AdvanceSimulationTo( max_duration );
-
-			return m.GetResult( *m_Model );
-		}
-
-		void SimulationObjective::ProcessParameters( opt::ParamSet& par )
-		{
-			// create new model using stored model props
-			// TODO: make locking optional
-			//boost::lock_guard< boost::mutex > lock( g_ModelMutex );
-			m_Model = sim::CreateModel( m_ModelProps, par );
+			m_Measure = dynamic_cast< Measure* >( measureIter->get() );
 		}
 
 		void SimulationObjective::WriteResults( const String& file )

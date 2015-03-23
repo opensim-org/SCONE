@@ -1,31 +1,27 @@
 #pragma once
 
-#include <winbase.h>
+#include <memory>
+#include "core.h"
 
 namespace scone
 {
-	class Timer
+	class CORE_API Timer
 	{
 	public:
-		Timer() {
-			Reset();
-		}
-
-		void Reset() {
-			LARGE_INTEGER freq;
-			::QueryPerformanceFrequency( &freq );
-			m_PerfCounterToTime = 1.0 / freq.QuadPart;
-			::QueryPerformanceCounter( &m_Epoch );
-		}
-
-		double GetTime() {
-			LARGE_INTEGER current;
-			::QueryPerformanceCounter( &current );
-			return m_PerfCounterToTime * ( current.QuadPart - m_Epoch.QuadPart );
-		}
+		Timer();
+		~Timer();
+		void Restart();
+		double GetTime();
+		double Pause();
+		double Resume();
 
 	private:
-		LARGE_INTEGER m_Epoch;
-		double m_PerfCounterToTime;
+		double GetCurrentTime();
+		bool m_IsRunning;
+		double m_Time;
+
+		// system specific implementation is hidden behind pimpl
+		class Impl;
+		std::unique_ptr< Impl > m_pImpl;
 	};
 }

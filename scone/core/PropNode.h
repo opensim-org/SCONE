@@ -118,8 +118,15 @@ namespace scone
 		const PropNode& GetChild( const String& key ) const
 		{
 			const PropNode* p = GetChildPtr( key );
-			if ( p == nullptr )
-				SCONE_THROW( "Could not find key: " + key );
+			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: " + key );
+			else return *p;
+		}
+
+		/// Get Child
+		PropNode& GetChild( const String& key )
+		{
+			PropNode* p = GetChildPtr( key );
+			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: " + key );
 			else return *p;
 		}
 
@@ -179,8 +186,6 @@ namespace scone
 	PropNode CORE_API ReadPropertiesFromXml( const String& filename );
 	PropNode CORE_API ReadPropertiesFromInfo( const String& filename );
 	PropNode CORE_API ReadProperties( const String& filename );
-
-
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

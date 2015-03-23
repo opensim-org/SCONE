@@ -53,12 +53,18 @@
     <ClCompile Include="..\..\scone\studio\stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\studio\SconeManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_SconeStudio.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\studio\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\studio\SconeManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

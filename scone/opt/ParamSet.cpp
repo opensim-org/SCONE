@@ -6,12 +6,18 @@
 #include <fstream>
 #include <boost/format.hpp>
 #include "../core/Log.h"
+
 #include <boost/foreach.hpp>
 
 namespace scone
 {
 	namespace opt
 	{
+		ParamSet::ParamSet( const String& filename ) : m_Mode( ConstructionMode )
+		{
+			Read( filename );
+		}
+
 		double ParamSet::Get( const ParamInfo& info )
 		{
 			if ( m_Mode == ConstructionMode )
@@ -128,7 +134,6 @@ namespace scone
 
 			size_t params_set = 0;
 			size_t params_not_found = 0;
-			size_t params_not_free = 0;
 
 			while ( ifstr.good() )
 			{
@@ -136,25 +141,31 @@ namespace scone
 				double value, mean, std;
 				ifstr >> name >> value >> mean >> std;
 
+				if ( name.empty() )
+					continue;
+
 				std::vector< std::pair< ParamInfo, double > >::iterator iter = FindParamByName( name );
 				if ( iter != m_Params.end() )
 				{
-					// currently we only update free parameters (also for mean and std)
-					if ( iter->first.is_free )
-					{
-						iter->second = value;
-						iter->first.mean = mean;
-						iter->first.std = std;
-						++params_set;
-					}
-					else ++params_not_free;
+					// read existing parameter, updating mean / std
+					iter->second = value;
+					iter->first.mean = mean;
+					iter->first.std = std;
+					++params_set;
 				}
-				else ++params_not_found;
+				else
+				{
+					// create new parameter
+					// TODO: use a single mechanism to create parameters
+					ParamInfo info = ParamInfo( name, mean, std, 0, 0, REAL_LOWEST, REAL_MAX );
+					m_Params.push_back( std::make_pair( info, value ) );
+
+					++params_not_found;
+				}
 			}
 
 			// TODO: show statistics
-			if ( params_set == 0 )
-				SCONE_LOG( "Warning, no parameters were read from file" );
+			SCONE_LOG( "Read parameters, existing=" << params_set << " new=" << params_not_found );
 		}
 
 		void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
@@ -196,5 +207,5 @@ namespace scone
 				full_prefix += s;
 			return full_prefix;
 		}
-	}
+}
 }

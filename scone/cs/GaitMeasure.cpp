@@ -78,6 +78,12 @@ namespace scone
 			double eff = dist / ( 0.001 * cost );
 			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
 
+			// update report
+			m_Report.Set( "distance", dist );
+			m_Report.Set( "cost", cost );
+			m_Report.Set( "efficiency", eff );
+			m_Report.Set( score );
+
 			if ( _isnan( score ) )
 				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, cost, eff, m_MinVelocityMeasure.GetAverage(), score );
 
