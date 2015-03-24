@@ -35,15 +35,12 @@ void SimulationTest()
 		props.Set( "Model.model_file", *iter );
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
-		SCONE_LOG( "Muscles=" << m->GetMuscleCount() << " Bodies=" << m->GetBodyCount() << " Joints=" << m->GetJoints().size() );
-		SCONE_LOG( "Controllers=" << m->GetControllers().size() );
-
-		SCONE_LOG( "Starting simulation..." );
+		log::Debug( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscleCount(), m->GetBodyCount(), m->GetJoints().size(), m->GetControllers().size() );
+		log::Debug( "Starting simulation..." );
 
 		Timer t;
 		m->AdvanceSimulationTo( simulation_time );
 		double time = t.GetTime();
-		SCONE_LOG( "Simulation time: " << time << " (" << simulation_time / time << "x real-time)");
 
 		//std::cout << *m;
 
@@ -53,5 +50,4 @@ void SimulationTest()
 		//if ( par.IsInConstructionMode() )
 		//	par.SetMode( opt::ParamSet::UpdateMode );
 	}
-	SCONE_LOG( "Done!" );
 }

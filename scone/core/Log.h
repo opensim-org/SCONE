@@ -9,6 +9,18 @@
 
 namespace scone
 {
-	// thread safe logging
-	void CORE_API Log( const String& message );
+	namespace log
+	{
+		enum Level { LogAllLevel, TraceLevel, DebugLevel, InfoLevel, WarningLevel, ErrorLevel, CriticalLevel, IgnoreAllLevel };
+		
+		void CORE_API SetLevel( Level level );
+
+		// printf style log messages
+		void CORE_API Trace( const char* msg, ... );
+		void CORE_API Debug( const char* msg, ... );
+		void CORE_API Info( const char* msg, ... );
+		void CORE_API Warning( const char* msg, ... );
+		void CORE_API Error( const char* msg, ... );
+		void CORE_API Critical( const char* msg, ... );
+	}
 }

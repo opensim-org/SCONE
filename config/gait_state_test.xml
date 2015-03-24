@@ -12,11 +12,12 @@
 
 	<Objective type="SimulationObjective">
 		<max_duration>3.0</max_duration>
-		<signature_postfix>EffPen</signature_postfix>
+		<signature_postfix>EffForPenInit2</signature_postfix>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
-			<probe_class>Umberger2010MuscleMetabolicsProbe</probe_class>
+			<pre_control_simulation_time>0.0</pre_control_simulation_time>
+			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="StateController">

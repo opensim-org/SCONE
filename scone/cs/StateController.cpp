@@ -7,14 +7,27 @@
 #include "../core/InitFromPropNode.h"
 
 #include <boost/foreach.hpp>
+#include <boost/assign.hpp>
+
 #include "../sim/Body.h"
 #include "../sim/Factories.h"
+#include "../core/Log.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		const char* StateController::LegState::state_names[] = { "Stance", "Liftoff", "Swing", "Landing" };
+		std::map< StateController::LegState::State, String > g_StateNames = boost::assign::map_list_of
+			( StateController::LegState::UnknownState, "Unknown" )
+			( StateController::LegState::StanceState, "Stance" )
+			( StateController::LegState::LiftoffState, "Liftoff" )
+			( StateController::LegState::SwingState, "Swing" )
+			( StateController::LegState::LandingState, "Landing" );
+
+		const String& scone::cs::StateController::LegState::GetStateName( State state )
+		{
+			return g_StateNames[ state ];
+		}
 
 		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		sim::Controller( props, par, model, target_area )
@@ -87,6 +100,7 @@ namespace scone
 			{
 				LegState& ls = *m_LegStates[ idx ];
 				LegState& mir_ls = *m_LegStates[ idx ^ 1 ];
+				LegState::State new_state = ls.state;
 
 				if ( ls.contact )
 				{
@@ -97,8 +111,8 @@ namespace scone
 					case LegState::SwingState:
 					case LegState::LandingState:
 						if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
-							ls.state = LegState::LiftoffState;
-						else ls.state = LegState::StanceState;
+							new_state = LegState::LiftoffState;
+						else new_state = LegState::StanceState;
 						break;
 
 					case LegState::LiftoffState:
@@ -111,18 +125,24 @@ namespace scone
 					{
 					case LegState::UnknownState:
 					case LegState::LiftoffState:
-						ls.state = LegState::SwingState;
+						new_state = LegState::SwingState;
 						break;
 
 					case LegState::SwingState:
 						// check Swing -> Landing
 						if ( ls.sagittal_pos > landing_offset )
-							ls.state = LegState::LandingState;
+							new_state = LegState::LandingState;
 
 					case LegState::StanceState:
 					case LegState::LandingState:
 						break;
 					}
+				}
+
+				if ( new_state != ls.state )
+				{
+					log::Trace( "Leg %d state changed from %s to %s", idx, LegState::GetStateName( ls.state ).c_str(), LegState::GetStateName( new_state ).c_str() );
+					ls.state = new_state;
 				}
 			}
 		}

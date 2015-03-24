@@ -12,6 +12,7 @@
 #include "../opt/Factories.h"
 #include "../core/Timer.h"
 #include "../cs/SimulationObjective.h"
+#include "../core/Log.h"
 
 using namespace boost::filesystem;
 using boost::format;
@@ -21,6 +22,9 @@ namespace scone
 {
 	SconeManager::SconeManager()
 	{
+		// set log level
+		log::SetLevel( log::TraceLevel );
+
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();

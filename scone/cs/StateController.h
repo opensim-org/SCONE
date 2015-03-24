@@ -20,7 +20,7 @@ namespace scone
 
 				// current state
 				enum State { UnknownState = -1, StanceState = 0, LiftoffState = 1, SwingState = 2, LandingState = 3, StateCount };
-				static const char* state_names[];
+				static const String& GetStateName( State state );
 				TimedValue< State > state;
 
 				// current status

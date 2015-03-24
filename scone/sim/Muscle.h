@@ -16,6 +16,7 @@ namespace scone
 			Muscle();
 			virtual ~Muscle();
 
+			virtual Real GetForce() = 0;
 			virtual Real GetLength() = 0;
 			virtual Real GetFiberLength() = 0;
 			virtual Real GetTendonLength() = 0;

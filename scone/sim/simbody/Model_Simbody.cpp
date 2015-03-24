@@ -58,12 +58,14 @@ namespace scone
 			String model_file;
 			String state_init_file;
 			String probe_class;
+			double pre_control_simulation_time;
 
 			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
 			INIT_FROM_PROP( props, max_step_size, 0.001 );
 			INIT_FROM_PROP_REQUIRED( props, model_file );
 			INIT_FROM_PROP( props, state_init_file, String() );
 			INIT_FROM_PROP( props, probe_class, String() );
+			INIT_FROM_PROP( props, pre_control_simulation_time, 0.0 );
 
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
@@ -108,6 +110,20 @@ namespace scone
 			if ( !state_init_file.empty() )
 				ReadState( state_init_file );
 
+			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
+			m_pOsimManager->setWriteToStorage( true );
+			m_pOsimManager->setPerformAnalyses( false );
+			m_pOsimManager->setInitialTime( 0.0 );
+
+			// do some pre-control simulation
+			if ( pre_control_simulation_time > 0.0 )
+			{
+				m_pOsimModel->equilibrateMuscles( GetTkState() );
+				m_pOsimManager->setFinalTime( pre_control_simulation_time );
+				m_pOsimManager->integrate( GetTkState() );
+			}
+
 			// TODO: perhaps realize velocity from here, so that controllers have access valid properties
 			// right now, this is not needed because each individual call realizes the correct state
 
@@ -121,12 +137,9 @@ namespace scone
 				(*iter)->UpdateControls( *this, 0.0 );
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), (*iter)->GetControlValue() );
-			m_pOsimModel->equilibrateMuscles( GetOsimModel().updWorkingState() );
 
-			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
-			m_pOsimManager->setWriteToStorage( true );
-			m_pOsimManager->setPerformAnalyses( false );
+			// (re-)equilibrate muscles with initial control values set
+			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
 
 		Model_Simbody::~Model_Simbody()
@@ -146,7 +159,7 @@ namespace scone
 				try // see if it's a muscle
 				{
 					OpenSim::Muscle& osMus = dynamic_cast< OpenSim::Muscle& >( osAct );
-					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( osMus ) ) );
+					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, osMus ) ) );
 				}
 				catch ( std::bad_cast& )
 				{
@@ -204,7 +217,6 @@ namespace scone
 			SCONE_ASSERT( m_pOsimManager );
 
 			// Integrate from initial time to final time and integrate
-			m_pOsimManager->setInitialTime( 0.0 );
 			m_pOsimManager->setFinalTime( time );
 			m_pOsimManager->integrate( GetTkState() );
 

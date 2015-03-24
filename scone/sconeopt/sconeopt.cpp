@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	}
 	catch (std::exception& e)
 	{
-		SCONE_LOG( "Exception: " << e.what() );		
+		log::Critical( e.what() );
 		_getch();
 	}
 

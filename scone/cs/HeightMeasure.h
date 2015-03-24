@@ -2,7 +2,7 @@
 
 #include "Measure.h"
 #include "../sim/Body.h"
-#include "../core/MeasuredValue.h"
+#include "../core/SampledValue.h"
 
 namespace scone
 {
@@ -26,7 +26,7 @@ namespace scone
 			double termination_height;
 
 			sim::Body* m_pTargetBody; // non-owning pointer
-			MeasuredValue< double > m_Height;
+			SampledValue< double > m_Height;
 			bool m_Upward;
 		};
 	}

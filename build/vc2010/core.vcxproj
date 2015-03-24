@@ -18,7 +18,7 @@
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h" />
     <ClInclude Include="..\..\scone\core\Log.h" />
     <ClInclude Include="..\..\scone\core\math.h" />
-    <ClInclude Include="..\..\scone\core\MeasuredValue.h" />
+    <ClInclude Include="..\..\scone\core\SampledValue.h" />
     <ClInclude Include="..\..\scone\core\Named.h" />
     <ClInclude Include="..\..\scone\core\PropNode.h" />
     <ClInclude Include="..\..\scone\core\Quat.h" />

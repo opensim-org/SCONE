@@ -6,6 +6,9 @@
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "../core/Log.h"
+#include "../sim/sim.h"
+#include "../sim/Muscle.h"
+#include "boost/format.hpp"
 
 namespace scone
 {
@@ -34,6 +37,11 @@ namespace scone
 
 			m_InitBackDist = GetBackDist( model );
 			m_InitialComPos = model.GetComPos();
+			model.GetComVel();
+
+			// add initial energy measure (probably this is 0)
+			// TODO: try doing this after equilibrate muscles
+			m_Energy.AddSample( GetModelEnergy( model ), 0.0 );
 		}
 
 		GaitMeasure::~GaitMeasure()
@@ -49,6 +57,9 @@ namespace scone
 			// find normalized min velocity
 			Real vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
 			m_MinVelocityMeasure.AddSample( vel, timestamp );
+
+			// update energy measure
+			m_Energy.AddSample( GetModelEnergy( model ), timestamp );
 
 			// check termination
 			bool terminate = timestamp >= duration;
@@ -70,12 +81,15 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
+			// no more sample needs to be added, as update is already called
+			//m_Energy.AddSample( GetModelEnergy( model ), model.GetTime() );
+
 			// find efficiency
 			double dist = GetBackDist( model ) - m_InitBackDist;
-			double cost = model.GetTotalEnergyConsumption();
+			double cost = m_Energy.GetTotal(); // model.GetTotalEnergyConsumption();
 			if ( cost != cost ) // check if cost is not NaN
 				cost = 1000;
-			double eff = dist / ( 0.001 * cost );
+			double eff = dist / ( 0.0001 * cost );
 			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
 
 			// update report
@@ -108,5 +122,17 @@ namespace scone
 			auto iter = distances.begin();
 			return ( *iter + *(++iter) ) / 2;
 		}
+
+		double GaitMeasure::GetModelEnergy( sim::Model& model )
+		{
+			double f = 1.0; // base muscle force
+			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
+			{
+				f += mus->GetForce();
+			}
+
+			return f;
+		}
+
 	}
 }

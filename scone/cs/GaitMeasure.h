@@ -1,6 +1,6 @@
 #pragma once
 #include "Measure.h"
-#include "../core/MeasuredValue.h"
+#include "../core/SampledValue.h"
 
 namespace scone
 {
@@ -23,6 +23,9 @@ namespace scone
 			Real duration;
 
 		private:
+			SampledValue< double > m_Energy;
+			double GetModelEnergy( sim::Model& model );
+
 			// settings
 			std::vector< sim::Body* > m_GaitBodies;
 			Real GetBackDist( sim::Model &model );

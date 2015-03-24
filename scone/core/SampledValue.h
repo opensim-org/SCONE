@@ -3,10 +3,10 @@
 namespace scone
 {
 	template< typename T >
-	class MeasuredValue
+	class SampledValue
 	{
 	public:
-		MeasuredValue() { Reset(); }
+		SampledValue() { Reset(); }
 			
 		void AddSample( const T& value, const double& timestamp )
 		{
@@ -39,6 +39,8 @@ namespace scone
 			m_PrevTime = -1.0;
 		}
 
+		double GetPrevTime() { return m_PrevTime; }
+
 		T GetAverage() const
 		{
 			if ( m_PrevTime < 0.0 )
@@ -52,10 +54,11 @@ namespace scone
 		T GetLowest() const { return m_Lowest; }
 		T GetInitial() const { return m_Initial; }
 		T GetLatest() const { return m_PrevValue; }
+		T GetTotal() const { return m_Total; }
 
 	private:
 		T m_Total, m_Weight, m_Initial, m_Highest, m_Lowest, m_PrevTime, m_PrevValue;
 	};
 
-	typedef MeasuredValue< Real > MeasuredReal;
+	typedef SampledValue< Real > MeasuredReal;
 }

@@ -39,7 +39,7 @@ namespace scone
 		// evaluate individuals
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 		{
-			// run parsets through streams for awesomely reproducibilit
+			// run parsets through streams for awesomely reproducibility
 			std::vector< ParamSet > newparsets( parsets.size() );
 			for ( size_t idx = 0; idx < parsets.size(); ++idx )
 			{
@@ -52,8 +52,8 @@ namespace scone
 			CreateObjectives( parsets.size() );
 
 			if ( max_threads == 1 )
-				return EvaluateSingleThreaded( parsets );
-			else return EvaluateMultiThreaded( parsets );
+				return EvaluateSingleThreaded( newparsets );
+			else return EvaluateMultiThreaded( newparsets );
 		}
 
 		// evaluate individuals one-by-one in current thread
@@ -118,7 +118,7 @@ namespace scone
 		{
 			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
 			create_directories( path( m_OutputFolder ) );
-			SCONE_LOG( "Writing output to folder " << m_OutputFolder );
+			log::Info( ( "Writing to folder " + m_OutputFolder ).c_str() );
 		}
 
 		const String& Optimizer::GetOutputFolder()

@@ -14,12 +14,15 @@ namespace scone
 {
 	namespace sim
 	{
+		class Model_Simbody;
+
 		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public Muscle
 		{
 		public:
-			Muscle_Simbody( OpenSim::Muscle& mus );
+			Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus );
 			virtual ~Muscle_Simbody();
 
+			virtual Real GetForce() override;
 			virtual Real GetLength() override;
 			virtual Real GetFiberLength() override;
 			virtual Real GetTendonLength() override;
@@ -36,6 +39,7 @@ namespace scone
 
 		private:
 			OpenSim::Muscle& m_osMus;
+			Model_Simbody& m_Model;
 		};
 	}
 }

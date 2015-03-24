@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Muscle_Simbody.h"
 #include "../../core/Exception.h"
+#include "Model_Simbody.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		Muscle_Simbody::Muscle_Simbody( OpenSim::Muscle& mus ) : m_osMus( mus )
+		Muscle_Simbody::Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus ) : m_Model( model ), m_osMus( mus )
 		{
 		}
 
@@ -18,6 +19,14 @@ namespace scone
 		const String& Muscle_Simbody::GetName() const
 		{
 			return m_osMus.getName();
+		}
+
+		scone::Real Muscle_Simbody::GetForce()
+		{
+			// OpenSim: why can't I just use getWorkingState()?
+			// OpenSim: why must I update to Dynamics for getForce()?
+			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
+			return m_osMus.getForce( m_Model.GetTkState() );
 		}
 
 		scone::Real scone::sim::Muscle_Simbody::GetLength()
