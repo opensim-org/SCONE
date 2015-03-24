@@ -74,8 +74,12 @@ namespace scone
 
 		void StateController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			UpdateLegStates( model, timestamp );
-			UpdateControllerStates( model, timestamp );
+			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
+			{
+				// only update the states after a successful integration step
+				UpdateLegStates( model, timestamp );
+				UpdateControllerStates( model, timestamp );
+			}
 
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
@@ -141,7 +145,7 @@ namespace scone
 
 				if ( new_state != ls.state )
 				{
-					log::Trace( "Leg %d state changed from %s to %s", idx, LegState::GetStateName( ls.state ).c_str(), LegState::GetStateName( new_state ).c_str() );
+					log::Trace( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, LegState::GetStateName( ls.state ).c_str(), LegState::GetStateName( new_state ).c_str() );
 					ls.state = new_state;
 				}
 			}
