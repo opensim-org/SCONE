@@ -4,8 +4,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
+#include <boost/foreach.hpp>
+
 #include "Factories.h"
 #include "../core/Log.h"
+#include <sstream>
 
 using namespace boost::filesystem;
 
@@ -36,6 +39,15 @@ namespace scone
 		// evaluate individuals
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 		{
+			// run parsets through streams for awesomely reproducibilit
+			std::vector< ParamSet > newparsets( parsets.size() );
+			for ( size_t idx = 0; idx < parsets.size(); ++idx )
+			{
+				std::stringstream str;
+				str << parsets[ idx ];
+				str >> newparsets[ idx ];
+			}
+
 			// make sure there are enough objectives
 			CreateObjectives( parsets.size() );
 

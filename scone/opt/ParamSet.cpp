@@ -117,55 +117,18 @@ namespace scone
 			}
 		}
 
-		void ParamSet::Write( const String& filename )
+		void ParamSet::Write( const String& filename ) const
 		{
 			std::ofstream ofstr( filename );
-
-			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
-			{
-				if ( iter->first.is_free )
-					ofstr << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
-			}
+			SCONE_CONDITIONAL_THROW( !ofstr.good(), "Error opening file: " + filename );
+			ToStream( ofstr );
 		}
 
 		void ParamSet::Read( const String& filename )
 		{
 			std::ifstream ifstr( filename );
-
-			size_t params_set = 0;
-			size_t params_not_found = 0;
-
-			while ( ifstr.good() )
-			{
-				std::string name;
-				double value, mean, std;
-				ifstr >> name >> value >> mean >> std;
-
-				if ( name.empty() )
-					continue;
-
-				std::vector< std::pair< ParamInfo, double > >::iterator iter = FindParamByName( name );
-				if ( iter != m_Params.end() )
-				{
-					// read existing parameter, updating mean / std
-					iter->second = value;
-					iter->first.mean = mean;
-					iter->first.std = std;
-					++params_set;
-				}
-				else
-				{
-					// create new parameter
-					// TODO: use a single mechanism to create parameters
-					ParamInfo info = ParamInfo( name, mean, std, 0, 0, REAL_LOWEST, REAL_MAX );
-					m_Params.push_back( std::make_pair( info, value ) );
-
-					++params_not_found;
-				}
-			}
-
-			// TODO: show statistics
-			SCONE_LOG( "Read parameters, existing=" << params_set << " new=" << params_not_found );
+			SCONE_CONDITIONAL_THROW( !ifstr.good(), "Error opening file: " + filename );
+			FromStream( ifstr );
 		}
 
 		void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
@@ -207,5 +170,56 @@ namespace scone
 				full_prefix += s;
 			return full_prefix;
 		}
-}
+
+		std::ostream& ParamSet::ToStream( std::ostream& str ) const
+		{
+			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
+			{
+				if ( iter->first.is_free )
+					str << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
+			}
+
+			return str;
+		}
+
+		std::istream& ParamSet::FromStream( std::istream& str )
+		{
+			size_t params_set = 0;
+			size_t params_not_found = 0;
+
+			while ( str.good() )
+			{
+				std::string name;
+				double value, mean, std;
+				str >> name >> value >> mean >> std;
+
+				if ( name.empty() )
+					continue;
+
+				std::vector< std::pair< ParamInfo, double > >::iterator iter = FindParamByName( name );
+				if ( iter != m_Params.end() )
+				{
+					// read existing parameter, updating mean / std
+					iter->second = value;
+					iter->first.mean = mean;
+					iter->first.std = std;
+					++params_set;
+				}
+				else
+				{
+					// create new parameter
+					// TODO: use a single mechanism to create parameters
+					ParamInfo info = ParamInfo( name, mean, std, 0, 0, REAL_LOWEST, REAL_MAX );
+					m_Params.push_back( std::make_pair( info, value ) );
+
+					++params_not_found;
+				}
+			}
+
+			// TODO: show statistics
+			//SCONE_LOG( "Read parameters, existing=" << params_set << " new=" << params_not_found );
+
+			return str;
+		}
+	}
 }

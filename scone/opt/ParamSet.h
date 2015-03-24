@@ -36,8 +36,11 @@ namespace scone
 			void SetMode( Mode m ) { m_Mode = m; }
 			bool IsInConstructionMode() { return m_Mode == ConstructionMode; }
 
-			void Write( const String& filename );
+			void Write( const String& filename ) const;
 			void Read( const String& filename );
+
+			std::ostream& ToStream( std::ostream& str ) const;
+			std::istream& FromStream( std::istream& str );
 
 			void PushNamePrefix( const String& prefix );
 			void PopNamePrefix();
@@ -60,5 +63,9 @@ namespace scone
 
 			virtual void ProcessParameters( opt::ParamSet& par ) = 0;
 		};
+
+		inline std::ostream& operator<<( std::ostream& str, const ParamSet& par ) { return par.ToStream( str ); }
+		inline std::istream& operator>>( std::istream& str, ParamSet& par ) { return par.FromStream( str ); }
 	}
 }
+

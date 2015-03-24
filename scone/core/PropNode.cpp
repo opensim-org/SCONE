@@ -264,7 +264,7 @@ namespace scone
 		return *this;
 	}
 
-	void PropNode::ToStream( std::ostream& str, const std::string& prefix, bool unflaggedOnly ) const
+	std::ostream& PropNode::ToStream( std::ostream& str, const std::string& prefix, bool unflaggedOnly ) const
 	{
 		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
@@ -280,6 +280,8 @@ namespace scone
 
 			iter->second->ToStream( str, prefix + iter->first + ".", unflaggedOnly );
 		}
+
+		return str;
 	}
 
 	bool PropNode::operator==( const PropNode& other ) const

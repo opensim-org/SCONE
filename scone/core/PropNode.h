@@ -164,7 +164,7 @@ namespace scone
 		String GetStr( const String& key, const String& def ) const { return Get< String >( key, def ); }
 		Vec3 GetVec3( const String& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
-		void ToStream( std::ostream& str, const std::string& prefix = "", bool unflaggedOnly = false ) const;
+		std::ostream& ToStream( std::ostream& str, const std::string& prefix = "", bool unflaggedOnly = false ) const;
 
 		// flagging (can be used to detect unused properties)
 		const PropNode& SetFlag() const { m_Flag = true; return *this; }
