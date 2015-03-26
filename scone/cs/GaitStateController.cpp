@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "StateController.h"
+#include "GaitStateController.h"
 #include "../sim/Model.h"
 #include "../sim/sim.h"
 #include "../sim/Leg.h"
@@ -17,19 +17,19 @@ namespace scone
 {
 	namespace cs
 	{
-		std::map< StateController::LegState::State, String > g_StateNames = boost::assign::map_list_of
-			( StateController::LegState::UnknownState, "Unknown" )
-			( StateController::LegState::StanceState, "Stance" )
-			( StateController::LegState::LiftoffState, "Liftoff" )
-			( StateController::LegState::SwingState, "Swing" )
-			( StateController::LegState::LandingState, "Landing" );
+		std::map< GaitStateController::LegState::State, String > g_StateNames = boost::assign::map_list_of
+			( GaitStateController::LegState::UnknownState, "Unknown" )
+			( GaitStateController::LegState::StanceState, "Stance" )
+			( GaitStateController::LegState::LiftoffState, "Liftoff" )
+			( GaitStateController::LegState::SwingState, "Swing" )
+			( GaitStateController::LegState::LandingState, "Landing" );
 
-		const String& scone::cs::StateController::LegState::GetStateName( State state )
+		const String& scone::cs::GaitStateController::LegState::GetStateName( State state )
 		{
 			return g_StateNames[ state ];
 		}
 
-		StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+		GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
@@ -50,7 +50,7 @@ namespace scone
 			}
 		}
 
-		StateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Leg& leg ) :
+		GaitStateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Leg& leg ) :
 		active( false ),
 		active_since( 0.0 )
 		{
@@ -68,11 +68,11 @@ namespace scone
 			par.PopNamePrefix();
 		}
 
-		StateController::~StateController()
+		GaitStateController::~GaitStateController()
 		{
 		}
 
-		void StateController::UpdateControls( sim::Model& model, double timestamp )
+		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{
@@ -88,7 +88,7 @@ namespace scone
 			}
 		}
 
-		void StateController::UpdateLegStates( sim::Model& model, double timestamp )
+		void GaitStateController::UpdateLegStates( sim::Model& model, double timestamp )
 		{
 			// update statuses
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
@@ -151,7 +151,7 @@ namespace scone
 			}
 		}
 
-		void StateController::UpdateControllerStates( sim::Model& model, double timestamp )
+		void GaitStateController::UpdateControllerStates( sim::Model& model, double timestamp )
 		{
 			// update controller states
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
@@ -167,7 +167,7 @@ namespace scone
 			}
 		}
 
-		scone::String StateController::GetSignature()
+		scone::String GaitStateController::GetSignature()
 		{
 			return GetStringF( "SC%d.", m_ConditionalControllers.size() / 2 ) + m_ConditionalControllers.front()->controller->GetSignature();
 		}

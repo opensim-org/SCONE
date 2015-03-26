@@ -21,7 +21,7 @@ using namespace boost::filesystem;
 #include "PieceWiseConstantFunction.h"
 #include "PieceWiseLinearFunction.h"
 #include "Polynomial.h"
-#include "StateController.h"
+#include "GaitStateController.h"
 
 namespace scone
 {
@@ -37,7 +37,7 @@ namespace scone
 
 			// register controllers
 			sim::GetControllerFactory().Register< FeedForwardController >();
-			sim::GetControllerFactory().Register< StateController >();
+			sim::GetControllerFactory().Register< GaitStateController >();
 			sim::GetControllerFactory().Register< HeightMeasure >();
 			sim::GetControllerFactory().Register< GaitMeasure >();
 			sim::GetControllerFactory().Register< EnergyMeasure >();

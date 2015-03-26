@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API StateController : public sim::Controller
+		class CS_API GaitStateController : public sim::Controller
 		{
 		public:
 			struct LegState
@@ -29,8 +29,8 @@ namespace scone
 				Real coronal_pos;
 			};
 
-			StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
-			virtual ~StateController();
+			GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+			virtual ~GaitStateController();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 
@@ -65,8 +65,8 @@ namespace scone
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_offset;
-			StateController( const StateController& );
-			StateController& operator=( const StateController& );
+			GaitStateController( const GaitStateController& );
+			GaitStateController& operator=( const GaitStateController& );
 		};
 	}
 }
