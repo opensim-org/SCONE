@@ -28,9 +28,9 @@ namespace scone
 
 		String GetSideName( const Side& side )
 		{
-			if ( side == LeftSide ) return "_L";
-			else if ( side == RightSide ) return "_R";
-			else return "_M";
+			if ( side == LeftSide ) return "_l";
+			else if ( side == RightSide ) return "_r";
+			else return "_m";
 		}
 	}
 }

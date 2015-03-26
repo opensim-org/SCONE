@@ -380,5 +380,18 @@ namespace scone
 
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		}
+
+		std::map< String, double > Model_Simbody::GetState()
+		{
+			auto values = GetOsimModel().getStateValues( GetTkState() );
+			auto names = GetOsimModel().getStateVariableNames();
+			SCONE_ASSERT( values.size() == names.size() );
+
+			std::map< String, double > state;
+			for ( int i = 0; i < values.size(); ++i )
+				state[ names[ i ] ] = values[ i ];
+
+			return state;
+		}
 	}
 }

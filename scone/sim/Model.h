@@ -8,6 +8,10 @@
 #include "../opt/ParamSet.h"
 #include "Leg.h"
 
+#include <map>
+#include <vector>
+#include "State.h"
+
 namespace scone
 {
 	namespace sim
@@ -44,9 +48,12 @@ namespace scone
 			Leg& GetLeg( size_t idx ) { return *m_Legs[ idx ]; }
 			std::vector< LegUP >& GetLegs() { return m_Legs; }
 
-			/// Simulate model
+			/// Get simulation info
 			virtual double GetTime() = 0;
+			virtual State GetState() = 0;
 			virtual int GetIntegrationStep() = 0;
+
+			/// Simulate model
 			virtual int GetPreviousIntegrationStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
 			virtual void WriteStateHistory( const String& file ) = 0;

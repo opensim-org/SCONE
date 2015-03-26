@@ -7,6 +7,7 @@
 #include "Muscle_Simbody.h"
 
 #include <memory>
+#include <map>
 
 namespace OpenSim
 {
@@ -44,6 +45,7 @@ namespace scone
 
 			virtual void SetTerminationRequest() override;
 
+			virtual std::map< String, double > GetState() override;
 			virtual double GetTime() override;
 			virtual int GetIntegrationStep() override;
 			virtual int GetPreviousIntegrationStep() override;
