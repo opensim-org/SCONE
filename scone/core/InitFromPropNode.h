@@ -38,15 +38,18 @@ namespace scone
 		prop.SetFlag();
 	}
 
-	// process vector< unique_ptr > type (requires factory definition)
-	//template< typename T >
-	//void InitFromPropNode( const PropNode& prop, std::vector< std::unique_ptr< T > >& vec )
-	//{ 
-	//	vec.clear();
-	//	for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
-	//		vec.push_back( CreateFromPropNode< T >( *iter->second ) );
-	//	prop.SetFlag();
-	//}
+	// process vector< > type (NOT TESTED)
+	template< typename T >
+	void InitFromPropNode( const PropNode& prop, std::vector< T >& vec )
+	{ 
+		vec.clear();
+		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
+		{
+			vec.push_back( T() );
+			InitFromPropNode( iter->second, vec.back() );
+		}
+		prop.SetFlag();
+	}
 
 	//// process pointer type
 	//template< typename T >

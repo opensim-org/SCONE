@@ -9,18 +9,44 @@ namespace scone
 	{
 	public:
 		typedef std::map< T, String > MapType;
+		typedef const char* CC;
 
-		EnumStringMap( MapType& init_map ) : m_Map( init_map ) { };
-		EnumStringMap( MapType::iterator i1, MapType::iterator i2 ) : m_Map( i1, i2 ) { };
+		// clumsy constructor because initializer lists aren't supported...
+		EnumStringMap(
+			T e1 = T(0), const char* s1 = nullptr,
+			T e2 = T(0), const char* s2 = nullptr,
+			T e3 = T(0), const char* s3 = nullptr,
+			T e4 = T(0), const char* s4 = nullptr,
+			T e5 = T(0), const char* s5 = nullptr,
+			T e6 = T(0), const char* s6 = nullptr,
+			T e7 = T(0), const char* s7 = nullptr,
+			T e8 = T(0), const char* s8 = nullptr,
+			T e9 = T(0), const char* s9 = nullptr
+			)
+		{
+			if ( s1 ) m_Map[ e1 ] = s1;
+			if ( s2 ) m_Map[ e2 ] = s2;
+			if ( s3 ) m_Map[ e3 ] = s3;
+			if ( s4 ) m_Map[ e4 ] = s4;
+			if ( s5 ) m_Map[ e5 ] = s5;
+			if ( s6 ) m_Map[ e6 ] = s6;
+			if ( s7 ) m_Map[ e7 ] = s7;
+			if ( s8 ) m_Map[ e8 ] = s8;
+			if ( s9 ) m_Map[ e9 ] = s9;
+		};
+
 		virtual ~EnumStringMap() { };
 
-		const String& GetString( T e ) { return m_Map[ e ]; }
+		const String& GetString( T e ) {
+			auto iter = m_Map.find( e );
+			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find enum " + ToString( e ) );
+			return iter->second;
+		}
 		T GetEnum( const String& s )
 		{
 			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&](const String& v) { return v == s; } );
-			if ( iter != m_Map.end() )
-				return iter->first;
-			else return T(-1);
+			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find enum for " + s );
+			return iter->first;
 		}
 			
 	private:

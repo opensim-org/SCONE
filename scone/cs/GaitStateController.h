@@ -5,6 +5,7 @@
 #include "../sim/Leg.h"
 #include <bitset>
 #include "../core/TimedValue.h"
+#include "../core/EnumStringMap.h"
 
 namespace scone
 {
@@ -15,13 +16,14 @@ namespace scone
 		public:
 			struct LegState
 			{
-				LegState( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
+				LegState( const sim::Leg& l ) : leg( l ), phase( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
 				const sim::Leg& leg;
 
 				// current state
-				enum State { UnknownState = -1, StanceState = 0, LiftoffState = 1, SwingState = 2, LandingState = 3, StateCount };
-				static const String& GetStateName( State state );
-				TimedValue< State > state;
+				enum Phase { UnknownState = -1, StanceState = 0, LiftoffState = 1, SwingState = 2, LandingState = 3, StateCount };
+				const String& GetPhaseName() { return m_PhaseNames.GetString( phase ); }
+				static EnumStringMap< Phase > m_PhaseNames;
+				TimedValue< Phase > phase;
 
 				// current status
 				bool contact;
@@ -54,14 +56,14 @@ namespace scone
 			class ConditionalController
 			{
 			public:
-				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Leg& leg );
+				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const PropNode& mask );
 				virtual ~ConditionalController() {}
 				size_t leg_index;
-				std::bitset< LegState::StateCount > state_mask;
+				std::bitset< LegState::StateCount > phase_mask;
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;
-				bool TestLegState( size_t leg_idx, LegState::State state ) { return state_mask.test( size_t( state ) ); }
+				bool TestLegPhase( size_t leg_idx, LegState::Phase state ) { return phase_mask.test( size_t( state ) ); }
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_offset;

@@ -11,8 +11,10 @@ namespace scone
 {
 	namespace cs
 	{
-		//typename EnumStringMap< EnergyMeasure::EnergyMeasureType > m_MeasureNames = boost::assign::map_list_of
-		//	( EnergyMeasure::UnknownMeasure, "Unknown" );
+		EnumStringMap< EnergyMeasure::EnergyMeasureType > m_MeasureNames = EnumStringMap< EnergyMeasure::EnergyMeasureType >(
+			EnergyMeasure::TotalForce, "TotalForce",
+			EnergyMeasure::Umberger2010, "Umberger2010"
+			);
 
 		EnergyMeasure::EnergyMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
