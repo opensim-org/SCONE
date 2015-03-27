@@ -21,6 +21,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
+#include "../../core/system.h"
 
 using std::cout;
 using std::endl;
@@ -68,7 +69,7 @@ namespace scone
 			INIT_FROM_PROP( props, pre_control_simulation_time, 0.0 );
 
 			// create new OpenSim Model using resource cache
-			m_pOsimModel = g_ModelCache.CreateCopy( model_file );
+			m_pOsimModel = g_ModelCache.CreateCopy( GetSconeFolder( "models" ) + model_file );
 
 			// create the model
 			CreateModelWrappers();
@@ -108,7 +109,7 @@ namespace scone
 
 			// read initial state
 			if ( !state_init_file.empty() )
-				ReadState( state_init_file );
+				ReadState( GetSconeFolder( "models" ) + state_init_file );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );

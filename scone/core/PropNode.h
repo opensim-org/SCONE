@@ -183,9 +183,10 @@ namespace scone
 	};
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API ReadPropertiesFromXml( const String& filename );
-	PropNode CORE_API ReadPropertiesFromInfo( const String& filename );
-	PropNode CORE_API ReadProperties( const String& filename );
+	PropNode CORE_API ReadPropNodeFromXml( const String& filename );
+	PropNode CORE_API ReadPropNodeFromInfo( const String& filename );
+	PropNode CORE_API ReadPropNodeFromIni( const String& filename );
+	PropNode CORE_API ReadPropNode( const String& filename );
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

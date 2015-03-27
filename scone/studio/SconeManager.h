@@ -13,7 +13,6 @@ namespace scone
 		virtual ~SconeManager();
 
 		void SimulateObjective( const String& filename );
-		const PropNode& GetSettings();
 
 	private:
 		PropNode m_Settings;

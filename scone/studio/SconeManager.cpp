@@ -34,15 +34,6 @@ namespace scone
 	{
 	}
 
-	const PropNode& SconeManager::GetSettings()
-	{
-		// lazy initialization
-		if ( m_Settings.IsEmpty() )
-			m_Settings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
-
-		return m_Settings;
-	}
-
 	void SconeManager::SimulateObjective( const String& filename )
 	{
 		cout << "--- Starting evaluation ---" << endl;
@@ -53,7 +44,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 	
-		PropNode configProp = ReadPropertiesFromXml( config_path.string() ) ;
+		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
 		const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );

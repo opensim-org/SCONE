@@ -303,24 +303,30 @@ namespace scone
 		return true;
 	}
 
-	PropNode CORE_API ReadPropertiesFromXml( const String& filename )
+	PropNode CORE_API ReadPropNodeFromXml( const String& filename )
 	{
 		return PropNode().FromXmlFile( filename );
 	}
 
-	PropNode CORE_API ReadPropertiesFromInfo( const String& filename )
+	PropNode CORE_API ReadPropNodeFromInfo( const String& filename )
 	{
 		return PropNode().FromInfoFile( filename );
 	}
 
-	scone::PropNode ReadProperties( const String& config_file )
+	PropNode CORE_API ReadPropNodeFromIni( const String& filename )
+	{
+		return PropNode().FromIniFile( filename );
+	}
+
+	PropNode ReadPropNode( const String& config_file )
 	{
 		String ext = boost::filesystem::path( config_file ).extension().string();
 		if ( ext == ".xml" )
-			return ReadPropertiesFromXml( config_file );
+			return ReadPropNodeFromXml( config_file );
 		if ( ext == ".info" )
-			return ReadPropertiesFromInfo( config_file );
+			return ReadPropNodeFromInfo( config_file );
+		if ( ext == ".ini" )
+			return ReadPropNodeFromIni( config_file );
 		else SCONE_THROW( "Unknown file type: " + config_file );
 	}
-
 }

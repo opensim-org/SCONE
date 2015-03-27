@@ -72,9 +72,6 @@
     <ClInclude Include="..\..\scone\core\SampledValue.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\enum_with_tostring.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\EnumStringMap.h">
       <Filter>Tools</Filter>
     </ClInclude>

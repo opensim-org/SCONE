@@ -9,6 +9,7 @@
 #include "Factories.h"
 #include "../core/Log.h"
 #include <sstream>
+#include "../core/system.h"
 
 using namespace boost::filesystem;
 
@@ -23,7 +24,6 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
-			INIT_FROM_PROP( props, output_folder_base, String() );
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 			INIT_FROM_PROP( props, maximize_objective, true );
 			INIT_FROM_PROP( props, show_optimization_time, false );
@@ -116,7 +116,7 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			m_OutputFolder = output_folder_base + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
+			m_OutputFolder = GetSconeFolder( "output" ) + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
 			create_directories( path( m_OutputFolder ) );
 			log::Info( ( "Writing to folder " + m_OutputFolder ).c_str() );
 		}

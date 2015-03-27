@@ -14,7 +14,7 @@ QMainWindow(parent, flags)
 bool SconeStudio::init()
 {
 	// init file model and browser widget
-	QString path = QString( m_Manager.GetSettings().GetStr( "folders.output", "C:/" ).c_str() );
+	QString path = QString( scone::GetSconeFolder( "output" ).c_str() );
 	m_pFileModel = new QFileSystemModel( this );
 	QStringList filters( "*.par" );
 	m_pFileModel->setNameFilters( filters );

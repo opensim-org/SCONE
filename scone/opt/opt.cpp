@@ -18,7 +18,7 @@ namespace scone
 		void OPT_API PerformOptimization( const String& config_file )
 		{
 			// load properties
-			PropNode p = ReadProperties( config_file );
+			PropNode p = ReadPropNode( config_file );
 
 			// set current path to config file path
 			path config_path( config_file );

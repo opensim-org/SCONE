@@ -39,7 +39,6 @@ namespace scone
 			static void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
 			void InitOutputFolder();
 
-			String output_folder_base;
 			String m_Name;
 			String m_OutputFolder;
 

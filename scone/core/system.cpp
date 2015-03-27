@@ -3,9 +3,13 @@
 
 #include <shlobj.h>
 #include <iosfwd>
+#include <boost/thread.hpp>
 
 namespace scone
 {
+	boost::mutex g_SystemMutex;
+	PropNode g_GlobalSettings;
+
 	String GetLocalAppDataFolder()
 	{
 		// get the string
@@ -23,4 +27,21 @@ namespace scone
 		// convert to String and return
 		return String( mbsLocalAppData );
 	}
+
+	const PropNode& GetSconeSettings()
+	{
+		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+
+		// lazy initialization
+		if ( g_GlobalSettings.IsEmpty() )
+			g_GlobalSettings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
+
+		return g_GlobalSettings;
+	}
+
+	CORE_API String GetSconeFolder( const String& folder )
+	{
+		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
+	}
+
 }

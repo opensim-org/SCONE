@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\core\EnumStringMap.h" />
-    <ClInclude Include="..\..\scone\core\enum_with_tostring.h" />
     <ClInclude Include="..\..\scone\core\system.h" />
     <ClInclude Include="..\..\scone\core\core.h" />
     <ClInclude Include="..\..\scone\core\Exception.h" />
