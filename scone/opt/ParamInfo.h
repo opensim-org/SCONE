@@ -22,8 +22,8 @@ namespace scone
 
 			/// current state
 			//double value; // TODO: use this
-			double mean; // TODO: rename to init_mean?
-			double std;
+			double init_mean; // TODO: rename to init_mean?
+			double init_std;
 
 			/// initialization options
 			double init_min;

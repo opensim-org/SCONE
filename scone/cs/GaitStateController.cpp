@@ -29,8 +29,8 @@ namespace scone
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
-			INIT_FROM_PROP( props, landing_offset, 0.1 );
-
+			landing_threshold = par.Get( "landing_threshold", props.GetChild( "landing_threshold" ).SetFlag() );
+			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
@@ -102,41 +102,43 @@ namespace scone
 				LegState& mir_ls = *m_LegStates[ idx ^ 1 ];
 				LegState::Phase new_state = ls.phase;
 
-				if ( ls.contact )
+				switch( ls.phase )
 				{
-					switch( ls.phase )
+				case LegState::UnknownState:
+					if ( ls.contact )
 					{
-					case LegState::UnknownState:
-					case LegState::StanceState:
-					case LegState::SwingState:
-					case LegState::LandingState:
 						if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
 							new_state = LegState::LiftoffState;
 						else new_state = LegState::StanceState;
-						break;
-
-					case LegState::LiftoffState:
-						break;
 					}
-				}
-				else
-				{
-					switch( ls.phase )
+					else
 					{
-					case LegState::UnknownState:
-					case LegState::LiftoffState:
-						new_state = LegState::SwingState;
-						break;
-
-					case LegState::SwingState:
-						// check Swing -> Landing
-						if ( ls.sagittal_pos > landing_offset )
+						if ( ls.sagittal_pos > landing_threshold )
 							new_state = LegState::LandingState;
-
-					case LegState::StanceState:
-					case LegState::LandingState:
-						break;
+						else new_state = LegState::SwingState;
 					}
+					break;
+
+				case LegState::StanceState:
+					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
+						new_state = LegState::LiftoffState;
+					break;
+
+				case LegState::LiftoffState:
+					if ( !ls.contact )
+						new_state = LegState::SwingState;
+					break;
+
+				case LegState::SwingState:
+					if ( ls.sagittal_pos > landing_threshold )
+						new_state = LegState::LandingState;
+					break;
+
+				case LegState::LandingState:
+					if ( ls.contact )
+						new_state = LegState::StanceState;
+					break;
+
 				}
 
 				if ( new_state != ls.phase )

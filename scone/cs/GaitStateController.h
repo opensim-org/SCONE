@@ -66,7 +66,7 @@ namespace scone
 				bool TestLegPhase( size_t leg_idx, LegState::Phase state ) { return phase_mask.test( size_t( state ) ); }
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
-			Real landing_offset;
+			Real landing_threshold;
 			GaitStateController( const GaitStateController& );
 			GaitStateController& operator=( const GaitStateController& );
 		};

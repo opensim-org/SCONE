@@ -146,8 +146,9 @@ namespace scone
 					var += weight * Square( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
 
 				// update the result in ParInfo
-				m_Params[ parIdx ].first.mean = mean;
-				m_Params[ parIdx ].first.std = sqrt( var );
+				// TODO: keep this somewhere else?
+				m_Params[ parIdx ].first.init_mean = mean;
+				m_Params[ parIdx ].first.init_std = sqrt( var );
 			}
 		}
 
@@ -176,7 +177,7 @@ namespace scone
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 			{
 				if ( iter->first.is_free )
-					str << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.mean % iter->first.std;
+					str << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.init_mean % iter->first.init_std;
 			}
 
 			return str;
@@ -201,8 +202,8 @@ namespace scone
 				{
 					// read existing parameter, updating mean / std
 					iter->second = value;
-					iter->first.mean = mean;
-					iter->first.std = std;
+					iter->first.init_mean = mean;
+					iter->first.init_std = std;
 					++params_set;
 				}
 				else
