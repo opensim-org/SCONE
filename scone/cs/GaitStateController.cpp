@@ -130,7 +130,9 @@ namespace scone
 					break;
 
 				case LegState::SwingState:
-					if ( ls.sagittal_pos > landing_threshold )
+					if ( ls.contact && ls.sagittal_pos > mir_ls.sagittal_pos )
+						new_state = LegState::StanceState;
+					if ( !ls.contact && ls.sagittal_pos > landing_threshold )
 						new_state = LegState::LandingState;
 					break;
 
@@ -138,7 +140,6 @@ namespace scone
 					if ( ls.contact )
 						new_state = LegState::StanceState;
 					break;
-
 				}
 
 				if ( new_state != ls.phase )
