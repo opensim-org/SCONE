@@ -47,5 +47,16 @@ namespace scone
 
 			return f;
 		}
-}
+
+		scone::String EnergyMeasure::GetSignature()
+		{
+			switch( m_Type )
+			{
+			case TotalForce: return "TF";
+			case Umberger2010: return "U";
+			default: return "Unknown";
+			}
+		}
+
+	}
 }

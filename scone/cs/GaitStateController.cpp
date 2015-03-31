@@ -17,6 +17,8 @@ namespace scone
 {
 	namespace cs
 	{
+		const int g_GaitStateControllerVersion = 1;
+
 		EnumStringMap< GaitStateController::LegState::Phase > GaitStateController::LegState::m_PhaseNames = EnumStringMap< GaitStateController::LegState::Phase >(
 			GaitStateController::LegState::UnknownState, "Unknown",
 			GaitStateController::LegState::StanceState, "Stance",
@@ -144,7 +146,7 @@ namespace scone
 
 				if ( new_state != ls.phase )
 				{
-					log::Trace( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetPhaseName().c_str(), LegState::m_PhaseNames.GetString( new_state ).c_str() );
+					log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetPhaseName().c_str(), LegState::m_PhaseNames.GetString( new_state ).c_str() );
 					ls.phase = new_state;
 				}
 			}
@@ -168,7 +170,17 @@ namespace scone
 
 		scone::String GaitStateController::GetSignature()
 		{
-			return GetStringF( "SC%d.", m_ConditionalControllers.size() / 2 ) + m_ConditionalControllers.front()->controller->GetSignature();
+			String s = GetStringF( "GS%d", g_GaitStateControllerVersion );
+
+			std::map< String, int > controllers;
+			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
+				controllers[ cc->controller->GetSignature() ] += 1;
+
+			// output number of controllers per leg
+			for ( auto it = controllers.begin(); it != controllers.end(); ++it )
+				s += "." + ToString( it->second / m_LegStates.size() ) + it->first;
+
+			return s;
 		}
 	}
 }

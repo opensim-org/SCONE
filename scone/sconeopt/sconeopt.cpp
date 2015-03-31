@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 	}
 	catch (std::exception& e)
 	{
-		log::Critical( e.what() );
+		log::CriticalF( e.what() );
 		_getch();
 	}
 

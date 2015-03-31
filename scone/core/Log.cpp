@@ -20,10 +20,12 @@ namespace scone
 		Level g_LogLevel = InfoLevel;
 		const int g_MaxLogMessageSize = 1000;
 
+		std::ostream& LogStream() { return std::cout; }
+
 		void LogMessage( Level level, const char* message )
 		{
 			boost::lock_guard< boost::mutex > lock( g_LogMutex );
-			std::cout << message << std::endl;
+			LogStream() << message << std::endl;
 		}
 	
 		void CORE_API log::SetLevel( Level level )
@@ -32,32 +34,32 @@ namespace scone
 			g_LogLevel = level;	
 		}
 
-		void CORE_API Warning( const char* msg, ... )
+		void CORE_API WarningF( const char* msg, ... )
 		{
 			LOG_MESSAGE( WarningLevel, msg );
 		}
 
-		void CORE_API Trace( const char* msg, ... )
+		void CORE_API TraceF( const char* msg, ... )
 		{
 			LOG_MESSAGE( TraceLevel, msg );
 		}
 
-		void CORE_API Debug( const char* msg, ... )
+		void CORE_API DebugF( const char* msg, ... )
 		{
 			LOG_MESSAGE( DebugLevel, msg );
 		}
 
-		void CORE_API Info( const char* msg, ... )
+		void CORE_API InfoF( const char* msg, ... )
 		{
 			LOG_MESSAGE( InfoLevel, msg );
 		}
 
-		void CORE_API Error( const char* msg, ... )
+		void CORE_API ErrorF( const char* msg, ... )
 		{
 			LOG_MESSAGE( ErrorLevel, msg );
 		}
 
-		void CORE_API Critical( const char* msg, ... )
+		void CORE_API CriticalF( const char* msg, ... )
 		{
 			LOG_MESSAGE( CriticalLevel, msg );
 		}

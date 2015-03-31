@@ -109,7 +109,7 @@ namespace scone
 			CMA::RecombType rc_type = static_cast< CMA::RecombType >( CMA::superlinear );
 			m_pImpl->m_CMA.init( dim, var, m_Sigma, *m_pImpl->m_pParents, rc_type, CMA::rankmu );
 
-			log::Info( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
+			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
 
 			// optimization loop
 			Timer timer;

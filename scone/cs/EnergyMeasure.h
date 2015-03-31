@@ -21,8 +21,12 @@ namespace scone
 
 		private:
 			SampledValue< double > m_Energy;
+			EnergyMeasureType m_Type;
 
 			double GetTotalForce( sim::Model& model );
+
+			virtual String GetSignature() override;
+
 		};
 	}
 }

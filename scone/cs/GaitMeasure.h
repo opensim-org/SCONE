@@ -21,6 +21,7 @@ namespace scone
 			Real termination_height;
 			Real min_velocity;
 			Real duration;
+			//Measure energy_measure;
 
 		private:
 			SampledValue< double > m_Energy;
