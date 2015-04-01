@@ -27,7 +27,7 @@ namespace scone
 
 			// create optimizer and report unused parameters
 			opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
-			p.ToStream( std::cout, "!UNUSED!: ", true );
+			LogUntouched( p );
 
 			// copy config and model file
 			path outdir( o->GetOutputFolder() );
