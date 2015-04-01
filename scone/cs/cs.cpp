@@ -13,7 +13,7 @@ using namespace boost::filesystem;
 #include "FeedForwardController.h"
 #include "HeightMeasure.h"
 #include "GaitMeasure.h"
-#include "EnergyMeasure.h"
+#include "EffortMeasure.h"
 #include "../sim/Factories.h"
 #include "../sim/simbody/Model_Simbody.h"
 #include "../opt/Factories.h"
@@ -40,7 +40,7 @@ namespace scone
 			sim::GetControllerFactory().Register< GaitStateController >();
 			sim::GetControllerFactory().Register< HeightMeasure >();
 			sim::GetControllerFactory().Register< GaitMeasure >();
-			sim::GetControllerFactory().Register< EnergyMeasure >();
+			sim::GetControllerFactory().Register< EffortMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();

@@ -21,6 +21,22 @@ namespace scone
 			return m_osMus.getName();
 		}
 
+		scone::Real Muscle_Simbody::GetOptimalFiberLength()
+		{
+			return m_osMus.getOptimalFiberLength();
+		}
+
+		scone::Real Muscle_Simbody::GetTendonSlackLength()
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+		scone::Real Muscle_Simbody::GetMass()
+		{
+			return ( GetMaxIsometricForce() / 0.25e6 ) * 1059.7 * GetOptimalFiberLength();
+			
+		}
+
 		scone::Real Muscle_Simbody::GetForce()
 		{
 			// OpenSim: why can't I just use getWorkingState()?
@@ -31,22 +47,37 @@ namespace scone
 
 		scone::Real scone::sim::Muscle_Simbody::GetLength()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			return m_osMus.getLength( m_Model.GetTkState() );
 		}
-		
+
+		scone::Real Muscle_Simbody::GetVelocity()
+		{
+			return m_osMus.getLengtheningSpeed( m_Model.GetTkState() );
+		}
+
+		scone::Real Muscle_Simbody::GetFiberForce()
+		{
+			return m_osMus.getFiberForce( m_Model.GetTkState() );
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetFiberLength()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			return m_osMus.getFiberLength( m_Model.GetTkState() );
 		}
-		
+
+		scone::Real Muscle_Simbody::GetFiberVelocity()
+		{
+			return m_osMus.getFiberVelocity( m_Model.GetTkState() );
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetTendonLength()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			return m_osMus.getTendonLength( m_Model.GetTkState() );
 		}
 		
 		scone::Real scone::sim::Muscle_Simbody::GetMaxIsometricForce()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			return m_osMus.getMaxIsometricForce();
 		}
 		
 		std::vector< Vec3 > scone::sim::Muscle_Simbody::GetMusclePath()
@@ -56,17 +87,18 @@ namespace scone
 		
 		scone::Real scone::sim::Muscle_Simbody::GetActivation()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			return m_osMus.getActivation( m_Model.GetTkState() );
 		}
 		
 		scone::Real scone::sim::Muscle_Simbody::GetExcitation()
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			// use our own activation value, as OpenSim calls getControls()
+			return GetControlValue();
 		}
 		
-		void scone::sim::Muscle_Simbody::SetExcitation(Real u)
+		void scone::sim::Muscle_Simbody::SetExcitation( Real u )
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			m_osMus.setExcitation( m_Model.GetTkState(), u );
 		}
-}
+	}
 }

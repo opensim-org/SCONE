@@ -13,9 +13,27 @@ namespace scone
 	{
 		enum Level { LogAllLevel, TraceLevel, DebugLevel, InfoLevel, WarningLevel, ErrorLevel, CriticalLevel, IgnoreAllLevel };
 
+		class LogStream
+		{
+		public:
+			LogStream() { };
+			virtual ~LogStream() { };
+
+			template< typename T >
+			LogStream& operator<<( const T& value );
+		};
+
 		void CORE_API SetLevel( Level level );
 
-		// printf style log messages
+		// string style logging
+		void CORE_API Trace( const String& msg );
+		void CORE_API Debug( const String& msg );
+		void CORE_API Info( const String& msg );
+		void CORE_API Warning( const String& msg );
+		void CORE_API Error( const String& msg );
+		void CORE_API Critical( const String& msg );
+
+		// printf style logging
 		void CORE_API TraceF( const char* msg, ... );
 		void CORE_API DebugF( const char* msg, ... );
 		void CORE_API InfoF( const char* msg, ... );

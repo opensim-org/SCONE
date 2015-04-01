@@ -44,7 +44,7 @@ namespace scone
 		}
 		T GetEnum( const String& s )
 		{
-			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&](const String& v) { return v == s; } );
+			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( MapType::value_type& v) { return v.second == s; } );
 			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find enum for " + s );
 			return iter->first;
 		}

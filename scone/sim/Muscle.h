@@ -16,11 +16,18 @@ namespace scone
 			Muscle();
 			virtual ~Muscle();
 
+			virtual Real GetMaxIsometricForce() = 0;
+			virtual Real GetOptimalFiberLength() = 0;
+			virtual Real GetTendonSlackLength() = 0;
+			virtual Real GetMass() = 0;
+
 			virtual Real GetForce() = 0;
 			virtual Real GetLength() = 0;
+			virtual Real GetVelocity() = 0;
+			virtual Real GetFiberForce() = 0;
 			virtual Real GetFiberLength() = 0;
+			virtual Real GetFiberVelocity() = 0;
 			virtual Real GetTendonLength() = 0;
-			virtual Real GetMaxIsometricForce() = 0;
 			virtual std::vector< Vec3 > GetMusclePath() = 0;
 
 			virtual Real GetActivation() = 0;

@@ -36,7 +36,7 @@ void SimulationTest()
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
 		log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscleCount(), m->GetBodyCount(), m->GetJoints().size(), m->GetControllers().size() );
-		log::DebugF( "Starting simulation..." );
+		log::Debug( "Starting simulation..." );
 
 		Timer t;
 		m->AdvanceSimulationTo( simulation_time );

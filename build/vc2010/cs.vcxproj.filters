@@ -30,9 +30,6 @@
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h">
       <Filter>Functions</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\EnergyMeasure.h">
-      <Filter>Measures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
@@ -69,6 +66,9 @@
     <ClInclude Include="..\..\scone\cs\GaitCycleMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\EffortMeasure.h">
+      <Filter>Measures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -79,9 +79,6 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp">
       <Filter>Functions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\cs\EnergyMeasure.cpp">
-      <Filter>Measures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp">
       <Filter>Measures</Filter>
@@ -111,6 +108,9 @@
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\GaitCycleMeasure.cpp">
+      <Filter>Measures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
   </ItemGroup>

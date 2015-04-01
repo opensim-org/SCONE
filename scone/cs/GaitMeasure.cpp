@@ -17,7 +17,8 @@ namespace scone
 		const int g_GaitMeasureVersion = 1;
 
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area )
+		Measure( props, par, model, area ),
+		m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 			INIT_FROM_PROP( props, min_velocity, 0.5 );
@@ -40,10 +41,6 @@ namespace scone
 			m_InitBackDist = GetBackDist( model );
 			m_InitialComPos = model.GetComPos();
 			model.GetComVel();
-
-			// add initial energy measure (probably this is 0)
-			// TODO: try doing this after equilibrate muscles
-			m_Energy.AddSample( GetModelEnergy( model ), 0.0 );
 		}
 
 		GaitMeasure::~GaitMeasure()
@@ -61,7 +58,7 @@ namespace scone
 			m_MinVelocityMeasure.AddSample( vel, timestamp );
 
 			// update energy measure
-			m_Energy.AddSample( GetModelEnergy( model ), timestamp );
+			m_EffortMeasure.UpdateControls( model, timestamp );
 
 			// check termination
 			bool terminate = timestamp >= duration;
@@ -84,24 +81,25 @@ namespace scone
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
 			// no more sample needs to be added, as update is already called
-			//m_Energy.AddSample( GetModelEnergy( model ), model.GetTime() );
+			double effort = m_EffortMeasure.GetResult( model );
 
 			// find efficiency
 			double dist = GetBackDist( model ) - m_InitBackDist;
-			double cost = m_Energy.GetTotal(); // model.GetTotalEnergyConsumption();
-			if ( cost != cost ) // check if cost is not NaN
-				cost = 1000;
-			double eff = dist / ( 0.0001 * cost );
+			if ( effort != effort ) // check if cost is not NaN
+				effort = 1000;
+			double eff = dist / ( 0.001 * effort );
 			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
 
 			// update report
 			m_Report.Set( "distance", dist );
-			m_Report.Set( "cost", cost );
+			m_Report.Set( "effort", effort );
+			//m_Report.Set( "OpenSimEffort", model.GetTotalEnergyConsumption() );
+			//m_Report.Set( "OpenSimEffortFact", model.GetTotalEnergyConsumption() / cost );
 			m_Report.Set( "efficiency", eff );
 			m_Report.Set( score );
 
 			if ( _isnan( score ) )
-				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, cost, eff, m_MinVelocityMeasure.GetAverage(), score );
+				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, effort, eff, m_MinVelocityMeasure.GetAverage(), score );
 
 			return score;
 		}

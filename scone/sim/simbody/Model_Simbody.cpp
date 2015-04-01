@@ -86,7 +86,7 @@ namespace scone
 				for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
 				{
 					OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
-					//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Derived from [Wang2012]
+					//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Wronlgy derived from [Wang2012], should be 235?
 					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
 					probe->addMuscle( mus.getName(), 0.5 );
 				}

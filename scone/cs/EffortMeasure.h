@@ -7,26 +7,28 @@ namespace scone
 {
 	namespace cs
 	{
-		class EnergyMeasure : public Measure
+		class EffortMeasure : public Measure
 		{
 		public:
-			EnergyMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
-			virtual ~EnergyMeasure();
+			EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+			virtual ~EffortMeasure();
 
-			enum EnergyMeasureType { UnknownMeasure, TotalForce, Umberger2010 };
+			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012 };
 			static EnumStringMap< EnergyMeasureType > m_MeasureNames;
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
+			EnergyMeasureType measure_type;
+
 		private:
+			Real m_Wang2012BasalEnergy;
 			SampledValue< double > m_Energy;
-			EnergyMeasureType m_Type;
 
+			double GetEnergy( sim::Model& model );
+			double GetWang2012( sim::Model& model );
 			double GetTotalForce( sim::Model& model );
-
 			virtual String GetSignature() override;
-
 		};
 	}
 }

@@ -118,7 +118,7 @@ namespace scone
 		{
 			m_OutputFolder = GetSconeFolder( "output" ) + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
 			create_directories( path( m_OutputFolder ) );
-			log::InfoF( ( "Output: " + m_OutputFolder ).c_str() );
+			log::Info( "Output: " + m_OutputFolder );
 		}
 
 		const String& Optimizer::GetOutputFolder()

@@ -1,6 +1,7 @@
 #pragma once
 #include "Measure.h"
 #include "../core/SampledValue.h"
+#include "EffortMeasure.h"
 
 namespace scone
 {
@@ -21,7 +22,7 @@ namespace scone
 			Real termination_height;
 			Real min_velocity;
 			Real duration;
-			//Measure energy_measure;
+			EffortMeasure m_EffortMeasure;
 
 		private:
 			SampledValue< double > m_Energy;

@@ -24,7 +24,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 	catch (std::exception& e)
 	{
-		log::CriticalF( e.what() );
+		log::Critical( e.what() );
 	}
 
 	_getch();
