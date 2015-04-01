@@ -18,11 +18,11 @@ using namespace boost::property_tree;
 
 namespace scone
 {
-	PropNode::PropNode() : m_Flag( false )
+	PropNode::PropNode() : m_Touched( false )
 	{
 	}
 
-	PropNode::PropNode( const char* prop_string ) : m_Flag( false )
+	PropNode::PropNode( const char* prop_string ) : m_Touched( false )
 	{
 		if ( prop_string == 0 || strlen(prop_string) == 0 )
 			return;
@@ -44,7 +44,7 @@ namespace scone
 
 	PropNode& PropNode::operator=( const PropNode& other )
 	{
-		m_Flag = other.m_Flag;
+		m_Touched = other.m_Touched;
 		m_Value = other.m_Value;
 		m_Children.clear();
 		for ( ConstChildIter iter = other.m_Children.begin(); iter != other.m_Children.end(); ++iter )
@@ -264,17 +264,15 @@ namespace scone
 		return *this;
 	}
 
-	std::ostream& PropNode::ToStream( std::ostream& str, const std::string& prefix, bool unflaggedOnly ) const
+	std::ostream& PropNode::ToStream( std::ostream& str, String prefix, bool unflaggedOnly ) const
 	{
 		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
-			if ( !unflaggedOnly || !iter->second->GetFlag() )
+			if ( !unflaggedOnly || !iter->second->IsTouched() )
 			{
 				str << prefix << iter->first;
 				if ( iter->second->HasValue() )
 					str << " = " << iter->second->GetValue();
-				if ( !unflaggedOnly && iter->second->GetFlag() )
-					str << " *"; // show asterisk on flagged items
 				str << std::endl;
 			}
 
@@ -282,6 +280,14 @@ namespace scone
 		}
 
 		return str;
+	}
+
+	size_t PropNode::GetUntouchedCount() const
+	{
+		size_t count = IsTouched() ? 0 : 1;
+		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+			count += iter->second->GetUntouchedCount();
+		return count;
 	}
 
 	bool PropNode::operator==( const PropNode& other ) const

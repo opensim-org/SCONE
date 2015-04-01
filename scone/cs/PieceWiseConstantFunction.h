@@ -4,6 +4,7 @@
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Common/PiecewiseConstantFunction.h>
 #include "PieceWiseFunction.h"
+#include "../core/tools.h"
 
 namespace scone
 {

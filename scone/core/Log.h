@@ -24,6 +24,7 @@ namespace scone
 		};
 
 		void CORE_API SetLevel( Level level );
+		void CORE_API LogMessage( Level level, const String& msg );
 
 		// string style logging
 		void CORE_API Trace( const String& msg );

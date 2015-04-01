@@ -37,8 +37,8 @@ namespace scone
 		F& Create( const PropNode& props )
 		{
 			F& f = Create( props.GetStr( "type" ) );
-			props.SetFlag();
-			props.GetChild( "type" ).SetFlag();
+			props.Touch();
+			props.GetChild( "type" ).Touch();
 			return f;
 		}
 

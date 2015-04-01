@@ -27,7 +27,7 @@ namespace scone
 			INIT_FROM_PROP( props, min, REAL_MIN );
 			INIT_FROM_PROP( props, max, REAL_MAX );
 			INIT_FROM_PROP( props, is_free, true ); /// TODO: some smarter default
-			props.SetFlag();
+			props.Touch();
 		}
 
 		double ParamInfo::GetInitialValue() const

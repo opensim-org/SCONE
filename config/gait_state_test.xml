@@ -57,7 +57,7 @@
 					<termination_height>0.9</termination_height>
 					<min_velocity>0.5</min_velocity>
 					<duration>5.0</duration>
-					<EffortMeasure type="Wang2012"/>
+					<EffortMeasure measure_type="Wang2012"/>
 				</Measure>
 			</Controllers>
 		</Model>

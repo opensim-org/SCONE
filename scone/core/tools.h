@@ -2,6 +2,8 @@
 
 #include "core.h"
 #include <iosfwd>
+#include "PropNode.h"
+#include "Log.h"
 
 namespace scone
 {
@@ -36,4 +38,6 @@ namespace scone
 			return str.substr(pos + 1);
 		else return str;
 	}
+
+	void CORE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

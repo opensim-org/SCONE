@@ -19,7 +19,7 @@ namespace scone
 		EffortMeasure::EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			measure_type = m_MeasureNames.GetEnum( props.GetStr( "measure_type", "Wang2012" ) );
+			measure_type = m_MeasureNames.GetEnum( props.GetStr( "measure_type" ) );
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();

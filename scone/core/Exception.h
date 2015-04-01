@@ -31,4 +31,4 @@ namespace scone
 
 #define SCONE_THROW( message ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (message) )
 
-#define SCONE_CONDITIONAL_THROW( _condition_, _message_ ) if ( _condition_ ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (_message_) )
+#define SCONE_CONDITIONAL_THROW( _condition_, _message_ ) { if ( _condition_ ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (_message_) ); }

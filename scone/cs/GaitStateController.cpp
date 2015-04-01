@@ -31,21 +31,21 @@ namespace scone
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
-			landing_threshold = par.Get( "landing_threshold", props.GetChild( "landing_threshold" ).SetFlag() );
+			landing_threshold = par.Get( "landing_threshold", props.GetChild( "landing_threshold" ).Touch() );
 			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 
 			// create instances for each controller
-			const PropNode& ccProps = props.GetChild( "ConditionalControllers" ).SetFlag();
+			const PropNode& ccProps = props.GetChild( "ConditionalControllers" ).Touch();
 			for ( PropNode::ConstChildIter ccIt = ccProps.Begin(); ccIt != ccProps.End(); ++ccIt )
 			{
-				ccIt->second->SetFlag();
-				const PropNode& instProps = ccIt->second->GetChild( "Instances" ).SetFlag();
+				ccIt->second->Touch();
+				const PropNode& instProps = ccIt->second->GetChild( "Instances" ).Touch();
 
 				for ( PropNode::ConstChildIter instIt = instProps.Begin(); instIt != instProps.End(); ++instIt )
-					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( *ccIt->second, par, model, instIt->second->SetFlag() ) ) );
+					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( ccIt->second->Touch(), par, model, instIt->second->Touch() ) ) );
 			}
 		}
 
@@ -58,7 +58,7 @@ namespace scone
 			INIT_FROM_PROP_REQUIRED( instance, phase_mask );
 
 			// create controller
-			const PropNode& cprops = props.GetChild( "Controller" ).SetFlag();
+			const PropNode& cprops = props.GetChild( "Controller" );
 			par.PushNamePrefix( "S" + phase_mask.to_string() + "." );
 
 			// TODO: allow neater definition of target area instead of just taking the leg side

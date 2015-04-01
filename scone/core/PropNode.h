@@ -9,7 +9,6 @@
 
 #include "Vec3.h"
 #include "Exception.h"
-#include "tools.h"
 
 namespace scone
 {
@@ -49,7 +48,7 @@ namespace scone
 		bool HasValue() const {	return !m_Value.empty(); }
 
 		// get value
-		const String& GetValue() const { return m_Value; }
+		const String& GetValue() const { Touch(); return m_Value; }
 
 		// set value
 		void SetValue( const String& value ) { m_Value = value; }
@@ -58,6 +57,7 @@ namespace scone
 		template< typename T >
 		T GetValue( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
 		{
+			Touch();
 			return m_Value;
 		}
 
@@ -65,6 +65,7 @@ namespace scone
 		template< typename T >
 		T GetValue( typename std::enable_if< !std::is_same< T, String >::value >::type* = 0 ) const
 		{
+			Touch();
 			T value = T();
 			std::stringstream str( m_Value );
 			str >> value;
@@ -90,6 +91,7 @@ namespace scone
 		template< typename T >
 		void Set( const T& value )
 		{
+			Touch();
 			std::ostringstream str;
 			str << value;
 			m_Value = str.str();
@@ -119,7 +121,8 @@ namespace scone
 		{
 			const PropNode* p = GetChildPtr( key );
 			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: " + key );
-			else return *p;
+			Touch();
+			return *p;
 		}
 
 		/// Get Child
@@ -127,7 +130,8 @@ namespace scone
 		{
 			PropNode* p = GetChildPtr( key );
 			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: " + key );
-			else return *p;
+			Touch();
+			return *p;
 		}
 
 		/// create child node
@@ -164,12 +168,13 @@ namespace scone
 		String GetStr( const String& key, const String& def ) const { return Get< String >( key, def ); }
 		Vec3 GetVec3( const String& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
-		std::ostream& ToStream( std::ostream& str, const std::string& prefix = "", bool unflaggedOnly = false ) const;
+		std::ostream& ToStream( std::ostream& str, String prefix = "", bool unflaggedOnly = false ) const;
 
 		// flagging (can be used to detect unused properties)
-		const PropNode& SetFlag() const { m_Flag = true; return *this; }
-		const PropNode& ClearFlag() const { m_Flag = false; return *this; }
-		bool GetFlag() const { return m_Flag; }
+		const PropNode& Touch() const { m_Touched = true; return *this; }
+		const PropNode& UnTouch() const { m_Touched = false; return *this; }
+		bool IsTouched() const { return m_Touched; }
+		size_t GetUntouchedCount() const;
 
 	private:
 		PropNode* GetChildPtr( const String& key ) const;
@@ -179,7 +184,7 @@ namespace scone
 
 		String m_Value;
 		ChildContainer m_Children;
-		mutable bool m_Flag;
+		mutable bool m_Touched;
 	};
 
 	// shortcut file readers for lazy people

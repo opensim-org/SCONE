@@ -2,6 +2,15 @@
 
 #include "PropNode.h"
 #include <string>
+#include "tools.h"
+
+// convenience macro that automatically derives name from variable name
+#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+#define INIT_FROM_PROP_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
+#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
+
+// define a variable and init from props
+#define DECLARE_AND_INIT( _prop_, _type_, _var_, _default_ ) _type_ _var_; InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), (_type_) _default_ )
 
 namespace scone
 {
@@ -23,19 +32,12 @@ namespace scone
 		else var = T( default_value );
 	}
 
-	// process String type
-	//inline void InitFromPropNode( const PropNode& prop, String& var )
-	//{
-	//	var = prop.GetValue();
-	//	prop.SetFlag();
-	//}
-
 	// process fundamental types and String
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, T& var )
 	{
 		var = prop.GetValue< T >();
-		prop.SetFlag();
+		prop.Touch();
 	}
 
 	// process vector< > type (NOT TESTED)
@@ -48,34 +50,6 @@ namespace scone
 			vec.push_back( T() );
 			InitFromPropNode( iter->second, vec.back() );
 		}
-		prop.SetFlag();
+		prop.Touch();
 	}
-
-	//// process pointer type
-	//template< typename T >
-	//void InitFromPropNode( const PropNode& prop, std::unique_ptr< T >& var )
-	//{
-	//	var = GetFactory().Create< T >( prop.GetStr( "type" ), prop );
-	//	prop.SetFlag();
-	//	prop.GetChild( "type" ).SetFlag();
-	//}
-
-	//// create function (TODO: remove?)
-	//template< typename T >
-	//std::unique_ptr< T > CreateFromPropNode( const PropNode& prop )
-	//{
-	//	std::unique_ptr< T > var( GetFactory().Create< T >( prop.GetStr( "type" ), prop ) );
-	//	prop.SetFlag();
-	//	prop.GetChild( "type" ).SetFlag();
-
-	//	return var;
-	//}
-
-	// convenience macro that automatically derives name from variable name
-	#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
-	#define INIT_FROM_PROP_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
-	#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
-
-	// define a variable and init from props
-	#define DECLARE_AND_INIT( _prop_, _type_, _var_, _default_ ) _type_ _var_; InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), (_type_) _default_ )
 }

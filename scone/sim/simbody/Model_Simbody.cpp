@@ -129,7 +129,7 @@ namespace scone
 			// right now, this is not needed because each individual call realizes the correct state
 
 			// create and initialize controllers
-			const PropNode& cprops = props.GetChild( "Controllers" ).SetFlag();
+			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
 				m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
 

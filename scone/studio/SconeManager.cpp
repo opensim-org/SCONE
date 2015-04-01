@@ -48,6 +48,9 @@ namespace scone
 		const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+
+		// report unused parameters
+		LogUntouched( objProp );
 		
 		m_Statistics.Clear();
 		Timer timer;
