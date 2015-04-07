@@ -14,16 +14,16 @@ namespace scone
 		class CS_API GaitStateController : public sim::Controller
 		{
 		public:
-			struct LegState
+			struct LegInfo
 			{
-				LegState( const sim::Leg& l ) : leg( l ), phase( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
+				LegInfo( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
 				const sim::Leg& leg;
 
 				// current state
-				enum Phase { UnknownState = -1, StanceState = 0, LiftoffState = 1, SwingState = 2, LandingState = 3, StateCount };
-				const String& GetPhaseName() { return m_PhaseNames.GetString( phase ); }
-				static EnumStringMap< Phase > m_PhaseNames;
-				TimedValue< Phase > phase;
+				enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
+				const String& GetStateName() { return m_StateNames.GetString( state ); }
+				static EnumStringMap< GaitState > m_StateNames;
+				TimedValue< GaitState > state;
 
 				// current status
 				bool contact;
@@ -48,7 +48,7 @@ namespace scone
 			void UpdateControllerStates( sim::Model& model, double timestamp );
 
 		private:
-			typedef std::unique_ptr< LegState > LegStateUP;
+			typedef std::unique_ptr< LegInfo > LegStateUP;
 			std::vector< LegStateUP > m_LegStates;
 
 			// struct that defines if a controller is active (bitset denotes state(s), leg target should be part of controller)
@@ -59,14 +59,15 @@ namespace scone
 				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const PropNode& mask );
 				virtual ~ConditionalController() {}
 				size_t leg_index;
-				std::bitset< LegState::StateCount > phase_mask;
+				std::bitset< LegInfo::StateCount > state_mask;
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;
-				bool TestLegPhase( size_t leg_idx, LegState::Phase state ) { return phase_mask.test( size_t( state ) ); }
+				bool TestLegPhase( size_t leg_idx, LegInfo::GaitState state ) { return state_mask.test( size_t( state ) ); }
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_threshold;
+			Real late_stance_threshold;
 			GaitStateController( const GaitStateController& );
 			GaitStateController& operator=( const GaitStateController& );
 		};
