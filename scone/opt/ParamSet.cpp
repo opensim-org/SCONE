@@ -32,6 +32,7 @@ namespace scone
 				}
 
 				// add parameter info
+				// TODO: perhaps skip parameters that are not free
 				m_Params.push_back( std::make_pair( info, info.GetInitialValue() ) );
 
 				return m_Params.back().second;

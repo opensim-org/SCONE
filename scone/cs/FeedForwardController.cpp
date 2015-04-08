@@ -57,7 +57,7 @@ namespace scone
 				{
 					// check if we've already processed a mirrored version of this ActInfo
 					auto it = std::find_if( m_ActInfos.begin(), m_ActInfos.end(), [&]( ActInfo& oai ) { return ai.name == oai.name; } );
-					if ( it->function_idx != INVALID_INDEX || !it->mode_weights.empty() )
+					if ( it->function_idx != NoIndex || !it->mode_weights.empty() )
 					{
 						ai.function_idx = it->function_idx;
 						ai.mode_weights = it->mode_weights;

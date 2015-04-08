@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\cs.h" />
+    <ClInclude Include="..\..\scone\cs\JointLimitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\EffortMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Factories.h" />
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="..\..\scone\cs\GaitStateController.cpp" />
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\JointLimitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />

@@ -69,6 +69,9 @@
     <ClInclude Include="..\..\scone\cs\EffortMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\JointLimitMeasure.h">
+      <Filter>Measures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -111,6 +114,9 @@
       <Filter>Measures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp">
+      <Filter>Measures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\JointLimitMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
   </ItemGroup>

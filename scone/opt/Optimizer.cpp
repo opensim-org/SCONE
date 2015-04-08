@@ -40,20 +40,19 @@ namespace scone
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 		{
 			// run parsets through streams for awesomely reproducibility
-			std::vector< ParamSet > newparsets( parsets.size() );
 			for ( size_t idx = 0; idx < parsets.size(); ++idx )
 			{
 				std::stringstream str;
 				str << parsets[ idx ];
-				str >> newparsets[ idx ];
+				str >> parsets[ idx ];
 			}
 
 			// make sure there are enough objectives
 			CreateObjectives( parsets.size() );
 
 			if ( max_threads == 1 )
-				return EvaluateSingleThreaded( newparsets );
-			else return EvaluateMultiThreaded( newparsets );
+				return EvaluateSingleThreaded( parsets );
+			else return EvaluateMultiThreaded( parsets );
 		}
 
 		// evaluate individuals one-by-one in current thread

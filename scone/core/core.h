@@ -18,6 +18,12 @@
 	typedef std::shared_ptr< _class_ > _class_##SP; \
 	typedef std::unique_ptr< _class_ > _class_##UP;
 
+// class and shared pointer forward declaration macro
+#define SCONE_DECLARE_STRUCT_AND_PTR( _class_ ) \
+struct _class_; \
+	typedef std::shared_ptr< _class_ > _class_##SP; \
+	typedef std::unique_ptr< _class_ > _class_##UP;
+
 namespace scone
 {
 	// types
@@ -27,7 +33,10 @@ namespace scone
 	typedef double Real;
 #endif
 	typedef std::string String;
+
+	// index type
 	typedef size_t Index;
+	const Index NoIndex = std::numeric_limits< Index >::max();
 
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );
@@ -39,7 +48,6 @@ namespace scone
 	const Real REAL_MIN = std::numeric_limits< Real >::min();
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
 	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
-	const Index INVALID_INDEX = std::numeric_limits< Index >::max();
 
 	// forward declarations
 	class Vec3;

@@ -52,12 +52,10 @@ namespace scone
 			std::vector< LegStateUP > m_LegStates;
 
 			// struct that defines if a controller is active (bitset denotes state(s), leg target should be part of controller)
-			SCONE_DECLARE_CLASS_AND_PTR( ConditionalController );
-			class ConditionalController
+			SCONE_DECLARE_STRUCT_AND_PTR( ConditionalController );
+			struct ConditionalController
 			{
-			public:
-				ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const PropNode& mask );
-				virtual ~ConditionalController() {}
+				ConditionalController() : leg_index( NoIndex ), active( false ), active_since( 0.0 ) { };
 				size_t leg_index;
 				std::bitset< LegInfo::StateCount > state_mask;
 				bool active;

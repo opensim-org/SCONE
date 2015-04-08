@@ -47,31 +47,32 @@ namespace scone
 				const PropNode& instProps = ccIt->second->GetChild( "Instances" ).Touch();
 
 				for ( PropNode::ConstChildIter instIt = instProps.Begin(); instIt != instProps.End(); ++instIt )
-					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController( ccIt->second->Touch(), par, model, instIt->second->Touch() ) ) );
+				{
+					// automatically create controllers for all legs
+					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
+					{
+						// create new conditional controller
+						m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController() ) );
+						ConditionalController& cc = *m_ConditionalControllers.back();
+
+						// initialize state_mask based on names
+						String states = instIt->second->GetStr( "state_mask" );
+						for ( int i = 0; i < LegInfo::StateCount; ++i )
+							cc.state_mask.set( i, states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
+						SCONE_CONDITIONAL_THROW( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
+
+						// initialize leg index
+						cc.leg_index = legIdx;
+
+						// create controller
+						// TODO: allow neater definition of target area instead of just taking the leg side
+						const PropNode& cprops = ccIt->second->GetChild( "Controller" );
+						par.PushNamePrefix( "S" + cc.state_mask.to_string() + "." );
+						cc.controller = sim::CreateController( cprops, par, model, model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE );
+						par.PopNamePrefix();
+					}
+				}
 			}
-		}
-
-		GaitStateController::ConditionalController::ConditionalController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const PropNode& instance ) :
-		active( false ),
-		active_since( 0.0 )
-		{
-			INIT_FROM_PROP_REQUIRED( instance, leg_index );
-
-			// set phase_mask based on names
-			String states = instance.GetStr( "state_mask" );
-			for ( int i = 0; i < LegInfo::StateCount; ++i )
-				state_mask.set( i, states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
-
-			if ( !state_mask.any() )
-				log::Warning( "Conditional Controller has empty state mask!" );
-
-			// create controller
-			const PropNode& cprops = props.GetChild( "Controller" );
-			par.PushNamePrefix( "S" + state_mask.to_string() + "." );
-
-			// TODO: allow neater definition of target area instead of just taking the leg side
-			controller = sim::CreateController( cprops, par, model, model.GetLeg( leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE );
-			par.PopNamePrefix();
 		}
 
 		GaitStateController::~GaitStateController()

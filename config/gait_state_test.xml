@@ -20,18 +20,13 @@
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="0.0" max="0.5" is_free="1"/>
-					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
+					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="0"/>
 					<ConditionalControllers>
 						<ConditionalController>
 							<Instances>
-								<instance leg_index="0" state_mask="EarlyStance"/>
-								<instance leg_index="1" state_mask="EarlyStance"/>
-								<instance leg_index="0" state_mask="LateStance"/>
-								<instance leg_index="1" state_mask="LateStance"/>
-								<instance leg_index="0" state_mask="Liftoff Swing"/>
-								<instance leg_index="1" state_mask="Liftoff Swing"/>
-								<instance leg_index="0" state_mask="Landing"/>
-								<instance leg_index="1" state_mask="Landing"/>
+								<instance state_mask="EarlyStance LateStance"/>
+								<instance state_mask="Liftoff Swing"/>
+								<instance state_mask="Landing"/>
 							</Instances>
 							<Controller type="FeedForwardController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>

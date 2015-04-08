@@ -34,7 +34,7 @@ namespace scone
 			BOOST_FOREACH( const String& t, tokens )
 			{
 				size_t idx = model.FindBodyIndex( t );
-				if ( idx != INVALID_INDEX )
+				if ( idx != NoIndex )
 					m_GaitBodies.push_back( &model.GetBody( idx ) );
 			}
 

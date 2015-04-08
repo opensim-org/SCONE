@@ -43,7 +43,7 @@ namespace scone
 		{
 			auto it = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return body->GetName() == name; } );
 			if ( it == m_Bodies.end() )
-				return INVALID_INDEX;
+				return NoIndex;
 			else return it - m_Bodies.begin();
 		}
 	}
