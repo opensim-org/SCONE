@@ -3,6 +3,7 @@
 
 #include "Body.h"
 #include "Joint.h"
+#include "Dof.h"
 #include "Muscle.h"
 #include "boost/foreach.hpp"
 #include <algorithm>

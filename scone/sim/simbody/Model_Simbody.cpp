@@ -176,7 +176,7 @@ namespace scone
 			// Create wrappers for joints
 			m_Joints.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
-				m_Joints.push_back( JointUP( new Joint_Simbody( m_pOsimModel->getJointSet().get( idx ) ) ) );
+				m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );

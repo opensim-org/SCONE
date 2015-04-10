@@ -39,5 +39,7 @@ namespace scone
 		else return str;
 	}
 
+	inline String GetQuoted( const String& s ) { return "\"" + s + "\""; }
+
 	void CORE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

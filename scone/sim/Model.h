@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../core/core.h"
 #include "sim.h"
+
+#include "../core/core.h"
 #include "../core/Vec3.h"
 #include "Controller.h"
 #include "Link.h"
@@ -36,6 +37,9 @@ namespace scone
 
 			/// joint access
 			std::vector< JointUP >& GetJoints() { return m_Joints; }
+
+			/// dof access
+			std::vector< DofUP >& GetDofs() { return m_Dofs; }
 
 			/// link access
 			const Link& GetRootLink() const { return *m_RootLink; }
@@ -81,6 +85,7 @@ namespace scone
 			std::vector< MuscleUP > m_Muscles;
 			std::vector< BodyUP > m_Bodies;
 			std::vector< JointUP > m_Joints;
+			std::vector< DofUP > m_Dofs;
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
 			bool m_ShouldTerminate;

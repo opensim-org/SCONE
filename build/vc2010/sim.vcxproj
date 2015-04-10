@@ -81,6 +81,7 @@
     <ClCompile Include="..\..\scone\sim\Actuator.cpp" />
     <ClCompile Include="..\..\scone\sim\Body.cpp" />
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
+    <ClCompile Include="..\..\scone\sim\Dof.cpp" />
     <ClCompile Include="..\..\scone\sim\Factories.cpp" />
     <ClCompile Include="..\..\scone\sim\Joint.cpp" />
     <ClCompile Include="..\..\scone\sim\Leg.cpp" />
@@ -98,6 +99,7 @@
     <ClInclude Include="..\..\scone\sim\Actuator.h" />
     <ClInclude Include="..\..\scone\sim\Body.h" />
     <ClInclude Include="..\..\scone\sim\Controller.h" />
+    <ClInclude Include="..\..\scone\sim\Dof.h" />
     <ClInclude Include="..\..\scone\sim\Factories.h" />
     <ClInclude Include="..\..\scone\sim\Joint.h" />
     <ClInclude Include="..\..\scone\sim\Leg.h" />

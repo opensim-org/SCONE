@@ -9,11 +9,18 @@
 #define INIT_FROM_PROP_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
 #define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
 
+#define CONSTRUCT_FROM_PROP( _prop_, _var_ ) ConstructFromPropNode( _prop_.GetChild( GetCleanVarName( #_var_ ) ), _var_ );
+
+
 // define a variable and init from props
 #define DECLARE_AND_INIT( _prop_, _type_, _var_, _default_ ) _type_ _var_; InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), (_type_) _default_ )
 
 namespace scone
 {
+	class Propertyable
+	{
+	};
+
 	// process named property type
 	template< typename T >
 	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
@@ -37,6 +44,22 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, T& var )
 	{
 		var = prop.GetValue< T >();
+		prop.Touch();
+	}
+
+	// process propertyable types and String
+	template< typename T >
+	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_base_of< Propertyable, T >::value >::type* = 0 )
+	{
+		var = T( prop );
+		prop.Touch();
+	}
+
+	// process propertyable types and String
+	template< typename T >
+	void ConstructFromPropNode( const PropNode& prop, T& var )
+	{
+		var = T( prop );
 		prop.Touch();
 	}
 

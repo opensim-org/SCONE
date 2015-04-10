@@ -45,6 +45,9 @@
     <ClCompile Include="..\..\scone\sim\Link.cpp">
       <Filter>API</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Dof.cpp">
+      <Filter>API</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h">
@@ -90,6 +93,9 @@
       <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\State.h">
+      <Filter>API</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Dof.h">
       <Filter>API</Filter>
     </ClInclude>
   </ItemGroup>

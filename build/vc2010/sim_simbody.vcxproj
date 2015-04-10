@@ -85,6 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\sim\simbody\Body_Simbody.cpp" />
+    <ClCompile Include="..\..\scone\sim\simbody\Dof_Simbody.cpp" />
     <ClCompile Include="..\..\scone\sim\simbody\Joint_Simbody.cpp" />
     <ClCompile Include="..\..\scone\sim\simbody\Leg_Simbody.cpp" />
     <ClCompile Include="..\..\scone\sim\simbody\Model_Simbody.cpp" />
@@ -99,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\simbody\Body_Simbody.h" />
+    <ClInclude Include="..\..\scone\sim\simbody\Dof_Simbody.h" />
     <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h" />
     <ClInclude Include="..\..\scone\sim\simbody\Leg_Simbody.h" />
     <ClInclude Include="..\..\scone\sim\simbody\Model_Simbody.h" />
