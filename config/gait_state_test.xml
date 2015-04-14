@@ -7,7 +7,7 @@
 	<mu>0</mu>
 	<sigma>1</sigma>
 	<max_generations>5000</max_generations>
-	<maximize_objective>1</maximize_objective>
+	<maximize_objective>0</maximize_objective>
 
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>

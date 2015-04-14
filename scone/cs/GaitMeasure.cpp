@@ -14,7 +14,7 @@ namespace scone
 {
 	namespace cs
 	{
-		const int g_GaitMeasureVersion = 1;
+		const int g_GaitMeasureVersion = 2;
 
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
@@ -23,6 +23,9 @@ namespace scone
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 			INIT_FROM_PROP( props, min_velocity, 0.5 );
 			INIT_FROM_PROP( props, duration, 3.0 );
+
+			INIT_FROM_PROP( props, min_velocity_weight, 100.0 );
+			INIT_FROM_PROP( props, efficiency_weight, 0.001 );
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -80,26 +83,25 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			// no more sample needs to be added, as update is already called
-			double effort = m_EffortMeasure.GetResult( model );
-
 			// find efficiency
-			double dist = GetBackDist( model ) - m_InitBackDist;
-			if ( effort != effort ) // check if cost is not NaN
-				effort = 1000;
-			double eff = dist / ( 0.001 * effort );
-			double score = 100 * m_MinVelocityMeasure.GetAverage() * eff;
+			double effort = m_EffortMeasure.GetResult( model );
+			double distance = GetBackDist( model ) - m_InitBackDist;
+			double efficiency = effort / std::max( 0.1, distance );
+			double min_vel_score = 1.0 - m_MinVelocityMeasure.GetAverage();
+
+			double score = min_velocity_weight * min_vel_score + efficiency_weight * efficiency;
 
 			// update report
-			m_Report.Set( "distance", dist );
+			m_Report.Set( "distance", distance );
 			m_Report.Set( "effort", effort );
 			//m_Report.Set( "OpenSimEffort", model.GetTotalEnergyConsumption() );
 			//m_Report.Set( "OpenSimEffortFact", model.GetTotalEnergyConsumption() / cost );
-			m_Report.Set( "efficiency", eff );
+			m_Report.Set( "weighted_efficiency", efficiency_weight * efficiency );
+			m_Report.Set( "weighted_min_velocity", min_velocity_weight * min_vel_score );
 			m_Report.Set( score );
 
 			if ( _isnan( score ) )
-				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", dist, effort, eff, m_MinVelocityMeasure.GetAverage(), score );
+				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", distance, effort, efficiency, m_MinVelocityMeasure.GetAverage(), score );
 
 			return score;
 		}

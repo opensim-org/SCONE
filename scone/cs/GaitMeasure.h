@@ -24,6 +24,9 @@ namespace scone
 			Real duration;
 			EffortMeasure m_EffortMeasure;
 
+			Real min_velocity_weight;
+			Real efficiency_weight;
+
 		private:
 			SampledValue< double > m_Energy;
 			double GetModelEnergy( sim::Model& model );
