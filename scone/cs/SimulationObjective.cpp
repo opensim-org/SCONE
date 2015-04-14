@@ -10,6 +10,7 @@
 #include "../sim/Factories.h"
 
 #include <boost/thread.hpp>
+#include "version.h"
 
 namespace scone
 {
@@ -62,7 +63,7 @@ namespace scone
 
 		String SimulationObjective::GetSignature()
 		{
-			String str = m_Model->GetSignature();
+			String str = GetStringF( "%03d.", SCONE_VERSION_BUILD ) + m_Model->GetSignature();
 			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
 				str += "." + c->GetSignature();
 

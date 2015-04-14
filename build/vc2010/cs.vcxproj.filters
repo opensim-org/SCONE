@@ -72,6 +72,9 @@
     <ClInclude Include="..\..\scone\cs\JointLimitMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\version.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">

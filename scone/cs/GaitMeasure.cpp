@@ -14,8 +14,6 @@ namespace scone
 {
 	namespace cs
 	{
-		const int g_GaitMeasureVersion = 3;
-
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area )
@@ -108,7 +106,7 @@ namespace scone
 
 		scone::String GaitMeasure::GetSignature()
 		{
-			return GetStringF( "GM%d", g_GaitMeasureVersion );
+			return "GM";
 		}
 
 		scone::Real GaitMeasure::GetBackDist( sim::Model &model )

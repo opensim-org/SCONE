@@ -17,8 +17,6 @@ namespace scone
 {
 	namespace cs
 	{
-		const int g_GaitStateControllerVersion = 1;
-
 		EnumStringMap< GaitStateController::LegInfo::GaitState > GaitStateController::LegInfo::m_StateNames = EnumStringMap< GaitStateController::LegInfo::GaitState >(
 			GaitStateController::LegInfo::UnknownState, "Unknown",
 			GaitStateController::LegInfo::EarlyStanceState, "EarlyStance",
@@ -188,7 +186,7 @@ namespace scone
 
 		scone::String GaitStateController::GetSignature()
 		{
-			String s = GetStringF( "GS%d", g_GaitStateControllerVersion );
+			String s = "GS";
 
 			std::map< String, int > controllers;
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
