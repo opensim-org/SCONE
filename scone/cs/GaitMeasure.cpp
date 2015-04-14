@@ -14,7 +14,7 @@ namespace scone
 {
 	namespace cs
 	{
-		const int g_GaitMeasureVersion = 2;
+		const int g_GaitMeasureVersion = 3;
 
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
@@ -25,7 +25,7 @@ namespace scone
 			INIT_FROM_PROP( props, duration, 3.0 );
 
 			INIT_FROM_PROP( props, min_velocity_weight, 100.0 );
-			INIT_FROM_PROP( props, efficiency_weight, 0.001 );
+			INIT_FROM_PROP( props, efficiency_weight, 0.1 );
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -84,7 +84,7 @@ namespace scone
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
 			// find efficiency
-			double effort = m_EffortMeasure.GetResult( model );
+			double effort = m_EffortMeasure.GetResult( model ) / model.GetMass();
 			double distance = GetBackDist( model ) - m_InitBackDist;
 			double efficiency = effort / std::max( 0.1, distance );
 			double min_vel_score = 1.0 - m_MinVelocityMeasure.GetAverage();

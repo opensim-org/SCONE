@@ -41,7 +41,7 @@ namespace scone
 
 		double EffortMeasure::GetResult( sim::Model& model )
 		{
-			return m_Energy.GetTotal();
+			return m_Energy.GetAverage();
 		}
 
 		double EffortMeasure::GetEnergy( sim::Model& model )
