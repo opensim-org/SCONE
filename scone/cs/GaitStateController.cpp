@@ -79,6 +79,8 @@ namespace scone
 
 		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
+			//log::TraceF( "%d %.6f %.6f", model.GetIntegrationStep(), timestamp, model.GetDeltaTime() );
+
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{
 				// only update the states after a successful integration step

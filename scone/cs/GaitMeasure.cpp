@@ -39,7 +39,7 @@ namespace scone
 					m_GaitBodies.push_back( &model.GetBody( idx ) );
 			}
 
-			m_InitBackDist = GetBackDist( model );
+			m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
 			m_InitialComPos = model.GetComPos();
 			model.GetComVel();
 		}
@@ -54,9 +54,15 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			// find normalized min velocity
-			Real vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
-			m_MinVelocityMeasure.AddSample( vel, timestamp );
+			// find normalized min velocity (using GetGaitDist)
+			double dt = model.GetDeltaTime();
+			if ( dt > 0.0 )
+			{
+				double gait_dist = GetGaitDist( model );
+				double vel = ( gait_dist - m_PrevGaitDist ) / dt;
+				double norm_vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
+				m_MinVelocityMeasure.AddSample( norm_vel, timestamp );
+			}
 
 			// update energy measure
 			m_EffortMeasure.UpdateControls( model, timestamp );
@@ -83,7 +89,7 @@ namespace scone
 		{
 			// find efficiency
 			double effort = m_EffortMeasure.GetResult( model ) / model.GetMass();
-			double distance = GetBackDist( model ) - m_InitBackDist;
+			double distance = GetGaitDist( model ) - m_InitGaitDist;
 			double efficiency = effort / std::max( 0.1, distance );
 			double min_vel_score = 1.0 - m_MinVelocityMeasure.GetAverage();
 
@@ -109,7 +115,7 @@ namespace scone
 			return "GM";
 		}
 
-		scone::Real GaitMeasure::GetBackDist( sim::Model &model )
+		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )
 		{
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;

@@ -54,6 +54,7 @@ namespace scone
 		m_pTkState( nullptr ),
 		m_pControllerDispatcher( nullptr ),
 		m_PrevIntStep( -1 ),
+		m_PrevTime( 0.0 ),
 		m_pProbe( 0 )
 		{
 			String model_file;
@@ -315,8 +316,13 @@ namespace scone
 				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 			}
 
-			// update previous control step
-			m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
+			// update previous integration step and time
+			// OpenSim: do I need to keep this or is there are smarter way?
+			if ( m_Model.GetIntegrationStep() != m_Model.m_PrevIntStep )
+			{
+				m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
+				m_Model.m_PrevTime = m_Model.GetTime();
+			}
 		}
 
 		bool Model_Simbody::HasGroundContact()
@@ -349,6 +355,11 @@ namespace scone
 		int Model_Simbody::GetPreviousIntegrationStep()
 		{
 			return m_PrevIntStep;
+		}
+
+		double Model_Simbody::GetPreviousTime()
+		{
+			return m_PrevTime;
 		}
 
 		std::ostream& Model_Simbody::ToStream( std::ostream& str ) const 

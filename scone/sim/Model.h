@@ -56,9 +56,11 @@ namespace scone
 			virtual double GetTime() = 0;
 			virtual State GetState() = 0;
 			virtual int GetIntegrationStep() = 0;
+			virtual int GetPreviousIntegrationStep() = 0;
+			virtual double GetPreviousTime() = 0;
+			virtual double GetDeltaTime() { return GetTime() - GetPreviousTime(); }
 
 			/// Simulate model
-			virtual int GetPreviousIntegrationStep() = 0;
 			virtual void AdvanceSimulationTo( double time ) = 0;
 			virtual void WriteStateHistory( const String& file ) = 0;
 

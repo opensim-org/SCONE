@@ -33,11 +33,12 @@ namespace scone
 
 			// settings
 			std::vector< sim::Body* > m_GaitBodies;
-			Real GetBackDist( sim::Model &model );
+			Real GetGaitDist( sim::Model &model );
 
 			Vec3 m_InitialComPos;
 			MeasuredReal m_MinVelocityMeasure;
-			Real m_InitBackDist;
+			Real m_InitGaitDist;
+			Real m_PrevGaitDist;
 		};
 	}
 }

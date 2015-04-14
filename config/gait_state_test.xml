@@ -10,7 +10,7 @@
 	<maximize_objective>0</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix></signature_postfix>
+		<signature_postfix>minvel10</signature_postfix>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
@@ -41,7 +41,7 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
-					<min_velocity>0.5</min_velocity>
+					<min_velocity>1.0</min_velocity>
 					<duration>5.0</duration>
 					<EffortMeasure measure_type="Wang2012"/>
 				</Measure>

@@ -47,6 +47,7 @@ namespace scone
 
 			virtual std::map< String, double > GetState() override;
 			virtual double GetTime() override;
+			virtual double GetPreviousTime() override;
 			virtual int GetIntegrationStep() override;
 			virtual int GetPreviousIntegrationStep() override;
 
@@ -72,6 +73,7 @@ namespace scone
 			String model_file;
 
 			int m_PrevIntStep;
+			double m_PrevTime;
 
 			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
