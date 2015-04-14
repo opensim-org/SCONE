@@ -3,10 +3,10 @@
 namespace scone
 {
 	template< typename T >
-	class SampledValue
+	class Statistic
 	{
 	public:
-		SampledValue() { Reset(); }
+		Statistic() { Reset(); }
 			
 		void AddSample( const T& value, const double& timestamp )
 		{
@@ -14,7 +14,7 @@ namespace scone
 			{
 				// first sample, initialize
 				m_Initial = m_Highest = m_Lowest = value;
-				m_Total = m_Weight = 0.0;
+				m_Total = 0.0;
 			}
 			else
 			{
@@ -25,7 +25,6 @@ namespace scone
 				// update average
 				double dt = timestamp - m_PrevTime;
 				m_Total += dt * ( m_PrevValue + value ) / 2.0;
-				m_Weight += dt;
 			}
 
 			// update previous values for next call
@@ -35,7 +34,7 @@ namespace scone
 
 		void Reset()
 		{
-			m_Total = m_Weight = m_Highest = m_Lowest = 0.0;
+			m_Total = m_Highest = m_Lowest = 0.0;
 			m_PrevTime = -1.0;
 		}
 
@@ -45,9 +44,9 @@ namespace scone
 		{
 			if ( m_PrevTime < 0.0 )
 				SCONE_THROW( "Cannont compute average, no samples added" );
-			else if ( m_Weight == 0.0 )
+			else if ( m_PrevTime == 0.0 )
 				return m_Initial; // only one sample was added
-			else return m_Total / m_Weight;
+			else return m_Total / m_PrevTime;
 		}
 
 		T GetHighest() const { return m_Highest; }
@@ -57,8 +56,8 @@ namespace scone
 		T GetTotal() const { return m_Total; }
 
 	private:
-		T m_Total, m_Weight, m_Initial, m_Highest, m_Lowest, m_PrevTime, m_PrevValue;
+		T m_Total, m_Initial, m_Highest, m_Lowest, m_PrevTime, m_PrevValue;
 	};
 
-	typedef SampledValue< Real > MeasuredReal;
+	typedef Statistic< Real > MeasuredReal;
 }

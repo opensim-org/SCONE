@@ -1,6 +1,6 @@
 #pragma once
 #include "Measure.h"
-#include "../core/SampledValue.h"
+#include "../core/Statistic.h"
 #include "EffortMeasure.h"
 
 namespace scone
@@ -28,7 +28,7 @@ namespace scone
 			Real efficiency_weight;
 
 		private:
-			SampledValue< double > m_Energy;
+			Statistic< double > m_Energy;
 			double GetModelEnergy( sim::Model& model );
 
 			// settings

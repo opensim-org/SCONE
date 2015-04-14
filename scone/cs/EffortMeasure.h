@@ -1,7 +1,7 @@
 #pragma once
 #include "Measure.h"
 #include "../core/EnumStringMap.h"
-#include "../core/SampledValue.h"
+#include "../core/Statistic.h"
 
 namespace scone
 {
@@ -23,7 +23,7 @@ namespace scone
 
 		private:
 			Real m_Wang2012BasalEnergy;
-			SampledValue< double > m_Energy;
+			Statistic< double > m_Energy;
 
 			double GetEnergy( sim::Model& model );
 			double GetWang2012( sim::Model& model );
