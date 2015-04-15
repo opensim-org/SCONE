@@ -144,7 +144,7 @@ namespace scone
 					// keep output files
 					parsets[ m_pImpl->Offspring().bestIndex() ].Write( file_base + ".par" );
 					auto outputFiles = m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
-					outputFiles.push_back( file_base + ".par" );
+					//outputFiles.push_back( file_base + ".par" );
 
 					ManageFileOutput( best, outputFiles );
 				}

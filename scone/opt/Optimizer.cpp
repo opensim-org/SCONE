@@ -153,10 +153,8 @@ namespace scone
 				{
 					// delete the file(s)
 					BOOST_FOREACH( String& file, testIt->second )
-					{
-						log::Info( "Deleting file " + file );
 						boost::filesystem::remove( path( file ) );
-					}
+
 					m_OutputFiles.erase( testIt );
 				}
 			}
