@@ -4,6 +4,7 @@
 #include "../core/InitFromPropNode.h"
 #include "../core/Range.h"
 #include "../sim/Dof.h"
+#include "../core/Statistic.h"
 
 namespace scone
 {
@@ -20,11 +21,11 @@ namespace scone
 
 		private:
 			virtual String GetSignature() override;
+			Statistic<> m_Penalty;
 
 			struct Limit
 			{
 				Limit( const PropNode& props, sim::Model& model );
-
 				sim::Dof& dof;
 				Range< Real > range;
 				Real penalty;

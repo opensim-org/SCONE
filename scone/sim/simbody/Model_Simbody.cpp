@@ -22,6 +22,7 @@
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include "../../core/system.h"
+#include "Dof_Simbody.h"
 
 using std::cout;
 using std::endl;
@@ -178,6 +179,11 @@ namespace scone
 			m_Joints.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
 				m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
+
+			// create wrappers for dofs
+			m_Dofs.clear();
+			for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
+				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );

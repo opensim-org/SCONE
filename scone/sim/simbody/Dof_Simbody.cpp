@@ -19,5 +19,20 @@ namespace scone
 		{
 
 		}
+
+		scone::Real Dof_Simbody::GetPos()
+		{
+			return m_osCoord.getValue( m_Model.GetTkState() );
+		}
+
+		scone::Real Dof_Simbody::GetVel()
+		{
+			return m_osCoord.getSpeedValue( m_Model.GetTkState() );
+		}
+
+		const String& Dof_Simbody::GetName() const 
+		{
+			return m_osCoord.getName();
+		}
 	}
 }

@@ -141,9 +141,9 @@ namespace scone
 		PropNode& Merge( const PropNode& props, bool overwrite = true );
 
 		/// Access to children for iteration
-		const ChildContainer& GetChildren() const { return m_Children; }
-		ConstChildIter Begin() const { return m_Children.cbegin(); }
-		ConstChildIter End() const { return m_Children.cend(); }
+		const ChildContainer& GetChildren() const { Touch(); return m_Children; }
+		ConstChildIter Begin() const { Touch(); return m_Children.cbegin(); }
+		ConstChildIter End() const { Touch(); return m_Children.cend(); }
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const String& rootname = "" );

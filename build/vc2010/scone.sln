@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test.vcxproj", "{43
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sconeopt", "sconeopt.vcxproj", "{989E355F-4BB6-475A-B732-3AC5E376A77D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sconeexport", "..\sconeexport\sconeexport.vcxproj", "{F9B953C1-B75F-4853-A669-2475AE11F638}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -63,6 +65,10 @@ Global
 		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Debug|Win32.Build.0 = Debug|Win32
 		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Release|Win32.ActiveCfg = Release|Win32
 		{989E355F-4BB6-475A-B732-3AC5E376A77D}.Release|Win32.Build.0 = Release|Win32
+		{F9B953C1-B75F-4853-A669-2475AE11F638}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F9B953C1-B75F-4853-A669-2475AE11F638}.Debug|Win32.Build.0 = Debug|Win32
+		{F9B953C1-B75F-4853-A669-2475AE11F638}.Release|Win32.ActiveCfg = Release|Win32
+		{F9B953C1-B75F-4853-A669-2475AE11F638}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

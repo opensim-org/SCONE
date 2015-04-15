@@ -16,14 +16,17 @@ namespace scone
 	{
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
-		m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area )
+		m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area ),
+		m_DofLimitMeasure( props.GetChild( "DofLimitMeasure" ), par, model, area )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 			INIT_FROM_PROP( props, min_velocity, 0.5 );
 			INIT_FROM_PROP( props, duration, 3.0 );
 
-			INIT_FROM_PROP( props, min_velocity_weight, 100.0 );
-			INIT_FROM_PROP( props, efficiency_weight, 0.1 );
+			// init term weights
+			m_Terms[ "min_velocity" ].weight = props.GetReal( "min_velocity_weight", 100.0 );
+			m_Terms[ "cost_of_travel" ].weight = props.GetReal( "cost_of_travel_weight", 0.1 );
+			m_Terms[ "dof_limit" ].weight = props.GetReal( "dof_limit_weight", 100.0 );
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -66,6 +69,7 @@ namespace scone
 
 			// update energy measure
 			m_EffortMeasure.UpdateControls( model, timestamp );
+			m_DofLimitMeasure.UpdateControls( model, timestamp );
 
 			// check termination
 			bool terminate = timestamp >= duration;
@@ -88,24 +92,23 @@ namespace scone
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
 			// find efficiency
-			double effort = m_EffortMeasure.GetResult( model ) / model.GetMass();
-			double distance = GetGaitDist( model ) - m_InitGaitDist;
-			double efficiency = effort / std::max( 0.1, distance );
-			double min_vel_score = 1.0 - m_MinVelocityMeasure.GetAverage();
+			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
+			m_Terms[ "distance" ].value = GetGaitDist( model ) - m_InitGaitDist;
+			m_Terms[ "speed" ].value = m_Terms[ "distance" ].value / model.GetTime();
 
-			double score = min_velocity_weight * min_vel_score + efficiency_weight * efficiency;
+			// for efficiency, we use speed because effort is an average
+			// speed is capped to min_velocity to prevent high values for efficiency
+			m_Terms[ "cost_of_travel" ].value = m_Terms[ "effort" ].value / std::max( min_velocity, m_Terms[ "speed" ].value );
+			m_Terms[ "min_velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
+			m_Terms[ "dof_limit" ].value = m_DofLimitMeasure.GetResult( model );
 
-			// update report
-			m_Report.Set( "distance", distance );
-			m_Report.Set( "effort", effort );
-			//m_Report.Set( "OpenSimEffort", model.GetTotalEnergyConsumption() );
-			//m_Report.Set( "OpenSimEffortFact", model.GetTotalEnergyConsumption() / cost );
-			m_Report.Set( "weighted_efficiency", efficiency_weight * efficiency );
-			m_Report.Set( "weighted_min_velocity", min_velocity_weight * min_vel_score );
-			m_Report.Set( score );
-
-			if ( _isnan( score ) )
-				printf("dist=%f cost=%f eff=%f min_vel=%f score=%f\n", distance, effort, efficiency, m_MinVelocityMeasure.GetAverage(), score );
+			// generate report and count total score
+			double score = 0.0;
+			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
+			{
+				log::DebugF( "%24s\t%6.2f\t%6.2f\t%6.2f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
+				score += term.second.weighted_value();
+			}
 
 			return score;
 		}

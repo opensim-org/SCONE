@@ -2,6 +2,7 @@
 #include "Measure.h"
 #include "../core/Statistic.h"
 #include "EffortMeasure.h"
+#include "DofLimitMeasure.h"
 
 namespace scone
 {
@@ -23,9 +24,16 @@ namespace scone
 			Real min_velocity;
 			Real duration;
 			EffortMeasure m_EffortMeasure;
+			DofLimitMeasure m_DofLimitMeasure;
 
-			Real min_velocity_weight;
-			Real efficiency_weight;
+			struct WeightedTerm {
+				WeightedTerm( double w = 0.0 ) : weight( w ), value( 0.0 ) {};
+				double weighted_value() { return weight * value; }
+				double weight;
+				double value;
+			};
+			typedef std::pair< const String, WeightedTerm > StringWeightedTermPair;
+			std::map< String, WeightedTerm > m_Terms;
 
 		private:
 			Statistic< double > m_Energy;

@@ -44,6 +44,12 @@
 					<min_velocity>1.0</min_velocity>
 					<duration>5.0</duration>
 					<EffortMeasure measure_type="Wang2012"/>
+					<DofLimitMeasure>
+						<Limits>
+							<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" penalty="1.0"/>
+							<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" penalty="1.0"/>
+						</Limits>
+					</DofLimitMeasure>
 				</Measure>
 			</Controllers>
 		</Model>

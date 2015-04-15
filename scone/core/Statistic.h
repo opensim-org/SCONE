@@ -1,8 +1,10 @@
 #pragma once
 
+#include "core.h"
+
 namespace scone
 {
-	template< typename T >
+	template< typename T = Real >
 	class Statistic
 	{
 	public:

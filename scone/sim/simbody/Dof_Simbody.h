@@ -17,7 +17,12 @@ namespace scone
 		public:
 			Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord );
 			virtual ~Dof_Simbody();
-			
+
+			virtual Real GetPos() override;
+			virtual Real GetVel() override;
+			virtual const String& GetName() const override;
+
+
 		private:
 			Model_Simbody& m_Model;
 			OpenSim::Coordinate& m_osCoord;

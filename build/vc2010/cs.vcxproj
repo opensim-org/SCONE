@@ -107,6 +107,7 @@
     <IntDir>$(SolutionDir)..\..\intermediate\$(TargetName)\$(Configuration)\</IntDir>
     <CustomBuildBeforeTargets>
     </CustomBuildBeforeTargets>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
