@@ -17,7 +17,7 @@ namespace scone
 		size_t GetCoefficientCount();
 
 		// a signature describing the function
-		virtual String GetSignature() override { return GetStringF( "P%d", m_Coeffs.size() - 1 ); }
+		virtual String GetSignature() override { return GetStringF( "p%d", m_Coeffs.size() - 1 ); }
 
 	protected:
 		std::vector< Real > m_Coeffs;

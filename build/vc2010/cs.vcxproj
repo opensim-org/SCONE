@@ -151,7 +151,7 @@
       <Command>"$(SolutionDir)..\tools\IncrementBuildCount" "$(SolutionDir)..\..\scone\cs\version.h" SCONE_VERSION_BUILD</Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>*** Updating version number</Message>
+      <Message>*** Updating Version ***</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

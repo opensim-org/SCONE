@@ -47,7 +47,7 @@ namespace scone
 
 		scone::String DofLimitMeasure::GetSignature()
 		{
-			return "DL";
+			return "dl";
 		}
 	}
 }

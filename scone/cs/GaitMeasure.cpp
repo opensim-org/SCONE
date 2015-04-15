@@ -103,19 +103,21 @@ namespace scone
 			m_Terms[ "dof_limit" ].value = m_DofLimitMeasure.GetResult( model );
 
 			// generate report and count total score
+			// TODO: use generic measure report?
 			double score = 0.0;
 			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
 			{
-				log::DebugF( "%24s\t%6.2f\t%6.2f\t%6.2f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
+				log::DebugF( "%20s\t%6.2f\t%6.2f\t%6.2f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
 				score += term.second.weighted_value();
 			}
 
+			log::DebugF( "%20s\t%6.2f", "TOTAL", score );
 			return score;
 		}
 
 		scone::String GaitMeasure::GetSignature()
 		{
-			return "GM";
+			return "gm";
 		}
 
 		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )

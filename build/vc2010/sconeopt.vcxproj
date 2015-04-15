@@ -113,6 +113,14 @@
     <PostBuildEvent>
       <Command>xcopy "$(OutDir)*.*" "$(OutDir)..\ReleaseCopy" /S /D /Y </Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>
+      </Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

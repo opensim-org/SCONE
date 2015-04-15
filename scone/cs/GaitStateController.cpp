@@ -188,7 +188,7 @@ namespace scone
 
 		scone::String GaitStateController::GetSignature()
 		{
-			String s = "GS";
+			String s = "gs";
 
 			std::map< String, int > controllers;
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )

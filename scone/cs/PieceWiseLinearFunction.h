@@ -23,7 +23,7 @@ namespace scone
 		OpenSim::PiecewiseLinearFunction& GetOsFunc() { return m_osFunc; }
 
 		// a signature describing the function
-		virtual String GetSignature() override { return GetStringF( "L%d", m_osFunc.getSize() ); }
+		virtual String GetSignature() override { return GetStringF( "l%d", m_osFunc.getSize() ); }
 
 	private:
 		OpenSim::PiecewiseLinearFunction m_osFunc;
