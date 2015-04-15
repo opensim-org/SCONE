@@ -23,7 +23,7 @@ namespace scone
 
 			virtual double Evaluate() override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
-			virtual void WriteResults( const String& file ) override;
+			virtual std::vector< String > WriteResults( const String& file ) override;
 			virtual String GetSignature();
 
 			sim::Model& GetModel() { return *m_Model; }

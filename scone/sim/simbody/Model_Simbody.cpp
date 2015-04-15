@@ -224,11 +224,12 @@ namespace scone
 
 		}
 
-		void Model_Simbody::WriteStateHistory( const String& file )
+		String Model_Simbody::WriteStateHistory( const String& file )
 		{
 			boost::filesystem::path path( file + ".sto" );
 			m_pOsimManager->getStateStorage().setName( ( path.parent_path().filename() / path.stem() ).string() );
 			m_pOsimManager->getStateStorage().print( path.string() );
+			return path.string();
 		}
 
 		Vec3 Model_Simbody::GetComPos()

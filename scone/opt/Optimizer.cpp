@@ -27,6 +27,7 @@ namespace scone
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
 			INIT_FROM_PROP( props, maximize_objective, true );
 			INIT_FROM_PROP( props, show_optimization_time, false );
+			INIT_FROM_PROP( props, min_improvement_factor_for_file_output, 1.01 );
 
 			// create at least one objective from props, so that all nodes are properly flagged
 			CreateObjectives( 1 );
@@ -134,6 +135,30 @@ namespace scone
 			{
 				m_Objectives.push_back( CreateObjective( m_ObjectiveProps, ParamSet() ) );
 				m_Objectives.back()->debug_idx = m_Objectives.size();
+			}
+		}
+
+		void Optimizer::ManageFileOutput( double fitness, const std::vector< String >& files )
+		{
+			m_OutputFiles.push_back( std::make_pair( fitness, files ) );
+			if ( m_OutputFiles.size() >= 3 )
+			{
+				// see if we should delete the second last file
+				auto testIt  = m_OutputFiles.end() - 2;
+				double imp1 = testIt->first / ( testIt - 1 )->first;
+				double imp2 = ( testIt + 1 )->first / testIt->first;
+				if ( !maximize_objective ) { imp1 = 1.0 / imp1; imp2 = 1.0 / imp2; }
+
+				if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
+				{
+					// delete the file(s)
+					BOOST_FOREACH( String& file, testIt->second )
+					{
+						log::Info( "Deleting file " + file );
+						boost::filesystem::remove( path( file ) );
+					}
+					m_OutputFiles.erase( testIt );
+				}
 			}
 		}
 	}

@@ -56,9 +56,11 @@ namespace scone
 			m_Measure = dynamic_cast< Measure* >( measureIter->get() );
 		}
 
-		void SimulationObjective::WriteResults( const String& file )
+		std::vector< String > SimulationObjective::WriteResults( const String& file )
 		{
-			m_Model->WriteStateHistory( file );
+			std::vector< String > files;
+			files.push_back( m_Model->WriteStateHistory( file ) );
+			return files;
 		}
 
 		String SimulationObjective::GetSignature()

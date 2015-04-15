@@ -140,8 +140,13 @@ namespace scone
 					String ind_name = GetStringF( "%04d_%.3f_%.3f", gen, m_pImpl->Offspring().meanFitness(), best );
 					String file_base = GetOutputFolder() + ind_name;
 					parsets[ m_pImpl->Offspring().bestIndex() ].UpdateMeanStd( parsets );
+
+					// keep output files
 					parsets[ m_pImpl->Offspring().bestIndex() ].Write( file_base + ".par" );
-					m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
+					auto outputFiles = m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
+					outputFiles.push_back( file_base + ".par" );
+
+					ManageFileOutput( best, outputFiles );
 				}
 
 				// show time if needed

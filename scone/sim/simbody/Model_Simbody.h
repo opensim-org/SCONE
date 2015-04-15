@@ -41,7 +41,7 @@ namespace scone
 			virtual Real GetTotalEnergyConsumption() override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
-			virtual void WriteStateHistory( const String& file ) override;
+			virtual String WriteStateHistory( const String& file_base ) override;
 
 			virtual void SetTerminationRequest() override;
 

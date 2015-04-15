@@ -28,10 +28,13 @@ namespace scone
 			const PropNode& m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
 
+			void ManageFileOutput( double fitness, const std::vector< String >& files );
+
 			size_t max_threads;
 			int thread_priority;
 			bool maximize_objective;
 			bool show_optimization_time;
+			Real min_improvement_factor_for_file_output;
 
 		private:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );
@@ -41,6 +44,7 @@ namespace scone
 
 			String m_Name;
 			String m_OutputFolder;
+			std::vector< std::pair< double, std::vector< String > > > m_OutputFiles;
 
 		private: // non-copyable and non-assignable
 			Optimizer( const Optimizer& );

@@ -19,7 +19,9 @@ namespace scone
 
 			// update all parameters and call Evaluate
 			double Evaluate( ParamSet& par );
-			virtual void WriteResults( const String& file ) { };
+
+			// write results and return all files written
+			virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
 
 			// virtual evaluation function
 			virtual double Evaluate() = 0;
