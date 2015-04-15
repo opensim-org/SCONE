@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "JointLimitMeasure.h"
+#include "DofLimitMeasure.h"
 #include "../sim/Model.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		JointLimitMeasure::JointLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
 			const PropNode& lp = props.GetChild( "Limits" );
@@ -14,28 +14,28 @@ namespace scone
 				m_Limits.push_back( Limit( it->second->Touch(), model ) );
 		}
 
-		JointLimitMeasure::~JointLimitMeasure()
+		DofLimitMeasure::~DofLimitMeasure()
 		{
 		}
 
-		JointLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
+		DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
 		dof( FindNamed( model.GetDofs(), props.GetStr( "dof" ) ) )
 		{
 			CONSTRUCT_FROM_PROP( props, range );
 			INIT_FROM_PROP( props, penalty, 1.0 );
 		}
 
-		void JointLimitMeasure::UpdateControls( sim::Model& model, double timestamp )
+		void DofLimitMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 
-		double JointLimitMeasure::GetResult( sim::Model& model )
+		double DofLimitMeasure::GetResult( sim::Model& model )
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 
-		scone::String JointLimitMeasure::GetSignature()
+		scone::String DofLimitMeasure::GetSignature()
 		{
 			return "JLM";
 		}

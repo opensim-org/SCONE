@@ -69,11 +69,11 @@
     <ClInclude Include="..\..\scone\cs\EffortMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\JointLimitMeasure.h">
-      <Filter>Measures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\version.h">
       <Filter>System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h">
+      <Filter>Measures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,7 +119,7 @@
     <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\JointLimitMeasure.cpp">
+    <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
   </ItemGroup>
