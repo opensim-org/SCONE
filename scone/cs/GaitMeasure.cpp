@@ -65,6 +65,7 @@ namespace scone
 				double vel = ( gait_dist - m_PrevGaitDist ) / dt;
 				double norm_vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
 				m_MinVelocityMeasure.AddSample( norm_vel, timestamp );
+				m_PrevGaitDist = gait_dist;
 			}
 
 			// update energy measure
