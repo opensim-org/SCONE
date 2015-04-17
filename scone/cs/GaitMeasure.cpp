@@ -57,17 +57,6 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			// find normalized min velocity (using GetGaitDist)
-			double dt = model.GetDeltaTime();
-			if ( dt > 0.0 )
-			{
-				double gait_dist = GetGaitDist( model );
-				double vel = ( gait_dist - m_PrevGaitDist ) / dt;
-				double norm_vel = GetRestrained( model.GetComVel().x, 0.0, min_velocity ) / min_velocity;
-				m_MinVelocityMeasure.AddSample( norm_vel, timestamp );
-				m_PrevGaitDist = gait_dist;
-			}
-
 			// update energy measure
 			m_EffortMeasure.UpdateControls( model, timestamp );
 			m_DofLimitMeasure.UpdateControls( model, timestamp );
@@ -96,11 +85,11 @@ namespace scone
 			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
 			m_Terms[ "distance" ].value = GetGaitDist( model ) - m_InitGaitDist;
 			m_Terms[ "speed" ].value = m_Terms[ "distance" ].value / model.GetTime();
+			m_Terms[ "min_velocity" ].value = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / duration ) / min_velocity );
 
-			// for efficiency, we use speed because effort is an average
-			// speed is capped to min_velocity to prevent high values for efficiency
+			// for cost_of_transport, we use speed because effort is an average
+			// speed is capped to min_velocity to prevent high values for cost_of_transport
 			m_Terms[ "cost_of_transport" ].value = m_Terms[ "effort" ].value / std::max( min_velocity, m_Terms[ "speed" ].value );
-			m_Terms[ "min_velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
 			m_Terms[ "dof_limit" ].value = m_DofLimitMeasure.GetResult( model );
 
 			// generate report and count total score

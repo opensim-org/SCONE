@@ -8,10 +8,10 @@
 	<sigma>1</sigma>
 	<max_generations>5000</max_generations>
 	<min_improvement_factor_for_file_output>1.01</min_improvement_factor_for_file_output>
-	<maximize_objective>1</maximize_objective>
+	<maximize_objective>0</maximize_objective>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix>dist</signature_postfix>
+		<signature_postfix></signature_postfix>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
@@ -43,8 +43,8 @@
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
 					<min_velocity>0.5</min_velocity>
-					<duration>5.0</duration>
-					<Weights min_velocity="0" distance="100" cost_of_transport="-0.1" dof_limit="-100"/>
+					<duration>3.0</duration>
+					<Weights min_velocity="100" cost_of_transport="0.1" dof_limit="100"/>
 					<EffortMeasure measure_type="Wang2012"/>
 					<DofLimitMeasure>
 						<Limits>
