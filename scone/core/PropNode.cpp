@@ -12,6 +12,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include "boost/filesystem/path.hpp"
 
 using namespace boost;
 using namespace boost::property_tree;
@@ -99,6 +100,15 @@ namespace scone
 				return child->AddChild( head_key );
 			else 
 				return AddChild( head_key ).AddChild( tail_key );
+		}
+	}
+
+	void PropNode::AddChildren( const PropNode& other )
+	{
+		for ( ConstChildIter iter = other.Begin(); iter != other.End(); ++iter )
+		{
+			m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
+			m_Children.back().second->AddChildren( *iter->second );
 		}
 	}
 
@@ -309,30 +319,64 @@ namespace scone
 		return true;
 	}
 
-	PropNode CORE_API ReadPropNodeFromXml( const String& filename )
+	void ResolveIncludedFiles( PropNode& props, const String& filename, const String& include_directive, int level )
 	{
-		return PropNode().FromXmlFile( filename );
+		SCONE_CONDITIONAL_THROW( level >= 100, "Exceeded maximum include level, check for loops in includes" );
+
+		for ( PropNode::ChildIter iter = props.Begin(); iter != props.End(); )
+		{
+			if ( iter->first == include_directive )
+			{
+				// load included file using filename path
+				boost::filesystem::path include_path = boost::filesystem::path( filename ).parent_path() / iter->second->GetValue();
+				PropNode other = ReadPropNode( include_path.string(), include_directive, level + 1 );
+				
+				// remove the include and add the children
+				iter = props.GetChildren().erase( iter );
+				props.AddChildren( other );
+			}
+			else
+			{
+				// search in children
+				ResolveIncludedFiles( *iter->second, filename, include_directive, level );
+				++iter;
+			}
+		}
 	}
 
-	PropNode CORE_API ReadPropNodeFromInfo( const String& filename )
+	PropNode ReadPropNodeFromXml( const String& filename, const String& include_directive, int level )
 	{
-		return PropNode().FromInfoFile( filename );
+		PropNode p;
+		p.FromXmlFile( filename );
+		ResolveIncludedFiles( p, filename, include_directive, level );
+		return p;
 	}
 
-	PropNode CORE_API ReadPropNodeFromIni( const String& filename )
+	PropNode ReadPropNodeFromInfo( const String& filename, const String& include_directive, int level )
 	{
-		return PropNode().FromIniFile( filename );
+		PropNode p;
+		p.FromInfoFile( filename );
+		ResolveIncludedFiles( p, filename, include_directive, level );
+		return p;
 	}
 
-	PropNode ReadPropNode( const String& config_file )
+	PropNode ReadPropNodeFromIni( const String& filename, const String& include_directive, int level )
+	{
+		PropNode p;
+		p.FromIniFile( filename );
+		ResolveIncludedFiles( p, filename, include_directive, level );
+		return p;
+	}
+
+	PropNode ReadPropNode( const String& config_file, const String& include_directive, int level )
 	{
 		String ext = boost::filesystem::path( config_file ).extension().string();
 		if ( ext == ".xml" )
-			return ReadPropNodeFromXml( config_file );
+			return ReadPropNodeFromXml( config_file, include_directive, level );
 		if ( ext == ".info" )
-			return ReadPropNodeFromInfo( config_file );
+			return ReadPropNodeFromInfo( config_file, include_directive, level );
 		if ( ext == ".ini" )
-			return ReadPropNodeFromIni( config_file );
+			return ReadPropNodeFromIni( config_file, include_directive, level );
 		else SCONE_THROW( "Unknown file type: " + config_file );
 	}
 }

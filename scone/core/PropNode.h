@@ -137,13 +137,19 @@ namespace scone
 		/// create child node
 		PropNode& AddChild( const String& key );
 
+		/// add all children from props
+		void AddChildren( const PropNode& other );
+
 		/// Merge existing properties
 		PropNode& Merge( const PropNode& props, bool overwrite = true );
 
 		/// Access to children for iteration
 		const ChildContainer& GetChildren() const { Touch(); return m_Children; }
+		ChildContainer& GetChildren() { Touch(); return m_Children; }
 		ConstChildIter Begin() const { Touch(); return m_Children.cbegin(); }
 		ConstChildIter End() const { Touch(); return m_Children.cend(); }
+		ChildIter Begin() { Touch(); return m_Children.begin(); }
+		ChildIter End() { Touch(); return m_Children.end(); }
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const String& rootname = "" );
@@ -188,10 +194,10 @@ namespace scone
 	};
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API ReadPropNodeFromXml( const String& filename );
-	PropNode CORE_API ReadPropNodeFromInfo( const String& filename );
-	PropNode CORE_API ReadPropNodeFromIni( const String& filename );
-	PropNode CORE_API ReadPropNode( const String& filename );
+	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
+	PropNode CORE_API ReadPropNode( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

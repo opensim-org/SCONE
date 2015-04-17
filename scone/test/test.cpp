@@ -20,7 +20,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		//XmlParseTest();
 		//SerializationTest();
 		//OptimizationTest();
-		SimulationTest();
+		//SimulationTest();
+		PropNode p = ReadPropNode( "include_test.xml" );
+		cout << p;
 	}
 	catch (std::exception& e)
 	{

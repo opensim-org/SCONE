@@ -62,6 +62,7 @@ namespace scone
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;
+			virtual double GetSimulationEndTime() = 0;
 			virtual String WriteStateHistory( const String& file_base ) = 0;
 
 			// get model statistics

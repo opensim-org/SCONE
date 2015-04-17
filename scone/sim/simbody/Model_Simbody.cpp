@@ -412,5 +412,10 @@ namespace scone
 
 			return state;
 		}
+
+		double Model_Simbody::GetSimulationEndTime()
+		{
+			return m_pOsimManager->getFinalTime();
+		}
 	}
 }

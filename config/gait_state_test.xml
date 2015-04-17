@@ -12,6 +12,7 @@
 
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
+		<max_duration>3</max_duration>
 		<Model type="Simbody">
 			<model_file>../models/f1024.osim</model_file>
 			<state_init_file>../models/f2354_init_walk.sto</state_init_file>

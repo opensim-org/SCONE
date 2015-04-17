@@ -75,6 +75,7 @@ namespace scone
 					m_MinVelocityMeasure.AddSample( 0, timestamp );
 					m_MinVelocityMeasure.AddSample( 0, duration );
 				}
+				log::TraceF( "%.3f: Simulation terminated", timestamp );
 				SetTerminationRequest();
 			}
 		}
@@ -85,7 +86,12 @@ namespace scone
 			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
 			m_Terms[ "distance" ].value = GetGaitDist( model ) - m_InitGaitDist;
 			m_Terms[ "speed" ].value = m_Terms[ "distance" ].value / model.GetTime();
-			m_Terms[ "min_velocity" ].value = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / duration ) / min_velocity );
+
+			// get min_velicty
+			double fixed_duration = std::max( model.GetTime(), duration );
+			double walking_min_vel = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / fixed_duration ) / min_velocity );
+			double w = model.GetTime() / fixed_duration;
+			m_Terms[ "min_velocity" ].value = w * walking_min_vel + ( 1 - w ) * 1;
 
 			// for cost_of_transport, we use speed because effort is an average
 			// speed is capped to min_velocity to prevent high values for cost_of_transport
