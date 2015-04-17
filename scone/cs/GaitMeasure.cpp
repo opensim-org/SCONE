@@ -24,9 +24,9 @@ namespace scone
 			INIT_FROM_PROP( props, duration, 3.0 );
 
 			// init term weights
-			m_Terms[ "min_velocity" ].weight = props.GetReal( "min_velocity_weight", 100.0 );
-			m_Terms[ "cost_of_travel" ].weight = props.GetReal( "cost_of_travel_weight", 0.1 );
-			m_Terms[ "dof_limit" ].weight = props.GetReal( "dof_limit_weight", 100.0 );
+			const PropNode& weights = props.GetChild( "Weights" );
+			for ( auto it = weights.Begin(); it != weights.End(); ++it )
+				m_Terms[ it->first ] = it->second->GetValue< Real >();
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -99,7 +99,7 @@ namespace scone
 
 			// for efficiency, we use speed because effort is an average
 			// speed is capped to min_velocity to prevent high values for efficiency
-			m_Terms[ "cost_of_travel" ].value = m_Terms[ "effort" ].value / std::max( min_velocity, m_Terms[ "speed" ].value );
+			m_Terms[ "cost_of_transport" ].value = m_Terms[ "effort" ].value / std::max( min_velocity, m_Terms[ "speed" ].value );
 			m_Terms[ "min_velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
 			m_Terms[ "dof_limit" ].value = m_DofLimitMeasure.GetResult( model );
 
