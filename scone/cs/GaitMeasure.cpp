@@ -17,11 +17,13 @@ namespace scone
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area ),
-		m_DofLimitMeasure( props.GetChild( "DofLimitMeasure" ), par, model, area )
+		m_DofLimitMeasure( props.GetChild( "DofLimitMeasure" ), par, model, area ),
+		m_MinVelocityMeasure( Statistic<>::NoInterpolation )
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 			INIT_FROM_PROP( props, min_velocity, 0.5 );
 			INIT_FROM_PROP( props, duration, 3.0 );
+			INIT_FROM_PROP( props, contact_force_threshold, 0.1 );
 
 			// init term weights
 			const PropNode& weights = props.GetChild( "Weights" );
@@ -63,19 +65,31 @@ namespace scone
 
 			// check termination
 			bool terminate = timestamp >= duration;
+			terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
 
-			// check if com is too low
-			Vec3 com = model.GetComPos();
-			terminate |= com.y < termination_height * m_InitialComPos.y;
+			// update min_velocity measure on new step or termination
+			if ( HasNewFootContact( model ) || terminate )
+			{
+				double gait_dist = GetGaitDist( model );
+				double step_size = gait_dist - m_PrevGaitDist;
+				double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
+				if ( dt > 0 )
+				{
+					double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
+					m_MinVelocityMeasure.AddSample( norm_vel, timestamp );
+					log::TraceF( "%.3f: STEP! step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+				}
+				m_PrevGaitDist = gait_dist;
+			}
+
+			// handle termination
 			if ( terminate )
 			{
+				// add penalty to min_velocity measure
 				if ( timestamp < duration )
-				{
-					// add penalty to min_velocity measure
-					m_MinVelocityMeasure.AddSample( 0, timestamp );
 					m_MinVelocityMeasure.AddSample( 0, duration );
-				}
-				log::TraceF( "%.3f: Simulation terminated", timestamp );
+
+				log::TraceF( "%.3f: Terminating simulation", timestamp );
 				SetTerminationRequest();
 			}
 		}
@@ -88,10 +102,10 @@ namespace scone
 			m_Terms[ "speed" ].value = m_Terms[ "distance" ].value / model.GetTime();
 
 			// get min_velicty
-			double fixed_duration = std::max( model.GetTime(), duration );
-			double walking_min_vel = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / fixed_duration ) / min_velocity );
-			double w = model.GetTime() / fixed_duration;
-			m_Terms[ "min_velocity" ].value = w * walking_min_vel + ( 1 - w ) * 1;
+			//double fixed_duration = std::max( model.GetTime(), duration );
+			//double walking_min_vel = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / fixed_duration ) / min_velocity );
+			//double w = model.GetTime() / fixed_duration;
+			m_Terms[ "min_velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
 
 			// for cost_of_transport, we use speed because effort is an average
 			// speed is capped to min_velocity to prevent high values for cost_of_transport
@@ -103,11 +117,11 @@ namespace scone
 			double score = 0.0;
 			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
 			{
-				log::DebugF( "%20s\t%6.2f\t%6.2f\t%6.2f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
+				log::DebugF( "%20s\t%8.3f\t%8.3f\t%8.3f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
 				score += term.second.weighted_value();
 			}
 
-			log::DebugF( "%20s\t%6.2f", "TOTAL", score );
+			log::DebugF( "%20s\t%8.3f", "TOTAL", score );
 			return score;
 		}
 
@@ -139,6 +153,27 @@ namespace scone
 			}
 
 			return f;
+		}
+
+		bool GaitMeasure::HasNewFootContact( sim::Model& model )
+		{
+			if ( m_PrevContactState.empty() )
+			{
+				// initialize
+				BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+					m_PrevContactState.push_back( leg->GetContactForce().y > contact_force_threshold );
+				return false;
+			}
+
+			bool has_new_contact = false;
+			for ( size_t idx = 0; idx < model.GetLegCount(); ++idx )
+			{
+				bool contact = model.GetLeg( idx ).GetContactForce().y > contact_force_threshold;
+				has_new_contact |= contact && !m_PrevContactState[ idx ];
+				m_PrevContactState[ idx ] = contact;
+			}
+
+			return has_new_contact;
 		}
 
 	}

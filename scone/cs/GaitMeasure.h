@@ -23,8 +23,7 @@ namespace scone
 			Real termination_height;
 			Real min_velocity;
 			Real duration;
-			EffortMeasure m_EffortMeasure;
-			DofLimitMeasure m_DofLimitMeasure;
+			Real contact_force_threshold;
 
 			struct WeightedTerm {
 				WeightedTerm( double w = 0.0 ) : weight( w ), value( 0.0 ) {};
@@ -43,10 +42,16 @@ namespace scone
 			std::vector< sim::Body* > m_GaitBodies;
 			Real GetGaitDist( sim::Model &model );
 
+			bool HasNewFootContact( sim::Model& model );
+			std::vector< bool > m_PrevContactState;
+
 			Vec3 m_InitialComPos;
-			MeasuredReal m_MinVelocityMeasure;
 			Real m_InitGaitDist;
 			Real m_PrevGaitDist;
+
+			MeasuredReal m_MinVelocityMeasure;
+			EffortMeasure m_EffortMeasure;
+			DofLimitMeasure m_DofLimitMeasure;
 		};
 	}
 }

@@ -9,7 +9,8 @@ namespace scone
 	namespace cs
 	{
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area )
+		Measure( props, par, model, area ),
+		m_Penalty( Statistic<>::LinearInterpolation )
 		{
 			const PropNode& lp = props.GetChild( "Limits" );
 			for ( auto it = lp.Begin(); it != lp.End(); ++it )

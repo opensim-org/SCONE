@@ -43,7 +43,7 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
-					<min_velocity>0.5</min_velocity>
+					<min_velocity>1.0</min_velocity>
 					<duration>3.0</duration>
 					<Weights min_velocity="100" cost_of_transport="0.1" dof_limit="100"/>
 					<EffortMeasure measure_type="Wang2012"/>

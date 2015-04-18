@@ -17,7 +17,8 @@ namespace scone
 			);
 
 		EffortMeasure::EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area )
+		Measure( props, par, model, area ),
+		m_Energy( Statistic<>::LinearInterpolation )
 		{
 			measure_type = m_MeasureNames.GetEnum( props.GetStr( "measure_type" ) );
 
@@ -27,7 +28,6 @@ namespace scone
 
 		EffortMeasure::~EffortMeasure()
 		{
-
 		}
 
 		void EffortMeasure::UpdateControls( sim::Model& model, double timestamp )
@@ -36,7 +36,8 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			m_Energy.AddSample( GetEnergy( model ), timestamp );
+			double current_effort = GetEnergy( model );
+			m_Energy.AddSample( current_effort, timestamp );
 		}
 
 		double EffortMeasure::GetResult( sim::Model& model )
