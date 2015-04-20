@@ -16,7 +16,9 @@ namespace scone
 		public:
 			struct LegInfo
 			{
-				LegInfo( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ) {};
+				LegInfo( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ), leg_length( l.MeasureLength() ) {};
+
+				// leg structure
 				const sim::Leg& leg;
 
 				// current state
@@ -29,6 +31,7 @@ namespace scone
 				bool contact;
 				Real sagittal_pos;
 				Real coronal_pos;
+				const Real leg_length;
 			};
 
 			GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );

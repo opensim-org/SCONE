@@ -13,9 +13,10 @@ namespace scone
 			Joint();
 			virtual ~Joint();
 
-			virtual size_t GetDofCount() = 0;
-			virtual Real GetDof( size_t index = 0 ) = 0;
-			virtual const String& GetDofName( size_t index = 0 ) = 0;
+			virtual Vec3 GetPos() const = 0;
+			virtual size_t GetDofCount() const = 0;
+			virtual Real GetDof( size_t index = 0 ) const = 0;
+			virtual const String& GetDofName( size_t index = 0 ) const = 0;
 		};
 	}
 }

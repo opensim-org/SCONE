@@ -22,6 +22,7 @@ namespace scone
 			size_t GetRank() const { return m_Rank; }
 
 			virtual Vec3 GetContactForce() const;
+			Real MeasureLength() const;
 
 		private:
 			size_t m_Index;

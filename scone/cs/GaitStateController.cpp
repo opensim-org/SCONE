@@ -35,7 +35,10 @@ namespace scone
 			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+			{		
 				m_LegStates.push_back( LegStateUP( new LegInfo( *leg ) ) );
+				log::TraceF( "leg %d leg_length=%.2f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
+			}
 
 			// create instances for each controller
 			const PropNode& ccProps = props.GetChild( "ConditionalControllers" ).Touch();
@@ -120,13 +123,13 @@ namespace scone
 					{
 						if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
 							new_state = LegInfo::LiftoffState;
-						else if ( ls.sagittal_pos < late_stance_threshold )
+						else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
 							new_state = LegInfo::LateStanceState;
 						else new_state = LegInfo::EarlyStanceState;
 					}
 					else
 					{
-						if ( ls.sagittal_pos > landing_threshold )
+						if ( ls.sagittal_pos > ls.leg_length * landing_threshold )
 							new_state = LegInfo::LandingState;
 						else new_state = LegInfo::SwingState;
 					}
@@ -135,7 +138,7 @@ namespace scone
 				case LegInfo::EarlyStanceState:
 					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegInfo::LiftoffState;
-					else if ( ls.sagittal_pos < late_stance_threshold )
+					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
 						new_state = LegInfo::LateStanceState;
 					break;
 
@@ -152,7 +155,7 @@ namespace scone
 				case LegInfo::SwingState:
 					if ( ls.contact && ls.sagittal_pos > mir_ls.sagittal_pos )
 						new_state = LegInfo::EarlyStanceState;
-					if ( !ls.contact && ls.sagittal_pos > landing_threshold )
+					if ( !ls.contact && ls.sagittal_pos > ls.leg_length * landing_threshold )
 						new_state = LegInfo::LandingState;
 					break;
 
@@ -188,7 +191,7 @@ namespace scone
 
 		scone::String GaitStateController::GetSignature()
 		{
-			String s = "gs";
+			String s = "gsc";
 
 			std::map< String, int > controllers;
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )

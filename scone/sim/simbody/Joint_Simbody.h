@@ -20,9 +20,11 @@ namespace scone
 
 			virtual const String& GetName() const;
 
-			virtual size_t GetDofCount() override;
-			virtual Real GetDof( size_t index = 0 ) override;
-			virtual const String& GetDofName( size_t index = 0 ) override;
+			virtual Vec3 GetPos() const override;
+
+			virtual size_t GetDofCount() const override;
+			virtual Real GetDof( size_t index = 0 ) const override;
+			virtual const String& GetDofName( size_t index = 0 ) const override;
 
 			class Model_Simbody& m_Model;
 			OpenSim::Joint& m_osJoint;

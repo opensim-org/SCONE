@@ -3,6 +3,7 @@
 #include "Leg.h"
 #include "Link.h"
 #include "Body.h"
+#include "Joint.h"
 
 namespace scone
 {
@@ -24,6 +25,14 @@ namespace scone
 		Vec3 Leg::GetContactForce() const
 		{
 			return m_Foot.GetBody().GetContactForce();
+		}
+
+		Real Leg::MeasureLength() const
+		{
+			// HACK: this uses body positions because joint positions are too hard for OpenSim
+			// TODO: do it right
+			// OpenSim: how can we get the actual position of a joint
+			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).GetLength();
 		}
 	}
 }

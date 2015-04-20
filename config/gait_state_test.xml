@@ -21,7 +21,7 @@
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="GaitStateController">
-					<landing_threshold init_mean="0.1" init_std="0.01" min="0.0" max="0.5" is_free="1"/>
+					<landing_threshold init_mean="0.01" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="0"/>
 					<ConditionalControllers>
 						<ConditionalController>
@@ -43,9 +43,9 @@
 				</Controller>
 				<Measure type="GaitMeasure">
 					<termination_height>0.9</termination_height>
-					<min_velocity>0.5</min_velocity>
+					<min_velocity>1.0</min_velocity>
 					<duration>3.0</duration>
-					<Weights distance="0" balance="100" cost_of_transport="0.1" limit="100"/>
+					<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="100"/>
 					<EffortMeasure measure_type="Wang2012"/>
 					<DofLimitMeasure>
 						<Limits>
