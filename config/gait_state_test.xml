@@ -21,7 +21,7 @@
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="GaitStateController">
-					<landing_threshold init_mean="0.01" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="0"/>
 					<ConditionalControllers>
 						<ConditionalController>
