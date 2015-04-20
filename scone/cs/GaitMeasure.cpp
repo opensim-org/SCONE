@@ -96,21 +96,20 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
+			// precompute some parameters
+			double distance = GetGaitDist( model ) - m_InitGaitDist;
+			double speed = distance / model.GetTime();
+
 			// find efficiency
 			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
-			m_Terms[ "distance" ].value = GetGaitDist( model ) - m_InitGaitDist;
-			m_Terms[ "speed" ].value = m_Terms[ "distance" ].value / model.GetTime();
-
-			// get min_velicty
-			//double fixed_duration = std::max( model.GetTime(), duration );
-			//double walking_min_vel = std::max( 0.0, 1.0 - ( m_Terms[ "distance" ].value / fixed_duration ) / min_velocity );
-			//double w = model.GetTime() / fixed_duration;
-			m_Terms[ "min_velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
+			m_Terms[ "distance" ].value = 1.0 - std::min( 1.0, distance / ( min_velocity * duration ) );
+			m_Terms[ "velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
+			m_Terms[ "balance" ].value = 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) );
 
 			// for cost_of_transport, we use speed because effort is an average
-			// speed is capped to min_velocity to prevent high values for cost_of_transport
-			m_Terms[ "cost_of_transport" ].value = m_Terms[ "effort" ].value / std::max( min_velocity, m_Terms[ "speed" ].value );
-			m_Terms[ "dof_limit" ].value = m_DofLimitMeasure.GetResult( model );
+			// speed is capped to 0.01 prevent high or negative values for cost_of_transport
+			m_Terms[ "cost_of_transport" ].value = m_Terms[ "effort" ].value / std::max( 0.01, speed );
+			m_Terms[ "limit" ].value = m_DofLimitMeasure.GetResult( model );
 
 			// generate report and count total score
 			// TODO: use generic measure report?
@@ -125,9 +124,17 @@ namespace scone
 			return score;
 		}
 
-		scone::String GaitMeasure::GetSignature()
+		String GaitMeasure::GetSignature()
 		{
-			return "gm";
+			String s = "gm-";
+			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
+			{
+				// add the first character of each of the used weight terms
+				if ( term.second.weight > 0.0 )
+					s += term.first[0];
+			}
+
+			return s;
 		}
 
 		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )
