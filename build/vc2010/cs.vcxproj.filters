@@ -75,6 +75,9 @@
     <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\ReflexController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp">
       <Filter>Measures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
+      <Filter>Controllers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

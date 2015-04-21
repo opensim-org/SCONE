@@ -26,6 +26,7 @@
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseLinearFunction.h" />
     <ClInclude Include="..\..\scone\cs\Polynomial.h" />
+    <ClInclude Include="..\..\scone\cs\ReflexController.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
     <ClInclude Include="..\..\scone\cs\tools.h" />
@@ -45,6 +46,7 @@
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp" />
+    <ClCompile Include="..\..\scone\cs\ReflexController.cpp" />
     <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
