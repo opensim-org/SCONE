@@ -96,7 +96,7 @@ namespace scone
 
 		double GaitMeasure::GetResult( sim::Model& model )
 		{
-			// precompute some parameters
+			// precompute some values
 			double distance = GetGaitDist( model ) - m_InitGaitDist;
 			double speed = distance / model.GetTime();
 
@@ -182,6 +182,5 @@ namespace scone
 
 			return has_new_contact;
 		}
-
 	}
 }
