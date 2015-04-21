@@ -26,7 +26,7 @@ namespace scone
 		_localtime64_s(&t, &long_time);
 	
 		char buf[100];
-		sprintf_s(buf, sizeof(buf), "%02d.%02d.%02d%02d", t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min);
+		sprintf_s(buf, sizeof(buf), "%02d%02d_%02d%02d", t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min);
 	
 		return buf;
 	}

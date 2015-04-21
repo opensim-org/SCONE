@@ -65,7 +65,7 @@ namespace scone
 
 		String SimulationObjective::GetSignature()
 		{
-			String str = GetStringF( "v%d.", SCONE_VERSION_BUILD ) + m_Model->GetSignature();
+			String str = m_Model->GetSignature() + GetStringF( "_%d", SCONE_VERSION_BUILD );
 			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
 				str += "." + c->GetSignature();
 

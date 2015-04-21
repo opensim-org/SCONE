@@ -4,7 +4,7 @@ namespace scone
 {
 	// TODO: move to core
 	template< typename T >
-	class Delayed
+	class CORE_API Delayed
 	{
 	public:
 		Delayed() { };

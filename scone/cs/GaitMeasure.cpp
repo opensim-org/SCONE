@@ -126,7 +126,7 @@ namespace scone
 
 		String GaitMeasure::GetSignature()
 		{
-			String s = GetStringF( "g%02d-", static_cast< int >( 10 * min_velocity ) );
+			String s = GetStringF( "g%02d", static_cast< int >( 10 * min_velocity ) );
 			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
 			{
 				// add the first character of each of the used weight terms
