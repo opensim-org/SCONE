@@ -25,9 +25,7 @@ namespace scone
 	template< typename T >
 	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
 	{
-		if ( prop.HasKey( name ) )
-			InitFromPropNode< T >( prop.GetChild( name ), var );
-		else SCONE_THROW( "Could not find key: " + name );
+		InitFromPropNode< T >( prop.GetChild( name ), var );
 	}
 
 	// process named property type with default argument
@@ -44,7 +42,6 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, T& var )
 	{
 		var = prop.GetValue< T >();
-		prop.Touch();
 	}
 
 	// process propertyable types and String
@@ -52,7 +49,6 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_base_of< Propertyable, T >::value >::type* = 0 )
 	{
 		var = T( prop );
-		prop.Touch();
 	}
 
 	// process propertyable types and String
@@ -60,7 +56,6 @@ namespace scone
 	void ConstructFromPropNode( const PropNode& prop, T& var )
 	{
 		var = T( prop );
-		prop.Touch();
 	}
 
 	// process vector< > type (NOT TESTED)
@@ -73,6 +68,5 @@ namespace scone
 			vec.push_back( T() );
 			InitFromPropNode( iter->second, vec.back() );
 		}
-		prop.Touch();
 	}
 }

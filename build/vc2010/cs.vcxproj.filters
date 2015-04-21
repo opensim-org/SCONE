@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\scone\cs\ReflexController.h">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\Reflex.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -126,6 +129,9 @@
       <Filter>Measures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\Reflex.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
   </ItemGroup>

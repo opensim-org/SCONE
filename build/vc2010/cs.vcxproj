@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
+    <ClInclude Include="..\..\scone\cs\Reflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseLinearFunction.h" />
@@ -43,6 +44,7 @@
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
+    <ClCompile Include="..\..\scone\cs\Reflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp" />

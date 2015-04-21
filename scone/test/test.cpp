@@ -21,8 +21,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		//SerializationTest();
 		//OptimizationTest();
 		//SimulationTest();
-		PropNode p = ReadPropNode( "include_test.xml" );
-		cout << p;
+		//PropNode p = ReadPropNode( "include_test.xml" );
+		//cout << p;
+		DelayTest();
 	}
 	catch (std::exception& e)
 	{

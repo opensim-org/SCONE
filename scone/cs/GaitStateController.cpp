@@ -30,8 +30,8 @@ namespace scone
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
-			landing_threshold = par.Get( "landing_threshold", props.GetChild( "landing_threshold" ) );
-			late_stance_threshold = par.Get( "late_stance_threshold", props.GetChild( "late_stance_threshold" ) );
+			INIT_FROM_PROP_PAR( props, par, landing_threshold );
+			INIT_FROM_PROP_PAR( props, par, late_stance_threshold );
 			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )

@@ -2,6 +2,7 @@
 
 #include "cs.h"
 #include "../sim/Controller.h"
+#include "../core/Delayed.h"
 
 namespace scone
 {
@@ -13,22 +14,9 @@ namespace scone
 			ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 			virtual ~ReflexController();
 
-			struct Reflex
-			{
-				size_t source_idx;
-				size_t target_idx;
-				
-				// Reflex parameters
-				Real delay;
-				Real length_gain;
-				Real length_ofs;
-				Real force_gain;
-				Real velocity_gain;
+			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual String GetSignature() override;
 
-				// values
-
-			};
-			
 		protected:
 		private:
 		};

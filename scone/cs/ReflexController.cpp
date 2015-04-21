@@ -13,5 +13,16 @@ namespace scone
 		ReflexController::~ReflexController()
 		{
 		}
+
+		void ReflexController::UpdateControls( sim::Model& model, double timestamp )
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+		scone::String ReflexController::GetSignature()
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
+
 	}
 }

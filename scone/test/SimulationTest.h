@@ -8,7 +8,22 @@
 #include "../core/InitFromPropNode.h"
 #include "../sim/Factories.h"
 
+#include <fstream>
+#include "../core/Delayed.h"
+
 using namespace scone;
+
+void DelayTest()
+{
+	std::ofstream str( "delay_test.txt" );
+
+	DelayedReal dv( 0.5 );
+	for ( double t = 0.0; t < 10.0; t += ( rand() % 100 ) / 100.0 )
+	{
+		dv.Update( t, cos( t ) );
+		str << t << "\t" << dv.GetLastUpdateValue() << "\t" << dv.GetDelayed() << std::endl;
+	}
+}
 
 void SimulationTest()
 {
