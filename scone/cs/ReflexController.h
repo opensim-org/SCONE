@@ -17,8 +17,11 @@ namespace scone
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual String GetSignature() override;
 
-		protected:
 		private:
+			std::vector< ReflexUP > m_Reflexes;
+
+			ReflexController( const ReflexController& other );
+			ReflexController operator=( const ReflexController& other );
 		};
 	}
 }

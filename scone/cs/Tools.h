@@ -4,17 +4,12 @@ namespace scone
 {
 	namespace cs
 	{
-		String GetSymmetricMuscleName( const String& str )
-		{
-			return str.substr( 0, str.length() - 2 );
-		} 
-
-		String ExtractMuscleName( const String& str )
+		inline String GetNameNoSide( const String& str )
 		{
 			return str.substr( 0, str.length() - 2 );
 		}
 
-		Side ExtractMuscleSide( const String& str )
+		inline Side GetSide( const String& str )
 		{
 			if ( str.length() >= 2 )
 			{
@@ -26,7 +21,7 @@ namespace scone
 			return NoSide;
 		}
 
-		String GetSideName( const Side& side )
+		inline String GetSideName( const Side& side )
 		{
 			if ( side == LeftSide ) return "_l";
 			else if ( side == RightSide ) return "_r";

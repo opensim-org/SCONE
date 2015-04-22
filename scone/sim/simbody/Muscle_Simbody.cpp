@@ -21,23 +21,22 @@ namespace scone
 			return m_osMus.getName();
 		}
 
-		scone::Real Muscle_Simbody::GetOptimalFiberLength()
+		scone::Real Muscle_Simbody::GetOptimalFiberLength() const
 		{
 			return m_osMus.getOptimalFiberLength();
 		}
 
-		scone::Real Muscle_Simbody::GetTendonSlackLength()
+		scone::Real Muscle_Simbody::GetTendonSlackLength() const
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			return m_osMus.getTendonSlackLength();
 		}
 
-		scone::Real Muscle_Simbody::GetMass()
+		scone::Real Muscle_Simbody::GetMass() const
 		{
-			return ( GetMaxIsometricForce() / 0.25e6 ) * 1059.7 * GetOptimalFiberLength();
-			
+			return ( GetMaxIsometricForce() / 0.25e6 ) * 1059.7 * GetOptimalFiberLength(); // from OpenSim Umberger metabolic energy model docs
 		}
 
-		scone::Real Muscle_Simbody::GetForce()
+		scone::Real Muscle_Simbody::GetForce() const
 		{
 			// OpenSim: why can't I just use getWorkingState()?
 			// OpenSim: why must I update to Dynamics for getForce()?
@@ -45,52 +44,72 @@ namespace scone
 			return m_osMus.getForce( m_Model.GetTkState() );
 		}
 
-		scone::Real scone::sim::Muscle_Simbody::GetLength()
+		scone::Real Muscle_Simbody::GetNormalizedForce() const 
+		{
+			return GetForce() / GetMaxIsometricForce();
+		}
+
+		scone::Real scone::sim::Muscle_Simbody::GetLength() const
 		{
 			return m_osMus.getLength( m_Model.GetTkState() );
 		}
 
-		scone::Real Muscle_Simbody::GetVelocity()
+		scone::Real Muscle_Simbody::GetVelocity() const
 		{
 			return m_osMus.getLengtheningSpeed( m_Model.GetTkState() );
 		}
 
-		scone::Real Muscle_Simbody::GetFiberForce()
+		scone::Real Muscle_Simbody::GetFiberForce() const
 		{
 			return m_osMus.getFiberForce( m_Model.GetTkState() );
 		}
 
-		scone::Real scone::sim::Muscle_Simbody::GetFiberLength()
+		scone::Real Muscle_Simbody::GetNormalizedFiberForce() const 
+		{
+			return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
+		}
+
+		scone::Real scone::sim::Muscle_Simbody::GetFiberLength() const
 		{
 			return m_osMus.getFiberLength( m_Model.GetTkState() );
 		}
 
-		scone::Real Muscle_Simbody::GetFiberVelocity()
+		scone::Real Muscle_Simbody::GetNormalizedFiberLength() const 
+		{
+			return m_osMus.getNormalizedFiberLength( m_Model.GetTkState() );
+		}
+
+		scone::Real Muscle_Simbody::GetFiberVelocity() const
 		{
 			return m_osMus.getFiberVelocity( m_Model.GetTkState() );
 		}
 
-		scone::Real scone::sim::Muscle_Simbody::GetTendonLength()
+		scone::Real Muscle_Simbody::GetNormalizedFiberVelocity() const 
+		{
+			return m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
+		}
+
+		scone::Real scone::sim::Muscle_Simbody::GetTendonLength() const
 		{
 			return m_osMus.getTendonLength( m_Model.GetTkState() );
 		}
 		
-		scone::Real scone::sim::Muscle_Simbody::GetMaxIsometricForce()
+		scone::Real scone::sim::Muscle_Simbody::GetMaxIsometricForce() const
 		{
 			return m_osMus.getMaxIsometricForce();
 		}
 		
-		std::vector< Vec3 > scone::sim::Muscle_Simbody::GetMusclePath()
+		std::vector< Vec3 > scone::sim::Muscle_Simbody::GetMusclePath() const
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
 		
-		scone::Real scone::sim::Muscle_Simbody::GetActivation()
+		scone::Real scone::sim::Muscle_Simbody::GetActivation() const
 		{
 			return m_osMus.getActivation( m_Model.GetTkState() );
 		}
 		
-		scone::Real scone::sim::Muscle_Simbody::GetExcitation()
+		scone::Real scone::sim::Muscle_Simbody::GetExcitation() const
 		{
 			// use our own activation value, as OpenSim calls getControls()
 			return GetControlValue();

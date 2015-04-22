@@ -15,7 +15,7 @@ namespace scone
 
 			virtual void AddControlValue( double v ) { m_ActuatorControlValue += v; }
 			virtual void ResetControlValue() { m_ActuatorControlValue = 0.0; }
-			double GetControlValue() { return m_ActuatorControlValue; }
+			double GetControlValue() const { return m_ActuatorControlValue; }
 
 		private:
 			double m_ActuatorControlValue;

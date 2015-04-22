@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Objective : public Parameterizable
+		class OPT_API Objective
 		{
 		public:
 			Objective( const PropNode& props, ParamSet& par );
@@ -22,6 +22,9 @@ namespace scone
 
 			// write results and return all files written
 			virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
+
+			// process parameters
+			virtual void ProcessParameters( opt::ParamSet& par ) = 0;
 
 			// virtual evaluation function
 			virtual double Evaluate() = 0;

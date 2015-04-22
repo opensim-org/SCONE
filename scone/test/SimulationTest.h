@@ -17,11 +17,13 @@ void DelayTest()
 {
 	std::ofstream str( "delay_test.txt" );
 
-	DelayedReal dv( 0.5 );
+	DelayedReal dv( 1.0 );
 	for ( double t = 0.0; t < 10.0; t += ( rand() % 100 ) / 100.0 )
 	{
-		dv.Update( t, cos( t ) );
-		str << t << "\t" << dv.GetLastUpdateValue() << "\t" << dv.GetDelayed() << std::endl;
+		Real v = cos( t );
+		if ( t < 5 )
+			dv.Update( t, v );
+		str << t << "\t" << v << "\t" << dv.GetDelayed( t ) << std::endl;
 	}
 }
 

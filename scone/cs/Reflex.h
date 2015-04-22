@@ -17,6 +17,8 @@ namespace scone
 			virtual ~Reflex();
 
 			virtual void UpdateControls( double timestamp );
+			virtual void UpdateMuscleState( double timestamp );
+			virtual void ComputeControls( double timestamp );
 
 			// Reflex parameters
 			Real length_gain;

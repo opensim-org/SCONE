@@ -16,31 +16,40 @@ namespace scone
 	{
 		class Model_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public Muscle
+		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public scone::sim::Muscle
 		{
 		public:
 			Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus );
 			virtual ~Muscle_Simbody();
 
 			// muscle parameters
-			virtual Real GetMaxIsometricForce() override;
-			virtual Real GetOptimalFiberLength() override;
-			virtual Real GetTendonSlackLength() override;
-			virtual Real GetMass() override;
+			virtual Real GetMaxIsometricForce() const override;
+			virtual Real GetOptimalFiberLength() const override;
+			virtual Real GetTendonSlackLength() const override;
+			virtual Real GetMass() const override;
 			
 			// current force / length / velocity
-			virtual Real GetForce() override;
-			virtual Real GetLength() override;
-			virtual Real GetVelocity() override;
-			virtual Real GetFiberForce() override;
-			virtual Real GetFiberLength() override;
-			virtual Real GetFiberVelocity() override;
-			virtual Real GetTendonLength() override;
+			virtual Real GetForce() const override;
+			virtual Real GetNormalizedForce() const override;
 
-			virtual Real GetActivation() override;
-			virtual Real GetExcitation() override;
+			virtual Real GetLength() const override;
+			virtual Real GetVelocity() const override;
 
-			virtual std::vector< Vec3 > GetMusclePath() override;
+			virtual Real GetFiberForce() const override;
+			virtual Real GetNormalizedFiberForce() const override;
+
+			virtual Real GetFiberLength() const override;
+			virtual Real GetNormalizedFiberLength() const override;
+
+			virtual Real GetFiberVelocity() const override;
+			virtual Real GetNormalizedFiberVelocity() const override;
+
+			virtual Real GetTendonLength() const override;
+
+			virtual Real GetActivation() const override;
+			virtual Real GetExcitation() const override;
+
+			virtual std::vector< Vec3 > GetMusclePath() const override;
 
 			virtual void SetExcitation( Real u ) override;
 

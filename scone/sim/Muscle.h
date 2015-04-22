@@ -16,22 +16,31 @@ namespace scone
 			Muscle();
 			virtual ~Muscle();
 
-			virtual Real GetMaxIsometricForce() = 0;
-			virtual Real GetOptimalFiberLength() = 0;
-			virtual Real GetTendonSlackLength() = 0;
-			virtual Real GetMass() = 0;
+			virtual Real GetMaxIsometricForce() const = 0;
+			virtual Real GetOptimalFiberLength() const = 0;
+			virtual Real GetTendonSlackLength() const = 0;
+			virtual Real GetMass() const = 0;
 
-			virtual Real GetForce() = 0;
-			virtual Real GetLength() = 0;
-			virtual Real GetVelocity() = 0;
-			virtual Real GetFiberForce() = 0;
-			virtual Real GetFiberLength() = 0;
-			virtual Real GetFiberVelocity() = 0;
-			virtual Real GetTendonLength() = 0;
-			virtual std::vector< Vec3 > GetMusclePath() = 0;
+			virtual Real GetForce() const = 0;
+			virtual Real GetNormalizedForce() const = 0;
 
-			virtual Real GetActivation() = 0;
-			virtual Real GetExcitation() = 0;
+			virtual Real GetLength() const = 0;
+			virtual Real GetVelocity() const = 0;
+
+			virtual Real GetFiberForce() const = 0;
+			virtual Real GetNormalizedFiberForce() const = 0;
+
+			virtual Real GetFiberLength() const = 0;
+			virtual Real GetNormalizedFiberLength() const = 0;
+
+			virtual Real GetFiberVelocity() const = 0;
+			virtual Real GetNormalizedFiberVelocity() const = 0;
+
+			virtual Real GetTendonLength() const = 0;
+			virtual std::vector< Vec3 > GetMusclePath() const = 0;
+
+			virtual Real GetActivation() const = 0;
+			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
 		};
 	}

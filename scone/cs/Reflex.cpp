@@ -12,10 +12,10 @@ namespace scone
 		m_Velocity( props.GetReal( "delay" ) ),
 		m_Force( props.GetReal( "delay" ) )
 		{
-			INIT_FROM_PROP_PAR( props, par, length_gain );
-			INIT_FROM_PROP_PAR( props, par, length_ofs );
-			INIT_FROM_PROP_PAR( props, par, velocity_gain );
-			INIT_FROM_PROP_PAR( props, par, force_gain );
+			INIT_FROM_PROP_PAR( props, par, length_gain, 0.0 );
+			INIT_FROM_PROP_PAR( props, par, length_ofs, 1.0 );
+			INIT_FROM_PROP_PAR( props, par, velocity_gain, 0.0 );
+			INIT_FROM_PROP_PAR( props, par, force_gain, 0.0 );
 		}
 
 		Reflex::~Reflex()
@@ -24,18 +24,34 @@ namespace scone
 
 		void Reflex::UpdateControls( double timestamp )
 		{
-			// update internal measures
-			m_Length.Update( timestamp, m_Source.GetFiberLength() );
-			m_Velocity.Update( timestamp, m_Source.GetFiberVelocity() );
-			m_Force.Update( timestamp, m_Source.GetForce() );
+			UpdateMuscleState( timestamp );
+			ComputeControls( timestamp );
+		}
 
+		void Reflex::UpdateMuscleState( double timestamp )
+		{
+			// update internal measures
+			m_Length.Update( timestamp, m_Source.GetNormalizedFiberLength() );
+			m_Velocity.Update( timestamp, m_Source.GetNormalizedFiberVelocity() );
+			m_Force.Update( timestamp, m_Source.GetNormalizedFiberForce() );
+		}
+
+		void Reflex::ComputeControls( double timestamp )
+		{
 			// compute reflex excitation u
 			double u = 0.0;
-			u += length_gain * std::max( 0.0, m_Length.GetDelayed() - length_ofs );
-			u += velocity_gain * m_Velocity.GetDelayed();
-			u += force_gain * m_Force.GetDelayed();
 
-			// apply to target
+			// add stretch reflex
+			u += length_gain * std::max( 0.0, m_Length.GetDelayed( timestamp ) - length_ofs );
+
+			// add velocity reflex
+			// TODO: should velocity gain be positive only?
+			u += velocity_gain * std::max( 0.0, m_Velocity.GetDelayed( timestamp ) );
+
+			// add force reflex
+			u += force_gain * m_Force.GetDelayed( timestamp );
+
+			// apply excitation to target muscle
 			m_Target.AddControlValue( u );
 		}
 	}

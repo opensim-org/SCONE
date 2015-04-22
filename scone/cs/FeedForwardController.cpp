@@ -30,8 +30,8 @@ namespace scone
 			{
 				ActInfo ai;
 				ai.full_name = model.GetMuscle( idx ).GetName();
-				ai.name = ExtractMuscleName( ai.full_name );
-				ai.side = ExtractMuscleSide( ai.full_name );
+				ai.name = GetNameNoSide( ai.full_name );
+				ai.side = GetSide( ai.full_name );
 				ai.muscle_idx = idx;
 
 				// see if this muscle is on the right side
@@ -45,9 +45,8 @@ namespace scone
 				// create mode functions
 				for ( size_t idx = 0; idx < number_of_modes; ++idx )
 				{
-					par.PushNamePrefix( GetStringF( "Mode%d.", idx ) );
+					opt::ScopedParamSetPrefixer prefixer( par, GetStringF( "Mode%d.", idx ) );
 					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
-					par.PopNamePrefix();
 				}
 			}
 
@@ -77,9 +76,8 @@ namespace scone
 				{
 					// create a new function
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
-					par.PushNamePrefix( prefix + "." );
+					opt::ScopedParamSetPrefixer prefixer( par, prefix + "." );
 					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
-					par.PopNamePrefix();
 					ai.function_idx = m_Functions.size() - 1;
 				}
 			}

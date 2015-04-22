@@ -300,35 +300,47 @@ namespace scone
 
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
-			// update current state (TODO: remove const cast)
-			m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
-
-			// reset actuator values
-			BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
-				mus->ResetControlValue();
-
-			// update all controllers
-			BOOST_FOREACH( ControllerUP& con, m_Model.GetControllers() )
+			// see 'catch' statement below for explanation try {} catch {} is needed
+			try
 			{
-				con->UpdateControls( m_Model, s.getTime() );
-				if ( con->GetTerminationRequest() )
-					m_Model.SetTerminationRequest();
+				// update current state (TODO: remove const cast)
+				m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
+
+				// reset actuator values
+				BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+					mus->ResetControlValue();
+
+				// update all controllers
+				BOOST_FOREACH( ControllerUP& con, m_Model.GetControllers() )
+				{
+					con->UpdateControls( m_Model, m_Model.GetTime() );
+					if ( con->GetTerminationRequest() )
+						m_Model.SetTerminationRequest();
+				}
+
+				// inject actuator values into controls
+				SimTK::Vector controlValue( 1 );
+				BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+				{
+					controlValue[ 0 ] = mus->GetControlValue();
+					dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
+				}
+
+				// update previous integration step and time
+				// OpenSim: do I need to keep this or is there are smarter way?
+				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep )
+				{
+					m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
+					m_Model.m_PrevTime = m_Model.GetTime();
+				}
 			}
-
-			// inject actuator values into controls
-			SimTK::Vector controlValue( 1 );
-			BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+			catch( std::exception& e )
 			{
-				controlValue[ 0 ] = mus->GetControlValue();
-				dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
-			}
-
-			// update previous integration step and time
-			// OpenSim: do I need to keep this or is there are smarter way?
-			if ( m_Model.GetIntegrationStep() != m_Model.m_PrevIntStep )
-			{
-				m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
-				m_Model.m_PrevTime = m_Model.GetTime();
+				// exceptions are caught and reported here
+				// otherwise they get lost in SimTK::AbstractIntegratorRep::attemptDAEStep()
+				// OpenSim: please remove the catch(...) statement
+				log::Critical( e.what() );
+				throw e;
 			}
 		}
 

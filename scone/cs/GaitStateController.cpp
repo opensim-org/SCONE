@@ -30,8 +30,8 @@ namespace scone
 		sim::Controller( props, par, model, target_area )
 		{
 			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
-			INIT_FROM_PROP_PAR( props, par, landing_threshold );
-			INIT_FROM_PROP_PAR( props, par, late_stance_threshold );
+			INIT_FROM_PROP_PAR( props, par, landing_threshold, 0.0 );
+			INIT_FROM_PROP_PAR( props, par, late_stance_threshold, 0.0 );
 			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
@@ -68,9 +68,8 @@ namespace scone
 						// create controller
 						// TODO: allow neater definition of target area instead of just taking the leg side
 						const PropNode& cprops = ccIt->second->GetChild( "Controller" );
-						par.PushNamePrefix( "S" + cc.state_mask.to_string() + "." );
+						opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 						cc.controller = sim::CreateController( cprops, par, model, model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE );
-						par.PopNamePrefix();
 					}
 				}
 			}
@@ -82,8 +81,6 @@ namespace scone
 
 		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			//log::TraceF( "%d %.6f %.6f", model.GetIntegrationStep(), timestamp, model.GetDeltaTime() );
-
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{
 				// only update the states after a successful integration step

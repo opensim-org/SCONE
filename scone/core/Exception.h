@@ -27,7 +27,7 @@ namespace scone
 #endif
 
 #define SCONE_ASSERT( expression ) \
-	if (!(expression)) throw scone::LogicException(""__FUNCTION__"(): Assertion Failure: "#expression"" );
+	if (!(expression)) throw scone::RuntimeException(""__FUNCTION__"(): Assertion Failure: "#expression"" );
 
 #define SCONE_THROW( message ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (message) )
 
