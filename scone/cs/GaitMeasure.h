@@ -22,7 +22,6 @@ namespace scone
 			// parameters
 			Real termination_height;
 			Real min_velocity;
-			Real duration;
 			Real contact_force_threshold;
 
 			struct WeightedTerm {

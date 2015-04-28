@@ -66,8 +66,11 @@ namespace scone
 		String SimulationObjective::GetSignature()
 		{
 			String str = GetStringF( "%03d.", SCONE_VERSION_BUILD ) + m_Model->GetSignature();
+
 			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
 				str += "." + c->GetSignature();
+
+			str += GetStringF( ".D%.0f", max_duration );
 
 			if ( !signature_postfix.empty() )
 				str += "." + signature_postfix;

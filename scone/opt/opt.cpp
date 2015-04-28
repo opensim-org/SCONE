@@ -30,7 +30,7 @@ namespace scone
 			LogUntouched( p );
 
 			// copy original and write resolved config files
-			path outdir( o->GetOutputFolder() );
+			path outdir( o->AcquireOutputFolder() );
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
 			p.ToXmlFile( ( outdir / "config.xml" ).string() );
 

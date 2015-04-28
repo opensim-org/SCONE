@@ -116,16 +116,21 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			m_OutputFolder = GetSconeFolder( "output" ) + GetDateTimeAsString() + "." + GetObjective().GetSignature() + "/";
+			m_OutputFolder = GetSconeFolder( "output" ) + GetDateTimeAsString() + "." + GetSignature() + "/";
 			create_directories( path( m_OutputFolder ) );
 			log::Info( "Output: " + m_OutputFolder );
 		}
 
-		const String& Optimizer::GetOutputFolder()
+		const String& Optimizer::AcquireOutputFolder()
 		{
 			if ( m_OutputFolder.empty() )
 				InitOutputFolder();
 			return m_OutputFolder;
+		}
+
+		scone::String Optimizer::GetSignature()
+		{
+			return GetObjective().GetSignature();
 		}
 
 		void Optimizer::CreateObjectives( size_t count )

@@ -17,7 +17,8 @@ namespace scone
 			virtual void Run() = 0;
 
 			/// get the results output folder (creates it if it doesn't exist)
-			const String& GetOutputFolder();
+			const String& AcquireOutputFolder();
+			String GetSignature();
 
 			bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 			bool IsMinimizing() { return !maximize_objective; }

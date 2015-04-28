@@ -143,7 +143,7 @@ namespace scone
 
 					// write results
 					String ind_name = GetStringF( "%04d_%.3f_%.3f", gen, m_pImpl->Offspring().meanFitness(), best );
-					String file_base = GetOutputFolder() + ind_name;
+					String file_base = AcquireOutputFolder() + ind_name;
 					parsets[ m_pImpl->Offspring().bestIndex() ].UpdateMeanStd( parsets );
 
 					// keep output files

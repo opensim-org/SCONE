@@ -22,7 +22,6 @@ namespace scone
 		{
 			INIT_FROM_PROP( props, termination_height, 0.5 );
 			INIT_FROM_PROP( props, min_velocity, 0.5 );
-			INIT_FROM_PROP( props, duration, 3.0 );
 			INIT_FROM_PROP( props, contact_force_threshold, 0.1 );
 
 			// init term weights
@@ -64,7 +63,7 @@ namespace scone
 			m_DofLimitMeasure.UpdateControls( model, timestamp );
 
 			// check termination
-			bool terminate = timestamp >= duration;
+			bool terminate = false;
 			terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
 
 			// update min_velocity measure on new step or termination
@@ -85,10 +84,6 @@ namespace scone
 			// handle termination
 			if ( terminate )
 			{
-				// add penalty to min_velocity measure
-				if ( timestamp < duration )
-					m_MinVelocityMeasure.AddSample( 0, duration );
-
 				log::TraceF( "%.3f: Terminating simulation", timestamp );
 				SetTerminationRequest();
 			}
@@ -99,6 +94,11 @@ namespace scone
 			// precompute some values
 			double distance = GetGaitDist( model ) - m_InitGaitDist;
 			double speed = distance / model.GetTime();
+			double duration = model.GetSimulationEndTime();
+
+			// add penalty to min_velocity measure
+			if ( model.GetTime() < duration )
+				m_MinVelocityMeasure.AddSample( 0, duration );
 
 			// find efficiency
 			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
