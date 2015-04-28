@@ -7,7 +7,7 @@
 #include "../core/InitFromPropNode.h"
 
 #include <boost/foreach.hpp>
-#include <boost/assign.hpp>
+#include <boost/tokenizer.hpp>
 
 #include "../sim/Body.h"
 #include "../sim/Factories.h"
@@ -41,13 +41,14 @@ namespace scone
 			}
 
 			// create instances for each controller
-			const PropNode& ccProps = props.GetChild( "ConditionalControllers" ).Touch();
+			const PropNode& ccProps = props.GetChild( "ConditionalControllers" );
 			for ( PropNode::ConstChildIter ccIt = ccProps.Begin(); ccIt != ccProps.End(); ++ccIt )
 			{
-				ccIt->second->Touch();
-				const PropNode& instProps = ccIt->second->GetChild( "Instances" ).Touch();
-
-				for ( PropNode::ConstChildIter instIt = instProps.Begin(); instIt != instProps.End(); ++instIt )
+				// get state masks
+				String state_masks = ccIt->second->GetStr( "states" );
+				boost::char_separator< char > state_mask_seperator(";,");
+				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
+				BOOST_FOREACH( const String& instance_states, state_tokens )
 				{
 					// automatically create controllers for all legs
 					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
@@ -56,10 +57,9 @@ namespace scone
 						m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController() ) );
 						ConditionalController& cc = *m_ConditionalControllers.back();
 
-						// initialize state_mask based on names
-						String states = instIt->second->GetStr( "state_mask" );
+						// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
 						for ( int i = 0; i < LegInfo::StateCount; ++i )
-							cc.state_mask.set( i, states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
+							cc.state_mask.set( i, instance_states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
 						SCONE_CONDITIONAL_THROW( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
 
 						// initialize leg index
@@ -188,7 +188,7 @@ namespace scone
 
 		scone::String GaitStateController::GetSignature()
 		{
-			String s = "gs";
+			String s = "G";
 
 			std::map< String, int > controllers;
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )

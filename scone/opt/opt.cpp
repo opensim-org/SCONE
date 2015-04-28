@@ -29,9 +29,10 @@ namespace scone
 			opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
 			LogUntouched( p );
 
-			// copy config and model file
+			// copy original and write resolved config files
 			path outdir( o->GetOutputFolder() );
-			copy_file( config_path.filename(), outdir / ( "config" + config_path.extension().string() ), copy_option::overwrite_if_exists );
+			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
+			p.ToXmlFile( ( outdir / "config.xml" ).string() );
 
 			o->Run();
 		}

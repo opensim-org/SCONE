@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Measure type="GaitMeasure">
+	<termination_height>0.9</termination_height>
+	<min_velocity>1.0</min_velocity>
+	<duration>3.0</duration>
+	<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="100"/>
+	<EffortMeasure measure_type="Wang2012"/>
+	<DofLimitMeasure>
+		<Limits>
+			<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" penalty="1.0"/>
+			<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" penalty="1.0"/>
+		</Limits>
+	</DofLimitMeasure>
+</Measure>

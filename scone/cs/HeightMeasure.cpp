@@ -68,7 +68,7 @@ namespace scone
 
 		scone::String HeightMeasure::GetSignature()
 		{
-			return "jump";
+			return "Jump";
 		}
 	}
 }

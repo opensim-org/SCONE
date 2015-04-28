@@ -1,39 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name>XXX</name>
-	<max_threads>32</max_threads>
-	<thread_priority>-2</thread_priority>
-	<lambda>0</lambda>
-	<mu>0</mu>
-	<sigma>1</sigma>
-	<random_seed>123</random_seed>
-	<max_generations>5000</max_generations>
-	<output_folder_base>../../_SconeOutput/</output_folder_base>
+	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<max_generations>4000</max_generations>
 	<maximize_objective>1</maximize_objective>
-
 	<Objective type="SimulationObjective">
 		<max_duration>2.0</max_duration>
 		<Model type="Simbody">
-			<model_file>../models/f2354.osim</model_file>
-			<!--state_init_file>../models/f2354_init_walk.sto</state_init_file-->
+			<model_file>f1024.osim</model_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
-				<Controller type="FeedForwardController">
-					<use_symmetric_actuators>1</use_symmetric_actuators>
-					<Function type="PieceWiseConstantFunction">
-						<control_points>2</control_points>
-						<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
-						<control_point_delta_time mean="0.2" std="0.02" is_free="1"/>
-					</Function>
-					<number_of_modes>0</number_of_modes>
-					<!--mode_weight init_min="0.0" init_max="1.0" min="-1" max="1"/-->
-				</Controller>
-				<Measure type="HeightMeasure">
-					<target_body></target_body>
-					<use_average_height>0</use_average_height>
-					<terminate_on_peak>1</terminate_on_peak>
-					<termination_height>0.75</termination_height>
-				</Measure>
+				<INCLUDE file="controllers/C_FC2DT20.xml"/>
+				<INCLUDE file="measures/M_Jump.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

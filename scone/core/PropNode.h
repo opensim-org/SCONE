@@ -137,8 +137,8 @@ namespace scone
 		/// create child node
 		PropNode& AddChild( const String& key );
 
-		/// add all children from props
-		void AddChildren( const PropNode& other );
+		/// insert all children from other PropNode
+		ChildIter InsertChildren( ChildIter insert_point, const PropNode& other );
 
 		/// Merge existing properties
 		PropNode& Merge( const PropNode& props, bool overwrite = true );
@@ -194,10 +194,10 @@ namespace scone
 	};
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
-	PropNode CORE_API ReadPropNode( const String& filename, const String& include_directive = "INCLUDE_FILE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNode( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

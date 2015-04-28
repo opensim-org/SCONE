@@ -61,7 +61,7 @@ namespace scone
 
 		scone::String ReflexController::GetSignature()
 		{
-			String str = GetStringF( "r%d", m_Reflexes.size() );
+			String str = "R"; //GetStringF( "r%d", m_Reflexes.size() );
 
 			// count reflex types
 			int l = 0, v = 0, f = 0;
@@ -72,9 +72,9 @@ namespace scone
 				if ( r->force_gain != 0.0 ) ++f;
 			}
 
-			if ( l > 0 ) str += "l";
-			if ( v > 0 ) str += "v";
-			if ( f > 0 ) str += "f";
+			if ( l > 0 ) str += "L";
+			if ( v > 0 ) str += "V";
+			if ( f > 0 ) str += "F";
 
 			return str;
 		}

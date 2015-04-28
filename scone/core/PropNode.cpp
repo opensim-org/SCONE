@@ -58,6 +58,8 @@ namespace scone
 		if ( overwrite )
 			m_Value = other.m_Value;
 
+		ChildIter insertion_point = Begin();
+
 		for ( ConstChildIter other_it = other.m_Children.begin(); other_it != other.m_Children.end(); ++other_it )
 		{
 			// see if we already have the key
@@ -69,7 +71,11 @@ namespace scone
 			}
 
 			if ( child == nullptr )
-				m_Children.push_back( std::make_pair( other_it->first, PropNodePtr( new PropNode( *other_it->second ) ) ) );
+			{
+				// add new child at insertion_point
+				insertion_point = m_Children.insert( insertion_point, std::make_pair( other_it->first, PropNodePtr( new PropNode( *other_it->second ) ) ) );
+				++insertion_point;
+			}
 			else child->Merge( *other_it->second, overwrite );
 		}
 
@@ -103,13 +109,16 @@ namespace scone
 		}
 	}
 
-	void PropNode::AddChildren( const PropNode& other )
+	PropNode::ChildIter PropNode::InsertChildren( ChildIter insertIt, const PropNode& other )
 	{
-		for ( ConstChildIter iter = other.Begin(); iter != other.End(); ++iter )
+		for ( ConstChildIter otherIt = other.Begin(); otherIt != other.End(); ++otherIt )
 		{
-			m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
-			m_Children.back().second->AddChildren( *iter->second );
+			insertIt = m_Children.insert( insertIt, std::make_pair( otherIt->first, PropNodePtr( new PropNode( *otherIt->second ) ) ) );
+			++insertIt;
+			//m_Children.back().second->AddChildren( *otherIt->second );
 		}
+
+		return insertIt;
 	}
 
 	PropNode* PropNode::GetChildPtr( const String& key ) const
@@ -328,12 +337,26 @@ namespace scone
 			if ( iter->first == include_directive )
 			{
 				// load included file using filename path
-				boost::filesystem::path include_path = boost::filesystem::path( filename ).parent_path() / iter->second->GetValue();
+				String include_filename = iter->second->GetStr( "file" );
+				bool merge_children = iter->second->GetBool( "merge_children", false );
+				boost::filesystem::path include_path = boost::filesystem::path( filename ).parent_path() / include_filename;
 				PropNode other = ReadPropNode( include_path.string(), include_directive, level + 1 );
 				
-				// remove the include and add the children
+				// remove the include node
 				iter = props.GetChildren().erase( iter );
-				props.AddChildren( other );
+
+				// merge or include, depending on options
+				if ( merge_children )
+				{
+					SCONE_ASSERT( other.GetChildren().size() == 1);
+					props.Merge( *other.Begin()->second, false );
+					iter = props.Begin(); // reset the iterator, which has become invalid after merge
+				}
+				else
+				{
+					// insert the children at the INCLUDE spot
+					iter = props.InsertChildren( iter, other );
+				}
 			}
 			else
 			{

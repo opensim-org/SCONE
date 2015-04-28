@@ -126,13 +126,18 @@ namespace scone
 
 		String GaitMeasure::GetSignature()
 		{
-			String s = GetStringF( "g%02d", static_cast< int >( 10 * min_velocity ) );
+			String s = GetStringF( "V%02d", static_cast< int >( 10 * min_velocity ) );
+
+			String extra;
 			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
 			{
 				// add the first character of each of the used weight terms
 				if ( term.second.weight > 0.0 )
-					s += term.first[0];
+					extra += term.first[0];
 			}
+
+			if ( extra != "clv" )
+				s += extra; // add only if it's not the default
 
 			return s;
 		}
