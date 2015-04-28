@@ -1,59 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<name></name>
-	<max_threads>32</max_threads>
-	<thread_priority>-2</thread_priority>
-	<lambda>0</lambda>
-	<mu>0</mu>
-	<sigma>1</sigma>
-	<max_generations>5000</max_generations>
-	<min_improvement_factor_for_file_output>1.01</min_improvement_factor_for_file_output>
-	<maximize_objective>0</maximize_objective>
-
+	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
 		<max_duration>3</max_duration>
 		<Model type="Simbody">
-			<model_file>../models/f1024.osim</model_file>
-			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
-			<pre_control_simulation_time>0.0</pre_control_simulation_time>
+			<model_file>f1024.osim</model_file>
+			<state_init_file>f2354_init_walk.sto</state_init_file>
 			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
-					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="0"/>
 					<ConditionalControllers>
-						<ConditionalController>
-							<Instances>
-								<instance state_mask="EarlyStance LateStance"/>
-								<instance state_mask="Liftoff Swing"/>
-								<instance state_mask="Landing"/>
-							</Instances>
-							<Controller type="FeedForwardController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<Function type="PieceWiseConstantFunction">
-									<control_points>1</control_points>
-									<control_point_y init_min="0.1" init_max="0.5" min="0.02" max="1"/>
-									<!--control_point_delta_time mean="0.25" std="0.025" is_free="1"/-->
-								</Function>
-							</Controller>
-						</ConditionalController>
+						<INCLUDE file="controllers/CC_3FC1.xml"/>
 					</ConditionalControllers>
 				</Controller>
-				<Measure type="GaitMeasure">
-					<termination_height>0.9</termination_height>
-					<min_velocity>1.0</min_velocity>
-					<duration>3.0</duration>
-					<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="100"/>
-					<EffortMeasure measure_type="Wang2012"/>
-					<DofLimitMeasure>
-						<Limits>
-							<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" penalty="1.0"/>
-							<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" penalty="1.0"/>
-						</Limits>
-					</DofLimitMeasure>
-				</Measure>
+				<INCLUDE file="measures/M_G10.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

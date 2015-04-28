@@ -25,7 +25,7 @@ namespace scone
 			INIT_FROM_PROP( props, max_threads, 1u );
 			INIT_FROM_PROP( props, thread_priority, 0 );
 			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
-			INIT_FROM_PROP( props, maximize_objective, true );
+			INIT_FROM_PROP_REQUIRED( props, maximize_objective );
 			INIT_FROM_PROP( props, show_optimization_time, false );
 			INIT_FROM_PROP( props, min_improvement_factor_for_file_output, 1.01 );
 
