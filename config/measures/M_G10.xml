@@ -2,7 +2,7 @@
 <Measure type="GaitMeasure">
 	<termination_height>0.9</termination_height>
 	<min_velocity>1.0</min_velocity>
-	<duration>3.0</duration>
+	<duration>10</duration>
 	<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="100"/>
 	<EffortMeasure measure_type="Wang2012"/>
 	<DofLimitMeasure>

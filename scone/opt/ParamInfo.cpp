@@ -34,7 +34,7 @@ namespace scone
 		{
 			if ( is_free )
 			{
-				if ( init_min == 0.0 && init_max == 0.0 )
+				if ( init_mean != 0.0 || init_std != 0.0 )
 					return GetRestrained( Rng::gauss( init_mean, Square( init_std ) ), min, max );
 				else
 					return Rng::uni( init_min, init_max );
