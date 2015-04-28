@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
 		<max_duration>3</max_duration>

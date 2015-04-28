@@ -40,7 +40,7 @@ namespace scone
 			void Read( const String& filename );
 
 			std::ostream& ToStream( std::ostream& str ) const;
-			std::istream& FromStream( std::istream& str );
+			std::istream& FromStream( std::istream& str, bool log_results = false );
 
 			void PushNamePrefix( const String& prefix );
 			void PopNamePrefix();

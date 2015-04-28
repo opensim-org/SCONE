@@ -27,6 +27,8 @@ namespace scone
 			int max_attempts;
 			long random_seed;
 
+			String init_file;
+
 		private: // non-copyable and non-assignable
 			CmaOptimizer( const CmaOptimizer& );
 			CmaOptimizer& operator=( const CmaOptimizer& );

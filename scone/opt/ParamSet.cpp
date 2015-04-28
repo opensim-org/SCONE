@@ -130,7 +130,7 @@ namespace scone
 		{
 			std::ifstream ifstr( filename );
 			SCONE_CONDITIONAL_THROW( !ifstr.good(), "Error opening file: " + filename );
-			FromStream( ifstr );
+			FromStream( ifstr, true );
 		}
 
 		void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
@@ -185,7 +185,7 @@ namespace scone
 			return str;
 		}
 
-		std::istream& ParamSet::FromStream( std::istream& str )
+		std::istream& ParamSet::FromStream( std::istream& str, bool log_results )
 		{
 			size_t params_set = 0;
 			size_t params_not_found = 0;
@@ -210,17 +210,20 @@ namespace scone
 				}
 				else
 				{
-					// create new parameter
-					// TODO: use a single mechanism to create parameters
-					ParamInfo info = ParamInfo( name, mean, std, 0, 0, REAL_LOWEST, REAL_MAX );
-					m_Params.push_back( std::make_pair( info, value ) );
+					// create new parameter if in construction mode
+					if ( IsInConstructionMode() )
+					{
+						// TODO: use a single mechanism to create parameters
+						ParamInfo info = ParamInfo( name, mean, std, 0, 0, REAL_LOWEST, REAL_MAX );
+						m_Params.push_back( std::make_pair( info, value ) );
+					}
 
 					++params_not_found;
 				}
 			}
 
-			// TODO: show statistics
-			//SCONE_LOG( "Read parameters, existing=" << params_set << " new=" << params_not_found );
+			if ( log_results )
+				log::InfoF( "Parameters read: %d, new parameters: %d", params_set, params_not_found );
 
 			return str;
 		}

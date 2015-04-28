@@ -365,6 +365,9 @@ namespace scone
 				++iter;
 			}
 		}
+
+		// untouch all after search
+		props.UnTouch();
 	}
 
 	PropNode ReadPropNodeFromXml( const String& filename, const String& include_directive, int level )

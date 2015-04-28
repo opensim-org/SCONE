@@ -1,27 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<max_threads>32</max_threads>
-	<thread_priority>-2</thread_priority>
-	<lambda>0</lambda>
-	<mu>0</mu>
-	<sigma>1</sigma>
-	<max_generations>3000</max_generations>
-	<min_improvement_factor_for_file_output>1.05</min_improvement_factor_for_file_output>
-	<maximize_objective>0</maximize_objective>
-
+	<!--INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/-->
+	<initasdasda file="initializations/014.f1024.G_3FC1.V10.0098_51.728_18.310.par"/>
+	<maximize_objective>0</maximize_objective>>
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
 		<max_duration>3</max_duration>
 		<Model type="Simbody">
-			<model_file>../models/f1024.osim</model_file>
-			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
-			<pre_control_simulation_time>0.0</pre_control_simulation_time>
+			<model_file>f1024.osim</model_file>
+			<state_init_file>f2354_init_walk.sto</state_init_file>
 			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
-					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="0"/>
 					<ConditionalControllers>
 						<INCLUDE file="controllers/CC_3FC1.xml"/>
 						<ConditionalController>

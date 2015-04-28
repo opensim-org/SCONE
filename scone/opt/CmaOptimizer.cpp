@@ -43,6 +43,7 @@ namespace scone
 			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_FROM_PROP( props, max_generations, 10000u );
 			INIT_FROM_PROP( props, random_seed, long( 123 ) );
+			INIT_FROM_PROP( props, init_file, String("") );
 		}
 
 		CmaOptimizer::~CmaOptimizer()
@@ -83,7 +84,11 @@ namespace scone
 			// init random seed
 			Rng::seed( random_seed );
 
-			// generate random population
+			// initialize settings from file
+			if ( !init_file.empty() )
+				par.Read( init_file );
+
+			// generate random initial population
 			for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
 			{
 				par.InitRandom();
