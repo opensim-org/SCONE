@@ -32,7 +32,6 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			double g = -model.GetGravity()[1];
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
 			double height = pos; // + pow( vel, 2.0 ) / ( 2.0 * g );

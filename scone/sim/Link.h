@@ -14,7 +14,7 @@ namespace scone
 		{
 		public:
 			Link( Body& b, Joint& j, Link* parent = nullptr ) : m_Body( &b ), m_Joint( &j ), m_Parent( parent ), type( UnknownLink ) { };
-			Link( Body& b ) : m_Body( &b ), m_Joint( nullptr ) { };
+			Link( Body& b ) : m_Body( &b ), m_Joint( nullptr ), m_Parent( nullptr ) { };
 
 			// serialization, can be used for debug printing
 			String ToString( const String& prefix = "" ) const;

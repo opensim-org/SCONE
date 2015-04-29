@@ -146,7 +146,6 @@ namespace scone
 		{
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;
-			double dist = REAL_MAX;
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
 			distances.insert( model.GetComPos().x );
@@ -154,17 +153,6 @@ namespace scone
 			SCONE_ASSERT( distances.size() >= 2 );
 			auto iter = distances.begin();
 			return ( *iter + *(++iter) ) / 2;
-		}
-
-		double GaitMeasure::GetModelEnergy( sim::Model& model )
-		{
-			double f = 1.0; // base muscle force
-			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
-			{
-				f += mus->GetForce();
-			}
-
-			return f;
 		}
 
 		bool GaitMeasure::HasNewFootContact( sim::Model& model )

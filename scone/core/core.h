@@ -1,13 +1,13 @@
 #pragma once
 
-#include <limits>
-#include <string>
-
 #ifdef CORE_EXPORTS
 #define CORE_API __declspec(dllexport)
 #else
 #define CORE_API __declspec(dllimport)
 #endif
+
+#include <limits>
+#include <string>
 
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )

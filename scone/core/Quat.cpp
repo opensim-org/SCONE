@@ -210,8 +210,6 @@ namespace scone
 	{
 		// use matrix based method
 		Real m[3][3];
-		const Vec3* fixVector = 0;
-		Real fixAngle = Real( 0 );
 
 		// convert to matrix
 		ToMatrix( m );

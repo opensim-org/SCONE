@@ -14,6 +14,8 @@ namespace scone
 	
 		char buf[8192];
 		vsprintf_s(buf, sizeof(buf), format, args);
+
+		va_end( args );
 	
 		return std::string(buf);
 	}

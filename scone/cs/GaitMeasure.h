@@ -35,7 +35,6 @@ namespace scone
 
 		private:
 			Statistic< double > m_Energy;
-			double GetModelEnergy( sim::Model& model );
 
 			// settings
 			std::vector< sim::Body* > m_GaitBodies;

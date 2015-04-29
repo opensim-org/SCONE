@@ -43,8 +43,6 @@ namespace scone
 
 			// public parameters
 			Real contact_force_threshold;
-			Real saggital_anterior_threshold;
-			Real saggital_posterior_threshold;
 
 		protected:
 			virtual void UpdateLegStates( sim::Model& model, double timestamp );

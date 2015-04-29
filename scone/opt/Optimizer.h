@@ -40,7 +40,7 @@ namespace scone
 		private:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );
 			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets );
-			static void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
+			static void EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
 			void InitOutputFolder();
 
 			String m_Name;

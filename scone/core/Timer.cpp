@@ -18,7 +18,8 @@ namespace scone
 	}
 
 	Timer::Timer() :
-	m_pImpl( new Impl )
+	m_pImpl( new Impl ),
+	m_Time( 0.0 )
 	{
 		LARGE_INTEGER freq;
 		::QueryPerformanceFrequency( &freq );

@@ -60,7 +60,6 @@ namespace scone
 
 		std::pair< String, int > GaitCycleMeasure::GetMirroredStateNameAndSign( const String& str )
 		{
-			String target;
 			size_t extPos = str.find_last_of( '_' );
 			String baseName = str.substr( 0, extPos );
 			String ext = extPos != String::npos ? str.substr( extPos + 1 ) : "";

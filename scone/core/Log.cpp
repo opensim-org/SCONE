@@ -10,6 +10,7 @@ if ( LEVEL >= g_LogLevel ) \
 		char _buf_[ g_MaxLogMessageSize ]; \
 		vsprintf_s( _buf_, sizeof( _buf_ ), FORMAT, args ); \
 		LogMessageNoCheck( LEVEL, _buf_ ); \
+		va_end( args ); \
 }
 
 namespace scone
