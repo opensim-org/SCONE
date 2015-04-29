@@ -34,5 +34,10 @@ namespace scone
 		{
 			return m_osCoord.getName();
 		}
+
+		scone::Real Dof_Simbody::GetLimitForce()
+		{
+			throw std::logic_error("The method or operation is not implemented.");
+		}
 	}
 }

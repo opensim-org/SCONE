@@ -22,6 +22,8 @@ namespace scone
 			virtual Real GetVel() override;
 			virtual const String& GetName() const override;
 
+			virtual Real GetLimitForce() override;
+
 
 		private:
 			Model_Simbody& m_Model;

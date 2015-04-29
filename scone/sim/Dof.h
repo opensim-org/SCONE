@@ -15,6 +15,7 @@ namespace scone
 
 			virtual Real GetPos() = 0;
 			virtual Real GetVel() = 0;
+			virtual Real GetLimitForce() = 0;
 		};
 	}
 }
