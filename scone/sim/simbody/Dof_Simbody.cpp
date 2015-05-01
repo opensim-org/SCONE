@@ -10,9 +10,23 @@ namespace scone
 	{
 		Dof_Simbody::Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord ) :
 		m_Model( model ),
-		m_osCoord( coord )
+		m_osCoord( coord ),
+		m_pOsLimitForce( nullptr )
 		{
-
+			// find corresponding CoordinateLimitForce
+			auto& forceSet = model.GetOsimModel().getForceSet();
+			for ( int idx = 0; idx < forceSet.getSize(); ++idx )
+			{
+				// OpenSim: Set<T>::get( idx ) is const but returns non-const reference, is this a bug?
+				const OpenSim::CoordinateLimitForce* clf = dynamic_cast< const OpenSim::CoordinateLimitForce* >( &forceSet.get( idx ) );
+				if ( clf && clf->getProperty_coordinate().getValue() == coord.getName() )
+				{
+					// we have found a match!
+					log::Trace( "Found limit force " + clf->getName() + " for coord " + coord.getName() );
+					m_pOsLimitForce = clf;
+					break; 
+				}
+			}
 		}
 
 		Dof_Simbody::~Dof_Simbody()
@@ -37,7 +51,9 @@ namespace scone
 
 		scone::Real Dof_Simbody::GetLimitForce()
 		{
-			throw std::logic_error("The method or operation is not implemented.");
+			if ( m_pOsLimitForce )
+				return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );
+			else return 0.0;
 		}
 	}
 }

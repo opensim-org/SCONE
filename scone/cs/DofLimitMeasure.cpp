@@ -9,8 +9,7 @@ namespace scone
 	namespace cs
 	{
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area ),
-		m_Penalty( Statistic<>::LinearInterpolation )
+		Measure( props, par, model, area )
 		{
 			const PropNode& lp = props.GetChild( "Limits" );
 			for ( auto it = lp.Begin(); it != lp.End(); ++it )
@@ -22,33 +21,53 @@ namespace scone
 		}
 
 		DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
-		dof( FindNamed( model.GetDofs(), props.GetStr( "dof" ) ) )
+		dof( FindNamed( model.GetDofs(), props.GetStr( "dof" ) ) ),
+		penalty( Statistic<>::LinearInterpolation )
 		{
-			range.min = DegToRad( props.GetReal( "min_deg" ) );
-			range.max = DegToRad( props.GetReal( "max_deg" ) );
-			INIT_FROM_PROP( props, penalty, 1.0 );
+			range.min = props.GetReal( "min_deg", 0.0 );
+			range.max = props.GetReal( "max_deg", 0.0 );
+			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
+			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 		}
 
 		void DofLimitMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
-			double penalty = 0.0;
 			BOOST_FOREACH( Limit& l, m_Limits )
 			{
-				double violation = l.range.GetRangeViolation( l.dof.GetPos() );
-				penalty += l.penalty * abs( violation );
-			}
+				if ( l.squared_range_penalty > 0.0 )
+				{
+					double rp = l.squared_range_penalty * GetSquared( l.range.GetRangeViolation( RadToDeg( l.dof.GetPos() ) ) );
+					l.penalty.AddSample( timestamp, rp );
+				}
 
-			m_Penalty.AddSample( penalty, timestamp );
+				if ( l.squared_force_penalty > 0.0 )
+				{
+					double fp = l.squared_force_penalty * GetSquared( l.dof.GetLimitForce() );
+					l.penalty.AddSample( timestamp, fp );
+				}
+			}
 		}
 
 		double DofLimitMeasure::GetResult( sim::Model& model )
 		{
-			return m_Penalty.GetAverage();
+			double result = 0.0;
+			BOOST_FOREACH( Limit& l, m_Limits )
+			{
+				result += l.penalty.GetAverage();
+				m_Report.Set( l.dof.GetName(), GetStringF( "%g", l.penalty.GetAverage() ) );
+			}
+
+			return result;
 		}
 
 		scone::String DofLimitMeasure::GetSignature()
 		{
-			return "dl";
+			return "DL";
+		}
+
+		scone::PropNode DofLimitMeasure::GetReport()
+		{
+			return m_Report;
 		}
 	}
 }

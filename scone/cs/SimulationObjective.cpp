@@ -20,8 +20,8 @@ namespace scone
 		Objective( props, par ),
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
-			INIT_FROM_PROP( props, max_duration, 6000.0 );
-			INIT_FROM_PROP( props, signature_postfix, String() );
+			INIT_PROPERTY( props, max_duration, 6000.0 );
+			INIT_PROPERTY( props, signature_postfix, String() );
 
 			ProcessParameters( par );
 		}

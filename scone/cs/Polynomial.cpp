@@ -13,7 +13,7 @@ namespace scone
 	Polynomial::Polynomial( const PropNode& props, opt::ParamSet& par )
 	{
 		size_t degree;
-		INIT_FROM_PROP( props, degree, 0u );
+		INIT_PROPERTY( props, degree, 0u );
 		m_Coeffs.resize( degree + 1 );
 		for ( size_t i = 0; i < m_Coeffs.size(); ++i )
 			SetCoefficient( i, par.Get( GetStringF( "C%d", i ), props.GetChild( GetStringF( "coefficient%d", i ) ) ) );

@@ -18,19 +18,21 @@ namespace scone
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
+			virtual PropNode GetReport();
+			virtual String GetSignature() override;
 
 		private:
-			virtual String GetSignature() override;
-			Statistic<> m_Penalty;
-
 			struct Limit
 			{
 				Limit( const PropNode& props, sim::Model& model );
 				sim::Dof& dof;
 				Range< Real > range;
-				Real penalty;
+				Real squared_range_penalty;
+				Real squared_force_penalty;
+				Statistic<> penalty;
 			};
 
+			PropNode m_Report;
 			std::vector< Limit > m_Limits;
 		};
 	}

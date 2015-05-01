@@ -26,7 +26,6 @@
     <ClInclude Include="..\..\scone\core\PropNode.h" />
     <ClInclude Include="..\..\scone\core\Quat.h" />
     <ClInclude Include="..\..\scone\core\ResourceCache.h" />
-    <ClInclude Include="..\..\scone\core\serialization.h" />
     <ClInclude Include="..\..\scone\core\stdafx.h" />
     <ClInclude Include="..\..\scone\core\TimedValue.h" />
     <ClInclude Include="..\..\scone\core\Timer.h" />

@@ -23,7 +23,7 @@ namespace scone
 		Controller( props, par, model, target_area )
 		{
 			DECLARE_AND_INIT( props, bool, use_symmetric_actuators, true );
-			INIT_FROM_PROP( props, number_of_modes, 0u );
+			INIT_PROPERTY( props, number_of_modes, 0u );
 
 			// setup actuator info
 			for ( size_t idx = 0; idx < model.GetMuscleCount(); ++idx )

@@ -109,7 +109,7 @@ namespace scone
 		}
 	}
 
-	PropNode::ChildIter PropNode::InsertChildren( ChildIter insertIt, const PropNode& other )
+	PropNode::ChildIter PropNode::InsertChildren( const PropNode& other, ChildIter insertIt )
 	{
 		for ( ConstChildIter otherIt = other.Begin(); otherIt != other.End(); ++otherIt )
 		{
@@ -295,7 +295,7 @@ namespace scone
 				str << std::endl;
 			}
 
-			iter->second->ToStream( str, prefix + iter->first + ".", unflaggedOnly );
+			iter->second->ToStream( str, prefix + "  ", unflaggedOnly );
 		}
 
 		return str;
@@ -355,7 +355,7 @@ namespace scone
 				else
 				{
 					// insert the children at the INCLUDE spot
-					iter = props.InsertChildren( iter, other );
+					iter = props.InsertChildren( other, iter );
 				}
 			}
 			else

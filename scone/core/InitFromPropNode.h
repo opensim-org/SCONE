@@ -5,11 +5,11 @@
 #include "tools.h"
 
 // convenience macro that automatically derives name from variable name
-#define INIT_FROM_PROP( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
-#define INIT_FROM_PROP_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
-#define INIT_FROM_PROP_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
+#define INIT_PROPERTY( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+#define INIT_PROPERTY_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
+#define INIT_PROPERTY_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
 
-#define CONSTRUCT_FROM_PROP( _prop_, _var_ ) ConstructFromPropNode( _prop_.GetChild( GetCleanVarName( #_var_ ) ), _var_ );
+//#define CONSTRUCT_FROM_PROP( _prop_, _var_ ) ConstructFromPropNode( _prop_.GetChild( GetCleanVarName( #_var_ ) ), _var_ );
 
 
 // define a variable and init from props
@@ -17,9 +17,9 @@
 
 namespace scone
 {
-	class Propertyable
-	{
-	};
+	//class Propertyable
+	//{
+	//};
 
 	// process named property type
 	template< typename T >
@@ -44,19 +44,19 @@ namespace scone
 		var = prop.GetValue< T >();
 	}
 
-	// process propertyable types and String
-	template< typename T >
-	void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_base_of< Propertyable, T >::value >::type* = 0 )
-	{
-		var = T( prop );
-	}
+	//// process propertyable types
+	//template< typename T >
+	//void InitFromPropNode( const PropNode& prop, T& var, typename std::enable_if< std::is_base_of< Propertyable, T >::value >::type* = 0 )
+	//{
+	//	var = T( prop );
+	//}
 
-	// process propertyable types and String
-	template< typename T >
-	void ConstructFromPropNode( const PropNode& prop, T& var )
-	{
-		var = T( prop );
-	}
+	//// process propertyable types and String
+	//template< typename T >
+	//void ConstructFromPropNode( const PropNode& prop, T& var )
+	//{
+	//	var = T( prop );
+	//}
 
 	// process vector< > type (NOT TESTED)
 	template< typename T >

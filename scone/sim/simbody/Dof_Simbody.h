@@ -28,6 +28,7 @@ namespace scone
 		private:
 			Model_Simbody& m_Model;
 			OpenSim::Coordinate& m_osCoord;
+			const OpenSim::CoordinateLimitForce* m_pOsLimitForce;
 		};
 	}
 }

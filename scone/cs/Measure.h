@@ -15,10 +15,7 @@ namespace scone
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;
 			virtual double GetResult( sim::Model& model ) = 0;
-			const PropNode& GetReport() { return m_Report; }
-
-		protected:
-			PropNode m_Report;
+			virtual PropNode GetReport() { return PropNode(); }
 		};
 	}
 }

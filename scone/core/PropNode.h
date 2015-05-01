@@ -138,7 +138,8 @@ namespace scone
 		PropNode& AddChild( const String& key );
 
 		/// insert all children from other PropNode
-		ChildIter InsertChildren( ChildIter insert_point, const PropNode& other );
+		ChildIter InsertChildren( const PropNode& other, ChildIter insert_point );
+		ChildIter InsertChildren( const PropNode& other ) { return InsertChildren( other, Begin() ); }
 
 		/// Merge existing properties
 		PropNode& Merge( const PropNode& props, bool overwrite = true );

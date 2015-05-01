@@ -3,8 +3,8 @@
 namespace scone
 {
 	// math helper functions
-	inline Real DegToRad( Real d ) { return d / 180 * REAL_PI; }
-	inline Real RadToDeg( Real d ) { return d / REAL_PI * 180; }
+	inline Real DegToRad( Real d ) { return ( REAL_PI / 180 ) * d; }
+	inline Real RadToDeg( Real d ) { return ( 180 / REAL_PI ) * d; }
 	template< typename T > void Restrain( T& value, const T& min, const T& max ) { if ( value > max ) value = max; else if ( value < min ) value = min; }
 	template< typename T > T GetRestrained( const T& value, const T& min, const T& max ) {
 		if ( value > max ) return max; else if ( value < min ) return min; else return value;
@@ -24,7 +24,8 @@ namespace scone
 	}
 
 	// square function
-	template< typename T > T Square( T value ) { return value * value; }
+	template< typename T > T GetSquared( T value ) { return value * value; }
+	template< typename T > T GetCubed( T value ) { return value * value * value; }
 
 	// Degree struct
 	struct Rad;

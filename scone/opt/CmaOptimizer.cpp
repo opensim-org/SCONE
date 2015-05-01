@@ -38,12 +38,11 @@ namespace scone
 		num_elitists( 0 ),
 		max_attempts( 100 )
 		{
-			INIT_FROM_PROP_NAMED( props, m_Lambda, "lambda", 0 );
-			INIT_FROM_PROP_NAMED( props, m_Mu, "mu", 0 );
-			INIT_FROM_PROP_NAMED( props, m_Sigma, "sigma", 1.0 );
-			INIT_FROM_PROP( props, max_generations, 10000u );
-			INIT_FROM_PROP( props, random_seed, long( 123 ) );
-			INIT_FROM_PROP( props, init_file, String("") );
+			INIT_PROPERTY_NAMED( props, m_Lambda, "lambda", 0 );
+			INIT_PROPERTY_NAMED( props, m_Mu, "mu", 0 );
+			INIT_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
+			INIT_PROPERTY( props, max_generations, 10000u );
+			INIT_PROPERTY( props, random_seed, long( 123 ) );
 		}
 
 		CmaOptimizer::~CmaOptimizer()
@@ -85,7 +84,7 @@ namespace scone
 			Rng::seed( random_seed );
 
 			// initialize settings from file
-			if ( !init_file.empty() )
+			if ( use_init_file && !init_file.empty() )
 				par.Read( init_file );
 
 			// generate random initial population
@@ -106,7 +105,7 @@ namespace scone
 				avg[ par_idx ] /= m_Lambda;
 
 				for ( size_t ind_idx = 0; ind_idx < m_pImpl->m_pOffspring->size(); ++ind_idx )
-					var[ par_idx ] += Square((*m_pImpl->m_pOffspring)[ind_idx][0][par_idx] - avg[ par_idx ]);
+					var[ par_idx ] += GetSquared((*m_pImpl->m_pOffspring)[ind_idx][0][par_idx] - avg[ par_idx ]);
 				var[ par_idx ] /= m_Lambda;
 			}
 
@@ -147,10 +146,15 @@ namespace scone
 					parsets[ m_pImpl->Offspring().bestIndex() ].UpdateMeanStd( parsets );
 
 					// keep output files
+					std::vector< String > outputFiles;
+					if ( output_objective_result_files )
+						outputFiles = m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
+
+					// write .par file
 					parsets[ m_pImpl->Offspring().bestIndex() ].Write( file_base + ".par" );
-					auto outputFiles = m_Objectives[ m_pImpl->Offspring().bestIndex() ]->WriteResults( file_base );
 					outputFiles.push_back( file_base + ".par" );
 
+					// cleanup superfluous output files
 					ManageFileOutput( best, outputFiles );
 				}
 

@@ -20,9 +20,9 @@ namespace scone
 		m_DofLimitMeasure( props.GetChild( "DofLimitMeasure" ), par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation )
 		{
-			INIT_FROM_PROP( props, termination_height, 0.5 );
-			INIT_FROM_PROP( props, min_velocity, 0.5 );
-			INIT_FROM_PROP( props, contact_force_threshold, 0.1 );
+			INIT_PROPERTY( props, termination_height, 0.5 );
+			INIT_PROPERTY( props, min_velocity, 0.5 );
+			INIT_PROPERTY( props, contact_force_threshold, 0.1 );
 
 			// init term weights
 			const PropNode& weights = props.GetChild( "Weights" );
@@ -31,7 +31,7 @@ namespace scone
 
 			// get string of gait bodies
 			String gait_bodies;
-			INIT_FROM_PROP( props, gait_bodies, String() );
+			INIT_PROPERTY( props, gait_bodies, String() );
 
 			// extract individual body names from gait_bodies string
 			boost::char_separator< char > separator(", ");
@@ -75,7 +75,7 @@ namespace scone
 				if ( dt > 0 )
 				{
 					double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
-					m_MinVelocityMeasure.AddSample( norm_vel, timestamp );
+					m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
 					log::TraceF( "%.3f: STEP! step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
 				}
 				m_PrevGaitDist = gait_dist;
@@ -98,7 +98,7 @@ namespace scone
 
 			// add penalty to min_velocity measure
 			if ( model.GetTime() < duration )
-				m_MinVelocityMeasure.AddSample( 0, duration );
+				m_MinVelocityMeasure.AddSample( duration, 0 );
 
 			// find efficiency
 			m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
@@ -118,25 +118,30 @@ namespace scone
 			{
 				log::DebugF( "%20s\t%8.3f\t%8.3f\t%8.3f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
 				score += term.second.weighted_value();
+				m_Report.Set( term.first, GetStringF( "%g (%g * %g)", term.second.weighted_value(), term.second.weight, term.second.value ) );
 			}
 
+			m_Report.GetChild( "effort" ).InsertChildren( m_EffortMeasure.GetReport() );
+			m_Report.GetChild( "limit" ).InsertChildren( m_DofLimitMeasure.GetReport() );
+
 			log::DebugF( "%20s\t%8.3f", "TOTAL", score );
+
 			return score;
 		}
 
 		String GaitMeasure::GetSignature()
 		{
-			String s = GetStringF( "V%02d", static_cast< int >( 10 * min_velocity ) );
+			String s = GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
 
 			String extra;
 			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
 			{
 				// add the first character of each of the used weight terms
 				if ( term.second.weight > 0.0 )
-					extra += term.first[0];
+					extra += toupper( term.first[0] );
 			}
 
-			if ( extra != "clv" )
+			if ( extra != "CLV" )
 				s += extra; // add only if it's not the default
 
 			return s;
@@ -174,6 +179,11 @@ namespace scone
 			}
 
 			return has_new_contact;
+		}
+
+		scone::PropNode GaitMeasure::GetReport()
+		{
+			return m_Report;
 		}
 	}
 }

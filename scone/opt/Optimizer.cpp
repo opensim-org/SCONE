@@ -22,12 +22,15 @@ namespace scone
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) )
 		{
-			INIT_FROM_PROP( props, max_threads, 1u );
-			INIT_FROM_PROP( props, thread_priority, 0 );
-			INIT_FROM_PROP_NAMED( props, m_Name, "name", String() );
-			INIT_FROM_PROP_REQUIRED( props, maximize_objective );
-			INIT_FROM_PROP( props, show_optimization_time, false );
-			INIT_FROM_PROP( props, min_improvement_factor_for_file_output, 1.01 );
+			INIT_PROPERTY( props, max_threads, 1u );
+			INIT_PROPERTY( props, thread_priority, 0 );
+			INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
+			INIT_PROPERTY_REQUIRED( props, maximize_objective );
+			INIT_PROPERTY( props, show_optimization_time, false );
+			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.01 );
+			INIT_PROPERTY( props, init_file, String("") );
+			INIT_PROPERTY( props, use_init_file, true );
+			INIT_PROPERTY( props, output_objective_result_files, true );
 
 			// create at least one objective from props, so that all nodes are properly flagged
 			CreateObjectives( 1 );
@@ -130,7 +133,11 @@ namespace scone
 
 		scone::String Optimizer::GetSignature()
 		{
-			return GetObjective().GetSignature();
+			String s = GetObjective().GetSignature();
+			if ( use_init_file && !init_file.empty() )
+				s += ".I";
+
+			return s;
 		}
 
 		void Optimizer::CreateObjectives( size_t count )

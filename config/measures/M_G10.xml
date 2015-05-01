@@ -2,12 +2,14 @@
 <Measure type="GaitMeasure">
 	<termination_height>0.9</termination_height>
 	<min_velocity>1.0</min_velocity>
-	<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="100"/>
+	<Weights distance="0" velocity="100" balance="0" cost_of_transport="0.1" limit="1"/>
 	<EffortMeasure measure_type="Wang2012"/>
 	<DofLimitMeasure>
 		<Limits>
-			<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" penalty="1.0"/>
-			<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" penalty="1.0"/>
+			<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="0.1"/>
+			<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="0.1"/>
+			<limit dof="knee_angle_l" squared_force_penalty="0.001"/>
+			<limit dof="knee_angle_r" squared_force_penalty="0.001"/>
 		</Limits>
 	</DofLimitMeasure>
 </Measure>

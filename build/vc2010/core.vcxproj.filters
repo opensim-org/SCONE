@@ -10,11 +10,11 @@
     <Filter Include="Base">
       <UniqueIdentifier>{30dfae76-16ca-4d88-a9cf-25c55c7fc5b9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Serialization">
-      <UniqueIdentifier>{68c14adb-6aa8-41f7-9bec-efd1c0146b6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{509cdda2-4a20-4dd7-a627-77cb840c9722}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PropNode">
+      <UniqueIdentifier>{68c14adb-6aa8-41f7-9bec-efd1c0146b6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -52,13 +52,10 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\InitFromPropNode.h">
-      <Filter>Serialization</Filter>
+      <Filter>PropNode</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\PropNode.h">
-      <Filter>Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\core\serialization.h">
-      <Filter>Serialization</Filter>
+      <Filter>PropNode</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\ResourceCache.h">
       <Filter>Tools</Filter>
@@ -99,7 +96,7 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\PropNode.cpp">
-      <Filter>Serialization</Filter>
+      <Filter>PropNode</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Log.cpp">
       <Filter>Tools</Filter>

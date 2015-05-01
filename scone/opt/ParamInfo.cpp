@@ -20,13 +20,13 @@ namespace scone
 		ParamInfo::ParamInfo( const String& i_name, const PropNode& props ) :
 		name( i_name )
 		{
-			INIT_FROM_PROP( props, init_min, 0.0 );
-			INIT_FROM_PROP( props, init_max, 0.0 );
-			INIT_FROM_PROP( props, init_mean, 0.0 );
-			INIT_FROM_PROP( props, init_std, 0.0 );
-			INIT_FROM_PROP( props, min, REAL_MIN );
-			INIT_FROM_PROP( props, max, REAL_MAX );
-			INIT_FROM_PROP( props, is_free, true ); /// TODO: some smarter default
+			INIT_PROPERTY( props, init_min, 0.0 );
+			INIT_PROPERTY( props, init_max, 0.0 );
+			INIT_PROPERTY( props, init_mean, 0.0 );
+			INIT_PROPERTY( props, init_std, 0.0 );
+			INIT_PROPERTY( props, min, REAL_MIN );
+			INIT_PROPERTY( props, max, REAL_MAX );
+			INIT_PROPERTY( props, is_free, true ); /// TODO: some smarter default
 			props.Touch();
 		}
 
@@ -35,7 +35,7 @@ namespace scone
 			if ( is_free )
 			{
 				if ( init_mean != 0.0 || init_std != 0.0 )
-					return GetRestrained( Rng::gauss( init_mean, Square( init_std ) ), min, max );
+					return GetRestrained( Rng::gauss( init_mean, GetSquared( init_std ) ), min, max );
 				else
 					return Rng::uni( init_min, init_max );
 			}

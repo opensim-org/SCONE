@@ -36,6 +36,9 @@ namespace scone
 			bool maximize_objective;
 			bool show_optimization_time;
 			Real min_improvement_factor_for_file_output;
+			String init_file;
+			bool use_init_file;
+			bool output_objective_result_files;
 
 		private:
 			std::vector< double > EvaluateSingleThreaded( std::vector< ParamSet >& parsets );

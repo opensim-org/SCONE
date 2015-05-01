@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file>initializations/014.f1024.G_3FC1.V10.0098_51.728_18.310.par</init_file>
+	<init_file>initializations/014.f1024.G_3FC1.V10.0155_28.047_5.554.par</init_file>
+	<use_init_file>0</use_init_file>
 
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
-		<max_duration>10</max_duration>
+		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
 			<state_init_file>f2354_init_walk.sto</state_init_file>

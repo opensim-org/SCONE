@@ -145,7 +145,7 @@ namespace scone
 
 				double var = 0.0;
 				for ( size_t setIdx = 0; setIdx < parsets.size(); ++setIdx )
-					var += weight * Square( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
+					var += weight * GetSquared( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
 
 				// update the result in ParInfo
 				// TODO: keep this somewhere else?

@@ -11,8 +11,22 @@ namespace scone
 		enum InterpolationMode { NoInterpolation, LinearInterpolation };
 
 		Statistic( InterpolationMode im = LinearInterpolation ) : m_InterpolationMode( im ) { Reset(); }
+		Statistic& operator=( const Statistic& other ) {
+			m_Total = other.m_Total;
+			m_Initial = other.m_Initial;
+			m_Highest = other.m_Highest;
+			m_Lowest = other.m_Lowest;
+			m_PrevTime = other.m_PrevTime;
+			m_PrevValue = other.m_PrevValue;
+			m_InterpolationMode = other.m_InterpolationMode;
+			m_nSamples = other.m_nSamples;
+			return *this;
+		}
+		Statistic( const Statistic& other ) {
+			*this = other;
+		}
 
-		void AddSample( const T& value, const double& timestamp )
+		void AddSample( double timestamp, const T& value )
 		{
 			if ( m_nSamples == 0 )
 			{
@@ -50,8 +64,8 @@ namespace scone
 
 		T GetAverage() const
 		{
-			SCONE_CONDITIONAL_THROW( m_nSamples == 0, "Cannot perform operation, no samples have been added" );
-
+			if ( m_nSamples == 0 )
+				return 0.0;
 			if ( m_PrevTime == 0.0 )
 				return m_Initial; // only one sample was added
 			else return m_Total / m_PrevTime;

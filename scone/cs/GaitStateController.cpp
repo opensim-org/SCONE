@@ -29,7 +29,7 @@ namespace scone
 		GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		sim::Controller( props, par, model, target_area )
 		{
-			INIT_FROM_PROP( props, contact_force_threshold, 10.0 );
+			INIT_PROPERTY( props, contact_force_threshold, 10.0 );
 			INIT_FROM_PROP_PAR( props, par, landing_threshold, 0.0 );
 			INIT_FROM_PROP_PAR( props, par, late_stance_threshold, 0.0 );
 			

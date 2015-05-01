@@ -18,6 +18,7 @@ namespace scone
 			virtual double GetResult( sim::Model& model ) override;
 
 			virtual String GetSignature() override;
+			virtual PropNode GetReport();
 
 			// parameters
 			Real termination_height;
@@ -41,11 +42,14 @@ namespace scone
 			Real GetGaitDist( sim::Model &model );
 
 			bool HasNewFootContact( sim::Model& model );
+
 			std::vector< bool > m_PrevContactState;
 
 			Vec3 m_InitialComPos;
 			Real m_InitGaitDist;
 			Real m_PrevGaitDist;
+
+			PropNode m_Report;
 
 			MeasuredReal m_MinVelocityMeasure;
 			EffortMeasure m_EffortMeasure;

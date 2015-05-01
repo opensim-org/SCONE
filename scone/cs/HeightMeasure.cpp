@@ -12,10 +12,10 @@ namespace scone
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 		{
-			INIT_FROM_PROP( props, target_body, String("") );
-			INIT_FROM_PROP( props, use_average_height, false );
-			INIT_FROM_PROP( props, terminate_on_peak, true );
-			INIT_FROM_PROP( props, termination_height, 0.5 );
+			INIT_PROPERTY( props, target_body, String("") );
+			INIT_PROPERTY( props, use_average_height, false );
+			INIT_PROPERTY( props, terminate_on_peak, true );
+			INIT_PROPERTY( props, termination_height, 0.5 );
 
 			m_Upward = false;
 			m_Height.Reset();
@@ -39,7 +39,7 @@ namespace scone
 			//SCONE_LOG( "Force: " << model.GetLegs()[ 0 ]->GetContactForce() );
 
 			// add sample
-			m_Height.AddSample( height, timestamp );
+			m_Height.AddSample( timestamp, height );
 
 			//printf( "ct=%.5f step=%d time/step=%.5f height=%.4f\n", timestamp, model.GetStep(), timestamp / model.GetStep(), height );
 			//SCONE_LOG( "time=" << timestamp << " height=" << height << " best=" << m_Best );

@@ -63,12 +63,12 @@ namespace scone
 			String probe_class;
 			double pre_control_simulation_time;
 
-			INIT_FROM_PROP( props, integration_accuracy, 0.0001 );
-			INIT_FROM_PROP( props, max_step_size, 0.001 );
-			INIT_FROM_PROP_REQUIRED( props, model_file );
-			INIT_FROM_PROP( props, state_init_file, String() );
-			INIT_FROM_PROP( props, probe_class, String() );
-			INIT_FROM_PROP( props, pre_control_simulation_time, 0.0 );
+			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
+			INIT_PROPERTY( props, max_step_size, 0.001 );
+			INIT_PROPERTY_REQUIRED( props, model_file );
+			INIT_PROPERTY( props, state_init_file, String() );
+			INIT_PROPERTY( props, probe_class, String() );
+			INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( GetSconeFolder( "models" ) + model_file );
@@ -157,6 +157,7 @@ namespace scone
 			m_Muscles.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getActuators().getSize(); ++idx )
 			{
+				// OpenSim: Set<T>::get( idx ) is const but returns non-const reference, is this a bug?
 				OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
 
 				try // see if it's a muscle

@@ -37,7 +37,7 @@ namespace scone
 				return;
 
 			double current_effort = GetEnergy( model );
-			m_Energy.AddSample( current_effort, timestamp );
+			m_Energy.AddSample( timestamp, current_effort );
 		}
 
 		double EffortMeasure::GetResult( sim::Model& model )

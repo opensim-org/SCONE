@@ -60,11 +60,14 @@ namespace scone
 		// collect statistics
 		m_Statistics.Clear();
 		m_Statistics.Set( "result", result );
-		m_Statistics.GetChild( "result" ).Merge( so.GetMeasure().GetReport(), false );
+		m_Statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
 		m_Statistics.Set( "simulation time", so.GetModel().GetTime() );
 		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
 	
 		cout << "--- Evaluation report ---" << endl;
 		cout << m_Statistics << endl;
+
+		// write results
+		obj->WriteResults( path( filename ).replace_extension().string() );
 	}
 }

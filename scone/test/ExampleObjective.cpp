@@ -12,7 +12,7 @@ namespace scone
 	num_params( 0 ),
 	is_evaluating( false )
 	{
-		INIT_FROM_PROP( props, num_params, 0 );
+		INIT_PROPERTY( props, num_params, 0 );
 		params.resize( num_params );
 	}
 
@@ -38,7 +38,7 @@ namespace scone
 		// Rosenbrock function
 		double sum = 0.0;
 		for( unsigned int i = 0; i < v.size()-1; i++ ) {
-			sum += 100 * Square( v[i+1] - Square( v[ i ] ) ) + Square( 1. - v[ i ] );
+			sum += 100 * GetSquared( v[i+1] - GetSquared( v[ i ] ) ) + GetSquared( 1. - v[ i ] );
 		}
 
 		// Grind some
