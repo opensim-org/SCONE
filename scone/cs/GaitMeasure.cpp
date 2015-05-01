@@ -66,20 +66,9 @@ namespace scone
 			bool terminate = false;
 			terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
 
-			// update min_velocity measure on new step or termination
-			if ( HasNewFootContact( model ) || terminate )
-			{
-				double gait_dist = GetGaitDist( model );
-				double step_size = gait_dist - m_PrevGaitDist;
-				double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
-				if ( dt > 0 )
-				{
-					double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
-					m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
-					log::TraceF( "%.3f: STEP! step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
-				}
-				m_PrevGaitDist = gait_dist;
-			}
+			// update min_velocity measure on new step
+			if ( HasNewFootContact( model ) )
+				UpdateMinVelocityMeasure(model, timestamp);
 
 			// handle termination
 			if ( terminate )
@@ -96,7 +85,8 @@ namespace scone
 			double speed = distance / model.GetTime();
 			double duration = model.GetSimulationEndTime();
 
-			// add penalty to min_velocity measure
+			// add final step and penalty to min_velocity measure
+			UpdateMinVelocityMeasure( model, model.GetTime() );
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 
@@ -129,6 +119,33 @@ namespace scone
 			return score;
 		}
 
+		void GaitMeasure::UpdateMinVelocityMeasure( sim::Model &model, double timestamp )
+		{
+			double gait_dist = GetGaitDist( model );
+			double step_size = gait_dist - m_PrevGaitDist;
+			double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
+			if ( dt > 0 )
+			{
+				double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
+				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
+				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+			}
+			m_PrevGaitDist = gait_dist;
+		}
+
+		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )
+		{
+			// compute average of feet and Com (smallest 2 values)
+			std::set< double > distances;
+			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
+			distances.insert( model.GetComPos().x );
+
+			SCONE_ASSERT( distances.size() >= 2 );
+			auto iter = distances.begin();
+			return ( *iter + *(++iter) ) / 2;
+		}
+
 		String GaitMeasure::GetSignature()
 		{
 			String s = GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
@@ -147,19 +164,6 @@ namespace scone
 			return s;
 		}
 
-		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )
-		{
-			// compute average of feet and Com (smallest 2 values)
-			std::set< double > distances;
-			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
-				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
-			distances.insert( model.GetComPos().x );
-
-			SCONE_ASSERT( distances.size() >= 2 );
-			auto iter = distances.begin();
-			return ( *iter + *(++iter) ) / 2;
-		}
-
 		bool GaitMeasure::HasNewFootContact( sim::Model& model )
 		{
 			if ( m_PrevContactState.empty() )
@@ -174,7 +178,11 @@ namespace scone
 			for ( size_t idx = 0; idx < model.GetLegCount(); ++idx )
 			{
 				bool contact = model.GetLeg( idx ).GetContactForce().y > contact_force_threshold;
-				has_new_contact |= contact && !m_PrevContactState[ idx ];
+				if ( contact && !m_PrevContactState[ idx ] )
+				{
+					has_new_contact = true;
+					log::TraceF( "%.3f: Step detected for leg %d", model.GetTime(), idx );
+				}
 				m_PrevContactState[ idx ] = contact;
 			}
 

@@ -15,6 +15,9 @@ namespace scone
 			virtual ~GaitMeasure();
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+
+			void UpdateMinVelocityMeasure( sim::Model &model, double timestamp );
+
 			virtual double GetResult( sim::Model& model ) override;
 
 			virtual String GetSignature() override;
