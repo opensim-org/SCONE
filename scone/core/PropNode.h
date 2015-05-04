@@ -136,6 +136,7 @@ namespace scone
 
 		/// create child node
 		PropNode& AddChild( const String& key );
+		PropNode& AddChild( const String& key, const PropNode& other );
 
 		/// insert all children from other PropNode
 		ChildIter InsertChildren( const PropNode& other, ChildIter insert_point );

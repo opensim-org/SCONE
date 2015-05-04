@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix></signature_postfix>
+		<signature_postfix>Test</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -19,7 +19,7 @@
 						<INCLUDE file="controllers/CC_3FC1.xml"/>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_G10.xml"/>
+				<INCLUDE file="measures/M_CG10.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

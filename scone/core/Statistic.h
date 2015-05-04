@@ -82,6 +82,4 @@ namespace scone
 		InterpolationMode m_InterpolationMode;
 		size_t m_nSamples;
 	};
-
-	typedef Statistic< Real > MeasuredReal;
 }

@@ -20,10 +20,12 @@ namespace scone
 			virtual double GetResult( sim::Model& model ) override;
 
 			EnergyMeasureType measure_type;
+			bool use_cost_of_transport;
 
 		private:
 			Real m_Wang2012BasalEnergy;
 			Statistic< double > m_Energy;
+			Vec3 m_InitComPos;
 
 			double GetEnergy( sim::Model& model );
 			double GetWang2012( sim::Model& model );

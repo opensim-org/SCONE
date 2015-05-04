@@ -54,9 +54,9 @@ namespace scone
 
 			PropNode m_Report;
 
-			MeasuredReal m_MinVelocityMeasure;
-			EffortMeasure m_EffortMeasure;
-			DofLimitMeasure m_DofLimitMeasure;
+			Statistic<> m_MinVelocityMeasure;
+			//EffortMeasure m_EffortMeasure;
+			//DofLimitMeasure m_DofLimitMeasure;
 		};
 	}
 }

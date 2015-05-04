@@ -21,9 +21,11 @@ namespace scone
 		m_Energy( Statistic<>::LinearInterpolation )
 		{
 			measure_type = m_MeasureNames.GetEnum( props.GetStr( "measure_type" ) );
+			INIT_PROPERTY( props, use_cost_of_transport, false );
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
+			m_InitComPos = model.GetComPos();
 		}
 
 		EffortMeasure::~EffortMeasure()
@@ -42,7 +44,12 @@ namespace scone
 
 		double EffortMeasure::GetResult( sim::Model& model )
 		{
-			return m_Energy.GetAverage();
+			if ( use_cost_of_transport )
+			{
+				double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
+				return m_Energy.GetTotal() / ( model.GetMass() * distance );
+			}
+			else return m_Energy.GetTotal();
 		}
 
 		double EffortMeasure::GetEnergy( sim::Model& model )

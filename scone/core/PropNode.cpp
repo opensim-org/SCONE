@@ -109,6 +109,11 @@ namespace scone
 		}
 	}
 
+	PropNode& PropNode::AddChild( const String& key, const PropNode& other )
+	{
+		return ( AddChild( key ) = other );
+	}
+
 	PropNode::ChildIter PropNode::InsertChildren( const PropNode& other, ChildIter insertIt )
 	{
 		for ( ConstChildIter otherIt = other.Begin(); otherIt != other.End(); ++otherIt )

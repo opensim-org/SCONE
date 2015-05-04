@@ -23,6 +23,9 @@ using namespace boost::filesystem;
 #include "Polynomial.h"
 #include "GaitStateController.h"
 #include "ReflexController.h"
+#include "DofLimitMeasure.h"
+#include "CompositeMeasure.h"
+#include "GaitCycleMeasure.h"
 
 namespace scone
 {
@@ -44,7 +47,10 @@ namespace scone
 			// register measures
 			sim::GetControllerFactory().Register< HeightMeasure >();
 			sim::GetControllerFactory().Register< GaitMeasure >();
+			sim::GetControllerFactory().Register< GaitCycleMeasure >();
 			sim::GetControllerFactory().Register< EffortMeasure >();
+			sim::GetControllerFactory().Register< DofLimitMeasure >();
+			sim::GetControllerFactory().Register< CompositeMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();
