@@ -16,18 +16,11 @@ namespace scone
 	{
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
-		//m_EffortMeasure( props.GetChild( "EffortMeasure" ), par, model, area ),
-		//m_DofLimitMeasure( props.GetChild( "DofLimitMeasure" ), par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, min_velocity, 0.5 );
 			INIT_PROPERTY( props, contact_force_threshold, 0.1 );
-
-			// init term weights
-			//const PropNode& weights = props.GetChild( "Weights" );
-			//for ( auto it = weights.Begin(); it != weights.End(); ++it )
-			//	m_Terms[ it->first ] = it->second->GetValue< Real >();
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -58,10 +51,6 @@ namespace scone
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;
 
-			//// update energy measure
-			//m_EffortMeasure.UpdateControls( model, timestamp );
-			//m_DofLimitMeasure.UpdateControls( model, timestamp );
-
 			// check termination
 			bool terminate = false;
 			terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
@@ -89,32 +78,6 @@ namespace scone
 			UpdateMinVelocityMeasure( model, model.GetTime() );
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
-
-			//// find efficiency
-			//m_Terms[ "effort" ].value = m_EffortMeasure.GetResult( model ) / model.GetMass();
-			//m_Terms[ "distance" ].value = 1.0 - std::min( 1.0, distance / ( min_velocity * duration ) );
-			//m_Terms[ "velocity" ].value = 1.0 - m_MinVelocityMeasure.GetAverage();
-			//m_Terms[ "balance" ].value = 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) );
-
-			//// for cost_of_transport, we use speed because effort is an average
-			//// speed is capped to 0.01 prevent high or negative values for cost_of_transport
-			//m_Terms[ "cost_of_transport" ].value = m_Terms[ "effort" ].value / std::max( 0.01, speed );
-			//m_Terms[ "limit" ].value = m_DofLimitMeasure.GetResult( model );
-
-			// generate report and count total score
-			// TODO: use generic measure report?
-			//double score = 0.0;
-			//BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
-			//{
-			//	log::DebugF( "%20s\t%8.3f\t%8.3f\t%8.3f", term.first.c_str(), term.second.weighted_value(), term.second.value, term.second.weight );
-			//	score += term.second.weighted_value();
-			//	m_Report.Set( term.first, GetStringF( "%g (%g * %g)", term.second.weighted_value(), term.second.weight, term.second.value ) );
-			//}
-
-			//m_Report.GetChild( "effort" ).InsertChildren( m_EffortMeasure.GetReport() );
-			//m_Report.GetChild( "limit" ).InsertChildren( m_DofLimitMeasure.GetReport() );
-
-			//log::DebugF( "%20s\t%8.3f", "TOTAL", score );
 
 			m_Report.Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
 			m_Report.Set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
@@ -151,20 +114,7 @@ namespace scone
 
 		String GaitMeasure::GetSignature()
 		{
-			String s = GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
-
-			String extra;
-			BOOST_FOREACH( StringWeightedTermPair& term, m_Terms )
-			{
-				// add the first character of each of the used weight terms
-				if ( term.second.weight > 0.0 )
-					extra += toupper( term.first[0] );
-			}
-
-			if ( extra != "CLV" )
-				s += extra; // add only if it's not the default
-
-			return s;
+			return GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
 		}
 
 		bool GaitMeasure::HasNewFootContact( sim::Model& model )
@@ -184,7 +134,7 @@ namespace scone
 				if ( contact && !m_PrevContactState[ idx ] )
 				{
 					has_new_contact = true;
-					log::TraceF( "%.3f: Step detected for leg %d", model.GetTime(), idx );
+					//log::TraceF( "%.3f: Step detected for leg %d", model.GetTime(), idx );
 				}
 				m_PrevContactState[ idx ] = contact;
 			}

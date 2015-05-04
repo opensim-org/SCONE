@@ -106,8 +106,8 @@ namespace scone
 		{
 			switch( measure_type )
 			{
-			case TotalForce: return "tf";
-			case Wang2012: return "w";
+			case TotalForce: return "F";
+			case Wang2012: return "W";
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
 		}

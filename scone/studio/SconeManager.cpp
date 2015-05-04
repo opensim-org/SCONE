@@ -64,8 +64,8 @@ namespace scone
 		m_Statistics.Set( "simulation time", so.GetModel().GetTime() );
 		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
 	
-		cout << "--- Evaluation report ---" << endl;
-		cout << m_Statistics << endl;
+		//cout << "--- Evaluation report ---" << endl;
+		//cout << m_Statistics << endl;
 
 		// write results
 		obj->WriteResults( path( filename ).replace_extension().string() );

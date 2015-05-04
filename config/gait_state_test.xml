@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 
 	<Objective type="SimulationObjective">
-		<signature_postfix>Test</signature_postfix>
+		<signature_postfix></signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -16,7 +16,9 @@
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<ConditionalControllers>
-						<INCLUDE file="controllers/CC_3FC1.xml"/>
+						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
+							<INCLUDE file="controllers/C_FP0.xml"/>
+						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
 				<INCLUDE file="measures/M_CG10.xml"/>

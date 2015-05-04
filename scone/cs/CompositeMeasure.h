@@ -21,10 +21,13 @@ namespace scone
 
 			struct Term
 			{
-				Term() : weight( 0.0 ), measure( nullptr ) {};
-				Term( Term&& other ) : name( other.name ), weight( other.weight ), measure( std::move( other.measure ) ) {};
+				Term();;
+				Term( const PropNode& pn );
+				Term( Term&& other );;
 				String name;
 				double weight;
+				double threshold;
+				double offset;
 				MeasureUP measure;
 			private:
 				Term( const Term& other );

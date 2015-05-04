@@ -28,15 +28,6 @@ namespace scone
 			Real min_velocity;
 			Real contact_force_threshold;
 
-			struct WeightedTerm {
-				WeightedTerm( double w = 0.0 ) : weight( w ), value( 0.0 ) {};
-				double weighted_value() { return weight * value; }
-				double weight;
-				double value;
-			};
-			typedef std::pair< const String, WeightedTerm > StringWeightedTermPair;
-			std::map< String, WeightedTerm > m_Terms;
-
 		private:
 			Statistic< double > m_Energy;
 
@@ -55,8 +46,6 @@ namespace scone
 			PropNode m_Report;
 
 			Statistic<> m_MinVelocityMeasure;
-			//EffortMeasure m_EffortMeasure;
-			//DofLimitMeasure m_DofLimitMeasure;
 		};
 	}
 }
