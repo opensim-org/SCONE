@@ -5,12 +5,14 @@
 
 #include <vector>
 #include "Actuator.h"
+#include "Sensor.h"
+#include "../core/EnumStringMap.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle : public virtual Actuator
+		class SCONE_SIM_API Muscle : public virtual Actuator, public virtual Sensor
 		{
 		public:
 			Muscle();
@@ -42,6 +44,13 @@ namespace scone
 			virtual Real GetActivation() const = 0;
 			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
+
+			/// Inherited from Sensor
+			enum MuscleSensor { MuscleLengthSensor, MuscleVelocitySensor, MuscleForceSensor, MuscleSensorCount };
+			static EnumStringMap< MuscleSensor > m_SensorNames;
+			virtual size_t GetSensorCount() override;
+			virtual const String& GetSensorName( size_t idx ) override;
+			virtual Real GetSensorValue( size_t idx ) override;
 		};
 	}
 }

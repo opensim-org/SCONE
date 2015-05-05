@@ -2,7 +2,7 @@
 
 #include "cs.h"
 #include "../sim/Controller.h"
-#include "../core/Delayed.h"
+#include "../core/Delayer.h"
 
 namespace scone
 {

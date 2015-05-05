@@ -1,34 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="API">
-      <UniqueIdentifier>{3f49b442-b75c-4b1b-9571-1380506db887}</UniqueIdentifier>
-    </Filter>
     <Filter Include="System">
       <UniqueIdentifier>{7829c4b4-90ae-4d57-a953-b1d5c397a4c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sensors and Actuators">
+      <UniqueIdentifier>{3f49b442-b75c-4b1b-9571-1380506db887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Topology">
+      <UniqueIdentifier>{0839a2b9-feca-47e5-a2c0-2f83b5c0c156}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core Components">
+      <UniqueIdentifier>{a7d71153-9b8c-440e-b6fb-ba69e67ccbc8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\sim\Actuator.cpp">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Body.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Controller.cpp">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Joint.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Model.cpp">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Muscle.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Simulation.cpp">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Factories.cpp">
       <Filter>System</Filter>
@@ -36,40 +33,44 @@
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <Filter>System</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Dof.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Sensor.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\scone\sim\Area.cpp">
-      <Filter>API</Filter>
+      <Filter>Topology</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Leg.cpp">
-      <Filter>API</Filter>
+      <Filter>Topology</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Link.cpp">
-      <Filter>API</Filter>
+      <Filter>Topology</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Dof.cpp">
-      <Filter>API</Filter>
+    <ClCompile Include="..\..\scone\sim\Model.cpp">
+      <Filter>Core Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Simulation.cpp">
+      <Filter>Core Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Controller.cpp">
+      <Filter>Core Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Body.h">
-      <Filter>API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Controller.h">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Joint.h">
-      <Filter>API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Model.h">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Muscle.h">
-      <Filter>API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Simulation.h">
-      <Filter>API</Filter>
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Factories.h">
       <Filter>System</Filter>
@@ -83,20 +84,33 @@
     <ClInclude Include="..\..\scone\sim\Types.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Link.h">
-      <Filter>API</Filter>
+    <ClInclude Include="..\..\scone\sim\Dof.h">
+      <Filter>Sensors and Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Sensor.h">
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Area.h">
-      <Filter>API</Filter>
+      <Filter>Topology</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Leg.h">
-      <Filter>API</Filter>
+      <Filter>Topology</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Link.h">
+      <Filter>Topology</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Model.h">
+      <Filter>Core Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Simulation.h">
+      <Filter>Core Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\State.h">
-      <Filter>API</Filter>
+      <Filter>Core Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Dof.h">
-      <Filter>API</Filter>
+    <ClInclude Include="..\..\scone\sim\Controller.h">
+      <Filter>Core Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h" />
   </ItemGroup>
 </Project>

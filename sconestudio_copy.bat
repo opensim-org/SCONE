@@ -1,0 +1,1 @@
+".\bin\ReleaseCopy\sconestudio.exe"

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include "tools.h"
 
 namespace scone
 {

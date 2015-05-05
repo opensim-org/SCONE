@@ -31,9 +31,9 @@ namespace scone
 		void Reflex::UpdateMuscleState( double timestamp )
 		{
 			// update internal measures
-			m_Length.Update( timestamp, m_Source.GetNormalizedFiberLength() );
-			m_Velocity.Update( timestamp, m_Source.GetNormalizedFiberVelocity() );
-			m_Force.Update( timestamp, m_Source.GetNormalizedFiberForce() );
+			m_Length.AddSample( timestamp, m_Source.GetNormalizedFiberLength() );
+			m_Velocity.AddSample( timestamp, m_Source.GetNormalizedFiberVelocity() );
+			m_Force.AddSample( timestamp, m_Source.GetNormalizedFiberForce() );
 		}
 
 		void Reflex::ComputeControls( double timestamp )
@@ -42,14 +42,14 @@ namespace scone
 			double u = 0.0;
 
 			// add stretch reflex
-			u += length_gain * std::max( 0.0, m_Length.GetDelayed( timestamp ) - length_ofs );
+			u += length_gain * std::max( 0.0, m_Length.GetDelayedValue( timestamp ) - length_ofs );
 
 			// add velocity reflex
 			// TODO: should velocity gain be positive only?
-			u += velocity_gain * std::max( 0.0, m_Velocity.GetDelayed( timestamp ) );
+			u += velocity_gain * std::max( 0.0, m_Velocity.GetDelayedValue( timestamp ) );
 
 			// add force reflex
-			u += force_gain * m_Force.GetDelayed( timestamp );
+			u += force_gain * m_Force.GetDelayedValue( timestamp );
 
 			// apply excitation to target muscle
 			m_Target.AddControlValue( u );

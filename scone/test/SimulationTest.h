@@ -9,7 +9,7 @@
 #include "../sim/Factories.h"
 
 #include <fstream>
-#include "../core/Delayed.h"
+#include "../core/Delayer.h"
 
 using namespace scone;
 
@@ -22,8 +22,8 @@ void DelayTest()
 	{
 		Real v = cos( t );
 		if ( t < 5 )
-			dv.Update( t, v );
-		str << t << "\t" << v << "\t" << dv.GetDelayed( t ) << std::endl;
+			dv.AddSample( t, v );
+		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t ) << std::endl;
 	}
 }
 

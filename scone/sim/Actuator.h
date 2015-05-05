@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Actuator : public Named
+		class SCONE_SIM_API Actuator : public virtual Named
 		{
 		public:
 			Actuator();

@@ -3,7 +3,7 @@
 #include "cs.h"
 #include "../sim/Muscle.h"
 #include "../core/PropNode.h"
-#include "../core/Delayed.h"
+#include "../core/Delayer.h"
 #include "../opt/ParamSet.h"
 
 namespace scone

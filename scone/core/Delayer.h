@@ -3,15 +3,20 @@
 
 namespace scone
 {
-	// TODO: move to core
+	// helper function that computes a weighted average of any value
 	template< typename T >
-	class Delayed
+	T GetWeightedAverage( double value1_weight, const T& value1, const T& value2 ) {
+		return value1_weight * value1 + ( 1.0 - value1_weight ) * value2;
+	}
+
+	template< typename T >
+	class Delayer
 	{
 	public:
-		Delayed( double delay ) : m_Delay( delay ) { };
-		virtual ~Delayed() { };
+		Delayer( double delay ) : m_Delay( delay ) { };
+		virtual ~Delayer() { };
 
-		void Update( double current_time, const T& value )
+		void AddSample( double current_time, const T& value )
 		{
 			if ( !m_Data.empty() && current_time < m_Data.back().first )
 				log::ErrorF( "Delayed<>::GetDelayed(): Wrong timestamp, current_time=%.6f < %.6f", current_time, m_Data.back().first );
@@ -25,10 +30,7 @@ namespace scone
 				m_Data.pop_front();
 		}
 
-		double GetLastUpdateTime() { return m_Data.back().first; }
-		double GetLastUpdateValue() { return m_Data.back().second; }
-
-		T GetDelayed( double current_time )
+		T GetDelayedValue( double current_time )
 		{
 			SCONE_ASSERT( !m_Data.empty() );
 			double delayed_time = current_time - m_Delay;
@@ -54,7 +56,7 @@ namespace scone
 				log::ErrorF( "Delayed<>::GetDelayed(): Failed condition: t0=%.6f <= delayed_time=%.6f < t1=%.6f", it0->first, delayed_time, it1->first );
 
 			double w = ( delayed_time - it0->first ) / ( it1->first - it0->first );
-			return w * it1->second + ( 1 - w ) * it0->second;
+			return GetWeightedAverage( w, it1->second, it0->second );
 		}
 			
 	private:
@@ -62,7 +64,7 @@ namespace scone
 		std::deque< std::pair< double, T > > m_Data;
 	};
 
-	typedef Delayed< Real > DelayedReal;
-	typedef Delayed< double > DelayedDouble;
-	typedef Delayed< float > DelayedFloat;
+	typedef Delayer< Real > DelayedReal;
+	typedef Delayer< double > DelayedDouble;
+	typedef Delayer< float > DelayedFloat;
 }
