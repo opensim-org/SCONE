@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\scone\core\DataStorage.h" />
+    <ClInclude Include="..\..\scone\core\Storage.h" />
     <ClInclude Include="..\..\scone\core\Delayer.h" />
     <ClInclude Include="..\..\scone\core\EnumStringMap.h" />
     <ClInclude Include="..\..\scone\core\HasData.h" />
@@ -36,7 +36,7 @@
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\core\DataStorage.cpp" />
+    <ClCompile Include="..\..\scone\core\Storage.cpp" />
     <ClCompile Include="..\..\scone\core\Log.cpp" />
     <ClCompile Include="..\..\scone\core\HasName.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />

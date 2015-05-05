@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include "../core/Delayer.h"
+#include "../core/Storage.h"
 
 using namespace scone;
 
@@ -17,13 +18,29 @@ void DelayTest()
 {
 	std::ofstream str( "delay_test.txt" );
 
-	DelayedReal dv( 1.0 );
-	for ( double t = 0.0; t < 10.0; t += ( rand() % 100 ) / 100.0 )
+	double delay = 1.0;
+	DelayedReal dv( delay );
+	Storage store;
+	for ( double t = 0.0; t < 20.0; t += ( 1 + rand() % 200 ) / 100.0 )
 	{
 		Real v = cos( t );
-		if ( t < 5 )
+
+		if ( t < 15 )
+		{
 			dv.AddSample( t, v );
-		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t ) << std::endl;
+			store.SetValue( t, "Cos", v );
+			store.SetValue( t, "Sin", sin( t ) );
+			store.SetValue( t, "SQRT", sqrt( t ) );
+		}
+
+		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t );
+
+		for ( size_t idx = 0; idx < store.GetChannelCount(); ++idx )
+		{
+			str << "\t" << store.GetInterpolatedValue( t, idx );
+			str << "\t" << store.GetInterpolatedValue( t - delay, idx );
+		}
+		str << std::endl;
 	}
 }
 

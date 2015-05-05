@@ -8,6 +8,6 @@ namespace scone
 		HasData() { };
 		virtual ~HasData() { };
 
-		virtual void AddData( DataStorage::Frame& frame ) = 0;
+		virtual void AddData( Storage::Frame& frame ) = 0;
 	};
 }

@@ -84,7 +84,7 @@
     <ClInclude Include="..\..\scone\core\HasData.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\DataStorage.h">
+    <ClInclude Include="..\..\scone\core\Storage.h">
       <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
@@ -119,7 +119,7 @@
     <ClCompile Include="..\..\scone\core\HasSignature.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\DataStorage.cpp">
+    <ClCompile Include="..\..\scone\core\Storage.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
