@@ -34,6 +34,7 @@ namespace scone
 		ValueType GetInterpolatedValue( TimeInSeconds time, Index idx ) const;
 
 	private:
+		// TODO: use std::vector< String > for labels
 		std::map< String, size_t > m_Labels;
 		std::vector< Frame > m_Data;
 
