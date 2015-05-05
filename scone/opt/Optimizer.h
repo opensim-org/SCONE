@@ -2,13 +2,13 @@
 
 #include "opt.h"
 #include "Objective.h"
-#include "../core/Signature.h"
+#include "../core/HasSignature.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Optimizer : public Signature
+		class OPT_API Optimizer : public HasSignature
 		{
 		public:
 			Optimizer( const PropNode& props );

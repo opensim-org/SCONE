@@ -3,13 +3,13 @@
 #include "sim.h"
 #include <functional>
 #include "../opt/ParamSet.h"
-#include "../core/Signature.h"
+#include "../core/HasSignature.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Controller : public Signature
+		class SCONE_SIM_API Controller : public HasSignature
 		{
 		public:
 			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area );

@@ -3,13 +3,13 @@
 #include "opt.h"
 #include "ParamSet.h"
 #include "../core/InitFromPropNode.h"
-#include "../core/Signature.h"
+#include "../core/HasSignature.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Objective : public Signature
+		class OPT_API Objective : public HasSignature
 		{
 		public:
 			Objective( const PropNode& props, ParamSet& par );

@@ -2,7 +2,7 @@
 
 #include "../core/core.h"
 #include "../opt/ParamSet.h"
-#include "../core/Named.h"
+#include "../core/HasName.h"
 #include "cs.h"
 
 namespace scone

@@ -6,7 +6,7 @@ namespace scone
 	namespace sim
 	{
 		Controller::Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
-		Signature( props ),
+		HasSignature( props ),
 		m_TerminationRequest( false )
 		{
 		}

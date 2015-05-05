@@ -5,11 +5,11 @@
 
 namespace scone
 {
-	class CORE_API Named
+	class CORE_API HasName
 	{
 	public:
-		Named();
-		virtual ~Named();
+		HasName();
+		virtual ~HasName();
 		virtual const String& GetName() const = 0;
 	};
 

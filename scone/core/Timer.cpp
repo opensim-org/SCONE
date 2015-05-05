@@ -34,7 +34,7 @@ namespace scone
 		::QueryPerformanceCounter( &m_pImpl->epoch );
 	}
 
-	double Timer::GetTime()
+	TimeInSeconds Timer::GetTime()
 	{
 		if ( m_IsRunning )
 			m_Time = GetCurrentTime();
@@ -42,7 +42,7 @@ namespace scone
 		return m_Time;
 	}
 
-	double Timer::Pause()
+	TimeInSeconds Timer::Pause()
 	{
 		if ( m_IsRunning )
 		{
@@ -53,7 +53,7 @@ namespace scone
 		return m_Time;
 	}
 
-	double Timer::Resume()
+	TimeInSeconds Timer::Resume()
 	{
 		double deltaTime = GetCurrentTime() - m_Time;
 		m_pImpl->epoch.QuadPart += static_cast< LONGLONG >( deltaTime / m_pImpl->pctoseconds );
@@ -61,7 +61,7 @@ namespace scone
 		return GetTime();
 	}
 
-	double Timer::GetCurrentTime()
+	TimeInSeconds Timer::GetCurrentTime()
 	{
 		LARGE_INTEGER current;
 		::QueryPerformanceCounter( &current );

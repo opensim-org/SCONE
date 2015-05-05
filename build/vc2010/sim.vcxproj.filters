@@ -57,7 +57,9 @@
     <ClCompile Include="..\..\scone\sim\Controller.cpp">
       <Filter>Core Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp" />
+    <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h">
@@ -111,6 +113,8 @@
     <ClInclude Include="..\..\scone\sim\Controller.h">
       <Filter>Core Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h" />
+    <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h">
+      <Filter>Sensors and Actuators</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

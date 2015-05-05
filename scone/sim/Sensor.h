@@ -1,13 +1,13 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/Named.h"
+#include "../core/HasName.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Sensor : public virtual Named
+		class SCONE_SIM_API Sensor : public virtual HasName
 		{
 		public:
 			Sensor();

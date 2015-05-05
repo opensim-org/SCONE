@@ -39,9 +39,6 @@
     <ClInclude Include="..\..\scone\core\Exception.h">
       <Filter>Base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\Named.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\core.h">
       <Filter>System</Filter>
     </ClInclude>
@@ -75,11 +72,20 @@
     <ClInclude Include="..\..\scone\core\Statistic.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\Signature.h">
-      <Filter>Base</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\Delayer.h">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\HasName.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\HasSignature.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\HasData.h">
+      <Filter>Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\DataStorage.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -91,9 +97,6 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\core\tools.cpp">
       <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\core\Named.cpp">
-      <Filter>Base</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\core\stdafx.cpp">
       <Filter>System</Filter>
@@ -110,8 +113,14 @@
     <ClCompile Include="..\..\scone\core\Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\Signature.cpp">
+    <ClCompile Include="..\..\scone\core\HasName.cpp">
       <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\HasSignature.cpp">
+      <Filter>Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\DataStorage.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

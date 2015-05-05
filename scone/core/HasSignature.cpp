@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Signature.h"
+#include "HasSignature.h"
 #include "InitFromPropNode.h"
 
 namespace scone
 {
-	Signature::Signature( const PropNode& pn )
+	HasSignature::HasSignature( const PropNode& pn )
 	{
 		INIT_PROPERTY( pn, signature_prefix, String("") );
 		INIT_PROPERTY( pn, signature_postfix, String("") );
@@ -22,11 +22,11 @@ namespace scone
 			signature_prefix = signature_prefix + ".";
 	}
 
-	Signature::~Signature()
+	HasSignature::~HasSignature()
 	{
 	}
 
-	scone::String Signature::GetSignature()
+	scone::String HasSignature::GetSignature()
 	{
 		return signature_prefix + GetMainSignature() + signature_postfix;
 	}

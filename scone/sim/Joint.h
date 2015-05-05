@@ -1,13 +1,13 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/Named.h"
+#include "../core/HasName.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Joint : public Named
+		class SCONE_SIM_API Joint : public HasName
 		{
 		public:
 			Joint();

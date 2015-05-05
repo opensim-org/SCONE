@@ -11,14 +11,14 @@ namespace scone
 		Timer();
 		~Timer();
 		void Restart();
-		double GetTime();
-		double Pause();
-		double Resume();
+		TimeInSeconds GetTime();
+		TimeInSeconds Pause();
+		TimeInSeconds Resume();
 
 	private:
-		double GetCurrentTime();
+		TimeInSeconds GetCurrentTime();
 		bool m_IsRunning;
-		double m_Time;
+		TimeInSeconds m_Time;
 
 		// system specific implementation is hidden behind pimpl
 		class Impl;

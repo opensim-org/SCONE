@@ -37,6 +37,7 @@ namespace scone
 	// index type
 	typedef size_t Index;
 	const Index NoIndex = std::numeric_limits< Index >::max();
+	typedef double TimeInSeconds;
 
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );

@@ -12,14 +12,14 @@
 #include <map>
 #include <vector>
 #include "State.h"
-#include "../core/Named.h"
-#include "../core/Signature.h"
+#include "../core/HasName.h"
+#include "../core/HasSignature.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model : public Named, public Signature
+		class SCONE_SIM_API Model : public HasName, public HasSignature
 		{
 		public:
 			Model( const PropNode& props, opt::ParamSet& par );

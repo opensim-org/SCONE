@@ -4,11 +4,11 @@
 
 namespace scone
 {
-	class CORE_API Signature
+	class CORE_API HasSignature
 	{
 	public:
-		Signature( const PropNode& pn );
-		virtual ~Signature();
+		HasSignature( const PropNode& pn );
+		virtual ~HasSignature();
 
 		String GetSignature();
 

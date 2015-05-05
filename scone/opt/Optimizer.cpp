@@ -18,7 +18,7 @@ namespace scone
 	namespace opt
 	{
 		Optimizer::Optimizer( const PropNode& props ) :
-		Signature( props ),
+		HasSignature( props ),
 		max_threads( 1 ),
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) )
