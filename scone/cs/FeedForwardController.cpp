@@ -110,7 +110,7 @@ namespace scone
 			}
 		}
 
-		scone::String FeedForwardController::GetSignature()
+		scone::String FeedForwardController::GetMainSignature()
 		{
 			String s = "F" + m_Functions.front()->GetSignature();
 			if ( number_of_modes > 0 )

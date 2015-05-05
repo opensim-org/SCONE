@@ -18,6 +18,7 @@ namespace scone
 	namespace opt
 	{
 		Optimizer::Optimizer( const PropNode& props ) :
+		Signature( props ),
 		max_threads( 1 ),
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) )
@@ -119,7 +120,8 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			m_OutputFolder = GetSconeFolder( "output" ) + GetDateTimeAsString() + "." + GetSignature() + "/";
+			m_OutputFolder = GetSconeFolder( "output" ) + GetSignature() + "/";
+			SCONE_CONDITIONAL_THROW( exists( path( m_OutputFolder ) ), "Output folder already exists: " + GetQuoted( m_OutputFolder ) );
 			create_directories( path( m_OutputFolder ) );
 			log::Info( "Output: " + m_OutputFolder );
 		}
@@ -131,7 +133,7 @@ namespace scone
 			return m_OutputFolder;
 		}
 
-		scone::String Optimizer::GetSignature()
+		scone::String Optimizer::GetMainSignature()
 		{
 			String s = GetObjective().GetSignature();
 			if ( use_init_file && !init_file.empty() )

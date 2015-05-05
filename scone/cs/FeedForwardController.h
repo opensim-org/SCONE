@@ -26,7 +26,7 @@ namespace scone
 			bool UseModes() { return number_of_modes > 0; }
 
 			// a signature describing the controller
-			virtual String GetSignature() override;
+			virtual String GetMainSignature() override;
 
 		private:
 			// mode settings

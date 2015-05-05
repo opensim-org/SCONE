@@ -103,7 +103,7 @@ namespace scone
 
 			PropNode* child = GetChildPtr( head_key );
 			if ( child )
-				return child->AddChild( head_key );
+				return child->AddChild( tail_key );
 			else 
 				return AddChild( head_key ).AddChild( tail_key );
 		}
@@ -409,5 +409,24 @@ namespace scone
 		if ( ext == ".ini" )
 			return ReadPropNodeFromIni( config_file, include_directive, level );
 		else SCONE_THROW( "Unknown file type: " + config_file );
+	}
+
+	PropNode GetPropNodeFromArgs( int begin_idx, int end_idx, char* argv[] )
+	{
+		PropNode pn;
+
+		for ( int i = begin_idx; i < end_idx; ++i )
+		{
+			String s = argv[ i ];
+			size_t pos = s.find( "=" );
+			if ( pos != String::npos )
+			{
+				String key = s.substr( 0, pos );
+				String value = s.substr( pos + 1 );
+				pn.Set( key, value );
+			}
+		}
+
+		return pn;
 	}
 }

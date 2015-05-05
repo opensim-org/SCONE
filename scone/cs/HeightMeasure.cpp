@@ -65,7 +65,7 @@ namespace scone
 			else return 100 * ( m_Height.GetHighest() - m_Height.GetInitial() );
 		}
 
-		scone::String HeightMeasure::GetSignature()
+		scone::String HeightMeasure::GetMainSignature()
 		{
 			return "Jump";
 		}

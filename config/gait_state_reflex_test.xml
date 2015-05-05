@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file>initializations/014.f1024.G_3FC1.V10.0155_28.047_5.554.par</init_file>
-	<use_init_file>0</use_init_file>
+	<signature_postfix></signature_postfix>
+	<init_file>initializations/019.f1024.G_3FP0.S10.D5.0870_50.992_26.677.par</init_file>
+	<use_init_file>1</use_init_file>
 	
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
@@ -16,14 +17,15 @@
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<ConditionalControllers>
-						<INCLUDE file="controllers/CC_3FC1.xml"/>
-						<ConditionalController>
-							<states>EarlyStance LateStance Liftoff Swing Landing</states>
-							<INCLUDE file="controllers/C_RL.xml"/>
+						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
+							<INCLUDE file="controllers/C_FP0.xml"/>
+						</ConditionalController>
+						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
+							<INCLUDE file="controllers/C_RL_Post.xml"/>
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_G10.xml"/>
+				<INCLUDE file="measures/M_CG10.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

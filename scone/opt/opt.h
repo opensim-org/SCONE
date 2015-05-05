@@ -29,6 +29,8 @@ namespace scone
 
 		// register factory types
 		void OPT_API RegisterFactoryTypes();
-		void OPT_API PerformOptimization( const String& config_file );
+
+		// TODO: move this to sconeopt?
+		void OPT_API PerformOptimization( int argc, char* argv[] );
 	}
 }

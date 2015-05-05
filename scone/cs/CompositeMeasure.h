@@ -17,7 +17,6 @@ namespace scone
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual PropNode GetReport() override;
-			virtual String GetSignature() override;
 
 			struct Term
 			{
@@ -32,6 +31,9 @@ namespace scone
 			private:
 				Term( const Term& other );
 			};
+
+		protected:
+			virtual String GetMainSignature() override;
 
 		private:
 			CompositeMeasure( CompositeMeasure& other );

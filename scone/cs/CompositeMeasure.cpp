@@ -89,7 +89,7 @@ namespace scone
 			return m_Report;
 		}
 
-		scone::String CompositeMeasure::GetSignature()
+		scone::String CompositeMeasure::GetMainSignature()
 		{
 			// for now, just return the first one
 			return m_Terms.front().measure->GetSignature();

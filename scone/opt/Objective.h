@@ -3,12 +3,13 @@
 #include "opt.h"
 #include "ParamSet.h"
 #include "../core/InitFromPropNode.h"
+#include "../core/Signature.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Objective
+		class OPT_API Objective : public Signature
 		{
 		public:
 			Objective( const PropNode& props, ParamSet& par );
@@ -28,9 +29,6 @@ namespace scone
 
 			// virtual evaluation function
 			virtual double Evaluate() = 0;
-
-			// a signature describing the objective
-			virtual String GetSignature() { return ""; }
 
 			int debug_idx;
 		};

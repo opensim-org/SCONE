@@ -59,10 +59,11 @@ namespace scone
 			SimTK::State& GetTkState() { return *m_pTkState; }
 			void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
 
+			virtual const String& GetName() const override;
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
-			// a signature describing the model
-			virtual String GetSignature();
+		protected:
+			virtual String GetMainSignature() override;
 
 		private:
 			void ReadState( const String& file );

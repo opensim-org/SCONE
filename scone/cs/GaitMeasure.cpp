@@ -112,7 +112,7 @@ namespace scone
 			return ( *iter + *(++iter) ) / 2;
 		}
 
-		String GaitMeasure::GetSignature()
+		String GaitMeasure::GetMainSignature()
 		{
 			return GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
 		}

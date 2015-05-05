@@ -15,10 +15,24 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
-		void OPT_API PerformOptimization( const String& config_file )
+		void OPT_API PerformOptimization( int argc, char* argv[] )
 		{
+			SCONE_CONDITIONAL_THROW( argc < 2, "No config file argument provided" );
+
+			// get config file
+			String config_file( argv[ 1 ] );
+
 			// load properties
-			PropNode p = ReadPropNode( config_file );
+			PropNode props = ReadPropNode( config_file );
+
+			// get command line settings (parameter 2 and further)
+			PropNode cmd_props = GetPropNodeFromArgs( 2, argc, argv );
+			if ( !cmd_props.IsEmpty() )
+			{
+				//log::Info( "Command line properties:" );
+				//std::cout << cmd_props;
+				props.Merge( cmd_props, true );
+			}
 
 			// set current path to config file path
 			path config_path( config_file );
@@ -26,13 +40,13 @@ namespace scone
 				current_path( config_path.parent_path() );
 
 			// create optimizer and report unused parameters
-			opt::OptimizerUP o = opt::CreateOptimizer( p.GetChild( "Optimizer" ) );
-			LogUntouched( p );
+			opt::OptimizerUP o = opt::CreateOptimizer( props.GetChild( "Optimizer" ) );
+			LogUntouched( props );
 
 			// copy original and write resolved config files
 			path outdir( o->AcquireOutputFolder() );
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
-			p.ToXmlFile( ( outdir / "config.xml" ).string() );
+			props.ToXmlFile( ( outdir / "config.xml" ).string() );
 
 			o->Run();
 		}

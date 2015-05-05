@@ -20,13 +20,15 @@ namespace scone
 
 			virtual double GetResult( sim::Model& model ) override;
 
-			virtual String GetSignature() override;
 			virtual PropNode GetReport();
 
 			// parameters
 			Real termination_height;
 			Real min_velocity;
 			Real contact_force_threshold;
+
+		protected:
+			virtual String GetMainSignature() override;
 
 		private:
 			Statistic< double > m_Energy;

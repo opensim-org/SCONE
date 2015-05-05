@@ -102,7 +102,7 @@ namespace scone
 			return e;
 		}
 
-		scone::String EffortMeasure::GetSignature()
+		scone::String EffortMeasure::GetMainSignature()
 		{
 			switch( measure_type )
 			{

@@ -24,17 +24,18 @@ namespace scone
 			virtual double Evaluate() override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 			virtual std::vector< String > WriteResults( const String& file ) override;
-			virtual String GetSignature();
 
 			sim::Model& GetModel() { return *m_Model; }
 			cs::Measure& GetMeasure() { return *m_Measure; }
+
+		protected:
+			virtual String GetMainSignature() override;
 
 		private:
 			double max_duration;
 			sim::ModelUP m_Model;
 			cs::Measure* m_Measure;
 			const PropNode& m_ModelProps;
-			String signature_postfix;
 		};
 	}
 }

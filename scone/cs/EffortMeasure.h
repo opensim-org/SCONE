@@ -22,6 +22,9 @@ namespace scone
 			EnergyMeasureType measure_type;
 			bool use_cost_of_transport;
 
+		protected:
+			virtual String GetMainSignature() override;
+
 		private:
 			Real m_Wang2012BasalEnergy;
 			Statistic< double > m_Energy;
@@ -30,7 +33,6 @@ namespace scone
 			double GetEnergy( sim::Model& model );
 			double GetWang2012( sim::Model& model );
 			double GetTotalForce( sim::Model& model );
-			virtual String GetSignature() override;
 		};
 	}
 }

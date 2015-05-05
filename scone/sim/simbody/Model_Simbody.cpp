@@ -401,15 +401,9 @@ namespace scone
 			return str;
 		}
 
-		scone::String Model_Simbody::GetSignature()
-		{
-			return GetOsimModel().getName();
-		}
-
 		scone::Real Model_Simbody::GetTotalEnergyConsumption()
 		{
 			SCONE_ASSERT( m_pProbe != nullptr );
-
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		}
 
@@ -429,6 +423,16 @@ namespace scone
 		double Model_Simbody::GetSimulationEndTime()
 		{
 			return m_pOsimManager->getFinalTime();
+		}
+
+		scone::String Model_Simbody::GetMainSignature()
+		{
+			return GetOsimModel().getName();
+		}
+
+		const String& Model_Simbody::GetName() const 
+		{
+			return GetOsimModel().getName();
 		}
 	}
 }

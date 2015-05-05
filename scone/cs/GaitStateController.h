@@ -39,7 +39,7 @@ namespace scone
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 
-			virtual String GetSignature() override;
+			virtual String GetMainSignature() override;
 
 			// public parameters
 			Real contact_force_threshold;

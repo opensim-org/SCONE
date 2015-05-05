@@ -59,7 +59,7 @@ namespace scone
 				r->ComputeControls( timestamp );
 		}
 
-		scone::String ReflexController::GetSignature()
+		scone::String ReflexController::GetMainSignature()
 		{
 			String str = "R"; //GetStringF( "r%d", m_Reflexes.size() );
 

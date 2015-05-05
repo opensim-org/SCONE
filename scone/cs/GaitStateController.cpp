@@ -186,7 +186,7 @@ namespace scone
 			}
 		}
 
-		scone::String GaitStateController::GetSignature()
+		scone::String GaitStateController::GetMainSignature()
 		{
 			String s = "G";
 

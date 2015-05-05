@@ -19,7 +19,9 @@ namespace scone
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual PropNode GetReport();
-			virtual String GetSignature() override;
+
+		protected:
+			virtual String GetMainSignature() override;
 
 		private:
 			struct Limit

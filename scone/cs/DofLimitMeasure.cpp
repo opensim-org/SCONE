@@ -60,7 +60,7 @@ namespace scone
 			return result;
 		}
 
-		scone::String DofLimitMeasure::GetSignature()
+		scone::String DofLimitMeasure::GetMainSignature()
 		{
 			return "DL";
 		}

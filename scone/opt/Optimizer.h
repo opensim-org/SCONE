@@ -2,12 +2,13 @@
 
 #include "opt.h"
 #include "Objective.h"
+#include "../core/Signature.h"
 
 namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Optimizer
+		class OPT_API Optimizer : public Signature
 		{
 		public:
 			Optimizer( const PropNode& props );
@@ -18,7 +19,6 @@ namespace scone
 
 			/// get the results output folder (creates it if it doesn't exist)
 			const String& AcquireOutputFolder();
-			String GetSignature();
 
 			bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 			bool IsMinimizing() { return !maximize_objective; }
@@ -30,6 +30,8 @@ namespace scone
 			std::vector< ObjectiveUP > m_Objectives;
 
 			void ManageFileOutput( double fitness, const std::vector< String >& files );
+
+			virtual String GetMainSignature() override;
 
 			size_t max_threads;
 			int thread_priority;

@@ -12,12 +12,14 @@
 #include <map>
 #include <vector>
 #include "State.h"
+#include "../core/Named.h"
+#include "../core/Signature.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model
+		class SCONE_SIM_API Model : public Named, public Signature
 		{
 		public:
 			Model( const PropNode& props, opt::ParamSet& par );
@@ -80,8 +82,8 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
-			// a signature describing the model
-			virtual String GetSignature() { return ""; }
+		protected:
+			virtual String GetMainSignature() override { return GetName(); }
 
 		protected:
 			LinkUP m_RootLink;

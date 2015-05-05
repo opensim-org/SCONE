@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\scone\core\Delayed.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\Signature.h">
+      <Filter>Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\core\Timer.cpp">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\core\Signature.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

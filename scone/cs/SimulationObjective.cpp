@@ -21,7 +21,6 @@ namespace scone
 		m_ModelProps( props.GetChild( "Model" ) )
 		{
 			INIT_PROPERTY( props, max_duration, 6000.0 );
-			INIT_PROPERTY( props, signature_postfix, String() );
 
 			ProcessParameters( par );
 		}
@@ -63,17 +62,13 @@ namespace scone
 			return files;
 		}
 
-		String SimulationObjective::GetSignature()
+		String SimulationObjective::GetMainSignature()
 		{
 			String str = GetStringF( "%03d.", SCONE_VERSION_BUILD ) + m_Model->GetSignature();
 
 			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
 				str += "." + c->GetSignature();
-
 			str += GetStringF( ".D%.0f", max_duration );
-
-			if ( !signature_postfix.empty() )
-				str += "." + signature_postfix;
 
 			return str;
 		}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<signature_postfix></signature_postfix>
 	<init_file>initializations/014.f1024.G_3FC1.V10.0155_28.047_5.554.par</init_file>
 	<use_init_file>0</use_init_file>
 

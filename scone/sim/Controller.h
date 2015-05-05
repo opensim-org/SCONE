@@ -3,12 +3,13 @@
 #include "sim.h"
 #include <functional>
 #include "../opt/ParamSet.h"
+#include "../core/Signature.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Controller
+		class SCONE_SIM_API Controller : public Signature
 		{
 		public:
 			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area );
@@ -18,9 +19,6 @@ namespace scone
 
 			void SetTerminationRequest( bool value = true ) { m_TerminationRequest = value; }
 			bool GetTerminationRequest() { return m_TerminationRequest; }
-
-			// a signature describing the controller
-			virtual String GetSignature() { return ""; }
 
 		private:
 			bool m_TerminationRequest;

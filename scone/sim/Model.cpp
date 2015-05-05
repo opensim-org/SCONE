@@ -15,6 +15,7 @@ namespace scone
 	namespace sim
 	{
 		Model::Model( const PropNode& props, opt::ParamSet& par ) :
+		Signature( props ),
 		m_ShouldTerminate( false )
 		{
 		}
