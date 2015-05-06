@@ -12,16 +12,68 @@ namespace scone
 	class Storage
 	{
 	public:
-		typedef std::pair< TimeT, std::vector< ValueT > > Frame;
+		class Frame
+		{
+		public:
+			friend class Storage;
+
+			Frame( Storage& store, TimeT t, ValueT default_value = ValueT( 0 ) ) :
+			m_Store( store ),
+			m_Time( t ),
+			m_Values( store.GetChannelCount(), default_value ) {
+			}
+
+			TimeT GetTime() { return m_Time; }
+
+			ValueT& operator[]( Index idx ) {
+				return m_Values[ idx ];
+			}
+
+			const ValueT& operator[]( Index idx ) const {
+				return m_Values[ idx ];
+			}
+
+			ValueT& operator[]( const String& label ) {
+				Index idx = m_Store.GetChannelIndex( label );
+				if ( idx == NoIndex )
+					idx = m_Store.AddChannel( label );
+				return m_Values[ idx ];
+			}
+
+			const ValueT& operator[]( const String& label ) const {
+				Index idx = m_Store.GetChannelIndex( label );
+				SCONE_ASSERT( idx != NoIndex );
+				return m_Values[ idx ];
+			}
+
+		private:
+			typename Storage< ValueT, TimeT >& m_Store;
+			typename TimeT m_Time;
+			typename std::vector< ValueT > m_Values;
+		};
+		typedef std::unique_ptr< Frame > FrameUP;
 
 		Storage() { };
 		~Storage() { };
+
+		Frame& AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
+			SCONE_CONDITIONAL_THROW( !m_Data.empty() && time <= m_Data.back()->GetTime(), "Frame must have higher timestamp" );
+			m_Data.push_back( FrameUP( new Frame( *this, time, default_value ) ) );
+			m_InterpolationCache.clear(); // cached iterators have become invalid
+			return *m_Data.back();
+		}
+
+		Frame& Back() {
+			SCONE_ASSERT( !m_Data.empty() );
+			return *m_Data.back();
+		}
+
 
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
 			m_Labels.push_back( label );
 			for ( auto it = m_Data.begin(); it != m_Data.end(); ++it )
-				it->second.resize( m_Labels.size(), default_value ); // resize existing data
+				(*it)->m_Values.resize( m_Labels.size(), default_value ); // resize existing data
 			return m_Labels.size() - 1;
 		}
 
@@ -34,37 +86,6 @@ namespace scone
 
 		size_t GetChannelCount() const {
 			return m_Labels.size();
-		}
-
-		void AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
-			SCONE_CONDITIONAL_THROW( !m_Data.empty() && time <= m_Data.back().first, "Frame must have higher timestamp" );
-			m_Data.push_back( Frame( time, std::vector< ValueT >( m_Labels.size(), default_value ) ) );
-			m_InterpolationCache.clear(); // cached iterators have become invalid
-		}
-
-		ValueT& operator[]( Index idx ) {
-			SCONE_ASSERT( !m_Data.empty() );
-			return m_Data.back().second[ idx ];
-		}
-
-		const ValueT& operator[]( Index idx ) const {
-			SCONE_ASSERT( !m_Data.empty() );
-			return m_Data.back().second[ idx ];
-		}
-
-		ValueT& operator[]( const String& label ) {
-			SCONE_ASSERT( !m_Data.empty() );
-			Index idx = GetChannelIndex( label );
-			if ( idx == NoIndex )
-				idx = AddChannel( label );
-			return m_Data.back().second[ idx ];
-		}
-
-		const ValueT& operator[]( const String& label ) const {
-			SCONE_ASSERT( !m_Data.empty() );
-			Index idx = GetChannelIndex( label );
-			SCONE_ASSERT( idx != NoIndex );
-			return m_Data.back().second[ idx ];
 		}
 
 		const ValueT& GetValue( Index frame_idx, Index channel_idx ) const {
@@ -84,13 +105,13 @@ namespace scone
 
 	private:
 		std::vector< String > m_Labels;
-		std::vector< Frame > m_Data;
+		std::vector< std::unique_ptr< Frame > > m_Data;
 
 		// interpolation related stuff
 		struct InterpolatedFrame {
 			double upper_weight;
-			typename std::vector< Frame >::const_iterator upper_frame, lower_frame;
-			ValueT value( Index channel_idx ) const { return upper_weight * upper_frame->second[ channel_idx ] + ( 1.0 - upper_weight ) * lower_frame->second[ channel_idx ]; }
+			typename std::vector< FrameUP >::const_iterator upper_frame, lower_frame;
+			ValueT value( Index channel_idx ) const { return upper_weight * (**upper_frame)[ channel_idx ] + ( 1.0 - upper_weight ) * (**lower_frame)[ channel_idx ]; }
 		};
 
 		InterpolatedFrame GetInterpolatedFrame( TimeT time ) const {
@@ -101,7 +122,7 @@ namespace scone
 
 			// compute new one
 			InterpolatedFrame bf;
-			bf.upper_frame = std::upper_bound( m_Data.cbegin(), m_Data.cend(), Frame( time, std::vector< ValueT >() ) );
+			bf.upper_frame = std::upper_bound( m_Data.cbegin(), m_Data.cend(), time, []( TimeT lhs, const FrameUP &rhs) { return lhs < rhs->GetTime(); } );
 			if ( bf.upper_frame == m_Data.cend() )
 			{
 				// timestamp too high, point to most recent frame
@@ -118,7 +139,7 @@ namespace scone
 			{
 				// we have an actual interpolation
 				bf.lower_frame = bf.upper_frame - 1;
-				bf.upper_weight = ( time - bf.lower_frame->first ) / ( bf.upper_frame->first - bf.lower_frame->first );
+				bf.upper_weight = ( time - (*bf.lower_frame)->GetTime() ) / ( (*bf.upper_frame)->GetTime() - (*bf.lower_frame)->GetTime() );
 			}
 
 			// store in cache

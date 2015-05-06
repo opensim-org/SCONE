@@ -18,10 +18,10 @@ void DelayTest()
 {
 	std::ofstream str( "delay_test.txt" );
 
-	double delay = 1.0;
+	double delay = 5.0;
 	DelayedReal dv( delay );
 	Storage< double > store;
-	for ( double t = 0.0; t < 20.0; t += ( 1 + rand() % 200 ) / 100.0 )
+	for ( double t = 0.0; t < 20.0; t += ( 1 + rand() % 100 ) / 100.0 )
 	{
 		Real v = cos( t );
 
@@ -29,18 +29,17 @@ void DelayTest()
 		{
 			dv.AddSample( t, v );
 			store.AddFrame( t );
+			store.Back()[ "Cos" ] = v;
 
-			store[ "Cos" ] = v;
-			store[ "Sin" ] = sin( t );
-			store[ "SQRT" ] = sqrt( t );
+			for ( int i = 1; i < 6; ++i )
+				store.Back()[ "Test" + ToString( i ) ] = store.GetInterpolatedValue( t - 1.0, i - 1 );
 		}
+		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t ) << "\t" << store.GetInterpolatedValue( t - delay, 0 );
 
-		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t );
-
-		for ( size_t idx = 0; idx < store.GetChannelCount(); ++idx )
+		for ( size_t idx = 1; idx < store.GetChannelCount(); ++idx )
 		{
 			str << "\t" << store.GetInterpolatedValue( t, idx );
-			str << "\t" << store.GetInterpolatedValue( t - delay, idx );
+			//str << "\t" << store.GetInterpolatedValue( t - delay, idx );
 		}
 		str << std::endl;
 	}
