@@ -20,7 +20,7 @@ void DelayTest()
 
 	double delay = 1.0;
 	DelayedReal dv( delay );
-	Storage store;
+	Storage< double > store;
 	for ( double t = 0.0; t < 20.0; t += ( 1 + rand() % 200 ) / 100.0 )
 	{
 		Real v = cos( t );
@@ -28,9 +28,11 @@ void DelayTest()
 		if ( t < 15 )
 		{
 			dv.AddSample( t, v );
-			store.SetValue( t, "Cos", v );
-			store.SetValue( t, "Sin", sin( t ) );
-			store.SetValue( t, "SQRT", sqrt( t ) );
+			store.AddFrame( t );
+
+			store[ "Cos" ] = v;
+			store[ "Sin" ] = sin( t );
+			store[ "SQRT" ] = sqrt( t );
 		}
 
 		str << t << "\t" << v << "\t" << dv.GetDelayedValue( t );

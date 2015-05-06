@@ -119,8 +119,5 @@
     <ClCompile Include="..\..\scone\core\HasSignature.cpp">
       <Filter>Base</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\Storage.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

@@ -36,7 +36,6 @@
     <ClInclude Include="..\..\scone\core\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\scone\core\Storage.cpp" />
     <ClCompile Include="..\..\scone\core\Log.cpp" />
     <ClCompile Include="..\..\scone\core\HasName.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />
