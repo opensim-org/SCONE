@@ -17,7 +17,7 @@ namespace scone
 {
 	namespace cs
 	{
-		EnumStringMap< GaitStateController::LegInfo::GaitState > GaitStateController::LegInfo::m_StateNames = EnumStringMap< GaitStateController::LegInfo::GaitState >(
+		StringMap< GaitStateController::LegInfo::GaitState > GaitStateController::LegInfo::m_StateNames = StringMap< GaitStateController::LegInfo::GaitState >(
 			GaitStateController::LegInfo::UnknownState, "Unknown",
 			GaitStateController::LegInfo::EarlyStanceState, "EarlyStance",
 			GaitStateController::LegInfo::LateStanceState, "LateStance",

@@ -5,7 +5,7 @@
 #include "../sim/Leg.h"
 #include <bitset>
 #include "../core/TimedValue.h"
-#include "../core/EnumStringMap.h"
+#include "../core/StringMap.h"
 
 namespace scone
 {
@@ -24,7 +24,7 @@ namespace scone
 				// current state
 				enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
 				const String& GetStateName() { return m_StateNames.GetString( state ); }
-				static EnumStringMap< GaitState > m_StateNames;
+				static StringMap< GaitState > m_StateNames;
 				TimedValue< GaitState > state;
 
 				// current status

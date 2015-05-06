@@ -6,7 +6,7 @@
 #include <vector>
 #include "Actuator.h"
 #include "Sensor.h"
-#include "../core/EnumStringMap.h"
+#include "../core/StringMap.h"
 
 namespace scone
 {
@@ -46,11 +46,14 @@ namespace scone
 			virtual void SetExcitation( Real u ) = 0;
 
 			/// Inherited from Sensor
-			enum MuscleSensor { MuscleLengthSensor, MuscleVelocitySensor, MuscleForceSensor, MuscleSensorCount };
-			static EnumStringMap< MuscleSensor > m_SensorNames;
+			static const Index MuscleLengthSensor = 0;
+			static const Index MuscleVelocitySensor = 1;
+			static const Index MuscleForceSensor = 2;
+			static const size_t MuscleSensorCount = 3;
+			static StringMap< Index > m_SensorNames;
 			virtual size_t GetSensorCount() override;
-			virtual const String& GetSensorName( size_t idx ) override;
-			virtual Real GetSensorValue( size_t idx ) override;
+			virtual const String& GetSensorName( Index idx ) override;
+			virtual Real GetSensorValue( Index idx ) override;
 		};
 	}
 }

@@ -6,14 +6,14 @@
 namespace scone
 {
 	template< typename T >
-	class EnumStringMap
+	class StringMap
 	{
 	public:
 		typedef std::map< T, String > MapType;
 		typedef const char* CC;
 
-		// clumsy constructor because initializer lists aren't supported...
-		EnumStringMap(
+		// clumsy constructor because initializer lists aren't supported in VS2010
+		StringMap(
 			T e1 = T(0), const char* s1 = nullptr,
 			T e2 = T(0), const char* s2 = nullptr,
 			T e3 = T(0), const char* s3 = nullptr,
@@ -36,17 +36,17 @@ namespace scone
 			if ( s9 ) m_Map[ e9 ] = s9;
 		};
 
-		virtual ~EnumStringMap() { };
+		virtual ~StringMap() { };
 
 		const String& GetString( T e ) {
 			auto iter = m_Map.find( e );
-			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find enum " + ToString( e ) );
+			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find value " + ToString( e ) );
 			return iter->second;
 		}
-		T GetEnum( const String& s )
+		T GetValue( const String& s )
 		{
 			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( MapType::value_type& v) { return v.second == s; } );
-			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find enum for " + s );
+			SCONE_CONDITIONAL_THROW( iter == m_Map.end(), "Could not find " + s );
 			return iter->first;
 		}
 			

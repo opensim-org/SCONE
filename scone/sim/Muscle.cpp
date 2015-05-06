@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace sim
 	{
-		EnumStringMap< Muscle::MuscleSensor > Muscle::m_SensorNames = EnumStringMap< Muscle::MuscleSensor >(
+		StringMap< Index > Muscle::m_SensorNames(
 			Muscle::MuscleLengthSensor, "MuscleLengthSensor", 
 			Muscle::MuscleVelocitySensor, "MuscleVelocitySensor", 
 			Muscle::MuscleForceSensor, "MuscleForceSensor" );
@@ -25,12 +25,12 @@ namespace scone
 			return MuscleSensorCount;
 		}
 
-		const String& Muscle::GetSensorName( size_t idx )
+		const String& Muscle::GetSensorName( Index idx )
 		{
-			return m_SensorNames.GetString( static_cast< MuscleSensor >( idx ) );
+			return m_SensorNames.GetString( idx );
 		}
 
-		scone::Real Muscle::GetSensorValue( size_t idx )
+		scone::Real Muscle::GetSensorValue( Index idx )
 		{
 			switch( idx )
 			{

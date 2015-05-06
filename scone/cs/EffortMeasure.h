@@ -1,6 +1,6 @@
 #pragma once
 #include "Measure.h"
-#include "../core/EnumStringMap.h"
+#include "../core/StringMap.h"
 #include "../core/Statistic.h"
 
 namespace scone
@@ -14,7 +14,7 @@ namespace scone
 			virtual ~EffortMeasure();
 
 			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012 };
-			static EnumStringMap< EnergyMeasureType > m_MeasureNames;
+			static StringMap< EnergyMeasureType > m_MeasureNames;
 
 			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;

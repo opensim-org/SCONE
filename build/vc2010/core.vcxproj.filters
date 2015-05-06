@@ -63,9 +63,6 @@
     <ClInclude Include="..\..\scone\core\system.h">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\core\EnumStringMap.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\core\Range.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -85,6 +82,9 @@
       <Filter>Base</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\core\Storage.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\core\StringMap.h">
       <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>

@@ -14,8 +14,8 @@ namespace scone
 			virtual ~Sensor();
 
 			virtual size_t GetSensorCount() = 0;
-			virtual const String& GetSensorName( size_t idx ) = 0;
-			virtual Real GetSensorValue( size_t idx ) = 0;
+			virtual const String& GetSensorName( Index idx ) = 0;
+			virtual Real GetSensorValue( Index idx ) = 0;
 		};
 	}
 }

@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace cs
 	{
-		EnumStringMap< EffortMeasure::EnergyMeasureType > EffortMeasure::m_MeasureNames = EnumStringMap< EffortMeasure::EnergyMeasureType >(
+		StringMap< EffortMeasure::EnergyMeasureType > EffortMeasure::m_MeasureNames = StringMap< EffortMeasure::EnergyMeasureType >(
 			EffortMeasure::TotalForce, "TotalForce",
 			EffortMeasure::Wang2012, "Wang2012"
 			);
@@ -20,7 +20,7 @@ namespace scone
 		Measure( props, par, model, area ),
 		m_Energy( Statistic<>::LinearInterpolation )
 		{
-			measure_type = m_MeasureNames.GetEnum( props.GetStr( "measure_type" ) );
+			measure_type = m_MeasureNames.GetValue( props.GetStr( "measure_type" ) );
 			INIT_PROPERTY( props, use_cost_of_transport, false );
 
 			// precompute some stuff
