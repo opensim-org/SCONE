@@ -40,11 +40,11 @@ namespace scone
 
 		Real SensorDelayAdapter::GetSensorValue( size_t idx, TimeInSeconds delay )
 		{
-			if ( m_ChannelOfs == 0 && idx == 1 )
-			{
-				Real delayed_value = m_Storage.GetInterpolatedValue( m_Model.GetTime() - delay, m_ChannelOfs + idx );
-				log::TraceF( "%.3f: current=%.3f delayed=%.3f delay=%g", m_Model.GetTime(), m_Source.GetSensorValue( idx ), delayed_value, delay );
-			}
+			//if ( m_ChannelOfs == 0 && idx == 1 )
+			//{
+			//	Real delayed_value = m_Storage.GetInterpolatedValue( m_Model.GetTime() - delay, m_ChannelOfs + idx );
+			//	log::TraceF( "%.3f: current=%.3f delayed=%.3f delay=%g", m_Model.GetTime(), m_Source.GetSensorValue( idx ), delayed_value, delay );
+			//}
 
 			return m_Storage.GetInterpolatedValue( m_Model.GetTime() - delay, m_ChannelOfs + idx );
 		}

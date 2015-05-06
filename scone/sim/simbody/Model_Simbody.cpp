@@ -136,6 +136,8 @@ namespace scone
 				m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
 
 			// update SensorDelayAdapters here because they may be needed by controllers
+			// muscles are first equilibrated to ensure they contain valid data
+			m_pOsimModel->equilibrateMuscles( GetTkState() );
 			UpdateSensorDelayAdapters();
 
 			// get initial controller values and equilibrate muscles

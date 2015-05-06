@@ -3,7 +3,7 @@
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<signature_postfix></signature_postfix>
 	<init_file>initializations/019.f1024.G_3FP0.S10.D5.0870_50.992_26.677.par</init_file>
-	<use_init_file>1</use_init_file>
+	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
 		<signature_postfix></signature_postfix>
@@ -20,8 +20,8 @@
 						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
 							<INCLUDE file="controllers/C_FP0.xml"/>
 						</ConditionalController>
-						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
-							<INCLUDE file="controllers/C_RL_Post.xml"/>
+						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
+							<INCLUDE file="controllers/C_RL.xml"/>
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
