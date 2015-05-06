@@ -14,6 +14,8 @@
 #include "State.h"
 #include "../core/HasName.h"
 #include "../core/HasSignature.h"
+#include "SensorDelayAdapter.h"
+#include "Sensor.h"
 
 namespace scone
 {
@@ -82,8 +84,12 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
+			// create delayed sensors
+			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
+
 		protected:
 			virtual String GetMainSignature() override { return GetName(); }
+			void UpdateSensorDelayAdapters();
 
 		protected:
 			LinkUP m_RootLink;
@@ -94,6 +100,9 @@ namespace scone
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
 			bool m_ShouldTerminate;
+
+			Storage< Real > m_SensorDelayStorage;
+			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

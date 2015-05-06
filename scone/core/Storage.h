@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include <utility>
+#include <algorithm>
 
 namespace scone
 {
@@ -54,6 +55,15 @@ namespace scone
 		typedef std::unique_ptr< Frame > FrameUP;
 
 		Storage() { };
+		Storage( const Storage& other ) {
+			*this = other;
+		};
+		Storage& operator=( const Storage& other ) {
+			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
+				m_Data.push_back( FrameUP( new Frame( **it ) ) );
+			m_InterpolationCache.clear();
+			return *this;
+		};
 		~Storage() { };
 
 		Frame& AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
@@ -62,12 +72,20 @@ namespace scone
 			m_InterpolationCache.clear(); // cached iterators have become invalid
 			return *m_Data.back();
 		}
+		
+		bool IsEmpty() const { return m_Data.empty(); }
 
 		Frame& Back() {
 			SCONE_ASSERT( !m_Data.empty() );
 			return *m_Data.back();
 		}
 
+		size_t GetFrameCount() const { return m_Data.size(); }
+
+		Frame& GetFrame( Index frame_index ) {
+			SCONE_ASSERT( frame_idx < m_Data.size() );
+			return m_Data[ frame_idx ];
+		}
 
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
@@ -86,16 +104,6 @@ namespace scone
 
 		size_t GetChannelCount() const {
 			return m_Labels.size();
-		}
-
-		const ValueT& GetValue( Index frame_idx, Index channel_idx ) const {
-			SCONE_ASSERT( frame_idx < m_Data.size() );
-			return m_Data[ frame_idx ].second[ channel_idx ];
-		}
-
-		const TimeT& GetTime( Index frame_idx ) const {
-			SCONE_ASSERT( frame_idx < m_Data.size() );
-			return m_Data[ frame_idx ].first;
 		}
 
 		ValueT GetInterpolatedValue( TimeT time, Index idx ) const {

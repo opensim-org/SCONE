@@ -1,18 +1,22 @@
 #include "stdafx.h"
 #include "SensorDelayAdapter.h"
+#include "Model.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		SensorDelayAdapter::SensorDelayAdapter( Model& model, Sensor& source, double delay ) :
+		SensorDelayAdapter::SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, double delay ) :
 		m_Model( model ),
+		m_Storage( storage ),
 		m_Source( source ),
-		m_PreviousUpdateStep( -1 )
+		m_Delay( delay ),
+		m_PreviousUpdateStep( -1 ),
+		m_ChannelOfs( storage.GetChannelCount() )
 		{
-			// create delayers
+			// create channels in storage
 			for ( size_t i = 0; i < source.GetSensorCount(); ++i )
-				m_Delayers.push_back( Delayer< Real >( delay ) );
+				m_Storage.AddChannel( source.GetName() + "." + source.GetSensorName( i ) );
 		}
 
 		SensorDelayAdapter::~SensorDelayAdapter()
@@ -29,10 +33,20 @@ namespace scone
 			return m_Source.GetSensorName( idx );
 		}
 
-		scone::Real SensorDelayAdapter::GetSensorValue( size_t idx )
+		Real SensorDelayAdapter::GetSensorValue( size_t idx )
 		{
-			UpdateFromSource(); // update when necessary
-			return m_Delayers[ idx ].GetDelayedValue( m_Model.GetTime() );		
+			return m_Storage.GetInterpolatedValue( m_Model.GetTime() - m_Delay, m_ChannelOfs + idx );
+		}
+
+		Real SensorDelayAdapter::GetSensorValue( size_t idx, TimeInSeconds delay )
+		{
+			if ( m_ChannelOfs == 0 && idx == 1 )
+			{
+				Real delayed_value = m_Storage.GetInterpolatedValue( m_Model.GetTime() - delay, m_ChannelOfs + idx );
+				log::TraceF( "%.3f: current=%.3f delayed=%.3f delay=%g", m_Model.GetTime(), m_Source.GetSensorValue( idx ), delayed_value, delay );
+			}
+
+			return m_Storage.GetInterpolatedValue( m_Model.GetTime() - delay, m_ChannelOfs + idx );
 		}
 
 		const String& SensorDelayAdapter::GetName() const 
@@ -40,17 +54,13 @@ namespace scone
 			return m_Source.GetName();
 		}
 
-		void SensorDelayAdapter::UpdateFromSource()
+		void SensorDelayAdapter::UpdateStorage()
 		{
-			if ( m_Model.GetIntegrationStep() != m_PreviousUpdateStep )
-			{
-				// do some checks
-				SCONE_CONDITIONAL_THROW( m_Model.GetIntegrationStep() != m_Model.GetPreviousIntegrationStep(), "SensorDelayAdapter should be updated at each new integration step" );
-				SCONE_CONDITIONAL_THROW( m_Model.GetIntegrationStep() == m_PreviousUpdateStep + 1, "SensorDelayAdapter is missing data and should be updated at each new integration step" );
+			SCONE_ASSERT( !m_Storage.IsEmpty() && m_Storage.Back().GetTime() == m_Model.GetTime() );
 
-				for ( size_t i = 0; i < m_Source.GetSensorCount(); ++i )
-					m_Delayers[ i ].AddSample( m_Model.GetTime(), m_Source.GetSensorValue( i ) );
-			}
+			// add the new values
+			for ( size_t i = 0; i < m_Source.GetSensorCount(); ++i )
+				m_Storage.Back()[ m_ChannelOfs + i ] = m_Source.GetSensorValue( i );
 		}
 	}
 }

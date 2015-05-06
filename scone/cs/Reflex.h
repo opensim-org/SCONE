@@ -5,6 +5,7 @@
 #include "../core/PropNode.h"
 #include "../core/Delayer.h"
 #include "../opt/ParamSet.h"
+#include "../sim/Model.h"
 
 namespace scone
 {
@@ -13,11 +14,9 @@ namespace scone
 		class CS_API Reflex
 		{
 		public:
-			Reflex( const PropNode& props, opt::ParamSet& par, sim::Muscle& source, sim::Muscle& target );
+			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Muscle& source, sim::Muscle& target );
 			virtual ~Reflex();
 
-			virtual void UpdateControls( double timestamp );
-			virtual void UpdateMuscleState( double timestamp );
 			virtual void ComputeControls( double timestamp );
 
 			// Reflex parameters
@@ -26,14 +25,12 @@ namespace scone
 			Real force_gain;
 			Real velocity_gain;
 
+			TimeInSeconds delay;
+
 		private:
 			sim::Muscle& m_Source;
 			sim::Muscle& m_Target;
-
-			// Delayed muscle parameters
-			DelayedReal m_Length;
-			DelayedReal m_Force;
-			DelayedReal m_Velocity;
+			sim::SensorDelayAdapter& m_DelayedSource;
 		};
 	}
 }

@@ -135,6 +135,9 @@ namespace scone
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
 				m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
 
+			// update SensorDelayAdapters here because they may be needed by controllers
+			UpdateSensorDelayAdapters();
+
 			// get initial controller values and equilibrate muscles
 			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
 				(*iter)->UpdateControls( *this, 0.0 );
@@ -306,6 +309,10 @@ namespace scone
 			{
 				// update current state (TODO: remove const cast)
 				m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
+
+				// update SensorDelayAdapters at the beginning of each new step
+				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+					m_Model.UpdateSensorDelayAdapters();
 
 				// reset actuator values
 				BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )

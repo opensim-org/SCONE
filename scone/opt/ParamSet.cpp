@@ -51,7 +51,10 @@ namespace scone
 
 		double ParamSet::Get( const String& name, const PropNode& props )
 		{
-			return Get( ParamInfo( GetNamePrefix() + name, props ) );
+			// see if this is an actual parameter
+			if ( props.GetChildren().size() > 0 )
+				return Get( ParamInfo( GetNamePrefix() + name, props ) );
+			else return props.GetValue< double >(); // just return the value
 		}
 
 		double ParamSet::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )

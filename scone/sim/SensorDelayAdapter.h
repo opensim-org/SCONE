@@ -2,30 +2,36 @@
 
 #include "Sensor.h"
 #include "../core/Delayer.h"
-#include "Model.h"
+#include "../core/Storage.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		// TODO: make more efficient using templates
-		class SensorDelayAdapter : public Sensor
+		class Model;
+
+		// TODO: make more efficient using templates?
+		class SCONE_SIM_API SensorDelayAdapter : public Sensor
 		{
 		public:
-			SensorDelayAdapter( Model& model, Sensor& source, double delay );
+			SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, TimeInSeconds default_delay );
 			virtual ~SensorDelayAdapter();
 
 			virtual size_t GetSensorCount() override;
 			virtual const String& GetSensorName( size_t idx ) override;
 			virtual Real GetSensorValue( size_t idx ) override;
+			Real GetSensorValue( size_t idx, TimeInSeconds delay );
 			virtual const String& GetName() const override;
 		
 		private:
-			void UpdateFromSource();
+			friend Model;
+			void UpdateStorage();
 
+			Index m_ChannelOfs;
+			TimeInSeconds m_Delay;
 			Model& m_Model;
+			Storage< Real >& m_Storage;
 			Sensor& m_Source;
-			std::vector< Delayer< Real > > m_Delayers;
 			int m_PreviousUpdateStep;
 		};
 	}

@@ -35,8 +35,10 @@ namespace scone
 					// find muscle
 					sim::Muscle& m = FindNamed( model.GetMuscles(), musname );
 					opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
-					m_Reflexes.push_back( ReflexUP( new Reflex( *item.second, par, m, m ) ) );
+					m_Reflexes.push_back( ReflexUP( new Reflex( *item.second, par, model, m, m ) ) );
 				}
+
+				// create others
 			}
 		}
 
@@ -46,15 +48,7 @@ namespace scone
 
 		void ReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			// IMPORTANT: currently, this doesn't work with states, because timestamp can't be reset
-			// TODO: fix this
-			if ( model.GetIntegrationStep() > model.GetPreviousIntegrationStep() )
-			{
-				// only update the reflex values when a new step is taken
-				BOOST_FOREACH( ReflexUP& r, m_Reflexes )
-					r->UpdateMuscleState( timestamp );
-			}
-
+			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
 				r->ComputeControls( timestamp );
 		}

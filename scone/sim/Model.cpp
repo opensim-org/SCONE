@@ -48,5 +48,29 @@ namespace scone
 				return NoIndex;
 			else return it - m_Bodies.begin();
 		}
+
+		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
+		{
+			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
+				[&]( SensorDelayAdapterUP& a ) { return &a->m_Source == &source; } );
+
+			if ( it == m_SensorDelayAdapters.end() )
+			{
+				m_SensorDelayAdapters.push_back( SensorDelayAdapterUP( new SensorDelayAdapter( *this, m_SensorDelayStorage, source, 0.0 ) ) );
+				return *m_SensorDelayAdapters.back();
+			}
+			else return **it;
+		}
+
+		void Model::UpdateSensorDelayAdapters()
+		{
+			SCONE_CONDITIONAL_THROW( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
+			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
+
+			// add a new frame and update
+			m_SensorDelayStorage.AddFrame( GetTime() );
+			BOOST_FOREACH( std::unique_ptr< SensorDelayAdapter >& sda, m_SensorDelayAdapters )
+				sda->UpdateStorage();
+		}
 	}
 }

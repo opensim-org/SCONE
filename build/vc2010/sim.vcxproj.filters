@@ -10,7 +10,7 @@
     <Filter Include="Topology">
       <UniqueIdentifier>{0839a2b9-feca-47e5-a2c0-2f83b5c0c156}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core Components">
+    <Filter Include="Model and Simulation">
       <UniqueIdentifier>{a7d71153-9b8c-440e-b6fb-ba69e67ccbc8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -49,13 +49,13 @@
       <Filter>Topology</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Model.cpp">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Simulation.cpp">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Controller.cpp">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp">
       <Filter>Sensors and Actuators</Filter>
@@ -102,16 +102,16 @@
       <Filter>Topology</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Model.h">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Simulation.h">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\State.h">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Controller.h">
-      <Filter>Core Components</Filter>
+      <Filter>Model and Simulation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h">
       <Filter>Sensors and Actuators</Filter>
