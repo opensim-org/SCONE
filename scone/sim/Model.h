@@ -16,6 +16,7 @@
 #include "../core/HasSignature.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -87,6 +88,9 @@ namespace scone
 			// create delayed sensors
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 
+			// profiler, TODO: move to somewhere else (either global scope or sim::Simulation)
+			Profiler& GetProfiler() { return m_Profiler; }
+
 		protected:
 			virtual String GetMainSignature() override { return GetName(); }
 			void UpdateSensorDelayAdapters();
@@ -103,6 +107,8 @@ namespace scone
 
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
+
+			Profiler m_Profiler;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

@@ -54,6 +54,8 @@ namespace scone
 
 		void CompositeMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
+			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+
 			BOOST_FOREACH( Term& t, m_Terms )
 			{
 				t.measure->UpdateControls( model, timestamp );

@@ -81,6 +81,8 @@ namespace scone
 
 		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
+			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{
 				// only update the states after a successful integration step

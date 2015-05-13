@@ -85,6 +85,8 @@ namespace scone
 
 		void FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
+			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );
 			for ( size_t idx = 0; idx < m_Functions.size(); ++idx )

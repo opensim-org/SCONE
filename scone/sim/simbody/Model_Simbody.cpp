@@ -228,6 +228,7 @@ namespace scone
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
+			ScopedProfile scoped_profile( GetProfiler(), __FUNCTION__ );
 			SCONE_ASSERT( m_pOsimManager );
 
 			// Integrate from initial time to final time and integrate
@@ -306,6 +307,8 @@ namespace scone
 
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
+			ScopedProfile scoped_profile( m_Model.GetProfiler(), __FUNCTION__ );
+
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
 			{

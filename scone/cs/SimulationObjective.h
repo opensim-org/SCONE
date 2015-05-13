@@ -28,11 +28,12 @@ namespace scone
 			sim::Model& GetModel() { return *m_Model; }
 			cs::Measure& GetMeasure() { return *m_Measure; }
 
+			double max_duration;
+
 		protected:
 			virtual String GetMainSignature() override;
 
 		private:
-			double max_duration;
 			sim::ModelUP m_Model;
 			cs::Measure* m_Measure;
 			const PropNode& m_ModelProps;

@@ -4,12 +4,11 @@
     <ClCompile Include="..\..\scone\test\ExampleObjective.cpp" />
     <ClCompile Include="..\..\scone\test\stdafx.cpp" />
     <ClCompile Include="..\..\scone\test\main.cpp" />
+    <ClCompile Include="..\..\scone\test\Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\test\ExampleObjective.h" />
-    <ClInclude Include="..\..\scone\test\XmlParseTest.h" />
-    <ClInclude Include="..\..\scone\test\OptimizationTest.h" />
-    <ClInclude Include="..\..\scone\test\SimulationTest.h" />
     <ClInclude Include="..\..\scone\test\stdafx.h" />
+    <ClInclude Include="..\..\scone\test\Test.h" />
   </ItemGroup>
 </Project>
