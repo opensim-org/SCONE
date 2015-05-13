@@ -2,14 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="..\..\scone\test\ExampleObjective.cpp" />
-    <ClCompile Include="..\..\scone\test\test.cpp" />
     <ClCompile Include="..\..\scone\test\stdafx.cpp" />
+    <ClCompile Include="..\..\scone\test\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\test\ExampleObjective.h" />
     <ClInclude Include="..\..\scone\test\XmlParseTest.h" />
     <ClInclude Include="..\..\scone\test\OptimizationTest.h" />
-    <ClInclude Include="..\..\scone\test\SerializationTest.h" />
     <ClInclude Include="..\..\scone\test\SimulationTest.h" />
     <ClInclude Include="..\..\scone\test\stdafx.h" />
   </ItemGroup>
