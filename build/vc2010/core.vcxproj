@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\scone\core\Angle.h" />
     <ClInclude Include="..\..\scone\core\Profiler.h" />
     <ClInclude Include="..\..\scone\core\Storage.h" />
     <ClInclude Include="..\..\scone\core\Delayer.h" />

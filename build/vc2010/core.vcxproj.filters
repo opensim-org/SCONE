@@ -90,6 +90,9 @@
     <ClInclude Include="..\..\scone\core\Profiler.h">
       <Filter>Tools</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\Angle.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">
