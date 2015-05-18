@@ -3,6 +3,7 @@
 #include "CompositeMeasure.h"
 #include "../sim/Factories.h"
 #include <boost/foreach.hpp>
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -54,7 +55,7 @@ namespace scone
 
 		void CompositeMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
-			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 
 			BOOST_FOREACH( Term& t, m_Terms )
 			{

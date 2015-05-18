@@ -7,6 +7,7 @@
 #include "../core/Log.h"
 #include "../core/system.h"
 #include "Test.h"
+#include "../core/Profiler.h"
 
 using std::cout;
 using std::endl;
@@ -19,6 +20,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		String fname = GetSconeFolder( "output" ) + "020.f1024.G_3FP0_3RL.S10.D5/2264_39.857_7.188.par";
 		PlaybackTest( fname );
 		//SimulationTest();
+
+		std::cout << Profiler::GetGlobalInstance().GetReport();
 	}
 	catch (std::exception& e)
 	{

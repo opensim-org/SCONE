@@ -8,6 +8,7 @@
 #include "../sim/Model.h"
 #include "tools.h"
 #include "../sim/Area.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -48,7 +49,7 @@ namespace scone
 
 		void ReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 
 			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 			BOOST_FOREACH( ReflexUP& r, m_Reflexes )

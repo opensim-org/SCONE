@@ -70,6 +70,7 @@ namespace scone
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 
+			String integration_method;
 			double integration_accuracy;
 			double max_step_size;
 			String model_file;

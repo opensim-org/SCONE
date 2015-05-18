@@ -8,6 +8,8 @@
 #include "boost/foreach.hpp"
 #include <algorithm>
 
+#include "../core/Profiler.h"
+
 using std::endl;
 
 namespace scone
@@ -64,6 +66,7 @@ namespace scone
 
 		void Model::UpdateSensorDelayAdapters()
 		{
+			SCONE_PROFILE_SCOPE;
 			SCONE_CONDITIONAL_THROW( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
@@ -71,6 +74,24 @@ namespace scone
 			m_SensorDelayStorage.AddFrame( GetTime() );
 			BOOST_FOREACH( std::unique_ptr< SensorDelayAdapter >& sda, m_SensorDelayAdapters )
 				sda->UpdateStorage();
+		}
+
+		void Model::UpdateControlValues()
+		{
+			SCONE_PROFILE_SCOPE;
+
+			// reset actuator values
+			// TODO: not only muscles!
+			BOOST_FOREACH( MuscleUP& mus, GetMuscles() )
+				mus->ResetControlValue();
+
+			// update all controllers
+			BOOST_FOREACH( ControllerUP& con, GetControllers() )
+			{
+				con->UpdateControls( *this, GetTime() );
+				if ( con->GetTerminationRequest() )
+					SetTerminationRequest();
+			}
 		}
 	}
 }

@@ -26,6 +26,7 @@ namespace scone
 
 	void SimulationTest()
 	{
+		SCONE_PROFILE_SCOPE;
 		const double simulation_time = 0.2;
 
 		cs::RegisterFactoryTypes();
@@ -68,6 +69,9 @@ namespace scone
 
 	void PlaybackTest( const String& filename )
 	{
+		SCONE_PROFILE_SCOPE;
+		Profiler::GetGlobalInstance().Suspend();
+
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
@@ -80,18 +84,22 @@ namespace scone
 			bfs::current_path( config_path.parent_path() );
 
 		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-		const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
+		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+
+		// override some variables
+		objProp.Set( "max_duration", 3 );
+		objProp.Set( "Model.integration_accuracy", 0.001 );
+		objProp.Set( "Model.max_step_size", 0.001 );
+		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler") );
+
+		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
-		so.max_duration = 1.0;
 
+		Profiler::GetGlobalInstance().Activate();
 		double result;
 		Timer timer;
-
-		{
-			ScopedProfile scoped_profile( so.GetModel().GetProfiler(), __FUNCTION__ );
-			result = so.Evaluate();
-		}
+		result = so.Evaluate();
 
 		timer.Pause();
 
@@ -106,11 +114,8 @@ namespace scone
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
-		cout << "--- Profile report ---" << endl;
-		cout << so.GetModel().GetProfiler().GetReport();
-
 		// write results
-		//obj->WriteResults( bfs::path( filename ).replace_extension().string() );
+		obj->WriteResults( bfs::path( filename ).replace_extension().string() );
 	}
 
 	void DelayTest()

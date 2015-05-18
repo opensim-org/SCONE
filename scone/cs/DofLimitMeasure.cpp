@@ -3,6 +3,7 @@
 #include "DofLimitMeasure.h"
 #include "../sim/Model.h"
 #include <boost/foreach.hpp>
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -32,6 +33,7 @@ namespace scone
 
 		void DofLimitMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
+			SCONE_PROFILE_SCOPE;
 			BOOST_FOREACH( Limit& l, m_Limits )
 			{
 				if ( l.squared_range_penalty > 0.0 )

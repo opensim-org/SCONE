@@ -4,21 +4,31 @@
 
 namespace scone
 {
+	Profiler& Profiler::GetGlobalInstance()
+	{
+		// this should be thread-safe in c++14
+		// TODO: use thread local storage, or ensure thread safety
+		static Profiler g_GlobalInstance;
+		return g_GlobalInstance;
+	}
 
 	ScopedProfile::ScopedProfile( class Profiler& prof, const String& scope ) :
 	m_Profiler( prof )
 	{
-		m_Time = m_Profiler.StartMeasure( scope );
+		if ( m_Profiler.IsActive() )
+			m_Time = m_Profiler.StartMeasure( scope );
 	}
 
 	ScopedProfile::~ScopedProfile()
 	{
-		m_Profiler.StopMeasure( m_Time );
+		if ( m_Profiler.IsActive() )
+			m_Profiler.StopMeasure( m_Time );
 	}
 
 	Profiler::Profiler() :
 	m_Root( nullptr ),
-	m_Current( &m_Root )
+	m_Current( &m_Root ),
+	m_bActive( true )
 	{
 
 	}
@@ -46,6 +56,21 @@ namespace scone
 		PropNode pn;
 		m_Root.GetReport( pn );
 		return pn;
+	}
+
+	void Profiler::Activate()
+	{
+		m_bActive = true;
+	}
+
+	void Profiler::Suspend()
+	{
+		m_bActive = false;
+	}
+
+	bool Profiler::IsActive()
+	{
+		return m_bActive;
 	}
 
 	Profiler::Item::Item( Item* p ) :
@@ -82,6 +107,7 @@ namespace scone
 		TimeInSeconds topnode_time = topnode->inclusive_time;
 		TimeInSeconds children_time = 0.0;
 
+		// TODO: sort children first
 		for ( auto it = children.begin(); it != children.end(); ++it )
 			children_time += it->second->GetReport( pn.AddChild( it->first ) );
 

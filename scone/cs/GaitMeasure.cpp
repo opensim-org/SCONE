@@ -9,6 +9,7 @@
 #include "../sim/sim.h"
 #include "../sim/Muscle.h"
 #include "boost/format.hpp"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -47,6 +48,8 @@ namespace scone
 
 		void GaitMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
+			SCONE_PROFILE_SCOPE;
+
 			// check if this is a new step
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;

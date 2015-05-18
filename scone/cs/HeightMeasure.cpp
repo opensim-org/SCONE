@@ -3,6 +3,7 @@
 #include "HeightMeasure.h"
 #include "../sim/Model.h"
 #include "../core/Log.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -28,6 +29,8 @@ namespace scone
 
 		void HeightMeasure::UpdateControls( sim::Model& model, double timestamp )
 		{
+			SCONE_PROFILE_SCOPE;
+
 			// check if this is a new step
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
 				return;

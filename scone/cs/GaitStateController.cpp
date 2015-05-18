@@ -12,6 +12,7 @@
 #include "../sim/Body.h"
 #include "../sim/Factories.h"
 #include "../core/Log.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -81,7 +82,7 @@ namespace scone
 
 		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{

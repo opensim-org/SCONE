@@ -14,6 +14,7 @@
 #include "Tools.h"
 #include "Factories.h"
 #include "../sim/Area.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -85,7 +86,7 @@ namespace scone
 
 		void FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
-			ScopedProfile scoped_profile( model.GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );

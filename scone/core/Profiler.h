@@ -5,6 +5,16 @@
 #include <map>
 #include "Timer.h"
 
+//#define SCONE_ENABLE_PROFILING
+
+#ifdef SCONE_ENABLE_PROFILING
+	#define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
+	#define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg ) ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), scope_name_arg )
+#else 
+	#define SCONE_PROFILE_SCOPE
+	#define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg )
+#endif
+
 namespace scone
 {
 	class CORE_API ScopedProfile
@@ -12,7 +22,6 @@ namespace scone
 	public:
 		ScopedProfile( class Profiler& prof, const String& name );
 		~ScopedProfile();
-
 	private:
 		class Profiler& m_Profiler;
 		TimeInSeconds m_Time;
@@ -27,12 +36,17 @@ namespace scone
 		virtual ~Profiler();
 
 		PropNode GetReport();
+		void Activate();
+		void Suspend();
+		bool IsActive();
+
+		static Profiler& GetGlobalInstance();
 
 	private:
-
 		TimeInSeconds StartMeasure( const String& scope );
 		void StopMeasure( TimeInSeconds start_time );
 
+		// TODO: move to pImpl
 		struct Item {
 			Item( Item* parent );
 			void AddSample( TimeInSeconds time );
@@ -46,8 +60,8 @@ namespace scone
 		};
 
 		Item m_Root;
-
-		Timer m_Timer;
 		Item* m_Current;
+		Timer m_Timer;
+		bool m_bActive;
 	};
 }

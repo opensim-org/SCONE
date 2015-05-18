@@ -22,6 +22,7 @@
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include "../../core/system.h"
+#include "../../core/Profiler.h"
 #include "Dof_Simbody.h"
 
 using std::cout;
@@ -58,12 +59,15 @@ namespace scone
 		m_PrevTime( 0.0 ),
 		m_pProbe( 0 )
 		{
+			SCONE_PROFILE_SCOPE;
+
 			String model_file;
 			String state_init_file;
 			String probe_class;
 			double pre_control_simulation_time;
 
 			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
+			INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
 			INIT_PROPERTY( props, max_step_size, 0.001 );
 			INIT_PROPERTY_REQUIRED( props, model_file );
 			INIT_PROPERTY( props, state_init_file, String() );
@@ -104,7 +108,12 @@ namespace scone
 			g_SimBodyMutex.unlock();
 
 			// Create the integrator for the simulation.
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			if ( integration_method == "RungeKuttaMerson" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "SemiExplicitEuler" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
+			else SCONE_THROW( "Invalid integration method: " + GetQuoted( integration_method ) );
+
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
 			m_pTkIntegrator->resetAllStatistics();
@@ -114,6 +123,8 @@ namespace scone
 				ReadState( GetSconeFolder( "models" ) + state_init_file );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
+
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
 			m_pOsimManager->setWriteToStorage( true );
 			m_pOsimManager->setPerformAnalyses( false );
@@ -127,7 +138,7 @@ namespace scone
 				m_pOsimManager->integrate( GetTkState() );
 			}
 
-			// TODO: perhaps realize velocity from here, so that controllers have access valid properties
+			// TODO: perhaps realize velocity or dynamics here, so that controllers have access valid properties
 			// right now, this is not needed because each individual call realizes the correct state
 
 			// create and initialize controllers
@@ -140,9 +151,8 @@ namespace scone
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
 			UpdateSensorDelayAdapters();
 
-			// get initial controller values and equilibrate muscles
-			for ( auto iter = GetControllers().begin(); iter != GetControllers().end(); ++iter )
-				(*iter)->UpdateControls( *this, 0.0 );
+			// get initial controller values and inject results
+			UpdateControlValues();
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast< Muscle_Simbody* >( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), (*iter)->GetControlValue() );
 
@@ -228,7 +238,7 @@ namespace scone
 
 		void Model_Simbody::AdvanceSimulationTo( double time )
 		{
-			ScopedProfile scoped_profile( GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 			SCONE_ASSERT( m_pOsimManager );
 
 			// Integrate from initial time to final time and integrate
@@ -307,7 +317,7 @@ namespace scone
 
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
-			ScopedProfile scoped_profile( m_Model.GetProfiler(), __FUNCTION__ );
+			SCONE_PROFILE_SCOPE;
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
@@ -316,20 +326,12 @@ namespace scone
 				m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
 
 				// update SensorDelayAdapters at the beginning of each new step
+				// TODO: move this to an analyzer object (same for Measures)
 				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
 					m_Model.UpdateSensorDelayAdapters();
 
-				// reset actuator values
-				BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
-					mus->ResetControlValue();
-
-				// update all controllers
-				BOOST_FOREACH( ControllerUP& con, m_Model.GetControllers() )
-				{
-					con->UpdateControls( m_Model, m_Model.GetTime() );
-					if ( con->GetTerminationRequest() )
-						m_Model.SetTerminationRequest();
-				}
+				// update actuator values
+				m_Model.UpdateControlValues();
 
 				// inject actuator values into controls
 				SimTK::Vector controlValue( 1 );

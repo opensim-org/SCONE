@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Muscle.h"
 
+#include "../core/Profiler.h"
+
 namespace scone
 {
 	namespace sim
@@ -32,6 +34,7 @@ namespace scone
 
 		scone::Real Muscle::GetSensorValue( Index idx )
 		{
+			SCONE_PROFILE_SCOPE;
 			switch( idx )
 			{
 			case MuscleLengthSensor: return GetNormalizedFiberLength();
