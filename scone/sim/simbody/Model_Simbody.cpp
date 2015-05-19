@@ -329,6 +329,7 @@ namespace scone
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			SCONE_PROFILE_SCOPE;
+			//log::TraceF( "%03d %.8f", m_Model.GetIntegrationStep(), s.getTime() );
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
@@ -337,7 +338,7 @@ namespace scone
 				m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
 
 				// update SensorDelayAdapters at the beginning of each new step
-				// TODO: move this to an analyzer object (same for Measures)
+				// TODO: move this to an analyzer object or some other point
 				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
 				{
 					m_Model.UpdateSensorDelayAdapters();
@@ -355,9 +356,9 @@ namespace scone
 					BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
 					{
 						// This is an optimization that only works when there are only muscles
-						// OpenSim: addInControls is terribly inefficient, that's why we changed it
+						// OpenSim: addInControls is rather inefficient, that's why we changed it
 						// TODO: fix this into a generic version
-						controls[ idx++ ] = mus->GetControlValue();
+						controls[ idx++ ] += mus->GetControlValue();
 						//controlValue[ 0 ] = mus->GetControlValue();
 						//dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 					}

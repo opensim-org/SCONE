@@ -67,7 +67,7 @@ namespace scone
 		~Storage() { };
 
 		Frame& AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
-			SCONE_CONDITIONAL_THROW( !m_Data.empty() && time <= m_Data.back()->GetTime(), "Frame must have higher timestamp" );
+			SCONE_THROW_IF( !m_Data.empty() && time <= m_Data.back()->GetTime(), "Frame must have higher timestamp" );
 			m_Data.push_back( FrameUP( new Frame( *this, time, default_value ) ) );
 			m_InterpolationCache.clear(); // cached iterators have become invalid
 			return *m_Data.back();

@@ -354,7 +354,7 @@ namespace scone
 
 	void ResolveIncludedFiles( PropNode& props, const String& filename, const String& include_directive, int level )
 	{
-		SCONE_CONDITIONAL_THROW( level >= 100, "Exceeded maximum include level, check for loops in includes" );
+		SCONE_THROW_IF( level >= 100, "Exceeded maximum include level, check for loops in includes" );
 
 		for ( PropNode::ChildIter iter = props.Begin(); iter != props.End(); )
 		{
@@ -372,7 +372,7 @@ namespace scone
 				// merge or include, depending on options
 				if ( merge_children )
 				{
-					SCONE_ASSERT( other.GetChildren().size() == 1);
+					SCONE_ASSERT( other.GetChildren().size() == 1 );
 					props.Merge( *other.Begin()->second, false );
 					iter = props.Begin(); // reset the iterator, which has become invalid after merge
 				}

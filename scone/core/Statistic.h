@@ -31,7 +31,7 @@ namespace scone
 			if ( m_nSamples == 0 )
 			{
 				// first sample is special case when interpolating
-				SCONE_CONDITIONAL_THROW( m_InterpolationMode == LinearInterpolation && timestamp != 0.0, "First timestamp needs to be 0 when using interpolation" );
+				SCONE_THROW_IF( m_InterpolationMode == LinearInterpolation && timestamp != 0.0, "First timestamp needs to be 0 when using interpolation" );
 				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
 			}
 

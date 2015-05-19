@@ -17,7 +17,7 @@ namespace scone
 
 		void OPT_API PerformOptimization( int argc, char* argv[] )
 		{
-			SCONE_CONDITIONAL_THROW( argc < 2, "No config file argument provided" );
+			SCONE_THROW_IF( argc < 2, "No config file argument provided" );
 
 			// get config file
 			String config_file( argv[ 1 ] );

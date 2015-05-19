@@ -78,6 +78,7 @@ namespace scone
 
 	void Profiler::Reset()
 	{
+		SCONE_ASSERT_MSG( m_Current == &m_Root, "Cannot reset while a ScopedProfile is active" );
 		m_Root.children.clear();
 	}
 

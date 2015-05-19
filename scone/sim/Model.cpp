@@ -50,7 +50,7 @@ namespace scone
 		void Model::UpdateSensorDelayAdapters()
 		{
 			SCONE_PROFILE_SCOPE;
-			SCONE_CONDITIONAL_THROW( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
+			SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
 			// add a new frame and update

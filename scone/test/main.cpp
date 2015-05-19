@@ -28,7 +28,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		log::Critical( e.what() );
 	}
 
-	//_getch();
-
+#ifdef _DEBUG
+	_getch();
+#endif
 	return 0;
 }

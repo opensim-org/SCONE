@@ -69,13 +69,11 @@ namespace scone
 
 	void PlaybackTest( const String& filename )
 	{
-		SCONE_PROFILE_SCOPE;
-		Profiler::GetGlobalInstance().Suspend();
+		log::SetLevel( log::TraceLevel );
 
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
-		log::SetLevel( log::DebugLevel );
 
 		opt::ParamSet par( filename );
 
@@ -87,16 +85,17 @@ namespace scone
 		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
 
 		// override some variables
-		objProp.Set( "max_duration", 5 );
-		//objProp.Set( "Model.integration_accuracy", 1e-3 );
-		//objProp.Set( "Model.max_step_size", 0.01 );
-		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+		objProp.Set( "max_duration", 3 );
+		objProp.Set( "Model.integration_accuracy", 1e-3 );
+		objProp.Set( "Model.max_step_size", 0.01 );
+		objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
 
-		Profiler::GetGlobalInstance().Activate();
+		Profiler::GetGlobalInstance().Reset();
+
 		double result;
 		Timer timer;
 		result = so.Evaluate();

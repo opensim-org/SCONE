@@ -42,7 +42,7 @@ namespace scone
 
 				// first cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
 				Measure* m = dynamic_cast< Measure* >( sim::CreateController( it->second->GetChild( "Measure" ), par, model, area ).release() );
-				SCONE_CONDITIONAL_THROW( m == nullptr, "Could not cast Controller* to Measure*" );
+				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
 				t.measure = MeasureUP( m );
 
 				m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member

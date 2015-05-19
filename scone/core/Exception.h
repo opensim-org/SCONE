@@ -15,20 +15,22 @@ namespace scone
 }
 
 // assertion and exceptions
-#define SCONE_THROW_NOT_IMPLEMENTED throw scone::LogicException(""__FUNCTION__"(): Function not implemented");
+#define SCONE_THROW_NOT_IMPLEMENTED throw scone::LogicException( __FUNCTION__"(): Function not implemented");
 
 #define SCONE_ASSERT_DEBUG_ALWAYS
 
-#if defined(_DEBUG) || defined(SCONE_ASSERT_ALWAYS)
-#define SCONE_ASSERT_DEBUG( expression ) \
-	if (!(expression)) throw scone::LogicException(""__FUNCTION__"(): Assertion Failure: "#expression"" );
+#if defined(_DEBUG) || defined(SCONE_ASSERT_DEBUG_ALWAYS)
+	#define SCONE_ASSERT_DEBUG( expression ) \
+		if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression );
 #else
-#define SCONE_ASSERT_DEBUG( expression )
+	#define SCONE_ASSERT_DEBUG( expression )
 #endif
 
 #define SCONE_ASSERT( expression ) \
-	if (!(expression)) throw scone::RuntimeException(""__FUNCTION__"(): Assertion Failure: "#expression"" );
+	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression );
 
-#define SCONE_THROW( message ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (message) )
+#define SCONE_ASSERT_MSG( expression, message ) \
+	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression" ("message")" );
 
-#define SCONE_CONDITIONAL_THROW( _condition_, _message_ ) { if ( _condition_ ) throw scone::RuntimeException(std::string(""__FUNCTION__"(): ") + (_message_) ); }
+#define SCONE_THROW( message ) throw scone::RuntimeException(__FUNCTION__"(): " + std::string( message ) )
+#define SCONE_THROW_IF( _condition_, _message_ ) { if ( _condition_ ) throw scone::RuntimeException( __FUNCTION__"(): " + std::string( _message_ ) ); }

@@ -121,7 +121,7 @@ namespace scone
 		void Optimizer::InitOutputFolder()
 		{
 			m_OutputFolder = GetSconeFolder( "output" ) + GetSignature() + "/";
-			SCONE_CONDITIONAL_THROW( exists( path( m_OutputFolder ) ), "Output folder already exists: " + GetQuoted( m_OutputFolder ) );
+			SCONE_THROW_IF( exists( path( m_OutputFolder ) ), "Output folder already exists: " + GetQuoted( m_OutputFolder ) );
 			create_directories( path( m_OutputFolder ) );
 			log::Info( "Output: " + m_OutputFolder );
 		}

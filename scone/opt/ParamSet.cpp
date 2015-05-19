@@ -125,7 +125,7 @@ namespace scone
 		void ParamSet::Write( const String& filename ) const
 		{
 			std::ofstream ofstr( filename );
-			SCONE_CONDITIONAL_THROW( !ofstr.good(), "Error opening file: " + filename );
+			SCONE_THROW_IF( !ofstr.good(), "Error opening file: " + filename );
 			ToStream( ofstr );
 		}
 
@@ -133,7 +133,7 @@ namespace scone
 		{
 			log::Debug( "Reading " + GetQuoted( filename ) );
 			std::ifstream ifstr( filename );
-			SCONE_CONDITIONAL_THROW( !ifstr.good(), "Error opening file: " + filename );
+			SCONE_THROW_IF( !ifstr.good(), "Error opening file: " + filename );
 			FromStream( ifstr, true );
 		}
 

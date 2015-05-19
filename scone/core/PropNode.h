@@ -120,7 +120,7 @@ namespace scone
 		const PropNode& GetChild( const String& key ) const
 		{
 			const PropNode* p = GetChildPtr( key );
-			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: \"" + key + "\"" );
+			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
 			Touch();
 			return *p;
 		}
@@ -129,7 +129,7 @@ namespace scone
 		PropNode& GetChild( const String& key )
 		{
 			PropNode* p = GetChildPtr( key );
-			SCONE_CONDITIONAL_THROW( p == nullptr, "Could not find key: \"" + key + "\"" );
+			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
 			Touch();
 			return *p;
 		}

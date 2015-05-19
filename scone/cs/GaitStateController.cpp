@@ -61,7 +61,7 @@ namespace scone
 						// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
 						for ( int i = 0; i < LegInfo::StateCount; ++i )
 							cc.state_mask.set( i, instance_states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
-						SCONE_CONDITIONAL_THROW( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
+						SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
 
 						// initialize leg index
 						cc.leg_index = legIdx;
