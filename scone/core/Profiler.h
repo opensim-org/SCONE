@@ -17,12 +17,10 @@
 
 namespace scone
 {
-	class Profiler;
-
 	class CORE_API ScopedProfile
 	{
 	public:
-		ScopedProfile( Profiler& prof, const String& name );
+		ScopedProfile( class Profiler& prof, const String& name );
 		~ScopedProfile();
 
 	private:
@@ -34,7 +32,6 @@ namespace scone
 	{
 	public:
 		friend class ScopedProfile;
-		//typedef LONGLONG Ticks;
 
 		Profiler();
 		virtual ~Profiler();
@@ -60,6 +57,9 @@ namespace scone
 			long long peak_time;
 			Item* parent;
 			std::map< String, std::unique_ptr< Item > > children;
+		private:
+			Item( const Item& other );
+			Item operator=( const Item& other );
 		};
 
 		Item m_Root;
