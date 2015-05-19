@@ -131,7 +131,7 @@ namespace scone
 
 		void ParamSet::Read( const String& filename )
 		{
-			log::Debug( "Reading parameters from file: " + GetQuoted( filename ) );
+			log::Debug( "Reading " + GetQuoted( filename ) );
 			std::ifstream ifstr( filename );
 			SCONE_CONDITIONAL_THROW( !ifstr.good(), "Error opening file: " + filename );
 			FromStream( ifstr, true );

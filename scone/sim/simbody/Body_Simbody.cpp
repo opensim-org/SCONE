@@ -86,7 +86,6 @@ namespace scone
 		void Body_Simbody::ConnectContactForce( const String& force_name )
 		{
 			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( force_name, 0 );
-			std::cout << force_name << ": " << m_ForceIndex << std::endl;
 		}
 	}
 }

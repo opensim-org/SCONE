@@ -14,8 +14,7 @@ namespace scone
 			GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~GaitMeasure();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
-
+			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
 			void UpdateMinVelocityMeasure( sim::Model &model, double timestamp );
 
 			virtual double GetResult( sim::Model& model ) override;

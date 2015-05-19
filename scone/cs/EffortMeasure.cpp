@@ -33,15 +33,18 @@ namespace scone
 		{
 		}
 
-		void EffortMeasure::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult EffortMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
-			// check if this is a new step
+
+			// make sure this is a new step
 			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
-				return;
+				return NoUpdate;
 
 			double current_effort = GetEnergy( model );
 			m_Energy.AddSample( timestamp, current_effort );
+
+			return SuccessfulUpdate;
 		}
 
 		double EffortMeasure::GetResult( sim::Model& model )

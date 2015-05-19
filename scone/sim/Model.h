@@ -50,7 +50,9 @@ namespace scone
 
 			/// controller access
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
+
 			void UpdateControlValues();
+			void UpdateAnalyses();
 
 			/// leg access
 			size_t GetLegCount() { return m_Legs.size(); }

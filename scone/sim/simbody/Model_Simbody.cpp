@@ -16,7 +16,6 @@
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
 #include "boost/foreach.hpp"
-#include "Leg_Simbody.h"
 #include "../Factories.h"
 
 #include <boost/thread.hpp>
@@ -153,6 +152,7 @@ namespace scone
 			// update SensorDelayAdapters here because they may be needed by controllers
 			// muscles are first equilibrated to ensure they contain valid data
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
+			UpdateAnalyses();
 			UpdateSensorDelayAdapters();
 
 			// get initial controller values and inject results
@@ -339,7 +339,10 @@ namespace scone
 				// update SensorDelayAdapters at the beginning of each new step
 				// TODO: move this to an analyzer object (same for Measures)
 				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+				{
 					m_Model.UpdateSensorDelayAdapters();
+					m_Model.UpdateAnalyses();
+				}
 
 				// update actuator values
 				m_Model.UpdateControlValues();

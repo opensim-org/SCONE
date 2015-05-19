@@ -80,7 +80,7 @@ namespace scone
 		{
 		}
 
-		void GaitStateController::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -96,6 +96,8 @@ namespace scone
 				if ( cc->active )
 					cc->controller->UpdateControls( model, timestamp - cc->active_since );
 			}
+
+			return SuccessfulUpdate;
 		}
 
 		void GaitStateController::UpdateLegStates( sim::Model& model, double timestamp )

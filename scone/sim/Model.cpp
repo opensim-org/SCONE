@@ -86,12 +86,24 @@ namespace scone
 				mus->ResetControlValue();
 
 			// update all controllers
+			bool terminate = false;
 			BOOST_FOREACH( ControllerUP& con, GetControllers() )
-			{
-				con->UpdateControls( *this, GetTime() );
-				if ( con->GetTerminationRequest() )
-					SetTerminationRequest();
-			}
+				terminate |= con->UpdateControls( *this, GetTime() ) == Controller::RequestTermination;
+
+			if ( terminate )
+				SetTerminationRequest();
+		}
+
+		void Model::UpdateAnalyses()
+		{
+			SCONE_PROFILE_SCOPE;
+
+			bool terminate = false;
+			BOOST_FOREACH( ControllerUP& con, GetControllers() )
+				terminate |= con->UpdateAnalysis( *this, GetTime() ) == sim::Controller::RequestTermination;
+
+			if ( terminate )
+				SetTerminationRequest();
 		}
 	}
 }

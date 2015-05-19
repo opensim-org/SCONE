@@ -84,7 +84,7 @@ namespace scone
 			}
 		}
 
-		void FeedForwardController::UpdateControls( sim::Model& model, double time )
+		sim::Controller::UpdateResult FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -111,6 +111,8 @@ namespace scone
 					model.GetMuscle( ai.muscle_idx ).AddControlValue( funcresults[ ai.function_idx ] );
 				}
 			}
+
+			return SuccessfulUpdate;
 		}
 
 		scone::String FeedForwardController::GetMainSignature()

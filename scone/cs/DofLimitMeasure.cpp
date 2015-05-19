@@ -31,9 +31,10 @@ namespace scone
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 		}
 
-		void DofLimitMeasure::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
+
 			BOOST_FOREACH( Limit& l, m_Limits )
 			{
 				if ( l.squared_range_penalty > 0.0 )
@@ -48,6 +49,8 @@ namespace scone
 					l.penalty.AddSample( timestamp, fp );
 				}
 			}
+
+			return SuccessfulUpdate;
 		}
 
 		double DofLimitMeasure::GetResult( sim::Model& model )

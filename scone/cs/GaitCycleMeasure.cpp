@@ -26,10 +26,6 @@ namespace scone
 
 		}
 
-		void GaitCycleMeasure::UpdateControls( sim::Model& model, double timestamp )
-		{
-		}
-
 		double GaitCycleMeasure::GetResult( sim::Model& model )
 		{
 			return GetStateSimilarity( model.GetState() );

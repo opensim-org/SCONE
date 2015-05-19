@@ -46,13 +46,12 @@ namespace scone
 		{
 		}
 
-		void GaitMeasure::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult GaitMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
-			// check if this is a new step
-			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
-				return;
+			// make sure this is a new step
+			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
 			// check termination
 			bool terminate = false;
@@ -66,8 +65,9 @@ namespace scone
 			if ( terminate )
 			{
 				log::TraceF( "%.3f: Terminating simulation", timestamp );
-				SetTerminationRequest();
+				return RequestTermination;
 			}
+			else return SuccessfulUpdate;
 		}
 
 		double GaitMeasure::GetResult( sim::Model& model )

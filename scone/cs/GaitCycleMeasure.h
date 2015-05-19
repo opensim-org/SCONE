@@ -14,7 +14,6 @@ namespace scone
 			GaitCycleMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~GaitCycleMeasure();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
 			bool use_half_cycle;

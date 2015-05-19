@@ -16,7 +16,7 @@ namespace scone
 			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012 };
 			static StringMap< EnergyMeasureType > m_MeasureNames;
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
 			EnergyMeasureType measure_type;

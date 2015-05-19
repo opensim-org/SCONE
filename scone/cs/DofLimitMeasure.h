@@ -16,7 +16,7 @@ namespace scone
 			DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~DofLimitMeasure();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual PropNode GetReport();
 

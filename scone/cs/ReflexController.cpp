@@ -47,13 +47,15 @@ namespace scone
 		{
 		}
 
-		void ReflexController::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult ReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
 			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
 				r->ComputeControls( timestamp );
+
+			return SuccessfulUpdate;
 		}
 
 		scone::String ReflexController::GetMainSignature()

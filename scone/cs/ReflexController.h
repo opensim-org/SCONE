@@ -14,7 +14,7 @@ namespace scone
 			ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 			virtual ~ReflexController();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
 			virtual String GetMainSignature() override;
 
 		private:

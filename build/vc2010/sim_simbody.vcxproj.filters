@@ -18,9 +18,6 @@
     <ClCompile Include="..\..\scone\sim\simbody\Joint_Simbody.cpp">
       <Filter>API</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\simbody\Leg_Simbody.cpp">
-      <Filter>API</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\sim\simbody\Model_Simbody.cpp">
       <Filter>API</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
       <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Joint_Simbody.h">
-      <Filter>API</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\simbody\Leg_Simbody.h">
       <Filter>API</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\simbody\Model_Simbody.h">

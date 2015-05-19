@@ -27,13 +27,12 @@ namespace scone
 			else m_pTargetBody = nullptr;
 		}
 
-		void HeightMeasure::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
-			// check if this is a new step
-			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
-				return;
+			// make sure this is a new step
+			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
@@ -49,7 +48,7 @@ namespace scone
 
 			// check height
 			if ( pos < termination_height * m_Height.GetInitial() )
-				SetTerminationRequest();
+				return RequestTermination;
 
 			// check if there's a velocity flip
 			if ( terminate_on_peak )
@@ -57,8 +56,10 @@ namespace scone
 				if ( timestamp > 0.1 && vel > 0.1 )
 					m_Upward = true;
 				if ( m_Upward && vel < 0.0 )
-					SetTerminationRequest();
+					return RequestTermination;
 			}
+
+			return SuccessfulUpdate;
 		}
 
 		double HeightMeasure::GetResult( sim::Model& model )

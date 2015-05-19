@@ -14,7 +14,7 @@ namespace scone
 			CompositeMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~CompositeMeasure();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual PropNode GetReport() override;
 

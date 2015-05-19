@@ -22,7 +22,7 @@ namespace scone
 			FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 			virtual ~FeedForwardController() { };
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
 			bool UseModes() { return number_of_modes > 0; }
 
 			// a signature describing the controller

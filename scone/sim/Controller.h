@@ -15,10 +15,10 @@ namespace scone
 			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual ~Controller();
 
-			virtual void UpdateControls( sim::Model& model, double timestamp ) = 0;
+			enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };
 
-			void SetTerminationRequest( bool value = true ) { m_TerminationRequest = value; }
-			bool GetTerminationRequest() { return m_TerminationRequest; }
+			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) { return NoUpdate; }
+			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) { return NoUpdate; }
 
 		private:
 			bool m_TerminationRequest;

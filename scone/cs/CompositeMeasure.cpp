@@ -53,16 +53,15 @@ namespace scone
 		{
 		}
 
-		void CompositeMeasure::UpdateControls( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
+			bool terminate = false;
 			BOOST_FOREACH( Term& t, m_Terms )
-			{
-				t.measure->UpdateControls( model, timestamp );
-				if ( t.measure->GetTerminationRequest() )
-					SetTerminationRequest();
-			}
+				terminate |= t.measure->UpdateAnalysis( model, timestamp ) == RequestTermination;
+
+			return terminate ? RequestTermination : SuccessfulUpdate;
 		}
 
 		double CompositeMeasure::GetResult( sim::Model& model )
