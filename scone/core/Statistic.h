@@ -35,6 +35,8 @@ namespace scone
 				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
 			}
 
+			SCONE_ASSERT( timestamp >= m_PrevTime );
+
 			// update min / max
 			m_Highest = std::max( m_Highest, value );
 			m_Lowest = std::min( m_Lowest, value );
