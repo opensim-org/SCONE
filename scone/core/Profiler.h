@@ -17,20 +17,24 @@
 
 namespace scone
 {
+	class Profiler;
+
 	class CORE_API ScopedProfile
 	{
 	public:
-		ScopedProfile( class Profiler& prof, const String& name );
+		ScopedProfile( Profiler& prof, const String& name );
 		~ScopedProfile();
+
 	private:
 		class Profiler& m_Profiler;
-		TimeInSeconds m_Time;
+		long long m_Time;
 	};
 
 	class CORE_API Profiler
 	{
 	public:
 		friend class ScopedProfile;
+		//typedef LONGLONG Ticks;
 
 		Profiler();
 		virtual ~Profiler();
@@ -39,29 +43,28 @@ namespace scone
 		void Activate();
 		void Suspend();
 		bool IsActive();
-
 		static Profiler& GetGlobalInstance();
 
 	private:
-		TimeInSeconds StartMeasure( const String& scope );
-		void StopMeasure( TimeInSeconds start_time );
+		long long StartMeasure( const String& scope );
+		void StopMeasure( long long start_time );
 
 		// TODO: move to pImpl
 		struct Item {
 			Item( Item* parent );
-			void AddSample( TimeInSeconds time );
+			void AddSample( long long duration );
 			Item& GetOrAddChild( const String& scope );
-			TimeInSeconds GetReport( PropNode& pn );
+			long long GetReport( PropNode& pn );
 			size_t num_samples;
-			TimeInSeconds inclusive_time;
-			TimeInSeconds peak_time;
+			long long inclusive_time;
+			long long peak_time;
 			Item* parent;
 			std::map< String, std::unique_ptr< Item > > children;
 		};
 
 		Item m_Root;
 		Item* m_Current;
-		Timer m_Timer;
 		bool m_bActive;
 	};
+
 }
