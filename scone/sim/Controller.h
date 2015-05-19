@@ -18,7 +18,7 @@ namespace scone
 			enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };
 
 			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) { return NoUpdate; }
-			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) { return NoUpdate; }
+			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) { return NoUpdate; }
 
 		private:
 			bool m_TerminationRequest;

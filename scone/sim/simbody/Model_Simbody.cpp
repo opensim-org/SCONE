@@ -258,7 +258,7 @@ namespace scone
 
 		}
 
-		String Model_Simbody::WriteStateHistory( const String& file )
+		String Model_Simbody::WriteStateHistory( const String& file ) const
 		{
 			boost::filesystem::path path( file + ".sto" );
 			m_pOsimManager->getStateStorage().setName( ( path.parent_path().filename() / path.stem() ).string() );
@@ -266,22 +266,22 @@ namespace scone
 			return path.string();
 		}
 
-		Vec3 Model_Simbody::GetComPos()
+		Vec3 Model_Simbody::GetComPos() const
 		{
 			return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 		}
 		
-		Vec3 Model_Simbody::GetComVel()
+		Vec3 Model_Simbody::GetComVel() const
 		{
 			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 
-		Real Model_Simbody::GetMass()
+		Real Model_Simbody::GetMass() const
 		{
 			return m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 		}
 
-		scone::Vec3 Model_Simbody::GetGravity()
+		scone::Vec3 Model_Simbody::GetGravity() const
 		{
 			return ToVec3( m_pOsimModel->getGravity() );
 		}
@@ -373,7 +373,7 @@ namespace scone
 			}
 		}
 
-		bool Model_Simbody::HasGroundContact()
+		bool Model_Simbody::HasGroundContact() const
 		{
 			// total vertical force applied to both feet
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
@@ -390,22 +390,22 @@ namespace scone
 			m_pOsimManager->halt();
 		}
 
-		double Model_Simbody::GetTime()
+		double Model_Simbody::GetTime() const
 		{
 			return GetTkState().getTime();
 		}
 
-		int Model_Simbody::GetIntegrationStep()
+		int Model_Simbody::GetIntegrationStep() const
 		{
 			return GetTkIntegrator().getNumStepsTaken();
 		}
 
-		int Model_Simbody::GetPreviousIntegrationStep()
+		int Model_Simbody::GetPreviousIntegrationStep() const
 		{
 			return m_PrevIntStep;
 		}
 
-		double Model_Simbody::GetPreviousTime()
+		double Model_Simbody::GetPreviousTime() const
 		{
 			return m_PrevTime;
 		}
@@ -429,13 +429,13 @@ namespace scone
 			return str;
 		}
 
-		scone::Real Model_Simbody::GetTotalEnergyConsumption()
+		scone::Real Model_Simbody::GetTotalEnergyConsumption() const
 		{
 			SCONE_ASSERT( m_pProbe != nullptr );
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		}
 
-		std::map< String, double > Model_Simbody::GetState()
+		std::map< String, double > Model_Simbody::GetState() const
 		{
 			auto values = GetOsimModel().getStateValues( GetTkState() );
 			auto names = GetOsimModel().getStateVariableNames();
@@ -448,12 +448,12 @@ namespace scone
 			return state;
 		}
 
-		double Model_Simbody::GetSimulationEndTime()
+		double Model_Simbody::GetSimulationEndTime() const
 		{
 			return m_pOsimManager->getFinalTime();
 		}
 
-		scone::String Model_Simbody::GetMainSignature()
+		scone::String Model_Simbody::GetMainSignature() const
 		{
 			return GetOsimModel().getName();
 		}

@@ -58,13 +58,13 @@ namespace scone
 			return SuccessfulUpdate;
 		}
 
-		scone::String ReflexController::GetMainSignature()
+		scone::String ReflexController::GetMainSignature() const
 		{
 			String str = "R"; //GetStringF( "r%d", m_Reflexes.size() );
 
 			// count reflex types
 			int l = 0, v = 0, f = 0;
-			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
+			BOOST_FOREACH( const ReflexUP& r, m_Reflexes )
 			{
 				if ( r->length_gain != 0.0 ) ++l;
 				if ( r->velocity_gain != 0.0 ) ++v;

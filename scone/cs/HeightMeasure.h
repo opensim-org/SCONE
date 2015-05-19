@@ -14,11 +14,11 @@ namespace scone
 			HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~HeightMeasure() { };
 
-			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
 		protected:
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 		private:
 			String target_body;

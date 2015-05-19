@@ -26,29 +26,12 @@ namespace scone
 		{
 		}
 
-		Body& Model::FindBody( const String& name )
-		{
-			auto it = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return body->GetName() == name; } );
-			if ( it == m_Bodies.end() )
-				SCONE_THROW( "Could not find body: " + name );
-
-			return **it;
-		}
-
 		std::ostream& Model::ToStream( std::ostream& str ) const
 		{
 			str << "Links:" << endl;
 			str << GetRootLink().ToString();
 
 			return str;
-		}
-
-		scone::Index Model::FindBodyIndex( const String& name )
-		{
-			auto it = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return body->GetName() == name; } );
-			if ( it == m_Bodies.end() )
-				return NoIndex;
-			else return it - m_Bodies.begin();
 		}
 
 		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )

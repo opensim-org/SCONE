@@ -15,6 +15,7 @@ namespace scone
 			virtual ~Optimizer();
 
 			Objective& GetObjective() { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
+			const Objective& GetObjective() const { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
 			virtual void Run() = 0;
 
 			/// get the results output folder (creates it if it doesn't exist)
@@ -31,7 +32,7 @@ namespace scone
 
 			void ManageFileOutput( double fitness, const std::vector< String >& files );
 
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 			size_t max_threads;
 			int thread_priority;

@@ -14,8 +14,8 @@ namespace scone
 			GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~GaitMeasure();
 
-			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
-			void UpdateMinVelocityMeasure( sim::Model &model, double timestamp );
+			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+			void UpdateMinVelocityMeasure( const sim::Model &model, double timestamp );
 
 			virtual double GetResult( sim::Model& model ) override;
 
@@ -27,16 +27,16 @@ namespace scone
 			Real contact_force_threshold;
 
 		protected:
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 		private:
 			Statistic< double > m_Energy;
 
 			// settings
 			std::vector< sim::Body* > m_GaitBodies;
-			Real GetGaitDist( sim::Model &model );
+			Real GetGaitDist( const sim::Model &model );
 
-			bool HasNewFootContact( sim::Model& model );
+			bool HasNewFootContact( const sim::Model& model );
 
 			std::vector< bool > m_PrevContactState;
 

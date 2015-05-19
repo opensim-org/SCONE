@@ -53,7 +53,7 @@ namespace scone
 		{
 		}
 
-		sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -91,7 +91,7 @@ namespace scone
 			return m_Report;
 		}
 
-		scone::String CompositeMeasure::GetMainSignature()
+		scone::String CompositeMeasure::GetMainSignature() const
 		{
 			// for now, just return the first one
 			return m_Terms.front().measure->GetSignature();

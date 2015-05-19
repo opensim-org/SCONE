@@ -26,7 +26,7 @@ namespace scone
 	{
 	}
 
-	scone::String HasSignature::GetSignature()
+	scone::String HasSignature::GetSignature() const
 	{
 		return signature_prefix + GetMainSignature() + signature_postfix;
 	}

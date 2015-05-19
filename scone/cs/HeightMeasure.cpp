@@ -23,11 +23,11 @@ namespace scone
 
 			// find target body
 			if ( !target_body.empty() )
-				m_pTargetBody = &model.FindBody( target_body );
+				m_pTargetBody = &FindNamed( model.GetBodies(), target_body );
 			else m_pTargetBody = nullptr;
 		}
 
-		sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -69,7 +69,7 @@ namespace scone
 			else return 100 * ( m_Height.GetHighest() - m_Height.GetInitial() );
 		}
 
-		scone::String HeightMeasure::GetMainSignature()
+		scone::String HeightMeasure::GetMainSignature() const
 		{
 			return "Jump";
 		}

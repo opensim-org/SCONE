@@ -31,7 +31,7 @@ namespace scone
 			double max_duration;
 
 		protected:
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 		private:
 			sim::ModelUP m_Model;

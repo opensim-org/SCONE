@@ -195,12 +195,12 @@ namespace scone
 			}
 		}
 
-		scone::String GaitStateController::GetMainSignature()
+		scone::String GaitStateController::GetMainSignature() const
 		{
 			String s = "G";
 
 			std::map< String, int > controllers;
-			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
+			BOOST_FOREACH( const ConditionalControllerUP& cc, m_ConditionalControllers )
 				controllers[ cc->controller->GetSignature() ] += 1;
 
 			// output number of controllers per leg

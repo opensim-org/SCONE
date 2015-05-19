@@ -31,7 +31,7 @@ namespace scone
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 		}
 
-		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -65,7 +65,7 @@ namespace scone
 			return result;
 		}
 
-		scone::String DofLimitMeasure::GetMainSignature()
+		scone::String DofLimitMeasure::GetMainSignature() const
 		{
 			return "DL";
 		}

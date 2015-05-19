@@ -33,37 +33,39 @@ namespace scone
 			Model_Simbody( const PropNode& props, opt::ParamSet& par );
 			virtual ~Model_Simbody();
 
-			virtual Vec3 GetComPos() override;
-			virtual Vec3 GetComVel() override;
-			virtual Real GetMass() override;
-			virtual Vec3 GetGravity() override;
-			virtual bool HasGroundContact() override;
-			virtual Real GetTotalEnergyConsumption() override;
+			virtual Vec3 GetComPos() const override;
+			virtual Vec3 GetComVel() const override;
+			virtual Real GetMass() const override;
+			virtual Vec3 GetGravity() const override;
+			virtual bool HasGroundContact() const override;
+			virtual Real GetTotalEnergyConsumption() const override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
-			virtual double GetSimulationEndTime() override;
-			virtual String WriteStateHistory( const String& file_base ) override;
+			virtual double GetSimulationEndTime() const override;
+			virtual String WriteStateHistory( const String& file_base ) const override;
 
 			virtual void SetTerminationRequest() override;
 
-			virtual std::map< String, double > GetState() override;
-			virtual double GetTime() override;
-			virtual double GetPreviousTime() override;
-			virtual int GetIntegrationStep() override;
-			virtual int GetPreviousIntegrationStep() override;
+			virtual State GetState() const override;
+			virtual double GetTime() const override;
+			virtual double GetPreviousTime() const override;
+			virtual int GetIntegrationStep() const override;
+			virtual int GetPreviousIntegrationStep() const override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
 			const OpenSim::Model& GetOsimModel() const { return *m_pOsimModel; }
 			SimTK::Integrator& GetTkIntegrator() { return *m_pTkIntegrator; }
+			const SimTK::Integrator& GetTkIntegrator() const { return *m_pTkIntegrator; }
 			SimTK::State& GetTkState() { return *m_pTkState; }
+			const SimTK::State& GetTkState() const { return *m_pTkState; }
 			void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
 
 			virtual const String& GetName() const override;
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		protected:
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 		private:
 			void ReadState( const String& file );

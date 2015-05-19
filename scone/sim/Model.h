@@ -28,57 +28,61 @@ namespace scone
 			virtual ~Model();
 
 			/// muscle access
-			size_t GetMuscleCount() { return m_Muscles.size(); }
+			size_t GetMuscleCount() const { return m_Muscles.size(); }
 			Muscle& GetMuscle( size_t idx ) { return *m_Muscles[ idx ]; }
 			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
+			const std::vector< MuscleUP >& GetMuscles() const { return m_Muscles; }
 
 			/// body access
-			size_t GetBodyCount() { return m_Bodies.size(); }
-			Body& GetBody( size_t idx ) { return *m_Bodies[ idx ]; }
-			Body& FindBody( const String& name );
-			Index FindBodyIndex( const String& name );
+			size_t GetBodyCount() const { return m_Bodies.size(); }
+			Body& GetBody( size_t idx ) const { return *m_Bodies[ idx ]; }
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
+			const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
 
 			/// joint access
 			std::vector< JointUP >& GetJoints() { return m_Joints; }
+			const std::vector< JointUP >& GetJoints() const { return m_Joints; }
 
 			/// dof access
 			std::vector< DofUP >& GetDofs() { return m_Dofs; }
+			const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 			/// link access
 			const Link& GetRootLink() const { return *m_RootLink; }
 
 			/// controller access
 			std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
+			const std::vector< ControllerUP >& GetControllers() const { return m_Controllers; }
 
 			void UpdateControlValues();
 			void UpdateAnalyses();
 
 			/// leg access
-			size_t GetLegCount() { return m_Legs.size(); }
-			Leg& GetLeg( size_t idx ) { return *m_Legs[ idx ]; }
+			size_t GetLegCount() const { return m_Legs.size(); }
+			const Leg& GetLeg( size_t idx ) const { return *m_Legs[ idx ]; }
 			std::vector< LegUP >& GetLegs() { return m_Legs; }
+			const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 
 			/// Get simulation info
-			virtual double GetTime() = 0;
-			virtual State GetState() = 0;
-			virtual int GetIntegrationStep() = 0;
-			virtual int GetPreviousIntegrationStep() = 0;
-			virtual double GetPreviousTime() = 0;
-			virtual double GetDeltaTime() { return GetTime() - GetPreviousTime(); }
+			virtual double GetTime() const = 0;
+			virtual State GetState() const = 0;
+			virtual int GetIntegrationStep() const = 0;
+			virtual int GetPreviousIntegrationStep() const = 0;
+			virtual double GetPreviousTime() const = 0;
+			virtual double GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;
-			virtual double GetSimulationEndTime() = 0;
-			virtual String WriteStateHistory( const String& file_base ) = 0;
+			virtual double GetSimulationEndTime() const = 0;
+			virtual String WriteStateHistory( const String& file_base ) const = 0;
 
 			// get model statistics
-			virtual Vec3 GetComPos() = 0;
-			virtual Vec3 GetComVel() = 0;
-			virtual Real GetMass() = 0;
-			virtual Vec3 GetGravity() = 0;
-			virtual bool HasGroundContact() = 0;
-			virtual Real GetTotalEnergyConsumption() { SCONE_THROW_NOT_IMPLEMENTED; }
+			virtual Vec3 GetComPos() const = 0;
+			virtual Vec3 GetComVel() const = 0;
+			virtual Real GetMass() const = 0;
+			virtual Vec3 GetGravity() const = 0;
+			virtual bool HasGroundContact() const = 0;
+			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 
 			// TODO: perhaps remove termination request here
 			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -91,7 +95,7 @@ namespace scone
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 
 		protected:
-			virtual String GetMainSignature() override { return GetName(); }
+			virtual String GetMainSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();
 
 		protected:

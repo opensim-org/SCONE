@@ -16,12 +16,12 @@ namespace scone
 			DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~DofLimitMeasure();
 
-			virtual UpdateResult UpdateAnalysis( sim::Model& model, double timestamp ) override;
+			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 			virtual PropNode GetReport();
 
 		protected:
-			virtual String GetMainSignature() override;
+			virtual String GetMainSignature() const override;
 
 		private:
 			struct Limit

@@ -33,7 +33,7 @@ namespace scone
 		{
 		}
 
-		sim::Controller::UpdateResult EffortMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult EffortMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -57,7 +57,7 @@ namespace scone
 			else return m_Energy.GetTotal();
 		}
 
-		double EffortMeasure::GetEnergy( sim::Model& model )
+		double EffortMeasure::GetEnergy( const sim::Model& model ) const
 		{
 			switch( measure_type )
 			{
@@ -67,19 +67,19 @@ namespace scone
 			}
 		}
 
-		double EffortMeasure::GetTotalForce( sim::Model& model )
+		double EffortMeasure::GetTotalForce( const sim::Model& model ) const
 		{
 			double f = 1.0; // base muscle force
-			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
+			BOOST_FOREACH( const sim::MuscleUP& mus, model.GetMuscles() )
 				f += mus->GetForce();
 
 			return f;
 		}
 
-		double EffortMeasure::GetWang2012( sim::Model& model )
+		double EffortMeasure::GetWang2012( const sim::Model& model ) const
 		{
 			double e = m_Wang2012BasalEnergy;
-			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
+			BOOST_FOREACH( const sim::MuscleUP& mus, model.GetMuscles() )
 			{
 				double mass = mus->GetMass();
 				Real l = 0.5;
@@ -107,7 +107,7 @@ namespace scone
 			return e;
 		}
 
-		scone::String EffortMeasure::GetMainSignature()
+		scone::String EffortMeasure::GetMainSignature() const
 		{
 			switch( measure_type )
 			{

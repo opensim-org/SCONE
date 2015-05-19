@@ -10,10 +10,10 @@ namespace scone
 		HasSignature( const PropNode& pn );
 		virtual ~HasSignature();
 
-		String GetSignature();
+		String GetSignature() const;
 
 	protected:
-		virtual String GetMainSignature() { return ""; }
+		virtual String GetMainSignature() const { return ""; }
 
 	private:
 		String signature_prefix;

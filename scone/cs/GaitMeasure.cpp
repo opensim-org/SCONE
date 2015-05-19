@@ -32,9 +32,8 @@ namespace scone
 			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
 			BOOST_FOREACH( const String& t, tokens )
 			{
-				size_t idx = model.FindBodyIndex( t );
-				if ( idx != NoIndex )
-					m_GaitBodies.push_back( &model.GetBody( idx ) );
+				sim::Body& b = FindNamed( model.GetBodies(), t );
+				m_GaitBodies.push_back( &b );
 			}
 
 			m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
@@ -46,7 +45,7 @@ namespace scone
 		{
 		}
 
-		sim::Controller::UpdateResult GaitMeasure::UpdateAnalysis( sim::Model& model, double timestamp )
+		sim::Controller::UpdateResult GaitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -59,7 +58,7 @@ namespace scone
 
 			// update min_velocity measure on new step
 			if ( HasNewFootContact( model ) )
-				UpdateMinVelocityMeasure(model, timestamp);
+				UpdateMinVelocityMeasure( model, timestamp );
 
 			// handle termination
 			if ( terminate )
@@ -88,7 +87,7 @@ namespace scone
 			return 1.0 - m_MinVelocityMeasure.GetAverage();
 		}
 
-		void GaitMeasure::UpdateMinVelocityMeasure( sim::Model &model, double timestamp )
+		void GaitMeasure::UpdateMinVelocityMeasure( const sim::Model &model, double timestamp )
 		{
 			double gait_dist = GetGaitDist( model );
 			double step_size = gait_dist - m_PrevGaitDist;
@@ -102,11 +101,11 @@ namespace scone
 			m_PrevGaitDist = gait_dist;
 		}
 
-		scone::Real GaitMeasure::GetGaitDist( sim::Model &model )
+		scone::Real GaitMeasure::GetGaitDist( const sim::Model &model )
 		{
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;
-			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+			BOOST_FOREACH( const sim::LegUP& leg, model.GetLegs() )
 				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
 			distances.insert( model.GetComPos().x );
 
@@ -115,17 +114,17 @@ namespace scone
 			return ( *iter + *(++iter) ) / 2;
 		}
 
-		String GaitMeasure::GetMainSignature()
+		String GaitMeasure::GetMainSignature() const
 		{
 			return GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
 		}
 
-		bool GaitMeasure::HasNewFootContact( sim::Model& model )
+		bool GaitMeasure::HasNewFootContact( const sim::Model& model )
 		{
 			if ( m_PrevContactState.empty() )
 			{
 				// initialize
-				BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+				BOOST_FOREACH( const sim::LegUP& leg, model.GetLegs() )
 					m_PrevContactState.push_back( leg->GetContactForce().y > contact_force_threshold );
 				return false;
 			}
