@@ -288,22 +288,41 @@ namespace scone
 		return *this;
 	}
 
-	std::ostream& PropNode::ToStream( std::ostream& str, String prefix, bool unflaggedOnly ) const
+	std::ostream& PropNode::ToStream( std::ostream& str, const String& prefix, bool unflaggedOnly, int key_width, int depth ) const
 	{
+		if ( key_width == -1 )
+			key_width = GetMaximumKeyWidth( prefix );
+
 		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
 			if ( !unflaggedOnly || !iter->second->IsTouched() )
 			{
-				str << prefix << iter->first;
+				String full_key;
+				for ( int i = 0; i < depth; ++i )
+					full_key += prefix;
+				full_key += iter->first;
+
+				str << std::left << std::setw( key_width ) << full_key;
 				if ( iter->second->HasValue() )
-					str << " = " << iter->second->GetValue();
+					str << std::setw( 0 ) << " = " << iter->second->GetValue();
 				str << std::endl;
 			}
 
-			iter->second->ToStream( str, prefix + "  ", unflaggedOnly );
+			iter->second->ToStream( str, prefix, unflaggedOnly, key_width, depth + 1 );
 		}
 
 		return str;
+	}
+
+	int PropNode::GetMaximumKeyWidth( const String& prefix, int depth ) const
+	{
+		int kw = 0;
+		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+		{
+			kw = std::max( kw, static_cast< int >( depth * prefix.size() + iter->first.size() ) );
+			kw = std::max( kw, iter->second->GetMaximumKeyWidth( prefix, depth + 1 ) );
+		}
+		return kw;
 	}
 
 	size_t PropNode::GetUntouchedCount() const

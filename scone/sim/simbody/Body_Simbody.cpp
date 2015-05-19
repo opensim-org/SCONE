@@ -5,6 +5,7 @@
 #include <OpenSim/OpenSim.h>
 #include "tools.h"
 #include "Model_Simbody.h"
+#include "../../core/Profiler.h"
 
 namespace scone
 {
@@ -13,9 +14,10 @@ namespace scone
 		Body_Simbody::Body_Simbody( class Model_Simbody& model, OpenSim::Body& body ) :
 		Body(),
 		m_osBody( body ),
-		m_Model( model )
+		m_Model( model ),
+		m_ForceIndex( -1 )
 		{
-			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( m_osBody.getName(), 0 );
+			ConnectContactForce( body.getName() );
 		}
 
 		const String& Body_Simbody::GetName() const
@@ -25,6 +27,7 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetPos() const
 		{
+			SCONE_PROFILE_SCOPE;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
@@ -46,6 +49,7 @@ namespace scone
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
 		{
+			SCONE_PROFILE_SCOPE;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
@@ -61,6 +65,7 @@ namespace scone
 
 		Vec3 Body_Simbody::GetContactForce() const
 		{
+			SCONE_PROFILE_SCOPE;
 			if ( m_ForceIndex != -1 )
 			{
 				// TODO: find out if this can be done less clumsy in OpenSim
@@ -76,6 +81,12 @@ namespace scone
 		Vec3 Body_Simbody::GetContactTorque() const
 		{
 			throw std::logic_error("The method or operation is not implemented.");
+		}
+
+		void Body_Simbody::ConnectContactForce( const String& force_name )
+		{
+			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( force_name, 0 );
+			std::cout << force_name << ": " << m_ForceIndex << std::endl;
 		}
 	}
 }

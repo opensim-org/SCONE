@@ -176,7 +176,7 @@ namespace scone
 		String GetStr( const String& key, const String& def ) const { return Get< String >( key, def ); }
 		Vec3 GetVec3( const String& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
-		std::ostream& ToStream( std::ostream& str, String prefix = "", bool unflaggedOnly = false ) const;
+		std::ostream& ToStream( std::ostream& str, const String& prefix = "  ", bool unflaggedOnly = false, int key_width = -1, int depth = 0 ) const;
 
 		// flagging (can be used to detect unused properties)
 		const PropNode& Touch() const { m_Touched = true; return *this; }
@@ -189,6 +189,8 @@ namespace scone
 
 		void RemoveChildren( const String& key );
 		void RemoveChild( const String& key );
+
+		int GetMaximumKeyWidth( const String& prefix = "  ", int depth = 0 ) const;
 
 		String m_Value;
 		ChildContainer m_Children;

@@ -75,7 +75,7 @@ namespace scone
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
-		//log::SetLevel( log::TraceLevel );
+		log::SetLevel( log::DebugLevel );
 
 		opt::ParamSet par( filename );
 
@@ -88,9 +88,9 @@ namespace scone
 
 		// override some variables
 		objProp.Set( "max_duration", 3 );
-		objProp.Set( "Model.integration_accuracy", 0.001 );
-		objProp.Set( "Model.max_step_size", 0.001 );
-		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler") );
+		objProp.Set( "Model.integration_accuracy", 1e-3 );
+		objProp.Set( "Model.max_step_size", 0.01 );
+		objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );

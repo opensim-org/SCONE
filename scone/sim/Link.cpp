@@ -31,5 +31,10 @@ namespace scone
 				return nullptr;
 			}
 		}
+
+		Link* Link::FindLink( const String& body )
+		{
+			return const_cast< Link* >( const_cast< const Link& >( *this ).FindLink( body ) );
+		}
 	}
 }

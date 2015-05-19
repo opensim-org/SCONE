@@ -4,6 +4,7 @@
 #include "Link.h"
 #include "Body.h"
 #include "Joint.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -24,6 +25,7 @@ namespace scone
 
 		Vec3 Leg::GetContactForce() const
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_Foot.GetBody().GetContactForce();
 		}
 

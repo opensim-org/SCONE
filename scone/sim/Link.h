@@ -32,12 +32,14 @@ namespace scone
 			std::vector< LinkUP >& GetChildren() { return m_Children; }
 			const std::vector< LinkUP >& GetChildren() const { return m_Children; }
 			const Link& GetChild( size_t i ) const { return *m_Children[ i ]; }
+			Link& GetChild( size_t i ) { return *m_Children[ i ]; }
 
 			// get parent
 			const Link& GetParent() const { return *m_Parent; }
 
 			// find link
 			const Link* FindLink( const String& body ) const;
+			Link* FindLink( const String& body );
 
 			// link metadata
 			LinkType type;

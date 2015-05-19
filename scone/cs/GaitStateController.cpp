@@ -100,6 +100,8 @@ namespace scone
 
 		void GaitStateController::UpdateLegStates( sim::Model& model, double timestamp )
 		{
+			SCONE_PROFILE_SCOPE;
+
 			// update statuses
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			{
@@ -175,6 +177,8 @@ namespace scone
 
 		void GaitStateController::UpdateControllerStates( sim::Model& model, double timestamp )
 		{
+			SCONE_PROFILE_SCOPE;
+
 			// update controller states
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{

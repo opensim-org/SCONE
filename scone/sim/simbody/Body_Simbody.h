@@ -32,6 +32,9 @@ namespace scone
 			OpenSim::Body& m_osBody;
 			class Model_Simbody& m_Model;
 
+			// connect a specific contact force to this body
+			void ConnectContactForce( const String& force_name );
+
 		private:
 			int m_ForceIndex;
 		};

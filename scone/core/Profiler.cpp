@@ -16,13 +16,13 @@ namespace scone
 	m_Profiler( prof )
 	{
 		if ( m_Profiler.IsActive() )
-			m_Time = m_Profiler.StartMeasure( scope );
+			m_StartTime = m_Profiler.StartMeasure( scope );
 	}
 
 	ScopedProfile::~ScopedProfile()
 	{
 		if ( m_Profiler.IsActive() )
-			m_Profiler.StopMeasure( m_Time );
+			m_Profiler.StopMeasure( m_StartTime );
 	}
 
 	Profiler::Profiler() :
@@ -38,7 +38,7 @@ namespace scone
 
 	}
 
-	long long Profiler::StartMeasure( const String& scope )
+	HighResolutionTime Profiler::StartMeasure( const String& scope )
 	{
 		m_Current = &m_Current->GetOrAddChild( scope );
 		LARGE_INTEGER li;
@@ -46,7 +46,7 @@ namespace scone
 		return li.QuadPart;
 	}
 
-	void Profiler::StopMeasure( long long start_time )
+	void Profiler::StopMeasure( HighResolutionTime start_time )
 	{
 		LARGE_INTEGER li;
 		QueryPerformanceCounter( &li );
@@ -84,7 +84,7 @@ namespace scone
 	{
 	}
 
-	void Profiler::Item::AddSample( long long cur_time )
+	void Profiler::Item::AddSample( HighResolutionTime cur_time )
 	{
 		++num_samples;
 		inclusive_time += cur_time;
@@ -103,18 +103,18 @@ namespace scone
 		return *it->second;
 	}
 
-	long long Profiler::Item::GetReport( PropNode& pn )
+	HighResolutionTime Profiler::Item::GetReport( PropNode& pn )
 	{
 		Item* topnode = this;
 		for (; topnode->parent && topnode->parent->parent; topnode = topnode->parent );
-		long long topnode_time = topnode->inclusive_time;
-		long long children_time = 0;
+		HighResolutionTime topnode_time = topnode->inclusive_time;
+		HighResolutionTime children_time = 0;
 
 		// TODO: sort children first
 		for ( auto it = children.begin(); it != children.end(); ++it )
 			children_time += it->second->GetReport( pn.AddChild( it->first ) );
 
-		pn.SetValue( GetStringF( "%.2f (%.2f exclusive)", 100.0 * inclusive_time / topnode_time, 100.0 * ( inclusive_time - children_time ) / topnode_time ) );
+		pn.SetValue( GetStringF( "%6.2f (%5.2f exclusive)", 100.0 * inclusive_time / topnode_time, 100.0 * ( inclusive_time - children_time ) / topnode_time ) );
 
 		return inclusive_time;
 	}

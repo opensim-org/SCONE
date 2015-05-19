@@ -110,8 +110,14 @@ namespace scone
 			// Create the integrator for the simulation.
 			if ( integration_method == "RungeKuttaMerson" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "RungeKutta2" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta2Integrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "RungeKutta3" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta3Integrator( m_pOsimModel->getMultibodySystem() ) );
 			else if ( integration_method == "SemiExplicitEuler" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
+			else if ( integration_method == "SemiExplicitEuler2" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
 			else SCONE_THROW( "Invalid integration method: " + GetQuoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
@@ -123,8 +129,6 @@ namespace scone
 				ReadState( GetSconeFolder( "models" ) + state_init_file );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
-
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
 			m_pOsimManager->setWriteToStorage( true );
 			m_pOsimManager->setPerformAnalyses( false );
@@ -204,13 +208,20 @@ namespace scone
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
-			// create legs
-			const Link* left_femur = GetRootLink().FindLink( "femur_l" );
-			if ( left_femur )
-				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *left_femur, left_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), LeftSide ) ) );
-			const Link* right_femur = GetRootLink().FindLink( "femur_r" );
-			if ( right_femur )
-				m_Legs.push_back( LegUP( new Leg_Simbody( *this, *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
+			// create legs and connect contact forces
+			if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
+			{
+				Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
+				m_Legs.push_back( LegUP( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide ) ) );
+				dynamic_cast< Body_Simbody& >( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
+			}
+
+			if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
+			{
+				Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
+				m_Legs.push_back( LegUP( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
+				dynamic_cast< Body_Simbody& >( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
+			}
 		}
 
 		void Model_Simbody::ReadState( const String& file )

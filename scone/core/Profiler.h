@@ -5,7 +5,7 @@
 #include <map>
 #include "Timer.h"
 
-//#define SCONE_ENABLE_PROFILING
+#define SCONE_ENABLE_PROFILING
 
 #ifdef SCONE_ENABLE_PROFILING
 	#define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
@@ -17,6 +17,8 @@
 
 namespace scone
 {
+	typedef long long HighResolutionTime;
+
 	class CORE_API ScopedProfile
 	{
 	public:
@@ -25,7 +27,7 @@ namespace scone
 
 	private:
 		class Profiler& m_Profiler;
-		long long m_Time;
+		HighResolutionTime m_StartTime;
 	};
 
 	class CORE_API Profiler
@@ -43,28 +45,29 @@ namespace scone
 		static Profiler& GetGlobalInstance();
 
 	private:
-		long long StartMeasure( const String& scope );
-		void StopMeasure( long long start_time );
+		HighResolutionTime StartMeasure( const String& scope );
+		void StopMeasure( HighResolutionTime start_time );
 
 		// TODO: move to pImpl
 		struct Item {
 			Item( Item* parent );
-			void AddSample( long long duration );
+			void AddSample( HighResolutionTime duration );
 			Item& GetOrAddChild( const String& scope );
-			long long GetReport( PropNode& pn );
+			HighResolutionTime GetReport( PropNode& pn );
 			size_t num_samples;
-			long long inclusive_time;
-			long long peak_time;
+			HighResolutionTime inclusive_time;
+			HighResolutionTime peak_time;
 			Item* parent;
 			std::map< String, std::unique_ptr< Item > > children;
-		private:
-			Item( const Item& other );
-			Item operator=( const Item& other );
 		};
 
 		Item m_Root;
 		Item* m_Current;
 		bool m_bActive;
+
+	private:
+		Profiler( const Profiler& other );
+		Profiler& operator=( const Profiler& other );
 	};
 
 }
