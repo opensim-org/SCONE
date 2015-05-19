@@ -11,6 +11,7 @@
 
 #include <boost/thread.hpp>
 #include "version.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -31,6 +32,7 @@ namespace scone
 
 		double SimulationObjective::Evaluate()
 		{
+			SCONE_PROFILE_SCOPE;
 			SCONE_ASSERT( m_Model && m_Measure );
 
 			// run the simulation

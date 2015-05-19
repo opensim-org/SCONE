@@ -348,11 +348,19 @@ namespace scone
 				m_Model.UpdateControlValues();
 
 				// inject actuator values into controls
-				SimTK::Vector controlValue( 1 );
-				BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
 				{
-					controlValue[ 0 ] = mus->GetControlValue();
-					dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
+					SCONE_PROFILE_SCOPE_NAMED( "addInControls" );
+					SimTK::Vector controlValue( 1 );
+					int idx = 0;
+					BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+					{
+						// This is an optimization that only works when there are only muscles
+						// OpenSim: addInControls is terribly inefficient, that's why we changed it
+						// TODO: fix this into a generic version
+						controls[ idx++ ] = mus->GetControlValue();
+						//controlValue[ 0 ] = mus->GetControlValue();
+						//dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
+					}
 				}
 
 				// update previous integration step and time

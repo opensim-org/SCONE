@@ -39,8 +39,7 @@ namespace scone
 			{
 			case MuscleLengthSensor: return GetNormalizedFiberLength();
 			case MuscleVelocitySensor: return GetNormalizedFiberVelocity();
-			//case MuscleForceSensor: return GetNormalizedForce();
-			case MuscleForceSensor: return 0.0;
+			case MuscleForceSensor: return GetNormalizedForce();
 			default: SCONE_THROW( "Invalid sensor index" );
 			}
 		}

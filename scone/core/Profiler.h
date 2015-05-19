@@ -42,6 +42,8 @@ namespace scone
 		void Activate();
 		void Suspend();
 		bool IsActive();
+		void Reset();
+
 		static Profiler& GetGlobalInstance();
 
 	private:

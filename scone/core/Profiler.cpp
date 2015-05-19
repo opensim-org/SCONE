@@ -76,6 +76,11 @@ namespace scone
 		return m_bActive;
 	}
 
+	void Profiler::Reset()
+	{
+		m_Root.children.clear();
+	}
+
 	Profiler::Item::Item( Item* p ) :
 	parent( p ),
 	num_samples( 0 ),

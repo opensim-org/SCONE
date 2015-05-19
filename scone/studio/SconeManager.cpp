@@ -13,6 +13,7 @@
 #include "../core/Timer.h"
 #include "../cs/SimulationObjective.h"
 #include "../core/Log.h"
+#include "../core/Profiler.h"
 
 using namespace boost::filesystem;
 using boost::format;
@@ -52,6 +53,8 @@ namespace scone
 		// report unused parameters
 		LogUntouched( objProp );
 		
+		Profiler::GetGlobalInstance().Reset();
+
 		m_Statistics.Clear();
 		Timer timer;
 		double result = so.Evaluate();
@@ -64,8 +67,10 @@ namespace scone
 		m_Statistics.Set( "simulation time", so.GetModel().GetTime() );
 		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
 	
-		//cout << "--- Evaluation report ---" << endl;
-		//cout << m_Statistics << endl;
+		cout << "--- Evaluation report ---" << endl;
+		cout << m_Statistics << endl;
+
+		cout << Profiler::GetGlobalInstance().GetReport();
 
 		// write results
 		obj->WriteResults( path( filename ).replace_extension().string() );
