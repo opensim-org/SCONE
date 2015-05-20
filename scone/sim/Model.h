@@ -81,7 +81,6 @@ namespace scone
 			virtual Vec3 GetComVel() const = 0;
 			virtual Real GetMass() const = 0;
 			virtual Vec3 GetGravity() const = 0;
-			virtual bool HasGroundContact() const = 0;
 			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 
 			// TODO: perhaps remove termination request here

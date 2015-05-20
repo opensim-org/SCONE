@@ -27,6 +27,8 @@
 using std::cout;
 using std::endl;
 
+#define USE_MANUAL_INTEGRATION 1
+
 namespace scone
 {
 	namespace sim
@@ -68,6 +70,8 @@ namespace scone
 			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
 			INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
 			INIT_PROPERTY( props, max_step_size, 0.001 );
+			INIT_PROPERTY( props, use_fixed_control_step_size, false );
+			INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
 			INIT_PROPERTY_REQUIRED( props, model_file );
 			INIT_PROPERTY( props, state_init_file, String() );
 			INIT_PROPERTY( props, probe_class, String() );
@@ -247,17 +251,6 @@ namespace scone
 			}
 		}
 
-		void Model_Simbody::AdvanceSimulationTo( double time )
-		{
-			SCONE_PROFILE_SCOPE;
-			SCONE_ASSERT( m_pOsimManager );
-
-			// Integrate from initial time to final time and integrate
-			m_pOsimManager->setFinalTime( time );
-			m_pOsimManager->integrate( GetTkState() );
-
-		}
-
 		String Model_Simbody::WriteStateHistory( const String& file ) const
 		{
 			boost::filesystem::path path( file + ".sto" );
@@ -329,24 +322,35 @@ namespace scone
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			SCONE_PROFILE_SCOPE;
-			//log::TraceF( "%03d %.8f", m_Model.GetIntegrationStep(), s.getTime() );
+			//log::TraceF( "%03d %03d %.8f", m_Model.GetIntegrationStep(), m_Model.GetPreviousIntegrationStep(), s.getTime() );
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
 			{
-				// update current state (TODO: remove const cast)
-				m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
-
-				// update SensorDelayAdapters at the beginning of each new step
-				// TODO: move this to an analyzer object or some other point
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+				if ( !m_Model.use_fixed_control_step_size )
 				{
-					m_Model.UpdateSensorDelayAdapters();
-					m_Model.UpdateAnalyses();
-				}
+					// update current state (TODO: remove const cast)
+					m_Model.SetTkState( const_cast< SimTK::State& >( s ) );
 
-				// update actuator values
-				m_Model.UpdateControlValues();
+					// update SensorDelayAdapters at the beginning of each new step
+					// TODO: move this to an analyzer object or some other point
+					if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+					{
+						m_Model.UpdateSensorDelayAdapters();
+						m_Model.UpdateAnalyses();
+					}
+
+					// update actuator values
+					m_Model.UpdateControlValues();
+
+					// update previous integration step and time
+					// OpenSim: do I need to keep this or is there are smarter way?
+					if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep )
+					{
+						m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
+						m_Model.m_PrevTime = m_Model.GetTime();
+					}
+				}
 
 				// inject actuator values into controls
 				{
@@ -363,14 +367,6 @@ namespace scone
 						//dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 					}
 				}
-
-				// update previous integration step and time
-				// OpenSim: do I need to keep this or is there are smarter way?
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep )
-				{
-					m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
-					m_Model.m_PrevTime = m_Model.GetTime();
-				}
 			}
 			catch( std::exception& e )
 			{
@@ -382,15 +378,63 @@ namespace scone
 			}
 		}
 
-		bool Model_Simbody::HasGroundContact() const
+		void Model_Simbody::AdvanceSimulationTo( double final_time )
 		{
-			// total vertical force applied to both feet
-			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
-			OpenSim::Array<double> force_foot_r = m_pOsimModel->getForceSet().get("foot_r").getRecordValues( GetTkState() );
-			OpenSim::Array<double> force_foot_l = m_pOsimModel->getForceSet().get("foot_l").getRecordValues( GetTkState() );
-			double netGRFVertical = force_foot_r[1] + force_foot_l[1];
-			//printf("array_size=%d vertical force=%f\n", force_foot_l.size(), netGRFVertical );
-			return netGRFVertical < -1.0;
+			SCONE_PROFILE_SCOPE;
+			SCONE_ASSERT( m_pOsimManager );
+
+			//final_time = int( final_time / fixed_control_step_size ) * fixed_control_step_size;
+
+			if ( use_fixed_control_step_size )
+			{
+				// Integrate using time stepper
+				m_pTkIntegrator->setFinalTime( final_time );
+				SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
+				ts.initialize( GetTkState() );
+				int number_of_steps = static_cast< int >( 0.5 + final_time / fixed_control_step_size );
+				for ( int current_step = 0; current_step < number_of_steps; )
+				{
+					// update controls
+					UpdateControlValues();
+
+					// integrate
+					m_PrevTime = GetTime();
+					m_PrevIntStep = GetIntegrationStep();
+					double target_time = GetTime() + fixed_control_step_size;
+					SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
+					SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
+					++current_step;
+
+					// OpenSim: add state to storage, why so complicated?
+					{
+						SCONE_PROFILE_SCOPE_NAMED( "m_pOsimManager->getStateStorage()::append()" );
+						OpenSim::Array<double> stateValues;
+						m_pOsimModel->getStateValues( GetTkState(), stateValues );
+						OpenSim::StateVector vec;
+						vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0]);
+						m_pOsimManager->getStateStorage().append(vec);
+					}
+
+					// update the sensor delays and other analyses
+					UpdateSensorDelayAdapters();
+					UpdateAnalyses();
+
+					// terminate on request
+					if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+					{
+						log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
+						break;
+					}
+
+					//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
+				}
+			}
+			else
+			{
+				// Integrate from initial time to final time (the old way)
+				m_pOsimManager->setFinalTime( final_time );
+				m_pOsimManager->integrate( GetTkState() );
+			}
 		}
 
 		void Model_Simbody::SetTerminationRequest()

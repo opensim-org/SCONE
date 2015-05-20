@@ -50,13 +50,15 @@ namespace scone
 		void Model::UpdateSensorDelayAdapters()
 		{
 			SCONE_PROFILE_SCOPE;
-			SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
+			//SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
 			// add a new frame and update
 			m_SensorDelayStorage.AddFrame( GetTime() );
 			BOOST_FOREACH( std::unique_ptr< SensorDelayAdapter >& sda, m_SensorDelayAdapters )
 				sda->UpdateStorage();
+
+			//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
 		}
 
 		void Model::UpdateControlValues()
@@ -72,6 +74,8 @@ namespace scone
 			bool terminate = false;
 			BOOST_FOREACH( ControllerUP& con, GetControllers() )
 				terminate |= con->UpdateControls( *this, GetTime() ) == Controller::RequestTermination;
+
+			//log::TraceF( "Controls updated for Int=%03d time=%.6f", GetIntegrationStep(), GetTime() );
 
 			if ( terminate )
 				SetTerminationRequest();

@@ -37,7 +37,6 @@ namespace scone
 			virtual Vec3 GetComVel() const override;
 			virtual Real GetMass() const override;
 			virtual Vec3 GetGravity() const override;
-			virtual bool HasGroundContact() const override;
 			virtual Real GetTotalEnergyConsumption() const override;
 
 			virtual void AdvanceSimulationTo( double time ) override;
@@ -75,6 +74,8 @@ namespace scone
 			String integration_method;
 			double integration_accuracy;
 			double max_step_size;
+			bool use_fixed_control_step_size;
+			double fixed_control_step_size;
 			String model_file;
 
 			int m_PrevIntStep;
