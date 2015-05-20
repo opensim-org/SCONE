@@ -383,10 +383,12 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 			SCONE_ASSERT( m_pOsimManager );
 
-			//final_time = int( final_time / fixed_control_step_size ) * fixed_control_step_size;
-
 			if ( use_fixed_control_step_size )
 			{
+				// set this because it's used by GetSimulationEndTime()
+				// TODO: Change this!
+				m_pOsimManager->setFinalTime( final_time );
+
 				// Integrate using time stepper
 				m_pTkIntegrator->setFinalTime( final_time );
 				SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
@@ -400,9 +402,12 @@ namespace scone
 					// integrate
 					m_PrevTime = GetTime();
 					m_PrevIntStep = GetIntegrationStep();
+
 					double target_time = GetTime() + fixed_control_step_size;
 					SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
-					SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
+					SetTkState( m_pTkIntegrator->updAdvancedState() );
+					//SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
+
 					++current_step;
 
 					// OpenSim: add state to storage, why so complicated?
@@ -412,8 +417,7 @@ namespace scone
 						m_pOsimModel->getStateValues( GetTkState(), stateValues );
 						OpenSim::StateVector vec;
 						vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0]);
-						m_pOsimManager->getStateStorage().append(vec);
-					}
+						m_pOsimManager->getStateStorage().append(vec);					}
 
 					// update the sensor delays and other analyses
 					UpdateSensorDelayAdapters();

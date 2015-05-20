@@ -1,6 +1,5 @@
 # Build
 call "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
-"%~dp0\build\tools\IncrementBuildCount.exe" "%~dp0\scone\cs\version.h" SCONE_VERSION_BUILD
 msbuild "%~dp0\build\vc2010\scone.sln" /p:Configuration=Release
 
 # Export
