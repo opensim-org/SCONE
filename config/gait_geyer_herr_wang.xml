@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<signature_postfix></signature_postfix>
+	<init_file></init_file>
+	<use_init_file>0</use_init_file>
+	
+	<Objective type="SimulationObjective">
+		<signature_postfix>GHW1</signature_postfix>
+		<max_duration>5</max_duration>
+		<Model type="Simbody">
+			<model_file>f1024.osim</model_file>
+			<state_init_file>f2354_init_walk.sto</state_init_file>
+			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<Controllers>
+				<Controller type="GaitStateController">
+					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<ConditionalControllers>
+						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
+							<!-- Feed forward components for three states -->
+							<Controller type="FeedForwardController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Function type="Polynomial">
+									<degree>0</degree>
+									<coefficient0 init_min="0.1" init_max="0.5" min="0.02" max="1"/>
+								</Function>
+							</Controller>
+						</ConditionalController>
+						<ConditionalController states="EarlyStance LateStance">
+							<!-- Stance reflexes [Wang2012] -->
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<MonoSynapticReflexes>
+									<Reflex targets="tib_ant" delay="0.020">
+										<length_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<!-- Missing F- reflex from SOL -->
+									</Reflex>
+									<Reflex targets="soleus" delay="0.020">
+										<force_gain init_mean="0.1" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+									</Reflex>
+									<Reflex targets="gastroc" delay="0.020">
+										<force_gain init_mean="0.1" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+									</Reflex>
+									<Reflex targets="vasti" delay="0.010">
+										<force_gain init_mean="0.1" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+										<!-- Missing angle based inhibition -->
+									</Reflex>
+									<Reflex delay="0.005" targets="hamstrings glut_max iliopsoas rect_fem">
+										<!-- Improvised length based stability stuff -->
+										<length_gain	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs		init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex delay="0.005" targets="ercspn intobl extobl">
+										<!-- Upper body stability (not in [Wang2012]) -->
+										<length_gain	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs		init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+								</MonoSynapticReflexes>
+							</Controller>						
+						</ConditionalController>
+						<ConditionalController states="Liftoff Swing">
+							<!-- Swing reflexes [Wang2012] -->
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<MonoSynapticReflexes>
+									<Reflex targets="tib_ant" delay="0.020">
+										<!-- L+ reflex -->
+										<length_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex delay="0.005" targets="iliopsoas rect_fem">
+										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
+										<length_gain	init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs		init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+								</MonoSynapticReflexes>
+							</Controller>						
+						</ConditionalController>
+						<ConditionalController states="Landing">
+							<!-- Swing reflexes [Wang2012] -->
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<MonoSynapticReflexes>
+									<Reflex targets="tib_ant" delay="0.020">
+										<!-- L+ reflex -->
+										<length_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex delay="0.005" targets="hamstrings glut_max">
+										<!-- F+ reflex for end of swing -->
+										<force_gain init_mean="0.1" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+									</Reflex>
+									<Reflex delay="0.005" targets="iliopsoas rect_fem vasti">
+										<!-- L+ reflex stabalizing hip end position (not in [Wang2012]) -->
+										<length_gain	init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs		init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+								</MonoSynapticReflexes>
+							</Controller>						
+						</ConditionalController>
+					</ConditionalControllers>
+				</Controller>
+				<INCLUDE file="measures/M_CG10.xml"/>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>
