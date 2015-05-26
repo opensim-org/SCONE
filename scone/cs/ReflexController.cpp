@@ -1,25 +1,36 @@
 #include "stdafx.h"
 
 #include "ReflexController.h"
-#include "MuscleReflex.h"
-#include "Reflex.h"
 
 #include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
-#include "../sim/Model.h"
-#include "tools.h"
-#include "../sim/Area.h"
+
+#include "../core/InitFromPropNode.h"
+#include "../core/Log.h"
 #include "../core/Profiler.h"
+
+#include "../sim/sim.h"
+#include "../sim/Controller.h"
+#include "../sim/Model.h"
+#include "../sim/Muscle.h"
+#include "../sim/Area.h"
+
+#include "Factories.h"
+#include "MuscleReflex.h"
+#include "Tools.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		ReflexController::ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
-		sim::Controller( props, par, model, target_area )
+		ReflexController::ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		Controller( props, par, model, area )
 		{
+			sim::Actuator& act = model.GetMuscle( 0 );
+
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
+			String sidename = GetSideName( area.side );
 
 			// initialize monosynaptic reflexes (TODO: get rid of those)
 			const PropNode& msr = props.GetChild( "MonoSynapticReflexes" );
@@ -32,21 +43,37 @@ namespace scone
 				BOOST_FOREACH( String musname, tokens )
 				{
 					if ( symmetric && GetSide( musname ) == NoSide )
-						musname += GetSideName( target_area.side ); // make sure the muscle has a sided name
+						musname += sidename; // make sure the muscle has a sided name
 
 					// find muscle
-					sim::Muscle& m = *FindNamed( model.GetMuscles(), musname );
+					sim::Muscle& muscle = *FindNamed( model.GetMuscles(), musname );
 					opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
-					m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, m, m ) ) );
+					m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, muscle, muscle ) ) );
 				}
 			}
 
 			// create normal reflexes
-			//const PropNode& reflexvec = props.GetChild( "Reflexes" );
-			//BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
-			//{
+			// TODO: move the lot of this code to Reflex constructor(s)
+			const PropNode& reflexvec = props.GetChild( "Reflexes" );
+			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
+			{
+				const PropNode& rprops = *item.second;
 
-			//}
+				String targetname = rprops.GetStr( "target" );
+				sim::Actuator& target = *FindNamed( model.GetActuators(), targetname + sidename );
+
+				String sourcename = rprops.GetStr( "source", targetname );
+				sim::Sensor& source = *FindNamed( model.GetSensors(), sourcename + sidename );
+				Index source_idx = source.GetSensorIndex( rprops.GetStr( "source_channel" ) );
+
+				// get name for this reflex
+				String reflexname = GetNameNoSide( target.GetName() );
+				if ( source.GetName() != target.GetName() )
+					reflexname += "-" + GetNameNoSide( source.GetName() );
+
+				opt::ScopedParamSetPrefixer prefixer( par, reflexname + "." );
+				m_Reflexes.push_back( CreateReflex( *item.second, par, model, target, source ) );
+			}
 		}
 
 		ReflexController::~ReflexController()

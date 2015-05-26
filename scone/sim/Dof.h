@@ -15,18 +15,18 @@ namespace scone
 			Dof();
 			virtual ~Dof();
 
-			virtual Real GetPos() = 0;
-			virtual Real GetVel() = 0;
-			virtual Real GetLimitForce() = 0;
+			virtual Real GetPos() const = 0;
+			virtual Real GetVel() const = 0;
+			virtual Real GetLimitForce() const = 0;
 
-			static const Index DofSensorPosition = 0;
-			static const Index DofSensorVelocity = 1;
-			static const Index DofSensorCount = 2;
+			static const Index DofPositionSensor = 0;
+			static const Index DofVelocitySensor = 1;
+
+			virtual const StringIndexMap& GetSensorNames() const override;
+			virtual Real GetSensorValue( Index idx ) const override;
+
+		private:
 			static StringMap< Index > m_SensorNames;
-
-			virtual size_t GetSensorCount() override;
-			virtual const String& GetSensorName( Index idx ) override;
-			virtual Real GetSensorValue( Index idx ) override;
 		};
 	}
 }

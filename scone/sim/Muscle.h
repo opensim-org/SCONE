@@ -12,7 +12,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle : public virtual Actuator, public virtual Sensor
+		class SCONE_SIM_API Muscle : public Actuator, public Sensor
 		{
 		public:
 			Muscle();
@@ -49,11 +49,12 @@ namespace scone
 			static const Index MuscleLengthSensor = 0;
 			static const Index MuscleVelocitySensor = 1;
 			static const Index MuscleForceSensor = 2;
-			static const size_t MuscleSensorCount = 3;
+
+			virtual Real GetSensorValue( Index idx ) const override;
+			virtual const StringIndexMap& GetSensorNames() const override;
+
+		private:
 			static StringMap< Index > m_SensorNames;
-			virtual size_t GetSensorCount() override;
-			virtual const String& GetSensorName( Index idx ) override;
-			virtual Real GetSensorValue( Index idx ) override;
 		};
 	}
 }

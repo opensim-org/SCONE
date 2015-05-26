@@ -4,6 +4,7 @@
 #include "../sim/Model.h"
 #include "../sim/sim.h"
 #include "../sim/Leg.h"
+#include "../sim/Muscle.h"
 #include "../core/InitFromPropNode.h"
 
 #include <boost/foreach.hpp>
@@ -28,7 +29,7 @@ namespace scone
 			);
 
 		GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
-		sim::Controller( props, par, model, target_area )
+		Controller( props, par, model, target_area )
 		{
 			INIT_PROPERTY( props, contact_force_threshold, 10.0 );
 			INIT_FROM_PROP_PAR( props, par, landing_threshold, 0.0 );
@@ -51,7 +52,7 @@ namespace scone
 				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
 				BOOST_FOREACH( const String& instance_states, state_tokens )
 				{
-					// automatically create controllers for all legs
+					// automatically create controllers for all legs (sides)
 					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
 					{
 						// create new conditional controller

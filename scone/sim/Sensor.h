@@ -2,6 +2,7 @@
 
 #include "sim.h"
 #include "../core/HasName.h"
+#include "../core/StringMap.h"
 
 namespace scone
 {
@@ -13,9 +14,12 @@ namespace scone
 			Sensor();
 			virtual ~Sensor();
 
-			virtual size_t GetSensorCount() = 0;
-			virtual const String& GetSensorName( Index idx ) = 0;
-			virtual Real GetSensorValue( Index idx ) = 0;
+			size_t GetSensorCount() const;
+			const String& GetSensorName( Index idx ) const;
+			Index GetSensorIndex( const String& name ) const;
+
+			virtual const StringIndexMap& GetSensorNames() const = 0;
+			virtual Real GetSensorValue( Index idx ) const = 0;
 		};
 	}
 }

@@ -34,12 +34,12 @@ namespace scone
 
 		}
 
-		scone::Real Dof_Simbody::GetPos()
+		scone::Real Dof_Simbody::GetPos() const
 		{
 			return m_osCoord.getValue( m_Model.GetTkState() );
 		}
 
-		scone::Real Dof_Simbody::GetVel()
+		scone::Real Dof_Simbody::GetVel() const
 		{
 			return m_osCoord.getSpeedValue( m_Model.GetTkState() );
 		}
@@ -49,7 +49,7 @@ namespace scone
 			return m_osCoord.getName();
 		}
 
-		scone::Real Dof_Simbody::GetLimitForce()
+		scone::Real Dof_Simbody::GetLimitForce() const
 		{
 			if ( m_pOsLimitForce )
 				return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );

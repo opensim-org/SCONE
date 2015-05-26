@@ -1,9 +1,10 @@
 #pragma once
 
 #include "cs.h"
-#include "../sim/Controller.h"
-#include "../core/Delayer.h"
-
+#include "../core/PropNode.h"
+#include "../opt/ParamSet.h"
+#include "../sim/Model.h"
+#include "../sim/Area.h"
 
 namespace scone
 {

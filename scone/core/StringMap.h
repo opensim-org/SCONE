@@ -2,6 +2,8 @@
 
 #include <map>
 #include "tools.h"
+#include "core.h"
+#include <algorithm>
 
 namespace scone
 {
@@ -9,9 +11,6 @@ namespace scone
 	class StringMap
 	{
 	public:
-		typedef std::map< T, String > MapType;
-		typedef const char* CC;
-
 		// clumsy constructor because initializer lists aren't supported in VS2010
 		StringMap(
 			T e1 = T(0), const char* s1 = nullptr,
@@ -38,19 +37,25 @@ namespace scone
 
 		virtual ~StringMap() { };
 
-		const String& GetString( T e ) {
+		const String& GetString( T e ) const {
 			auto iter = m_Map.find( e );
 			SCONE_THROW_IF( iter == m_Map.end(), "Could not find value " + ToString( e ) );
 			return iter->second;
 		}
-		T GetValue( const String& s )
+
+		T GetValue( const String& s ) const
 		{
-			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( MapType::value_type& v) { return v.second == s; } );
+			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( const MapType::value_type& v) { return v.second == s; } );
 			SCONE_THROW_IF( iter == m_Map.end(), "Could not find " + s );
 			return iter->first;
 		}
+
+		size_t GetSize() const { return m_Map.size(); }
 			
 	private:
+		typedef std::map< T, String > MapType;
 		MapType m_Map;
 	};
+
+	typedef StringMap< Index > StringIndexMap;
 }

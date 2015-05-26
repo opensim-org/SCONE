@@ -14,6 +14,7 @@
     <ClInclude Include="..\..\scone\cs\CompositeMeasure.h" />
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\DofReflex.h" />
     <ClInclude Include="..\..\scone\cs\EffortMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Factories.h" />
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h" />
@@ -38,6 +39,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\CompositeMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\cs.cpp" />
+    <ClCompile Include="..\..\scone\cs\DofReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Factories.cpp" />
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp" />

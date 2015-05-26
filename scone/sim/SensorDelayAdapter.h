@@ -17,11 +17,10 @@ namespace scone
 			SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, TimeInSeconds default_delay );
 			virtual ~SensorDelayAdapter();
 
-			virtual size_t GetSensorCount() override;
-			virtual const String& GetSensorName( size_t idx ) override;
-			virtual Real GetSensorValue( size_t idx ) override;
-			Real GetSensorValue( size_t idx, TimeInSeconds delay );
+			virtual Real GetSensorValue( size_t idx ) const override;
+			Real GetSensorValue( size_t idx, TimeInSeconds delay ) const;
 			virtual const String& GetName() const override;
+			virtual const StringIndexMap& GetSensorNames() const override;
 		
 		private:
 			friend Model;

@@ -18,12 +18,11 @@ namespace scone
 			Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord );
 			virtual ~Dof_Simbody();
 
-			virtual Real GetPos() override;
-			virtual Real GetVel() override;
+			virtual Real GetPos() const override;
+			virtual Real GetVel() const override;
+			virtual Real GetLimitForce() const override;
+
 			virtual const String& GetName() const override;
-
-			virtual Real GetLimitForce() override;
-
 
 		private:
 			Model_Simbody& m_Model;

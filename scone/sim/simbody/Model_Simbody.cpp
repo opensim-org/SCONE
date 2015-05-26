@@ -151,7 +151,7 @@ namespace scone
 			// create and initialize controllers
 			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
-				m_Controllers.push_back( CreateController( *iter->second, par, *this ) );
+				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// update SensorDelayAdapters here because they may be needed by controllers
 			// muscles are first equilibrated to ensure they contain valid data

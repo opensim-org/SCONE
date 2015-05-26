@@ -12,19 +12,16 @@ namespace scone
 		class CS_API Reflex
 		{
 		public:
-			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model );
-			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Sensor& source, Index source_idx, sim::Actuator& target );
+			//Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model );
+			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source );
 			virtual ~Reflex();
 
 			virtual void ComputeControls( double timestamp );
-
-			Real gain;
-			Real offset;
 			TimeInSeconds delay;
 
-		private:
+		protected:
+			Real GetDelayedSensorValue( Index channel ) { return m_DelayedSource.GetSensorValue( channel, delay ); }
 			sim::SensorDelayAdapter& m_DelayedSource;
-			Index m_SourceIdx;
 			sim::Actuator& m_Target;
 		};
 	}

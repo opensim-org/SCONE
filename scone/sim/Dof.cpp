@@ -6,8 +6,8 @@ namespace scone
 	namespace sim
 	{
 		StringMap< Index > Dof::m_SensorNames(
-			DofSensorPosition, "DofSensorPosition",
-			DofSensorVelocity, "DofSensorVelolicty" );
+			DofPositionSensor, "DofPosition",
+			DofVelocitySensor, "DofVelolicty" );
 
 		Dof::Dof()
 		{
@@ -17,25 +17,21 @@ namespace scone
 		{
 		}
 
-		size_t Dof::GetSensorCount()
-		{
-			return DofSensorCount;
-		}
-
-		const String& Dof::GetSensorName( Index idx )
-		{
-			return m_SensorNames.GetString( idx );
-		}
-
-		scone::Real Dof::GetSensorValue( Index idx )
+		scone::Real Dof::GetSensorValue( Index idx ) const
 		{
 			// TODO: function pointers for better performance?
 			switch( idx )
 			{
-			case DofSensorPosition: return GetPos();
-			case DofSensorVelocity: return GetVel();
+			case DofPositionSensor: return GetPos();
+			case DofVelocitySensor: return GetVel();
 			default: SCONE_THROW( "Invalid sensor index" );
 			}
 		}
+
+		const StringIndexMap& Dof::GetSensorNames() const
+		{
+			return m_SensorNames;
+		}
+
 	}
 }

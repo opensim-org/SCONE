@@ -23,6 +23,8 @@ namespace scone
 		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		Controller( props, par, model, target_area )
 		{
+			sim::Actuator& act = model.GetMuscle( 0 );
+
 			DECLARE_AND_INIT( props, bool, use_symmetric_actuators, true );
 			INIT_PROPERTY( props, number_of_modes, 0u );
 

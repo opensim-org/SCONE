@@ -23,22 +23,12 @@ namespace scone
 		{
 		}
 
-		size_t SensorDelayAdapter::GetSensorCount()
-		{
-			return m_Source.GetSensorCount();
-		}
-
-		const String& SensorDelayAdapter::GetSensorName( size_t idx )
-		{
-			return m_Source.GetSensorName( idx );
-		}
-
-		Real SensorDelayAdapter::GetSensorValue( size_t idx )
+		Real SensorDelayAdapter::GetSensorValue( size_t idx ) const
 		{
 			return m_Storage.GetInterpolatedValue( m_Model.GetTime() - m_Delay, m_ChannelOfs + idx );
 		}
 
-		Real SensorDelayAdapter::GetSensorValue( size_t idx, TimeInSeconds delay )
+		Real SensorDelayAdapter::GetSensorValue( size_t idx, TimeInSeconds delay ) const
 		{
 			//if ( m_ChannelOfs == 0 && idx == 1 )
 			//{
@@ -62,5 +52,11 @@ namespace scone
 			for ( size_t i = 0; i < m_Source.GetSensorCount(); ++i )
 				m_Storage.Back()[ m_ChannelOfs + i ] = m_Source.GetSensorValue( i );
 		}
+
+		const StringIndexMap& SensorDelayAdapter::GetSensorNames() const 
+		{
+			return m_Source.GetSensorNames();
+		}
+
 	}
 }

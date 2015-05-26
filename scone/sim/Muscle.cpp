@@ -8,9 +8,9 @@ namespace scone
 	namespace sim
 	{
 		StringMap< Index > Muscle::m_SensorNames(
-			Muscle::MuscleLengthSensor, "MuscleLengthSensor", 
-			Muscle::MuscleVelocitySensor, "MuscleVelocitySensor", 
-			Muscle::MuscleForceSensor, "MuscleForceSensor" );
+			Muscle::MuscleLengthSensor, "MuscleLength", 
+			Muscle::MuscleVelocitySensor, "MuscleVelocity", 
+			Muscle::MuscleForceSensor, "MuscleForce" );
 
 		Muscle::Muscle() :
 		Actuator(),
@@ -22,17 +22,7 @@ namespace scone
 		{
 		}
 
-		size_t Muscle::GetSensorCount()
-		{
-			return MuscleSensorCount;
-		}
-
-		const String& Muscle::GetSensorName( Index idx )
-		{
-			return m_SensorNames.GetString( idx );
-		}
-
-		scone::Real Muscle::GetSensorValue( Index idx )
+		scone::Real Muscle::GetSensorValue( Index idx ) const
 		{
 			SCONE_PROFILE_SCOPE;
 			switch( idx )
@@ -42,6 +32,11 @@ namespace scone
 			case MuscleForceSensor: return GetNormalizedForce();
 			default: SCONE_THROW( "Invalid sensor index" );
 			}
+		}
+
+		const StringIndexMap& Muscle::GetSensorNames() const 
+		{
+			return m_SensorNames;
 		}
 	}
 }
