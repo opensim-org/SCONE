@@ -36,7 +36,7 @@ namespace scone
 					// find muscle
 					sim::Muscle& m = FindNamed( model.GetMuscles(), musname );
 					opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
-					m_Reflexes.push_back( ReflexUP( new Reflex( *item.second, par, model, m, m ) ) );
+					m_Reflexes.push_back( ReflexUP( new MuscleReflex( *item.second, par, model, m, m ) ) );
 				}
 
 				// create others

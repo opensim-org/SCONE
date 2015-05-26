@@ -11,11 +11,11 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API Reflex
+		class CS_API MuscleReflex
 		{
 		public:
-			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Muscle& source, sim::Muscle& target );
-			virtual ~Reflex();
+			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Muscle& source, sim::Muscle& target );
+			virtual ~MuscleReflex();
 
 			virtual void ComputeControls( double timestamp );
 

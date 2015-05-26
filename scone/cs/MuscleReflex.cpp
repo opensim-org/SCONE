@@ -5,7 +5,7 @@ namespace scone
 {
 	namespace cs
 	{
-		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Muscle& source, sim::Muscle& target ) :
+		MuscleReflex::MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Muscle& source, sim::Muscle& target ) :
 		m_Source( source ),
 		m_Target( target ),
 		m_DelayedSource( model.AcquireSensorDelayAdapter( source ) )
@@ -17,11 +17,11 @@ namespace scone
 			INIT_FROM_PROP_PAR( props, par, delay, 0.0 );
 		}
 
-		Reflex::~Reflex()
+		MuscleReflex::~MuscleReflex()
 		{
 		}
 
-		void Reflex::ComputeControls( double timestamp )
+		void MuscleReflex::ComputeControls( double timestamp )
 		{
 			// compute reflex excitation u
 			double u = 0.0;
