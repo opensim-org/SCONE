@@ -22,7 +22,7 @@ namespace scone
 		}
 
 		DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
-		dof( FindNamed( model.GetDofs(), props.GetStr( "dof" ) ) ),
+		dof( *FindNamed( model.GetDofs(), props.GetStr( "dof" ) ) ),
 		penalty( Statistic<>::LinearInterpolation )
 		{
 			range.min = props.GetReal( "min_deg", 0.0 );

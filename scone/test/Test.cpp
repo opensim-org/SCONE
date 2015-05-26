@@ -85,11 +85,11 @@ namespace scone
 		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
 
 		// override some variables
-		objProp.Set( "max_duration", 1 );
-		objProp.Set( "Model.integration_accuracy", 1e-3 );
-		objProp.Set( "Model.use_fixed_control_step_size", true );
-		objProp.Set( "Model.fixed_control_step_size", 0.01 );
-		objProp.Set( "Model.max_step_size", 0.001 );
+		//objProp.Set( "max_duration", 1 );
+		//objProp.Set( "Model.integration_accuracy", 1e-3 );
+		//objProp.Set( "Model.use_fixed_control_step_size", true );
+		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
+		//objProp.Set( "Model.max_step_size", 0.001 );
 		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
 
 		// create objective

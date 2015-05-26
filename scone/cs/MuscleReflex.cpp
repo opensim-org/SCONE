@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Reflex.h"
+#include "MuscleReflex.h"
 
 namespace scone
 {

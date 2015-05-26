@@ -4,6 +4,7 @@
 #include "../sim/Controller.h"
 #include "../core/Delayer.h"
 
+
 namespace scone
 {
 	namespace cs
@@ -18,6 +19,7 @@ namespace scone
 			virtual String GetMainSignature() const override;
 
 		private:
+			std::vector< MuscleReflexUP > m_MuscleReflexes;
 			std::vector< ReflexUP > m_Reflexes;
 
 			ReflexController( const ReflexController& other );

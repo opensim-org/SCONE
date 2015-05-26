@@ -187,6 +187,8 @@ namespace scone
 				{
 					OpenSim::Muscle& osMus = dynamic_cast< OpenSim::Muscle& >( osAct );
 					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, osMus ) ) );
+					m_Sensors.push_back( m_Muscles.back().get() );
+					m_Actuators.push_back( m_Muscles.back().get() );
 				}
 				catch ( std::bad_cast& )
 				{
@@ -207,7 +209,10 @@ namespace scone
 			// create wrappers for dofs
 			m_Dofs.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
+			{
 				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
+				m_Sensors.push_back( m_Dofs.back().get() );
+			}
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );

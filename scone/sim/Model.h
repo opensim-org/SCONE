@@ -47,6 +47,10 @@ namespace scone
 			std::vector< DofUP >& GetDofs() { return m_Dofs; }
 			const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
+			/// Sensor access
+			std::vector< Sensor* >& GetSensors() { return m_Sensors; }
+			std::vector< Actuator* >& GetActuators() { return m_Actuators; }
+
 			/// link access
 			const Link& GetRootLink() const { return *m_RootLink; }
 
@@ -107,6 +111,9 @@ namespace scone
 			std::vector< ControllerUP > m_Controllers;
 			bool m_ShouldTerminate;
 
+			// non-owning storage
+			std::vector< Sensor* > m_Sensors;
+			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		};

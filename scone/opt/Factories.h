@@ -8,12 +8,12 @@ namespace scone
 {
 	namespace opt
 	{
-		DECLARE_FACTORY( Optimizer, ( const PropNode& ) );
-		OPT_API OptimizerFactory& GetOptimizerFactory();
-		OPT_API OptimizerUP CreateOptimizer( const PropNode& props );
+		DECLARE_FACTORY( OPT_API, Optimizer, ( const PropNode& ) );
+		//OPT_API OptimizerFactory& GetOptimizerFactory();
+		//OPT_API OptimizerUP CreateOptimizer( const PropNode& props );
 
-		DECLARE_FACTORY( Objective, ( const PropNode&, ParamSet& ) );
-		OPT_API ObjectiveFactory& GetObjectiveFactory();
-		OPT_API ObjectiveUP CreateObjective( const PropNode& props, ParamSet& par );
+		DECLARE_FACTORY( OPT_API, Objective, ( const PropNode&, ParamSet& ) );
+		//OPT_API ObjectiveFactory& GetObjectiveFactory();
+		//OPT_API ObjectiveUP CreateObjective( const PropNode& props, ParamSet& par );
 	}
 }

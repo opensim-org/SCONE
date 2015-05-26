@@ -32,7 +32,7 @@ namespace scone
 			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
 			BOOST_FOREACH( const String& t, tokens )
 			{
-				sim::Body& b = FindNamed( model.GetBodies(), t );
+				sim::Body& b = *FindNamed( model.GetBodies(), t );
 				m_GaitBodies.push_back( &b );
 			}
 

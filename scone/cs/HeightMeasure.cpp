@@ -23,7 +23,7 @@ namespace scone
 
 			// find target body
 			if ( !target_body.empty() )
-				m_pTargetBody = &FindNamed( model.GetBodies(), target_body );
+				m_pTargetBody = FindNamed( model.GetBodies(), target_body ).get();
 			else m_pTargetBody = nullptr;
 		}
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "ReflexController.h"
+#include "MuscleReflex.h"
 #include "Reflex.h"
 
 #include <boost/foreach.hpp>
@@ -20,7 +21,7 @@ namespace scone
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
-			// initialize monosynaptic reflexes
+			// initialize monosynaptic reflexes (TODO: get rid of those)
 			const PropNode& msr = props.GetChild( "MonoSynapticReflexes" );
 			BOOST_FOREACH( const PropNode::KeyChildPair& item, msr.GetChildren() )
 			{
@@ -34,13 +35,18 @@ namespace scone
 						musname += GetSideName( target_area.side ); // make sure the muscle has a sided name
 
 					// find muscle
-					sim::Muscle& m = FindNamed( model.GetMuscles(), musname );
+					sim::Muscle& m = *FindNamed( model.GetMuscles(), musname );
 					opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
-					m_Reflexes.push_back( ReflexUP( new MuscleReflex( *item.second, par, model, m, m ) ) );
+					m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, m, m ) ) );
 				}
-
-				// create others
 			}
+
+			// create normal reflexes
+			//const PropNode& reflexvec = props.GetChild( "Reflexes" );
+			//BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
+			//{
+
+			//}
 		}
 
 		ReflexController::~ReflexController()
@@ -52,7 +58,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 
 			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
-			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
+			BOOST_FOREACH( MuscleReflexUP& r, m_MuscleReflexes )
 				r->ComputeControls( timestamp );
 
 			return SuccessfulUpdate;
@@ -64,7 +70,7 @@ namespace scone
 
 			// count reflex types
 			int l = 0, v = 0, f = 0;
-			BOOST_FOREACH( const ReflexUP& r, m_Reflexes )
+			BOOST_FOREACH( const MuscleReflexUP& r, m_MuscleReflexes )
 			{
 				if ( r->length_gain != 0.0 ) ++l;
 				if ( r->velocity_gain != 0.0 ) ++v;
