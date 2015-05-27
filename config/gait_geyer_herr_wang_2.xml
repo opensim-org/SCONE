@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW2</signature_postfix>
+		<signature_postfix>GHW3</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -21,8 +21,8 @@
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<ConditionalControllers>
+						<!-- Feed forward components for three states -->
 						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
-							<!-- Feed forward components for three states -->
 							<Controller type="FeedForwardController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Function type="Polynomial">
@@ -31,12 +31,20 @@
 								</Function>
 							</Controller>
 						</ConditionalController>
+
+						<!-- Stance reflexes [Wang2012] -->
 						<ConditionalController states="EarlyStance LateStance">
-							<!-- Stance reflexes [Wang2012] -->
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
-									<!-- Missing: TA =L+(TA) + F-(SOL) -->
+									<!-- TA =L+(TA) + F-(SOL) -->
+									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
+										<length_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
+										<force_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+									</Reflex>
 									
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
@@ -64,20 +72,20 @@
 									</Reflex>
 									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
 										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<vel_gain init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									
 									<!-- Upper body stability (not in [Wang2012]) -->
 									<Reflex type="MuscleReflex" target="ercspn" delay="0.005">
 										<length_gain init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<length_ofs init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="intobl" delay="0.005">
-										<length_gain init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
 										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="extobl" delay="0.005">
-										<length_gain init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
 										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
@@ -95,18 +103,19 @@
 									</Reflex>
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
-										<length_gain	init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs		init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<length_gain	init_mean="2.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs		init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 										<length_gain	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs		init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<length_ofs		init_mean="1.0" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
 						</ConditionalController>
 						<ConditionalController states="Landing">
+						
 							<!-- Landing [Wang2012] -->
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
