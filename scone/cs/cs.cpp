@@ -46,7 +46,7 @@ namespace scone
 			sim::GetControllerFactory().Register< GaitStateController >();
 			sim::GetControllerFactory().Register< ReflexController >();
 			GetReflexFactory().Register< MuscleReflex >();
-			//GetReflexFactory().Register< DofReflex >();
+			GetReflexFactory().Register< DofReflex >();
 
 			// register measures
 			sim::GetControllerFactory().Register< HeightMeasure >();

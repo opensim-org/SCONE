@@ -30,7 +30,7 @@ namespace scone
 	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression );
 
 #define SCONE_ASSERT_MSG( expression, message ) \
-	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression" ("message")" );
+	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in "__FUNCTION__"(): "#expression" (" + String( message ) + ")" );
 
 #define SCONE_THROW( message ) throw scone::RuntimeException(__FUNCTION__"(): " + std::string( message ) )
 #define SCONE_THROW_IF( _condition_, _message_ ) { if ( _condition_ ) throw scone::RuntimeException( __FUNCTION__"(): " + std::string( _message_ ) ); }

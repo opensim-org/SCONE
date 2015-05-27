@@ -19,7 +19,12 @@ namespace scone
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 		if ( it == cont.end() )
 			SCONE_THROW( "Could not find " + GetQuoted( name ) );
-
 		return *it;
+	}
+
+	template< typename T >
+	bool ContainsNamed( std::vector< T >& cont, const String& name )
+	{
+		return cont.end() != std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}
 }

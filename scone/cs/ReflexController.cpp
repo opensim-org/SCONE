@@ -33,22 +33,25 @@ namespace scone
 			String sidename = GetSideName( area.side );
 
 			// initialize monosynaptic reflexes (TODO: get rid of those)
-			const PropNode& msr = props.GetChild( "MonoSynapticReflexes" );
-			BOOST_FOREACH( const PropNode::KeyChildPair& item, msr.GetChildren() )
+			if ( props.HasKey( "MonoSynapticReflexes" ) )
 			{
-				// extract individual muscle names from "targets"
-				String targets = item.second->GetStr( "targets" );
-				boost::char_separator< char > separator(", ");
-				boost::tokenizer< boost::char_separator< char > > tokens( targets, separator );
-				BOOST_FOREACH( String musname, tokens )
+				const PropNode& msr = props.GetChild( "MonoSynapticReflexes" );
+				BOOST_FOREACH( const PropNode::KeyChildPair& item, msr.GetChildren() )
 				{
-					if ( symmetric && GetSide( musname ) == NoSide )
-						musname += sidename; // make sure the muscle has a sided name
+					// extract individual muscle names from "targets"
+					String targets = item.second->GetStr( "targets" );
+					boost::char_separator< char > separator(", ");
+					boost::tokenizer< boost::char_separator< char > > tokens( targets, separator );
+					BOOST_FOREACH( String musname, tokens )
+					{
+						if ( symmetric && GetSide( musname ) == NoSide )
+							musname += sidename; // make sure the muscle has a sided name
 
-					// find muscle
-					sim::Muscle& muscle = *FindNamed( model.GetMuscles(), musname );
-					opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
-					m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, muscle, muscle ) ) );
+						// find muscle
+						sim::Muscle& muscle = *FindNamed( model.GetMuscles(), musname );
+						opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
+						m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, muscle, muscle ) ) );
+					}
 				}
 			}
 
@@ -59,12 +62,13 @@ namespace scone
 			{
 				const PropNode& rprops = *item.second;
 
-				String targetname = rprops.GetStr( "target" );
-				sim::Actuator& target = *FindNamed( model.GetActuators(), targetname + sidename );
+				String trgname = rprops.GetStr( "target" );
+				sim::Actuator& target = *FindNamed( model.GetActuators(), trgname + sidename );
 
-				String sourcename = rprops.GetStr( "source", targetname );
-				sim::Sensor& source = *FindNamed( model.GetSensors(), sourcename + sidename );
-				Index source_idx = source.GetSensorIndex( rprops.GetStr( "source_channel" ) );
+				String srcname = rprops.GetStr( "source", trgname );
+				sim::Sensor& source = ContainsNamed( model.GetSensors(), srcname + sidename ) ?
+					*FindNamed( model.GetSensors(), srcname + sidename ) : *FindNamed( model.GetSensors(), srcname );
+				//Index source_idx = source.GetSensorIndex( rprops.GetStr( "source_channel" ) );
 
 				// get name for this reflex
 				String reflexname = GetNameNoSide( target.GetName() );
