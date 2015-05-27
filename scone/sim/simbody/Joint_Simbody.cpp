@@ -11,8 +11,12 @@ namespace scone
 {
 	namespace sim
 	{
-		Joint_Simbody::Joint_Simbody( class Model_Simbody& model, OpenSim::Joint& osJoint ) : m_osJoint( osJoint ), m_Model( model )
+		Joint_Simbody::Joint_Simbody( Body& body, Joint* parent, class Model_Simbody& model, OpenSim::Joint& osJoint ) :
+		Joint( body, parent ),
+		m_osJoint( osJoint ),
+		m_Model( model )
 		{
+			log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 		}
 
 		Joint_Simbody::~Joint_Simbody()

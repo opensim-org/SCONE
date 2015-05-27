@@ -175,6 +175,7 @@ namespace scone
 		void Model_Simbody::CreateModelWrappers()
 		{
 			SCONE_ASSERT( m_pOsimModel );
+			SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Sensors.empty() );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
@@ -202,9 +203,9 @@ namespace scone
 				m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) ) );
 
 			// Create wrappers for joints
-			m_Joints.clear();
-			for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
-				m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
+			//m_Joints.clear();
+			//for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
+			//	m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
 
 			// create wrappers for dofs
 			m_Dofs.clear();
@@ -300,9 +301,11 @@ namespace scone
 			// find the sim::Joint (if any)
 			if ( osBody.hasJoint() )
 			{
-				auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body ).m_osJoint == osBody.getJoint(); } );
-				SCONE_ASSERT( itJoint != m_Joints.end() );
-				link = LinkUP( new Link( **itBody, **itJoint, parent ) );
+				// create a joint
+				m_Joints.push_back( JointUP( new Joint_Simbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) ) );
+				//auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body ).m_osJoint == osBody.getJoint(); } );
+				//SCONE_ASSERT( itJoint != m_Joints.end() );
+				link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
 			}
 			else
 			{

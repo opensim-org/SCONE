@@ -10,13 +10,17 @@ namespace scone
 		class SCONE_SIM_API Joint : public HasName
 		{
 		public:
-			Joint();
+			Joint( Body& body, Joint* parent = nullptr );
 			virtual ~Joint();
 
 			virtual Vec3 GetPos() const = 0;
 			virtual size_t GetDofCount() const = 0;
 			virtual Real GetDof( size_t index = 0 ) const = 0;
 			virtual const String& GetDofName( size_t index = 0 ) const = 0;
+
+		protected:
+			Body& m_Body;
+			Joint* m_pParent;
 		};
 	}
 }

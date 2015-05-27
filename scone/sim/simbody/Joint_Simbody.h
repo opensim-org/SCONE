@@ -15,7 +15,7 @@ namespace scone
 		class SCONE_SIM_SIMBODY_API Joint_Simbody : public Joint
 		{
 		public:
-			Joint_Simbody( class Model_Simbody& model, OpenSim::Joint& osJoint );
+			Joint_Simbody( Body& body, Joint* parent, class Model_Simbody& model, OpenSim::Joint& osJoint );
 			virtual ~Joint_Simbody();
 
 			virtual const String& GetName() const;
