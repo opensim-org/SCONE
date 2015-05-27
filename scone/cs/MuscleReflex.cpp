@@ -3,7 +3,7 @@
 #include "MuscleReflex.h"
 #include "../sim/Muscle.h"
 
-#define DEBUG_MUSCLE "hamstrings_r"
+//#define DEBUG_MUSCLE "hamstrings_r"
 
 namespace scone
 {
