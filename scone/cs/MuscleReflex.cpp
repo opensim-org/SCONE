@@ -3,6 +3,8 @@
 #include "MuscleReflex.h"
 #include "../sim/Muscle.h"
 
+#define DEBUG_MUSCLE "hamstrings_r"
+
 namespace scone
 {
 	namespace cs
@@ -33,6 +35,11 @@ namespace scone
 			Real u_f = force_gain * m_DelayedSource.GetSensorValue( sim::Muscle::MuscleForceSensor, delay );
 
 			m_Target.AddControlValue( u_l + u_v + u_f );
+
+#ifdef DEBUG_MUSCLE
+			if ( m_Target.GetName() == DEBUG_MUSCLE )
+				log::TraceF( "u_l=%.3f u_v=%.3f u_f=%.3f", u_l, u_v, u_f );
+#endif
 		}
 	}
 }

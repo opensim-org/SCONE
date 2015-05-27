@@ -18,7 +18,14 @@
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<ConditionalControllers>
 						<ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
-							<INCLUDE file="controllers/C_FP0.xml"/>
+							<!-- Feed forward components for three states -->
+							<Controller type="FeedForwardController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Function type="Polynomial">
+									<degree>0</degree>
+									<coefficient0 init_mean="0.1" init_std="0.05" min="0.02" max="1"/>
+								</Function>
+							</Controller>
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>

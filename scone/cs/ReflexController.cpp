@@ -92,6 +92,9 @@ namespace scone
 			BOOST_FOREACH( MuscleReflexUP& r, m_MuscleReflexes )
 				r->ComputeControls( timestamp );
 
+			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
+				r->ComputeControls( timestamp );
+
 			return SuccessfulUpdate;
 		}
 

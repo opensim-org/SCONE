@@ -4,6 +4,8 @@
 #include "../sim/Dof.h"
 #include "../sim/Actuator.h"
 
+//#define DEBUG_MUSCLE "glut_max_r"
+
 namespace scone
 {
 	namespace cs
@@ -24,9 +26,16 @@ namespace scone
 
 		void DofReflex::ComputeControls( double timestamp )
 		{
-			Real u_p = pos_gain * ( target_pos - GetDelayedSensorValue( sim::Dof::DofPositionSensor ) );
-			Real u_d = vel_gain * ( target_vel - GetDelayedSensorValue( sim::Dof::DofVelocitySensor ) );
+			Real pos = GetDelayedSensorValue( sim::Dof::DofPositionSensor );
+			Real vel = GetDelayedSensorValue( sim::Dof::DofVelocitySensor );
+			Real u_p = pos_gain * ( target_pos - pos );
+			Real u_d = vel_gain * ( target_vel - vel );
 			m_Target.AddControlValue( u_p + u_d );
+
+#ifdef DEBUG_MUSCLE
+			if ( m_Target.GetName() == DEBUG_MUSCLE )
+				log::TraceF( "pos=%.3f vel=%.3f u_p=%.3f u_d=%.3f", pos, vel, u_p, u_d );
+#endif
 		}
 	}
 }
