@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW4.LE</signature_postfix>
+		<signature_postfix>GHW4</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -55,12 +55,12 @@
 								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
-										<force_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									
 									<!-- F+ GAS -->
 									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
-										<force_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									
 									<!-- F+ VAS, missing dof based inhibition -->
@@ -69,20 +69,21 @@
 									</Reflex>
 									
 									<!-- Root stability -->
-									<Reflex type="DofReflex" target="hamstrings" source="lumbar_extension" delay="0.005">
-										<pos_gain init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.1" init_std="0.02" min="-10" max="10" is_free="1"/>
+									<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
+										<pos_gain init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									<Reflex type="DofReflex" target="glut_max" source="lumbar_extension" delay="0.005">
-										<pos_gain init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.1" init_std="0.02" min="-10" max="10" is_free="1"/>
+									<Reflex type="DofReflex" target="glut_max" source="pelvis_tilt" delay="0.005">
+										<pos_gain init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
+									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
 										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<vel_gain init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									
 									<!-- Upper body stability (not in [Wang2012]) -->
+									<!--
 									<Reflex type="DofReflex" target="ercspn" source="lumbar_extension" delay="0.005">
 										<pos_gain init_mean="2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
@@ -95,8 +96,23 @@
 										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<vel_gain init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
+									-->
+									
+									<Reflex type="MuscleReflex" target="ercspn" delay="0.005">
+										<length_gain init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex type="MuscleReflex" target="intobl" delay="0.005">
+										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									<Reflex type="MuscleReflex" target="extobl" delay="0.005">
+										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									
 								</Reflexes>
-							</Controller>
+							</Controller>						
 						</ConditionalController>
 						<ConditionalController states="Liftoff Swing">
 							<!-- Swing reflexes [Wang2012] -->
