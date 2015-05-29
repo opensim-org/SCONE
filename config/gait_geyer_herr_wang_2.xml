@@ -32,8 +32,7 @@
 							</Controller>
 						</ConditionalController>
 
-						<!-- Stance reflexes [Wang2012] -->
-						<ConditionalController states="EarlyStance LateStance">
+						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
@@ -45,7 +44,15 @@
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
 										<force_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									
+								</Reflexes>
+							</Controller>
+						</ConditionalController>
+						
+						<!-- Stance reflexes [Wang2012] -->
+						<ConditionalController states="EarlyStance LateStance">
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
 										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
@@ -96,15 +103,10 @@
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
-									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<!-- L+ reflex -->
-										<length_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
-									</Reflex>
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 										<length_gain	init_mean="2.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs		init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<length_ofs		init_mean="0.6" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
@@ -120,12 +122,6 @@
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
-									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<!-- L+ reflex, perhaps not use a separate instance here? -->
-										<length_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
-									</Reflex>
-									
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">
 										<force_gain init_mean="0.3" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
