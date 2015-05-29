@@ -63,6 +63,9 @@
     <ClCompile Include="..\..\scone\sim\Model.cpp">
       <Filter>Model Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\BalanceSensor.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h">
@@ -118,6 +121,9 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Model.h">
       <Filter>Model Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\BalanceSensor.h">
+      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

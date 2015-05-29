@@ -16,6 +16,7 @@
 #include "../core/HasSignature.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
+#include "BalanceSensor.h"
 
 namespace scone
 {
@@ -109,6 +110,7 @@ namespace scone
 			std::vector< DofUP > m_Dofs;
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
+			BalanceSensorUP m_BalanceSensor;
 			bool m_ShouldTerminate;
 
 			// non-owning storage

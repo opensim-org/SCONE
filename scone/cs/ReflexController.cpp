@@ -48,7 +48,7 @@ namespace scone
 							musname += sidename; // make sure the muscle has a sided name
 
 						// find muscle
-						sim::Muscle& muscle = *FindNamed( model.GetMuscles(), musname );
+						sim::Muscle& muscle = *FindByName( model.GetMuscles(), musname );
 						opt::ScopedParamSetPrefixer prefixer( par, ( symmetric ? GetNameNoSide( musname ) : musname ) + "." );
 						m_MuscleReflexes.push_back( MuscleReflexUP( new MuscleReflex( *item.second, par, model, muscle, muscle ) ) );
 					}
@@ -63,11 +63,11 @@ namespace scone
 				const PropNode& rprops = *item.second;
 
 				String trgname = rprops.GetStr( "target" );
-				sim::Actuator& target = *FindNamed( model.GetActuators(), trgname + sidename );
+				sim::Actuator& target = *FindByName( model.GetActuators(), trgname + sidename );
 
 				String srcname = rprops.GetStr( "source", trgname );
-				sim::Sensor& source = ContainsNamed( model.GetSensors(), srcname + sidename ) ?
-					*FindNamed( model.GetSensors(), srcname + sidename ) : *FindNamed( model.GetSensors(), srcname );
+				sim::Sensor& source = HasElementWithName( model.GetSensors(), srcname + sidename ) ?
+					*FindByName( model.GetSensors(), srcname + sidename ) : *FindByName( model.GetSensors(), srcname );
 				//Index source_idx = source.GetSensorIndex( rprops.GetStr( "source_channel" ) );
 
 				// get name for this reflex

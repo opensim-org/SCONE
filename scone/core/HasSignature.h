@@ -19,4 +19,4 @@ namespace scone
 		String signature_prefix;
 		String signature_postfix;
 	};
-}
+}			

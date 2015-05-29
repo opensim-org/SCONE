@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW3</signature_postfix>
+		<signature_postfix>GHW4</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -69,7 +69,7 @@
 									</Reflex>
 									
 									<!-- Root stability -->
-									<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
+									<Reflex type="DofReflex" target="hamstrings" source="Posture" delay="0.005">
 										<pos_gain init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>

@@ -14,7 +14,7 @@ namespace scone
 	};
 
 	template< typename T >
-	T& FindNamed( std::vector< T >& cont, const String& name )
+	T& FindByName( std::vector< T >& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 		if ( it == cont.end() )
@@ -23,7 +23,7 @@ namespace scone
 	}
 
 	template< typename T >
-	bool ContainsNamed( std::vector< T >& cont, const String& name )
+	bool HasElementWithName( std::vector< T >& cont, const String& name )
 	{
 		return cont.end() != std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}

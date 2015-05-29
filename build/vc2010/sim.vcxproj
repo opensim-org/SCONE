@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\sim\Actuator.cpp" />
+    <ClCompile Include="..\..\scone\sim\BalanceSensor.cpp" />
     <ClCompile Include="..\..\scone\sim\Body.cpp" />
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Dof.cpp" />
@@ -99,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h" />
+    <ClInclude Include="..\..\scone\sim\BalanceSensor.h" />
     <ClInclude Include="..\..\scone\sim\Body.h" />
     <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Dof.h" />

@@ -22,7 +22,10 @@
 #include <boost/filesystem.hpp>
 #include "../../core/system.h"
 #include "../../core/Profiler.h"
+
 #include "Dof_Simbody.h"
+#include "../Sensor.h"
+#include "../BalanceSensor.h"
 
 using std::cout;
 using std::endl;
@@ -214,6 +217,9 @@ namespace scone
 				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
 				m_Sensors.push_back( m_Dofs.back().get() );
 			}
+
+			// create BodySensor
+			m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
@@ -425,7 +431,8 @@ namespace scone
 						m_pOsimModel->getStateValues( GetTkState(), stateValues );
 						OpenSim::StateVector vec;
 						vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0]);
-						m_pOsimManager->getStateStorage().append(vec);					}
+						m_pOsimManager->getStateStorage().append(vec);
+					}
 
 					// update the sensor delays and other analyses
 					UpdateSensorDelayAdapters();
