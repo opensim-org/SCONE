@@ -19,6 +19,10 @@ namespace scone
 			Real target_vel;
 			Real pos_gain;
 			Real vel_gain;
+
+		private:
+			sim::SensorDelayAdapter& m_DelayedRoot; // used for world coordinates, TODO: neater
+			bool m_bUseRoot;
 		};
 	}
 }
