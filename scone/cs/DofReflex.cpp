@@ -17,10 +17,10 @@ namespace scone
 		{
 			// TODO: don't use this hack
 			SCONE_ASSERT( dynamic_cast< sim::Dof* >( &source ) != 0 );
-			INIT_FROM_PROP_PAR( props, par, target_pos, 0.0 );
-			INIT_FROM_PROP_PAR( props, par, target_vel, 0.0 );
-			INIT_FROM_PROP_PAR( props, par, pos_gain, 0.0 );
-			INIT_FROM_PROP_PAR( props, par, vel_gain, 0.0 );
+			INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
+			INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
+			INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
+			INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		}
 
 		DofReflex::~DofReflex()

@@ -11,10 +11,13 @@
 #define OPT_API __declspec(dllimport)
 #endif
 
-#define INIT_FROM_PROP_PAR( PROP_, PAR_, VAR_, DEFAULT_ ) \
+#define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PROP_.HasKey( GetCleanVarName( #VAR_ ) ) ? PAR_.Get( GetCleanVarName( #VAR_ ), PROP_.GetChild( GetCleanVarName( #VAR_ ) ) ) : DEFAULT_
 
-#define INIT_FROM_PROP_PAR_REQUIRED( PROP_, PAR_, VAR_ ) \
+#define INIT_PARAM_NAMED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
+	VAR_ = PROP_.HasKey( NAME_ ) ? PAR_.Get( NAME_, PROP_.GetChild( NAME_ ) ) : DEFAULT_
+
+#define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
 	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_.GetChild( GetCleanVarName( #VAR_ ) ) )
 
 namespace scone

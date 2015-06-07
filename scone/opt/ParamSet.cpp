@@ -141,15 +141,15 @@ namespace scone
 		{
 			for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
 			{
-				double weight = 1.0 / parsets.size();
+				double w = 1.0 / parsets.size();
 
 				double mean = 0.0;
 				for ( size_t setIdx = 0; setIdx < parsets.size(); ++setIdx )
-					mean += weight * parsets[ setIdx ].m_Params[ parIdx ].second;
+					mean += w * parsets[ setIdx ].m_Params[ parIdx ].second;
 
 				double var = 0.0;
 				for ( size_t setIdx = 0; setIdx < parsets.size(); ++setIdx )
-					var += weight * GetSquared( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
+					var += w * GetSquared( parsets[ setIdx ].m_Params[ parIdx ].second - mean );
 
 				// update the result in ParInfo
 				// TODO: keep this somewhere else?
@@ -183,7 +183,7 @@ namespace scone
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 			{
 				if ( iter->first.is_free )
-					str << boost::format( "%-20s\t%16.8f\t%16.8f\t%16.8f\n" ) % iter->first.name % iter->second % iter->first.init_mean % iter->first.init_std;
+					str << boost::format( "%-39s %16.8f\t%14.8f\t%14.8f\n" ) % iter->first.name % iter->second % iter->first.init_mean % iter->first.init_std;
 			}
 
 			return str;
