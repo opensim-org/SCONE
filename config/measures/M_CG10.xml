@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Measure type="CompositeMeasure">
 	<Terms>
-		<term name="Gait" weight="100">
+		<term name="Gait" weight="100" threshold="0.05">
 			<Measure type="GaitMeasure">
 				<termination_height>0.9</termination_height>
 				<min_velocity>1.0</min_velocity>
@@ -18,7 +18,7 @@
 				</Limits>
 			</Measure>
 		</term>
-		<term name="KneeLimits" weight="0.001" threshold="200">
+		<term name="KneeLimits" weight="0.001" threshold="1000">
 			<Measure type="DofLimitMeasure">
 				<Limits>
 					<limit dof="knee_angle_l" squared_force_penalty="1"/>
