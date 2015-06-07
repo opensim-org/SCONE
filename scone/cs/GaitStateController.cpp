@@ -31,6 +31,7 @@ namespace scone
 		GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		Controller( props, par, model, target_area )
 		{
+			// TODO: move contact_force_threshold to leg?
 			INIT_PROPERTY( props, contact_force_threshold, 10.0 );
 			INIT_PARAM( props, par, landing_threshold, 0.0 );
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );

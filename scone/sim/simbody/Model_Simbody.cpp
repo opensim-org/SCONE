@@ -135,7 +135,7 @@ namespace scone
 			{
 				State state = ReadState( GetSconeFolder( "models" ) + state_init_file );
 				SetState( state );
-				FixState( 0.1 * GetMass() );
+				FixState( 0.1 * GetMass() * -GetGravity().y );
 			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
