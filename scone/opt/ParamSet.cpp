@@ -183,7 +183,7 @@ namespace scone
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 			{
 				if ( iter->first.is_free )
-					str << boost::format( "%-39s %16.8f\t%14.8f\t%14.8f\n" ) % iter->first.name % iter->second % iter->first.init_mean % iter->first.init_std;
+					str << boost::format( "%-35s\t%14.8f\t%14.8f\t%14.8f\n" ) % iter->first.name % iter->second % iter->first.init_mean % iter->first.init_std;
 			}
 
 			return str;

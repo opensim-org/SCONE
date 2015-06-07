@@ -38,11 +38,11 @@
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
 									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<length_gain init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<KL init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
-										<force_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KF init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -55,60 +55,45 @@
 								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
-										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									
 									<!-- F+ GAS -->
 									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
-										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									
 									<!-- F+ VAS, missing dof based inhibition -->
 									<Reflex type="MuscleReflex" target="vasti" delay="0.010">
-										<force_gain init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									
 									<!-- Root stability -->
 									<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
-										<pos_gain init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="glut_max" source="pelvis_tilt" delay="0.005">
-										<pos_gain init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
-										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									
 									<!-- Upper body stability (not in [Wang2012]) -->
-									<!--
 									<Reflex type="DofReflex" target="ercspn" source="lumbar_extension" delay="0.005">
-										<pos_gain init_mean="2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="intobl" source="lumbar_extension" delay="0.005">
-										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="extobl" source="lumbar_extension" delay="0.005">
-										<pos_gain init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<vel_gain init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
-									</Reflex>
-									-->
-									
-									<Reflex type="MuscleReflex" target="ercspn" delay="0.005">
-										<length_gain init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
-									</Reflex>
-									<Reflex type="MuscleReflex" target="intobl" delay="0.005">
-										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
-									</Reflex>
-									<Reflex type="MuscleReflex" target="extobl" delay="0.005">
-										<length_gain init_mean="1.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									
 								</Reflexes>
@@ -121,13 +106,13 @@
 								<Reflexes>
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
-										<length_gain	init_mean="2.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs		init_mean="0.6" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<KL	init_mean="2.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<L0		init_mean="0.6" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
 										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
-										<length_gain	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<length_ofs		init_mean="1.0" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<KL	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<L0		init_mean="1.0" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
@@ -140,10 +125,10 @@
 								<Reflexes>
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">
-										<force_gain init_mean="0.3" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.3" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="glut_max" delay="0.005">
-										<force_gain init_mean="0.3" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.3" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						

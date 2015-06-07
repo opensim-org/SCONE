@@ -46,6 +46,7 @@ namespace scone
 			virtual void SetTerminationRequest() override;
 
 			virtual State GetState() const override;
+			virtual void SetState( const State& state ) override;
 			virtual double GetTime() const override;
 			virtual double GetPreviousTime() const override;
 			virtual int GetIntegrationStep() const override;
@@ -67,7 +68,7 @@ namespace scone
 			virtual String GetMainSignature() const override;
 
 		private:
-			void ReadState( const String& file );
+			State ReadState( const String& file );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 

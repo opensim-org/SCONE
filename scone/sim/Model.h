@@ -71,6 +71,7 @@ namespace scone
 			/// Get simulation info
 			virtual double GetTime() const = 0;
 			virtual State GetState() const = 0;
+			virtual void SetState( const State& state ) = 0;
 			virtual int GetIntegrationStep() const = 0;
 			virtual int GetPreviousIntegrationStep() const = 0;
 			virtual double GetPreviousTime() const = 0;

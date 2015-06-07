@@ -132,7 +132,10 @@ namespace scone
 
 			// read initial state
 			if ( !state_init_file.empty() )
-				ReadState( GetSconeFolder( "models" ) + state_init_file );
+			{
+				State state = ReadState( GetSconeFolder( "models" ) + state_init_file );
+				SetState( state );
+			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
@@ -237,29 +240,6 @@ namespace scone
 				Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
 				m_Legs.push_back( LegUP( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
 				dynamic_cast< Body_Simbody& >( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
-			}
-		}
-
-		void Model_Simbody::ReadState( const String& file )
-		{
-			// OSIM: why is there no normal way to get a value using a label???
-
-			// create a copy of the storage
-			auto store = g_StorageCache.CreateCopy( file );
-			OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
-			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
-			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
-
-			// run over all labels
-			for ( int i = 0; i < storeLabels.getSize(); i++ )
-			{
-				// check if the label is corresponds to a state
-				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
-				{
-					double value = data[ store->getStateIndex( storeLabels[i] ) ];
-					GetOsimModel().setStateVariable( GetTkState(), storeLabels[i], value );
-				}
-				//else SCONE_LOG( "Unused state parameter: " << storeLabels[ i ] );
 			}
 		}
 
@@ -507,6 +487,31 @@ namespace scone
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		}
 
+		State Model_Simbody::ReadState( const String& file )
+		{
+			// OSIM: why is there no normal way to get a value using a label???
+
+			// create a copy of the storage
+			auto store = g_StorageCache.CreateCopy( file );
+			OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
+			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
+			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
+
+			// run over all labels
+			State state;
+			for ( int i = 0; i < storeLabels.getSize(); i++ )
+			{
+				// check if the label is corresponds to a state
+				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
+				{
+					state[ storeLabels[ i ] ] = data[ store->getStateIndex( storeLabels[i] ) ];
+				}
+				else log::Trace( "Unused state parameter: " + storeLabels[ i ] );
+			}
+
+			return state;
+		}
+
 		std::map< String, double > Model_Simbody::GetState() const
 		{
 			auto values = GetOsimModel().getStateValues( GetTkState() );
@@ -518,6 +523,12 @@ namespace scone
 				state[ names[ i ] ] = values[ i ];
 
 			return state;
+		}
+
+		void Model_Simbody::SetState( const State& state )
+		{
+			BOOST_FOREACH( const State::value_type& nvp, state )
+				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
 		}
 
 		double Model_Simbody::GetSimulationEndTime() const
@@ -534,5 +545,5 @@ namespace scone
 		{
 			return GetOsimModel().getName();
 		}
-	}
+}
 }
