@@ -135,6 +135,7 @@ namespace scone
 			{
 				State state = ReadState( GetSconeFolder( "models" ) + state_init_file );
 				SetState( state );
+				FixState( 0.1 * GetMass() );
 			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
@@ -545,5 +546,56 @@ namespace scone
 		{
 			return GetOsimModel().getName();
 		}
-}
+
+		Real Model_Simbody::GetTotalContactForce()
+		{
+			Real force = 0.0;
+			BOOST_FOREACH( LegUP& leg, GetLegs() )
+				force += leg->GetContactForce().GetLength();
+			return force;
+		}
+
+		void Model_Simbody::FixState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
+		{
+			const String state_name = "pelvis_ty";
+			const Real step_size = 0.1;
+
+			// find top
+			double top = GetOsimModel().getStateVariable( GetTkState(), state_name );
+			while ( abs( GetTotalContactForce() ) > force_threshold )
+			{
+				top += step_size;
+				GetOsimModel().setStateVariable( GetTkState(), state_name, top );
+			}
+
+			// find bottom
+			double bottom = top;
+			do
+			{
+				bottom -= step_size;
+				GetOsimModel().setStateVariable( GetTkState(), state_name, bottom );
+			}
+			while ( abs( GetTotalContactForce() ) <= force_threshold );
+
+			// find middle ground until we are close enough
+			double force;
+			for ( int i = 0; i < 100; ++i )
+			{
+				double new_ty = ( top + bottom ) / 2;
+				GetOsimModel().setStateVariable( GetTkState(), state_name, new_ty );
+				double force = abs( GetTotalContactForce() );
+				log::TraceF( "new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+
+				// check if it's good enough
+				if ( abs( force - force_threshold ) / force_threshold <= fix_accuracy )
+					break;
+
+				// update top / bottom
+				if ( force > force_threshold ) bottom = new_ty; else top = new_ty;
+			}
+
+			if ( abs( force - force_threshold ) / force_threshold > fix_accuracy )
+				log::WarningF( "Could not fix initial state, top=%.6f bottom=%.6f force=%.6f target=%.6f", top, bottom, force, force_threshold );
+		}
+	}
 }

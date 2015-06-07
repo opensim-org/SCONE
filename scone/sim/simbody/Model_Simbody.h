@@ -68,6 +68,8 @@ namespace scone
 			virtual String GetMainSignature() const override;
 
 		private:
+			Real GetTotalContactForce();
+			void FixState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 			State ReadState( const String& file );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
