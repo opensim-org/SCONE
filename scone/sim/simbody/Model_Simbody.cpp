@@ -507,7 +507,7 @@ namespace scone
 				{
 					state[ storeLabels[ i ] ] = data[ store->getStateIndex( storeLabels[i] ) ];
 				}
-				else log::Trace( "Unused state parameter: " + storeLabels[ i ] );
+				//else log::Trace( "Unused state parameter: " + storeLabels[ i ] );
 			}
 
 			return state;
@@ -579,12 +579,12 @@ namespace scone
 
 			// find middle ground until we are close enough
 			double force;
+			double new_ty;
 			for ( int i = 0; i < 100; ++i )
 			{
-				double new_ty = ( top + bottom ) / 2;
+				new_ty = ( top + bottom ) / 2;
 				GetOsimModel().setStateVariable( GetTkState(), state_name, new_ty );
-				double force = abs( GetTotalContactForce() );
-				log::TraceF( "new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+				force = abs( GetTotalContactForce() );
 
 				// check if it's good enough
 				if ( abs( force - force_threshold ) / force_threshold <= fix_accuracy )
@@ -595,7 +595,9 @@ namespace scone
 			}
 
 			if ( abs( force - force_threshold ) / force_threshold > fix_accuracy )
-				log::WarningF( "Could not fix initial state, top=%.6f bottom=%.6f force=%.6f target=%.6f", top, bottom, force, force_threshold );
+				log::WarningF( "Could not fix initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+			else
+				log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 		}
 	}
 }
