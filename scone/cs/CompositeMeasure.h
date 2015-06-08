@@ -33,7 +33,7 @@ namespace scone
 			};
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			CompositeMeasure( CompositeMeasure& other );

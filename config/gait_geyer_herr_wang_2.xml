@@ -135,7 +135,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG10_CoT.xml"/>
+				<INCLUDE file="measures/M_CG12_E.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

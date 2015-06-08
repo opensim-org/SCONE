@@ -23,7 +23,7 @@ namespace scone
 			bool use_cost_of_transport;
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			Real m_Wang2012BasalEnergy;

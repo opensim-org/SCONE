@@ -537,7 +537,7 @@ namespace scone
 			return m_pOsimManager->getFinalTime();
 		}
 
-		scone::String Model_Simbody::GetMainSignature() const
+		scone::String Model_Simbody::GetClassSignature() const
 		{
 			return GetOsimModel().getName();
 		}

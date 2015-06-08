@@ -21,7 +21,7 @@ namespace scone
 			virtual PropNode GetReport();
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			struct Limit

@@ -18,7 +18,7 @@ namespace scone
 			virtual double GetResult( sim::Model& model ) override;
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			String target_body;

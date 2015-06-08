@@ -100,7 +100,7 @@ namespace scone
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 
 		protected:
-			virtual String GetMainSignature() const override { return GetName(); }
+			virtual String GetClassSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();
 
 		protected:

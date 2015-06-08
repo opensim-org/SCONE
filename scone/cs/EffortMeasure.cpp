@@ -54,7 +54,7 @@ namespace scone
 				double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 				return m_Energy.GetTotal() / ( model.GetMass() * distance );
 			}
-			else return m_Energy.GetTotal();
+			else return m_Energy.GetAverage();
 		}
 
 		double EffortMeasure::GetEnergy( const sim::Model& model ) const
@@ -107,14 +107,22 @@ namespace scone
 			return e;
 		}
 
-		scone::String EffortMeasure::GetMainSignature() const
+		scone::String EffortMeasure::GetClassSignature() const
 		{
+			String s;
+
+			if ( use_cost_of_transport )
+				s += "C";
+			else s += "A";
+
 			switch( measure_type )
 			{
-			case TotalForce: return "F";
-			case Wang2012: return "W";
+			case TotalForce: s += "F"; break;
+			case Wang2012: s += "W"; break;
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
+
+			return s;
 		}
 	}
 }

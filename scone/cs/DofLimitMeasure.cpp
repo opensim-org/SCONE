@@ -65,9 +65,9 @@ namespace scone
 			return result;
 		}
 
-		scone::String DofLimitMeasure::GetMainSignature() const
+		scone::String DofLimitMeasure::GetClassSignature() const
 		{
-			return "DL";
+			return "";
 		}
 
 		scone::PropNode DofLimitMeasure::GetReport()

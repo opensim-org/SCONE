@@ -17,7 +17,7 @@ namespace scone
 			virtual ~ReflexController();
 
 			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			std::vector< MuscleReflexUP > m_MuscleReflexes;

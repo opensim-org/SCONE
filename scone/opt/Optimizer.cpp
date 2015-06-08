@@ -133,7 +133,7 @@ namespace scone
 			return m_OutputFolder;
 		}
 
-		scone::String Optimizer::GetMainSignature() const
+		scone::String Optimizer::GetClassSignature() const
 		{
 			String s = GetObjective().GetSignature();
 			if ( use_init_file && !init_file.empty() )

@@ -98,7 +98,7 @@ namespace scone
 			return SuccessfulUpdate;
 		}
 
-		scone::String ReflexController::GetMainSignature() const
+		scone::String ReflexController::GetClassSignature() const
 		{
 			String str = "R"; //GetStringF( "r%d", m_Reflexes.size() );
 

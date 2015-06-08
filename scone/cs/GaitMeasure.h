@@ -27,7 +27,7 @@ namespace scone
 			Real contact_force_threshold;
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			Statistic< double > m_Energy;

@@ -117,7 +117,7 @@ namespace scone
 			return SuccessfulUpdate;
 		}
 
-		scone::String FeedForwardController::GetMainSignature() const
+		scone::String FeedForwardController::GetClassSignature() const
 		{
 			String s = "F" + m_Functions.front()->GetSignature();
 			if ( number_of_modes > 0 )

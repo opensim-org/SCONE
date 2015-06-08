@@ -197,7 +197,7 @@ namespace scone
 			}
 		}
 
-		scone::String GaitStateController::GetMainSignature() const
+		scone::String GaitStateController::GetClassSignature() const
 		{
 			String s = "G";
 

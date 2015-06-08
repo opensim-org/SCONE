@@ -13,7 +13,7 @@ namespace scone
 		String GetSignature() const;
 
 	protected:
-		virtual String GetMainSignature() const { return ""; }
+		virtual String GetClassSignature() const { return ""; }
 
 	private:
 		String signature_prefix;

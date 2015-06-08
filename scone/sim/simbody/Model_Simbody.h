@@ -65,7 +65,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		protected:
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 		private:
 			Real GetTotalContactForce();

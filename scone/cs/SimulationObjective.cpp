@@ -64,7 +64,7 @@ namespace scone
 			return files;
 		}
 
-		String SimulationObjective::GetMainSignature() const
+		String SimulationObjective::GetClassSignature() const
 		{
 			String str = GetStringF( "%03d.", SCONE_VERSION_BUILD ) + m_Model->GetSignature();
 

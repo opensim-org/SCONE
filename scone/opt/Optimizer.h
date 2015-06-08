@@ -32,7 +32,7 @@ namespace scone
 
 			void ManageFileOutput( double fitness, const std::vector< String >& files );
 
-			virtual String GetMainSignature() const override;
+			virtual String GetClassSignature() const override;
 
 			size_t max_threads;
 			int thread_priority;

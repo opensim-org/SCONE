@@ -91,16 +91,13 @@ namespace scone
 			return m_Report;
 		}
 
-		scone::String CompositeMeasure::GetMainSignature() const
+		scone::String CompositeMeasure::GetClassSignature() const
 		{
-			// for now, just return the first one
-			return m_Terms.front().measure->GetSignature();
+			String str;
+			BOOST_FOREACH( auto& t, m_Terms )
+				str += t.measure->GetSignature();
 
-			//String str;
-			//BOOST_FOREACH( Term& t, m_Terms )
-			//	str += t.measure->GetSignature();
-
-			//return str;
+			return str;
 		}
 	}
 }
