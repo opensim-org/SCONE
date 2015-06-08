@@ -47,6 +47,8 @@ namespace scone
 			PropNode m_Report;
 
 			Statistic<> m_MinVelocityMeasure;
+			int m_nSteps;
+			double m_TotStepSize;
 		};
 	}
 }
