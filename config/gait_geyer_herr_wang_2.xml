@@ -11,7 +11,7 @@
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
-			<state_init_file>f2354_init_walk_2.sto</state_init_file>
+			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
 			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
@@ -135,7 +135,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG10.xml"/>
+				<INCLUDE file="measures/M_CG10_CoT.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>
