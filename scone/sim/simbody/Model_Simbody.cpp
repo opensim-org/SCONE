@@ -30,8 +30,6 @@
 using std::cout;
 using std::endl;
 
-#define USE_MANUAL_INTEGRATION 1
-
 namespace scone
 {
 	namespace sim
@@ -373,6 +371,18 @@ namespace scone
 			}
 		}
 
+		void Model_Simbody::StoreTkState()
+		{
+			SCONE_PROFILE_SCOPE;
+
+			// OpenSim: add state to storage, why so complicated?
+			OpenSim::Array<double> stateValues;
+			m_pOsimModel->getStateValues( GetTkState(), stateValues );
+			OpenSim::StateVector vec;
+			vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0]);
+			m_pOsimManager->getStateStorage().append(vec);
+		}
+
 		void Model_Simbody::AdvanceSimulationTo( double final_time )
 		{
 			SCONE_PROFILE_SCOPE;
@@ -388,6 +398,11 @@ namespace scone
 				m_pTkIntegrator->setFinalTime( final_time );
 				SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
 				ts.initialize( GetTkState() );
+
+				// store initial state
+				StoreTkState();
+
+				// start integration loop
 				int number_of_steps = static_cast< int >( 0.5 + final_time / fixed_control_step_size );
 				for ( int current_step = 0; current_step < number_of_steps; )
 				{
@@ -397,7 +412,6 @@ namespace scone
 					// integrate
 					m_PrevTime = GetTime();
 					m_PrevIntStep = GetIntegrationStep();
-
 					double target_time = GetTime() + fixed_control_step_size;
 					SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
 					SetTkState( m_pTkIntegrator->updAdvancedState() );
@@ -405,15 +419,7 @@ namespace scone
 
 					++current_step;
 
-					// OpenSim: add state to storage, why so complicated?
-					{
-						SCONE_PROFILE_SCOPE_NAMED( "m_pOsimManager->getStateStorage()::append()" );
-						OpenSim::Array<double> stateValues;
-						m_pOsimModel->getStateValues( GetTkState(), stateValues );
-						OpenSim::StateVector vec;
-						vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0]);
-						m_pOsimManager->getStateStorage().append(vec);
-					}
+					StoreTkState();
 
 					// update the sensor delays and other analyses
 					UpdateSensorDelayAdapters();
