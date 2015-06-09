@@ -1,0 +1,1 @@
+hg log -r . --template "{rev}" > version.txt

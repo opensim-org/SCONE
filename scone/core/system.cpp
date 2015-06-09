@@ -2,13 +2,15 @@
 #include "system.h"
 
 #include <shlobj.h>
-#include <iosfwd>
+#include <fstream>
 #include <boost/thread.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace scone
 {
 	boost::mutex g_SystemMutex;
 	PropNode g_GlobalSettings;
+	String g_Version;
 
 	String GetLocalAppDataFolder()
 	{
@@ -28,6 +30,15 @@ namespace scone
 		return String( mbsLocalAppData );
 	}
 
+	CORE_API String GetApplicationFolder()
+	{
+		char buf[ 1024 ];
+		GetModuleFileName( 0, buf, sizeof( buf ) );
+
+		boost::filesystem::path folder( buf );
+		return folder.parent_path().string();
+	}
+
 	const PropNode& GetSconeSettings()
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
@@ -44,4 +55,16 @@ namespace scone
 		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
 	}
 
+	CORE_API String GetApplicationVersion()
+	{
+		if ( g_Version.empty() )
+		{
+			std::ifstream ifstr( GetApplicationFolder() + "/version.txt" );
+			if ( ifstr.good() )
+				ifstr >> g_Version;
+			else g_Version = "UNKNOWN_VERSION";
+		}
+
+		return g_Version;
+	}
 }
