@@ -32,7 +32,7 @@ namespace scone
 		Controller( props, par, model, target_area )
 		{
 			// TODO: move contact_force_threshold to leg?
-			INIT_PROPERTY( props, contact_force_threshold, 10.0 );
+			INIT_PARAM( props, par, stance_load_threshold, 0.1 );
 			INIT_PARAM( props, par, landing_threshold, 0.0 );
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );
 			
@@ -110,7 +110,7 @@ namespace scone
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			{
 				LegInfo& ls = *m_LegStates[ idx ];
-				ls.contact = ls.leg.GetContactForce().y > contact_force_threshold;
+				ls.contact = ls.leg.GetLoad() >= stance_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetBaseLink().GetBody().GetPos().x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
 			}

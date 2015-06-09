@@ -2,6 +2,7 @@
 
 #include "sim_simbody.h"
 #include "../Body.h"
+#include "Model_Simbody.h"
 
 namespace OpenSim
 {
@@ -34,6 +35,8 @@ namespace scone
 
 			// connect a specific contact force to this body
 			void ConnectContactForce( const String& force_name );
+
+			virtual const Model& GetModel() const override;
 
 		private:
 			int m_ForceIndex;

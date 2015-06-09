@@ -67,6 +67,7 @@ namespace scone
 			String state_init_file;
 			String probe_class;
 			double pre_control_simulation_time;
+			double initial_leg_load;
 
 			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
 			INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
@@ -77,6 +78,7 @@ namespace scone
 			INIT_PROPERTY( props, state_init_file, String() );
 			INIT_PROPERTY( props, probe_class, String() );
 			INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
+			INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( GetSconeFolder( "models" ) + model_file );
@@ -133,7 +135,7 @@ namespace scone
 			{
 				State state = ReadState( GetSconeFolder( "models" ) + state_init_file );
 				SetState( state );
-				FixState( 0.1 * GetMass() * -GetGravity().y );
+				FixState( initial_leg_load * GetMass() * -GetGravity().y );
 			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information

@@ -42,7 +42,7 @@ namespace scone
 			virtual String GetClassSignature() const override;
 
 			// public parameters
-			Real contact_force_threshold;
+			Real stance_load_threshold;
 
 		protected:
 			virtual void UpdateLegStates( sim::Model& model, double timestamp );

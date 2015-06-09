@@ -87,5 +87,10 @@ namespace scone
 		{
 			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( force_name, 0 );
 		}
+
+		const Model& Body_Simbody::GetModel() const 
+		{
+			return dynamic_cast< const Model& >( m_Model );
+		}
 	}
 }

@@ -23,7 +23,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, min_velocity, 0.5 );
-			INIT_PROPERTY( props, contact_force_threshold, 0.1 );
+			INIT_PROPERTY( props, load_threshold, 0.1 );
 
 			// make contact_force_threshold a factor of the model's downward gravity force
 			//contact_force_threshold *= model.GetMass() * -model.GetGravity().y;
@@ -138,14 +138,14 @@ namespace scone
 			{
 				// initialize
 				BOOST_FOREACH( const sim::LegUP& leg, model.GetLegs() )
-					m_PrevContactState.push_back( leg->GetContactForce().y > contact_force_threshold );
+					m_PrevContactState.push_back( leg->GetLoad() >= load_threshold );
 				return false;
 			}
 
 			bool has_new_contact = false;
 			for ( size_t idx = 0; idx < model.GetLegCount(); ++idx )
 			{
-				bool contact = model.GetLeg( idx ).GetContactForce().y > contact_force_threshold;
+				bool contact = model.GetLeg( idx ).GetLoad() >= load_threshold;
 				if ( contact && !m_PrevContactState[ idx ] )
 				{
 					has_new_contact = true;
