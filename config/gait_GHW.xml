@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW6</signature_postfix>
+		<signature_postfix>GHW7</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -105,15 +105,22 @@
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
+									<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
-										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 										<KL	init_mean="3.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<L0		init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<L0	init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
+									
+									<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
-										<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 										<KL	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<L0		init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<L0	init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+									</Reflex>
+									
+									<!-- Balance hip correction -->
+									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
+										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
