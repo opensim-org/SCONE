@@ -1,1 +1,1 @@
-hg log -r . --template "{rev}" > version.txt
+hg log -r . --template "{rev}" > "%~dp0\version.txt"
