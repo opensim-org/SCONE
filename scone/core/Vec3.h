@@ -116,8 +116,9 @@ namespace scone
 		Real GetAngle( const Vec3& v ) const;
 
 		/** Project onto plane. */
-		Vec3& Project( const Vec3& plane_normal );
-		Vec3 GetProjection( const Vec3& plane_normal ) const;
+		Vec3& ProjectPlane( const Vec3& plane_normal );
+		Vec3 GetPlaneProjection( const Vec3& plane_normal ) const;
+		Vec3 GetVectorProjection( const Vec3& vec ) const;
 
 		/** Get angle between v1 and v2 on plane defined by this normal. */
 		Real GetAngleOnPlane( const Vec3& v1, const Vec3& v2 ) const;

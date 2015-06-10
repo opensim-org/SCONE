@@ -147,14 +147,14 @@ namespace scone
 		return acos( GetNormalized().GetDotProduct( v.GetNormalized() ) );
 	}
 
-	Vec3& Vec3::Project( const Vec3& plane_normal )
+	Vec3& Vec3::ProjectPlane( const Vec3& plane_normal )
 	{
 		Vec3 pnn = plane_normal.GetNormalized();
 		( *this ) -= GetDotProduct( pnn ) * pnn;
 		return ( *this );
 	}
 
-	Vec3 Vec3::GetProjection( const Vec3& plane_normal ) const
+	Vec3 Vec3::GetPlaneProjection( const Vec3& plane_normal ) const
 	{
 		Vec3 pnn = plane_normal.GetNormalized();
 		return *this - GetDotProduct( pnn ) * pnn;
@@ -174,7 +174,7 @@ namespace scone
 
 	Real Vec3::GetAngleOnPlane( const Vec3& v1, const Vec3& v2 ) const
 	{
-		return v1.GetProjection(*this).GetAngle(v2.GetProjection(*this));
+		return v1.GetPlaneProjection(*this).GetAngle(v2.GetPlaneProjection(*this));
 	}
 
 	Real Vec3::GetVolume() const
@@ -190,5 +190,12 @@ namespace scone
 	Vec3 Vec3::GetScaled( Real sx, Real sy, Real sz ) const
 	{
 		return Vec3( sx * X(), sy * Y(), sz * Z() );
+	}
+
+	Vec3 Vec3::GetVectorProjection( const Vec3& vec ) const
+	{
+		// http://math.oregonstate.edu/home/programs/undergrad/CalculusQuestStudyGuides/vcalc/dotprod/dotprod.html
+		// TODO: requires testing
+		return ( GetDotProduct( vec ) / GetSquaredLength() ) * (*this);
 	}
 }
