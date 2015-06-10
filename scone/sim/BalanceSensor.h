@@ -7,13 +7,13 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API BalanceSensor : public Sensor
+		class SCONE_SIM_API BalanceSensor : public ChannelSensor
 		{
 		public:
 			BalanceSensor( Model& model );
 			virtual ~BalanceSensor();
 
-			static const Index PostureSensorIndex = 0;
+			static const Index SagittalBodyPostureSensor = 0;
 
 			virtual const StringIndexMap& GetSensorNames() const override;
 			virtual Real GetSensorValue( Index idx ) const override;
@@ -26,5 +26,3 @@ namespace scone
 		};
 	}
 }
-
-

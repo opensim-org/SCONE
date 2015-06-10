@@ -9,7 +9,7 @@ namespace scone
 		class CS_API DofReflex : public Reflex
 		{
 		public:
-			DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source );
+			DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source );
 			virtual ~DofReflex();
 
 			virtual void ComputeControls( double timestamp );

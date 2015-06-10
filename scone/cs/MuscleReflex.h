@@ -10,7 +10,7 @@ namespace scone
 		class CS_API MuscleReflex : public Reflex
 		{
 		public:
-			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source );
+			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source );
 			virtual ~MuscleReflex();
 
 			virtual void ComputeControls( double timestamp );

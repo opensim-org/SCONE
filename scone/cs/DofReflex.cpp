@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace cs
 	{
-		DofReflex::DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source ) :
+		DofReflex::DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source ) :
 		Reflex( props, par, model, target, source ),
 		m_DelayedRoot( model.AcquireSensorDelayAdapter( *FindByName( model.GetSensors(), "pelvis_tilt" ) ) ),
 		m_bUseRoot( m_DelayedRoot.GetName() != m_DelayedSource.GetName() )

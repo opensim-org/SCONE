@@ -5,25 +5,25 @@ namespace scone
 {
 	namespace sim
 	{
-		Sensor::Sensor()
+		ChannelSensor::ChannelSensor()
 		{
 		}
 
-		Sensor::~Sensor()
+		ChannelSensor::~ChannelSensor()
 		{
 		}
 
-		size_t Sensor::GetSensorCount() const
+		size_t ChannelSensor::GetSensorCount() const
 		{
 			return GetSensorNames().GetSize();
 		}
 
-		const String& Sensor::GetSensorName( Index idx ) const
+		const String& ChannelSensor::GetSensorName( Index idx ) const
 		{
 			return GetSensorNames().GetString( idx );
 		}
 
-		Index Sensor::GetSensorIndex( const String& name ) const
+		Index ChannelSensor::GetSensorIndex( const String& name ) const
 		{
 			return GetSensorNames().GetValue( name );
 		}

@@ -34,7 +34,7 @@ namespace scone
 			return str;
 		}
 
-		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
+		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( ChannelSensor& source )
 		{
 			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
 				[&]( SensorDelayAdapterUP& a ) { return &a->m_Source == &source; } );

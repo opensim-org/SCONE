@@ -13,6 +13,6 @@ namespace scone
 
 	namespace cs
 	{
-		DECLARE_FACTORY( CS_API, Reflex, ( const PropNode&, opt::ParamSet&, sim::Model&, sim::Actuator&, sim::Sensor& ) );
+		DECLARE_FACTORY( CS_API, Reflex, ( const PropNode&, opt::ParamSet&, sim::Model&, sim::Actuator&, sim::ChannelSensor& ) );
 	}
 }

@@ -7,14 +7,14 @@ namespace scone
 {
 	namespace sim
 	{
-		StringMap< Index > Muscle::m_SensorNames(
+		StringIndexMap g_SensorNames = StringIndexMap(
 			Muscle::MuscleLengthSensor, "MuscleLength", 
 			Muscle::MuscleVelocitySensor, "MuscleVelocity", 
 			Muscle::MuscleForceSensor, "MuscleForce" );
 
 		Muscle::Muscle() :
 		Actuator(),
-		Sensor()
+		ChannelSensor()
 		{
 		}
 		
@@ -36,7 +36,7 @@ namespace scone
 
 		const StringIndexMap& Muscle::GetSensorNames() const 
 		{
-			return m_SensorNames;
+			return g_SensorNames;
 		}
 	}
 }

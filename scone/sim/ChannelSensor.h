@@ -8,11 +8,11 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Sensor : public virtual HasName
+		class SCONE_SIM_API ChannelSensor : public virtual HasName
 		{
 		public:
-			Sensor();
-			virtual ~Sensor();
+			ChannelSensor();
+			virtual ~ChannelSensor();
 
 			size_t GetSensorCount() const;
 			const String& GetSensorName( Index idx ) const;

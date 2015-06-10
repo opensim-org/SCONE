@@ -49,7 +49,7 @@ namespace scone
 			const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 			/// Sensor access
-			std::vector< Sensor* >& GetSensors() { return m_Sensors; }
+			std::vector< ChannelSensor* >& GetSensors() { return m_Sensors; }
 			std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 			/// link access
@@ -97,7 +97,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
 			// create delayed sensors
-			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
+			SensorDelayAdapter& AcquireSensorDelayAdapter( ChannelSensor& source );
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -115,7 +115,7 @@ namespace scone
 			bool m_ShouldTerminate;
 
 			// non-owning storage
-			std::vector< Sensor* > m_Sensors;
+			std::vector< ChannelSensor* > m_Sensors;
 			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;

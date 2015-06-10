@@ -13,7 +13,7 @@ namespace scone
 	{
 		static ReflexFactory g_ReflexFactory;
 		CS_API ReflexFactory& GetReflexFactory() { return g_ReflexFactory; }
-		CS_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source ) {
+		CS_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source ) {
 			return ReflexUP( GetReflexFactory().Create( props )( props, par, model, target, source ) );
 		}
 	}

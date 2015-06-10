@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Dof : public Sensor
+		class SCONE_SIM_API Dof : public ChannelSensor
 		{
 		public:
 			Dof();

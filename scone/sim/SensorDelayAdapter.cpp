@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace sim
 	{
-		SensorDelayAdapter::SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, double delay ) :
+		SensorDelayAdapter::SensorDelayAdapter( Model& model, Storage< Real >& storage, ChannelSensor& source, double delay ) :
 		m_Model( model ),
 		m_Storage( storage ),
 		m_Source( source ),

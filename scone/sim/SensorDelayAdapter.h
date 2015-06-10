@@ -11,10 +11,10 @@ namespace scone
 		class Model;
 
 		// TODO: make more efficient using templates?
-		class SCONE_SIM_API SensorDelayAdapter : public Sensor
+		class SCONE_SIM_API SensorDelayAdapter : public ChannelSensor
 		{
 		public:
-			SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, TimeInSeconds default_delay );
+			SensorDelayAdapter( Model& model, Storage< Real >& storage, ChannelSensor& source, TimeInSeconds default_delay );
 			virtual ~SensorDelayAdapter();
 
 			virtual Real GetSensorValue( size_t idx ) const override;
@@ -30,7 +30,7 @@ namespace scone
 			TimeInSeconds m_Delay;
 			Model& m_Model;
 			Storage< Real >& m_Storage;
-			Sensor& m_Source;
+			ChannelSensor& m_Source;
 			int m_PreviousUpdateStep;
 		};
 	}

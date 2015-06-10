@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		MuscleReflex::MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source ) :
+		MuscleReflex::MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source ) :
 		Reflex( props, par, model, target, source )
 		{
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );

@@ -66,7 +66,7 @@ namespace scone
 				sim::Actuator& target = *FindByName( model.GetActuators(), trgname + sidename );
 
 				String srcname = rprops.GetStr( "source", trgname );
-				sim::Sensor& source = HasElementWithName( model.GetSensors(), srcname + sidename ) ?
+				sim::ChannelSensor& source = HasElementWithName( model.GetSensors(), srcname + sidename ) ?
 					*FindByName( model.GetSensors(), srcname + sidename ) : *FindByName( model.GetSensors(), srcname );
 				//Index source_idx = source.GetSensorIndex( rprops.GetStr( "source_channel" ) );
 

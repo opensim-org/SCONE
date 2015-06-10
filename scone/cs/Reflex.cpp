@@ -17,7 +17,7 @@ namespace scone
 		//	INIT_FROM_PROP_PAR( props, par, threshold, 0.0 );
 		//}
 
-		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source ) :
+		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source ) :
 		m_DelayedSource( model.AcquireSensorDelayAdapter( source ) ),
 		m_Target( target )
 		{

@@ -13,7 +13,7 @@ namespace scone
 		{
 		public:
 			//Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model );
-			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::Sensor& source );
+			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source );
 			virtual ~Reflex();
 
 			virtual void ComputeControls( double timestamp );
