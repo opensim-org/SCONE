@@ -195,7 +195,7 @@ namespace scone
 	Vec3 Vec3::GetVectorProjection( const Vec3& vec ) const
 	{
 		// http://math.oregonstate.edu/home/programs/undergrad/CalculusQuestStudyGuides/vcalc/dotprod/dotprod.html
-		// TODO: requires testing
+		// TODO: needs to me tested
 		return ( GetDotProduct( vec ) / GetSquaredLength() ) * (*this);
 	}
 }

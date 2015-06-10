@@ -163,6 +163,30 @@ namespace scone
 		}
 	}
 
+	void Quat::ToAxisAngle2( Vec3& axis, Real& angle ) const
+	{
+		Real len = sqrt( X() * X() + Y() * Y() + Z() * Z() );
+		angle = 2 * atan2( len, W() );
+		if ( angle > REAL_EPSILON )
+		{
+			Real factor = 1.0 / sin( angle / 2 );
+			axis.Set( factor * X(), factor * Y(), factor * Z() );
+		}
+		else axis.Set( 0, 0, 0 );
+	}
+
+	Vec3 Quat::ToExponentialMap2() const
+	{
+		Real len = sqrt( X() * X() + Y() * Y() + Z() * Z() );
+		Real angle = 2 * atan2( len, W() );
+		if ( angle > REAL_EPSILON )
+		{
+			Real factor = angle / sin( angle / 2 );
+			return Vec3( factor * X(), factor * Y(), factor * Z() );
+		}
+		return Vec3::ZERO;
+	}
+
 	void Quat::ToAxes( Vec3& x, Vec3& y, Vec3& z ) const
 	{
 		x = (*this) * Vec3::UNIT_X;
@@ -173,8 +197,7 @@ namespace scone
 	Vec3 Quat::ToExponentialMap() const
 	{
 		Vec3 v;
-		double a;
-
+		Real a;
 		ToAxisAngle( v, a );
 
 		return a * v;

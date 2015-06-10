@@ -64,10 +64,11 @@ namespace scone
 
 		/** Convert to axis angle. */
 		void ToAxisAngle( Vec3& axis, Real& angle ) const;
+		void ToAxisAngle2( Vec3& axis, Real& angle ) const;
 
 		/** Convert to exponential map. */
 		Vec3 ToExponentialMap() const;
-
+		Vec3 ToExponentialMap2() const;
 
 		/** Convert to matrix. */
 		void ToMatrix( Real m[3][3] ) const;
@@ -108,7 +109,6 @@ namespace scone
 
 		const Real* Ptr() const { return m_V; }
 		Real* Ptr() { return m_V; }
-
 	private:
 
 		Real m_V[4];
