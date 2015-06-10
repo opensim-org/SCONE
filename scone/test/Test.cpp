@@ -50,7 +50,7 @@ namespace scone
 			props.Set( "Model.model_file", *iter );
 			sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
-			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscleCount(), m->GetBodyCount(), m->GetJoints().size(), m->GetControllers().size() );
+			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
 
 			Timer t;

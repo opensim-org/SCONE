@@ -26,8 +26,6 @@ namespace scone
 		ReflexController::ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
 		{
-			sim::Actuator& act = model.GetMuscle( 0 );
-
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 			String sidename = GetSideName( area.side );

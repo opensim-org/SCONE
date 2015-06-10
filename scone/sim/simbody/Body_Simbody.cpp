@@ -44,7 +44,12 @@ namespace scone
 
 		scone::Quat scone::sim::Body_Simbody::GetOri() const
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			// OpenSim: can this be done more efficient?
+			double dir_cos[3][3];
+			m_osBody.getModel().getSimbodyEngine().getDirectionCosines( m_Model.GetTkState(), m_osBody, dir_cos );
+			double a1, a2, a3;
+			m_osBody.getModel().getSimbodyEngine().convertDirectionCosinesToAngles( dir_cos, &a1, &a2, &a3 );
+			return QuatFromEuler( a1, a2, a3 );
 		}
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const

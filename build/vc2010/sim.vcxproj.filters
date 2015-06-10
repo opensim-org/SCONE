@@ -16,6 +16,9 @@
     <Filter Include="Simulation and Control">
       <UniqueIdentifier>{a7d71153-9b8c-440e-b6fb-ba69e67ccbc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sensors and Actuators\Old">
+      <UniqueIdentifier>{d3a5fe5d-0706-4a24-a5e8-5f329598de97}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\sim\Actuator.cpp">
@@ -58,14 +61,18 @@
       <Filter>Model Components</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\BalanceSensor.cpp">
-      <Filter>Sensors and Actuators</Filter>
+      <Filter>Sensors and Actuators\Old</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\ChannelSensor.cpp">
+      <Filter>Sensors and Actuators\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\ChannelSensorDelayAdapter.cpp">
+      <Filter>Sensors and Actuators\Old</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Sensor.cpp">
       <Filter>Sensors and Actuators</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
-    <ClCompile Include="..\..\scone\sim\MuscleSensors.cpp" />
-    <ClCompile Include="..\..\scone\sim\ChannelSensorDelayAdapter.cpp">
+    <ClCompile Include="..\..\scone\sim\Sensors.cpp">
       <Filter>Sensors and Actuators</Filter>
     </ClCompile>
   </ItemGroup>
@@ -118,15 +125,19 @@
     <ClInclude Include="..\..\scone\sim\Model.h">
       <Filter>Model Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\sim\ChannelSensorDelayAdapter.h">
+      <Filter>Sensors and Actuators\Old</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\scone\sim\BalanceSensor.h">
-      <Filter>Sensors and Actuators</Filter>
+      <Filter>Sensors and Actuators\Old</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\ChannelSensor.h">
+      <Filter>Sensors and Actuators\Old</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Sensors.h">
       <Filter>Sensors and Actuators</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Sensor.h" />
-    <ClInclude Include="..\..\scone\sim\MuscleSensors.h" />
-    <ClInclude Include="..\..\scone\sim\ChannelSensorDelayAdapter.h">
+    <ClInclude Include="..\..\scone\sim\Sensor.h">
       <Filter>Sensors and Actuators</Filter>
     </ClInclude>
   </ItemGroup>

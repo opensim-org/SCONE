@@ -29,14 +29,10 @@ namespace scone
 			virtual ~Model();
 
 			/// muscle access
-			size_t GetMuscleCount() const { return m_Muscles.size(); }
-			Muscle& GetMuscle( size_t idx ) { return *m_Muscles[ idx ]; }
 			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
 			const std::vector< MuscleUP >& GetMuscles() const { return m_Muscles; }
 
 			/// body access
-			size_t GetBodyCount() const { return m_Bodies.size(); }
-			Body& GetBody( size_t idx ) const { return *m_Bodies[ idx ]; }
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 			const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
 

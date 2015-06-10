@@ -91,7 +91,7 @@
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
     <ClCompile Include="..\..\scone\sim\Area.cpp" />
     <ClCompile Include="..\..\scone\sim\ChannelSensor.cpp" />
-    <ClCompile Include="..\..\scone\sim\MuscleSensors.cpp" />
+    <ClCompile Include="..\..\scone\sim\Sensors.cpp" />
     <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
     <ClCompile Include="..\..\scone\sim\ChannelSensorDelayAdapter.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
@@ -114,7 +114,7 @@
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\Area.h" />
     <ClInclude Include="..\..\scone\sim\ChannelSensor.h" />
-    <ClInclude Include="..\..\scone\sim\MuscleSensors.h" />
+    <ClInclude Include="..\..\scone\sim\Sensors.h" />
     <ClInclude Include="..\..\scone\sim\Sensor.h" />
     <ClInclude Include="..\..\scone\sim\ChannelSensorDelayAdapter.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
