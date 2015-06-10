@@ -2,7 +2,7 @@
 
 #include "sim.h"
 #include "../core/HasName.h"
-#include "Sensor.h"
+#include "ChannelSensor.h"
 #include "../core/StringMap.h"
 
 namespace scone

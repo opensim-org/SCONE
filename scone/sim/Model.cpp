@@ -34,14 +34,14 @@ namespace scone
 			return str;
 		}
 
-		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( ChannelSensor& source )
+		ChannelSensorDelayAdapter& Model::AcquireSensorDelayAdapter( ChannelSensor& source )
 		{
 			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
-				[&]( SensorDelayAdapterUP& a ) { return &a->m_Source == &source; } );
+				[&]( ChannelSensorDelayAdapterUP& a ) { return &a->m_Source == &source; } );
 
 			if ( it == m_SensorDelayAdapters.end() )
 			{
-				m_SensorDelayAdapters.push_back( SensorDelayAdapterUP( new SensorDelayAdapter( *this, m_SensorDelayStorage, source, 0.0 ) ) );
+				m_SensorDelayAdapters.push_back( ChannelSensorDelayAdapterUP( new ChannelSensorDelayAdapter( *this, m_SensorDelayStorage, source, 0.0 ) ) );
 				return *m_SensorDelayAdapters.back();
 			}
 			else return **it;
@@ -55,7 +55,7 @@ namespace scone
 
 			// add a new frame and update
 			m_SensorDelayStorage.AddFrame( GetTime() );
-			BOOST_FOREACH( std::unique_ptr< SensorDelayAdapter >& sda, m_SensorDelayAdapters )
+			BOOST_FOREACH( std::unique_ptr< ChannelSensorDelayAdapter >& sda, m_SensorDelayAdapters )
 				sda->UpdateStorage();
 
 			//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );

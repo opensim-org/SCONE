@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Sensor.h"
+#include "ChannelSensor.h"
 
 namespace scone
 {

@@ -27,9 +27,6 @@
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\sim\Sensor.cpp">
-      <Filter>Sensors and Actuators</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\sim\Area.cpp">
       <Filter>Topology</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Controller.cpp">
       <Filter>Simulation and Control</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp">
-      <Filter>Sensors and Actuators</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\sim\Body.cpp">
       <Filter>Model Components</Filter>
@@ -66,6 +60,14 @@
     <ClCompile Include="..\..\scone\sim\BalanceSensor.cpp">
       <Filter>Sensors and Actuators</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\sim\ChannelSensor.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
+    <ClCompile Include="..\..\scone\sim\MuscleSensors.cpp" />
+    <ClCompile Include="..\..\scone\sim\ChannelSensorDelayAdapter.cpp">
+      <Filter>Sensors and Actuators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h">
@@ -82,9 +84,6 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Types.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Sensor.h">
-      <Filter>Sensors and Actuators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\Area.h">
       <Filter>Topology</Filter>
@@ -104,9 +103,6 @@
     <ClInclude Include="..\..\scone\sim\Controller.h">
       <Filter>Simulation and Control</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h">
-      <Filter>Sensors and Actuators</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\Body.h">
       <Filter>Model Components</Filter>
     </ClInclude>
@@ -123,6 +119,14 @@
       <Filter>Model Components</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\BalanceSensor.h">
+      <Filter>Sensors and Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\ChannelSensor.h">
+      <Filter>Sensors and Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Sensor.h" />
+    <ClInclude Include="..\..\scone\sim\MuscleSensors.h" />
+    <ClInclude Include="..\..\scone\sim\ChannelSensorDelayAdapter.h">
       <Filter>Sensors and Actuators</Filter>
     </ClInclude>
   </ItemGroup>

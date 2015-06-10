@@ -21,7 +21,7 @@ namespace scone
 
 		protected:
 			Real GetDelayedSensorValue( Index channel ) { return m_DelayedSource.GetSensorValue( channel, delay ); }
-			sim::SensorDelayAdapter& m_DelayedSource;
+			sim::ChannelSensorDelayAdapter& m_DelayedSource;
 			sim::Actuator& m_Target;
 		};
 	}

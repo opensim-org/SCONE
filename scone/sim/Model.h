@@ -14,8 +14,8 @@
 #include "State.h"
 #include "../core/HasName.h"
 #include "../core/HasSignature.h"
-#include "SensorDelayAdapter.h"
-#include "Sensor.h"
+#include "ChannelSensorDelayAdapter.h"
+#include "ChannelSensor.h"
 #include "BalanceSensor.h"
 
 namespace scone
@@ -97,7 +97,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
 			// create delayed sensors
-			SensorDelayAdapter& AcquireSensorDelayAdapter( ChannelSensor& source );
+			ChannelSensorDelayAdapter& AcquireSensorDelayAdapter( ChannelSensor& source );
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -118,7 +118,7 @@ namespace scone
 			std::vector< ChannelSensor* > m_Sensors;
 			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
-			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
+			std::vector< std::unique_ptr< ChannelSensorDelayAdapter > > m_SensorDelayAdapters;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

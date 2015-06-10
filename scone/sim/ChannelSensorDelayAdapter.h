@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Sensor.h"
+#include "ChannelSensor.h"
 #include "../core/Delayer.h"
 #include "../core/Storage.h"
 
@@ -11,11 +11,11 @@ namespace scone
 		class Model;
 
 		// TODO: make more efficient using templates?
-		class SCONE_SIM_API SensorDelayAdapter : public ChannelSensor
+		class SCONE_SIM_API ChannelSensorDelayAdapter : public ChannelSensor
 		{
 		public:
-			SensorDelayAdapter( Model& model, Storage< Real >& storage, ChannelSensor& source, TimeInSeconds default_delay );
-			virtual ~SensorDelayAdapter();
+			ChannelSensorDelayAdapter( Model& model, Storage< Real >& storage, ChannelSensor& source, TimeInSeconds default_delay );
+			virtual ~ChannelSensorDelayAdapter();
 
 			virtual Real GetSensorValue( size_t idx ) const override;
 			Real GetSensorValue( size_t idx, TimeInSeconds delay ) const;

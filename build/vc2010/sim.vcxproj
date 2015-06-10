@@ -90,8 +90,10 @@
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
     <ClCompile Include="..\..\scone\sim\Area.cpp" />
+    <ClCompile Include="..\..\scone\sim\ChannelSensor.cpp" />
+    <ClCompile Include="..\..\scone\sim\MuscleSensors.cpp" />
     <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
-    <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp" />
+    <ClCompile Include="..\..\scone\sim\ChannelSensorDelayAdapter.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -111,8 +113,10 @@
     <ClInclude Include="..\..\scone\sim\Model.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\Area.h" />
+    <ClInclude Include="..\..\scone\sim\ChannelSensor.h" />
+    <ClInclude Include="..\..\scone\sim\MuscleSensors.h" />
     <ClInclude Include="..\..\scone\sim\Sensor.h" />
-    <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h" />
+    <ClInclude Include="..\..\scone\sim\ChannelSensorDelayAdapter.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\State.h" />

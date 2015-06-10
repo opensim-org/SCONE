@@ -7,7 +7,7 @@ namespace scone
 	namespace sim
 	{
 		const StringMap< Index > BalanceSensor::m_SensorNames(
-			BalanceSensor::PostureSensorIndex, "Posture" );
+			BalanceSensor::SagittalBodyPostureSensor, "Posture" );
 
 		BalanceSensor::BalanceSensor( Model& model ) :
 		m_BodyDof( *FindByName( model.GetDofs(), "lumbar_extension" ) ),
