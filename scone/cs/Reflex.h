@@ -23,6 +23,7 @@ namespace scone
 			//Real GetDelayedSensorValue( Index channel ) { return m_DelayedSource.GetSensorValue( channel, delay ); }
 			//sim::ChannelSensorDelayAdapter& m_DelayedSource;
 			sim::Actuator& m_Target;
+			static String GetReflexName( const String& target, const String& source );
 		};
 	}
 }

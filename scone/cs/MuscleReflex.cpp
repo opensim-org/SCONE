@@ -16,10 +16,7 @@ namespace scone
 		m_Source( *FindByName( model.GetMuscles(), props.GetStr( "source", props.GetStr( "target" ) ) + GetSideName( area.side ) ) )
 		{
 			// init names
-			String trgname = m_Target.GetName();
-			String srcname = m_Source.GetName();
-			//String sidename = GetSideName( area.side );
-			String reflexname = ( srcname == trgname ) ? GetNameNoSide( trgname ) : GetNameNoSide( trgname ) + "-" + GetNameNoSide( srcname );
+			String reflexname = GetReflexName( m_Target.GetName(), m_Source.GetName() );
 			opt::ScopedParamSetPrefixer prefixer( par, reflexname + "." );
 
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );

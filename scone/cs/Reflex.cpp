@@ -33,5 +33,10 @@ namespace scone
 		{
 			SCONE_THROW_NOT_IMPLEMENTED;
 		}
+
+		scone::String Reflex::GetReflexName( const String& target, const String& source )
+		{
+			return ( target == source ) ? GetNameNoSide( target ) : GetNameNoSide( target ) + "-" + GetNameNoSide( source );
+		}
 	}
 }

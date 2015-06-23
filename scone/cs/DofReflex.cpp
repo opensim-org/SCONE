@@ -21,8 +21,9 @@ namespace scone
 		//m_DelayedRoot( model.AcquireSensorDelayAdapter( *FindByName( model.GetSensors(), "pelvis_tilt" ) ) ),
 		//m_bUseRoot( m_DelayedRoot.GetName() != m_DelayedSource.GetName() )
 		{
-			// TODO: don't use this hack
-			//SCONE_ASSERT( dynamic_cast< sim::Dof* >( &source ) != 0 );
+			String reflexname = GetReflexName( m_Target.GetName(), FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetName() );
+			opt::ScopedParamSetPrefixer prefixer( par, reflexname + "." );
+
 			INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
 			INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
 			INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
