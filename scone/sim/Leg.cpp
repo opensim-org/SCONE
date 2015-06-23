@@ -45,5 +45,13 @@ namespace scone
 				m_ForceToLoadFactor = 1.0 / m_Foot.GetBody().GetModel().GetMass() * -m_Foot.GetBody().GetModel().GetGravity().y;
 			return m_ForceToLoadFactor * GetContactForce().y;
 		}
+
+		scone::String Leg::GetName() const
+		{
+			// TODO: include ranks
+			if ( m_Side == LeftSide )
+				return "L";
+			else return "R";
+		}
 	}
 }

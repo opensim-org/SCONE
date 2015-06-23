@@ -11,10 +11,12 @@ namespace scone
 		class SCONE_SIM_API Sensor
 		{
 		public:
+			Sensor();
 			Sensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual ~Sensor();
 
 			virtual Real GetValue() const = 0;
+			virtual String GetName() const = 0;
 		};
 	}
 }

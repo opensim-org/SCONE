@@ -7,12 +7,13 @@
 #include "Actuator.h"
 #include "ChannelSensor.h"
 #include "../core/StringMap.h"
+#include "Sensors.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle : public Actuator, public ChannelSensor
+		class SCONE_SIM_API Muscle : public Actuator //, public ChannelSensor
 		{
 		public:
 			Muscle();
@@ -46,12 +47,17 @@ namespace scone
 			virtual void SetExcitation( Real u ) = 0;
 
 			/// Inherited from Sensor
-			static const Index MuscleLengthSensor = 0;
-			static const Index MuscleVelocitySensor = 1;
-			static const Index MuscleForceSensor = 2;
+			//static const Index MuscleLengthSensor = 0;
+			//static const Index MuscleVelocitySensor = 1;
+			//static const Index MuscleForceSensor = 2;
 
-			virtual Real GetSensorValue( Index idx ) const override;
-			virtual const StringIndexMap& GetSensorNames() const override;
+			//virtual Real GetSensorValue( Index idx ) const override;
+			//virtual const StringIndexMap& GetSensorNames() const override;
+			
+			// muscle sensors
+			MuscleLengthSensor m_MuscleLengthSensor;
+			MuscleForceSensor m_MuscleForceSensor;
+			MuscleVelocitySensor m_MuscleVelocitySensor;
 		};
 	}
 }

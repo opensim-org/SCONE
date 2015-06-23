@@ -2,6 +2,8 @@
 #include "Reflex.h"
 #include "../core/InitFromPropNode.h"
 #include "../sim/Actuator.h"
+#include "../sim/Area.h"
+#include "Tools.h"
 
 namespace scone
 {
@@ -17,9 +19,8 @@ namespace scone
 		//	INIT_FROM_PROP_PAR( props, par, threshold, 0.0 );
 		//}
 
-		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source ) :
-		m_DelayedSource( model.AcquireSensorDelayAdapter( source ) ),
-		m_Target( target )
+		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		m_Target( *FindByName( model.GetActuators(), props.GetStr( "target" ) + GetSideName( area.side ) ) )
 		{
 			INIT_PROPERTY_REQUIRED( props, delay );
 		}

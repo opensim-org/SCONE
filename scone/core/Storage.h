@@ -58,9 +58,19 @@ namespace scone
 		Storage( const Storage& other ) {
 			*this = other;
 		};
+		Storage( Storage&& other ) {
+			*this = std::move( other );
+		};
 		Storage& operator=( const Storage& other ) {
+			m_Labels = other.m_Labels;
 			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
 				m_Data.push_back( FrameUP( new Frame( **it ) ) );
+			m_InterpolationCache.clear();
+			return *this;
+		};
+		Storage& operator=( Storage&& other ) {
+			m_Labels = std::move( other.m_Labels );
+			m_Data = std::move( other.m_Data );
 			m_InterpolationCache.clear();
 			return *this;
 		};

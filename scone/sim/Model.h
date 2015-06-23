@@ -45,7 +45,8 @@ namespace scone
 			const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 			/// Sensor access
-			std::vector< ChannelSensor* >& GetSensors() { return m_Sensors; }
+			std::vector< ChannelSensor* >& GetChannelSensors() { return m_ChannelSensors; }
+			//std::vector< ChannelSensor* >& GetChannelSensors() { return m_ChannelSensors; }
 			std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 			/// link access
@@ -93,7 +94,8 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
 			// create delayed sensors
-			ChannelSensorDelayAdapter& AcquireSensorDelayAdapter( ChannelSensor& source );
+			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
+			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -107,14 +109,14 @@ namespace scone
 			std::vector< DofUP > m_Dofs;
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
-			BalanceSensorUP m_BalanceSensor;
+			//BalanceSensorUP m_BalanceSensor;
 			bool m_ShouldTerminate;
 
 			// non-owning storage
-			std::vector< ChannelSensor* > m_Sensors;
+			std::vector< ChannelSensor* > m_ChannelSensors;
 			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
-			std::vector< std::unique_ptr< ChannelSensorDelayAdapter > > m_SensorDelayAdapters;
+			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

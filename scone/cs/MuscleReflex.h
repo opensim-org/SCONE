@@ -2,6 +2,7 @@
 
 #include "cs.h"
 #include "Reflex.h"
+#include "../sim/SensorDelayAdapter.h"
 
 namespace scone
 {
@@ -10,7 +11,7 @@ namespace scone
 		class CS_API MuscleReflex : public Reflex
 		{
 		public:
-			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, sim::Actuator& target, sim::ChannelSensor& source );
+			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~MuscleReflex();
 
 			virtual void ComputeControls( double timestamp );
@@ -20,6 +21,12 @@ namespace scone
 			Real length_ofs;
 			Real force_gain;
 			Real velocity_gain;
+
+		private:
+			sim::Muscle& m_Source;
+			sim::SensorDelayAdapter* m_pForceSensor;
+			sim::SensorDelayAdapter* m_pLengthSensor;
+			sim::SensorDelayAdapter* m_pVelocitySensor;
 		};
 	}
 }

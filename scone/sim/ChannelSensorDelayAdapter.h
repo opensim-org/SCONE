@@ -10,7 +10,6 @@ namespace scone
 	{
 		class Model;
 
-		// TODO: make more efficient using templates?
 		class SCONE_SIM_API ChannelSensorDelayAdapter : public ChannelSensor
 		{
 		public:

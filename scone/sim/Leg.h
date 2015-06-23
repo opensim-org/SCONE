@@ -20,6 +20,7 @@ namespace scone
 			Side GetSide() const { return m_Side; }
 			size_t GetIndex() const { return m_Index; }
 			size_t GetRank() const { return m_Rank; }
+			String GetName() const;
 
 			virtual Vec3 GetContactForce() const;
 			Real GetLoad() const;
