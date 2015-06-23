@@ -182,7 +182,7 @@ namespace scone
 		void Model_Simbody::CreateModelWrappers()
 		{
 			SCONE_ASSERT( m_pOsimModel );
-			SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_ChannelSensors.empty() );
+			SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();

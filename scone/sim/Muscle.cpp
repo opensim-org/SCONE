@@ -13,15 +13,33 @@ namespace scone
 		//	Muscle::MuscleForceSensor, "MuscleForce" );
 
 		Muscle::Muscle() :
-		Actuator(),
-		m_MuscleForceSensor( *this ),
-		m_MuscleLengthSensor( *this ),
-		m_MuscleVelocitySensor( *this )
+		Actuator()
 		{
 		}
 		
 		Muscle::~Muscle()
 		{
+		}
+
+		MuscleForceSensor& Muscle::GetForceSensor()
+		{
+			if ( !m_pMuscleForceSensor )
+				m_pMuscleForceSensor = std::unique_ptr< MuscleForceSensor >( new MuscleForceSensor( *this ) );
+			return *m_pMuscleForceSensor;
+		}
+
+		MuscleLengthSensor& Muscle::GetLengthSensor()
+		{
+			if ( !m_pMuscleLengthSensor )
+				m_pMuscleLengthSensor = std::unique_ptr< MuscleLengthSensor >( new MuscleLengthSensor( *this ) );
+			return *m_pMuscleLengthSensor;
+		}
+
+		MuscleVelocitySensor& Muscle::GetVelocitySensor()
+		{
+			if ( !m_pMuscleVelocitySensor )
+				m_pMuscleVelocitySensor = std::unique_ptr< MuscleVelocitySensor >( new MuscleVelocitySensor( *this ) );
+			return *m_pMuscleVelocitySensor;
 		}
 
 		//scone::Real Muscle::GetSensorValue( Index idx ) const

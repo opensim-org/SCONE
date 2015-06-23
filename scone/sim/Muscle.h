@@ -53,11 +53,15 @@ namespace scone
 
 			//virtual Real GetSensorValue( Index idx ) const override;
 			//virtual const StringIndexMap& GetSensorNames() const override;
+
+			MuscleLengthSensor& GetLengthSensor();
+			MuscleForceSensor& GetForceSensor();
+			MuscleVelocitySensor& GetVelocitySensor();
 			
-			// muscle sensors
-			MuscleLengthSensor m_MuscleLengthSensor;
-			MuscleForceSensor m_MuscleForceSensor;
-			MuscleVelocitySensor m_MuscleVelocitySensor;
+		private:
+			std::unique_ptr< MuscleLengthSensor > m_pMuscleLengthSensor;
+			std::unique_ptr< MuscleForceSensor > m_pMuscleForceSensor;
+			std::unique_ptr< MuscleVelocitySensor > m_pMuscleVelocitySensor;
 		};
 	}
 }

@@ -24,6 +24,7 @@ namespace scone
 
 		private:
 			sim::Muscle& m_Source;
+
 			sim::SensorDelayAdapter* m_pForceSensor;
 			sim::SensorDelayAdapter* m_pLengthSensor;
 			sim::SensorDelayAdapter* m_pVelocitySensor;

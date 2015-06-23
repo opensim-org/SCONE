@@ -14,10 +14,10 @@ namespace scone
 	{
 		DofReflex::DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Reflex( props, par, model, area ),
-		m_DelayedPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->m_PositionSensor ) ),
-		m_DelayedVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->m_VelocitySensor ) ),
-		m_DelayedRootPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->m_PositionSensor ) ),
-		m_DelayedRootVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->m_VelocitySensor ) )
+		m_DelayedPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetDofPositionSensor() ) ),
+		m_DelayedVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetDofVelocitySensor() ) ),
+		m_DelayedRootPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->GetDofPositionSensor() ) ),
+		m_DelayedRootVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->GetDofVelocitySensor() ) )
 		//m_DelayedRoot( model.AcquireSensorDelayAdapter( *FindByName( model.GetSensors(), "pelvis_tilt" ) ) ),
 		//m_bUseRoot( m_DelayedRoot.GetName() != m_DelayedSource.GetName() )
 		{

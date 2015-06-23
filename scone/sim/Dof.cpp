@@ -9,14 +9,26 @@ namespace scone
 		//	DofPositionSensor, "DofPosition",
 		//	DofVelocitySensor, "DofVelolicty" );
 
-		Dof::Dof() :
-		m_PositionSensor( *this ),
-		m_VelocitySensor( *this )
+		Dof::Dof()
 		{
 		}
 
 		Dof::~Dof()
 		{
+		}
+
+		DofPositionSensor& Dof::GetDofPositionSensor()
+		{
+			if ( !m_pPositionSensor )
+				m_pPositionSensor = std::unique_ptr< DofPositionSensor >( new DofPositionSensor( *this ) );
+			return *m_pPositionSensor;
+		}
+
+		DofVelocitySensor& Dof::GetDofVelocitySensor()
+		{
+			if ( !m_pVelocitySensor )
+				m_pVelocitySensor = std::unique_ptr< DofVelocitySensor >( new DofVelocitySensor( *this ) );
+			return *m_pVelocitySensor;
 		}
 
 		//scone::Real Dof::GetSensorValue( Index idx ) const
