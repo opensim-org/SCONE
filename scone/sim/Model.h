@@ -14,9 +14,8 @@
 #include "State.h"
 #include "../core/HasName.h"
 #include "../core/HasSignature.h"
-#include "ChannelSensorDelayAdapter.h"
-#include "ChannelSensor.h"
-#include "BalanceSensor.h"
+#include "Sensor.h"
+#include "../core/Storage.h"
 
 namespace scone
 {

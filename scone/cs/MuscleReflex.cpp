@@ -25,9 +25,9 @@ namespace scone
 			INIT_PARAM_NAMED( props, par, force_gain, "KF", 0.0 );
 
 			// create delayed sensors
-			m_pForceSensor = &model.AcquireSensorDelayAdapter( m_Source.GetForceSensor() );
-			m_pLengthSensor = &model.AcquireSensorDelayAdapter( m_Source.GetLengthSensor() );
-			m_pVelocitySensor = &model.AcquireSensorDelayAdapter( m_Source.GetVelocitySensor() );
+			m_pForceSensor = &model.AcquireSensorDelayAdapter( m_Source.GetMuscleForceSensor() );
+			m_pLengthSensor = &model.AcquireSensorDelayAdapter( m_Source.GetMuscleLengthSensor() );
+			m_pVelocitySensor = &model.AcquireSensorDelayAdapter( m_Source.GetMuscleVelocitySensor() );
 		}
 
 		MuscleReflex::~MuscleReflex()

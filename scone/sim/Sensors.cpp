@@ -5,6 +5,7 @@
 #include "Area.h"
 #include "Body.h"
 #include "../cs/Tools.h"
+#include "Dof.h"
 
 namespace scone
 {

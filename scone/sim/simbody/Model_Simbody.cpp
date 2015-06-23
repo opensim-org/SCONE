@@ -24,8 +24,6 @@
 #include "../../core/Profiler.h"
 
 #include "Dof_Simbody.h"
-#include "../ChannelSensor.h"
-#include "../BalanceSensor.h"
 
 using std::cout;
 using std::endl;

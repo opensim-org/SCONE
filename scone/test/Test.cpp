@@ -10,6 +10,7 @@
 #include "../opt/Factories.h"
 #include "../cs/SimulationObjective.h"
 #include "../core/Profiler.h"
+#include "../core/Delayer.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
