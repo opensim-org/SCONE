@@ -4,6 +4,7 @@
 #include "../sim/Dof.h"
 #include "../sim/Actuator.h"
 #include "../sim/Model.h"
+#include "../sim/SensorDelayAdapter.h"
 
 //#define DEBUG_MUSCLE "glut_max_r"
 
@@ -34,21 +35,21 @@ namespace scone
 
 		void DofReflex::ComputeControls( double timestamp )
 		{
-			//// TODO: Add world coordinate option to Body
-			//Real root_pos = m_DelayedRoot.GetSensorValue( sim::Dof::DofPositionSensor, delay );
-			//Real root_vel = m_DelayedRoot.GetSensorValue( sim::Dof::DofVelocitySensor, delay );
-			//Real pos = GetDelayedSensorValue( sim::Dof::DofPositionSensor );
-			//Real vel = GetDelayedSensorValue( sim::Dof::DofVelocitySensor );
+			// TODO: Add world coordinate option to Body
+			Real root_pos = m_DelayedRootPos.GetValue( delay );
+			Real root_vel = m_DelayedRootVel.GetValue( delay );
+			Real pos = m_DelayedPos.GetValue( delay );
+			Real vel = m_DelayedVel.GetValue( delay );
 
-			//if ( m_bUseRoot )
-			//{
-			//	pos += root_pos;
-			//	vel += root_vel;
-			//}
+			if ( m_bUseRoot )
+			{
+				pos += root_pos;
+				vel += root_vel;
+			}
 
-			//Real u_p = pos_gain * ( target_pos - pos );
-			//Real u_d = vel_gain * ( target_vel - vel );
-			//m_Target.AddControlValue( u_p + u_d );
+			Real u_p = pos_gain * ( target_pos - pos );
+			Real u_d = vel_gain * ( target_vel - vel );
+			m_Target.AddControlValue( u_p + u_d );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )

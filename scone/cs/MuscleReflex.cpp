@@ -5,7 +5,7 @@
 #include "../sim/Area.h"
 #include "Tools.h"
 
-//#define DEBUG_MUSCLE "hamstrings_r"
+#define DEBUG_MUSCLE "vasti_r"
 
 namespace scone
 {
