@@ -17,9 +17,8 @@ namespace scone
 		m_DelayedPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetDofPositionSensor() ) ),
 		m_DelayedVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetDofVelocitySensor() ) ),
 		m_DelayedRootPos( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->GetDofPositionSensor() ) ),
-		m_DelayedRootVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->GetDofVelocitySensor() ) )
-		//m_DelayedRoot( model.AcquireSensorDelayAdapter( *FindByName( model.GetSensors(), "pelvis_tilt" ) ) ),
-		//m_bUseRoot( m_DelayedRoot.GetName() != m_DelayedSource.GetName() )
+		m_DelayedRootVel( model.AcquireSensorDelayAdapter( FindByName( model.GetDofs(), "pelvis_tilt" )->GetDofVelocitySensor() ) ),
+		m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
 		{
 			String reflexname = GetReflexName( m_Target.GetName(), FindByName( model.GetDofs(), props.GetStr( "source" ) )->GetName() );
 			opt::ScopedParamSetPrefixer prefixer( par, reflexname + "." );
