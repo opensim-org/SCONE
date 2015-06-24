@@ -3,6 +3,7 @@
 #include "cs.h"
 #include "Reflex.h"
 #include "../sim/SensorDelayAdapter.h"
+#include "../core/Range.h"
 
 namespace scone
 {
@@ -23,7 +24,9 @@ namespace scone
 			Real velocity_gain;
 
 		private:
-			sim::Muscle& m_Source;
+			sim::SensorDelayAdapter* m_pConditionalDofPos;
+			sim::SensorDelayAdapter* m_pConditionalDofVel;
+			Range m_ConditionalPosRange;
 
 			sim::SensorDelayAdapter* m_pForceSensor;
 			sim::SensorDelayAdapter* m_pLengthSensor;

@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW7</signature_postfix>
+		<signature_postfix>GHW8</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -62,6 +62,9 @@
 									<!-- F+ GAS -->
 									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
 										<KF init_mean="0.4" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<Condition dof="knee_angle">
+											<pos_range min="-180" max="-10"/>
+										</Condition>
 									</Reflex>
 									
 									<!-- F+ VAS, missing dof based inhibition -->
