@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW9</signature_postfix>
+		<signature_postfix>GHW10</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -45,7 +45,15 @@
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
 										<KF init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									
+								</Reflexes>
+							</Controller>
+						</ConditionalController>
+
+						<!-- Stance reflexes that also work during lift-off (i.e. F+ SOL / GAS)-->
+						<ConditionalController states="EarlyStance LateStance Liftoff">
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
 										<KF init_mean="0.4" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
