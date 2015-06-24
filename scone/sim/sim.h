@@ -25,9 +25,7 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( Muscle );
 		SCONE_DECLARE_CLASS_AND_PTR( Controller );
 		SCONE_DECLARE_CLASS_AND_PTR( Leg );
-		SCONE_DECLARE_CLASS_AND_PTR( ChannelSensor );
-		SCONE_DECLARE_CLASS_AND_PTR( BalanceSensor );
-		SCONE_DECLARE_CLASS_AND_PTR( ChannelSensorDelayAdapter );
+		SCONE_DECLARE_CLASS_AND_PTR( Sensor );
 		SCONE_DECLARE_CLASS_AND_PTR( SensorDelayAdapter );
 	}
 }

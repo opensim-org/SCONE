@@ -3,6 +3,8 @@
 
 #include "../core/Profiler.h"
 
+#pragma warning( disable: 4355 )
+
 namespace scone
 {
 	namespace sim
@@ -14,27 +16,6 @@ namespace scone
 		
 		Muscle::~Muscle()
 		{
-		}
-
-		MuscleForceSensor& Muscle::GetMuscleForceSensor()
-		{
-			if ( !m_pMuscleForceSensor )
-				m_pMuscleForceSensor = std::unique_ptr< MuscleForceSensor >( new MuscleForceSensor( *this ) );
-			return *m_pMuscleForceSensor;
-		}
-
-		MuscleLengthSensor& Muscle::GetMuscleLengthSensor()
-		{
-			if ( !m_pMuscleLengthSensor )
-				m_pMuscleLengthSensor = std::unique_ptr< MuscleLengthSensor >( new MuscleLengthSensor( *this ) );
-			return *m_pMuscleLengthSensor;
-		}
-
-		MuscleVelocitySensor& Muscle::GetMuscleVelocitySensor()
-		{
-			if ( !m_pMuscleVelocitySensor )
-				m_pMuscleVelocitySensor = std::unique_ptr< MuscleVelocitySensor >( new MuscleVelocitySensor( *this ) );
-			return *m_pMuscleVelocitySensor;
 		}
 	}
 }

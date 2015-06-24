@@ -17,6 +17,7 @@ namespace scone
 
 			virtual Real GetValue() const = 0;
 			virtual String GetName() const = 0;
+			virtual const String& GetSourceName() const = 0;
 		};
 	}
 }

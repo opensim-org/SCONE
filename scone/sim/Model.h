@@ -91,9 +91,32 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
+			// create a sensor of type SensorT with a source of type SourceT
+			template< typename SensorT, typename SourceT >
+			SensorT& AcquireSensor( SourceT& src ) {
+				static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
+
+				// find existing sensor of same type with same source name
+				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == src.GetName(); } );
+
+				if ( it != m_Sensors.end() ) {
+					return dynamic_cast< SensorT& >( **it ); // return found element
+				}
+				else {
+					SensorT* sensor = new SensorT( src );
+					m_Sensors.push_back( SensorUP( sensor ) );
+					return *sensor; // return new sensor
+				}
+			}
+
 			// create delayed sensors
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
+
+			template< typename SensorT, typename SourceT >
+			SensorDelayAdapter& AcquireDelayedSensor( SourceT& src ) {
+				return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( src ) );
+			}
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -111,10 +134,10 @@ namespace scone
 			bool m_ShouldTerminate;
 
 			// non-owning storage
-			//std::vector< ChannelSensor* > m_ChannelSensors;
 			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
+			std::vector< std::unique_ptr< Sensor > > m_Sensors;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

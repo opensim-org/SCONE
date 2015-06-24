@@ -17,6 +17,11 @@ namespace scone
 		{
 		}
 
+		const String& MuscleSensor::GetSourceName() const 
+		{
+			return m_Muscle.GetName();
+		}
+
 		scone::Real MuscleForceSensor::GetValue() const 
 		{
 			return m_Muscle.GetNormalizedForce();
@@ -51,6 +56,11 @@ namespace scone
 		Sensor( pn, par, model, target_area ),
 		m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) )
 		{
+		}
+
+		const String& DofSensor::GetSourceName() const 
+		{
+			return m_Dof.GetName();
 		}
 
 		scone::Real DofPositionSensor::GetValue() const 
@@ -89,6 +99,11 @@ namespace scone
 			return "Load." + m_Leg.GetName();
 		}
 
+		const String& LegLoadSensor::GetSourceName() const 
+		{
+			return m_Leg.GetName();
+		}
+
 		SagittalPostureSensor::SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Body( *FindByName( model.GetBodies(), pn.GetStr( "body" ) ) )
@@ -105,5 +120,9 @@ namespace scone
 			return "Posture.S";
 		}
 
+		const String& SagittalPostureSensor::GetSourceName() const 
+		{
+			return m_Body.GetName();
+		}
 	}
 }

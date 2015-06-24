@@ -19,6 +19,7 @@ namespace scone
 
 			void UpdateStorage();
 			Sensor& GetSource() { return m_Source; }
+			virtual const String& GetSourceName() const override { return m_Source.GetSourceName(); }
 
 		private:
 			Model& m_Model;

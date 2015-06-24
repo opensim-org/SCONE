@@ -17,13 +17,6 @@ namespace scone
 			virtual Real GetPos() const = 0;
 			virtual Real GetVel() const = 0;
 			virtual Real GetLimitForce() const = 0;
-
-			DofPositionSensor& GetDofPositionSensor();
-			DofVelocitySensor& GetDofVelocitySensor();
-
-		private:
-			std::unique_ptr< DofPositionSensor > m_pPositionSensor;
-			std::unique_ptr< DofVelocitySensor > m_pVelocitySensor;
 		};
 	}
 }

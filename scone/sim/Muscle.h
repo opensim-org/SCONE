@@ -43,15 +43,6 @@ namespace scone
 			virtual Real GetActivation() const = 0;
 			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
-
-			MuscleLengthSensor& GetMuscleLengthSensor();
-			MuscleForceSensor& GetMuscleForceSensor();
-			MuscleVelocitySensor& GetMuscleVelocitySensor();
-			
-		private:
-			std::unique_ptr< MuscleLengthSensor > m_pMuscleLengthSensor;
-			std::unique_ptr< MuscleForceSensor > m_pMuscleForceSensor;
-			std::unique_ptr< MuscleVelocitySensor > m_pMuscleVelocitySensor;
 		};
 	}
 }

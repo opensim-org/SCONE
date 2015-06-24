@@ -13,6 +13,7 @@ namespace scone
 		public:
 			MuscleSensor( Muscle& m ) : m_Muscle( m ) {}
 			MuscleSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+			virtual const String& GetSourceName() const override;
 		protected:
 			Muscle& m_Muscle;
 		};
@@ -53,6 +54,7 @@ namespace scone
 		public:
 			DofSensor( Dof& dof ) : m_Dof( dof ) {}
 			DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+			virtual const String& GetSourceName() const override;
 		protected:
 			Dof& m_Dof;
 		};
@@ -83,6 +85,7 @@ namespace scone
 			LegLoadSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
+			virtual const String& GetSourceName() const override;
 		protected:
 			Leg& m_Leg;
 		};
@@ -94,6 +97,7 @@ namespace scone
 			SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
+			virtual const String& GetSourceName() const override;
 		protected:
 			Body& m_Body;
 		};
