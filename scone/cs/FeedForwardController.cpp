@@ -23,16 +23,14 @@ namespace scone
 		FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		Controller( props, par, model, target_area )
 		{
-			sim::Actuator& act = model.GetMuscle( 0 );
-
 			DECLARE_AND_INIT( props, bool, use_symmetric_actuators, true );
 			INIT_PROPERTY( props, number_of_modes, 0u );
 
 			// setup actuator info
-			for ( size_t idx = 0; idx < model.GetMuscleCount(); ++idx )
+			for ( size_t idx = 0; idx < model.GetMuscles().size(); ++idx )
 			{
 				ActInfo ai;
-				ai.full_name = model.GetMuscle( idx ).GetName();
+				ai.full_name = model.GetMuscles()[ idx ]->GetName();
 				ai.name = GetNameNoSide( ai.full_name );
 				ai.side = GetSide( ai.full_name );
 				ai.muscle_idx = idx;
@@ -105,12 +103,12 @@ namespace scone
 						val += ai.mode_weights[ mode ] * funcresults[ mode ];
 
 					// add control value
-					model.GetMuscle( ai.muscle_idx ).AddControlValue( val );
+					model.GetMuscles()[ ai.muscle_idx ]->AddControlValue( val );
 				}
 				else
 				{
 					// apply results directly to control value
-					model.GetMuscle( ai.muscle_idx ).AddControlValue( funcresults[ ai.function_idx ] );
+					model.GetMuscles()[ ai.muscle_idx ]->AddControlValue( funcresults[ ai.function_idx ] );
 				}
 			}
 

@@ -79,7 +79,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\sim\Actuator.cpp" />
-    <ClCompile Include="..\..\scone\sim\BalanceSensor.cpp" />
     <ClCompile Include="..\..\scone\sim\Body.cpp" />
     <ClCompile Include="..\..\scone\sim\Controller.cpp" />
     <ClCompile Include="..\..\scone\sim\Dof.cpp" />
@@ -90,8 +89,9 @@
     <ClCompile Include="..\..\scone\sim\Model.cpp" />
     <ClCompile Include="..\..\scone\sim\Muscle.cpp" />
     <ClCompile Include="..\..\scone\sim\Area.cpp" />
-    <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
     <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp" />
+    <ClCompile Include="..\..\scone\sim\Sensors.cpp" />
+    <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -100,7 +100,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\sim\Actuator.h" />
-    <ClInclude Include="..\..\scone\sim\BalanceSensor.h" />
     <ClInclude Include="..\..\scone\sim\Body.h" />
     <ClInclude Include="..\..\scone\sim\Controller.h" />
     <ClInclude Include="..\..\scone\sim\Dof.h" />
@@ -111,8 +110,9 @@
     <ClInclude Include="..\..\scone\sim\Model.h" />
     <ClInclude Include="..\..\scone\sim\Muscle.h" />
     <ClInclude Include="..\..\scone\sim\Area.h" />
-    <ClInclude Include="..\..\scone\sim\Sensor.h" />
     <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h" />
+    <ClInclude Include="..\..\scone\sim\Sensors.h" />
+    <ClInclude Include="..\..\scone\sim\Sensor.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\State.h" />

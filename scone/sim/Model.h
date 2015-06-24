@@ -14,9 +14,8 @@
 #include "State.h"
 #include "../core/HasName.h"
 #include "../core/HasSignature.h"
-#include "SensorDelayAdapter.h"
 #include "Sensor.h"
-#include "BalanceSensor.h"
+#include "../core/Storage.h"
 
 namespace scone
 {
@@ -29,14 +28,10 @@ namespace scone
 			virtual ~Model();
 
 			/// muscle access
-			size_t GetMuscleCount() const { return m_Muscles.size(); }
-			Muscle& GetMuscle( size_t idx ) { return *m_Muscles[ idx ]; }
 			std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
 			const std::vector< MuscleUP >& GetMuscles() const { return m_Muscles; }
 
 			/// body access
-			size_t GetBodyCount() const { return m_Bodies.size(); }
-			Body& GetBody( size_t idx ) const { return *m_Bodies[ idx ]; }
 			std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 			const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
 
@@ -49,7 +44,7 @@ namespace scone
 			const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 			/// Sensor access
-			std::vector< Sensor* >& GetSensors() { return m_Sensors; }
+			//std::vector< ChannelSensor* >& GetChannelSensors() { return m_ChannelSensors; }
 			std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 			/// link access
@@ -96,8 +91,32 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
+			// create a sensor of type SensorT with a source of type SourceT
+			template< typename SensorT, typename SourceT >
+			SensorT& AcquireSensor( SourceT& src ) {
+				static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
+
+				// find existing sensor of same type with same source name
+				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == src.GetName(); } );
+
+				if ( it != m_Sensors.end() ) {
+					return dynamic_cast< SensorT& >( **it ); // return found element
+				}
+				else {
+					SensorT* sensor = new SensorT( src );
+					m_Sensors.push_back( SensorUP( sensor ) );
+					return *sensor; // return new sensor
+				}
+			}
+
 			// create delayed sensors
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
+			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
+
+			template< typename SensorT, typename SourceT >
+			SensorDelayAdapter& AcquireDelayedSensor( SourceT& src ) {
+				return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( src ) );
+			}
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -111,14 +130,14 @@ namespace scone
 			std::vector< DofUP > m_Dofs;
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
-			BalanceSensorUP m_BalanceSensor;
+			//BalanceSensorUP m_BalanceSensor;
 			bool m_ShouldTerminate;
 
 			// non-owning storage
-			std::vector< Sensor* > m_Sensors;
 			std::vector< Actuator* > m_Actuators;
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
+			std::vector< std::unique_ptr< Sensor > > m_Sensors;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

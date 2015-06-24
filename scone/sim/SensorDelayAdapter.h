@@ -1,37 +1,31 @@
 #pragma once
 
+#include "sim.h"
 #include "Sensor.h"
-#include "../core/Delayer.h"
-#include "../core/Storage.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class Model;
-
-		// TODO: make more efficient using templates?
 		class SCONE_SIM_API SensorDelayAdapter : public Sensor
 		{
 		public:
-			SensorDelayAdapter( Model& model, Storage< Real >& storage, Sensor& source, TimeInSeconds default_delay );
+			SensorDelayAdapter( Model& model, Sensor& source, TimeInSeconds default_delay );
 			virtual ~SensorDelayAdapter();
 
-			virtual Real GetSensorValue( size_t idx ) const override;
-			Real GetSensorValue( size_t idx, TimeInSeconds delay ) const;
-			virtual const String& GetName() const override;
-			virtual const StringIndexMap& GetSensorNames() const override;
-		
-		private:
-			friend Model;
-			void UpdateStorage();
+			virtual Real GetValue() const override;
+			Real GetValue( Real delay ) const;
+			virtual String GetName() const override;
 
-			Index m_ChannelOfs;
-			TimeInSeconds m_Delay;
+			void UpdateStorage();
+			Sensor& GetSource() { return m_Source; }
+			virtual const String& GetSourceName() const override { return m_Source.GetSourceName(); }
+
+		private:
 			Model& m_Model;
-			Storage< Real >& m_Storage;
 			Sensor& m_Source;
-			int m_PreviousUpdateStep;
+			TimeInSeconds m_Delay;
+			Index m_StorageIdx;
 		};
 	}
 }

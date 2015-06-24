@@ -2,14 +2,13 @@
 
 #include "sim.h"
 #include "../core/HasName.h"
-#include "Sensor.h"
-#include "../core/StringMap.h"
+#include "Sensors.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Dof : public Sensor
+		class SCONE_SIM_API Dof : public HasName
 		{
 		public:
 			Dof();
@@ -18,15 +17,6 @@ namespace scone
 			virtual Real GetPos() const = 0;
 			virtual Real GetVel() const = 0;
 			virtual Real GetLimitForce() const = 0;
-
-			static const Index DofPositionSensor = 0;
-			static const Index DofVelocitySensor = 1;
-
-			virtual const StringIndexMap& GetSensorNames() const override;
-			virtual Real GetSensorValue( Index idx ) const override;
-
-		private:
-			static StringMap< Index > m_SensorNames;
 		};
 	}
 }

@@ -29,7 +29,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG10.xml"/>
+				<INCLUDE file="measures/M_CG10_COT.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

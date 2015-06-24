@@ -17,7 +17,8 @@ namespace scone
 		m_Side( side ),
 		m_Index( index ),
 		m_Rank( rank ),
-		m_ForceToLoadFactor( 0.0 )
+		m_ForceToLoadFactor( 0.0 ),
+		m_Name( GetStringF( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
 		{
 		}
 

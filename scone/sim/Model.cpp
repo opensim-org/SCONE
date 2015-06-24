@@ -9,6 +9,7 @@
 #include <algorithm>
 
 #include "../core/Profiler.h"
+#include "SensorDelayAdapter.h"
 
 using std::endl;
 
@@ -37,11 +38,11 @@ namespace scone
 		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 		{
 			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
-				[&]( SensorDelayAdapterUP& a ) { return &a->m_Source == &source; } );
+				[&]( SensorDelayAdapterUP& a ) { return &a->GetSource() == &source; } );
 
 			if ( it == m_SensorDelayAdapters.end() )
 			{
-				m_SensorDelayAdapters.push_back( SensorDelayAdapterUP( new SensorDelayAdapter( *this, m_SensorDelayStorage, source, 0.0 ) ) );
+				m_SensorDelayAdapters.push_back( SensorDelayAdapterUP( new SensorDelayAdapter( *this, source, 0.0 ) ) );
 				return *m_SensorDelayAdapters.back();
 			}
 			else return **it;

@@ -1,25 +1,23 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/HasName.h"
-#include "../core/StringMap.h"
+#include "../core/PropNode.h"
+#include "../opt/ParamSet.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Sensor : public virtual HasName
+		class SCONE_SIM_API Sensor
 		{
 		public:
 			Sensor();
+			Sensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual ~Sensor();
 
-			size_t GetSensorCount() const;
-			const String& GetSensorName( Index idx ) const;
-			Index GetSensorIndex( const String& name ) const;
-
-			virtual const StringIndexMap& GetSensorNames() const = 0;
-			virtual Real GetSensorValue( Index idx ) const = 0;
+			virtual Real GetValue() const = 0;
+			virtual String GetName() const = 0;
+			virtual const String& GetSourceName() const = 0;
 		};
 	}
 }

@@ -24,8 +24,6 @@
 #include "../../core/Profiler.h"
 
 #include "Dof_Simbody.h"
-#include "../Sensor.h"
-#include "../BalanceSensor.h"
 
 using std::cout;
 using std::endl;
@@ -182,7 +180,7 @@ namespace scone
 		void Model_Simbody::CreateModelWrappers()
 		{
 			SCONE_ASSERT( m_pOsimModel );
-			SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Sensors.empty() );
+			SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
 
 			// Create wrappers for actuators
 			m_Muscles.clear();
@@ -195,7 +193,7 @@ namespace scone
 				{
 					OpenSim::Muscle& osMus = dynamic_cast< OpenSim::Muscle& >( osAct );
 					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, osMus ) ) );
-					m_Sensors.push_back( m_Muscles.back().get() );
+					//m_ChannelSensors.push_back( m_Muscles.back().get() );
 					m_Actuators.push_back( m_Muscles.back().get() );
 				}
 				catch ( std::bad_cast& )
@@ -219,11 +217,11 @@ namespace scone
 			for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
 			{
 				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
-				m_Sensors.push_back( m_Dofs.back().get() );
+				//m_ChannelSensors.push_back( m_Dofs.back().get() );
 			}
 
 			// create BodySensor
-			m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
+			//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
 
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );

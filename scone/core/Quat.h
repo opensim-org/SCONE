@@ -115,20 +115,20 @@ namespace scone
 	};
 
 	/** Get quaternion using an axis and an angle. */
-	Quat QuatFromAxisAngle( const Vec3& axis, const Rad& angle );
+	Quat CORE_API QuatFromAxisAngle( const Vec3& axis, const Rad& angle );
 
 	/** Get quaternion using three axis vectors. */
-	Quat QuatFromAxes( const Vec3& x, const Vec3& y, const Vec3& z );
+	Quat CORE_API QuatFromAxes( const Vec3& x, const Vec3& y, const Vec3& z );
 
 	/** Get quaternion using Euler angles. */
-	Quat QuatFromEuler( const Rad& xAngle, const Rad& yAngle, const Rad& zAngle, EulerOrder eulerOrder = EULER_ORDER_XYZ );
+	Quat CORE_API QuatFromEuler( const Rad& xAngle, const Rad& yAngle, const Rad& zAngle, EulerOrder eulerOrder = EULER_ORDER_XYZ );
 
 	/** Get quaternion to represent the rotation from source to target vector. */
-	Quat QuatFromSourceToTarget( const Vec3& source, const Vec3& target );
+	Quat CORE_API QuatFromSourceToTarget( const Vec3& source, const Vec3& target );
 
 	/** Get quaternion to represent the rotation from source to target quaternion. */
-	Quat QuatFromSourceToTarget( const Quat& source, const Quat& target );
+	Quat CORE_API QuatFromSourceToTarget( const Quat& source, const Quat& target );
 
 	/** Get quaternion from exponential map. */
-	Quat QuatFromExponentialMap(const Vec3& v);
+	Quat CORE_API QuatFromExponentialMap(const Vec3& v);
 };

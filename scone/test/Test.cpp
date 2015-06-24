@@ -10,6 +10,7 @@
 #include "../opt/Factories.h"
 #include "../cs/SimulationObjective.h"
 #include "../core/Profiler.h"
+#include "../core/Delayer.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
@@ -50,7 +51,7 @@ namespace scone
 			props.Set( "Model.model_file", *iter );
 			sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
-			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscleCount(), m->GetBodyCount(), m->GetJoints().size(), m->GetControllers().size() );
+			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
 
 			Timer t;

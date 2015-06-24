@@ -4,6 +4,7 @@
 #include "../core/Vec3.h"
 #include "../core/Quat.h"
 #include "../core/HasName.h"
+
 #include "Model.h"
 
 namespace scone

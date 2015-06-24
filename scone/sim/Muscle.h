@@ -5,14 +5,13 @@
 
 #include <vector>
 #include "Actuator.h"
-#include "Sensor.h"
-#include "../core/StringMap.h"
+#include "Sensors.h"
 
 namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle : public Actuator, public Sensor
+		class SCONE_SIM_API Muscle : public Actuator
 		{
 		public:
 			Muscle();
@@ -44,17 +43,6 @@ namespace scone
 			virtual Real GetActivation() const = 0;
 			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
-
-			/// Inherited from Sensor
-			static const Index MuscleLengthSensor = 0;
-			static const Index MuscleVelocitySensor = 1;
-			static const Index MuscleForceSensor = 2;
-
-			virtual Real GetSensorValue( Index idx ) const override;
-			virtual const StringIndexMap& GetSensorNames() const override;
-
-		private:
-			static StringMap< Index > m_SensorNames;
 		};
 	}
 }
