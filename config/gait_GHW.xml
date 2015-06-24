@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW11</signature_postfix>
+		<signature_postfix>GHW12</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -43,7 +43,7 @@
 										<L0 init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
-										<KF init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KF init_mean="-2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
