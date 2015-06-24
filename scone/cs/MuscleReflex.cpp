@@ -33,10 +33,11 @@ namespace scone
 
 			if ( props.HasKey( "Condition" ) )
 			{
-				sim::Dof& dof = *FindByName( model.GetDofs(), props.GetStr( "Condition.dof" ) );
+				const PropNode& cp = props.GetChild( "Condition" );
+				sim::Dof& dof = *FindByName( model.GetDofs(), cp.GetStr( "dof" ) + GetSideName( area.side ) );
 				m_pConditionalDofPos = &model.AcquireDelayedSensor< sim::DofPositionSensor >( dof );
 				m_pConditionalDofVel = &model.AcquireDelayedSensor< sim::DofVelocitySensor >( dof );
-				m_ConditionalPosRange = Range( props.GetChild( "Condition.pos_range" ) );
+				m_ConditionalPosRange = Range( cp.GetChild( "pos_range" ) );
 			}
 
 			// create delayed sensors

@@ -83,6 +83,7 @@ namespace scone
 		template< typename T >
 		T Get( const String& key, const T& default_value ) const
 		{
+			Touch();
 			const PropNode* p = GetChildPtr( key );
 			return p ? p->GetValue< T >() : default_value;
 		}
