@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW10</signature_postfix>
+		<signature_postfix>GHW11</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -50,7 +50,7 @@
 						</ConditionalController>
 
 						<!-- Stance reflexes that also work during lift-off (i.e. F+ SOL / GAS)-->
-						<ConditionalController states="EarlyStance LateStance Liftoff">
+						<ConditionalController states="LateStance Liftoff">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
