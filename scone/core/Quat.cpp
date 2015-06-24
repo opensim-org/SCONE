@@ -124,7 +124,7 @@ namespace scone
 
 			// normalize, set rotation and return
 			r /= rlen;
-			return QuatFromAxisAngle( r, Rad( REAL_PI ) );
+			return QuatFromAxisAngle( r, Radian( REAL_PI ) );
 		}
 
 		// normalize c
@@ -275,7 +275,7 @@ namespace scone
 
 	Quat QuatFromExponentialMap( const Vec3& v )
 	{
-		Rad angle( v.GetLength() );
+		Radian angle( v.GetLength() );
 
 		if ( angle > std::numeric_limits<Real>::epsilon() )
 		{
@@ -287,7 +287,7 @@ namespace scone
 		}
 	}
 
-	Quat QuatFromAxisAngle( const Vec3& axis, const Rad& angle )
+	Quat QuatFromAxisAngle( const Vec3& axis, const Radian& angle )
 	{
 		// axis must be of unit length! (this is not enforced)
 		Real half_angle = Real( 0.5 ) * angle;
@@ -296,7 +296,7 @@ namespace scone
 		return Quat( cos( half_angle ), half_sin * axis.X(), half_sin * axis.Y(), half_sin * axis.Z() );
 	}
 
-	Quat QuatFromEuler( const Rad& xAngle, const Rad& yAngle, const Rad& zAngle, EulerOrder eulerOrder )
+	Quat QuatFromEuler( const Radian& xAngle, const Radian& yAngle, const Radian& zAngle, EulerOrder eulerOrder )
 	{
 		switch( eulerOrder )
 		{

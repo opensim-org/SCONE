@@ -28,7 +28,7 @@ namespace scone
 			{
 				Limit( const PropNode& props, sim::Model& model );
 				sim::Dof& dof;
-				RangeT< Real > range;
+				Range< Degree > range;
 				Real squared_range_penalty;
 				Real squared_force_penalty;
 				Statistic<> penalty;

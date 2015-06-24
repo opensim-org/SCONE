@@ -37,7 +37,7 @@ namespace scone
 				sim::Dof& dof = *FindByName( model.GetDofs(), cp.GetStr( "dof" ) + GetSideName( area.side ) );
 				m_pConditionalDofPos = &model.AcquireDelayedSensor< sim::DofPositionSensor >( dof );
 				m_pConditionalDofVel = &model.AcquireDelayedSensor< sim::DofVelocitySensor >( dof );
-				m_ConditionalPosRange = Range( cp.GetChild( "pos_range" ) );
+				m_ConditionalPosRange = Range< Degree >( cp.GetChild( "pos_range" ) );
 			}
 
 			// create delayed sensors
@@ -60,16 +60,16 @@ namespace scone
 			if ( m_pConditionalDofPos )
 			{
 				// check the condition
-				Real dofpos = m_pConditionalDofPos->GetValue( delay );
+				Degree dofpos = Radian( m_pConditionalDofPos->GetValue( delay ) );
 				if ( !m_ConditionalPosRange.Test( dofpos ) )
 				{
 					Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos );
-					Real dofvel = m_pConditionalDofPos->GetValue( delay );
+					Real dofvel = m_pConditionalDofVel->GetValue( delay );
 
 					if ( std::signbit( violation ) == std::signbit( dofvel ) )
 					{
-						log::TraceF( ( m_Target.GetName() + ": Ignoring because pos=%.3f vel=%.3f" ).c_str(), dofpos, dofvel );
-						return; // TODO: neater than just return
+						log::Trace( m_Target.GetName() + ": Ignoring, " + VARSTR( dofpos ) + VARSTR( dofvel ) );
+						return; // TODO: something neater than just return
 					}
 				}
 			}

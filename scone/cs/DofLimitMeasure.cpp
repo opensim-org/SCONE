@@ -25,8 +25,8 @@ namespace scone
 		dof( *FindByName( model.GetDofs(), props.GetStr( "dof" ) ) ),
 		penalty( Statistic<>::LinearInterpolation )
 		{
-			range.min = props.GetReal( "min_deg", 0.0 );
-			range.max = props.GetReal( "max_deg", 0.0 );
+			range.min = Degree( props.GetReal( "min_deg", 0.0 ) );
+			range.max = Degree( props.GetReal( "max_deg", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 		}
@@ -39,7 +39,7 @@ namespace scone
 			{
 				if ( l.squared_range_penalty > 0.0 )
 				{
-					double rp = l.squared_range_penalty * GetSquared( l.range.GetRangeViolation( RadToDeg( l.dof.GetPos() ) ) );
+					double rp = l.squared_range_penalty * GetSquared( l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ) );
 					l.penalty.AddSample( timestamp, rp );
 				}
 

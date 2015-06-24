@@ -49,7 +49,7 @@ namespace scone
 			m_osBody.getModel().getSimbodyEngine().getDirectionCosines( m_Model.GetTkState(), m_osBody, dir_cos );
 			double a1, a2, a3;
 			m_osBody.getModel().getSimbodyEngine().convertDirectionCosinesToAngles( dir_cos, &a1, &a2, &a3 );
-			return QuatFromEuler( a1, a2, a3 );
+			return QuatFromEuler( Radian( a1 ), Radian( a2 ), Radian( a3 ) );
 		}
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const

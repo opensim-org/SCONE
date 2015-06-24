@@ -28,29 +28,29 @@ namespace scone
 	template< typename T > T GetCubed( T value ) { return value * value * value; }
 
 	// Degree struct
-	struct Rad;
-	struct CORE_API Deg
+	struct Radian;
+	struct Degree
 	{
-		Deg( Real v = 0.0 ) : value( v ) { };
-		Deg( const Rad& v );
+		explicit Degree( Real v = 0.0 ) : value( v ) { };
+		Degree( const Radian& v );
 		operator Real&() { return value; }
 		operator const Real&() const { return value; }
 
-		friend std::ostream& operator<<( std::ostream& str, const Deg& v ) { return str << v.value; }
-		friend std::istream& operator>>( std::istream& str, Deg& v ) { return str >> v.value; }
+		friend std::ostream& operator<<( std::ostream& str, const Degree& v ) { return str << v.value; }
+		friend std::istream& operator>>( std::istream& str, Degree& v ) { return str >> v.value; }
 
 		Real value;
 	};
 
 	// Radian struct
-	struct CORE_API Rad
+	struct Radian
 	{
-		Rad( Real v = 0.0 ) : value( v ) { };
-		Rad( const Deg& v ) : value( v * Real( REAL_PI / 180.0 ) ) { };
+		explicit Radian( Real v = 0.0 ) : value( v ) { };
+		Radian( const Degree& v ) : value( v * Real( REAL_PI / 180.0 ) ) { };
 		operator Real&() { return value; }
 		operator const Real&() const { return value; }
 		Real value;
 	};
 
-	inline Deg::Deg( const Rad& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
+	inline Degree::Degree( const Radian& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
 }

@@ -5,7 +5,9 @@
 #include "core.h"
 
 // very basic logging
-#define SCONE_LOG( _MESSAGE_ ) { std::stringstream _STR_; _STR_ << _MESSAGE_; scone::Log( _STR_.str() ); }
+#define SCONE_LOG( MESSAGE_ ) { std::stringstream STR_; STR_ << MESSAGE_; scone::Log( STR_.str() ); }
+
+#define VARSTR( VAR_ ) ( String( #VAR_ ) + "=" + ToString( VAR_ ) + " " )
 
 namespace scone
 {

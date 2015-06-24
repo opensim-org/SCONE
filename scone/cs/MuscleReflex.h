@@ -26,7 +26,7 @@ namespace scone
 		private:
 			sim::SensorDelayAdapter* m_pConditionalDofPos;
 			sim::SensorDelayAdapter* m_pConditionalDofVel;
-			Range m_ConditionalPosRange;
+			Range< Degree > m_ConditionalPosRange;
 
 			sim::SensorDelayAdapter* m_pForceSensor;
 			sim::SensorDelayAdapter* m_pLengthSensor;
