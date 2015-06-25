@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace sim
 	{
-		Leg::Leg( const Link& proximal, const Link& foot, size_t index, Side side, size_t rank ) :
+		Leg::Leg( Link& proximal, Link& foot, size_t index, Side side, size_t rank ) :
 		m_Upper( proximal ),
 		m_Foot( foot ),
 		m_Side( side ),
@@ -45,6 +45,11 @@ namespace scone
 			if ( m_ForceToLoadFactor == 0.0 )
 				m_ForceToLoadFactor = 1.0 / m_Foot.GetBody().GetModel().GetMass() * -m_Foot.GetBody().GetModel().GetGravity().y;
 			return m_ForceToLoadFactor * GetContactForce().y;
+		}
+
+		Model& Leg::GetModel()
+		{
+			return m_Upper.GetBody().GetModel();
 		}
 	}
 }

@@ -14,19 +14,31 @@
 #include "../sim/Factories.h"
 #include "../core/Log.h"
 #include "../core/Profiler.h"
+#include "../sim/SensorDelayAdapter.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		StringMap< GaitStateController::LegInfo::GaitState > GaitStateController::LegInfo::m_StateNames = StringMap< GaitStateController::LegInfo::GaitState >(
-			GaitStateController::LegInfo::UnknownState, "Unknown",
-			GaitStateController::LegInfo::EarlyStanceState, "EarlyStance",
-			GaitStateController::LegInfo::LateStanceState, "LateStance",
-			GaitStateController::LegInfo::LiftoffState, "Liftoff",
-			GaitStateController::LegInfo::SwingState, "Swing",
-			GaitStateController::LegInfo::LandingState, "Landing"
+		StringMap< GaitStateController::LegState::GaitState > GaitStateController::LegState::m_StateNames = StringMap< GaitStateController::LegState::GaitState >(
+			GaitStateController::LegState::UnknownState, "Unknown",
+			GaitStateController::LegState::EarlyStanceState, "EarlyStance",
+			GaitStateController::LegState::LateStanceState, "LateStance",
+			GaitStateController::LegState::LiftoffState, "Liftoff",
+			GaitStateController::LegState::SwingState, "Swing",
+			GaitStateController::LegState::LandingState, "Landing"
 			);
+
+
+		GaitStateController::LegState::LegState( sim::Leg& l ) :
+		leg( l ),
+		state( UnknownState ),
+		contact( false ),
+		sagittal_pos( 0.0 ),
+		coronal_pos( 0.0 ),
+		leg_length( l.MeasureLength() ),
+		load_sensor( l.GetModel().AcquireDelayedSensor< sim::LegLoadSensor >( l ) )
+		{ }
 
 		GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
 		Controller( props, par, model, target_area )
@@ -35,11 +47,12 @@ namespace scone
 			INIT_PARAM( props, par, stance_load_threshold, 0.1 );
 			INIT_PARAM( props, par, landing_threshold, 0.0 );
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );
+			INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
 			
 			// create leg states
 			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
 			{		
-				m_LegStates.push_back( LegStateUP( new LegInfo( *leg ) ) );
+				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 				log::TraceF( "leg %d leg_length=%.2f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 			}
 
@@ -61,8 +74,8 @@ namespace scone
 						ConditionalController& cc = *m_ConditionalControllers.back();
 
 						// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
-						for ( int i = 0; i < LegInfo::StateCount; ++i )
-							cc.state_mask.set( i, instance_states.find( LegInfo::m_StateNames.GetString( LegInfo::GaitState( i ) ) ) != String::npos );
+						for ( int i = 0; i < LegState::StateCount; ++i )
+							cc.state_mask.set( i, instance_states.find( LegState::m_StateNames.GetString( LegState::GaitState( i ) ) ) != String::npos );
 						SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
 
 						// initialize leg index
@@ -109,7 +122,8 @@ namespace scone
 			// update statuses
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			{
-				LegInfo& ls = *m_LegStates[ idx ];
+				LegState& ls = *m_LegStates[ idx ];
+				//ls.contact = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
 				ls.contact = ls.leg.GetLoad() >= stance_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetBaseLink().GetBody().GetPos().x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
@@ -118,62 +132,62 @@ namespace scone
 			// update states
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			{
-				LegInfo& ls = *m_LegStates[ idx ];
-				LegInfo& mir_ls = *m_LegStates[ idx ^ 1 ];
-				LegInfo::GaitState new_state = ls.state;
+				LegState& ls = *m_LegStates[ idx ];
+				LegState& mir_ls = *m_LegStates[ idx ^ 1 ];
+				LegState::GaitState new_state = ls.state;
 
 				switch( ls.state )
 				{
-				case LegInfo::UnknownState:
+				case LegState::UnknownState:
 					if ( ls.contact )
 					{
 						if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
-							new_state = LegInfo::LiftoffState;
+							new_state = LegState::LiftoffState;
 						else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
-							new_state = LegInfo::LateStanceState;
-						else new_state = LegInfo::EarlyStanceState;
+							new_state = LegState::LateStanceState;
+						else new_state = LegState::EarlyStanceState;
 					}
 					else
 					{
 						if ( ls.sagittal_pos > ls.leg_length * landing_threshold )
-							new_state = LegInfo::LandingState;
-						else new_state = LegInfo::SwingState;
+							new_state = LegState::LandingState;
+						else new_state = LegState::SwingState;
 					}
 					break;
 
-				case LegInfo::EarlyStanceState:
+				case LegState::EarlyStanceState:
 					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
-						new_state = LegInfo::LiftoffState;
+						new_state = LegState::LiftoffState;
 					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
-						new_state = LegInfo::LateStanceState;
+						new_state = LegState::LateStanceState;
 					break;
 
-				case LegInfo::LateStanceState:
+				case LegState::LateStanceState:
 					if ( mir_ls.contact && ls.sagittal_pos < mir_ls.sagittal_pos )
-						new_state = LegInfo::LiftoffState;
+						new_state = LegState::LiftoffState;
 					break;
 
-				case LegInfo::LiftoffState:
+				case LegState::LiftoffState:
 					if ( !ls.contact )
-						new_state = LegInfo::SwingState;
+						new_state = LegState::SwingState;
 					break;
 
-				case LegInfo::SwingState:
+				case LegState::SwingState:
 					if ( ls.contact && ls.sagittal_pos > mir_ls.sagittal_pos )
-						new_state = LegInfo::EarlyStanceState;
+						new_state = LegState::EarlyStanceState;
 					if ( !ls.contact && ls.sagittal_pos > ls.leg_length * landing_threshold )
-						new_state = LegInfo::LandingState;
+						new_state = LegState::LandingState;
 					break;
 
-				case LegInfo::LandingState:
+				case LegState::LandingState:
 					if ( ls.contact )
-						new_state = LegInfo::EarlyStanceState;
+						new_state = LegState::EarlyStanceState;
 					break;
 				}
 
 				if ( new_state != ls.state )
 				{
-					log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), LegInfo::m_StateNames.GetString( new_state ).c_str() );
+					log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), LegState::m_StateNames.GetString( new_state ).c_str() );
 					ls.state = new_state;
 				}
 			}

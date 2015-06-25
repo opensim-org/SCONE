@@ -36,6 +36,7 @@ namespace scone
 			// connect a specific contact force to this body
 			void ConnectContactForce( const String& force_name );
 
+			virtual Model& GetModel() override;
 			virtual const Model& GetModel() const override;
 
 		private:

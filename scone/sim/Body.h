@@ -5,8 +5,6 @@
 #include "../core/Quat.h"
 #include "../core/HasName.h"
 
-#include "Model.h"
-
 namespace scone
 {
 	namespace sim
@@ -27,6 +25,7 @@ namespace scone
 			virtual Vec3 GetContactTorque() const = 0;
 
 			virtual const Model& GetModel() const = 0;
+			virtual Model& GetModel() = 0;
 		};
 	}
 }

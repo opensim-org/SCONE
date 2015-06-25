@@ -97,5 +97,10 @@ namespace scone
 		{
 			return dynamic_cast< const Model& >( m_Model );
 		}
+
+		Model& Body_Simbody::GetModel()
+		{
+			return dynamic_cast< Model& >( m_Model );
+		}
 	}
 }

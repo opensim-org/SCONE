@@ -6,8 +6,9 @@
 #include "../core/Vec3.h"
 #include "Controller.h"
 #include "Link.h"
-#include "../opt/ParamSet.h"
 #include "Leg.h"
+
+#include "../opt/ParamSet.h"
 
 #include <map>
 #include <vector>
@@ -130,7 +131,6 @@ namespace scone
 			std::vector< DofUP > m_Dofs;
 			std::vector< LegUP > m_Legs;
 			std::vector< ControllerUP > m_Controllers;
-			//BalanceSensorUP m_BalanceSensor;
 			bool m_ShouldTerminate;
 
 			// non-owning storage

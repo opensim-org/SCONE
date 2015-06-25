@@ -14,12 +14,13 @@ namespace scone
 		class CS_API GaitStateController : public sim::Controller
 		{
 		public:
-			struct LegInfo
+			struct LegState
 			{
-				LegInfo( const sim::Leg& l ) : leg( l ), state( UnknownState ), contact( false ), sagittal_pos( 0.0 ), coronal_pos( 0.0 ), leg_length( l.MeasureLength() ) {};
+				LegState( sim::Leg& l );
 
 				// leg structure
 				const sim::Leg& leg;
+				sim::SensorDelayAdapter& load_sensor;
 
 				// current state
 				enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
@@ -49,7 +50,7 @@ namespace scone
 			void UpdateControllerStates( sim::Model& model, double timestamp );
 
 		private:
-			typedef std::unique_ptr< LegInfo > LegStateUP;
+			typedef std::unique_ptr< LegState > LegStateUP;
 			std::vector< LegStateUP > m_LegStates;
 
 			// struct that defines if a controller is active (bitset denotes state(s), leg target should be part of controller)
@@ -58,15 +59,16 @@ namespace scone
 			{
 				ConditionalController() : leg_index( NoIndex ), active( false ), active_since( 0.0 ) { };
 				size_t leg_index;
-				std::bitset< LegInfo::StateCount > state_mask;
+				std::bitset< LegState::StateCount > state_mask;
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;
-				bool TestLegPhase( size_t leg_idx, LegInfo::GaitState state ) { return state_mask.test( size_t( state ) ); }
+				bool TestLegPhase( size_t leg_idx, LegState::GaitState state ) { return state_mask.test( size_t( state ) ); }
 			};
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_threshold;
 			Real late_stance_threshold;
+			Real leg_load_sensor_delay;
 			GaitStateController( const GaitStateController& );
 			GaitStateController& operator=( const GaitStateController& );
 		};

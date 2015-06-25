@@ -68,7 +68,7 @@ namespace scone
 
 					if ( std::signbit( violation ) == std::signbit( dofvel ) )
 					{
-						log::Trace( m_Target.GetName() + ": Ignoring, " + VARSTR( dofpos ) + VARSTR( dofvel ) );
+						//log::Trace( m_Target.GetName() + ": Ignoring, " + VARSTR( dofpos ) + VARSTR( dofvel ) );
 						return; // TODO: something neater than just return
 					}
 				}
