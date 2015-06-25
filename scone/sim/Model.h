@@ -119,6 +119,8 @@ namespace scone
 				return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( src ) );
 			}
 
+			Real sensor_delay_scaling_factor;
+
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();

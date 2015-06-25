@@ -10,6 +10,7 @@
 
 #include "../core/Profiler.h"
 #include "SensorDelayAdapter.h"
+#include "../core/InitFromPropNode.h"
 
 using std::endl;
 
@@ -21,6 +22,7 @@ namespace scone
 		HasSignature( props ),
 		m_ShouldTerminate( false )
 		{
+			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 		}
 
 		Model::~Model()

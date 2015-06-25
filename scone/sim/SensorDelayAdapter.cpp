@@ -24,12 +24,12 @@ namespace scone
 
 		scone::Real SensorDelayAdapter::GetValue() const 
 		{
-			return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - m_Delay, m_StorageIdx );
+			return GetValue( m_Delay );
 		}
 
 		scone::Real SensorDelayAdapter::GetValue( Real delay ) const
 		{
-			return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay, m_StorageIdx );
+			return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx );
 		}
 
 		void SensorDelayAdapter::UpdateStorage()
