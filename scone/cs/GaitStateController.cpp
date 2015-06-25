@@ -123,8 +123,7 @@ namespace scone
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			{
 				LegState& ls = *m_LegStates[ idx ];
-				//ls.contact = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
-				ls.contact = ls.leg.GetLoad() >= stance_load_threshold;
+				ls.contact = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetPos().x - ls.leg.GetBaseLink().GetBody().GetPos().x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
 			}
