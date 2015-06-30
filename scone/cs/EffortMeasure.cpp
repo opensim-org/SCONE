@@ -49,11 +49,16 @@ namespace scone
 
 		double EffortMeasure::GetResult( sim::Model& model )
 		{
+			double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
+			double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
+
+			m_Report.Add( "cost_of_transport", cot );
+			m_Report.Add( "average", m_Energy.GetAverage() );
+			m_Report.Add( "total", m_Energy.GetTotal() );
+			m_Report.Add( "probe_total", model.GetTotalEnergyConsumption() );
+
 			if ( use_cost_of_transport )
-			{
-				double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
-				return m_Energy.GetTotal() / ( model.GetMass() * distance );
-			}
+				return cot;
 			else return m_Energy.GetAverage();
 		}
 
@@ -123,6 +128,11 @@ namespace scone
 			}
 
 			return s;
+		}
+
+		scone::PropNode EffortMeasure::GetReport()
+		{
+			return m_Report;
 		}
 	}
 }

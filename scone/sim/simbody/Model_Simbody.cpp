@@ -89,6 +89,7 @@ namespace scone
 			m_pOsimModel->addController( m_pControllerDispatcher );
 
 			// create probe (ownership is automatically passed to OpenSim::Model)
+			// OpenSim: this doens't work! It either crashes or gives inconsistent results
 			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
 			{
 				auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
@@ -100,7 +101,7 @@ namespace scone
 					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
 					probe->addMuscle( mus.getName(), 0.5 );
 				}
-				probe->setInitialConditions( SimTK::Vector( 1 ) );
+				probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
 				probe->setOperation("integrate");
 				m_pProbe = probe;
 			}
@@ -490,8 +491,9 @@ namespace scone
 
 		scone::Real Model_Simbody::GetTotalEnergyConsumption() const
 		{
-			SCONE_ASSERT( m_pProbe != nullptr );
-			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
+			if ( m_pProbe )
+				return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
+			else return 0.0;
 		}
 
 		State Model_Simbody::ReadState( const String& file )

@@ -19,6 +19,8 @@ namespace scone
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
+			virtual PropNode GetReport() override;
+
 			EnergyMeasureType measure_type;
 			bool use_cost_of_transport;
 
@@ -29,6 +31,7 @@ namespace scone
 			Real m_Wang2012BasalEnergy;
 			Statistic< double > m_Energy;
 			Vec3 m_InitComPos;
+			PropNode m_Report;
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;
