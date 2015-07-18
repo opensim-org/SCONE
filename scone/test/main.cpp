@@ -18,8 +18,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	try
 	{
 		String fname = GetSconeFolder( "output" ) + "020.f1024.G_3FP0_3RL.S10.D5/2264_39.857_7.188.par";
-		PlaybackTest( fname );
-		//SimulationTest();
+		//PlaybackTest( fname );
+		SimulationTest();
 
 		std::cout << Profiler::GetGlobalInstance().GetReport();
 	}

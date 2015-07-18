@@ -52,6 +52,15 @@ namespace scone
 		return str.substr(n);
 	}
 
+	String GetFileNameNoExt( const String& str )
+	{
+		size_t n = str.find_last_of(".");
+
+		if ( n == std::string::npos )
+			return str; // no extension found
+		else return str.substr( 0, n );
+	}
+
 	void LogUntouched( const PropNode& p, log::Level level, size_t depth )
 	{
 		if ( depth == 0 )

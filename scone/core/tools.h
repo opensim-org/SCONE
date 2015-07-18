@@ -19,6 +19,9 @@ namespace scone
 	/// Get file extension (without dot)
 	String CORE_API GetFileNameExt( const String& str );
 
+	/// Get file without extension (without dot)
+	String CORE_API GetFileNameNoExt( const String& str );
+
 	/// convert any streamable type to string
 	template < typename T >
 	String ToString( const T& value )

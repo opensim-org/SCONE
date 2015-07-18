@@ -2,8 +2,10 @@
 <Model type="Simbody">
 	<model_file>../models/f1024.osim</model_file>
 	<!--state_init_file>../models/f2354_init_walk.sto</state_init_file-->
-	<probe_class>Umberger2010MuscleMetabolicsProbe</probe_class>
-	<integration_accuracy>0.00001</integration_accuracy>
+	<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
+	<integration_method>SemiExplicitEuler2</integration_method>
+	<integration_accuracy>0.001</integration_accuracy>
+	<use_fixed_control_step_size>0</use_fixed_control_step_size>
 	<max_step_size>0.01</max_step_size>
 	<Controllers>
 		<Controller type="FeedForwardController">

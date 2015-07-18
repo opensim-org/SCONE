@@ -34,7 +34,7 @@ namespace scone
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
 
 		std::vector< String > models;
-		//models.push_back( "../models/f1024.osim" );
+		models.push_back( "../models/f1024.osim" );
 		models.push_back( "../models/f2354.osim" );
 		//models.push_back( "models/test/gait2354.osim" );
 		//models.push_back( "models/jump2354.osim" );
@@ -56,12 +56,16 @@ namespace scone
 
 			Timer t;
 			m->AdvanceSimulationTo( simulation_time );
-			double time = t.GetTime();
+			auto time = t.GetTime();
 
 			//std::cout << *m;
+			//std::cout << "Total metabolic energy: " << m->GetTotalEnergyConsumption() << std::endl;
+			//std::cout << "Metabolic energy rate per Kg: " << m->GetTotalEnergyConsumption() / simulation_time / m->GetMass() << std::endl;
 
-			std::cout << "Total metabolic energy: " << m->GetTotalEnergyConsumption() << std::endl;
-			std::cout << "Metabolic energy rate per Kg: " << m->GetTotalEnergyConsumption() / simulation_time / m->GetMass() << std::endl;
+			std::cout << "performance (x real-time): " << m->GetTime() / time << endl;
+
+			m->WriteStateHistory( GetFileNameNoExt( *iter ) + "_simulation_test" );
+
 
 			//if ( par.IsInConstructionMode() )
 			//	par.SetMode( opt::ParamSet::UpdateMode );
