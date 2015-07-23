@@ -5,8 +5,6 @@
 #include <map>
 #include "Timer.h"
 
-//#define SCONE_ENABLE_PROFILING
-
 #ifdef SCONE_ENABLE_PROFILING
 	#define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
 	#define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg ) ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), scope_name_arg )

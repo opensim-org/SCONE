@@ -236,8 +236,8 @@ namespace scone
 	{
 		ptree pt;
 		ToPropertyTree( pt, *this, rootname );
-		boost::property_tree::xml_writer_settings<char> settings('\t', 1);
-		write_xml( filename, pt, std::locale(), settings );
+		boost::property_tree::xml_writer_settings< std::string > settings('\t', 1);
+		write_xml( filename, pt, std::locale() );
 	}
 
 	PropNode& PropNode::FromXmlFile( const String& filename, const String& rootname )

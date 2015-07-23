@@ -8,6 +8,10 @@
 
 #include <limits>
 #include <string>
+#include <memory>
+
+// enable / disable profiling
+//#define SCONE_ENABLE_PROFILING
 
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )

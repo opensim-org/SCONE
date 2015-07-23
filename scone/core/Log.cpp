@@ -2,6 +2,7 @@
 #include "Log.h"
 
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
 if ( LEVEL >= g_LogLevel ) \

@@ -2,6 +2,8 @@
 #include "Profiler.h"
 #include "tools.h"
 
+#include <algorithm>
+
 namespace scone
 {
 	Profiler& Profiler::GetGlobalInstance()
