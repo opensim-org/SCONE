@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#define SCONE_ENABLE_PROFILING
+
 #include "Test.h"
 #include "../cs/cs.h"
 #include "../opt/ParamSet.h"
@@ -161,5 +164,56 @@ namespace scone
 		prop.FromXmlFile( "config/optimization_test.xml" );
 		prop.ToInfoFile( "config/optimization_test.info" );
 		std::cout << prop;
+	}
+
+	void PerformanceTest( const String& filename )
+	{
+		log::SetLevel( log::InfoLevel );
+
+		// register scone types
+		opt::RegisterFactoryTypes();
+		cs::RegisterFactoryTypes();
+
+		opt::ParamSet par( filename );
+		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
+		if ( config_path.has_parent_path() )
+			bfs::current_path( config_path.parent_path() );
+
+		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+
+		// override some variables
+		objProp.Set( "max_duration", 1 );
+		objProp.Set( "Model.integration_accuracy", 1e-3 );
+		//objProp.Set( "Model.use_fixed_control_step_size", true );
+		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
+		//objProp.Set( "Model.max_step_size", 0.001 );
+		objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+
+		// create objective
+		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+
+		Profiler::GetGlobalInstance().Reset();
+		Timer timer;
+		double result;
+
+		timer.Restart();
+		result = so.Evaluate();
+		timer.Pause();
+
+		// collect statistics
+		PropNode stats;
+		stats.Clear();
+		stats.Set( "result", result );
+		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
+		stats.Set( "simulation time", so.GetModel().GetTime() );
+		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		cout << "--- Evaluation report ---" << endl;
+		cout << stats << endl;
+
+		cout << "Profile report:" << endl;
+		cout << Profiler::GetGlobalInstance().GetReport();
+		cout << "All done!" << endl;
 	}
 }

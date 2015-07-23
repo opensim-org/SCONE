@@ -8,5 +8,6 @@ namespace scone
 	void DelayTest();
 	void SimulationTest();
 	void PlaybackTest( const String& filename );
+	void PerformanceTest( const String& filename );
 	void XmlParseTest();
 }
