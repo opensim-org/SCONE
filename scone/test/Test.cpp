@@ -98,7 +98,8 @@ namespace scone
 		objProp.Set( "Model.use_fixed_control_step_size", true );
 		objProp.Set( "Model.fixed_control_step_size", 0.01 );
 		//objProp.Set( "Model.max_step_size", 0.001 );
-		objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+		objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
@@ -188,7 +189,8 @@ namespace scone
 		//objProp.Set( "Model.use_fixed_control_step_size", true );
 		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
 		//objProp.Set( "Model.max_step_size", 0.001 );
-		objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
+		objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
