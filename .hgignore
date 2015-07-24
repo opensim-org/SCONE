@@ -1,11 +1,11 @@
 syntax: glob
 bin/
 intermediate/
-build/vc2010/GeneratedFiles/
-build/vc2010/*.suo
-build/vc2010/*.opensdf
-build/vc2010/*.sdf
-build/vc2010/*.user
-build/vc2010/ipch/
+build/vc*/GeneratedFiles/
+build/vc*/*.suo
+build/vc*/*.opensdf
+build/vc*/*.sdf
+build/vc*/*.user
+build/vc*/ipch/
 *.log
 models/test/*
