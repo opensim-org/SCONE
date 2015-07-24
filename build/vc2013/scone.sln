@@ -58,11 +58,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sconeopt", "sconeopt.vcxpro
 		{082B32CB-9D77-4886-AFC1-C2999FE6D7FA} = {082B32CB-9D77-4886-AFC1-C2999FE6D7FA}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{384DD57A-A153-4715-9628-3B199CFDA615}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -116,8 +111,5 @@ Global
 		{C68ADE62-2D92-4B76-9656-B631907EBBA8} = {6E2F0CE4-E323-4E8D-94C3-A9B65970D96B}
 		{CB71E576-2C74-408B-8219-F3A3FDD34706} = {6E2F0CE4-E323-4E8D-94C3-A9B65970D96B}
 		{6CEE1F34-42AF-4180-BAA7-938A98847704} = {6E2F0CE4-E323-4E8D-94C3-A9B65970D96B}
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
