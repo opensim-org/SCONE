@@ -94,12 +94,12 @@ namespace scone
 
 		// override some variables
 		//objProp.Set( "max_duration", 1 );
-		objProp.Set( "Model.integration_accuracy", 1e-3 );
-		objProp.Set( "Model.use_fixed_control_step_size", true );
-		objProp.Set( "Model.fixed_control_step_size", 0.01 );
+		//objProp.Set( "Model.integration_accuracy", 1e-3 );
+		//objProp.Set( "Model.use_fixed_control_step_size", true );
+		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
 		//objProp.Set( "Model.max_step_size", 0.001 );
 		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
-		objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
+		//objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
@@ -125,7 +125,7 @@ namespace scone
 		cout << stats << endl;
 
 		// write results
-		obj->WriteResults( bfs::path( filename ).replace_extension().string() );
+		//obj->WriteResults( bfs::path( filename ).replace_extension().string() );
 	}
 
 	void DelayTest()

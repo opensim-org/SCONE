@@ -3,7 +3,6 @@
 #include "core.h"
 #include "PropNode.h"
 #include <map>
-#include "Timer.h"
 
 #ifdef SCONE_ENABLE_PROFILING
 	#define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
@@ -69,5 +68,4 @@ namespace scone
 		Profiler( const Profiler& other );
 		Profiler& operator=( const Profiler& other );
 	};
-
 }

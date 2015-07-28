@@ -15,7 +15,7 @@ namespace scone
 			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~MuscleReflex();
 
-			virtual void ComputeControls( double timestamp );
+			virtual void ComputeControls( double timestamp ) override;
 
 			// Reflex parameters
 			Real length_gain;

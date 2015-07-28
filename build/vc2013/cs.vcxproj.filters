@@ -16,6 +16,9 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{36c20868-41b5-4582-bf0c-357aa824d485}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Old Reflexes">
+      <UniqueIdentifier>{eba34c33-9b5c-432a-840b-d40db1ca6a7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\Function.h">
@@ -75,20 +78,20 @@
     <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\ReflexController.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\CompositeMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\DofReflex.h">
+      <Filter>Controllers\Old Reflexes</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h">
-      <Filter>Controllers</Filter>
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\Reflex.h">
-      <Filter>Controllers</Filter>
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\DofReflex.h">
-      <Filter>Controllers</Filter>
+    <ClInclude Include="..\..\scone\cs\ReflexController.h">
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,20 +140,20 @@
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\cs\CompositeMeasure.cpp">
       <Filter>Measures</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\scone\cs\DofReflex.cpp">
+      <Filter>Controllers\Old Reflexes</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp">
-      <Filter>Controllers</Filter>
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\Reflex.cpp">
-      <Filter>Controllers</Filter>
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\DofReflex.cpp">
-      <Filter>Controllers</Filter>
+    <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
+      <Filter>Controllers\Old Reflexes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

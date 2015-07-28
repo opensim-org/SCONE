@@ -63,12 +63,13 @@ namespace scone
 				Degree dofpos = Radian( m_pConditionalDofPos->GetValue( delay ) );
 				if ( !m_ConditionalPosRange.Test( dofpos ) )
 				{
+					// check if the sign of the violation is equal to the sign of the velocity
 					Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos );
 					Real dofvel = m_pConditionalDofVel->GetValue( delay );
 
 					if ( std::signbit( violation ) == std::signbit( dofvel ) )
 					{
-						//log::Trace( m_Target.GetName() + ": Ignoring, " + VARSTR( dofpos ) + VARSTR( dofvel ) );
+						//log::Trace( m_Target.GetName( ) + ": Ignoring, " + VARSTR( violation ) + VARSTR( dofpos ) + VARSTR( dofvel ) );
 						return; // TODO: something neater than just return
 					}
 				}
