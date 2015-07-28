@@ -92,7 +92,7 @@ namespace scone
 
 		size_t GetFrameCount() const { return m_Data.size(); }
 
-		Frame& GetFrame( Index frame_index ) {
+		Frame& GetFrame( Index frame_idx ) {
 			SCONE_ASSERT( frame_idx < m_Data.size() );
 			return m_Data[ frame_idx ];
 		}

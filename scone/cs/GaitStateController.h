@@ -29,7 +29,9 @@ namespace scone
 				TimedValue< GaitState > state;
 
 				// current status
-				bool contact;
+				Real leg_load;
+				bool allow_stance_init;
+				bool allow_swing_init;
 				Real sagittal_pos;
 				Real coronal_pos;
 				const Real leg_length;
@@ -44,7 +46,7 @@ namespace scone
 
 			// public parameters
 			Real stance_load_threshold;
-
+			Real swing_load_threshold;
 		protected:
 			virtual void UpdateLegStates( sim::Model& model, double timestamp );
 			void UpdateControllerStates( sim::Model& model, double timestamp );

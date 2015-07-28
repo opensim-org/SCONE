@@ -227,7 +227,7 @@ namespace scone
 			// setup hierarchy and create wrappers
 			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
-			// create legs and connect contact forces
+			// create legs and connect stance_contact forces
 			if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 			{
 				Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );

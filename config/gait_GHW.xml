@@ -7,7 +7,7 @@
 	<use_init_file>0</use_init_file>
 	
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW14</signature_postfix>
+		<signature_postfix>GHW15</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -22,6 +22,7 @@
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<stance_load_threshold init_mean="0.2" init_std="0.05" min="0.001" max="1.0" is_free="1"/>
+					<swing_load_threshold init_mean="0.001" init_std="0.05" min="0.001" max="1.0" is_free="0"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
 						<!-- Feed forward components for three states -->
@@ -45,6 +46,9 @@
 										<L0 init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
+										<KF init_mean="-2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<Reflex type="MuscleReflex" target="tib_ant" source="gastroc" delay="0.020">
 										<KF init_mean="-2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>

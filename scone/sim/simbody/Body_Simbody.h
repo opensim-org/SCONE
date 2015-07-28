@@ -33,7 +33,7 @@ namespace scone
 			OpenSim::Body& m_osBody;
 			class Model_Simbody& m_Model;
 
-			// connect a specific contact force to this body
+			// connect a specific stance_contact force to this body
 			void ConnectContactForce( const String& force_name );
 
 			virtual Model& GetModel() override;
