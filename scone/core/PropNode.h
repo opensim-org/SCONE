@@ -25,11 +25,13 @@ namespace scone
 
 		PropNode();
 		PropNode( const PropNode& other );
-		PropNode( const char* prop_string );
+		PropNode( PropNode&& other );
+		explicit PropNode( const char* prop_string );
 		~PropNode();
 
 		// assignment
 		PropNode& operator=( const PropNode& other );
+		PropNode& operator=( PropNode&& other );
 
 		// comparison
 		bool operator==( const PropNode& other ) const;

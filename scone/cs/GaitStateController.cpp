@@ -33,7 +33,8 @@ namespace scone
 		GaitStateController::LegState::LegState( sim::Leg& l ) :
 		leg( l ),
 		state( UnknownState ),
-		stance_contact( false ),
+		allow_stance_transition( false ),
+		allow_swing_transition( false ),
 		sagittal_pos( 0.0 ),
 		coronal_pos( 0.0 ),
 		leg_length( l.MeasureLength() ),
@@ -125,8 +126,8 @@ namespace scone
 			{
 				LegState& ls = *m_LegStates[ idx ];
 				ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
-				ls.allow_stance_init = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
-				ls.allow_stance_init = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
+				ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
+				ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetPos( ).x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
 			}
@@ -141,9 +142,9 @@ namespace scone
 				switch( ls.state )
 				{
 				case LegState::UnknownState:
-					if ( ls.stance_contact )
+					if ( ls.allow_stance_transition )
 					{
-						if ( mir_ls.stance_contact && ls.sagittal_pos < mir_ls.sagittal_pos )
+						if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 							new_state = LegState::LiftoffState;
 						else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
 							new_state = LegState::LateStanceState;
@@ -158,31 +159,31 @@ namespace scone
 					break;
 
 				case LegState::EarlyStanceState:
-					if ( mir_ls.stance_contact && ls.sagittal_pos < mir_ls.sagittal_pos )
+					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
 					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
 						new_state = LegState::LateStanceState;
 					break;
 
 				case LegState::LateStanceState:
-					if ( mir_ls.stance_contact && ls.sagittal_pos < mir_ls.sagittal_pos )
+					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
 					break;
 
 				case LegState::LiftoffState:
-					if ( !ls.stance_contact )
+					if ( ls.allow_swing_transition )
 						new_state = LegState::SwingState;
 					break;
 
 				case LegState::SwingState:
-					if ( ls.stance_contact && ls.sagittal_pos > mir_ls.sagittal_pos )
+					if ( ls.allow_stance_transition && ls.sagittal_pos > mir_ls.sagittal_pos )
 						new_state = LegState::EarlyStanceState;
-					if ( !ls.stance_contact && ls.sagittal_pos > ls.leg_length * landing_threshold )
+					if ( !ls.allow_stance_transition && ls.sagittal_pos > ls.leg_length * landing_threshold )
 						new_state = LegState::LandingState;
 					break;
 
 				case LegState::LandingState:
-					if ( ls.stance_contact )
+					if ( ls.allow_stance_transition )
 						new_state = LegState::EarlyStanceState;
 					break;
 				}

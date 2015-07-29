@@ -71,13 +71,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)..\..\bin\$(PlatformToolset)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\intermediate\$(PlatformToolset)\$(TargetName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\bin\$(PlatformToolset)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(TargetName)\$(PlatformToolset)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)..\..\bin\$(PlatformToolset)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\..\intermediate\$(PlatformToolset)\$(TargetName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)..\..\bin\$(PlatformToolset)-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate\$(TargetName)\$(PlatformToolset)-$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

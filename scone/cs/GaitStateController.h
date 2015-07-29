@@ -30,8 +30,8 @@ namespace scone
 
 				// current status
 				Real leg_load;
-				bool allow_stance_init;
-				bool allow_swing_init;
+				bool allow_stance_transition;
+				bool allow_swing_transition;
 				Real sagittal_pos;
 				Real coronal_pos;
 				const Real leg_length;

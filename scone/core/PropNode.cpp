@@ -43,13 +43,29 @@ namespace scone
 		*this = other;
 	}
 
+	PropNode::PropNode( PropNode&& other )
+	{
+		*this = std::move( other );
+	}
+
 	PropNode& PropNode::operator=( const PropNode& other )
 	{
-		m_Touched = other.m_Touched;
-		m_Value = other.m_Value;
-		m_Children.clear();
-		for ( ConstChildIter iter = other.m_Children.begin(); iter != other.m_Children.end(); ++iter )
-			m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
+		if ( this != &other )
+		{
+			m_Touched = other.m_Touched;
+			m_Value = other.m_Value;
+			m_Children.clear( );
+			for ( ConstChildIter iter = other.m_Children.begin( ); iter != other.m_Children.end( ); ++iter )
+				m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
+		}
+		return *this;
+	}
+
+	PropNode& PropNode::operator=( PropNode&& other )
+	{
+		m_Touched = std::move( other.m_Touched );
+		m_Value = std::move( other.m_Value );
+		m_Children = std::move( other.m_Children );
 		return *this;
 	}
 
@@ -217,7 +233,7 @@ namespace scone
 	void FromPropertyTree( PropNode& props, const ptree& tree )
 	{
 		props.SetValue( tree.get_value("") );
-		BOOST_FOREACH( const ptree::value_type &v, tree )
+		BOOST_FOREACH( const ptree::value_type& v, tree )
 		{
 			if ( v.first == "<xmlattr>" )
 			{
