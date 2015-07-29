@@ -126,7 +126,7 @@ namespace scone
 			{
 				LegState& ls = *m_LegStates[ idx ];
 				ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
-				ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) >= stance_load_threshold;
+				ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > stance_load_threshold;
 				ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetPos( ).x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
