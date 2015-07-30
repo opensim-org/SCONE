@@ -24,10 +24,6 @@ namespace scone
 			Real velocity_gain;
 
 		private:
-			sim::SensorDelayAdapter* m_pConditionalDofPos;
-			sim::SensorDelayAdapter* m_pConditionalDofVel;
-			Range< Degree > m_ConditionalPosRange;
-
 			sim::SensorDelayAdapter* m_pForceSensor;
 			sim::SensorDelayAdapter* m_pLengthSensor;
 			sim::SensorDelayAdapter* m_pVelocitySensor;

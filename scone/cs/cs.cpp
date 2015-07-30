@@ -28,6 +28,7 @@ using namespace boost::filesystem;
 #include "GaitCycleMeasure.h"
 #include "DofReflex.h"
 #include "MuscleReflex.h"
+#include "ConditionalMuscleReflex.h"
 
 namespace scone
 {
@@ -47,6 +48,7 @@ namespace scone
 			sim::GetControllerFactory().Register< ReflexController >();
 			GetReflexFactory().Register< MuscleReflex >();
 			GetReflexFactory().Register< DofReflex >();
+			GetReflexFactory().Register< ConditionalMuscleReflex >();
 
 			// register measures
 			sim::GetControllerFactory().Register< HeightMeasure >();

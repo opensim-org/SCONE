@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\CompositeMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\DofReflex.h" />
@@ -38,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\CompositeMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\cs.cpp" />
     <ClCompile Include="..\..\scone\cs\DofReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp" />

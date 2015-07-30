@@ -90,6 +90,9 @@
     <ClInclude Include="..\..\scone\cs\DofReflex.h">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -150,6 +153,9 @@
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\DofReflex.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
   </ItemGroup>
