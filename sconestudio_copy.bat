@@ -1,1 +1,1 @@
-".\bin\ReleaseCopy\sconestudio.exe"
+".\bin\v100-ReleaseCopy\sconestudio.exe"

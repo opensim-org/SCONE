@@ -59,7 +59,7 @@ namespace scone
 	{
 		if ( g_Version.empty() )
 		{
-			std::ifstream ifstr( GetApplicationFolder() + "/../../.version" );
+			std::ifstream ifstr( GetApplicationFolder() + "/.version" );
 			if ( ifstr.good() )
 				ifstr >> g_Version;
 			else g_Version = "UNKNOWN_VERSION";
