@@ -93,6 +93,15 @@
     <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h">
       <Filter>Controllers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflex.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexPose.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexController.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -156,6 +165,15 @@
       <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflex.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexPose.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp">
       <Filter>Controllers</Filter>
     </ClCompile>
   </ItemGroup>

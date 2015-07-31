@@ -20,7 +20,6 @@ namespace scone
 			virtual String GetClassSignature() const override;
 
 		private:
-			std::vector< MuscleReflexUP > m_MuscleReflexes;
 			std::vector< ReflexUP > m_Reflexes;
 
 			ReflexController( const ReflexController& other );

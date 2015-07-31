@@ -22,6 +22,10 @@ namespace scone
 			Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus );
 			virtual ~Muscle_Simbody();
 
+			// access to bodies
+			virtual const Link& GetOriginLink() const override;
+			virtual const Link& GetInsertionLink() const override;
+
 			// muscle parameters
 			virtual Real GetMaxIsometricForce() const override;
 			virtual Real GetOptimalFiberLength() const override;
@@ -50,12 +54,13 @@ namespace scone
 			virtual Real GetExcitation() const override;
 
 			virtual std::vector< Vec3 > GetMusclePath() const override;
-
 			virtual void SetExcitation( Real u ) override;
 
 			OpenSim::Muscle& GetOsMuscle() { return m_osMus; }
 
 			virtual const String& GetName() const override;
+
+			virtual Real GetMomentArm( const Dof& dof ) const override;
 
 		private:
 			OpenSim::Muscle& m_osMus;

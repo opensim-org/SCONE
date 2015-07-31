@@ -95,5 +95,12 @@ namespace scone
 			if ( terminate )
 				SetTerminationRequest();
 		}
+
+		const Link& Model::FindLink( const String& body_name )
+		{
+			const Link* link = GetRootLink().FindLink( body_name );
+			SCONE_THROW_IF( link == nullptr, "Could not find link " + body_name );
+			return *link;
+		}
 	}
 }

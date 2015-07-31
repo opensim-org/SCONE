@@ -17,6 +17,11 @@ namespace scone
 			Muscle();
 			virtual ~Muscle();
 
+			virtual const Link& GetOriginLink() const = 0;
+			virtual const Link& GetInsertionLink() const = 0;
+
+			virtual Real GetMomentArm( const Dof& dof ) const = 0;
+
 			virtual Real GetMaxIsometricForce() const = 0;
 			virtual Real GetOptimalFiberLength() const = 0;
 			virtual Real GetTendonSlackLength() const = 0;

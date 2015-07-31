@@ -101,6 +101,5 @@ namespace scone
 		protected:
 			Body& m_Body;
 		};
-
 	}
 }

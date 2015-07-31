@@ -25,6 +25,9 @@
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflex.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexController.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexPose.h" />
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
@@ -51,6 +54,9 @@
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflex.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexPose.cpp" />
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />

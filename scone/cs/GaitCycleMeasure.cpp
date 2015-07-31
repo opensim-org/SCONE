@@ -23,7 +23,6 @@ namespace scone
 
 		GaitCycleMeasure::~GaitCycleMeasure()
 		{
-
 		}
 
 		double GaitCycleMeasure::GetResult( sim::Model& model )

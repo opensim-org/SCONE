@@ -24,6 +24,8 @@ namespace scone
 
 			virtual const String& GetName() const override;
 
+			const OpenSim::Coordinate& GetOsCoordinate() const { return m_osCoord; }
+
 		private:
 			Model_Simbody& m_Model;
 			OpenSim::Coordinate& m_osCoord;

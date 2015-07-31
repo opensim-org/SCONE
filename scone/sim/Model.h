@@ -49,6 +49,7 @@ namespace scone
 			std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 			/// link access
+			const Link& FindLink( const String& body_name );
 			const Link& GetRootLink() const { return *m_RootLink; }
 
 			/// controller access

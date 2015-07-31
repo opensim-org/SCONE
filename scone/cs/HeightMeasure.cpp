@@ -31,22 +31,13 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
-			// make sure this is a new step
-			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
-
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
-			double height = pos; // + pow( vel, 2.0 ) / ( 2.0 * g );
-
-			//SCONE_LOG( "Force: " << model.GetLegs()[ 0 ]->GetContactForce() );
 
 			// add sample
-			m_Height.AddSample( timestamp, height );
+			m_Height.AddSample( timestamp, pos );
 
-			//printf( "ct=%.5f step=%d time/step=%.5f height=%.4f\n", timestamp, model.GetStep(), timestamp / model.GetStep(), height );
-			//SCONE_LOG( "time=" << timestamp << " height=" << height << " best=" << m_Best );
-
-			// check height
+			// check if the height is still high enough
 			if ( pos < termination_height * m_Height.GetInitial() )
 				return RequestTermination;
 
@@ -64,6 +55,7 @@ namespace scone
 
 		double HeightMeasure::GetResult( sim::Model& model )
 		{
+			// results are in cm to get nice scaling
 			if ( use_average_height )
 				return 100 * m_Height.GetAverage();
 			else return 100 * ( m_Height.GetHighest() - m_Height.GetInitial() );

@@ -498,7 +498,7 @@ namespace scone
 
 		State Model_Simbody::ReadState( const String& file )
 		{
-			// OSIM: why is there no normal way to get a value using a label???
+			// OpenSim: why is there no normal way to get a value using a label???
 
 			// create a copy of the storage
 			auto store = g_StorageCache.CreateCopy( file );

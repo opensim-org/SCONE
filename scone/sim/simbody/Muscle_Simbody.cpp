@@ -4,6 +4,7 @@
 
 #include "../../core/Exception.h"
 #include "../../core/Profiler.h"
+#include "Dof_Simbody.h"
 
 namespace scone
 {
@@ -96,6 +97,24 @@ namespace scone
 			return m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
 		}
 
+		const Link& Muscle_Simbody::GetOriginLink() const 
+		{
+			auto& pps = m_osMus.getGeometryPath().getPathPointSet();
+			return m_Model.FindLink( pps.get( 0 ).getBodyName() );
+		}
+
+		const Link& Muscle_Simbody::GetInsertionLink() const 
+		{
+			auto& pps = m_osMus.getGeometryPath().getPathPointSet();
+			return m_Model.FindLink( pps.get( 0 ).getBodyName() );
+		}
+
+		scone::Real Muscle_Simbody::GetMomentArm( const Dof& dof ) const 
+		{
+			const Dof_Simbody& dof_sb = dynamic_cast< const Dof_Simbody& >( dof );
+			return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetTendonLength() const
 		{
 			return m_osMus.getTendonLength( m_Model.GetTkState() );
@@ -118,7 +137,8 @@ namespace scone
 		
 		scone::Real scone::sim::Muscle_Simbody::GetExcitation() const
 		{
-			// use our own activation value, as OpenSim calls getControls()
+			// use our own control value, as OpenSim calls getControls()
+			// this could lead to infinite recursion
 			return GetControlValue();
 		}
 		

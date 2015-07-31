@@ -17,6 +17,7 @@ namespace scone
 			virtual size_t GetDofCount() const = 0;
 			virtual Real GetDof( size_t index = 0 ) const = 0;
 			virtual const String& GetDofName( size_t index = 0 ) const = 0;
+			bool HasDof( const String& dof_name ) const;
 
 		protected:
 			Body& m_Body;

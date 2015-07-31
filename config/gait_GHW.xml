@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<!--signature_postfix>DATE_TIME</signature_postfix-->
-	<!--signature_prefix>DATE_TIME</signature_prefix-->
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
-	
 	<Objective type="SimulationObjective">
 		<signature_postfix>GHW15</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
-			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
-			<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
 			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
@@ -36,6 +32,7 @@
 							</Controller>
 						</ConditionalController>
 
+						<!-- TA stretch reflexes, present during all states -->
 						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
@@ -61,7 +58,6 @@
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
 										<KF init_mean="0.4" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
-									
 									<!-- F+ GAS -->
 									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
 										<KF init_mean="0.4" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
@@ -70,7 +66,7 @@
 							</Controller>
 						</ConditionalController>
 						
-						<!-- Stance reflexes [Wang2012] -->
+						<!-- Stance reflexes, based on [Wang2012] -->
 						<ConditionalController states="EarlyStance LateStance">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
@@ -82,7 +78,6 @@
 											<pos_range min="-180" max="-10"/>
 										</Condition>
 									</Reflex>
-									
 									<!-- Root stability -->
 									<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
 										<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
@@ -96,7 +91,6 @@
 										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									
 									<!-- Upper body stability (not in [Wang2012]) -->
 									<Reflex type="DofReflex" target="ercspn" source="lumbar_extension" delay="0.005">
 										<KP init_mean="2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
@@ -110,12 +104,11 @@
 										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									
 								</Reflexes>
 							</Controller>						
 						</ConditionalController>
 						<ConditionalController states="Liftoff Swing">
-							<!-- Swing reflexes [Wang2012] -->
+							<!-- Swing reflexes, based on [Wang2012] -->
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
@@ -124,13 +117,11 @@
 										<KL	init_mean="3.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<L0	init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
-									
 									<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
 										<KL	init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<L0	init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
-									
 									<!-- Balance hip correction -->
 									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
 										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
@@ -139,9 +130,9 @@
 								</Reflexes>
 							</Controller>						
 						</ConditionalController>
-						<ConditionalController states="Landing">
 						
-							<!-- Landing [Wang2012] -->
+						<!-- Landing reflexes, based on [Wang2012] -->
+						<ConditionalController states="Landing">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
