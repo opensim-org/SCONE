@@ -9,7 +9,7 @@ namespace scone
 		JumpMeasure::JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		target_body( *FindByName( model.GetBodies(), props.GetStr( "target_body" ) ) ),
-		has_moved_up( false ),
+		was_airborne( false ),
 		distance( 0.0 ),
 		init_height( model.GetComPos().y ),
 		init_dist( std::min( model.GetComPos().x, target_body.GetPos().x ) ),
@@ -31,32 +31,34 @@ namespace scone
 		sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			if ( timestamp < ignore_time )
+			{
+				init_dist = std::min( model.GetComPos().x, target_body.GetPos().x );
 				return SuccessfulUpdate;
+			}
 
-			if ( model.GetComPos().y < termination_height * init_height )
+			Real y_com = model.GetComPos().y;
+			if ( y_com < termination_height * init_height )
 				return RequestTermination;
 
 			Real force = model.GetLeg( 0 ).GetContactForce().y + model.GetLeg( 1 ).GetContactForce().y;
 			if ( prev_force == -1.0 ) prev_force = force;
 
+			bool contact = force > 0.1;
 			bool move_up = force < prev_force;
+			bool move_down = force > prev_force;
 			prev_force = force;
 
-			if ( !move_up && has_moved_up )
+			if ( contact && was_airborne )
 			{
-				// model has landed, update distance
+				// model has landed, update distance and terminate
 				Real d = 100 * ( std::min( model.GetComPos().x, target_body.GetPos().x ) - init_dist );
 				distance = std::max( distance, d );
-			}
-			else if ( move_up && !has_moved_up )
-			{
-				// model has gone into flight (or well, is moving up at least)
-				has_moved_up = true;
-			}
-			else if ( has_moved_up && move_up && distance > 0.0 )
-			{
-				// controller is going for a second jump, stop it!
 				return Controller::RequestTermination;
+			}
+			else if ( !contact && !was_airborne )
+			{
+				// model has gone into flight
+				was_airborne = true;
 			}
 
 			return Controller::SuccessfulUpdate;

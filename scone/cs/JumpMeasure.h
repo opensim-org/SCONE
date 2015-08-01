@@ -26,7 +26,7 @@ namespace scone
 			Real termination_height;
 			Real init_dist;
 			Real init_height;
-			bool has_moved_up;
+			bool was_airborne;
 			Real distance;
 			Real prev_force;
 			Real ignore_time;
