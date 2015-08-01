@@ -24,6 +24,7 @@
     <ClInclude Include="..\..\scone\cs\Function.h" />
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\JumpMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflex.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflexController.h" />
@@ -53,6 +54,7 @@
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp" />
