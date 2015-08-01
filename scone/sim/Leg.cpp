@@ -43,7 +43,7 @@ namespace scone
 		scone::Real Leg::GetLoad() const
 		{
 			if ( m_ForceToLoadFactor == 0.0 )
-				m_ForceToLoadFactor = 1.0 / m_Foot.GetBody().GetModel().GetMass() * -m_Foot.GetBody().GetModel().GetGravity().y;
+				m_ForceToLoadFactor = 1.0 / ( m_Foot.GetBody().GetModel().GetMass() * -m_Foot.GetBody().GetModel().GetGravity().y );
 			return m_ForceToLoadFactor * GetContactForce().y;
 		}
 
