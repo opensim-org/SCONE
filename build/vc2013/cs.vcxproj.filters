@@ -93,6 +93,12 @@
     <ClInclude Include="..\..\scone\cs\ReflexController.h">
       <Filter>Controllers\Old Reflexes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\JumpMeasure.h">
+      <Filter>Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h">
+      <Filter>Controllers\Old Reflexes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -153,6 +159,12 @@
       <Filter>Controllers\Old Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
+      <Filter>Controllers\Old Reflexes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp">
+      <Filter>Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp">
       <Filter>Controllers\Old Reflexes</Filter>
     </ClCompile>
   </ItemGroup>

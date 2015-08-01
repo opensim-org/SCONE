@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\CompositeMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\cs.h" />
     <ClInclude Include="..\..\scone\cs\DofLimitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\DofReflex.h" />
@@ -23,6 +24,7 @@
     <ClInclude Include="..\..\scone\cs\Function.h" />
     <ClInclude Include="..\..\scone\cs\GaitMeasure.h" />
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
+    <ClInclude Include="..\..\scone\cs\JumpMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
@@ -38,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\CompositeMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\cs.cpp" />
     <ClCompile Include="..\..\scone\cs\DofReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\EffortMeasure.cpp" />
@@ -48,6 +51,7 @@
     <ClCompile Include="..\..\scone\cs\GaitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\HeightMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp" />
+    <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />

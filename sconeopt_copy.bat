@@ -1,1 +1,1 @@
-"%~dp0\bin\v100-ReleaseCopy\sconeopt.exe" %1 Optimizer.signature_postfix=DATE_TIME
+"%~dp0\bin\v120-ReleaseCopy\sconeopt.exe" %1 Optimizer.signature_postfix=DATE_TIME
