@@ -555,14 +555,6 @@ namespace scone
 			return GetOsimModel().getName();
 		}
 
-		Real Model_Simbody::GetTotalContactForce()
-		{
-			Real force = 0.0;
-			BOOST_FOREACH( LegUP& leg, GetLegs() )
-				force += leg->GetContactForce().GetLength();
-			return force;
-		}
-
 		void Model_Simbody::FixState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
 		{
 			const String state_name = "pelvis_ty";

@@ -102,5 +102,13 @@ namespace scone
 			SCONE_THROW_IF( link == nullptr, "Could not find link " + body_name );
 			return *link;
 		}
+
+		scone::Real Model::GetTotalContactForce() const
+		{
+			Real force = 0.0;
+			BOOST_FOREACH( const LegUP& leg, GetLegs() )
+				force += leg->GetContactForce().GetLength();
+			return force;
+		}
 	}
 }
