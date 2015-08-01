@@ -29,6 +29,7 @@ namespace scone
 			bool has_moved_up;
 			Real distance;
 			Real prev_force;
+			Real ignore_time;
 		};
 	}
 }

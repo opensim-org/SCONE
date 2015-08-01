@@ -16,6 +16,7 @@ namespace scone
 		prev_force( -1.0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
+			INIT_PROPERTY( props, ignore_time, 0.1 );
 		}
 
 		JumpMeasure::~JumpMeasure()
@@ -29,8 +30,11 @@ namespace scone
 
 		sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
+			if ( timestamp < ignore_time )
+				return SuccessfulUpdate;
+
 			if ( model.GetComPos().y < termination_height * init_height )
-				return Controller::RequestTermination;
+				return RequestTermination;
 
 			Real force = model.GetLeg( 0 ).GetContactForce().y + model.GetLeg( 1 ).GetContactForce().y;
 			if ( prev_force == -1.0 ) prev_force = force;
