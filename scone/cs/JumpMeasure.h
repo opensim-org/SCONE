@@ -16,9 +16,19 @@ namespace scone
 		public:
 			JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~JumpMeasure();
-			
-		protected:
+
+			virtual double GetResult( sim::Model& model ) override;
+			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+			virtual String GetClassSignature() const override;
+
 		private:
+			sim::Body& target_body;
+			Real termination_height;
+			Real init_dist;
+			Real init_height;
+			bool has_moved_up;
+			Real distance;
+			Real prev_force;
 		};
 	}
 }

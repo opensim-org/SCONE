@@ -29,6 +29,7 @@ using namespace boost::filesystem;
 #include "DofReflex.h"
 #include "MuscleReflex.h"
 #include "ConditionalMuscleReflex.h"
+#include "JumpMeasure.h"
 
 namespace scone
 {
@@ -57,6 +58,7 @@ namespace scone
 			sim::GetControllerFactory().Register< EffortMeasure >();
 			sim::GetControllerFactory().Register< DofLimitMeasure >();
 			sim::GetControllerFactory().Register< CompositeMeasure >();
+			sim::GetControllerFactory().Register< JumpMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();
