@@ -37,7 +37,9 @@
     <ClInclude Include="..\..\scone\cs\Reflex.h" />
     <ClInclude Include="..\..\scone\cs\ReflexController.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
+    <ClInclude Include="..\..\scone\cs\StateController.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
+    <ClInclude Include="..\..\scone\cs\TimeStateController.h" />
     <ClInclude Include="..\..\scone\cs\tools.h" />
     <ClInclude Include="..\..\scone\cs\version.h" />
   </ItemGroup>
@@ -66,10 +68,12 @@
     <ClCompile Include="..\..\scone\cs\Reflex.cpp" />
     <ClCompile Include="..\..\scone\cs\ReflexController.cpp" />
     <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />
+    <ClCompile Include="..\..\scone\cs\StateController.cpp" />
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\scone\cs\TimeStateController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">
