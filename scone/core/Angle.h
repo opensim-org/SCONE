@@ -1,9 +1,25 @@
 #pragma once
 
 #include "core.h"
+#include "math.h"
 
 namespace scone
 {
+	// THIS IS EXPERIMENTAL CODE, DO NOT USE!
+	enum AngleUnit { Degrees, Radians };
+	template< AngleUnit u >
+	struct Ang
+	{
+		Ang( const Ang< Radians >& other ) {};
+		Ang( const Ang< Degrees >& other ) {};
+		explicit Ang( Real v ) { value = v; }
+		operator Real&() { return value; }
+		Real value;
+	};
+
+	template<> Ang< Degrees >::Ang( const Ang< Radians >& other ) { value = RadToDeg( other.value ); }
+	template<> Ang< Radians >::Ang( const Ang< Degrees >& other ) { value = DegToRad( other.value ); }
+
 	class Angle
 	{
 	public:
