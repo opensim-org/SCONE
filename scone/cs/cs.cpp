@@ -30,6 +30,8 @@ using namespace boost::filesystem;
 #include "MuscleReflex.h"
 #include "ConditionalMuscleReflex.h"
 #include "JumpMeasure.h"
+#include "TimeStateController.h"
+#include "MetaReflexController.h"
 
 namespace scone
 {
@@ -47,6 +49,11 @@ namespace scone
 			sim::GetControllerFactory().Register< FeedForwardController >();
 			sim::GetControllerFactory().Register< GaitStateController >();
 			sim::GetControllerFactory().Register< ReflexController >();
+			sim::GetControllerFactory().Register< TimeStateController >();
+			sim::GetControllerFactory().Register< MetaReflexController >();
+
+			// register reflexes
+			// TODO: make this not separate but use controller factory instead?
 			GetReflexFactory().Register< MuscleReflex >();
 			GetReflexFactory().Register< DofReflex >();
 			GetReflexFactory().Register< ConditionalMuscleReflex >();

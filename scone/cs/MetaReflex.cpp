@@ -10,19 +10,25 @@
 #include "../sim/Link.h"
 #include "../sim/Joint.h"
 #include "../sim/SensorDelayAdapter.h"
+#include "tools.h"
 
 namespace scone
 {
 	namespace cs
 	{
 		MetaReflex::MetaReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) ) )
+		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) )
 		{
-			INIT_PROPERTY( props, reference_pos, 0.0 );
-			INIT_PROPERTY( props, length_gain, 0.0 );
-			INIT_PROPERTY( props, constant_moment, 0.0 );
-			INIT_PROPERTY( props, force_feedback, 0.0 );
-			INIT_PROPERTY( props, delay, 0.0 );
+			// TODO: remove once a proper factory is used
+			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
+
+			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
+
+			INIT_PARAM( props, par, reference_pos, 0.0 );
+			INIT_PARAM( props, par, length_gain, 0.0 );
+			INIT_PARAM( props, par, constant, 0.0 );
+			INIT_PARAM( props, par, force_feedback, 0.0 );
+			INIT_PROPERTY_REQUIRED( props, delay );
 
 			// create muscle infos
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
@@ -52,7 +58,7 @@ namespace scone
 			Real ul = mr.length_gain * std::max( 0.0, length_sensor->GetValue( mr.delay ) - reference_length );
 
 			// constant excitation
-			Real uc = std::max( 0.0, moment_arm * mr.constant_moment );
+			Real uc = std::max( 0.0, moment_arm * mr.constant );
 
 			// force feedback
 			Real uf = moment_arm * mr.force_feedback * std::max( 0.0, force_sensor->GetValue( mr.delay ) );

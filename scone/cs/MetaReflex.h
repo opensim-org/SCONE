@@ -9,6 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
+		// TODO: derive from either Reflex or Controller
 		class CS_API MetaReflex
 		{
 		public:
@@ -24,7 +25,7 @@ namespace scone
 			sim::Dof& target_dof;
 			Real reference_pos;
 			Real length_gain;
-			Real constant_moment;
+			Real constant;
 			Real force_feedback;
 			Real delay; // TODO: move this to muscle
 

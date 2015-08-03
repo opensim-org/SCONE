@@ -83,11 +83,13 @@ namespace scone
 						// initialize leg index
 						cc.leg_index = legIdx;
 
-						// create controller
 						// TODO: allow neater definition of target area instead of just taking the leg side
+						sim::Area a = model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
+
+						// create controller
 						const PropNode& cprops = ccIt->second->GetChild( "Controller" );
 						opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
-						cc.controller = sim::CreateController( cprops, par, model, model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE );
+						cc.controller = sim::CreateController( cprops, par, model, a );
 					}
 				}
 			}

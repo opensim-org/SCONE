@@ -28,7 +28,7 @@ namespace scone
 		//cs::PerformOptimization( "config/optimization_test.xml" );
 	}
 
-	void SimulationTest()
+	void ModelTest()
 	{
 		SCONE_PROFILE_SCOPE;
 		const double simulation_time = 0.2;
@@ -202,6 +202,44 @@ namespace scone
 
 		timer.Restart();
 		result = so.Evaluate();
+		timer.Pause();
+
+		// collect statistics
+		PropNode stats;
+		stats.Clear();
+		stats.Set( "result", result );
+		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
+		stats.Set( "simulation time", so.GetModel().GetTime() );
+		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		cout << "--- Evaluation report ---" << endl;
+		cout << stats << endl;
+
+		cout << "Profile report:" << endl;
+		cout << Profiler::GetGlobalInstance().GetReport();
+		cout << "All done!" << endl;
+	}
+
+	void SimulationObjectiveTest( const String& filename )
+	{
+		log::SetLevel( log::TraceLevel );
+
+		// register scone types
+		opt::RegisterFactoryTypes();
+		cs::RegisterFactoryTypes();
+
+		opt::ParamSet par; // empty parameter set
+		PropNode configProp = ReadPropNodeFromXml( filename ) ;
+		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+
+		// create objective
+		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+
+		// reset profiler
+		Profiler::GetGlobalInstance().Reset();
+
+		Timer timer;
+		double result = so.Evaluate();
 		timer.Pause();
 
 		// collect statistics

@@ -39,15 +39,15 @@ namespace scone
 					ccs.is_active_since = 0;
 
 					// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
-					String bit_string( m_States.size(), '0' );
-					ccs.state_mask.resize( m_States.size(), false );
+					String bit_string( GetStateCount(), '0' );
+					ccs.state_mask.resize( GetStateCount(), false );
 					bool has_any_state = false;
-					for ( size_t i = 0; i < m_States.size(); ++i )
+					for ( size_t i = 0; i < GetStateCount(); ++i )
 					{
-						if ( instance_states.find( m_States[ i ] ) != String::npos )
+						if ( instance_states.find( GetStateName( i ) ) != String::npos )
 						{
 							ccs.state_mask[ i ] = has_any_state = true;
-							bit_string[ i ] = '1';
+							bit_string[ GetStateCount() - 1 - i ] = '1';
 						}
 					}
 					SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" )
@@ -60,9 +60,9 @@ namespace scone
 			}
 		}
 
-		void StateController::UpdateConditionalControllerStates( size_t current_state, TimeInSeconds timestamp )
+		void StateController::UpdateConditionalControllerStates( StateIndex current_state, TimeInSeconds timestamp )
 		{
-			SCONE_ASSERT( current_state < m_States.size() );
+			SCONE_ASSERT( current_state < GetStateCount() );
 
 			// update controller states
 			BOOST_FOREACH( ConditionalController& cc, m_ConditionalControllers )

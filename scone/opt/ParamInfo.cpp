@@ -20,13 +20,22 @@ namespace scone
 		ParamInfo::ParamInfo( const String& i_name, const PropNode& props ) :
 		name( i_name )
 		{
+			bool is_free_default = true;
+
+			// check if we have a value
+			if ( props.HasValue() )
+			{
+				init_mean = props.GetValue< Real >();
+				is_free_default = false;
+			}
+
 			INIT_PROPERTY( props, init_min, 0.0 );
 			INIT_PROPERTY( props, init_max, 0.0 );
 			INIT_PROPERTY( props, init_mean, 0.0 );
 			INIT_PROPERTY( props, init_std, 0.0 );
 			INIT_PROPERTY( props, min, REAL_MIN );
 			INIT_PROPERTY( props, max, REAL_MAX );
-			INIT_PROPERTY( props, is_free, true ); /// TODO: some smarter default
+			INIT_PROPERTY( props, is_free, is_free_default ); /// TODO: some smarter default
 			props.Touch();
 		}
 

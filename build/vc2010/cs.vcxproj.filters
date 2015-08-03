@@ -25,6 +25,9 @@
     <Filter Include="Controllers\Reflex Controllers">
       <UniqueIdentifier>{0723627e-9271-45d6-8188-467871b8294d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Feed Forward Controllers">
+      <UniqueIdentifier>{9c71060b-62a7-4d22-a49a-638ef0b4ca03}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\Function.h">
@@ -56,9 +59,6 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\cs.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
-      <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h">
       <Filter>Functions</Filter>
@@ -120,6 +120,9 @@
     <ClInclude Include="..\..\scone\cs\MetaReflexController.h">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
+      <Filter>Controllers\Feed Forward Controllers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -148,9 +151,6 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp">
-      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\Factories.cpp">
       <Filter>System</Filter>
@@ -202,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\MetaReflexPose.cpp">
       <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp">
+      <Filter>Controllers\Feed Forward Controllers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
