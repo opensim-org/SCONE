@@ -87,12 +87,13 @@ namespace scone
 		{
 			BOOST_FOREACH( MuscleInfo& mi, m_MuscleInfos )
 			{
-				//mi.reference_length = ( mi.muscle->GetLength() - mi.muscle->GetTendonSlackLength() ) / mi.muscle->GetOptimalFiberLength();
 				mi.reference_length = ( mi.muscle->GetLength() - mi.muscle->GetTendonSlackLength() ) / mi.muscle->GetOptimalFiberLength();
+				Real length2 = mi.muscle->GetNormalizedFiberLength();
+
 				mi.moment_arm = mi.muscle->GetMomentArm( target_dof );
-				log::TraceF( "%-20s%-20sdof=% 8.3f length=% 8.3f moment=% 8.3f",
+				log::TraceF( "%-20s%-20sdof=% 8.3f length=% 8.3f (or %8.3f) moment=% 8.3f",
 					target_dof.GetName().c_str(), mi.muscle->GetName().c_str(),
-					target_dof.GetPos(), mi.reference_length, mi.moment_arm );
+					target_dof.GetPos(), mi.reference_length, length2, mi.moment_arm );
 			}
 		}
 
