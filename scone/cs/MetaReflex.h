@@ -17,18 +17,19 @@ namespace scone
 			virtual ~MetaReflex();
 
 			void SetupUsingCurrentPose();
-			void ComputeControls();
+			void UpdateControls();
 
 			friend struct MuscleInfo;
 
-		private:
 			sim::Dof& target_dof;
-			Real reference_pos;
+			Real reference_pos_in_degrees;
+			Real reference_pos_in_radians;
 			Real length_gain;
 			Real constant;
 			Real force_feedback;
 			Real delay; // TODO: move this to muscle
 
+		private:
 			// Structure taking
 			struct MuscleInfo
 			{

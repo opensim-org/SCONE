@@ -538,6 +538,8 @@ namespace scone
 		{
 			BOOST_FOREACH( const State::value_type& nvp, state )
 				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
+
+			//GetOsimModel().getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
 		}
 
 		double Model_Simbody::GetSimulationEndTime() const

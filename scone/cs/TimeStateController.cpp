@@ -15,7 +15,7 @@ namespace scone
 				m_States.push_back( TimeState( *it->second, par ) );
 
 			std::sort( m_States.begin(), m_States.end() );
-			SCONE_ASSERT( m_States.size() >= 2 );
+			SCONE_ASSERT( m_States.size() >= 1 );
 
 			// create conditional controllers
 			CreateConditionalControllers( props, par, model, area );

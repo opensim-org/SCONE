@@ -47,10 +47,33 @@ namespace scone
 					}
 				}
 			}
+
+			sim::State org_state = model.GetState();
+			sim::State pos_state = org_state;
+
+			// now set the DOFs and update the reflexes
+			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
+				pos_state[ mr->target_dof.GetName() ] = mr->reference_pos_in_radians;
+
+			model.SetState( pos_state );
+
+			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
+				mr->SetupUsingCurrentPose();
+
+			// restore original state
+			model.SetState( org_state );
 		}
 
 		MetaReflexController::~MetaReflexController()
 		{
+		}
+
+		MetaReflexController::UpdateResult MetaReflexController::UpdateControls( sim::Model& model, double timestamp )
+		{
+			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
+				mr->UpdateControls();
+
+			return SuccessfulUpdate;
 		}
 	}
 }

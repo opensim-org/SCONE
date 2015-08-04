@@ -56,6 +56,7 @@ namespace scone
 		scone::Real scone::sim::Muscle_Simbody::GetLength() const
 		{
 			SCONE_PROFILE_SCOPE;
+			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 			return m_osMus.getLength( m_Model.GetTkState() );
 		}
 
@@ -83,6 +84,7 @@ namespace scone
 		scone::Real Muscle_Simbody::GetNormalizedFiberLength() const 
 		{
 			SCONE_PROFILE_SCOPE;
+			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 			return m_osMus.getNormalizedFiberLength( m_Model.GetTkState() );
 		}
 
@@ -106,7 +108,7 @@ namespace scone
 		const Link& Muscle_Simbody::GetInsertionLink() const 
 		{
 			auto& pps = m_osMus.getGeometryPath().getPathPointSet();
-			return m_Model.FindLink( pps.get( 0 ).getBodyName() );
+			return m_Model.FindLink( pps.get( pps.getSize() - 1 ).getBodyName() );
 		}
 
 		scone::Real Muscle_Simbody::GetMomentArm( const Dof& dof ) const 
