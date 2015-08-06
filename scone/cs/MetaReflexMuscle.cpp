@@ -6,6 +6,7 @@
 #include "../sim/Dof.h"
 #include "MetaReflexDof.h"
 #include "boost/foreach.hpp"
+#include "MetaReflexController.h"
 
 //#define DEBUG_MUSCLE "tib_ant_r"
 
@@ -13,7 +14,7 @@ namespace scone
 {
 	namespace cs
 	{
-		MetaReflexMuscle::MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const std::vector< MetaReflexDofUP >& mrdofs ) : 
+		MetaReflexMuscle::MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller ) : 
 		muscle( mus ),
 		force_sensor( model.AcquireDelayedSensor< sim::MuscleForceSensor >( mus ) ),
 		length_sensor( model.AcquireDelayedSensor< sim::MuscleLengthSensor >( mus ) ),
@@ -28,7 +29,7 @@ namespace scone
 
 			// precompute number of dofs and total moment arm
 			Real total_moment_arm = 0.0;
-			BOOST_FOREACH( const MetaReflexDofUP& mrdof, mrdofs )
+			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
 			{
 				if ( muscle.HasMomentArm( mrdof->target_dof ) )
 				{
@@ -38,17 +39,24 @@ namespace scone
 			}
 
 			// compute muscle feedback parameters
-			BOOST_FOREACH( const MetaReflexDofUP& mrdof, mrdofs )
+			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
 			{
 				if ( muscle.HasMomentArm( mrdof->target_dof ) )
 				{
 					Real norm_moment_arm = muscle.GetMomentArm( mrdof->target_dof ) / total_moment_arm;
 					Real w = 1.0 / dof_count;
 
-					length_gain += w * mrdof->length_gain; // TODO: include moment arm?
-					force_gain += w * norm_moment_arm * mrdof->force_feedback;
-					constant_ex += w * norm_moment_arm * mrdof->constant;
-					stiffness += w * mrdof->stiffness; // TODO: include moment arm?
+					if ( controller.use_length )
+						length_gain += abs( norm_moment_arm ) * mrdof->length_gain;
+
+					if ( controller.use_force )
+						force_gain += norm_moment_arm * mrdof->force_feedback;
+
+					if ( controller.use_constant )
+						constant_ex += norm_moment_arm * mrdof->constant;
+
+					if ( controller.use_stiffness )
+						stiffness += abs( norm_moment_arm ) * mrdof->stiffness;
 
 					delay += w * mrdof->delay; // TODO: compute per muscle
 

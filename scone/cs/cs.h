@@ -26,6 +26,7 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( Reflex );
 		SCONE_DECLARE_CLASS_AND_PTR( Measure );
 		SCONE_DECLARE_CLASS_AND_PTR( HeightMeasure );
+		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexController );
 		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexDof );
 		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexMuscle );
 	}

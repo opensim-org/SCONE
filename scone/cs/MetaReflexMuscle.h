@@ -1,6 +1,7 @@
 #pragma once
 
 #include "cs.h"
+
 #include "../core/core.h"
 #include "../sim/Muscle.h"
 #include <vector>
@@ -12,7 +13,7 @@ namespace scone
 		class CS_API MetaReflexMuscle
 		{
 		public:
-			MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const std::vector< MetaReflexDofUP >& dofs );
+			MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller );
 			virtual ~MetaReflexMuscle();
 			void UpdateControls();
 

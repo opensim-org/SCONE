@@ -15,6 +15,7 @@
 #include "Factories.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"
+#include "../core/InitFromPropNode.h"
 
 namespace scone
 {
@@ -23,6 +24,11 @@ namespace scone
 		MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
 		{
+			INIT_PROPERTY( props, use_length, true );
+			INIT_PROPERTY( props, use_constant, true );
+			INIT_PROPERTY( props, use_force, true );
+			INIT_PROPERTY( props, use_stiffness, true );
+
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
@@ -57,7 +63,7 @@ namespace scone
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
-				m_ReflexMuscles.push_back( MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, m_ReflexDofs ) ) );
+				m_ReflexMuscles.push_back( MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this ) ) );
 
 			// restore original state
 			model.SetStateValues( org_state );
