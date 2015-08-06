@@ -21,6 +21,7 @@ namespace scone
 		constant_ex( 0.0 ),
 		force_gain( 0.0 ),
 		delay( 0.0 ),
+		stiffness( 0.0 ),
 		dof_count( 0 )
 		{
 			ref_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
@@ -44,9 +45,11 @@ namespace scone
 					Real norm_moment_arm = muscle.GetMomentArm( mrdof->target_dof ) / total_moment_arm;
 					Real w = 1.0 / dof_count;
 
-					length_gain += w * mrdof->length_gain;
+					length_gain += w * mrdof->length_gain; // TODO: include moment arm?
 					force_gain += w * norm_moment_arm * mrdof->force_feedback;
 					constant_ex += w * norm_moment_arm * mrdof->constant;
+					stiffness += w * mrdof->stiffness; // TODO: include moment arm?
+
 					delay += w * mrdof->delay; // TODO: compute per muscle
 
 					log::TraceF( "%-20s%-20sdof=% 6.1f len=% 8.3f mom=% 8.3f",

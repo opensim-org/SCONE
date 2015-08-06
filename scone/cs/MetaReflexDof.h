@@ -24,9 +24,13 @@ namespace scone
 			sim::Dof& target_dof;
 			Degree ref_pos_in_deg;
 			Real ref_pos_in_rad;
+
+			// actual parameters
 			Real length_gain;
 			Real constant;
 			Real force_feedback;
+			Real stiffness;
+
 			Real delay; // TODO: move this to muscle
 
 		private:

@@ -22,11 +22,14 @@ namespace scone
 
 			// info
 			Real ref_length;
+			Real delay;
+			size_t dof_count;
+
+			// gain parameters
 			Real length_gain;
 			Real constant_ex;
 			Real force_gain;
-			Real delay;
-			size_t dof_count;
+			Real stiffness;
 		};
 	}
 }

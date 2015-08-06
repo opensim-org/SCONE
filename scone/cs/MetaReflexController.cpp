@@ -77,7 +77,24 @@ namespace scone
 
 		scone::String MetaReflexController::GetClassSignature() const 
 		{
-			return "MRC";
+			// count reflex types
+			int l = 0, c = 0, f = 0, s = 0;
+			BOOST_FOREACH( const MetaReflexMuscleUP& r, m_ReflexMuscles )
+			{
+				if ( r->length_gain != 0.0 ) ++l;
+				if ( r->constant_ex != 0.0 ) ++c;
+				if ( r->force_gain != 0.0 ) ++f;
+				if ( r->stiffness != 0.0 ) ++s;
+			}
+
+			String str = "MR-";
+
+			if ( l > 0 ) str += "L";
+			if ( c > 0 ) str += "C";
+			if ( f > 0 ) str += "F";
+			if ( s > 0 ) str += "S";
+
+			return str;
 		}
 	}
 }

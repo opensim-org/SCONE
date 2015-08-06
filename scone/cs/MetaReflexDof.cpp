@@ -33,6 +33,8 @@ namespace scone
 			INIT_PARAM( props, par, length_gain, 0.0 );
 			INIT_PARAM( props, par, constant, 0.0 );
 			INIT_PARAM( props, par, force_feedback, 0.0 );
+			INIT_PARAM( props, par, stiffness, 0.0 );
+
 			INIT_PROPERTY_REQUIRED( props, delay );
 		}
 
