@@ -46,17 +46,10 @@ namespace scone
 					Real norm_moment_arm = muscle.GetMomentArm( mrdof->target_dof ) / total_moment_arm;
 					Real w = 1.0 / dof_count;
 
-					if ( controller.use_length )
-						length_gain += abs( norm_moment_arm ) * mrdof->length_gain;
-
-					if ( controller.use_force )
-						force_gain += norm_moment_arm * mrdof->force_feedback;
-
-					if ( controller.use_constant )
-						constant_ex += norm_moment_arm * mrdof->constant;
-
-					if ( controller.use_stiffness )
-						stiffness += abs( norm_moment_arm ) * mrdof->stiffness;
+					length_gain += abs( norm_moment_arm ) * mrdof->length_gain;
+					force_gain += norm_moment_arm * mrdof->force_feedback;
+					constant_ex += norm_moment_arm * mrdof->constant;
+					stiffness += abs( norm_moment_arm ) * mrdof->stiffness;
 
 					delay += w * mrdof->delay; // TODO: compute per muscle
 
@@ -65,7 +58,6 @@ namespace scone
 						mrdof->ref_pos_in_deg, ref_length, norm_moment_arm );
 				}
 			}
-
 		}
 
 		MetaReflexMuscle::~MetaReflexMuscle()
@@ -78,7 +70,7 @@ namespace scone
 			Real ul = length_gain * std::max( 0.0, length_sensor.GetValue( delay ) - ref_length );
 
 			// constant excitation
-			Real uc = std::max( 0.0, constant_ex );
+			Real uc = std::max( 0.0, constant_ex + stiffness );
 
 			// force feedback
 			Real uf = force_gain * std::max( 0.0, force_sensor.GetValue( delay ) );

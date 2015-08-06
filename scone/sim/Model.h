@@ -127,6 +127,7 @@ namespace scone
 			}
 
 			Real sensor_delay_scaling_factor;
+			const PropNode& custom_properties;
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }

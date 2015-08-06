@@ -29,7 +29,6 @@ namespace scone
 			GaitStateController::LegState::LandingState, "Landing"
 			);
 
-
 		GaitStateController::LegState::LegState( sim::Leg& l ) :
 		leg( l ),
 		state( UnknownState ),

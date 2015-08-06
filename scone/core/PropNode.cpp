@@ -19,6 +19,8 @@ using namespace boost::property_tree;
 
 namespace scone
 {
+	const PropNode PropNode::EMPTY_PROP_NODE = PropNode();
+
 	PropNode::PropNode() : m_Touched( false )
 	{
 	}
@@ -164,7 +166,10 @@ namespace scone
 			for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 			{
 				if ( iter->first == head_key )
+				{
+					iter->second->Touch();
 					return iter->second->GetChildPtr( tail_key );
+				}
 			}
 			return nullptr;
 		}

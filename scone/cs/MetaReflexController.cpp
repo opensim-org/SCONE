@@ -59,7 +59,7 @@ namespace scone
 			// now set the DOFs
 			auto org_state = model.GetStateValues();
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-				model.SetStateVariable( mr->target_dof.GetName(), mr->ref_pos_in_rad );
+				model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
