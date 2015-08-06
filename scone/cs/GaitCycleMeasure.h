@@ -19,10 +19,11 @@ namespace scone
 			bool use_half_cycle;
 
 		private:
-			Real GetStateSimilarity( sim::State& state );
+			Real GetStateSimilarity( const std::vector< Real >& state );
 			std::pair< String, int > GetMirroredStateNameAndSign( const String& str );
 
-			sim::State m_InitState;
+			std::vector< Real > m_InitState;
+			std::vector< String > m_StateNames;
 		};
 	}
 }

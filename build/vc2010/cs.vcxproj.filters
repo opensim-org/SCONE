@@ -114,14 +114,17 @@
     <ClInclude Include="..\..\scone\cs\MetaReflexPose.h">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\MetaReflex.h">
-      <Filter>Controllers\Meta Reflex Control</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\MetaReflexController.h">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
       <Filter>Controllers\Feed Forward Controllers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexDof.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexMuscle.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,9 +197,6 @@
     <ClCompile Include="..\..\scone\cs\GaitStateController.cpp">
       <Filter>Controllers\State Controllers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\MetaReflex.cpp">
-      <Filter>Controllers\Meta Reflex Control</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClCompile>
@@ -205,6 +205,12 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp">
       <Filter>Controllers\Feed Forward Controllers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexDof.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexMuscle.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

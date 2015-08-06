@@ -67,12 +67,17 @@ namespace scone
 
 			/// Get simulation info
 			virtual double GetTime() const = 0;
-			virtual State GetState() const = 0;
-			virtual void SetState( const State& state ) = 0;
 			virtual int GetIntegrationStep() const = 0;
 			virtual int GetPreviousIntegrationStep() const = 0;
 			virtual double GetPreviousTime() const = 0;
 			virtual double GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
+
+			// Model state access
+			virtual std::vector< Real > GetStateValues() const = 0;
+			virtual void SetStateValues( const std::vector< Real >& values ) = 0;
+			virtual std::vector< String > GetStateVariableNames() const = 0;
+			virtual Real GetStateVariable( const String& name ) const = 0;
+			virtual void SetStateVariable( const String& name, Real value ) = 0;
 
 			/// Simulate model
 			virtual void AdvanceSimulationTo( double time ) = 0;

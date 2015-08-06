@@ -12,13 +12,8 @@ namespace scone
 		{
 			INIT_PROPERTY( props, use_half_cycle, false );
 
-			m_InitState = model.GetState();
-
-			for ( auto iter = m_InitState.begin(); iter != m_InitState.end(); ++iter )
-			{
-				if ( iter->first.rfind( "_tx" ) == iter->first.size() - 3 )
-					iter = m_InitState.erase( iter );
-			}
+			m_InitState = model.GetStateValues();
+			m_StateNames = model.GetStateVariableNames();
 		}
 
 		GaitCycleMeasure::~GaitCycleMeasure()
@@ -27,24 +22,31 @@ namespace scone
 
 		double GaitCycleMeasure::GetResult( sim::Model& model )
 		{
-			return GetStateSimilarity( model.GetState() );
+			return GetStateSimilarity( model.GetStateValues() );
 		}
 
-		Real GaitCycleMeasure::GetStateSimilarity( sim::State& state )
+		Real GaitCycleMeasure::GetStateSimilarity( const std::vector< Real >& state )
 		{
 			Real total_diff = 0.0;
-			BOOST_FOREACH( auto& nvp, m_InitState )
+			for ( size_t idx = 0; idx < m_InitState.size(); ++idx )
 			{
+				String& name = m_StateNames[ idx ];
+
+				// skip forward translation
+				if ( name.rfind( "_tx" ) == name.size() - 3 )
+					continue;
+
 				Real diff = REAL_MAX;
 				if ( use_half_cycle )
 				{
-					auto trg = GetMirroredStateNameAndSign( nvp.first );
-					SCONE_ASSERT( state.count( trg.first ) > 0 ); // make sure the target state name exists
-					diff = abs( nvp.second - trg.second * state[ trg.first ] );
+					auto trg = GetMirroredStateNameAndSign( name );
+					Index trg_idx = FindIndex( m_StateNames, trg.first );
+					SCONE_ASSERT( trg_idx != NoIndex ); // make sure the target state name exists
+					diff = abs( m_InitState[ idx ] - trg.second * state[ trg_idx ] );
 				}
 				else
 				{
-					diff = abs( nvp.second * state[ nvp.first ] );
+					diff = abs( m_InitState[ idx ] - state[ idx ] );
 				}
 
 				total_diff += diff * diff;
@@ -68,6 +70,5 @@ namespace scone
 			// no need to mirror this state
 			return std::make_pair( str, 1 );
 		}
-
 	}
 }

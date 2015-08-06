@@ -89,5 +89,20 @@ namespace scone
 
 			return SuccessfulUpdate;
 		}
+
+		scone::String StateController::GetClassSignature() const 
+		{
+			String s = "S";
+
+			std::map< String, int > controllers;
+			BOOST_FOREACH( const ConditionalController& cc, m_ConditionalControllers )
+				controllers[ cc.second->GetSignature() ] += 1;
+
+			// output number of controllers per leg
+			for ( auto it = controllers.begin(); it != controllers.end(); ++it )
+				s += "_" + ToString( it->second ) + it->first;
+
+			return s;
+		}
 	}
 }

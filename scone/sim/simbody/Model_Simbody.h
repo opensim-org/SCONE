@@ -48,12 +48,19 @@ namespace scone
 
 			virtual void SetTerminationRequest() override;
 
-			virtual State GetState() const override;
-			virtual void SetState( const State& state ) override;
+			//virtual State GetState() const override;
+			//virtual void SetState( const State& state ) override;
 			virtual double GetTime() const override;
 			virtual double GetPreviousTime() const override;
 			virtual int GetIntegrationStep() const override;
 			virtual int GetPreviousIntegrationStep() const override;
+
+			/// State access
+			virtual std::vector< Real > GetStateValues() const override;
+			virtual void SetStateValues( const std::vector< Real >& values ) override;
+			virtual std::vector< String > GetStateVariableNames() const override;
+			Real GetStateVariable( const String& name ) const override;
+			virtual void SetStateVariable( const String& name, Real value ) override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
@@ -75,7 +82,7 @@ namespace scone
 			State ReadState( const String& file );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
-
+			void SetStateVariables( const std::map< String, Real >& state );
 			String integration_method;
 			double integration_accuracy;
 			double max_step_size;

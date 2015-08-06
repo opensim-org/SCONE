@@ -4,14 +4,17 @@
 
 #include <boost/foreach.hpp>
 
+#include "../sim/sim.h"
 #include "../sim/Area.h"
 #include "../sim/Model.h"
 #include "../sim/Dof.h"
+#include "../sim/Muscle.h"
 #include "../core/HasName.h"
 
 #include "tools.h"
 #include "Factories.h"
-#include "MetaReflex.h"
+#include "MetaReflexDof.h"
+#include "MetaReflexMuscle.h"
 
 namespace scone
 {
@@ -22,9 +25,8 @@ namespace scone
 		{
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
-			//String sidename = GetSideName( area.side );
 
-			// automatically create controllers for all legs (sides)
+			// create Meta Reflexes
 			const PropNode& reflexes = props.GetChild( "Reflexes" );
 			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexes.GetChildren() )
 			{
@@ -35,7 +37,7 @@ namespace scone
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
-					m_Reflexes.push_back( MetaReflexUP( new MetaReflex( *item.second, par, model, sim::Area::WHOLE_BODY ) ) );
+					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, sim::Area::WHOLE_BODY ) ) );
 				}
 				else
 				{
@@ -43,25 +45,22 @@ namespace scone
 					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
 					{
 						sim::Area a = model.GetLeg( legIdx ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
-						m_Reflexes.push_back( MetaReflexUP( new MetaReflex( *item.second, par, model, a ) ) );
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, a ) ) );
 					}
 				}
 			}
 
-			sim::State org_state = model.GetState();
-			sim::State pos_state = org_state;
+			// now set the DOFs
+			auto org_state = model.GetStateValues();
+			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+				model.SetStateVariable( mr->target_dof.GetName(), mr->ref_pos_in_rad );
 
-			// now set the DOFs and update the reflexes
-			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
-				pos_state[ mr->target_dof.GetName() ] = mr->reference_pos_in_radians;
-
-			model.SetState( pos_state );
-
-			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
-				mr->SetupUsingCurrentPose();
+			// Create meta reflex muscles
+			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
+				m_ReflexMuscles.push_back( MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, m_ReflexDofs ) ) );
 
 			// restore original state
-			model.SetState( org_state );
+			model.SetStateValues( org_state );
 		}
 
 		MetaReflexController::~MetaReflexController()
@@ -70,10 +69,15 @@ namespace scone
 
 		MetaReflexController::UpdateResult MetaReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			BOOST_FOREACH( MetaReflexUP& mr, m_Reflexes )
-				mr->UpdateControls();
+			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
+				mrmus->UpdateControls();
 
 			return SuccessfulUpdate;
+		}
+
+		scone::String MetaReflexController::GetClassSignature() const 
+		{
+			return "MRC";
 		}
 	}
 }

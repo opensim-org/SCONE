@@ -39,6 +39,9 @@ namespace scone
 		private:
 			StateController( const StateController& other );
 			StateController& operator=( const StateController& other );
+
+			virtual String GetClassSignature() const override;
+
 		};
 	}
 }

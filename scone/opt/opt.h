@@ -20,6 +20,9 @@
 #define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
 	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_.GetChild( GetCleanVarName( #VAR_ ) ) )
 
+#define INIT_PARAM_NAMED_REQUIRED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
+	VAR_ = PAR_.Get( NAME_, PROP_.GetChild( NAME_ ) )
+
 namespace scone
 {
 	namespace opt

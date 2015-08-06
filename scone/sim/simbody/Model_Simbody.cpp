@@ -132,8 +132,8 @@ namespace scone
 			// read initial state
 			if ( !state_init_file.empty() )
 			{
-				State state = ReadState( GetSconeFolder( "models" ) + state_init_file );
-				SetState( state );
+				std::map< String, Real > state = ReadState( GetSconeFolder( "models" ) + state_init_file );
+				SetStateVariables( state );
 				FixState( initial_leg_load * GetMass() * -GetGravity().y );
 			}
 
@@ -521,27 +521,6 @@ namespace scone
 			return state;
 		}
 
-		std::map< String, double > Model_Simbody::GetState() const
-		{
-			auto values = GetOsimModel().getStateValues( GetTkState() );
-			auto names = GetOsimModel().getStateVariableNames();
-			SCONE_ASSERT( values.size() == names.size() );
-
-			std::map< String, double > state;
-			for ( int i = 0; i < values.size(); ++i )
-				state[ names[ i ] ] = values[ i ];
-
-			return state;
-		}
-
-		void Model_Simbody::SetState( const State& state )
-		{
-			BOOST_FOREACH( const State::value_type& nvp, state )
-				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
-
-			//GetOsimModel().getMultibodySystem().realize( GetTkState(), SimTK::Stage::Dynamics );
-		}
-
 		double Model_Simbody::GetSimulationEndTime() const
 		{
 			return m_pOsimManager->getFinalTime();
@@ -600,6 +579,50 @@ namespace scone
 				log::WarningF( "Could not fix initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 			else
 				log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+		}
+
+		void Model_Simbody::SetStateVariables( const std::map< String, Real >& state )
+		{
+			BOOST_FOREACH( const State::value_type& nvp, state )
+				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
+		}
+
+		std::vector< String > Model_Simbody::GetStateVariableNames() const 
+		{
+			auto osnames = GetOsimModel().getStateVariableNames();
+			std::vector< String > state_names( osnames.size() );
+
+			for ( int i = 0; i < osnames.size(); ++i )
+				state_names[ i ] = osnames[ i ];
+
+			return state_names;
+		}
+
+		std::vector< Real > Model_Simbody::GetStateValues() const 
+		{
+			auto osvalues = GetOsimModel().getStateValues( GetTkState() );
+			std::vector< Real > state_values( osvalues.size() );
+
+			for ( int i = 0; i < osvalues.size(); ++i )
+				state_values[ i ] = osvalues[ i ];
+
+			return state_values;
+		}
+
+		void Model_Simbody::SetStateValues( const std::vector< Real >& state_vars )
+		{
+			std::vector< double > state_vars_d = state_vars;
+			GetOsimModel().setStateValues( GetTkState(), &state_vars_d[ 0 ] );
+		}
+
+		Real Model_Simbody::GetStateVariable( const String& name ) const
+		{
+			return GetOsimModel().getStateVariable( GetTkState(), name );
+		}
+
+		void Model_Simbody::SetStateVariable( const String& name, Real value )
+		{
+			GetOsimModel().setStateVariable( GetTkState(), name, value );
 		}
 	}
 }

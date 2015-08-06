@@ -28,6 +28,24 @@ namespace scone
 		return cont.end() != std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}
 
+	// TODO: move to elsewhere
+	template< typename T >
+	Index FindIndex( const std::vector< T > cont, const T& item )
+	{
+		auto it = std::find( cont.begin(), cont.end(), item );
+		return it != cont.end() ? static_cast< Index >( it - cont.begin() ) : NoIndex;
+	}
+
+	// TODO: move to elsewhere
+	template< typename T >
+	Index FindIndexOrThrow( const std::vector< T > cont, const T& item )
+	{
+		auto it = std::find( cont.begin(), cont.end(), item );
+		SCONE_THROW_IF( it == cont.end(), "Could not find " + ToString( item ) );
+		return static_cast< Index >( it - cont.begin() );
+	}
+
+	// TODO: move to elsewhere
 	template< typename T >
 	T& FindBySide( std::vector< T >& cont, Side side )
 	{
