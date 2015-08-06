@@ -26,6 +26,9 @@
     <ClInclude Include="..\..\scone\cs\HeightMeasure.h" />
     <ClInclude Include="..\..\scone\cs\JumpMeasure.h" />
     <ClInclude Include="..\..\scone\cs\Measure.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexController.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexDof.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexMuscle.h" />
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
@@ -34,7 +37,9 @@
     <ClInclude Include="..\..\scone\cs\Reflex.h" />
     <ClInclude Include="..\..\scone\cs\ReflexController.h" />
     <ClInclude Include="..\..\scone\cs\SimulationObjective.h" />
+    <ClInclude Include="..\..\scone\cs\StateController.h" />
     <ClInclude Include="..\..\scone\cs\stdafx.h" />
+    <ClInclude Include="..\..\scone\cs\TimeStateController.h" />
     <ClInclude Include="..\..\scone\cs\tools.h" />
     <ClInclude Include="..\..\scone\cs\version.h" />
   </ItemGroup>
@@ -53,6 +58,9 @@
     <ClCompile Include="..\..\scone\cs\DofLimitMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp" />
     <ClCompile Include="..\..\scone\cs\Measure.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexDof.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexMuscle.cpp" />
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />
@@ -60,10 +68,12 @@
     <ClCompile Include="..\..\scone\cs\Reflex.cpp" />
     <ClCompile Include="..\..\scone\cs\ReflexController.cpp" />
     <ClCompile Include="..\..\scone\cs\SimulationObjective.cpp" />
+    <ClCompile Include="..\..\scone\cs\StateController.cpp" />
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\scone\cs\TimeStateController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="core.vcxproj">

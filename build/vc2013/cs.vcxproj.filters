@@ -19,6 +19,15 @@
     <Filter Include="Controllers\Old Reflexes">
       <UniqueIdentifier>{eba34c33-9b5c-432a-840b-d40db1ca6a7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controllers\Feed Forward Control">
+      <UniqueIdentifier>{6f90e964-63ce-41c3-9f3e-46cea725a809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Meta Reflex Control">
+      <UniqueIdentifier>{6eab62dd-143b-49fb-9749-41eefb7241e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\State Control">
+      <UniqueIdentifier>{0aa14c42-1c35-438a-a716-3e3f5428bc99}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\scone\cs\Function.h">
@@ -51,9 +60,6 @@
     <ClInclude Include="..\..\scone\cs\cs.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
-      <Filter>Controllers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h">
       <Filter>Functions</Filter>
     </ClInclude>
@@ -62,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\Factories.h">
       <Filter>System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\scone\cs\GaitStateController.h">
-      <Filter>Controllers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\GaitCycleMeasure.h">
       <Filter>Measures</Filter>
@@ -99,6 +102,27 @@
     <ClInclude Include="..\..\scone\cs\JumpMeasure.h">
       <Filter>Measures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\FeedForwardController.h">
+      <Filter>Controllers\Feed Forward Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\GaitStateController.h">
+      <Filter>Controllers\State Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexController.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexDof.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexMuscle.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\TimeStateController.h">
+      <Filter>Controllers\State Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\StateController.h">
+      <Filter>Controllers\State Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -128,14 +152,8 @@
     <ClCompile Include="..\..\scone\cs\stdafx.cpp">
       <Filter>System</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp">
-      <Filter>Controllers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\cs\Factories.cpp">
       <Filter>System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\scone\cs\GaitStateController.cpp">
-      <Filter>Controllers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\GaitCycleMeasure.cpp">
       <Filter>Measures</Filter>
@@ -166,6 +184,27 @@
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp">
       <Filter>Measures</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\FeedForwardController.cpp">
+      <Filter>Controllers\Feed Forward Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\GaitStateController.cpp">
+      <Filter>Controllers\State Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexDof.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexMuscle.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\TimeStateController.cpp">
+      <Filter>Controllers\State Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\StateController.cpp">
+      <Filter>Controllers\State Control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
