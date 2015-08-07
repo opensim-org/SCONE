@@ -113,7 +113,7 @@ namespace scone
 			{
 				if ( cc->active )
 				{
-					log::Trace( "Updating Controls of " + GetConditionName( *cc ) );
+					//log::Trace( "Updating Controls of " + GetConditionName( *cc ) );
 					cc->controller->UpdateControls( model, timestamp - cc->active_since );
 				}
 			}

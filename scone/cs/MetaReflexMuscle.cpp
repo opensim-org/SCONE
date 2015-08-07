@@ -8,7 +8,7 @@
 #include "boost/foreach.hpp"
 #include "MetaReflexController.h"
 
-#define DEBUG_MUSCLE "iliopsoas_r"
+//#define DEBUG_MUSCLE "iliopsoas_r"
 
 namespace scone
 {
@@ -75,7 +75,10 @@ namespace scone
 			// force feedback
 			Real uf = force_gain * std::max( 0.0, force_sensor.GetValue( delay ) );
 
-			muscle.AddControlValue( ul + uc + uf );
+			// compute total
+			Real total = ul + uc + uf;
+
+			muscle.AddControlValue( total );
 
 #ifdef DEBUG_MUSCLE
 			if ( muscle.GetName() == DEBUG_MUSCLE )
