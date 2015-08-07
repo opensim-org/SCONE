@@ -3,12 +3,12 @@
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<maximize_objective>1</maximize_objective>
 	<Objective type="SimulationObjective">
-		<signature_postfix>MR2</signature_postfix>
+		<signature_postfix>MR3</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
 			<!--state_init_file>f2354_init_walk_2_S12.sto</state_init_file-->
-			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<sensor_delay_scaling_factor>2.0</sensor_delay_scaling_factor>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
@@ -49,7 +49,7 @@
 										<force_feedback init_mean="0.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<stiffness init_mean="0.0" init_std="0.1" min="0" max="1" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="ankle_angle" delay="0.010">
+									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
 										<reference_pos init_mean="90" init_std="5" min="-120" max="120" is_free="1"/>
 										<length_gain init_mean="1.0" init_std="0.1" min="0" max="1" is_free="1"/>
 										<constant init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
@@ -83,7 +83,7 @@
 										<force_feedback init_mean="0.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<stiffness init_mean="0.0" init_std="0.1" min="0" max="1" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="ankle_angle" delay="0.010">
+									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
 										<reference_pos init_mean="-60" init_std="5" min="-120" max="120" is_free="1"/>
 										<length_gain init_mean="0.5" init_std="0.1" min="0" max="1" is_free="1"/>
 										<constant init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
