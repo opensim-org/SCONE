@@ -65,8 +65,10 @@ namespace scone
 				bool active;
 				double active_since;
 				sim::ControllerUP controller;
+				String GetConditionName() const { return GetStringF( "L%dS%s", leg_index, state_mask.to_string().c_str() ); }
 				bool TestLegPhase( size_t leg_idx, LegState::GaitState state ) { return state_mask.test( size_t( state ) ); }
 			};
+			String GetConditionName( const ConditionalController& cc ) const;
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_threshold;
 			Real late_stance_threshold;

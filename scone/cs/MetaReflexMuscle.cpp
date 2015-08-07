@@ -8,7 +8,7 @@
 #include "boost/foreach.hpp"
 #include "MetaReflexController.h"
 
-//#define DEBUG_MUSCLE "tib_ant_r"
+#define DEBUG_MUSCLE "iliopsoas_r"
 
 namespace scone
 {
@@ -79,7 +79,7 @@ namespace scone
 
 #ifdef DEBUG_MUSCLE
 			if ( muscle.GetName() == DEBUG_MUSCLE )
-				log::TraceF( "length=%.3f reference=%.3f ul=%.3f", length_sensor.GetValue( delay ), ref_length, ul );
+				log::TraceF( "%s: l=%.3f ref_l=%.3f lg=%.3f ul=%.3f", DEBUG_MUSCLE, length_sensor.GetValue( delay ), ref_length, length_gain, ul );
 #endif
 		}
 	}

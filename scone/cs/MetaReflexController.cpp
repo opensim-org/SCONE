@@ -47,12 +47,17 @@ namespace scone
 				}
 				else
 				{
-					// this is a dof that has sides (probably), create a controller for each leg
-					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
+					// this is a dof that has sides (probably), create a controller that matches the Area side
+					if ( area.side == NoSide )
 					{
-						sim::Area a = model.GetLeg( legIdx ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
-						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, a ) ) );
+						for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
+							m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, model.GetLeg( legIdx ).GetArea() ) ) );
 					}
+					else
+					{
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, area ) ) );
+					}
+
 				}
 			}
 
@@ -63,7 +68,11 @@ namespace scone
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
-				m_ReflexMuscles.push_back( MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this ) ) );
+			{
+				MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this ) );
+				if ( mrm->dof_count > 0 ) // only keep reflex if it crosses any of the relevant dofs
+					m_ReflexMuscles.push_back( std::move( mrm ) );
+			}
 
 			// restore original state
 			model.SetStateValues( org_state );

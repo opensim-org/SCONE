@@ -112,7 +112,10 @@ namespace scone
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
 				if ( cc->active )
+				{
+					log::Trace( "Updating Controls of " + GetConditionName( *cc ) );
 					cc->controller->UpdateControls( model, timestamp - cc->active_since );
+				}
 			}
 
 			return SuccessfulUpdate;
@@ -229,5 +232,17 @@ namespace scone
 
 			return s;
 		}
+
+		scone::String GaitStateController::GetConditionName( const ConditionalController& cc ) const
+		{
+			String s = m_LegStates[ cc.leg_index ]->leg.GetName();
+			for ( int i = 0; i < LegState::StateCount; ++i )
+			{
+				if ( cc.state_mask.test( i ) )
+					s += "-" + LegState::m_StateNames.GetString( LegState::GaitState( i ) );
+			}
+			return s;
+		}
+
 	}
 }
