@@ -102,7 +102,7 @@ namespace scone
 				if ( r->stiffness != 0.0 ) ++s;
 			}
 
-			String str = "MR-";
+			String str = "M";
 
 			if ( l > 0 ) str += "L";
 			if ( c > 0 ) str += "C";
