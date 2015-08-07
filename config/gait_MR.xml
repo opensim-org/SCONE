@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>MR2</signature_postfix>
+		<signature_postfix>MR3</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -34,7 +34,7 @@
 									</Reflex>
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
 										<reference_pos init_mean="-45" init_std="1" min="-120" max="0" is_free="1"/>
-										<length_gain init_mean="0.1" init_std="0.01" min="0" max="1" is_free="1"/>
+										<length_gain init_mean="0.01" init_std="0.001" min="0" max="1" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -45,8 +45,8 @@
 							<Controller type="MetaReflexController">
 								<Reflexes>
 									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
-										<reference_pos init_mean="0" init_std="1" min="-90" max="90" is_free="1"/>
-										<length_gain init_mean="0.5" init_std="0.01" min="0" max="1" is_free="1"/>
+										<reference_pos init_mean="20" init_std="1" min="-90" max="90" is_free="1"/>
+										<length_gain init_mean="0.5" init_std="0.05" min="0" max="1" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -57,8 +57,8 @@
 							<Controller type="MetaReflexController">
 								<Reflexes>
 									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
-										<reference_pos init_mean="35" init_std="1" min="-90" max="180" is_free="1"/>
-										<length_gain init_mean="0.3" init_std=".01" min="0" max="1" is_free="1"/>
+										<reference_pos init_mean="30" init_std="1" min="-90" max="180" is_free="1"/>
+										<length_gain init_mean="0.5" init_std=".01" min="0" max="1" is_free="1"/>
 									</Reflex>
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
 										<reference_pos init_mean="-20" init_std="1" min="-90" max="90" is_free="1"/>
@@ -66,7 +66,7 @@
 									</Reflex>
 									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
 										<reference_pos init_mean="15" init_std="1" min="-90" max="180" is_free="1"/>
-										<length_gain init_mean="0.5" init_std="1" min="0" max="1" is_free="1"/>
+										<length_gain init_mean="1.0" init_std="0.1" min="0" max="1" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -77,17 +77,17 @@
 							<Controller type="MetaReflexController">
 								<Reflexes>
 									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005">
-										<reference_pos init_mean="0" init_std="1" min="-90" max="90" is_free="1"/>
-										<length_gain init_mean="1.0" init_std="1" min="0" max="1" is_free="1"/>
+										<reference_pos init_mean="10" init_std="1" min="-90" max="90" is_free="1"/>
+										<length_gain init_mean="1.0" init_std="0.1" min="0" max="1" is_free="1"/>
 									</Reflex>
-								
 									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
-										<reference_pos init_mean="0" init_std="1" min="-90" max="180" is_free="1"/>
+										<reference_pos init_mean="-10" init_std="1" min="-90" max="180" is_free="1"/>
 										<length_gain init_mean="0.5" init_std=".01" min="0" max="1" is_free="1"/>
 									</Reflex>
+									
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
-										<reference_pos init_mean="-5" init_std="1" min="-90" max="90" is_free="1"/>
-										<length_gain init_mean="0.5" init_std="1" min="0" max="1" is_free="1"/>
+										<reference_pos init_mean="-10" init_std="1" min="-90" max="90" is_free="1"/>
+										<length_gain init_mean="1.0" init_std="0.1" min="0" max="1" is_free="1"/>
 										<constant init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
 									</Reflex>
 								</Reflexes>

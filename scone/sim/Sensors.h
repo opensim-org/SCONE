@@ -48,6 +48,16 @@ namespace scone
 			virtual String GetName() const override;
 		};
 
+		// Sensor that simulates (based on [Prochazka 1999])
+		class SCONE_SIM_API MuscleSpindleSensor : public MuscleSensor
+		{
+		public:
+			MuscleSpindleSensor( Muscle& m ) : MuscleSensor( m ) {}
+			MuscleSpindleSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+			virtual Real GetValue() const override;
+			virtual String GetName() const override;
+		};
+
 		// Base class for dof sensors
 		class SCONE_SIM_API DofSensor : public Sensor
 		{

@@ -52,6 +52,17 @@ namespace scone
 			return m_Muscle.GetName() + ".V";
 		}
 
+		scone::Real MuscleSpindleSensor::GetValue() const 
+		{
+			// derived from [Prochazka1999], but normalized to unit length
+			return 0.105 * sqrt( std::max( 0.0, m_Muscle.GetNormalizedFiberVelocity() ) ) + m_Muscle.GetNormalizedFiberLength();
+		}
+
+		scone::String MuscleSpindleSensor::GetName() const 
+		{
+			return m_Muscle.GetName() + ".MS";
+		}
+
 		DofSensor::DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) )
@@ -124,5 +135,5 @@ namespace scone
 		{
 			return m_Body.GetName();
 		}
-	}
+}
 }
