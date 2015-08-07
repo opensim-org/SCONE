@@ -5,6 +5,8 @@
 
 #pragma once
 
+#ifdef _MSC_VER
+
 #include <SDKDDKVer.h>
 
 #define NOMINMAX
@@ -12,8 +14,12 @@
 
 #include <windows.h>
 
+#endif
+
 #include <string>
 #include <vector>
+#include <algorithm>
+
 
 //#include <boost/property_tree/ptree.hpp>
 //#include <boost/property_tree/ini_parser.hpp>
@@ -22,3 +28,4 @@
 //#include <boost/tokenizer.hpp>
 //#include <boost/algorithm/string.hpp>
 //#include <boost/foreach.hpp>
+

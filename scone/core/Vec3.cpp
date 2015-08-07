@@ -1,8 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Vec3.h"
 #include "Exception.h"
 #include <sstream>
+#include <cmath>
 #include "tools.h"
 
 namespace scone

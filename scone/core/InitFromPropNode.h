@@ -21,22 +21,6 @@ namespace scone
 	//{
 	//};
 
-	// process named property type
-	template< typename T >
-	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
-	{
-		InitFromPropNode< T >( prop.GetChild( name ), var );
-	}
-
-	// process named property type with default argument
-	template< typename T >
-	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name, const T& default_value )
-	{
-		if ( prop.HasKey( name ) )
-			InitFromPropNode( prop.GetChild( name ), var );
-		else var = T( default_value );
-	}
-
 	// process fundamental types and String
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, T& var )
@@ -68,5 +52,21 @@ namespace scone
 			vec.push_back( T() );
 			InitFromPropNode( iter->second, vec.back() );
 		}
+	}
+
+	// process named property type
+	template< typename T >
+	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
+	{
+		InitFromPropNode< T >( prop.GetChild( name ), var );
+	}
+
+	// process named property type with default argument
+	template< typename T >
+	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name, const T& default_value )
+	{
+		if ( prop.HasKey( name ) )
+			InitFromPropNode( prop.GetChild( name ), var );
+		else var = T( default_value );
 	}
 }

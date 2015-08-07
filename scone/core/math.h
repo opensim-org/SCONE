@@ -1,5 +1,12 @@
 #pragma once
 
+#include "core.h"
+
+#include <stdlib.h>
+#include <cmath>
+
+#include <iostream>
+
 namespace scone
 {
 	// math helper functions
@@ -36,7 +43,10 @@ namespace scone
 		operator Real&() { return value; }
 		operator const Real&() const { return value; }
 
-		friend std::ostream& operator<<( std::ostream& str, const Degree& v ) { return str << v.value; }
+		friend std::ostream& operator<<( std::ostream& str, const Degree& v ) {
+            str << v.value;
+            return str;
+        }
 		friend std::istream& operator>>( std::istream& str, Degree& v ) { return str >> v.value; }
 
 		Real value;
