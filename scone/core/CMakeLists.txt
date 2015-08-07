@@ -25,15 +25,15 @@ set(SOURCES
     stdafx.h
     Log.cpp
     Log.h
-    Profiler.cpp
-    Profiler.h
+    #    Profiler.cpp
+    #    Profiler.h
     ResourceCache.h
     Storage.h
     StringMap.h
-    system.cpp
-    system.h
-    Timer.cpp
-    Timer.h
+    #    system.cpp
+    #    system.h
+    #    Timer.cpp
+    #    Timer.h
     tools.cpp
     tools.h
     )
