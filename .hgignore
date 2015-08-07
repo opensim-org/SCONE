@@ -9,3 +9,4 @@ build/vc*/*.user
 build/vc*/ipch/
 *.log
 models/test/*
+config/backup/*
