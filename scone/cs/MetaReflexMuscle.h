@@ -13,7 +13,7 @@ namespace scone
 		class CS_API MetaReflexMuscle
 		{
 		public:
-			MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller );
+			MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller, const sim::Area& area );
 			virtual ~MetaReflexMuscle();
 			void UpdateControls();
 			void InitMuscleParameters( const MetaReflexController& controller );

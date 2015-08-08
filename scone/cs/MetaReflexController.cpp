@@ -70,15 +70,18 @@ namespace scone
 
 			// now set the DOFs
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), true );
+				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
 				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
 			{
-				MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this ) );
-				if ( mrm->dof_count > 0 ) // only keep reflex if it crosses any of the relevant dofs
-					m_ReflexMuscles.push_back( std::move( mrm ) );
+				if ( GetSide( mus->GetName() ) == area.side )
+				{
+					MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this, area ) );
+					if ( mrm->dof_count > 0 ) // only keep reflex if it crosses any of the relevant dofs
+						m_ReflexMuscles.push_back( std::move( mrm ) );
+				}
 			}
 
 			// init meta reflex control parameters
