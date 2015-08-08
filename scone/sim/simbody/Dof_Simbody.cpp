@@ -55,5 +55,15 @@ namespace scone
 				return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );
 			else return 0.0;
 		}
+
+		void Dof_Simbody::SetPos( Real pos, bool enforce_constraints )
+		{
+			m_osCoord.setValue( m_Model.GetTkState(), pos, enforce_constraints );
+		}
+
+		void Dof_Simbody::SetVel( Real vel )
+		{
+			m_osCoord.setSpeedValue( m_Model.GetTkState(), vel );
+		}
 	}
 }

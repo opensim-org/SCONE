@@ -61,10 +61,17 @@ namespace scone
 				}
 			}
 
-			// now set the DOFs
+			// backup the current state
 			auto org_state = model.GetStateValues();
+
+			// reset all dofs to ensure consistency when there are unspecified dofs
+			BOOST_FOREACH( sim::DofUP& dof, model.GetDofs() )
+				dof->SetPos( 0, false );
+
+			// now set the DOFs
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-				model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
+				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), true );
+				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
