@@ -86,6 +86,7 @@ namespace scone
 						sim::Area a = model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
 
 						// create controller
+						log::Trace( "Creating controllers for " + GetConditionName( cc ) );
 						const PropNode& cprops = ccIt->second->GetChild( "Controller" );
 						opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 						cc.controller = sim::CreateController( cprops, par, model, a );

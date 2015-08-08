@@ -74,6 +74,10 @@ namespace scone
 					m_ReflexMuscles.push_back( std::move( mrm ) );
 			}
 
+			// init meta reflex control parameters
+			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
+				mrm->InitMuscleParameters( *this );
+
 			// restore original state
 			model.SetStateValues( org_state );
 		}
@@ -103,7 +107,6 @@ namespace scone
 			}
 
 			String str = "M";
-
 			if ( l > 0 ) str += "L";
 			if ( c > 0 ) str += "C";
 			if ( f > 0 ) str += "F";

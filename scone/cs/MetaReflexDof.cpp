@@ -24,7 +24,9 @@ namespace scone
 		length_gain( 0.0 ),
 		constant( 0.0 ),
 		force_feedback( 0.0 ),
-		stiffness( 0.0 )
+		stiffness( 0.0 ),
+		tot_available_pos_mom( 0.0 ),
+		tot_available_neg_mom( 0.0 )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
@@ -49,6 +51,13 @@ namespace scone
 
 		MetaReflexDof::~MetaReflexDof()
 		{
+		}
+
+		void MetaReflexDof::AddAvailableMoment( Real max_moment )
+		{
+			if ( max_moment > 0 )
+				tot_available_pos_mom += max_moment;
+			else tot_available_neg_mom += max_moment;
 		}
 	}
 }
