@@ -13,7 +13,7 @@ namespace scone
 		va_start( args, format );
 	
 		char buf[8192];
-		vsnprintf(buf, sizeof(buf), format, args);
+		vsprintf_s(buf, sizeof(buf), format, args);
 
 		va_end( args );
 	
@@ -22,20 +22,21 @@ namespace scone
 	
 	std::string GetDateTimeAsString()
 	{
+        /*
         time_t timer;
         time(&timer);
         struct tm* t;
         t = localtime(&timer);
+        */
         
-        /*
 		__time64_t long_time;
 		_time64(&long_time);
 		struct tm t;
 		_localtime64_s(&t, &long_time);
-        */
+        
 	
 		char buf[100];
-		snprintf(buf, sizeof(buf), "%02d%02d.%02d%02d", t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min);
+		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d", t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min);
 	
 		return buf;
 	}

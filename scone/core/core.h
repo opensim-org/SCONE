@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER)
 
 #ifdef CORE_EXPORTS
 #define CORE_API __declspec(dllexport)
@@ -21,7 +21,7 @@
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
 
-#ifdef WIN32
+#if defined(_MSC_VER)
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )
 #endif
