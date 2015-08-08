@@ -109,7 +109,9 @@ namespace scone
 			virtual String GetName() const override;
 			virtual const String& GetSourceName() const override;
 		protected:
-			Body& m_Body;
+			// TODO: get rid of hard-coded dofs, use body instead
+			Dof& m_PelvisTilt;
+			Dof& m_LumbarExtension;
 		};
 	}
 }

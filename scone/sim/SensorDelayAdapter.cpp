@@ -13,7 +13,7 @@ namespace scone
 		SensorDelayAdapter::SensorDelayAdapter( Model& model, Sensor& source, TimeInSeconds default_delay ) :
 		Sensor(),
 		m_Model( model ),
-		m_Source( source ),
+		m_InputSensor( source ),
 		m_Delay( default_delay )
 		{
 			m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() );
@@ -38,12 +38,12 @@ namespace scone
 			SCONE_ASSERT( !storage.IsEmpty() && storage.Back().GetTime() == m_Model.GetTime() );
 
 			// add the new value
-			storage.Back()[ m_StorageIdx ] = m_Source.GetValue();
+			storage.Back()[ m_StorageIdx ] = m_InputSensor.GetValue();
 		}
 
 		scone::String SensorDelayAdapter::GetName() const 
 		{
-			return m_Source.GetName();
+			return m_InputSensor.GetName();
 		}
 	}
 }

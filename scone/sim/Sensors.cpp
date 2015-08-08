@@ -117,13 +117,15 @@ namespace scone
 
 		SagittalPostureSensor::SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
-		m_Body( *FindByName( model.GetBodies(), pn.GetStr( "body" ) ) )
+		m_PelvisTilt( *FindByName( model.GetDofs(), "pelvis_tilt" ) ),
+		m_LumbarExtension( *FindByName( model.GetDofs(), "lumbar_extension" ) )
 		{
+			// TODO: get rid of hard-coded dof names
 		}
 
 		scone::Real SagittalPostureSensor::GetValue() const 
 		{
-			return m_Body.GetOri().ToExponentialMap().z;
+			return m_PelvisTilt.GetPos() + m_LumbarExtension.GetPos();
 		}
 
 		scone::String SagittalPostureSensor::GetName() const 
@@ -133,7 +135,7 @@ namespace scone
 
 		const String& SagittalPostureSensor::GetSourceName() const 
 		{
-			return m_Body.GetName();
+			return m_PelvisTilt.GetName();
 		}
 }
 }
