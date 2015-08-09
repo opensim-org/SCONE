@@ -45,6 +45,15 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
 endif()
 
 
+# Various settings
+# ----------------
+# Place build products (libraries, executables) in root
+# binary (build) directory. Otherwise, they get scattered around
+# the build directory and so the dll's aren't next to the executables.
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+
+
 # Process source code.
 # --------------------
 add_subdirectory(scone/core)
@@ -52,3 +61,7 @@ add_subdirectory(scone/sim)
 add_subdirectory(scone/sim/simbody)
 add_subdirectory(scone/opt)
 add_subdirectory(scone/cs)
+add_subdirectory(scone/vis)
+
+add_subdirectory(scone/sconeopt)
+add_subdirectory(scone/test)
