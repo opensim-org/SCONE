@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>3DMR11</signature_postfix>
+		<signature_postfix>3DMR12</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f2354.osim</model_file>
@@ -12,6 +12,7 @@
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
 			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<initial_leg_load>0.5</initial_leg_load>
 			<custom_properties>
 				<meta_reflex_control use_length="1" use_constant="1" use_force="1" use_stiffness="1"/>
 			</custom_properties>
