@@ -39,7 +39,7 @@ namespace scone
 				// check if the target dof is sided
 				// TODO: see if we can come up with something nicer here...
 				const String& target_dof = item.second->GetStr( "target" );
-				SCONE_ASSERT( GetSide( target_dof ) == NoSide );
+				SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
@@ -48,6 +48,7 @@ namespace scone
 				else
 				{
 					// this is a dof that has sides (probably), create a controller that matches the Area side
+					SCONE_ASSERT( area.side != NoSide )
 					if ( area.side == NoSide )
 					{
 						for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
@@ -57,7 +58,6 @@ namespace scone
 					{
 						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, area ) ) );
 					}
-
 				}
 			}
 
@@ -70,8 +70,21 @@ namespace scone
 
 			// now set the DOFs
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+			{
 				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
+
+				// Do it for the mirrored side as well
+				// This is a workaround for an annoying OpenSim bug (3.3)
+				String dof_name = mr->target_dof.GetName();
+				if ( GetSide( dof_name ) != NoSide )
+				{
+					String mirror_name = GetMirroredName( dof_name );
+					sim::Dof& mirror_dof = *FindByName( model.GetDofs(), mirror_name );
+					mirror_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
+				}
+
 				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
+			}
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )

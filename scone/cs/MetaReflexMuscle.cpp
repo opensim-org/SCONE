@@ -7,8 +7,11 @@
 #include "MetaReflexDof.h"
 #include "boost/foreach.hpp"
 #include "MetaReflexController.h"
+#include "tools.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
+#define INFO_MUSCLE "bifemlh_r"
+#define INFO_MUSCLE_SHOW_ALL true
 
 namespace scone
 {
@@ -26,7 +29,19 @@ namespace scone
 		dof_count( 0 ),
 		total_abs_moment_arm( 0.0 )
 		{
-			ref_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
+			if ( muscle.GetName() == INFO_MUSCLE )
+				log::Trace( muscle.GetName() );
+
+			// Always get the length of the left
+			// This is a workaround for an annoying OpenSim bug (3.3)
+			// TODO: Fix this once the OpenSim bug is fixed!
+			if ( GetSide( muscle.GetName() ) == RightSide )
+			{
+				sim::Muscle& mir_mus = *FindByName( model.GetMuscles(), GetMirroredName( muscle.GetName() ) );
+				ref_length = ( mir_mus.GetLength() - mir_mus.GetTendonSlackLength() ) / mir_mus.GetOptimalFiberLength();
+			}
+			else
+				ref_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
 
 			// precompute number of dofs and total moment arm
 			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
@@ -75,9 +90,12 @@ namespace scone
 					// delay
 					delay += w * mrdof->delay; // TODO: compute per muscle
 
-					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f mom=% 8.3f se=%.3f",
-						muscle.GetName().c_str(), mrdof->target_dof.GetName().c_str(), 
-						mrdof->ref_pos_in_deg, ref_length, norm_moment_arm, stiffness );
+					if ( muscle.GetName() == INFO_MUSCLE || INFO_MUSCLE_SHOW_ALL )
+					{
+						log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f mom=% 8.3f se=%.3f",
+							muscle.GetName().c_str(), mrdof->target_dof.GetName().c_str(), 
+							mrdof->ref_pos_in_deg, ref_length, norm_moment_arm, stiffness );
+					}
 				}
 			}
 		}

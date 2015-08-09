@@ -34,6 +34,11 @@ namespace scone
 		{
 			return GetNameNoSide( str ) + GetSideName( side );
 		}
+
+		inline String GetMirroredName( const String& str )
+		{
+			return GetNameNoSide( str ) + GetSideName( GetMirroredSide( GetSide( str ) ) );
+		}
 	}
 
 	template< typename T >
