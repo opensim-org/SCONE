@@ -10157,73 +10157,62 @@
 
 				<!-- Coordinate limit forces -->
 				<CoordinateLimitForce name="LumbarExtensionLimit">
-					<isDisabled> false </isDisabled>
-					<coordinate> lumbar_extension </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      25.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>     -75.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<isDisabled>false</isDisabled>
+					<coordinate>lumbar_extension</coordinate>
+					<!--Stiffness of the passive limit force when coordinate exceeds upper limit in N*m/degree.-->
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
+					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
+					<upper_limit>25</upper_limit>
+					<lower_limit>-75</lower_limit>
+					<!--Damping factor on the coordinate's speed applied only when limit is exceeded-->
+					<damping>0.25</damping>
+					<!--Transition region width in the units of the coordinate (rotations in degrees)-->
+					<transition>10 </transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="KneeLimit_r">
-					<isDisabled> false </isDisabled>
-					<coordinate> knee_angle_r </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      0.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>    -120.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<isDisabled>false</isDisabled>
+					<coordinate>knee_angle_r</coordinate>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
+					<upper_limit>0</upper_limit>
+					<lower_limit>-120</lower_limit>
+					<damping>0.25</damping>
+					<transition>10</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="KneeLimit_l">
-					<isDisabled> false </isDisabled>
-					<coordinate> knee_angle_l </coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>      20.00000000 </upper_stiffness>
-					<!--The upper limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<upper_limit>      0.00000000 </upper_limit>
-					<!--Stiffness of the passive limit force when coordinate exceeds lower
-					    limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>      20.00000000 </lower_stiffness>
-					<!--The lower limit of the coordinate range of motion (rotations in
-					    degrees).-->
-					<lower_limit>    -120.00000000 </lower_limit>
-					<!--Damping factor on the coordinate's speed applied only when limit is
-					    exceeded-->
-					<damping>       0.25000000 </damping>
-					<!--Transition region width in the units of the coordinate (rotations in
-					    degrees).Dictates the transition from zero to constant stiffness as
-					    coordinate exceeds its limit.-->
-					<transition>      10.00000000 </transition>
+					<isDisabled>false</isDisabled>
+					<coordinate>knee_angle_l</coordinate>
+					<isDisabled>false</isDisabled>
+					<coordinate>knee_angle_r</coordinate>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
+					<upper_limit>0</upper_limit>
+					<lower_limit>-120</lower_limit>
+					<damping>0.25</damping>
+					<transition>10</transition>
+				</CoordinateLimitForce>
+				<CoordinateLimitForce name="MtpLimit_r">
+					<!--tgeijten: mtp limit to prevent toes from acting weird -->
+					<isDisabled>false</isDisabled>
+					<coordinate>mtp_angle_r</coordinate>
+					<upper_stiffness>1</upper_stiffness>
+					<lower_stiffness>2</lower_stiffness>
+					<upper_limit>10</upper_limit>
+					<lower_limit>-20</lower_limit>
+					<damping>0.1</damping>
+					<transition>10</transition>
+				</CoordinateLimitForce>
+				<CoordinateLimitForce name="MtpLimit_l">
+					<!--tgeijten: mtp limit to prevent toes from acting weird -->
+					<isDisabled>false</isDisabled>
+					<coordinate>mtp_angle_l</coordinate>
+					<upper_stiffness>1</upper_stiffness>
+					<lower_stiffness>2</lower_stiffness>
+					<upper_limit>10</upper_limit>
+					<lower_limit>-20</lower_limit>
+					<damping>0.1</damping>
+					<transition>10</transition>
 				</CoordinateLimitForce>
 			</objects>
 			<groups>
