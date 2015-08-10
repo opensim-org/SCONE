@@ -244,7 +244,7 @@
 										<!--Coordinate can describe rotational, translational, or coupled motion. Defaults to rotational.-->
 										<motion_type>translational</motion_type>
 										<!--The value of this coordinate before any value has been set. Rotational coordinate value is in radians and Translational in meters.-->
-										<default_value>0</default_value>
+										<default_value>1</default_value>
 										<!--The speed value of this coordinate before any value has been set. Rotational coordinate value is in rad/s and Translational in m/s.-->
 										<default_speed_value>0</default_speed_value>
 										<!--The minimum and maximum values that the coordinate can range between. Rotational coordinate range in radians and Translational in meters.-->
@@ -10159,24 +10159,24 @@
 				<CoordinateLimitForce name="LumbarExtensionLimit">
 					<isDisabled>false</isDisabled>
 					<coordinate>lumbar_extension</coordinate>
-					<!--Stiffness of the passive limit force when coordinate exceeds upper limit in N*m/degree.-->
-					<upper_stiffness>20</upper_stiffness>
-					<lower_stiffness>20</lower_stiffness>
 					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
 					<upper_limit>25</upper_limit>
 					<lower_limit>-75</lower_limit>
+					<!--Stiffness of the passive limit force when coordinate exceeds upper limit in N*m/degree.-->
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
 					<!--Damping factor on the coordinate's speed applied only when limit is exceeded-->
 					<damping>0.25</damping>
 					<!--Transition region width in the units of the coordinate (rotations in degrees)-->
-					<transition>10 </transition>
+					<transition>10</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="KneeLimit_r">
 					<isDisabled>false</isDisabled>
 					<coordinate>knee_angle_r</coordinate>
-					<upper_stiffness>20</upper_stiffness>
-					<lower_stiffness>20</lower_stiffness>
 					<upper_limit>0</upper_limit>
 					<lower_limit>-120</lower_limit>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
 					<damping>0.25</damping>
 					<transition>10</transition>
 				</CoordinateLimitForce>
@@ -10185,10 +10185,10 @@
 					<coordinate>knee_angle_l</coordinate>
 					<isDisabled>false</isDisabled>
 					<coordinate>knee_angle_r</coordinate>
-					<upper_stiffness>20</upper_stiffness>
-					<lower_stiffness>20</lower_stiffness>
 					<upper_limit>0</upper_limit>
 					<lower_limit>-120</lower_limit>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
 					<damping>0.25</damping>
 					<transition>10</transition>
 				</CoordinateLimitForce>
@@ -10196,23 +10196,45 @@
 					<!--tgeijten: mtp limit to prevent toes from acting weird -->
 					<isDisabled>false</isDisabled>
 					<coordinate>mtp_angle_r</coordinate>
-					<upper_stiffness>1</upper_stiffness>
-					<lower_stiffness>2</lower_stiffness>
-					<upper_limit>10</upper_limit>
-					<lower_limit>-20</lower_limit>
+					<upper_limit>50</upper_limit>
+					<lower_limit>-30</lower_limit>
+					<upper_stiffness>5</upper_stiffness>
+					<lower_stiffness>5</lower_stiffness>
 					<damping>0.1</damping>
-					<transition>10</transition>
+					<transition>20</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="MtpLimit_l">
 					<!--tgeijten: mtp limit to prevent toes from acting weird -->
 					<isDisabled>false</isDisabled>
 					<coordinate>mtp_angle_l</coordinate>
-					<upper_stiffness>1</upper_stiffness>
-					<lower_stiffness>2</lower_stiffness>
-					<upper_limit>10</upper_limit>
-					<lower_limit>-20</lower_limit>
+					<upper_limit>50</upper_limit>
+					<lower_limit>-30</lower_limit>
+					<upper_stiffness>5</upper_stiffness>
+					<lower_stiffness>5</lower_stiffness>
 					<damping>0.1</damping>
-					<transition>10</transition>
+					<transition>20</transition>
+				</CoordinateLimitForce>
+				<CoordinateLimitForce name="HipRotationLimit_r">
+					<!--tgeijten: mtp limit to prevent toes from acting weird -->
+					<isDisabled>false</isDisabled>
+					<coordinate>hip_rotation_r</coordinate>
+					<upper_limit>30</upper_limit>
+					<lower_limit>-60</lower_limit>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
+					<damping>0.25</damping>
+					<transition>5</transition>
+				</CoordinateLimitForce>
+				<CoordinateLimitForce name="HipRotationLimit_l">
+					<!--tgeijten: mtp limit to prevent toes from acting weird -->
+					<isDisabled>false</isDisabled>
+					<coordinate>hip_rotation_l</coordinate>
+					<upper_limit>30</upper_limit>
+					<lower_limit>-60</lower_limit>
+					<upper_stiffness>20</upper_stiffness>
+					<lower_stiffness>20</lower_stiffness>
+					<damping>0.25</damping>
+					<transition>5</transition>
 				</CoordinateLimitForce>
 			</objects>
 			<groups>
