@@ -80,7 +80,7 @@ namespace scone
 			virtual void SetStateVariable( const String& name, Real value ) = 0;
 
 			/// Simulate model
-			virtual void AdvanceSimulationTo( double time ) = 0;
+			virtual bool AdvanceSimulationTo( double time ) = 0;
 			virtual double GetSimulationEndTime() const = 0;
 			virtual String WriteStateHistory( const String& file_base ) const = 0;
 

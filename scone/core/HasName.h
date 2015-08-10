@@ -2,7 +2,6 @@
 
 #include "core.h"
 #include "Exception.h"
-#include "../sim/Types.h"
 
 namespace scone
 {
@@ -43,14 +42,5 @@ namespace scone
 		auto it = std::find( cont.begin(), cont.end(), item );
 		SCONE_THROW_IF( it == cont.end(), "Could not find " + ToString( item ) );
 		return static_cast< Index >( it - cont.begin() );
-	}
-
-	// TODO: move to elsewhere
-	template< typename T >
-	T& FindBySide( std::vector< T >& cont, Side side )
-	{
-		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetSide() == side; } );
-		SCONE_THROW_IF( it == cont.end(), "Could not find item with side " + ToString( side ) );
-		return *it;
 	}
 }

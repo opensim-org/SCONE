@@ -80,9 +80,6 @@
     <ClInclude Include="..\..\scone\sim\stdafx.h">
       <Filter>System</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\scone\sim\Types.h">
-      <Filter>System</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\scone\sim\Area.h">
       <Filter>Topology</Filter>
     </ClInclude>
@@ -124,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h">
       <Filter>Sensors and Actuators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Types.h">
+      <Filter>Topology</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Side.h">
+      <Filter>Topology</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

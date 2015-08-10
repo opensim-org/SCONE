@@ -3,6 +3,7 @@
 #include <bitset>
 #include "Types.h"
 #include "sim.h"
+#include "Side.h"
 
 namespace scone
 {

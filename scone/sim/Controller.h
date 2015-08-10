@@ -18,9 +18,11 @@ namespace scone
 			enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };
 
 			/// Called each attempted integration step
+			// TODO: use Result< UpdateResult >
 			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) { return NoUpdate; }
 
 			/// Called after each successful integration step
+			// TODO: use Result< UpdateResult >
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) { return NoUpdate; }
 
 		private:

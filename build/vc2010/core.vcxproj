@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\scone\core\Angle.h" />
     <ClInclude Include="..\..\scone\core\Profiler.h" />
+    <ClInclude Include="..\..\scone\core\Result.h" />
     <ClInclude Include="..\..\scone\core\Storage.h" />
     <ClInclude Include="..\..\scone\core\Delayer.h" />
     <ClInclude Include="..\..\scone\core\StringMap.h" />

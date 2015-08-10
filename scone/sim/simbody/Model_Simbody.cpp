@@ -384,64 +384,76 @@ namespace scone
 			m_pOsimManager->getStateStorage().append(vec);
 		}
 
-		void Model_Simbody::AdvanceSimulationTo( double final_time )
+		bool Model_Simbody::AdvanceSimulationTo( double final_time )
 		{
 			SCONE_PROFILE_SCOPE;
 			SCONE_ASSERT( m_pOsimManager );
 
-			if ( use_fixed_control_step_size )
+			try
 			{
-				// set this because it's used by GetSimulationEndTime()
-				// TODO: Change this!
-				m_pOsimManager->setFinalTime( final_time );
-
-				// Integrate using time stepper
-				m_pTkIntegrator->setFinalTime( final_time );
-				SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
-				ts.initialize( GetTkState() );
-
-				// store initial state
-				StoreTkState();
-
-				// start integration loop
-				int number_of_steps = static_cast< int >( 0.5 + final_time / fixed_control_step_size );
-				for ( int current_step = 0; current_step < number_of_steps; )
+				if ( use_fixed_control_step_size )
 				{
-					// update controls
-					UpdateControlValues();
+					// set this because it's used by GetSimulationEndTime()
+					// TODO: Change this!
+					m_pOsimManager->setFinalTime( final_time );
 
-					// integrate
-					m_PrevTime = GetTime();
-					m_PrevIntStep = GetIntegrationStep();
-					double target_time = GetTime() + fixed_control_step_size;
-					SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
-					SetTkState( m_pTkIntegrator->updAdvancedState() );
-					//SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
+					// Integrate using time stepper
+					m_pTkIntegrator->setFinalTime( final_time );
+					SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
+					ts.initialize( GetTkState() );
 
-					++current_step;
-
+					// store initial state
 					StoreTkState();
 
-					// update the sensor delays and other analyses
-					UpdateSensorDelayAdapters();
-					UpdateAnalyses();
-
-					// terminate on request
-					if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+					// start integration loop
+					int number_of_steps = static_cast< int >( 0.5 + final_time / fixed_control_step_size );
+					for ( int current_step = 0; current_step < number_of_steps; )
 					{
-						log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
-						break;
-					}
+						// update controls
+						UpdateControlValues();
 
-					//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
+						// integrate
+						m_PrevTime = GetTime();
+						m_PrevIntStep = GetIntegrationStep();
+						double target_time = GetTime() + fixed_control_step_size;
+						SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
+						SetTkState( m_pTkIntegrator->updAdvancedState() );
+						//SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
+
+						++current_step;
+
+						StoreTkState();
+
+						// update the sensor delays and other analyses
+						UpdateSensorDelayAdapters();
+						UpdateAnalyses();
+
+						// terminate on request
+						if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+						{
+							log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
+							// TODO: return appropriate result
+							break;
+						}
+
+						//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
+					}
+				}
+				else
+				{
+					// Integrate from initial time to final time (the old way)
+					m_pOsimManager->setFinalTime( final_time );
+					m_pOsimManager->integrate( GetTkState() );
 				}
 			}
-			else
+			catch ( std::exception& e )
 			{
-				// Integrate from initial time to final time (the old way)
-				m_pOsimManager->setFinalTime( final_time );
-				m_pOsimManager->integrate( GetTkState() );
+				// in case of an OpenSim exception, just log the exception and return false
+				// TODO: use Result class
+				log::Error( e.what() );
+				return false;
 			}
+			return true;
 		}
 
 		void Model_Simbody::SetTerminationRequest()

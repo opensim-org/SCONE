@@ -11,4 +11,5 @@ namespace scone
 	void PlaybackTest( const String& filename );
 	void PerformanceTest( const String& filename );
 	void XmlParseTest();
+	void MuscleLengthTest();
 }

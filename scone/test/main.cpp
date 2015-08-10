@@ -20,8 +20,9 @@ int main( int argc, const char* argv[] )
 
 	try
 	{
-		String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";
-		PlaybackTest( fname );
+		MuscleLengthTest();
+		//String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";
+		//PlaybackTest( fname );
 
 		//String fname = GetSconeFolder( "output" ) + "299.f2354.SE2001.FP1.Jump.D1/0997_50.535_50.583.par";
 		//SimulationTest();
