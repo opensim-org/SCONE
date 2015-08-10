@@ -10198,8 +10198,8 @@
 					<coordinate>mtp_angle_r</coordinate>
 					<upper_limit>50</upper_limit>
 					<lower_limit>-30</lower_limit>
-					<upper_stiffness>5</upper_stiffness>
-					<lower_stiffness>5</lower_stiffness>
+					<upper_stiffness>2</upper_stiffness>
+					<lower_stiffness>2</lower_stiffness>
 					<damping>0.1</damping>
 					<transition>20</transition>
 				</CoordinateLimitForce>
@@ -10209,8 +10209,8 @@
 					<coordinate>mtp_angle_l</coordinate>
 					<upper_limit>50</upper_limit>
 					<lower_limit>-30</lower_limit>
-					<upper_stiffness>5</upper_stiffness>
-					<lower_stiffness>5</lower_stiffness>
+					<upper_stiffness>2</upper_stiffness>
+					<lower_stiffness>2</lower_stiffness>
 					<damping>0.1</damping>
 					<transition>20</transition>
 				</CoordinateLimitForce>
@@ -10218,23 +10218,23 @@
 					<!--tgeijten: mtp limit to prevent toes from acting weird -->
 					<isDisabled>false</isDisabled>
 					<coordinate>hip_rotation_r</coordinate>
-					<upper_limit>30</upper_limit>
-					<lower_limit>-60</lower_limit>
-					<upper_stiffness>20</upper_stiffness>
-					<lower_stiffness>20</lower_stiffness>
-					<damping>0.25</damping>
-					<transition>5</transition>
+					<upper_limit>25</upper_limit>
+					<lower_limit>-55</lower_limit>
+					<upper_stiffness>5</upper_stiffness>
+					<lower_stiffness>5</lower_stiffness>
+					<damping>0.1</damping>
+					<transition>10</transition>
 				</CoordinateLimitForce>
 				<CoordinateLimitForce name="HipRotationLimit_l">
 					<!--tgeijten: mtp limit to prevent toes from acting weird -->
 					<isDisabled>false</isDisabled>
 					<coordinate>hip_rotation_l</coordinate>
-					<upper_limit>30</upper_limit>
-					<lower_limit>-60</lower_limit>
-					<upper_stiffness>20</upper_stiffness>
-					<lower_stiffness>20</lower_stiffness>
-					<damping>0.25</damping>
-					<transition>5</transition>
+					<upper_limit>25</upper_limit>
+					<lower_limit>-55</lower_limit>
+					<upper_stiffness>5</upper_stiffness>
+					<lower_stiffness>5</lower_stiffness>
+					<damping>0.1</damping>
+					<transition>10</transition>
 				</CoordinateLimitForce>
 			</objects>
 			<groups>
