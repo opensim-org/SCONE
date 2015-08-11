@@ -93,9 +93,9 @@ namespace scone
 			Real max_abs_dof_mom = std::min( abs( dof.tot_available_neg_mom ), dof.tot_available_pos_mom );
 			Real des_dof_mom = dof.stiffness * Sign( mus_mom_arm ) * max_abs_dof_mom;
 
-			Real tot_available_dof_mom = ( mus_mom_arm < 0 ) ? dof.tot_available_neg_mom : dof.tot_available_pos_mom;
+			Real max_stiffness_mom = ( mus_mom_arm < 0 ) ? dof.tot_available_neg_mom : dof.tot_available_pos_mom;
 			Real available_mus_mom = ( abs( mus_mom_arm ) / total_abs_moment_arm ) * max_mus_mom;
-			Real mus_mom_contrib = available_mus_mom / tot_available_dof_mom;
+			Real mus_mom_contrib = available_mus_mom / max_stiffness_mom;
 
 			Real des_mus_mom = mus_mom_contrib * des_dof_mom;
 			Real a = des_mus_mom / max_mus_mom;

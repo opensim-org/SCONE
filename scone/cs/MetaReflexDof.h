@@ -20,8 +20,6 @@ namespace scone
 			void UpdateControls();
 			void AddAvailableMoment( Real max_moment );
 
-			friend struct MuscleInfo;
-
 			sim::Dof& target_dof;
 			Degree ref_pos_in_deg;
 
