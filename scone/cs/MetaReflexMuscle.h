@@ -24,7 +24,6 @@ namespace scone
 			// info
 			Real ref_length;
 			Real delay;
-			size_t dof_count;
 			Real total_abs_moment_arm;
 
 			// gain parameters
@@ -32,6 +31,16 @@ namespace scone
 			Real constant_ex;
 			Real force_gain;
 			Real stiffness;
+
+			// dof specific info
+			struct DofInfo
+			{
+				MetaReflexDof* dof;
+				Real moment_arm;
+				Real max_moment;
+				Real contrib_weight;
+			};
+			std::vector< DofInfo > dof_infos;
 
 		private:
 			Real ComputeStiffnessExcitation( MetaReflexDof& dof );
