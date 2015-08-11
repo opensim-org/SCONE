@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		// TODO: derive from either Reflex or Controller
+		// TODO: derive from either Reflex or Controller, or don't and remove this TODO
 		class CS_API MetaReflexDof
 		{
 		public:
@@ -30,6 +30,9 @@ namespace scone
 			Real stiffness;
 
 			Real delay; // TODO: move this to muscle
+
+			// correction
+
 
 			// max muscle moments
 			Real tot_available_neg_mom;
