@@ -269,7 +269,7 @@ namespace scone
 	{
 		cs::RegisterFactoryTypes();
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.Set( "Model.model_file", "f2392.osim" );
+		props.Set( "Model.model_file", "gait2354.osim" );
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
@@ -278,6 +278,7 @@ namespace scone
 			BOOST_FOREACH( sim::DofUP& dof, m->GetDofs() )
 				dof->SetPos( dof_val, true );
 
+			cout << "DOF offset = " << dof_val << endl;
 			BOOST_FOREACH( sim::MuscleUP& mus, m->GetMuscles() )
 			{
 				if ( GetSide( mus->GetName() ) == RightSide )

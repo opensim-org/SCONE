@@ -74,14 +74,9 @@ namespace scone
 				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
 
 				// Do it for the mirrored side as well
-				// This is a workaround for an annoying OpenSim bug (3.3)
-				String dof_name = mr->target_dof.GetName();
-				if ( GetSide( dof_name ) != NoSide )
-				{
-					String mirror_name = GetMirroredName( dof_name );
-					sim::Dof& mirror_dof = *FindByName( model.GetDofs(), mirror_name );
-					mirror_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
-				}
+				//String dof_name = mr->target_dof.GetName();
+				//if ( GetSide( dof_name ) != NoSide )
+				// FindByName( model.GetDofs(), GetMirroredName( dof_name ) )->SetPos( Radian( mr->ref_pos_in_deg ), false );
 
 				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
 			}
