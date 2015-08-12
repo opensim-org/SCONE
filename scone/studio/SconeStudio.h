@@ -1,17 +1,26 @@
 #ifndef SCONESTUDIO_H
 #define SCONESTUDIO_H
 
-#include <QtGui/QMainWindow>
+
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    #include <QtWidgets/QMainWindow>
+#else
+    #include <QtGui/QMainWindow>
+    namespace Qt { typedef WFlags WindowFlags; }
+#endif
 #include "ui_SconeStudio.h"
 #include "../core/PropNode.h"
 #include "SconeManager.h"
+
+class QFileSystemModel;
 
 class SconeStudio : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	SconeStudio(QWidget *parent = 0, Qt::WFlags flags = 0);
+	SconeStudio(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~SconeStudio();
 
 	bool init();

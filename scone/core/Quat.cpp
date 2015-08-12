@@ -1,7 +1,9 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 
 #include "Quat.h"
 #include "Exception.h"
+
+#include <cmath>
 
 namespace scone
 {

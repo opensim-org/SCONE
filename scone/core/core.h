@@ -1,9 +1,17 @@
 #pragma once
 
+#if defined(_MSC_VER)
+
 #ifdef CORE_EXPORTS
 #define CORE_API __declspec(dllexport)
 #else
 #define CORE_API __declspec(dllimport)
+#endif
+
+#else
+
+#define CORE_API
+
 #endif
 
 #include <limits>
@@ -13,8 +21,10 @@
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
 
+#if defined(_MSC_VER)
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )
+#endif
 
 // class and shared pointer forward declaration macro
 #define SCONE_DECLARE_CLASS_AND_PTR( _class_ ) \

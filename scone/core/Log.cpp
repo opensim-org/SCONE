@@ -44,7 +44,7 @@ namespace scone
 			LogMessageCStr( level, msg.c_str() );
 		}
 
-		void CORE_API log::SetLevel( Level level )
+		void CORE_API SetLevel( Level level )
 		{
 			g_LogLevel = level;	
 		}

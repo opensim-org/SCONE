@@ -2,10 +2,15 @@
 #include "SconeStudio.h"
 #include "../core/system.h"
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    #include <QtWidgets/QFileSystemModel.h>
+    #include <QMessageBox.h>
+#endif
+
 using namespace scone;
 using namespace std;
 
-SconeStudio::SconeStudio(QWidget *parent, Qt::WFlags flags) :
+SconeStudio::SconeStudio(QWidget *parent, Qt::WindowFlags flags) :
 QMainWindow(parent, flags)
 {
 	ui.setupUi(this);

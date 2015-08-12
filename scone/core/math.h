@@ -1,5 +1,12 @@
 #pragma once
 
+#include "core.h"
+
+#include <stdlib.h>
+#include <cmath>
+
+#include <iostream>
+
 namespace scone
 {
 	// math helper functions
