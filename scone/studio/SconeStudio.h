@@ -1,7 +1,14 @@
 #ifndef SCONESTUDIO_H
 #define SCONESTUDIO_H
 
-#include <QtWidgets/QMainWindow>
+
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    #include <QtWidgets/QMainWindow>
+#else
+    #include <QtGui/QMainWindow>
+    namespace Qt { typedef WFlags WindowFlags; }
+#endif
 #include "ui_SconeStudio.h"
 #include "../core/PropNode.h"
 #include "SconeManager.h"

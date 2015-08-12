@@ -1,5 +1,5 @@
 
-if(${Qt5Core_FOUND})
+if(${Qt5Widgets_FOUND})
     # http://doc.qt.io/qt-5/cmake-manual.html
 
     set(CMAKE_AUTOMOC ON)
@@ -27,5 +27,20 @@ if(${Qt5Core_FOUND})
         )
 
     target_link_libraries(scone-studio scone-cs Qt5::Widgets ${Boost_LIBRARIES})
+    
+    if(WIN32)
+        # Copy Qt dll's to the binary directory.
+        set(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui)
+        foreach(qt5lib ${QT5_LIBS})
+            add_custom_command(TARGET scone-studio POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy ${Qt5Widgets_DIR}/../../../bin/${qt5lib}.dll
+                                             ${CMAKE_BINARY_DIR}/$<CONFIGURATION>
+                COMMAND ${CMAKE_COMMAND} -E copy ${Qt5Widgets_DIR}/../../../bin/${qt5lib}d.dll
+                                             ${CMAKE_BINARY_DIR}/$<CONFIGURATION>
+                COMMENT "Copying Qt library ${qt5lib} to binary directory." VERBATIM
+                                             )
+        endforeach()
+            
+    endif()
 
 endif()
