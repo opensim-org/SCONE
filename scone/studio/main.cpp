@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SconeStudio.h"
-#include <QtGui/QApplication>
+#include <QtWidgets/QApplication>
+#include <QMessageBox.h>
 
 int main(int argc, char *argv[])
 {

@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include "SconeStudio.h"
 #include "../core/system.h"
+#include <QtWidgets/QFileSystemModel.h>
+#include <QMessageBox.h>
 
 using namespace scone;
 using namespace std;
 
-SconeStudio::SconeStudio(QWidget *parent, Qt::WFlags flags) :
+SconeStudio::SconeStudio(QWidget *parent, Qt::WindowFlags flags) :
 QMainWindow(parent, flags)
 {
 	ui.setupUi(this);

@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 2.8.11)
+# 2.8.11 is required for how we use Qt5.
 
 project(scone)
 
@@ -27,6 +28,9 @@ find_package(OpenSim 3.3 REQUIRED)
 # This uses the FindShark.cmake file in build/cmake.
 find_package(Shark REQUIRED)
 
+# CMake has the ability to find Qt; we don't need to provide additional files.
+find_package(Qt5Widgets)
+# http://doc.qt.io/qt-5/cmake-manual.html
 
 # Incorporate dependencies.
 # -------------------------
@@ -35,6 +39,7 @@ add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
 include_directories(${Shark_INCLUDE_DIRS})
+
 
 # Compiler flags.
 # ---------------
@@ -64,4 +69,5 @@ add_subdirectory(scone/cs)
 add_subdirectory(scone/vis)
 
 add_subdirectory(scone/sconeopt)
+add_subdirectory(scone/studio)
 add_subdirectory(scone/test)
