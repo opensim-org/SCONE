@@ -4,9 +4,6 @@
 #include "Exception.h"
 
 
-#include "../sim/Types.h"
-#include "tools.h"
-
 namespace scone
 {
 	class CORE_API HasName
