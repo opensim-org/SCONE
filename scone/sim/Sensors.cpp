@@ -65,7 +65,8 @@ namespace scone
 
 		DofSensor::DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
-		m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) )
+		m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) ),
+		m_pRootDof( pn.HasKey( "root_dof" ) ? FindByName( model.GetDofs(), pn.GetStr( "dof" ) ).get() : nullptr )
 		{
 		}
 
@@ -76,7 +77,10 @@ namespace scone
 
 		scone::Real DofPositionSensor::GetValue() const 
 		{
-			return m_Dof.GetPos();
+			// TODO: get rid of this if statement and use a "constant" Dof?
+			if ( m_pRootDof )
+				return m_pRootDof->GetPos() + m_Dof.GetPos();
+			else return m_Dof.GetPos();
 		}
 
 		scone::String DofPositionSensor::GetName() const 
@@ -86,7 +90,9 @@ namespace scone
 
 		scone::Real DofVelocitySensor::GetValue() const 
 		{
-			return m_Dof.GetVel();
+			if ( m_pRootDof )
+				return m_pRootDof->GetVel() + m_Dof.GetVel();
+			else return m_Dof.GetVel();
 		}
 
 		scone::String DofVelocitySensor::GetName() const 
@@ -121,6 +127,7 @@ namespace scone
 		m_LumbarExtension( *FindByName( model.GetDofs(), "lumbar_extension" ) )
 		{
 			// TODO: get rid of hard-coded dof names
+			// TODO: use body world position instead
 		}
 
 		scone::Real SagittalPostureSensor::GetValue() const 

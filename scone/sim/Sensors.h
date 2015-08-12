@@ -67,6 +67,7 @@ namespace scone
 			virtual const String& GetSourceName() const override;
 		protected:
 			Dof& m_Dof;
+			Dof* m_pRootDof;
 		};
 
 		class SCONE_SIM_API DofPositionSensor : public DofSensor
