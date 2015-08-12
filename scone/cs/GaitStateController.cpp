@@ -29,7 +29,6 @@ namespace scone
 			GaitStateController::LegState::LandingState, "Landing"
 			);
 
-
 		GaitStateController::LegState::LegState( sim::Leg& l ) :
 		leg( l ),
 		state( UnknownState ),
@@ -87,6 +86,7 @@ namespace scone
 						sim::Area a = model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
 
 						// create controller
+						log::Trace( "Creating controllers for " + GetConditionName( cc ) );
 						const PropNode& cprops = ccIt->second->GetChild( "Controller" );
 						opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 						cc.controller = sim::CreateController( cprops, par, model, a );
@@ -113,7 +113,10 @@ namespace scone
 			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
 			{
 				if ( cc->active )
+				{
+					//log::Trace( "Updating Controls of " + GetConditionName( *cc ) );
 					cc->controller->UpdateControls( model, timestamp - cc->active_since );
+				}
 			}
 
 			return SuccessfulUpdate;
@@ -230,5 +233,17 @@ namespace scone
 
 			return s;
 		}
+
+		scone::String GaitStateController::GetConditionName( const ConditionalController& cc ) const
+		{
+			String s = m_LegStates[ cc.leg_index ]->leg.GetName();
+			for ( int i = 0; i < LegState::StateCount; ++i )
+			{
+				if ( cc.state_mask.test( i ) )
+					s += "-" + LegState::m_StateNames.GetString( LegState::GaitState( i ) );
+			}
+			return s;
+		}
+
 	}
 }

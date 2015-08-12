@@ -39,7 +39,7 @@ namespace scone
 			virtual Vec3 GetGravity() const override;
 			virtual Real GetTotalEnergyConsumption() const override;
 
-			virtual void AdvanceSimulationTo( double time ) override;
+			virtual bool AdvanceSimulationTo( double time ) override;
 
 			void StoreTkState();
 

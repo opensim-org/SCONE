@@ -17,6 +17,9 @@ namespace scone
 			virtual Real GetPos() const = 0;
 			virtual Real GetVel() const = 0;
 			virtual Real GetLimitForce() const = 0;
+
+			virtual void SetPos( Real pos, bool enforce_constraints = true ) = 0;
+			virtual void SetVel( Real vel ) = 0;
 		};
 	}
 }

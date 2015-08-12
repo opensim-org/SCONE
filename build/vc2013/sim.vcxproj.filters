@@ -125,5 +125,8 @@
     <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h">
       <Filter>Sensors and Actuators</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\sim\Side.h">
+      <Filter>Topology</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

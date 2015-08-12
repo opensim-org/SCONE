@@ -14,6 +14,14 @@
 #include "../cs/SimulationObjective.h"
 #include "../core/Profiler.h"
 #include "../core/Delayer.h"
+#include "../core/system.h"
+#include "boost/foreach.hpp"
+#include "../sim/sim.h"
+#include "../sim/Muscle.h"
+#include "boost/format.hpp"
+#include "../sim/Dof.h"
+#include "../cs/tools.h"
+#include "../sim/Side.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
@@ -255,5 +263,32 @@ namespace scone
 		cout << "Profile report:" << endl;
 		cout << Profiler::GetGlobalInstance().GetReport();
 		cout << "All done!" << endl;
+	}
+
+	void MuscleLengthTest()
+	{
+		cs::RegisterFactoryTypes();
+		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
+		props.Set( "Model.model_file", "gait2354.osim" );
+		opt::ParamSet par; // empty parameter set
+		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
+
+		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
+		{
+			BOOST_FOREACH( sim::DofUP& dof, m->GetDofs() )
+				dof->SetPos( dof_val, true );
+
+			cout << "DOF offset = " << dof_val << endl;
+			BOOST_FOREACH( sim::MuscleUP& mus, m->GetMuscles() )
+			{
+				if ( GetSide( mus->GetName() ) == RightSide )
+				{
+					sim::Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
+					cout << boost::format( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f" )
+						% mus->GetName() % mus->GetLength() % lmus.GetName() % lmus.GetLength()
+						% abs( mus->GetLength() - lmus.GetLength() ) << endl;
+				}
+			}
+		}
 	}
 }

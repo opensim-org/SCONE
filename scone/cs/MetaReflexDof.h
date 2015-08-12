@@ -18,12 +18,10 @@ namespace scone
 
 			void SetupUsingCurrentPose();
 			void UpdateControls();
-
-			friend struct MuscleInfo;
+			void AddAvailableMoment( Real max_moment );
 
 			sim::Dof& target_dof;
 			Degree ref_pos_in_deg;
-			Real ref_pos_in_rad;
 
 			// actual parameters
 			Real length_gain;
@@ -32,6 +30,10 @@ namespace scone
 			Real stiffness;
 
 			Real delay; // TODO: move this to muscle
+
+			// max muscle moments
+			Real tot_available_neg_mom;
+			Real tot_available_pos_mom;
 
 		private:
 			bool MuscleCrossesDof( const sim::Muscle& mus );

@@ -187,6 +187,8 @@ namespace scone
 		bool IsTouched() const { return m_Touched; }
 		size_t GetUntouchedCount() const;
 
+		static const PropNode EMPTY_PROP_NODE;
+
 	private:
 		PropNode* GetChildPtr( const String& key ) const;
 

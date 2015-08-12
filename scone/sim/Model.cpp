@@ -20,7 +20,8 @@ namespace scone
 	{
 		Model::Model( const PropNode& props, opt::ParamSet& par ) :
 		HasSignature( props ),
-		m_ShouldTerminate( false )
+		m_ShouldTerminate( false ),
+		custom_properties( props.HasKey( "custom_properties" ) ? props.GetChild( "custom_properties" ) : PropNode::EMPTY_PROP_NODE )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 		}
@@ -40,7 +41,7 @@ namespace scone
 		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 		{
 			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
-				[&]( SensorDelayAdapterUP& a ) { return &a->GetSource() == &source; } );
+				[&]( SensorDelayAdapterUP& a ) { return &a->GetInputSensor() == &source; } );
 
 			if ( it == m_SensorDelayAdapters.end() )
 			{

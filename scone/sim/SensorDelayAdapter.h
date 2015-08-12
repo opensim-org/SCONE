@@ -18,12 +18,12 @@ namespace scone
 			virtual String GetName() const override;
 
 			void UpdateStorage();
-			Sensor& GetSource() { return m_Source; }
-			virtual const String& GetSourceName() const override { return m_Source.GetSourceName(); }
+			Sensor& GetInputSensor() { return m_InputSensor; }
+			virtual const String& GetSourceName() const override { return m_InputSensor.GetSourceName(); }
 
 		private:
 			Model& m_Model;
-			Sensor& m_Source;
+			Sensor& m_InputSensor;
 			TimeInSeconds m_Delay;
 			Index m_StorageIdx;
 		};

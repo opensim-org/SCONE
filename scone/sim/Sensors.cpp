@@ -52,6 +52,17 @@ namespace scone
 			return m_Muscle.GetName() + ".V";
 		}
 
+		scone::Real MuscleSpindleSensor::GetValue() const 
+		{
+			// derived from [Prochazka1999], but normalized to unit length
+			return 0.105 * sqrt( std::max( 0.0, m_Muscle.GetNormalizedFiberVelocity() ) ) + m_Muscle.GetNormalizedFiberLength();
+		}
+
+		scone::String MuscleSpindleSensor::GetName() const 
+		{
+			return m_Muscle.GetName() + ".MS";
+		}
+
 		DofSensor::DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) )
@@ -106,13 +117,15 @@ namespace scone
 
 		SagittalPostureSensor::SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
-		m_Body( *FindByName( model.GetBodies(), pn.GetStr( "body" ) ) )
+		m_PelvisTilt( *FindByName( model.GetDofs(), "pelvis_tilt" ) ),
+		m_LumbarExtension( *FindByName( model.GetDofs(), "lumbar_extension" ) )
 		{
+			// TODO: get rid of hard-coded dof names
 		}
 
 		scone::Real SagittalPostureSensor::GetValue() const 
 		{
-			return m_Body.GetOri().ToExponentialMap().z;
+			return m_PelvisTilt.GetPos() + m_LumbarExtension.GetPos();
 		}
 
 		scone::String SagittalPostureSensor::GetName() const 
@@ -122,7 +135,7 @@ namespace scone
 
 		const String& SagittalPostureSensor::GetSourceName() const 
 		{
-			return m_Body.GetName();
+			return m_PelvisTilt.GetName();
 		}
-	}
+}
 }

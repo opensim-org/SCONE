@@ -39,7 +39,7 @@ namespace scone
 				// check if the target dof is sided
 				// TODO: see if we can come up with something nicer here...
 				const String& target_dof = item.second->GetStr( "target" );
-				SCONE_ASSERT( GetSide( target_dof ) == NoSide );
+				SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
@@ -47,23 +47,54 @@ namespace scone
 				}
 				else
 				{
-					// this is a dof that has sides (probably), create a controller for each leg
-					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
+					// this is a dof that has sides (probably), create a controller that matches the Area side
+					SCONE_ASSERT( area.side != NoSide )
+					if ( area.side == NoSide )
 					{
-						sim::Area a = model.GetLeg( legIdx ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
-						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, a ) ) );
+						for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
+							m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, model.GetLeg( legIdx ).GetArea() ) ) );
+					}
+					else
+					{
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, area ) ) );
 					}
 				}
 			}
 
-			// now set the DOFs
+			// backup the current state
 			auto org_state = model.GetStateValues();
+
+			// reset all dofs to ensure consistency when there are unspecified dofs
+			BOOST_FOREACH( sim::DofUP& dof, model.GetDofs() )
+				dof->SetPos( 0, false );
+
+			// now set the DOFs
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-				model.SetStateVariable( mr->target_dof.GetName(), mr->ref_pos_in_rad );
+			{
+				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
+
+				// Do it for the mirrored side as well
+				//String dof_name = mr->target_dof.GetName();
+				//if ( GetSide( dof_name ) != NoSide )
+				// FindByName( model.GetDofs(), GetMirroredName( dof_name ) )->SetPos( Radian( mr->ref_pos_in_deg ), false );
+
+				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
+			}
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
-				m_ReflexMuscles.push_back( MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this ) ) );
+			{
+				if ( GetSide( mus->GetName() ) == area.side )
+				{
+					MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this, area ) );
+					if ( mrm->dof_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
+						m_ReflexMuscles.push_back( std::move( mrm ) );
+				}
+			}
+
+			// init meta reflex control parameters
+			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
+				mrm->InitMuscleParameters( *this );
 
 			// restore original state
 			model.SetStateValues( org_state );
@@ -93,8 +124,7 @@ namespace scone
 				if ( r->stiffness != 0.0 ) ++s;
 			}
 
-			String str = "MR-";
-
+			String str = "M";
 			if ( l > 0 ) str += "L";
 			if ( c > 0 ) str += "C";
 			if ( f > 0 ) str += "F";

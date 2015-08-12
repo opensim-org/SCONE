@@ -113,6 +113,7 @@
     <ClInclude Include="..\..\scone\sim\SensorDelayAdapter.h" />
     <ClInclude Include="..\..\scone\sim\Sensors.h" />
     <ClInclude Include="..\..\scone\sim\Sensor.h" />
+    <ClInclude Include="..\..\scone\sim\Side.h" />
     <ClInclude Include="..\..\scone\sim\sim.h" />
     <ClInclude Include="..\..\scone\sim\Simulation.h" />
     <ClInclude Include="..\..\scone\sim\State.h" />
