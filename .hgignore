@@ -10,3 +10,4 @@ build/vc*/ipch/
 *.log
 models/test/*
 config/backup/*
+build/cmake-msvc2013/
