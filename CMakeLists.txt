@@ -17,7 +17,8 @@ set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/build/cmake")
 
 # Link with boost's static libraries.
-set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
 	filesystem system thread date_time chrono)
 
@@ -36,6 +37,9 @@ find_package(Qt5Widgets)
 # -------------------------
 # Reports automatic linking info with Visual Studio.
 add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
+if(WIN32)
+	add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK)
+endif()
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
 include_directories(${Shark_INCLUDE_DIRS})
@@ -55,8 +59,9 @@ endif()
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
+set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 
 # Process source code.
