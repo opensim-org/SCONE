@@ -81,6 +81,10 @@ namespace scone
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( GetSconeFolder( "models" ) + model_file );
 
+			// change model properties
+			if ( props.HasKey( "SimbodyParameters" ) )
+				SetOpenSimParameters( props.GetChild( "SimbodyParameters" ), par );
+
 			// create the model
 			CreateModelWrappers();
 
@@ -635,6 +639,25 @@ namespace scone
 		void Model_Simbody::SetStateVariable( const String& name, Real value )
 		{
 			GetOsimModel().setStateVariable( GetTkState(), name, value );
+		}
+
+		void Model_Simbody::SetOpenSimParameters( const PropNode& props, opt::ParamSet& par )
+		{
+			auto forceIt = props.FindChild( "ForceSet" );
+			if ( forceIt != props.End() )
+			{
+				opt::ScopedParamSetPrefixer prefix1( par, "ForceSet." );
+				for ( auto musIt = forceIt->second->Begin(); musIt != forceIt->second->End(); ++musIt )
+				{
+					opt::ScopedParamSetPrefixer prefix2( par, musIt->first + "." );
+					auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
+					for ( auto musPropIt = musIt->second->Begin(); musPropIt != musIt->second->End(); ++musPropIt )
+					{
+						double value = par.Get( musPropIt->first, *musPropIt->second );
+						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
+					}
+				}
+			}
 		}
 	}
 }

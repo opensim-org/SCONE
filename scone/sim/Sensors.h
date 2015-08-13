@@ -62,7 +62,7 @@ namespace scone
 		class SCONE_SIM_API DofSensor : public Sensor
 		{
 		public:
-			DofSensor( Dof& dof ) : m_Dof( dof ) {}
+			DofSensor( Dof& dof ) : m_Dof( dof ), m_pRootDof( nullptr ) {}
 			DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual const String& GetSourceName() const override;
 		protected:
@@ -74,7 +74,7 @@ namespace scone
 		{
 		public:
 			DofPositionSensor( Dof& dof ) : DofSensor( dof ) {}
-			DofPositionSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) : DofSensor( pn, par, model, target_area ) { };
+			DofPositionSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
 		};
@@ -83,7 +83,7 @@ namespace scone
 		{
 		public:
 			DofVelocitySensor( Dof& dof ) : DofSensor( dof ) {}
-			DofVelocitySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) : DofSensor( pn, par, model, target_area ) { };
+			DofVelocitySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
 		};

@@ -228,6 +228,18 @@ namespace scone
 		}
 	}
 
+	PropNode::ChildIter PropNode::FindChild( const String& key )
+	{
+		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
+		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
+	}
+
+	PropNode::ConstChildIter PropNode::FindChild( const String& key ) const
+	{
+		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
+		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
+	}
+
 	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
 	{
 		ptree& child = key.empty() ? tree : tree.add( key, props.GetValue() );

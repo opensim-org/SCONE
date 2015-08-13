@@ -155,6 +155,8 @@ namespace scone
 		ConstChildIter End() const { Touch(); return m_Children.cend(); }
 		ChildIter Begin() { Touch(); return m_Children.begin(); }
 		ChildIter End() { Touch(); return m_Children.end(); }
+		ChildIter FindChild( const String& key );
+		ConstChildIter FindChild( const String& key ) const;
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const String& rootname = "" );
