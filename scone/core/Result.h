@@ -21,7 +21,7 @@ namespace scone
 	};
 
 	template< typename T >
-	struct Failure : Result< CodeT >
+	struct Failure : Result< T >
 	{
 		Failure( const T& code, String message = "" ) : code_( code ), msg_( message ) { }
 		virtual operator bool() const { return false; }
