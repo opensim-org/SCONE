@@ -32,19 +32,19 @@ namespace scone
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
 			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
 
-			ref_pos_in_deg = Degree( par.Get( "reference_pos", props.GetChild( "reference_pos" ) ) );
+			ref_pos_in_deg = Degree( par.Get( "ref", props.GetChild( "ref" ) ) );
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_length", true ) )
-				INIT_PARAM( props, par, length_gain, 0.0 );
+				INIT_PARAM_NAMED( props, par, length_gain, "len", 0.0 );
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_constant", true ) )
-				INIT_PARAM( props, par, constant, 0.0 );
+				INIT_PARAM_NAMED( props, par, constant, "con", 0.0 );
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_force", true ) )
-				INIT_PARAM( props, par, force_feedback, 0.0 );
+				INIT_PARAM_NAMED( props, par, force_feedback, "for", 0.0 );
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_stiffness", true ) )
-				INIT_PARAM( props, par, stiffness, 0.0 );
+				INIT_PARAM_NAMED( props, par, stiffness, "imp", 0.0 );
 
 			INIT_PROPERTY_REQUIRED( props, delay );
 		}

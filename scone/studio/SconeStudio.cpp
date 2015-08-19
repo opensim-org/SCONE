@@ -47,4 +47,3 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
 }
-
