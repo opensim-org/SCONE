@@ -1,1 +1,1 @@
-#include <QtGui>
+#include <QtGui/QtGui>

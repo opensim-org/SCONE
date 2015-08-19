@@ -4,7 +4,7 @@
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QFileSystemModel.h>
-    #include <QMessageBox.h>
+    #include <QtWidgets/QMessageBox.h>
 #endif
 
 using namespace scone;

@@ -2,7 +2,7 @@
 #define SCONESTUDIO_H
 
 
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QMainWindow>
 #else

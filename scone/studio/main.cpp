@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "SconeStudio.h"
-#include <QtGlobal>
+#include <QtCore/QtGlobal>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QApplication>
-    #include <QMessageBox.h>
+    #include <QtWidgets/QMessageBox.h>
 #else
     #include <QtGui/QApplication>
 #endif
