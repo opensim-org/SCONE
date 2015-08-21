@@ -31,8 +31,10 @@ namespace scone
 
 			Real delay; // TODO: move this to muscle
 
-			// correction
-
+			// regulations
+			// TODO: make generic
+			Real constant_regulation;
+			sim::SensorDelayAdapter* constant_regulation_source;
 
 			// max muscle moments
 			Real tot_available_neg_mom;

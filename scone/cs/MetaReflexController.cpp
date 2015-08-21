@@ -112,7 +112,7 @@ namespace scone
 			return SuccessfulUpdate;
 		}
 
-		scone::String MetaReflexController::GetClassSignature() const 
+		String MetaReflexController::GetClassSignature() const 
 		{
 			// count reflex types
 			int l = 0, c = 0, f = 0, s = 0;

@@ -47,6 +47,13 @@ namespace scone
 				INIT_PARAM_NAMED( props, par, stiffness, "imp", 0.0 );
 
 			INIT_PROPERTY_REQUIRED( props, delay );
+
+			// Read in regulate
+			if ( props.HasKey( "regulate" ) )
+			{
+				const PropNode& rp = props.GetChild( "regulate" );
+				// TODO: get sensor, add a generic function to model that takes a PropNode
+			}
 		}
 
 		MetaReflexDof::~MetaReflexDof()
