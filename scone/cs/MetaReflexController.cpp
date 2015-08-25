@@ -71,7 +71,7 @@ namespace scone
 			// now set the DOFs
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
 			{
-				mr->target_dof.SetPos( Radian( mr->ref_pos_in_deg ), false );
+				mr->target_dof.SetPos( Radian( mr->dof_par.ref_pos_in_deg ), false );
 
 				// Do it for the mirrored side as well
 				//String dof_name = mr->target_dof.GetName();

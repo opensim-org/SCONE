@@ -117,9 +117,13 @@ namespace scone
 				}
 			}
 
+			Sensor& AcquireSensor( const PropNode& pn ) { SCONE_THROW_NOT_IMPLEMENTED; }
+
 			// create delayed sensors
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
+
+			SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn ) { SCONE_THROW_NOT_IMPLEMENTED; }
 
 			template< typename SensorT, typename SourceT >
 			SensorDelayAdapter& AcquireDelayedSensor( SourceT& src ) {

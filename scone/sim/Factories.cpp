@@ -16,5 +16,11 @@ namespace scone
 		SCONE_SIM_API ControllerUP CreateController( const PropNode& props, opt::ParamSet& par, Model& model, const Area& target_area ) {
 			return ControllerUP( GetControllerFactory().Create( props )( props, par, model, target_area ) );
 		}
+
+		static SensorFactory g_SensorFactory;
+		SCONE_SIM_API SensorFactory& GetSensorFactory() { return g_SensorFactory; }
+		SCONE_SIM_API SensorUP CreateSensor( const PropNode& props, opt::ParamSet& par, Model& model, const Area& target_area ) {
+			return SensorUP( GetSensorFactory().Create( props )( props, par, model, target_area ) );
+		}
 	}
 }

@@ -94,6 +94,7 @@
     <ClCompile Include="..\..\scone\sim\SensorDelayAdapter.cpp" />
     <ClCompile Include="..\..\scone\sim\Sensors.cpp" />
     <ClCompile Include="..\..\scone\sim\Sensor.cpp" />
+    <ClCompile Include="..\..\scone\sim\sim.cpp" />
     <ClCompile Include="..\..\scone\sim\Simulation.cpp" />
     <ClCompile Include="..\..\scone\sim\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

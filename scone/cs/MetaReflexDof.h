@@ -21,20 +21,26 @@ namespace scone
 			void AddAvailableMoment( Real max_moment );
 
 			sim::Dof& target_dof;
-			Degree ref_pos_in_deg;
 
 			// actual parameters
-			Real length_gain;
-			Real constant;
-			Real force_feedback;
-			Real stiffness;
+			struct DofParams
+			{
+				void InitFromPropNode( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 
-			Real delay; // TODO: move this to muscle
+				Degree ref_pos_in_deg;
+				Real length_gain;
+				Real constant;
+				Real force_feedback;
+				Real stiffness;
+			};
+			DofParams dof_par;
 
-			// regulations
-			// TODO: make generic
-			Real constant_regulation;
-			sim::SensorDelayAdapter* constant_regulation_source;
+			// regulation parameters
+			sim::SensorDelayAdapter* reg_sensor;
+			DofParams reg_par;
+
+			// delay, TODO: move this to muscle
+			Real delay;
 
 			// max muscle moments
 			Real tot_available_neg_mom;

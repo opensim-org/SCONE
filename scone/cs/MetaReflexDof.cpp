@@ -18,20 +18,8 @@ namespace scone
 {
 	namespace cs
 	{
-		MetaReflexDof::MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) ),
-		ref_pos_in_deg( 0.0 ),
-		length_gain( 0.0 ),
-		constant( 0.0 ),
-		force_feedback( 0.0 ),
-		stiffness( 0.0 ),
-		tot_available_pos_mom( 0.0 ),
-		tot_available_neg_mom( 0.0 )
+		void MetaReflexDof::DofParams::InitFromPropNode( const PropNode& props, opt::ParamSet& par, sim::Model& model )
 		{
-			// TODO: remove once a proper factory is used
-			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
-			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
-
 			ref_pos_in_deg = Degree( par.Get( "ref", props.GetChild( "ref" ) ) );
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_length", true ) )
@@ -45,6 +33,20 @@ namespace scone
 
 			if ( model.custom_properties.GetBool( "meta_reflex_control.use_stiffness", true ) )
 				INIT_PARAM_NAMED( props, par, stiffness, "imp", 0.0 );
+		}
+
+		MetaReflexDof::MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) ),
+		tot_available_pos_mom( 0.0 ),
+		tot_available_neg_mom( 0.0 ),
+		dof_par(),
+		reg_par()
+		{
+			// TODO: remove once a proper factory is used
+			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
+			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
+
+			dof_par.InitFromPropNode( props, par, model );
 
 			INIT_PROPERTY_REQUIRED( props, delay );
 
@@ -53,6 +55,7 @@ namespace scone
 			{
 				const PropNode& rp = props.GetChild( "regulate" );
 				// TODO: get sensor, add a generic function to model that takes a PropNode
+				reg_sensor = &model.AcquireDelayedSensor( rp.GetChild( "Sensor" ) );
 			}
 		}
 

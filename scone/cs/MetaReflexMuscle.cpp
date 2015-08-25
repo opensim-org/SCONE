@@ -63,12 +63,12 @@ namespace scone
 			{
 				Real norm_moment_arm = di.moment_arm / total_abs_moment_arm;
 
-				length_gain += abs( norm_moment_arm ) * di.dof->length_gain;
-				force_gain += norm_moment_arm * di.dof->force_feedback;
-				constant_ex += norm_moment_arm * di.dof->constant;
+				length_gain += abs( norm_moment_arm ) * di.dof->dof_par.length_gain;
+				force_gain += norm_moment_arm * di.dof->dof_par.force_feedback;
+				constant_ex += norm_moment_arm * di.dof->dof_par.constant;
 
 				// stiffness
-				if ( di.dof->stiffness > 0.0 )
+				if ( di.dof->dof_par.stiffness > 0.0 )
 					stiffness += ComputeStiffnessExcitation( *di.dof );
 
 				// delay, average of all MetaMuscleDofs
@@ -79,7 +79,7 @@ namespace scone
 				{
 					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f mom=% 8.3f se=%.3f",
 						muscle.GetName().c_str(), di.dof->target_dof.GetName().c_str(), 
-						di.dof->ref_pos_in_deg, ref_length, norm_moment_arm, stiffness );
+						di.dof->dof_par.ref_pos_in_deg, ref_length, norm_moment_arm, stiffness );
 				}
 #endif
 			}
@@ -91,7 +91,7 @@ namespace scone
 			Real max_mus_mom = mus_mom_arm * muscle.GetMaxIsometricForce();
 
 			Real max_abs_dof_mom = std::min( abs( dof.tot_available_neg_mom ), dof.tot_available_pos_mom );
-			Real des_dof_mom = dof.stiffness * Sign( mus_mom_arm ) * max_abs_dof_mom;
+			Real des_dof_mom = dof.dof_par.stiffness * Sign( mus_mom_arm ) * max_abs_dof_mom;
 
 			Real max_stiffness_mom = ( mus_mom_arm < 0 ) ? dof.tot_available_neg_mom : dof.tot_available_pos_mom;
 			Real available_mus_mom = ( abs( mus_mom_arm ) / total_abs_moment_arm ) * max_mus_mom;

@@ -39,6 +39,9 @@ namespace scone
 	{
 		void CS_API RegisterFactoryTypes()
 		{
+			// register sim factory types
+			sim::RegisterFactoryTypes();
+
 			// simulation engines
 			sim::RegisterSimbody();
 

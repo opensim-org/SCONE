@@ -27,5 +27,7 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( Leg );
 		SCONE_DECLARE_CLASS_AND_PTR( Sensor );
 		SCONE_DECLARE_CLASS_AND_PTR( SensorDelayAdapter );
+
+		void SCONE_SIM_API RegisterFactoryTypes();
 	}
 }
