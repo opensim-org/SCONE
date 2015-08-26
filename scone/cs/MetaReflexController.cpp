@@ -69,16 +69,13 @@ namespace scone
 				dof->SetPos( 0, false );
 
 			// now set the DOFs
+			// TODO: include mirror_left variable!
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
 			{
 				mr->target_dof.SetPos( Radian( mr->dof_par.ref_pos_in_deg ), false );
 
-				// Do it for the mirrored side as well
-				//String dof_name = mr->target_dof.GetName();
-				//if ( GetSide( dof_name ) != NoSide )
-				// FindByName( model.GetDofs(), GetMirroredName( dof_name ) )->SetPos( Radian( mr->ref_pos_in_deg ), false );
-
-				//model.SetStateVariable( mr->target_dof.GetName(), Radian( mr->ref_pos_in_deg ) );
+				// Set velocity based on regulation parameters
+				mr->target_dof.SetVel( Radian( mr->reg_par.ref_pos_in_deg ) );
 			}
 
 			// Create meta reflex muscles

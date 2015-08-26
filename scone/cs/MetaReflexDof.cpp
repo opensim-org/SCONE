@@ -54,8 +54,8 @@ namespace scone
 			if ( props.HasKey( "regulate" ) )
 			{
 				const PropNode& rp = props.GetChild( "regulate" );
-				// TODO: get sensor, add a generic function to model that takes a PropNode
-				reg_sensor = &model.AcquireDelayedSensor( rp.GetChild( "Sensor" ) );
+				reg_sensor = &model.AcquireDelayedSensor( rp.GetChild( "Sensor" ), par, area );
+				reg_par.InitFromPropNode( props, par, model );
 			}
 		}
 
@@ -67,7 +67,7 @@ namespace scone
 		{
 			if ( max_moment > 0 )
 				tot_available_pos_mom += max_moment;
-			else tot_available_neg_mom += max_moment;
+			else tot_available_neg_mom += max_moment; // neg moment stays negative
 		}
 	}
 }

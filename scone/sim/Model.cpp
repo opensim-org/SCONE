@@ -11,6 +11,7 @@
 #include "../core/Profiler.h"
 #include "SensorDelayAdapter.h"
 #include "../core/InitFromPropNode.h"
+#include "Factories.h"
 
 using std::endl;
 
@@ -38,6 +39,23 @@ namespace scone
 			return str;
 		}
 
+		Sensor& Model::AcquireSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area )
+		{
+			// create the sensor first, so we can use its name to find it
+			SensorUP sensor = sim::CreateSensor( pn, par, *this, area );
+
+			// see if there's a sensor with the same name (should be unique)
+			auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(), [&]( SensorUP& s ) { return s->GetName() == sensor->GetName(); } );
+
+			if ( it == m_Sensors.end() )
+			{
+				// add the new sensor and return it
+				m_Sensors.push_back( std::move( sensor ) );
+				return *m_Sensors.back(); // return newly added sensor
+			}
+			else return **it; // return found element (sensor gets deleted)
+		}
+
 		SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 		{
 			auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
@@ -49,6 +67,12 @@ namespace scone
 				return *m_SensorDelayAdapters.back();
 			}
 			else return **it;
+		}
+
+		SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area )
+		{
+			// acquire sensor first
+			return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );
 		}
 
 		void Model::UpdateSensorDelayAdapters()

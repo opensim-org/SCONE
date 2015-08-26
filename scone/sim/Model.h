@@ -101,29 +101,30 @@ namespace scone
 
 			// create a sensor of type SensorT with a source of type SourceT
 			template< typename SensorT, typename SourceT >
-			SensorT& AcquireSensor( SourceT& src ) {
+			SensorT& AcquireSensor( SourceT& src )
+			{
 				static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
 
 				// find existing sensor of same type with same source name
 				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == src.GetName(); } );
 
-				if ( it != m_Sensors.end() ) {
-					return dynamic_cast< SensorT& >( **it ); // return found element
-				}
-				else {
+				if ( it == m_Sensors.end() )
+				{
 					SensorT* sensor = new SensorT( src );
 					m_Sensors.push_back( SensorUP( sensor ) );
 					return *sensor; // return new sensor
 				}
+				else return dynamic_cast<SensorT&>( **it ); // return found element
 			}
 
-			Sensor& AcquireSensor( const PropNode& pn ) { SCONE_THROW_NOT_IMPLEMENTED; }
+			// Create sensor 
+			Sensor& AcquireSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area );
+			SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area );
 
 			// create delayed sensors
 			SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
 
-			SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn ) { SCONE_THROW_NOT_IMPLEMENTED; }
 
 			template< typename SensorT, typename SourceT >
 			SensorDelayAdapter& AcquireDelayedSensor( SourceT& src ) {

@@ -36,6 +36,7 @@ namespace scone
 			else SCONE_THROW( "Unknown type: " + name );
 		}
 
+		// TODO: use variadic functions for neater factories
 		F& Create( const PropNode& props )
 		{
 			F& f = Create( props.GetStr( "type" ) );

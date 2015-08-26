@@ -48,11 +48,12 @@ namespace scone
 
 			// find measure controller
 			auto& controllers = m_Model->GetControllers();
-			auto measureIter = std::find_if( controllers.begin(), controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } );
+			auto& is_measure = [&]( sim::ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
+			auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );
 
 			if ( measureIter == controllers.end() )
 				SCONE_THROW( "Could not find a measure" );
-			else if ( controllers.end() != std::find_if( measureIter + 1, controllers.end(), [&]( sim::ControllerUP& c ){ return dynamic_cast< Measure* >( c.get() ) != nullptr; } ) )
+			else if ( controllers.end() != std::find_if( measureIter + 1, controllers.end(), is_measure ) )
 				SCONE_THROW( "More than one measure was found" );
 
 			m_Measure = dynamic_cast< Measure* >( measureIter->get() );
