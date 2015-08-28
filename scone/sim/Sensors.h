@@ -102,17 +102,23 @@ namespace scone
 		};
 
 		// Sensor to measure the sagittal orientation of a body in world coordinates
-		class SCONE_SIM_API SagittalPostureSensor : public Sensor
+		class SCONE_SIM_API OrientationSensor : public Sensor
 		{
 		public:
-			SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+			enum Plane { Invalid = -1, Sagittal, Coronal, Transverse };
+			OrientationSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+			OrientationSensor( Plane plane, Real posgain = 1.0, Real velgain = 0.0 );
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
 			virtual const String& GetSourceName() const override;
+
 		protected:
-			// TODO: get rid of hard-coded dofs, use body instead
-			Dof& m_PelvisTilt;
-			Dof& m_LumbarExtension;
+			// TODO: don't use Dofs, use Body instead
+			Plane m_Plane;
+			Dof* m_Pelvis;
+			Dof* m_Lumbar;
+			Real m_PosGain;
+			Real m_VelGain;
 		};
 	}
 }

@@ -23,10 +23,20 @@ namespace scone
 	String CORE_API GetFileNameNoExt( const String& str );
 
 	/// convert any streamable type to string
-	template < typename T >
+	template< typename T >
 	String ToString( const T& value )
 	{
 		std::ostringstream str;
+		str << value;
+		return str.str();
+	}
+
+	/// convert any streamable type to string
+	template< typename T >
+	T FromString( const String& str )
+	{
+		T value;
+		std::ostringstream ostr( str );
 		str << value;
 		return str.str();
 	}

@@ -6,6 +6,7 @@
 #include "Body.h"
 #include "../cs/Tools.h"
 #include "Dof.h"
+#include <string.h>
 
 namespace scone
 {
@@ -122,28 +123,50 @@ namespace scone
 			return m_Leg.GetName();
 		}
 
-		SagittalPostureSensor::SagittalPostureSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
-			Sensor( pn, par, model, target_area ),
-			m_PelvisTilt( *FindByName( model.GetDofs(), "pelvis_tilt" ) ),
-			m_LumbarExtension( *FindByName( model.GetDofs(), "lumbar_extension" ) )
+		static const char* g_PelvisNames[] = { "pelvis_tilt", "pelvis_list", "pelvis_rotation" };
+		static const char* g_LumbarNames[] = { "lumbar_extension", "lumbar_bending", "lumbar_rotation" };
+		static const char* g_PlaneNames[] = { "Sagittal", "Coronal", "Transverse" };
+
+		// TODO: get rid of hard-coded dof names
+		OrientationSensor::OrientationSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
+		Sensor( pn, par, model, target_area ),
+		m_Plane( Invalid ),
+		m_Pelvis( nullptr ), 
+		m_Lumbar( nullptr )
 		{
-			// TODO: get rid of hard-coded dof names
-			// TODO: use body world position instead
+			// init plane
+			m_Plane = (Plane)pn.GetInt( "plane", -1 );
+			if ( m_Plane == -1 )
+			{
+				// try name (TODO: lower case comparison)
+				for ( int i = 0; i < 3; ++i )
+					if ( pn.GetStr( "plane" ) == g_PlaneNames[ i ] )
+						m_Plane = Plane( i );
+			}
+			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + GetQuoted( pn.GetStr( "plane" ) ) );
+
+			// init Dofs
+			m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
+			m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+
+			opt::ScopedParamSetPrefixer prefixer( par, GetName() );
+			INIT_PARAM_NAMED( pn, par, m_PosGain, "kp", 1.0 );
+			INIT_PARAM_NAMED( pn, par, m_VelGain, "kd", 0.0 );
 		}
 
-		scone::Real SagittalPostureSensor::GetValue() const
+		scone::Real OrientationSensor::GetValue() const
 		{
-			return m_PelvisTilt.GetPos() + m_LumbarExtension.GetPos();
+			return m_PosGain * ( m_Pelvis->GetPos() + m_Lumbar->GetPos() ) + m_VelGain * ( m_Pelvis->GetVel() + m_Lumbar->GetVel() );
 		}
 
-		scone::String SagittalPostureSensor::GetName() const
+		scone::String OrientationSensor::GetName() const
 		{
-			return "Posture.S";
+			return String( "Orientation." ) + g_PlaneNames[ m_Plane ];
 		}
 
-		const String& SagittalPostureSensor::GetSourceName() const
+		const String& OrientationSensor::GetSourceName() const
 		{
-			return m_PelvisTilt.GetName();
+			return m_Pelvis->GetName();
 		}
 	}
 }

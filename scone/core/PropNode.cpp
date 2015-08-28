@@ -242,7 +242,7 @@ namespace scone
 
 	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
 	{
-		ptree& child = key.empty() ? tree : tree.add( key, props.GetValue() );
+		ptree& child = key.empty() ? tree : tree.add( key, props.GetRawValue() );
 		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
 			ToPropertyTree( child, *iter->second, iter->first );
 	}
@@ -337,7 +337,7 @@ namespace scone
 
 				str << std::left << std::setw( key_width ) << full_key;
 				if ( iter->second->HasValue() )
-					str << std::setw( 0 ) << " = " << iter->second->GetValue();
+					str << std::setw( 0 ) << " = " << iter->second->GetRawValue();
 				str << std::endl;
 			}
 

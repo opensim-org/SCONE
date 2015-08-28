@@ -50,27 +50,18 @@ namespace scone
 		bool HasValue() const {	return !m_Value.empty(); }
 
 		// get value
-		const String& GetValue() const { Touch(); return m_Value; }
+		const String& GetRawValue() const { Touch(); return m_Value; }
 
 		// set value
 		void SetValue( const String& value ) { m_Value = value; }
 
-		// get string value (avoid stream operator to make sure spaces are included)
-		template< typename T >
-		T GetValue( typename std::enable_if< std::is_same< T, String >::value >::type* = 0 ) const
-		{
-			Touch();
-			return m_Value;
-		}
-
 		// get value of non-string streamable types
 		template< typename T >
-		T GetValue( typename std::enable_if< !std::is_same< T, String >::value >::type* = 0 ) const
+		T GetValue( ) const
 		{
 			Touch();
 			T value = T();
-			std::stringstream str( m_Value );
-			str >> value;
+			CastValueTo( value );
 			return value;
 		}
 
@@ -202,6 +193,18 @@ namespace scone
 		String m_Value;
 		ChildContainer m_Children;
 		mutable bool m_Touched;
+
+		void CastValueTo( String& value ) const
+		{
+			value = m_Value;
+		}
+
+		template< typename T >
+		void CastValueTo( T& value ) const
+		{
+			std::stringstream ss( m_Value );
+			ss >> value;
+		}
 	};
 
 	// shortcut file readers for lazy people
