@@ -18,7 +18,9 @@ namespace scone
 	class CORE_API PropNode
 	{
 	public:
-		typedef std::pair< String, PropNodePtr > KeyChildPair;
+		typedef String KeyType;
+		typedef String ValueType;
+		typedef std::pair< KeyType, PropNodePtr > KeyChildPair;
 		typedef std::vector< KeyChildPair > ChildContainer;
 		typedef ChildContainer::iterator ChildIter;
 		typedef ChildContainer::const_iterator ConstChildIter;
@@ -44,37 +46,31 @@ namespace scone
 		void Clear() { m_Children.clear(); m_Value.clear(); }
 
 		// check if child key exists
-		bool HasKey( const String& key ) const { return GetChildPtr( key ) != nullptr; }
-
-		// get value
+		bool HasKey( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
 		bool HasValue() const {	return !m_Value.empty(); }
 
+		// get / set raw value
+		const ValueType& GetValueType() const { Touch(); return m_Value; }
+		void SetValueType( const ValueType& value ) { m_Value = value; }
+
 		// get value
-		const String& GetRawValue() const { Touch(); return m_Value; }
-
-		// set value
-		void SetValue( const String& value ) { m_Value = value; }
-
-		// get value of non-string streamable types
 		template< typename T >
 		T GetValue( ) const
 		{
 			Touch();
-			T value = T();
-			CastValueTo( value );
-			return value;
+			return GetInternalValue< T >();
 		}
 
 		/// Get value, throws exception if key doesn't exist
 		template< typename T >
-		T Get( const String& key ) const
+		T Get( const KeyType& key ) const
 		{
 			return GetChild( key ).GetValue< T >();
 		}
 
 		/// Get value, returns default if key doesn't exist
 		template< typename T >
-		T Get( const String& key, const T& default_value ) const
+		T Get( const KeyType& key, const T& default_value ) const
 		{
 			Touch();
 			const PropNode* p = GetChildPtr( key );
@@ -85,15 +81,12 @@ namespace scone
 		template< typename T >
 		void Set( const T& value )
 		{
-			Touch();
-			std::ostringstream str;
-			str << value;
-			m_Value = str.str();
+			SetInternalValue( value );
 		}
 
 		/// Set a value, overwriting existing (if any) or adding new key
 		template< typename T >
-		PropNode& Set( const String& key, const T& value )
+		PropNode& Set( const KeyType& key, const T& value )
 		{
 			PropNode* p = GetChildPtr( key );
 			if ( p == nullptr )
@@ -104,14 +97,14 @@ namespace scone
 
 		/// Set a value, always adding new key
 		template< typename T >
-		PropNode& Add( const String& key, const T& value )
+		PropNode& Add( const KeyType& key, const T& value )
 		{
 			AddChild( key ).Set( value );
 			return *this;
 		}
 
 		/// Get Child
-		const PropNode& GetChild( const String& key ) const
+		const PropNode& GetChild( const KeyType& key ) const
 		{
 			const PropNode* p = GetChildPtr( key );
 			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
@@ -120,7 +113,7 @@ namespace scone
 		}
 
 		/// Get Child
-		PropNode& GetChild( const String& key )
+		PropNode& GetChild( const KeyType& key )
 		{
 			PropNode* p = GetChildPtr( key );
 			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
@@ -129,8 +122,8 @@ namespace scone
 		}
 
 		/// create child node
-		PropNode& AddChild( const String& key );
-		PropNode& AddChild( const String& key, const PropNode& other );
+		PropNode& AddChild( const KeyType& key );
+		PropNode& AddChild( const KeyType& key, const PropNode& other );
 
 		/// insert all children from other PropNode
 		ChildIter InsertChildren( const PropNode& other, ChildIter insert_point );
@@ -146,12 +139,12 @@ namespace scone
 		ConstChildIter End() const { Touch(); return m_Children.cend(); }
 		ChildIter Begin() { Touch(); return m_Children.begin(); }
 		ChildIter End() { Touch(); return m_Children.end(); }
-		ChildIter FindChild( const String& key );
-		ConstChildIter FindChild( const String& key ) const;
+		ChildIter FindChild( const KeyType& key );
+		ConstChildIter FindChild( const KeyType& key ) const;
 
 		/// XML I/O, with optional root name in case there is more than one child
-		void ToXmlFile( const String& filename, const String& rootname = "" );
-		PropNode& FromXmlFile( const String& filename, const String& rootname = "" );
+		void ToXmlFile( const String& filename, const KeyType& rootname = "" );
+		PropNode& FromXmlFile( const String& filename, const KeyType& rootname = "" );
 
 		void ToIniFile( const String& filename );
 		PropNode& FromIniFile( const String& filename );
@@ -160,17 +153,17 @@ namespace scone
 		PropNode& FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
-		int GetInt( const String& key ) const { return Get< int >( key ); }
-		bool GetBool( const String& key ) const { return Get< bool >( key ); }
-		Real GetReal( const String& key ) const { return Get< Real >( key ); }
-		String GetStr( const String& key ) const { return Get< String >( key ); }
-		Vec3 GetVec3( const String& key ) const { return Get< Vec3 >( key ); }
+		int GetInt( const KeyType& key ) const { return Get< int >( key ); }
+		bool GetBool( const KeyType& key ) const { return Get< bool >( key ); }
+		Real GetReal( const KeyType& key ) const { return Get< Real >( key ); }
+		String GetStr( const KeyType& key ) const { return Get< String >( key ); }
+		Vec3 GetVec3( const KeyType& key ) const { return Get< Vec3 >( key ); }
 
-		int GetInt( const String& key, int def ) const { return Get< int >( key, def ); }
-		bool GetBool( const String& key, bool def ) const { return Get< bool >( key, def ); }
-		Real GetReal( const String& key, Real def ) const { return Get< Real >( key, def ); }
-		String GetStr( const String& key, const String& def ) const { return Get< String >( key, def ); }
-		Vec3 GetVec3( const String& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
+		int GetInt( const KeyType& key, int def ) const { return Get< int >( key, def ); }
+		bool GetBool( const KeyType& key, bool def ) const { return Get< bool >( key, def ); }
+		Real GetReal( const KeyType& key, Real def ) const { return Get< Real >( key, def ); }
+		String GetStr( const KeyType& key, const String& def ) const { return Get< String >( key, def ); }
+		Vec3 GetVec3( const KeyType& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
 		std::ostream& ToStream( std::ostream& str, const String& prefix = "  ", bool unflaggedOnly = false, int key_width = -1, int depth = 0 ) const;
 
@@ -183,35 +176,43 @@ namespace scone
 		static const PropNode EMPTY_PROP_NODE;
 
 	private:
-		PropNode* GetChildPtr( const String& key ) const;
+		PropNode* GetChildPtr( const KeyType& key ) const;
 
-		void RemoveChildren( const String& key );
-		void RemoveChild( const String& key );
+		void RemoveChildren( const KeyType& key );
+		void RemoveChild( const KeyType& key );
 
 		int GetMaximumKeyWidth( const String& prefix = "  ", int depth = 0 ) const;
 
-		String m_Value;
+		ValueType m_Value;
 		ChildContainer m_Children;
 		mutable bool m_Touched;
 
-		void CastValueTo( String& value ) const
-		{
-			value = m_Value;
+		template< typename T >
+		T GetInternalValue() const {
+			std::stringstream ss( m_Value );
+			T value;
+			ss >> value;
+			return value;
+		}
+
+		template<>
+		String GetInternalValue< String >() const {
+			return m_Value;
 		}
 
 		template< typename T >
-		void CastValueTo( T& value ) const
-		{
-			std::stringstream ss( m_Value );
-			ss >> value;
+		void SetInternalValue( T& value ) {
+			std::ostringstream ss;
+			ss << value;
+			m_Value = ss.str();
 		}
 	};
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNode( const String& filename, const String& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode CORE_API ReadPropNode( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
 	PropNode CORE_API GetPropNodeFromArgs( int begin_idx, int end_idx, char* argv[] );
 
 	// stream operator

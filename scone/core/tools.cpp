@@ -92,7 +92,7 @@ namespace scone
 				if ( !iter->second->IsTouched() )
 				{
 					if ( iter->second->HasValue() )
-						cout << " = " << iter->second->GetRawValue();
+						cout << " = " << iter->second->GetValueType();
 					cout << " *";
 				}
 

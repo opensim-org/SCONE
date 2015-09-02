@@ -242,14 +242,14 @@ namespace scone
 
 	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
 	{
-		ptree& child = key.empty() ? tree : tree.add( key, props.GetRawValue() );
+		ptree& child = key.empty() ? tree : tree.add( key, props.GetValueType() );
 		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
 			ToPropertyTree( child, *iter->second, iter->first );
 	}
 
 	void FromPropertyTree( PropNode& props, const ptree& tree )
 	{
-		props.SetValue( tree.get_value("") );
+		props.SetValueType( tree.get_value("") );
 		BOOST_FOREACH( const ptree::value_type& v, tree )
 		{
 			if ( v.first == "<xmlattr>" )
@@ -337,7 +337,7 @@ namespace scone
 
 				str << std::left << std::setw( key_width ) << full_key;
 				if ( iter->second->HasValue() )
-					str << std::setw( 0 ) << " = " << iter->second->GetRawValue();
+					str << std::setw( 0 ) << " = " << iter->second->GetValueType();
 				str << std::endl;
 			}
 
