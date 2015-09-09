@@ -12,4 +12,5 @@ namespace scone
 	void PerformanceTest( const String& filename );
 	void XmlParseTest();
 	void MuscleLengthTest();
+	void DofAxisTest();
 }

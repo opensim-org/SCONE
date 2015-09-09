@@ -67,5 +67,10 @@ namespace scone
 			if ( !m_osCoord.getLocked( m_Model.GetTkState() ) )
 				m_osCoord.setSpeedValue( m_Model.GetTkState(), vel );
 		}
+
+		Vec3 Dof_Simbody::GetRotationAxis() const
+		{
+			return m_RotationAxis;
+		}
 	}
 }

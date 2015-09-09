@@ -22,6 +22,7 @@
 #include "../sim/Dof.h"
 #include "../cs/tools.h"
 #include "../sim/Side.h"
+#include "../sim/simbody/Model_Simbody.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
@@ -290,5 +291,19 @@ namespace scone
 				}
 			}
 		}
+	}
+
+	void DofAxisTest()
+	{
+		cs::RegisterFactoryTypes();
+		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
+		props.Set( "Model.model_file", "gait2354.osim" );
+		opt::ParamSet par; // empty parameter set
+		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
+
+		for ( sim::DofUP& dof : m->GetDofs() )
+			log::Info( dof->GetName() + ": " + ToString( dof->GetRotationAxis() ) );
+
+		dynamic_cast<sim::Model_Simbody&>( *m ).ValidateDofAxes();
 	}
 }

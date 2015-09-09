@@ -20,7 +20,7 @@ int main( int argc, const char* argv[] )
 
 	try
 	{
-		MuscleLengthTest();
+		DofAxisTest();
 		//String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";
 		//PlaybackTest( fname );
 

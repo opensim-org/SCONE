@@ -19,6 +19,7 @@ namespace OpenSim
 namespace SimTK
 {
 	class State;
+	class Integrator;
 }
 
 namespace scone
@@ -73,6 +74,8 @@ namespace scone
 
 			virtual const String& GetName() const override;
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
+
+			void ValidateDofAxes();
 
 		protected:
 			virtual String GetClassSignature() const override;

@@ -93,7 +93,7 @@ namespace scone
 			m_pOsimModel->addController( m_pControllerDispatcher );
 
 			// create probe (ownership is automatically passed to OpenSim::Model)
-			// OpenSim: this doens't work! It either crashes or gives inconsistent results
+			// OpenSim: this doesn't work! It either crashes or gives inconsistent results
 			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
 			{
 				auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
@@ -115,6 +115,8 @@ namespace scone
 			g_SimBodyMutex.lock();
 			m_pTkState = &m_pOsimModel->initSystem();
 			g_SimBodyMutex.unlock();
+
+			ValidateDofAxes();
 
 			// Create the integrator for the simulation.
 			if ( integration_method == "RungeKuttaMerson" )
@@ -657,6 +659,22 @@ namespace scone
 						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
 					}
 				}
+			}
+		}
+
+		void Model_Simbody::ValidateDofAxes()
+		{
+			SimTK::Matrix jsmat;
+			m_pOsimModel->getMatterSubsystem().calcSystemJacobian( GetTkState(), jsmat );
+
+			// extract axes from system Jacobian
+			for ( auto coIdx = 0u; coIdx < m_Dofs.size(); ++coIdx )
+			{
+				Dof_Simbody& dof = static_cast< Dof_Simbody& >( *m_Dofs[ coIdx ] );
+				auto mbIdx = dof.GetOsCoordinate().getJoint().getBody().getIndex();
+				
+				for ( auto j = 0; j < 3; ++j )
+					dof.m_RotationAxis[ j ] = jsmat( mbIdx * 6 + j, coIdx );
 			}
 		}
 	}

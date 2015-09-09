@@ -29,10 +29,15 @@ namespace scone
 			virtual void SetPos( Real pos, bool enforce_constraints = true ) override;
 			virtual void SetVel( Real vel ) override;
 
+			virtual Vec3 GetRotationAxis() const override;
+
 		private:
 			Model_Simbody& m_Model;
 			OpenSim::Coordinate& m_osCoord;
 			const OpenSim::CoordinateLimitForce* m_pOsLimitForce;
+			Vec3 m_RotationAxis;
+
+			friend class Model_Simbody;
 		};
 	}
 }

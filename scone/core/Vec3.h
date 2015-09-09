@@ -129,14 +129,14 @@ namespace scone
 
 		/** To stream. */
 		friend std::ostream& operator<<( std::ostream& str, const Vec3& v ) {
-			str << "(" << v.X() << "," << v.Y() << "," << v.Z() << ")";
+			str << "[" << v.X() << " " << v.Y() << " " << v.Z() << "]";
 			return str;
 		}
 
 		/** From stream. */
 		friend std::istream& operator>>( std::istream& str, Vec3& v ) {
 			char dummy;
-			str >> dummy >> v.x >> dummy >> v.y >> dummy >> v.z >> dummy;
+			str >> dummy >> v.x >> v.y >> v.z >> dummy;
 			return str;
 		}
 
