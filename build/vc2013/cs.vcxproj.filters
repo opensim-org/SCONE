@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\scone\cs\StateController.h">
       <Filter>Controllers\State Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexParams.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">

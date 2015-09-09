@@ -29,6 +29,7 @@
     <ClInclude Include="..\..\scone\cs\MetaReflexController.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflexDof.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflexMuscle.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexParams.h" />
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />

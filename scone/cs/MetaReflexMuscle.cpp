@@ -64,7 +64,7 @@ namespace scone
 				Real norm_moment_arm = di.moment_arm / total_abs_moment_arm;
 
 				length_gain += abs( norm_moment_arm ) * di.dof->dof_par.length_gain;
-				force_gain += norm_moment_arm * di.dof->dof_par.force_feedback;
+				force_gain += norm_moment_arm * di.dof->dof_par.force_gain;
 				constant_ex += norm_moment_arm * di.dof->dof_par.constant;
 
 				// stiffness
@@ -79,7 +79,7 @@ namespace scone
 				{
 					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f mom=% 8.3f se=%.3f",
 						muscle.GetName().c_str(), di.dof->target_dof.GetName().c_str(), 
-						di.dof->dof_par.ref_pos_in_deg, ref_length, norm_moment_arm, stiffness );
+						di.dof->dof_par.ref_pos, ref_length, norm_moment_arm, stiffness );
 				}
 #endif
 			}

@@ -22,7 +22,7 @@ namespace scone
 		Model::Model( const PropNode& props, opt::ParamSet& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
-		custom_properties( props.HasKey( "custom_properties" ) ? props.GetChild( "custom_properties" ) : PropNode::EMPTY_PROP_NODE )
+		custom_properties( props.TryGetChild( "custom_properties" ) )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 		}

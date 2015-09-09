@@ -121,6 +121,16 @@ namespace scone
 			return *p;
 		}
 
+		/// Try to get a child, return empty node on failure
+		const PropNode& TryGetChild( const KeyType& key ) const
+		{
+			PropNode* p = GetChildPtr( key );
+			if ( !p )
+				return EMPTY;
+			Touch();
+			return *p;
+		}
+
 		/// create child node
 		PropNode& AddChild( const KeyType& key );
 		PropNode& AddChild( const KeyType& key, const PropNode& other );
@@ -173,7 +183,7 @@ namespace scone
 		bool IsTouched() const { return m_Touched; }
 		size_t GetUntouchedCount() const;
 
-		static const PropNode EMPTY_PROP_NODE;
+		static const PropNode EMPTY;
 
 	private:
 		PropNode* GetChildPtr( const KeyType& key ) const;

@@ -72,10 +72,10 @@ namespace scone
 			// TODO: include mirror_left variable!
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
 			{
-				mr->target_dof.SetPos( Radian( mr->dof_par.ref_pos_in_deg ), false );
+				mr->target_dof.SetPos( Radian( Degree( mr->dof_par.ref_pos ) ), false );
 
 				// Set velocity based on regulation parameters
-				mr->target_dof.SetVel( Radian( mr->reg_par.ref_pos_in_deg ) );
+				mr->target_dof.SetVel( Radian( Degree( mr->bal_par.ref_pos ) ) );
 			}
 
 			// Create meta reflex muscles

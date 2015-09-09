@@ -19,7 +19,7 @@ using namespace boost::property_tree;
 
 namespace scone
 {
-	const PropNode PropNode::EMPTY_PROP_NODE = PropNode();
+	const PropNode PropNode::EMPTY = PropNode();
 
 	PropNode::PropNode() : m_Touched( false )
 	{

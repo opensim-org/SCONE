@@ -18,45 +18,19 @@ namespace scone
 {
 	namespace cs
 	{
-		void MetaReflexDof::DofParams::InitFromPropNode( const PropNode& props, opt::ParamSet& par, sim::Model& model )
-		{
-			ref_pos_in_deg = Degree( par.Get( "ref", props.GetChild( "ref" ) ) );
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_length", true ) )
-				INIT_PARAM_NAMED( props, par, length_gain, "len", 0.0 );
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_constant", true ) )
-				INIT_PARAM_NAMED( props, par, constant, "con", 0.0 );
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_force", true ) )
-				INIT_PARAM_NAMED( props, par, force_feedback, "for", 0.0 );
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_stiffness", true ) )
-				INIT_PARAM_NAMED( props, par, stiffness, "imp", 0.0 );
-		}
-
 		MetaReflexDof::MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
-		dof_par(),
-		reg_par()
+		dof_par( props, par, model, props.GetStr( "target" ) + "." ),
+		bal_par( props.TryGetChild( "Balance" ), par, model, props.GetStr( "target" ) + ".Bal." )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
 			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
 
-			dof_par.InitFromPropNode( props, par, model );
-
+			// TODO: move to muscle
 			INIT_PROPERTY_REQUIRED( props, delay );
-
-			// Read in regulate
-			if ( props.HasKey( "regulate" ) )
-			{
-				const PropNode& rp = props.GetChild( "regulate" );
-				reg_sensor = &model.AcquireDelayedSensor( rp.GetChild( "Sensor" ), par, area );
-				reg_par.InitFromPropNode( props, par, model );
-			}
 		}
 
 		MetaReflexDof::~MetaReflexDof()
