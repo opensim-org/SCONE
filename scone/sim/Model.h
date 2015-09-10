@@ -99,25 +99,28 @@ namespace scone
 			// streaming operator (for debugging)
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
-			// create a sensor of type SensorT with a source of type SourceT
+			// acquire a sensor of type SensorT with a source of type SourceT
 			template< typename SensorT, typename SourceT >
 			SensorT& AcquireSensor( SourceT& src )
 			{
 				static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
 
-				// find existing sensor of same type with same source name
-				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == src.GetName(); } );
+				// first, create a new sensor
+				SensorUP sensor = SensorUP( new SensorT( src ) );
+
+				// see if there's an existing sensor of same type with same source name
+				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == sensor->GetSourceName(); } );
 
 				if ( it == m_Sensors.end() )
 				{
-					SensorT* sensor = new SensorT( src );
-					m_Sensors.push_back( SensorUP( sensor ) );
-					return *sensor; // return new sensor
+					// its new, so move it to the back of the container
+					m_Sensors.push_back( std::move( sensor ) );
+					return dynamic_cast< SensorT& >( *m_Sensors.back() ); // return new sensor
 				}
-				else return dynamic_cast<SensorT&>( **it ); // return found element
+				else return dynamic_cast< SensorT& >( **it ); // return found element
 			}
 
-			// Create sensor 
+			// acquire sensor based on PropNode
 			Sensor& AcquireSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area );
 			SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area );
 
