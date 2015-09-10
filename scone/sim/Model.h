@@ -100,6 +100,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const;
 
 			// acquire a sensor of type SensorT with a source of type SourceT
+			// TODO: use variadic arguments and perfect forwarding
 			template< typename SensorT, typename SourceT >
 			SensorT& AcquireSensor( SourceT& src )
 			{
