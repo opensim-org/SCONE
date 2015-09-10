@@ -21,34 +21,39 @@ namespace scone
 		force_sensor( model.AcquireDelayedSensor< sim::MuscleForceSensor >( mus ) ),
 		length_sensor( model.AcquireDelayedSensor< sim::MuscleLengthSensor >( mus ) ),
 		length_gain( 0.0 ),
-		constant_ex( 0.0 ),
+		constant( 0.0 ),
 		force_gain( 0.0 ),
 		delay( 0.0 ),
 		stiffness( 0.0 ),
 		total_abs_moment_arm( 0.0 )
 		{
-			ref_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
+			base_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
 
 			// precompute number of dofs and total moment arm
 			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
 			{
 				if ( muscle.HasMomentArm( mrdof->target_dof ) )
 				{
-					DofInfo di;
-					di.dof = mrdof.get();
-					di.moment_arm = muscle.GetMomentArm( mrdof->target_dof );
-					dof_infos.push_back( di );
+					DofInfo di( *mrdof );
 
+					di.moment_arm = muscle.GetMomentArm( mrdof->target_dof );
 					total_abs_moment_arm += abs( di.moment_arm );
+
+					di.dof.target_dof.SetVel( 1 );
+					di.lengthening_speed = muscle.GetVelocity();
+					di.dof.target_dof.SetVel( 0 );
+
+					dof_infos.push_back( di );
 				}
 			}
 
 			// now compute the max available moment for each dof
 			BOOST_FOREACH( DofInfo& di, dof_infos )
 			{
-				di.contrib_weight = abs( di.moment_arm ) / total_abs_moment_arm;
-				di.max_moment = di.contrib_weight * di.moment_arm * muscle.GetMaxIsometricForce();
-				di.dof->AddAvailableMoment( di.max_moment );
+				di.w = di.moment_arm / total_abs_moment_arm;
+				di.abs_w = abs( di.w );
+				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
+				di.dof.AddAvailableMoment( di.max_moment );
 			}
 		}
 
@@ -56,30 +61,41 @@ namespace scone
 		{
 		}
 
-		void MetaReflexMuscle::InitMuscleParameters( const MetaReflexController& controller )
+		void MetaReflexMuscle::UpdateMuscleControlParameters()
 		{
+			// initialize reference length
+			ref_length = base_length;
+			length_gain = 0;
+			constant = 0;
+			force_gain = 0;
+
 			// compute muscle feedback parameters
 			BOOST_FOREACH( const DofInfo& di, dof_infos )
 			{
-				Real norm_moment_arm = di.moment_arm / total_abs_moment_arm;
+				ref_length += di.w * di.lengthening_speed * di.dof.bal_par.ref_pos * di.dof.GetLocalBalance();
 
-				length_gain += abs( norm_moment_arm ) * di.dof->dof_par.length_gain;
-				force_gain += norm_moment_arm * di.dof->dof_par.force_gain;
-				constant_ex += norm_moment_arm * di.dof->dof_par.constant;
+				length_gain += di.abs_w * di.dof.dof_par.length_gain;
+				length_gain += di.abs_w * di.dof.bal_par.length_gain * di.dof.GetLocalBalance();
+
+				force_gain += di.w * di.dof.dof_par.force_gain;
+				force_gain += di.w * di.dof.bal_par.force_gain * di.dof.GetLocalBalance();
+
+				constant += di.w * di.dof.dof_par.constant;
+				constant += di.w * di.dof.bal_par.constant * di.dof.GetLocalBalance();
 
 				// stiffness
-				if ( di.dof->dof_par.stiffness > 0.0 )
-					stiffness += ComputeStiffnessExcitation( *di.dof );
+				//if ( di.dof.dof_par.stiffness > 0.0 )
+				//	mus_par.stiffness += ComputeStiffnessExcitation( *di.dof );
 
 				// delay, average of all MetaMuscleDofs
-				delay += ( 1.0 / dof_infos.size() ) * di.dof->delay; // TODO: compute per muscle
+				delay += ( 1.0 / dof_infos.size() ) * di.dof.delay; // TODO: compute per muscle
 
 #ifdef INFO_MUSCLE
 				if ( muscle.GetName() == INFO_MUSCLE || strlen( INFO_MUSCLE ) == 0 )
 				{
-					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f mom=% 8.3f se=%.3f",
-						muscle.GetName().c_str(), di.dof->target_dof.GetName().c_str(), 
-						di.dof->dof_par.ref_pos, ref_length, norm_moment_arm, stiffness );
+					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f w=%8.3f se=%.3f",
+						muscle.GetName().c_str(), di.dof.target_dof.GetName().c_str(), 
+						di.dof.dof_par.ref_pos, ref_length, di.w, stiffness );
 				}
 #endif
 			}
@@ -106,10 +122,10 @@ namespace scone
 		void MetaReflexMuscle::UpdateControls()
 		{
 			// length feedback
-			Real ul = length_gain * std::max( 0.0, length_sensor.GetValue( delay ) - ref_length );
+			Real ul = length_gain * std::max( 0.0, length_sensor.GetValue( delay ) - base_length );
 
 			// constant excitation
-			Real uc = std::max( 0.0, constant_ex + stiffness );
+			Real uc = std::max( 0.0, constant + stiffness );
 
 			// force feedback
 			Real uf = force_gain * std::max( 0.0, force_sensor.GetValue( delay ) );
@@ -121,7 +137,7 @@ namespace scone
 
 #ifdef DEBUG_MUSCLE
 			if ( muscle.GetName() == DEBUG_MUSCLE )
-				log::TraceF( "%s: l=%.3f ref_l=%.3f lg=%.3f ul=%.3f", DEBUG_MUSCLE, length_sensor.GetValue( delay ), ref_length, length_gain, ul );
+				log::TraceF( "%s: l=%.3f ref_l=%.3f lg=%.3f ul=%.3f", DEBUG_MUSCLE, length_sensor.GetValue( delay ), base_length, length_gain, ul );
 #endif
 		}
 	}

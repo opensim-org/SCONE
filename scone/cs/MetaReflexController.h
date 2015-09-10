@@ -15,12 +15,6 @@ namespace scone
 
 			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
 
-			// options
-			bool use_length;
-			bool use_constant;
-			bool use_force;
-			bool use_stiffness;
-
 			const std::vector< MetaReflexDofUP >& GetReflexDofs() const { return m_ReflexDofs; }
 
 		private:
@@ -31,6 +25,10 @@ namespace scone
 
 			std::vector< MetaReflexDofUP > m_ReflexDofs;
 			std::vector< MetaReflexMuscleUP > m_ReflexMuscles;
+
+			//sim::SensorDelayAdapter& m_SagBalSensor;
+			//sim::SensorDelayAdapter& m_CorBalSensor;
+			//sim::SensorDelayAdapter& m_TraBalSensor;
 		};
 	}
 }

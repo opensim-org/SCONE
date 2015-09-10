@@ -21,6 +21,8 @@ namespace scone
 			void UpdateControls();
 			void AddAvailableMoment( Real max_moment );
 
+			void UpdateLocalBalance( const Vec3& global_balance );
+
 			sim::Dof& target_dof;
 
 			MetaReflexParams dof_par;
@@ -33,8 +35,15 @@ namespace scone
 			Real tot_available_neg_mom;
 			Real tot_available_pos_mom;
 
+			// dof axis in world coordinates at target pose
+			void SetDofRotationAxis();
+			Vec3 dof_rotation_axis;
+
+			Real GetLocalBalance();
+
 		private:
 			bool MuscleCrossesDof( const sim::Muscle& mus );
+			Real local_balance;
 		};
 	}
 }

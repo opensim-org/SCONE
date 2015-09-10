@@ -62,6 +62,7 @@
     <ClCompile Include="..\..\scone\cs\MetaReflexController.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflexDof.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflexMuscle.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp" />
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />

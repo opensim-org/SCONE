@@ -43,5 +43,20 @@ namespace scone
 				tot_available_pos_mom += max_moment;
 			else tot_available_neg_mom += max_moment; // neg moment stays negative
 		}
+
+		void MetaReflexDof::UpdateLocalBalance( const Vec3& global_balance )
+		{
+			local_balance = GetDotProduct( global_balance, dof_rotation_axis );
+		}
+
+		scone::Real MetaReflexDof::GetLocalBalance()
+		{
+			return local_balance;
+		}
+
+		void MetaReflexDof::SetDofRotationAxis()
+		{
+			dof_rotation_axis = target_dof.GetRotationAxis();
+		}
 	}
 }

@@ -9,10 +9,9 @@ namespace scone
 		class CS_API MetaReflexPose
 		{
 		public:
-			MetaReflexPose() {}
+			MetaReflexPose( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~MetaReflexPose() {}
 			
-		protected:
 		private:
 		};
 	}

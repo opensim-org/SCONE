@@ -23,12 +23,8 @@ namespace scone
 	{
 		MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
+		//m_SagBalSensor( model.AcquireDelayedSensor< sim::OrientationSensor >( sim::OrientationSensor::Sagittal ) )
 		{
-			INIT_PROPERTY( props, use_length, true );
-			INIT_PROPERTY( props, use_constant, true );
-			INIT_PROPERTY( props, use_force, true );
-			INIT_PROPERTY( props, use_stiffness, true );
-
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
@@ -66,17 +62,19 @@ namespace scone
 
 			// reset all dofs to ensure consistency when there are unspecified dofs
 			BOOST_FOREACH( sim::DofUP& dof, model.GetDofs() )
+			{
 				dof->SetPos( 0, false );
+				dof->SetVel( 0 );
+			}
 
 			// now set the DOFs
 			// TODO: include mirror_left variable!
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-			{
 				mr->target_dof.SetPos( Radian( Degree( mr->dof_par.ref_pos ) ), false );
 
-				// Set velocity based on regulation parameters
-				mr->target_dof.SetVel( Radian( Degree( mr->bal_par.ref_pos ) ) );
-			}
+			// set target dof rotation axes (required for local balance)
+			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+				mr->SetDofRotationAxis();
 
 			// Create meta reflex muscles
 			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
@@ -91,7 +89,7 @@ namespace scone
 
 			// init meta reflex control parameters
 			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
-				mrm->InitMuscleParameters( *this );
+				mrm->UpdateMuscleControlParameters();
 
 			// restore original state
 			model.SetStateValues( org_state );
@@ -103,6 +101,12 @@ namespace scone
 
 		MetaReflexController::UpdateResult MetaReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
+			// get balance
+			Vec3 global_balance;
+
+			BOOST_FOREACH( MetaReflexDofUP& mrmus, m_ReflexDofs)
+				mrmus->UpdateLocalBalance( global_balance );
+
 			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
 				mrmus->UpdateControls();
 
@@ -116,7 +120,7 @@ namespace scone
 			BOOST_FOREACH( const MetaReflexMuscleUP& r, m_ReflexMuscles )
 			{
 				if ( r->length_gain != 0.0 ) ++l;
-				if ( r->constant_ex != 0.0 ) ++c;
+				if ( r->constant != 0.0 ) ++c;
 				if ( r->force_gain != 0.0 ) ++f;
 				if ( r->stiffness != 0.0 ) ++s;
 			}
