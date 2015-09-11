@@ -18,11 +18,6 @@ namespace scone
 		{
 		}
 
-		const String& MuscleSensor::GetSourceName() const
-		{
-			return m_Muscle.GetName();
-		}
-
 		scone::Real MuscleForceSensor::GetValue() const
 		{
 			return m_Muscle.GetNormalizedForce();
@@ -71,11 +66,6 @@ namespace scone
 		{
 		}
 
-		const String& DofSensor::GetSourceName() const
-		{
-			return m_Dof.GetName();
-		}
-
 		scone::Real DofPositionSensor::GetValue() const
 		{
 			// TODO: get rid of this if statement and use a "constant" Dof?
@@ -115,12 +105,7 @@ namespace scone
 
 		scone::String LegLoadSensor::GetName() const
 		{
-			return "Load." + m_Leg.GetName();
-		}
-
-		const String& LegLoadSensor::GetSourceName() const
-		{
-			return m_Leg.GetName();
+			return m_Leg.GetName() + ".L";
 		}
 
 		static const char* g_PelvisNames[] = { "pelvis_tilt", "pelvis_list", "pelvis_rotation" };
@@ -145,9 +130,13 @@ namespace scone
 			}
 			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + GetQuoted( pn.GetStr( "plane" ) ) );
 
-			// init Dofs
-			m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
-			m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+			// init Dofs (if they exist)
+			if ( HasElementWithName( model.GetDofs(), g_PelvisNames[ m_Plane ] ) )
+			{
+				m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
+				m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+			}
+			else log::Warning( "Could not find Dof for balance sensor: " + String( g_PelvisNames[ m_Plane ] ) );
 
 			opt::ScopedParamSetPrefixer prefixer( par, GetName() );
 			INIT_PARAM_NAMED( pn, par, m_PosGain, "kp", 1.0 );
@@ -155,27 +144,30 @@ namespace scone
 		}
 
 		OrientationSensor::OrientationSensor( Model& model, Plane plane, Real posgain, Real velgain ) :
-			m_Plane( plane ),
-			m_PosGain( posgain ),
-			m_VelGain( velgain )
+		m_Plane( plane ),
+		m_PosGain( posgain ),
+		m_VelGain( velgain ),
+		m_Pelvis( nullptr ),
+		m_Lumbar( nullptr )
 		{
-			m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
-			m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+			// init Dofs (if they exist)
+			if ( HasElementWithName( model.GetDofs(), g_PelvisNames[ m_Plane ] ) )
+			{
+				m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
+				m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+			}
 		}
 
 		scone::Real OrientationSensor::GetValue() const
 		{
-			return m_PosGain * ( m_Pelvis->GetPos() + m_Lumbar->GetPos() ) + m_VelGain * ( m_Pelvis->GetVel() + m_Lumbar->GetVel() );
+			if ( m_Pelvis )
+				return m_PosGain * ( m_Pelvis->GetPos() + m_Lumbar->GetPos() ) + m_VelGain * ( m_Pelvis->GetVel() + m_Lumbar->GetVel() );
+			else return 0.0;
 		}
 
 		scone::String OrientationSensor::GetName() const
 		{
-			return String( "Orientation." ) + g_PlaneNames[ m_Plane ];
-		}
-
-		const String& OrientationSensor::GetSourceName() const
-		{
-			return m_Pelvis->GetName();
+			return String( "Ori." ) + g_PlaneNames[ m_Plane ];
 		}
 	}
 }

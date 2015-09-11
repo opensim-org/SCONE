@@ -114,7 +114,7 @@ namespace scone
 
 				// create a new sensor and see if there's an existing sensor of same type with same source name
 				SensorUP sensor = SensorUP( new SensorT( std::forward< Args >( args )... ) );
-				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == sensor->GetSourceName(); } );
+				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetName() == sensor->GetName(); } );
 				if ( it == m_Sensors.end() )
 				{
 					// its new, so move it to the back of the container

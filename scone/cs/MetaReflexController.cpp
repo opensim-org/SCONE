@@ -23,7 +23,6 @@ namespace scone
 	{
 		MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
-		//m_SagBalSensor( model.AcquireDelayedSensor< sim::OrientationSensor >( sim::OrientationSensor::Sagittal ) )
 		{
 			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now

@@ -22,12 +22,19 @@ namespace scone
 		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
-		dof_par( props, par, model, props.GetStr( "target" ) + "." ),
-		bal_par( props.TryGetChild( "Balance" ), par, model, props.GetStr( "target" ) + ".Bal." )
+		dof_par(),
+		bal_par()
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
 			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
+
+			dof_par = MetaReflexParams( props, par, model );
+			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
+			{
+				opt::ScopedParamSetPrefixer pre2( par, "B." );
+				bal_par = MetaReflexParams( props.GetChild( "Balance" ), par, model );
+			}
 
 			// TODO: move to muscle
 			INIT_PROPERTY_REQUIRED( props, delay );

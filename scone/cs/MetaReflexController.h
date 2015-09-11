@@ -25,10 +25,6 @@ namespace scone
 
 			std::vector< MetaReflexDofUP > m_ReflexDofs;
 			std::vector< MetaReflexMuscleUP > m_ReflexMuscles;
-
-			//sim::SensorDelayAdapter& m_SagBalSensor;
-			//sim::SensorDelayAdapter& m_CorBalSensor;
-			//sim::SensorDelayAdapter& m_TraBalSensor;
 		};
 	}
 }

@@ -5,10 +5,8 @@ namespace scone
 {
 	namespace cs
 	{
-		MetaReflexParams::MetaReflexParams( const PropNode& props, opt::ParamSet& par, sim::Model& model, const String& prefix /*= "" */ )
+		MetaReflexParams::MetaReflexParams( const PropNode& props, opt::ParamSet& par, sim::Model& model )
 		{
-			opt::ScopedParamSetPrefixer prefixer( par, prefix );
-
 			ref_pos = Degree( par.TryGet( "ref", props, "ref", 0.0 ) );
 
 			bool use_length = model.GetCustomProp( "meta_reflex_control.use_length", true );

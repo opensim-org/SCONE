@@ -10,8 +10,8 @@ namespace scone
 	{
 		struct MetaReflexParams
 		{
-			MetaReflexParams() = default; // : ref_pos( 0 ), length_gain( 0 ), force_gain( 0 ), constant( 0 ), stiffness( 0 ) {}
-			MetaReflexParams( const PropNode& props, opt::ParamSet& par, sim::Model& model, const String& prefix = "" );
+			MetaReflexParams() : ref_pos( 0 ), length_gain( 0 ), force_gain( 0 ), constant( 0 ), stiffness( 0 ) {}
+			MetaReflexParams( const PropNode& props, opt::ParamSet& par, sim::Model& model );
 
 			Degree ref_pos;
 			Real length_gain;

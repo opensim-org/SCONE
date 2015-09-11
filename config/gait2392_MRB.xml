@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<init_file></init_file>
+	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>3MR14</signature_postfix>
+		<signature_postfix>MRB1</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
-			<model_file>f2392.osim</model_file>
+			<model_file>f2392b.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<integration_method>SemiExplicitEuler2</integration_method>
@@ -16,6 +18,8 @@
 			<custom_properties>
 				<meta_reflex_control use_length="1" use_constant="1" use_force="1" use_stiffness="1"/>
 			</custom_properties>
+			<balance_sensor_delay>0.0</balance_sensor_delay>
+			<balance_sensor_orientation_velocity_gain init_mean="0" init_std="0" min="0" max="1" is_free="0"/>
 			
 			<Controllers>
 				<Controller type="GaitStateController">
@@ -24,24 +28,29 @@
 					<swing_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
-		
 						<!-- Hip and knee stance, upper body posture -->
 						<ConditionalController states="EarlyStance LateStance">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="lumbar_bending" delay="0.005">
-										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="0"/>
-										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
-									</Reflex>
-									<Reflex type="MetaReflex" target="lumbar_rotation" delay="0.005">
-										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="0"/>
-										<len init_mean="1.0" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
-									</Reflex>
 									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005">
 										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="1"/>
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
+									</Reflex>
+									<Reflex type="MetaReflex" target="lumbar_bending" delay="0.005" mirror_left="1">
+										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="0"/>
+										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
+									</Reflex>
+									<Reflex type="MetaReflex" target="lumbar_rotation" delay="0.005" mirror_left="1">
+										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="0"/>
+										<len init_mean="1.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
 									</Reflex>
 									
@@ -49,28 +58,43 @@
 										<ref init_mean="-10" init_std="1" min="-90" max="180" is_free="1"/>
 										<len init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="hip_adduction" delay="0.005">
 										<ref init_mean="-15" init_std="1" min="-90" max="90" is_free="1"/>
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="hip_rotation" delay="0.005">
 										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="1"/>
 										<len init_mean="0.5" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 									
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
 										<ref init_mean="-10" init_std="1" min="-90" max="90" is_free="1"/>
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 
 									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
 										<ref init_mean="0" init_std="1" min="-90" max="90" is_free="1"/>
 										<len init_mean="0.5" init_std="0.01" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance>
+											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="subtalar_angle" delay="0.020">
 										<ref init_mean="15" init_std="1" min="-90" max="90" is_free="1"/>
