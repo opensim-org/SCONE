@@ -23,7 +23,8 @@ namespace scone
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
 		dof_par(),
-		bal_par()
+		bal_par(),
+		local_balance( 0 )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
