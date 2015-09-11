@@ -105,10 +105,13 @@ namespace scone
 			Vec3 global_balance = model.GetDelayedOrientation();
 
 			BOOST_FOREACH( MetaReflexDofUP& mrmus, m_ReflexDofs)
-				mrmus->UpdateLocalBalance( global_balance );
+				mrmus->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
 			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
+			{
+				mrmus->UpdateMuscleControlParameters(); // TODO: perhaps not every time?
 				mrmus->UpdateControls();
+			}
 
 			return SuccessfulUpdate;
 		}
