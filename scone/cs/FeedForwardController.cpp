@@ -71,7 +71,7 @@ namespace scone
 					ai.mode_weights.resize( number_of_modes );
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
 					for ( size_t mode = 0; mode < number_of_modes; ++mode )
-						ai.mode_weights[ mode ] = par.Get( prefix + GetStringF( ".Mode%d", mode ), props.GetChild( "mode_weight" ) );
+						ai.mode_weights[ mode ] = par.Get( prefix + GetStringF( ".Mode%d", mode ), props, "mode_weight" );
 				}
 				else
 				{

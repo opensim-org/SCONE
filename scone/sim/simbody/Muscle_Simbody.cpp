@@ -63,6 +63,7 @@ namespace scone
 		scone::Real Muscle_Simbody::GetVelocity() const
 		{
 			SCONE_PROFILE_SCOPE;
+			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 			return m_osMus.getLengtheningSpeed( m_Model.GetTkState() );
 		}
 

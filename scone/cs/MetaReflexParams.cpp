@@ -9,23 +9,17 @@ namespace scone
 		{
 			opt::ScopedParamSetPrefixer prefixer( par, prefix );
 
-			ref_pos = Degree( par.Get( "ref", props.GetChild( "ref" ) ) );
+			ref_pos = Degree( par.TryGet( "ref", props, "ref", 0.0 ) );
 
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_length", true ) )
-				INIT_PARAM_NAMED( props, par, length_gain, "len", 0.0 );
-			else length_gain = 0.0;
+			bool use_length = model.GetCustomProp( "meta_reflex_control.use_length", true );
+			bool use_force = model.GetCustomProp( "meta_reflex_control.use_force", true );
+			bool use_constant = model.GetCustomProp( "meta_reflex_control.use_constant", true );
+			bool use_stiffness = model.GetCustomProp( "meta_reflex_control.use_stiffness", true );
 
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_force", true ) )
-				INIT_PARAM_NAMED( props, par, force_gain, "for", 0.0 );
-			else force_gain = 0.0;
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_constant", true ) )
-				INIT_PARAM_NAMED( props, par, constant, "con", 0.0 );
-			else constant = 0.0;
-
-			if ( model.custom_properties.GetBool( "meta_reflex_control.use_stiffness", true ) )
-				INIT_PARAM_NAMED( props, par, stiffness, "imp", 0.0 );
-			else stiffness = 0.0;
+			length_gain = use_length ? par.TryGet( "len", props, "len", 0.0 ) : 0;
+			force_gain = use_force ? par.TryGet( "for", props, "for", 0.0 ) : 0;
+			constant = use_constant ? par.TryGet( "con", props, "con", 0.0 ) : 0;
+			stiffness = use_stiffness ? par.TryGet( "imp", props, "imp", 0.0 ) : 0;
 		}
 	}
 }

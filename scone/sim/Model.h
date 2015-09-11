@@ -17,6 +17,8 @@
 #include "../core/HasSignature.h"
 #include "Sensor.h"
 #include "../core/Storage.h"
+#include <array>
+#include <type_traits>
 
 namespace scone
 {
@@ -91,6 +93,10 @@ namespace scone
 			virtual Vec3 GetGravity() const = 0;
 			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 			virtual Real GetTotalContactForce() const;
+			
+			// custom model properties
+			template< typename T >
+			T GetCustomProp( const String& key, const T& default_value ) const { return custom_properties.Get( key, default_value );  }
 
 			// TODO: perhaps remove termination request here
 			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -101,17 +107,14 @@ namespace scone
 
 			// acquire a sensor of type SensorT with a source of type SourceT
 			// TODO: use variadic arguments and perfect forwarding
-			template< typename SensorT, typename SourceT >
-			SensorT& AcquireSensor( SourceT& src )
+			template< typename SensorT, typename... Args >
+			SensorT& AcquireSensor( Args&&... args )
 			{
 				static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
 
-				// first, create a new sensor
-				SensorUP sensor = SensorUP( new SensorT( src ) );
-
-				// see if there's an existing sensor of same type with same source name
+				// create a new sensor and see if there's an existing sensor of same type with same source name
+				SensorUP sensor = SensorUP( new SensorT( std::forward< Args >( args )... ) );
 				auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(),[&]( SensorUP& s ) { return typeid( *s ) == typeid( SensorT ) && s->GetSourceName() == sensor->GetSourceName(); } );
-
 				if ( it == m_Sensors.end() )
 				{
 					// its new, so move it to the back of the container
@@ -130,17 +133,18 @@ namespace scone
 			Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
 
 
-			template< typename SensorT, typename SourceT >
-			SensorDelayAdapter& AcquireDelayedSensor( SourceT& src ) {
-				return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( src ) );
+			template< typename SensorT, typename... Args >
+			SensorDelayAdapter& AcquireDelayedSensor( Args&&... args ) {
+				return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) );
 			}
 
 			Real sensor_delay_scaling_factor;
-			const PropNode& custom_properties;
+			Vec3 GetDelayedOrientation();
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();
+			void CreateBalanceSensors( const PropNode& props, opt::ParamSet& par );
 
 		protected:
 			LinkUP m_RootLink;
@@ -157,6 +161,11 @@ namespace scone
 			Storage< Real > m_SensorDelayStorage;
 			std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 			std::vector< std::unique_ptr< Sensor > > m_Sensors;
+
+			std::array< SensorDelayAdapter*, 3 > m_OriSensors;
+			Real balance_sensor_delay;
+			Real balance_sensor_orientation_velocity_gain;
+			const PropNode& custom_properties;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

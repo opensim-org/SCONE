@@ -13,7 +13,7 @@ namespace scone
 			MetaReflexParams() = default; // : ref_pos( 0 ), length_gain( 0 ), force_gain( 0 ), constant( 0 ), stiffness( 0 ) {}
 			MetaReflexParams( const PropNode& props, opt::ParamSet& par, sim::Model& model, const String& prefix = "" );
 
-			Real ref_pos;
+			Degree ref_pos;
 			Real length_gain;
 			Real force_gain;
 			Real constant;

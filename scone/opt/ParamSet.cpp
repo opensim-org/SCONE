@@ -49,12 +49,22 @@ namespace scone
 			SCONE_THROW( "Invalid mode: " + ToString( m_Mode ) );
 		}
 
-		double ParamSet::Get( const String& name, const PropNode& props )
+		double ParamSet::Get( const String& name, const PropNode& props, const String node_name )
 		{
+			// get par node (throws if not exists)
+			const PropNode& parNode = props.GetChild( node_name );
+
 			// see if this is an actual parameter
-			if ( props.GetChildren().size() > 0 )
-				return Get( ParamInfo( GetNamePrefix() + name, props ) );
+			if ( parNode.GetChildren().size() > 0 )
+				return Get( ParamInfo( GetNamePrefix() + name, parNode ) );
 			else return props.GetValue< double >(); // just return the value
+		}
+
+		double ParamSet::TryGet( const String& name, const PropNode& props, const String node_name, double default_value )
+		{
+			if ( props.HasKey( node_name ) )
+				return Get( name, props, node_name );
+			else return default_value;
 		}
 
 		double ParamSet::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )

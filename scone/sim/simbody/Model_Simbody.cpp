@@ -85,8 +85,9 @@ namespace scone
 			if ( props.HasKey( "SimbodyParameters" ) )
 				SetOpenSimParameters( props.GetChild( "SimbodyParameters" ), par );
 
-			// create the model
+			// create model component wrappers and sensors
 			CreateModelWrappers();
+			CreateBalanceSensors( props, par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -655,7 +656,7 @@ namespace scone
 					auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
 					for ( auto musPropIt = musIt->second->Begin(); musPropIt != musIt->second->End(); ++musPropIt )
 					{
-						double value = par.Get( musPropIt->first, *musPropIt->second );
+						double value = par.Get( musPropIt->first, *musIt->second, musPropIt->first );
 						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
 					}
 				}

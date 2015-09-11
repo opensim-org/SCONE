@@ -154,6 +154,15 @@ namespace scone
 			INIT_PARAM_NAMED( pn, par, m_VelGain, "kd", 0.0 );
 		}
 
+		OrientationSensor::OrientationSensor( Model& model, Plane plane, Real posgain, Real velgain ) :
+			m_Plane( plane ),
+			m_PosGain( posgain ),
+			m_VelGain( velgain )
+		{
+			m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
+			m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+		}
+
 		scone::Real OrientationSensor::GetValue() const
 		{
 			return m_PosGain * ( m_Pelvis->GetPos() + m_Lumbar->GetPos() ) + m_VelGain * ( m_Pelvis->GetVel() + m_Lumbar->GetVel() );

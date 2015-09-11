@@ -22,7 +22,8 @@ namespace scone
 		Model::Model( const PropNode& props, opt::ParamSet& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
-		custom_properties( props.TryGetChild( "custom_properties" ) )
+		custom_properties( props.TryGetChild( "custom_properties" ) ),
+		m_OriSensors( { nullptr } )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 		}
@@ -75,6 +76,14 @@ namespace scone
 			return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );
 		}
 
+		Vec3 Model::GetDelayedOrientation()
+		{
+			SCONE_ASSERT( m_OriSensors[ 0 ] );
+			return Vec3( m_OriSensors[ 0 ]->GetValue( balance_sensor_delay ),
+				m_OriSensors[ 1 ]->GetValue( balance_sensor_delay ),
+				m_OriSensors[ 2 ]->GetValue( balance_sensor_delay ) );
+		}
+
 		void Model::UpdateSensorDelayAdapters()
 		{
 			SCONE_PROFILE_SCOPE;
@@ -87,6 +96,16 @@ namespace scone
 				sda->UpdateStorage();
 
 			//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
+		}
+
+		void Model::CreateBalanceSensors( const PropNode& props, opt::ParamSet& par )
+		{
+			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
+			INIT_PARAM( props, par, balance_sensor_orientation_velocity_gain, 0.0 );
+
+			m_OriSensors[ 0 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Coronal, 1, balance_sensor_orientation_velocity_gain );
+			m_OriSensors[ 1 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Transverse, 1, balance_sensor_orientation_velocity_gain );
+			m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, 1, balance_sensor_orientation_velocity_gain );
 		}
 
 		void Model::UpdateControlValues()

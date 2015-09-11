@@ -39,9 +39,9 @@ namespace scone
 					di.moment_arm = muscle.GetMomentArm( mrdof->target_dof );
 					total_abs_moment_arm += abs( di.moment_arm );
 
-					di.dof.target_dof.SetVel( 1 );
+					di.dof.target_dof.SetVel( Radian( Degree( 1 ) ) );
 					di.lengthening_speed = muscle.GetVelocity();
-					di.dof.target_dof.SetVel( 0 );
+					di.dof.target_dof.SetVel( Radian( 0 ) );
 
 					dof_infos.push_back( di );
 				}

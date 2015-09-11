@@ -19,10 +19,10 @@ namespace scone
 			Real xVal = 0.0;
 			if ( cpidx > 0 )
 			{
-				double dt = par.Get( GetStringF( "DT%d", cpidx - 1 ), props.GetChild( "control_point_delta_time" ) );
+				double dt = par.Get( GetStringF( "DT%d", cpidx - 1 ), props, "control_point_delta_time" );
 				xVal = GetX( cpidx - 1 ) + dt;
 			}
-			Real yVal = par.Get( GetStringF( "Y%d", cpidx ), props.GetChild( "control_point_y" ) );
+			Real yVal = par.Get( GetStringF( "Y%d", cpidx ), props, "control_point_y" );
 			AddPoint( xVal, yVal );
 		}
 	}

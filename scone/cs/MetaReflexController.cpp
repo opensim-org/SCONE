@@ -102,7 +102,7 @@ namespace scone
 		MetaReflexController::UpdateResult MetaReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
 			// get balance
-			Vec3 global_balance;
+			Vec3 global_balance = model.GetDelayedOrientation();
 
 			BOOST_FOREACH( MetaReflexDofUP& mrmus, m_ReflexDofs)
 				mrmus->UpdateLocalBalance( global_balance );

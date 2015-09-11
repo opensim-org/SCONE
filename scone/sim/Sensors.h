@@ -107,9 +107,7 @@ namespace scone
 		public:
 			enum Plane { Invalid = -1, Sagittal, Coronal, Transverse };
 			OrientationSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
-
-			// TODO: create single argument version so that it works with Model::AcquireSensor
-			OrientationSensor( Plane plane, Real posgain = 1.0, Real velgain = 0.0 ); 
+			OrientationSensor( Model& model, Plane plane, Real posgain = 1.0, Real velgain = 0.0 ); 
 			virtual Real GetValue() const override;
 			virtual String GetName() const override;
 			virtual const String& GetSourceName() const override;
@@ -117,8 +115,8 @@ namespace scone
 		protected:
 			// TODO: don't use Dofs, use Body instead
 			Plane m_Plane;
-			Dof* m_Pelvis;
-			Dof* m_Lumbar;
+			const Dof* m_Pelvis;
+			const Dof* m_Lumbar;
 			Real m_PosGain;
 			Real m_VelGain;
 		};
