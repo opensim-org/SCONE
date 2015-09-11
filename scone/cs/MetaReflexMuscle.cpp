@@ -10,7 +10,7 @@
 #include "tools.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
-#define INFO_MUSCLE "bifemlh_r"
+#define INFO_MUSCLE "iliopsoas_r"
 
 namespace scone
 {
@@ -93,9 +93,11 @@ namespace scone
 #ifdef INFO_MUSCLE
 				if ( muscle.GetName() == INFO_MUSCLE || strlen( INFO_MUSCLE ) == 0 )
 				{
-					log::TraceF( "%-20s%-20sdof=% 6.1f len=%6.3f w=%8.3f se=%.3f",
+					Real lb = di.dof.GetLocalBalance();
+					Real bc = di.dof.bal_par.constant * di.dof.GetLocalBalance();
+					log::TraceF( "%-20s%-20sref=%6.3f w=%5.2f lb=%.3f bc=%.3f",
 						muscle.GetName().c_str(), di.dof.target_dof.GetName().c_str(), 
-						di.dof.dof_par.ref_pos, ref_length, di.w, stiffness );
+						ref_length, di.w, lb, bc );
 				}
 #endif
 			}
