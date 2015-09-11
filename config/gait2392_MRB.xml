@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file></init_file>
-	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>MRB1</signature_postfix>
+		<signature_postfix>3MR14</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f2392b.osim</model_file>
@@ -16,7 +14,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<initial_leg_load>0.5</initial_leg_load>
 			<custom_properties>
-				<meta_reflex_control use_length="1" use_constant="1" use_force="1" use_stiffness="1"/>
+				<meta_reflex_control use_length="1" use_constant="1" use_force="1" use_stiffness="1" use_balance="0"/>
 			</custom_properties>
 			<balance_sensor_delay>0.0</balance_sensor_delay>
 			<balance_sensor_orientation_velocity_gain init_mean="0" init_std="0" min="0" max="1" is_free="0"/>
@@ -37,7 +35,7 @@
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="lumbar_bending" delay="0.005" mirror_left="1">
@@ -45,7 +43,7 @@
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="lumbar_rotation" delay="0.005" mirror_left="1">
@@ -59,7 +57,7 @@
 										<len init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="hip_adduction" delay="0.005">
@@ -67,7 +65,7 @@
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="hip_rotation" delay="0.005">
@@ -75,7 +73,7 @@
 										<len init_mean="0.5" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									
@@ -84,7 +82,7 @@
 										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 
@@ -93,7 +91,7 @@
 										<len init_mean="0.5" init_std="0.01" min="0" max="10" is_free="1"/>
 										<con init_mean="-0.1" init_std="0.1" min="-1" max="1" is_free="1"/>
 										<Balance>
-											<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
+											<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="subtalar_angle" delay="0.020">
@@ -209,7 +207,6 @@
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
-					
 					</ConditionalControllers>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT.xml"/>
