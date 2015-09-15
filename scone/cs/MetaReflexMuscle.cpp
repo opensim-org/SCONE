@@ -10,7 +10,7 @@
 #include "tools.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
-#define INFO_MUSCLE "iliopsoas_r"
+//#define INFO_MUSCLE "iliopsoas_r"
 
 namespace scone
 {
@@ -124,10 +124,11 @@ namespace scone
 		void MetaReflexMuscle::UpdateControls()
 		{
 			// length feedback
+			// TODO: include stiffness
 			Real ul = length_gain * std::max( 0.0, length_sensor.GetValue( delay ) - base_length );
 
 			// constant excitation
-			Real uc = std::max( 0.0, constant + stiffness );
+			Real uc = std::max( 0.0, constant );
 
 			// force feedback
 			Real uf = force_gain * std::max( 0.0, force_sensor.GetValue( delay ) );
