@@ -122,9 +122,6 @@
     <ClCompile Include="..\..\scone\core\Timer.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\core\HasName.cpp">
-      <Filter>Base</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\scone\core\HasSignature.cpp">
       <Filter>Base</Filter>
     </ClCompile>

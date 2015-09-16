@@ -40,7 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Log.cpp" />
-    <ClCompile Include="..\..\scone\core\HasName.cpp" />
     <ClCompile Include="..\..\scone\core\Profiler.cpp" />
     <ClCompile Include="..\..\scone\core\PropNode.cpp" />
     <ClCompile Include="..\..\scone\core\Quat.cpp" />

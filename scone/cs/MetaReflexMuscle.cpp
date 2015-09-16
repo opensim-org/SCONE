@@ -10,7 +10,8 @@
 #include "tools.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
-//#define INFO_MUSCLE "iliopsoas_r"
+//#define INFO_MUSCLE "glut_max_l"
+#define INFO_MUSCLE "iliopsoas_l"
 
 namespace scone
 {
@@ -95,9 +96,9 @@ namespace scone
 				{
 					Real lb = di.dof.GetLocalBalance();
 					Real bc = di.dof.bal_par.constant * di.dof.GetLocalBalance();
-					log::TraceF( "%-20s%-20sref=%6.3f w=%5.2f lb=%.3f bc=%.3f",
+					log::TracePeriodicF( 20, "%-20s%-20sref=%6.3f c=%.3f (w=% .2f * (lb=%.3f * %.3f + %.3f))",
 						muscle.GetName().c_str(), di.dof.target_dof.GetName().c_str(), 
-						ref_length, di.w, lb, bc );
+						ref_length, constant, di.w, lb, di.dof.bal_par.constant, di.dof.dof_par.constant );
 				}
 #endif
 			}

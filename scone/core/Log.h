@@ -37,6 +37,7 @@ namespace scone
 		void CORE_API Critical( const String& msg );
 
 		// printf style logging
+		void CORE_API TracePeriodicF( int period, const char* msg, ... );
 		void CORE_API TraceF( const char* msg, ... );
 		void CORE_API DebugF( const char* msg, ... );
 		void CORE_API InfoF( const char* msg, ... );

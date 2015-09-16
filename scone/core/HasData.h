@@ -1,13 +1,13 @@
 #pragma once
 
+#include "Storage.h"
+
 namespace scone
 {
-	class CORE_API HasData
+	class HasData
 	{
 	public:
-		HasData() { };
-		virtual ~HasData() { };
-
-		virtual void AddData( Storage::Frame& frame ) = 0;
+		virtual ~HasData() = 0 {}
+		virtual void StoreData( Storage< Real >::Frame& frame ) = 0;
 	};
 }

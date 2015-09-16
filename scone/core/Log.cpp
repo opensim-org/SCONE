@@ -33,7 +33,7 @@ namespace scone
 			LogStream() << message << std::endl;
 		}
 
-		void LogMessageCStr( Level level, const char* message )
+		void LogMessageCheck( Level level, const char* message )
 		{
 			if ( level >= g_LogLevel )
 				LogMessageNoCheck( level, message );
@@ -41,7 +41,7 @@ namespace scone
 
 		void CORE_API LogMessage( Level level, const String& msg )
 		{
-			LogMessageCStr( level, msg.c_str() );
+			LogMessageCheck( level, msg.c_str() );
 		}
 
 		void CORE_API SetLevel( Level level )
@@ -51,37 +51,45 @@ namespace scone
 
 		void CORE_API Trace( const String& msg )
 		{
-			LogMessageCStr( TraceLevel, msg.c_str() );
+			LogMessageCheck( TraceLevel, msg.c_str() );
 		}
 
 		void CORE_API Debug( const String& msg )
 		{
-			LogMessageCStr( DebugLevel, msg.c_str() );
+			LogMessageCheck( DebugLevel, msg.c_str() );
 		}
 
 		void CORE_API Info( const String& msg )
 		{
-			LogMessageCStr( InfoLevel, msg.c_str() );
+			LogMessageCheck( InfoLevel, msg.c_str() );
 		}
 
 		void CORE_API Warning( const String& msg )
 		{
-			LogMessageCStr( WarningLevel, msg.c_str() );
+			LogMessageCheck( WarningLevel, msg.c_str() );
 		}
 
 		void CORE_API Error( const String& msg )
 		{
-			LogMessageCStr( ErrorLevel, msg.c_str() );
+			LogMessageCheck( ErrorLevel, msg.c_str() );
 		}
 
 		void CORE_API Critical( const String& msg )
 		{
-			LogMessageCStr( CriticalLevel, msg.c_str() );
+			LogMessageCheck( CriticalLevel, msg.c_str() );
 		}
 
 		void CORE_API WarningF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( WarningLevel, msg );
+		}
+
+		void CORE_API TracePeriodicF( int period, const char* msg, ... )
+		{
+			static int counter = 0;
+			if ( counter++ % period == 0 ) {
+				LOG_MESSAGE_F( WarningLevel, msg );
+			}
 		}
 
 		void CORE_API TraceF( const char* msg, ... )
@@ -108,5 +116,5 @@ namespace scone
 		{
 			LOG_MESSAGE_F( CriticalLevel, msg );
 		}
-}
+	}
 }
