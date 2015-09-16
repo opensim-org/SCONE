@@ -84,11 +84,11 @@ namespace scone
 			LOG_MESSAGE_F( WarningLevel, msg );
 		}
 
-		void CORE_API TracePeriodicF( int period, const char* msg, ... )
+		void CORE_API PeriodicTraceF( int period, const char* msg, ... )
 		{
 			static int counter = 0;
 			if ( counter++ % period == 0 ) {
-				LOG_MESSAGE_F( WarningLevel, msg );
+				LOG_MESSAGE_F( TraceLevel, msg );
 			}
 		}
 
