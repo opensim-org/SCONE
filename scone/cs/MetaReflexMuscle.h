@@ -26,7 +26,7 @@ namespace scone
 			Real total_abs_moment_arm;
 
 			// info
-			Real base_length;
+			Real ref_length_base;
 
 			// muscle control parameters
 			Real ref_length;

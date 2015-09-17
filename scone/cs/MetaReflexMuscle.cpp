@@ -11,7 +11,7 @@
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
 //#define INFO_MUSCLE "glut_max_l"
-#define INFO_MUSCLE "iliopsoas_l"
+#define DEBUG_MUSCLE "rect_fem_l"
 
 namespace scone
 {
@@ -28,7 +28,7 @@ namespace scone
 		stiffness( 0.0 ),
 		total_abs_moment_arm( 0.0 )
 		{
-			base_length = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
+			ref_length_base = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
 
 			// precompute number of dofs and total moment arm
 			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
@@ -65,10 +65,11 @@ namespace scone
 		void MetaReflexMuscle::UpdateMuscleControlParameters()
 		{
 			// initialize reference length
-			ref_length = base_length;
+			ref_length = ref_length_base;
 			length_gain = 0;
 			constant = 0;
 			force_gain = 0;
+			delay = 0;
 
 			// compute muscle feedback parameters
 			BOOST_FOREACH( const DofInfo& di, dof_infos )
@@ -89,6 +90,7 @@ namespace scone
 				//	mus_par.stiffness += ComputeStiffnessExcitation( *di.dof );
 
 				// delay, average of all MetaMuscleDofs
+				// TODO: move away from here!
 				delay += ( 1.0 / dof_infos.size() ) * di.dof.delay; // TODO: compute per muscle
 
 #ifdef INFO_MUSCLE
@@ -126,7 +128,8 @@ namespace scone
 		{
 			// length feedback
 			// TODO: include stiffness
-			Real ul = length_gain * std::max( 0.0, length_sensor.GetValue( delay ) - base_length );
+			Real current_length = length_sensor.GetValue( delay );
+			Real ul = length_gain * std::max( 0.0, current_length - ref_length );
 
 			// constant excitation
 			Real uc = std::max( 0.0, constant );
@@ -141,7 +144,7 @@ namespace scone
 
 #ifdef DEBUG_MUSCLE
 			if ( muscle.GetName() == DEBUG_MUSCLE )
-				log::TraceF( "%s: l=%.3f ref_l=%.3f lg=%.3f ul=%.3f", DEBUG_MUSCLE, length_sensor.GetValue( delay ), base_length, length_gain, ul );
+				log::PeriodicTraceF( 20, "%s: u=%.3f l=%.3f bl=%.3f lg=%.3f ul=%.3f uc=%.3f", DEBUG_MUSCLE, total, current_length, ref_length_base, length_gain, ul );
 #endif
 		}
 	}
