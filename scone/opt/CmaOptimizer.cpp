@@ -135,7 +135,8 @@ namespace scone
 
 				// report results
 				printf(" M=%.3f", m_pImpl->Offspring().meanFitness() );
-				if ( IsBetterThan( m_pImpl->Offspring().best().fitnessValue(), best ) )
+				bool new_best = IsBetterThan( m_pImpl->Offspring().best().fitnessValue(), best );
+				if ( new_best )
 				{
 					best = m_pImpl->Offspring().best().fitnessValue();
 					printf(" B=%.3f", best );
@@ -163,7 +164,7 @@ namespace scone
 					printf( " T=%.1f", timer.GetTime() );
 
 				// done reporting
-				printf( "\n" );
+				printf( new_best ? "\n" : "\r" );
 
 				// update next generation
 				m_pImpl->m_pParents->selectMuLambda( m_pImpl->Offspring(), num_elitists );
