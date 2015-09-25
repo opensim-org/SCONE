@@ -4,7 +4,7 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHWL4</signature_postfix>
+		<signature_postfix>GHWL5</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
@@ -33,7 +33,7 @@
 						</ConditionalController>
 
 						<!-- TA stretch reflexes, present during all states -->
-						<ConditionalController states="Swing Landing EarlyStance">
+						<ConditionalController states="Swing, Landing EarlyStance">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Reflexes>
