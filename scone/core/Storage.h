@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	template< typename ValueT, typename TimeT = TimeInSeconds >
+	template< typename ValueT, typename TimeT = TimeInSeconds, bool FixedInterval = false >
 	class Storage
 	{
 	public:
@@ -21,18 +21,13 @@ namespace scone
 			Frame( Storage& store, TimeT t, ValueT default_value = ValueT( 0 ) ) :
 			m_Store( store ),
 			m_Time( t ),
-			m_Values( store.GetChannelCount(), default_value ) {
-			}
+			m_Values( store.GetChannelCount(), default_value ) { }
 
 			TimeT GetTime() { return m_Time; }
 
-			ValueT& operator[]( Index idx ) {
-				return m_Values[ idx ];
-			}
+			ValueT& operator[]( Index idx ) { return m_Values[ idx ]; }
 
-			const ValueT& operator[]( Index idx ) const {
-				return m_Values[ idx ];
-			}
+			const ValueT& operator[]( Index idx ) const { return m_Values[ idx ]; }
 
 			ValueT& operator[]( const String& label ) {
 				Index idx = m_Store.GetChannelIndex( label );
@@ -168,4 +163,12 @@ namespace scone
 		}
 		mutable std::map< TimeT, InterpolatedFrame > m_InterpolationCache;
 	};
+
+	// TEST: partial specialization for Storage with fixed intervals
+	// TODO: simply use if statement inside existing function?
+	template<>
+	Storage< double, TimeInSeconds, true >::InterpolatedFrame
+		Storage< double, TimeInSeconds, true >::GetInterpolatedFrame( TimeInSeconds time ) const {
+		SCONE_THROW_NOT_IMPLEMENTED;
+	}
 }
