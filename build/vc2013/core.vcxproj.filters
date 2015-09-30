@@ -96,6 +96,9 @@
     <ClInclude Include="..\..\scone\core\Result.h">
       <Filter>Base</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\core\StorageIo.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\core\Quat.cpp">

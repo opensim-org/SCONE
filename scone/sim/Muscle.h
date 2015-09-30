@@ -1,11 +1,14 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/core.h"
 
-#include <vector>
+#include "../core/core.h"
+#include "../core/HasData.h"
+
 #include "Actuator.h"
 #include "Sensors.h"
+
+#include <vector>
 
 namespace scone
 {
@@ -51,6 +54,8 @@ namespace scone
 
 			// checks if a muscle crosses a Dof. Default implementation
 			virtual bool HasMomentArm( const Dof& dof ) const;
+
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		};
 	}
 }

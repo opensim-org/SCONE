@@ -52,6 +52,9 @@ namespace scone
 
 		// report unused parameters
 		LogUntouched( objProp );
+
+		// set data storage
+		so.GetModel().SetStoreData( true );
 		
 		Profiler::GetGlobalInstance().Reset();
 

@@ -1,15 +1,17 @@
 #pragma once
 
 #include "core.h"
+#include "Exception.h"
 
 #include <map>
+#include <unordered_map>
 #include <vector>
 #include <utility>
 #include <algorithm>
 
 namespace scone
 {
-	template< typename ValueT, typename TimeT = TimeInSeconds, bool FixedInterval = false >
+	template< typename ValueT, typename TimeT = TimeInSeconds >
 	class Storage
 	{
 	public:
@@ -58,6 +60,7 @@ namespace scone
 		};
 		Storage& operator=( const Storage& other ) {
 			m_Labels = other.m_Labels;
+			m_LabelIndexMap = other.m_LabelIndexMap;
 			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
 				m_Data.push_back( FrameUP( new Frame( **it ) ) );
 			m_InterpolationCache.clear();
@@ -65,6 +68,7 @@ namespace scone
 		};
 		Storage& operator=( Storage&& other ) {
 			m_Labels = std::move( other.m_Labels );
+			m_LabelIndexMap = std::move( other.m_LabelIndexMap );
 			m_Data = std::move( other.m_Data );
 			m_InterpolationCache.clear();
 			return *this;
@@ -95,21 +99,22 @@ namespace scone
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
 			m_Labels.push_back( label );
+			m_LabelIndexMap[ label ] = m_Labels.size() - 1;
 			for ( auto it = m_Data.begin(); it != m_Data.end(); ++it )
 				(*it)->m_Values.resize( m_Labels.size(), default_value ); // resize existing data
 			return m_Labels.size() - 1;
 		}
 
 		Index GetChannelIndex( const String& label ) const {
-			auto it = std::find( m_Labels.begin(), m_Labels.end(), label );
-			if ( it == m_Labels.end() )
+			auto it = m_LabelIndexMap.find( label );
+			if ( it == m_LabelIndexMap.end() )
 				return NoIndex;
-			else return it - m_Labels.begin();
+			else return it->second;
 		}
 
-		size_t GetChannelCount() const {
-			return m_Labels.size();
-		}
+		size_t GetChannelCount() const { return m_Labels.size(); }
+		const std::vector< String >& GetLables() const { return m_Labels; }
+		const std::vector< FrameUP >& GetData() const { return m_Data; }
 
 		ValueT GetInterpolatedValue( TimeT time, Index idx ) const {
 			SCONE_ASSERT( !m_Data.empty() );
@@ -119,6 +124,7 @@ namespace scone
 	private:
 		std::vector< String > m_Labels;
 		std::vector< std::unique_ptr< Frame > > m_Data;
+		std::unordered_map< String, Index > m_LabelIndexMap;
 
 		// interpolation related stuff
 		struct InterpolatedFrame {
@@ -159,16 +165,8 @@ namespace scone
 			m_InterpolationCache[ time ] = bf;
 
 			return bf;
-
 		}
+
 		mutable std::map< TimeT, InterpolatedFrame > m_InterpolationCache;
 	};
-
-	// TEST: partial specialization for Storage with fixed intervals
-	// TODO: simply use if statement inside existing function?
-	template<>
-	Storage< double, TimeInSeconds, true >::InterpolatedFrame
-		Storage< double, TimeInSeconds, true >::GetInterpolatedFrame( TimeInSeconds time ) const {
-		SCONE_THROW_NOT_IMPLEMENTED;
-	}
 }

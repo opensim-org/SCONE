@@ -76,8 +76,7 @@ namespace scone
 
 			std::cout << "performance (x real-time): " << m->GetTime() / time << endl;
 
-			m->WriteStateHistory( GetFileNameNoExt( *iter ) + "_simulation_test" );
-
+			m->WriteData( GetFileNameNoExt( *iter ) + "_simulation_test" );
 
 			//if ( par.IsInConstructionMode() )
 			//	par.SetMode( opt::ParamSet::UpdateMode );

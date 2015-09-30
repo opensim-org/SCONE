@@ -42,10 +42,8 @@ namespace scone
 
 			virtual bool AdvanceSimulationTo( double time ) override;
 
-			void StoreTkState();
-
 			virtual double GetSimulationEndTime() const override;
-			virtual String WriteStateHistory( const String& file_base ) const override;
+			virtual String WriteData( const String& file_base ) const override;
 
 			virtual void SetTerminationRequest() override;
 
@@ -77,6 +75,8 @@ namespace scone
 
 			void ValidateDofAxes();
 
+			void StoreCurrentFrame() override;
+
 		protected:
 			virtual String GetClassSignature() const override;
 
@@ -87,6 +87,9 @@ namespace scone
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 			void SetStateVariables( const std::map< String, Real >& state );
+
+			virtual void SetStoreData( bool store ) override;
+
 			String integration_method;
 			double integration_accuracy;
 			double max_step_size;

@@ -70,6 +70,12 @@ namespace scone
 			return "";
 		}
 
+		void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame )
+		{
+			BOOST_FOREACH( Limit& l, m_Limits )
+				frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
+		}
+
 		scone::PropNode DofLimitMeasure::GetReport()
 		{
 			return m_Report;

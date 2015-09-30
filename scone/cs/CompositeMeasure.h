@@ -20,9 +20,9 @@ namespace scone
 
 			struct Term
 			{
-				Term();;
+				Term();
 				Term( const PropNode& pn );
-				Term( Term&& other );;
+				Term( Term&& other );
 				String name;
 				double weight;
 				double threshold;
@@ -38,6 +38,8 @@ namespace scone
 		private:
 			CompositeMeasure( CompositeMeasure& other );
 			CompositeMeasure& operator=( CompositeMeasure& other );
+
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 			std::vector< Term > m_Terms;
 			PropNode m_Report;

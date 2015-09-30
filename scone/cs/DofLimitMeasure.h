@@ -23,6 +23,8 @@ namespace scone
 		protected:
 			virtual String GetClassSignature() const override;
 
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
+
 		private:
 			struct Limit
 			{

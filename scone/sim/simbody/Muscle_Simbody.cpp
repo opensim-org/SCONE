@@ -50,6 +50,7 @@ namespace scone
 
 		scone::Real Muscle_Simbody::GetNormalizedForce() const 
 		{
+			SCONE_PROFILE_SCOPE;
 			return GetForce() / GetMaxIsometricForce();
 		}
 
@@ -69,16 +70,19 @@ namespace scone
 
 		scone::Real Muscle_Simbody::GetFiberForce() const
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_osMus.getFiberForce( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetNormalizedFiberForce() const 
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
 		}
 
 		scone::Real scone::sim::Muscle_Simbody::GetFiberLength() const
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_osMus.getFiberLength( m_Model.GetTkState() );
 		}
 
@@ -91,6 +95,7 @@ namespace scone
 
 		scone::Real Muscle_Simbody::GetFiberVelocity() const
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_osMus.getFiberVelocity( m_Model.GetTkState() );
 		}
 
@@ -135,6 +140,7 @@ namespace scone
 		
 		scone::Real scone::sim::Muscle_Simbody::GetActivation() const
 		{
+			SCONE_PROFILE_SCOPE;
 			return m_osMus.getActivation( m_Model.GetTkState() );
 		}
 		

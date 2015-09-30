@@ -24,7 +24,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Model : public HasName, public HasSignature
+		class SCONE_SIM_API Model : public HasName, public HasSignature, public HasData
 		{
 		public:
 			Model( const PropNode& props, opt::ParamSet& par );
@@ -84,7 +84,7 @@ namespace scone
 			/// Simulate model
 			virtual bool AdvanceSimulationTo( double time ) = 0;
 			virtual double GetSimulationEndTime() const = 0;
-			virtual String WriteStateHistory( const String& file_base ) const = 0;
+			virtual String WriteData( const String& file_base ) const = 0;
 
 			// get model statistics
 			virtual Vec3 GetComPos() const = 0;
@@ -141,10 +141,16 @@ namespace scone
 			Real sensor_delay_scaling_factor;
 			Vec3 GetDelayedOrientation();
 
+			virtual void SetStoreData( bool store ) { m_StoreData = store; }
+			virtual bool GetStoreData() { return m_StoreData; }
+
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();
 			void CreateBalanceSensors( const PropNode& props, opt::ParamSet& par );
+
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
+			virtual void StoreCurrentFrame();
 
 		protected:
 			LinkUP m_RootLink;
@@ -166,6 +172,10 @@ namespace scone
 			Real balance_sensor_delay;
 			Real balance_sensor_orientation_velocity_gain;
 			const PropNode& custom_properties;
+
+			// storage for HasData classes
+			Storage< Real, TimeInSeconds > m_Data;
+			bool m_StoreData;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

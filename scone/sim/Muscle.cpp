@@ -34,5 +34,12 @@ namespace scone
 			}
 			return false;
 		}
+
+		void Muscle::StoreData( Storage< Real >::Frame& frame )
+		{
+			//frame[ GetName() + ".length" ] = GetLength();
+			//frame[ GetName() + ".activation" ] = GetActivation();
+			//frame[ GetName() + ".force" ] = GetFiberForce();
+		}
 	}
 }

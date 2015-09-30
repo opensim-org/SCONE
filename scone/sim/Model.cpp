@@ -23,9 +23,12 @@ namespace scone
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
 		custom_properties( props.TryGetChild( "custom_properties" ) ),
-		m_OriSensors( { nullptr } )
+		m_OriSensors(),
+		m_StoreData( false )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
+
+			log::DebugF( "Orientation sensors initial values: %p %p %p", m_OriSensors[ 0 ], m_OriSensors[ 1 ], m_OriSensors[ 2 ] );
 		}
 
 		Model::~Model()
@@ -106,6 +109,31 @@ namespace scone
 			m_OriSensors[ 0 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Coronal, 1, balance_sensor_orientation_velocity_gain );
 			m_OriSensors[ 1 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Transverse, 1, balance_sensor_orientation_velocity_gain );
 			m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, 1, balance_sensor_orientation_velocity_gain );
+		}
+
+		void Model::StoreData( Storage< Real >::Frame& frame )
+		{
+			SCONE_PROFILE_SCOPE;
+
+			// store states
+			auto state_values = GetStateValues();
+			auto state_names = GetStateVariableNames();
+
+			for ( size_t i = 0; i < state_values.size(); ++i )
+				frame[ state_names[ i ] ] = state_values[ i ];
+
+			// store entities
+			for ( MuscleUP& m : GetMuscles() )
+				m->StoreData( frame );
+
+			for ( ControllerUP& c : GetControllers() )
+				c->StoreData( frame );
+		}
+
+		void Model::StoreCurrentFrame()
+		{
+			m_Data.AddFrame( GetTime() );
+			StoreData( m_Data.Back() );
 		}
 
 		void Model::UpdateControlValues()

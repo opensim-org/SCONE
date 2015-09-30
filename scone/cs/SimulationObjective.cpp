@@ -62,7 +62,7 @@ namespace scone
 		std::vector< String > SimulationObjective::WriteResults( const String& file )
 		{
 			std::vector< String > files;
-			files.push_back( m_Model->WriteStateHistory( file ) );
+			files.push_back( m_Model->WriteData( file ) );
 			return files;
 		}
 

@@ -209,6 +209,8 @@
     <ClCompile Include="..\..\scone\cs\StateController.cpp">
       <Filter>Controllers\State Control</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

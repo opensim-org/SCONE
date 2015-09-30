@@ -49,6 +49,12 @@ namespace scone
 			}
 		}
 
+		void CompositeMeasure::StoreData( Storage< Real >::Frame& frame )
+		{
+			BOOST_FOREACH( Term& t, m_Terms )
+				t.measure->StoreData( frame );
+		}
+
 		CompositeMeasure::~CompositeMeasure()
 		{
 		}
