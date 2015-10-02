@@ -18,7 +18,7 @@
 				</Limits>
 			</Measure>
 		</term>
-		<term name="KneeLimits" weight="0.001" threshold="1000">
+		<term name="KneeLimits" weight="0.001" threshold="500">
 			<Measure type="DofLimitMeasure">
 				<Limits>
 					<limit dof="knee_angle_l" squared_force_penalty="1"/>

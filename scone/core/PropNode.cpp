@@ -397,7 +397,7 @@ namespace scone
 				String include_filename = iter->second->GetStr( "file" );
 				bool merge_children = iter->second->GetBool( "merge_children", false );
 				boost::filesystem::path include_path = boost::filesystem::path( filename ).parent_path() / include_filename;
-				PropNode other = ReadPropNode( include_path.string(), include_directive, level + 1 );
+				PropNode included_props = ReadPropNode( include_path.string(), include_directive, level + 1 );
 				
 				// remove the include node
 				iter = props.GetChildren().erase( iter );
@@ -405,14 +405,14 @@ namespace scone
 				// merge or include, depending on options
 				if ( merge_children )
 				{
-					SCONE_ASSERT( other.GetChildren().size() == 1 );
-					props.Merge( *other.Begin()->second, false );
+					SCONE_ASSERT( included_props.GetChildren().size() == 1 );
+					props.Merge( *included_props.Begin()->second, false );
 					iter = props.Begin(); // reset the iterator, which has become invalid after merge
 				}
 				else
 				{
 					// insert the children at the INCLUDE spot
-					iter = props.InsertChildren( other, iter );
+					iter = props.InsertChildren( included_props, iter );
 				}
 			}
 			else
