@@ -253,12 +253,13 @@ namespace scone
 
 		String Model_Simbody::WriteData( const String& file ) const
 		{
-			// write sto
 			boost::filesystem::path path( file + ".sto" );
 			auto name = ( path.parent_path().filename() / path.stem() ).string();
+
+#if 0
 			m_pOsimManager->getStateStorage().setName( name );
 			m_pOsimManager->getStateStorage().print( path.filename().string() + "_osim.sto" );
-
+#endif
 			// write scone data
 			WriteStorageSto( m_Data, path.string(), name );
 
