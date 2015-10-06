@@ -22,6 +22,7 @@ namespace scone
 			Real length_ofs;
 			Real force_gain;
 			Real velocity_gain;
+			Real u_constant;
 
 		private:
 			sim::SensorDelayAdapter* m_pForceSensor;

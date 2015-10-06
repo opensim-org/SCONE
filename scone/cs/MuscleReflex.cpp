@@ -26,6 +26,7 @@ namespace scone
 
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 			INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
+			INIT_PARAM_NAMED( props, par, u_constant, "C", 0.0 );
 			INIT_PARAM_NAMED( props, par, velocity_gain, "KV", 0.0 );
 			INIT_PARAM_NAMED( props, par, force_gain, "KF", 0.0 );
 
@@ -47,7 +48,7 @@ namespace scone
 		void MuscleReflex::ComputeControls( double timestamp )
 		{
 			// add stretch reflex
-			Real u_l = m_pLengthSensor ? length_gain * std::max( 0.0, m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
+			Real u_l = m_pLengthSensor ? length_gain * m_pLengthSensor->GetValue( delay ) - length_ofs : 0;
 
 			// add velocity reflex
 			// TODO: should velocity gain be positive only?
@@ -56,7 +57,9 @@ namespace scone
 			// add force reflex
 			Real u_f = m_pForceSensor ? force_gain * m_pForceSensor->GetValue( delay ) : 0;
 
-			m_Target.AddControlValue( u_l + u_v + u_f );
+			Real u_total = u_l + u_v + u_f + u_constant;
+
+			m_Target.AddControlValue( std::max( 0.0, u_total ) );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )
