@@ -4,12 +4,12 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHWLC7</signature_postfix>
+		<signature_postfix>GHWLC8</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024cs7.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
-			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/>
+			<!--state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/-->
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
@@ -18,8 +18,8 @@
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
-					<stance_load_threshold init_mean="0.2" init_std="0.05" min="0.001" max="1.0" is_free="1"/>
-					<!--swing_load_threshold init_mean="0.001" init_std="0.05" min="0.001" max="1.0" is_free="0"/-->
+					<stance_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
+					<swing_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
 						<!-- Feed forward components for three states -->

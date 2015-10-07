@@ -26,7 +26,7 @@
 				</Limits>
 			</Measure>
 		</term>
-		<term name="Posture" weight="0.1" threshold="10">
+		<term name="Posture" weight="0.1" threshold="20">
 			<Measure type="DofLimitMeasure">
 				<Limits>
 					<limit dof="lumbar_extension" min_deg="-45" max_deg="45" squared_range_penalty="1" abs_velocity_penalty="100"/>
