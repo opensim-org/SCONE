@@ -33,6 +33,7 @@ namespace scone
 				Range< Degree > range;
 				Real squared_range_penalty;
 				Real squared_force_penalty;
+				Real squared_velocity_penalty;
 				Statistic<> penalty;
 			};
 
