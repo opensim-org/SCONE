@@ -48,7 +48,7 @@ namespace scone
 		void MuscleReflex::ComputeControls( double timestamp )
 		{
 			// add stretch reflex
-			Real u_l = m_pLengthSensor ? length_gain * m_pLengthSensor->GetValue( delay ) - length_ofs : 0;
+			Real u_l = m_pLengthSensor ? length_gain * ( m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
 
 			// add velocity reflex
 			// TODO: should velocity gain be positive only?

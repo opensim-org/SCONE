@@ -7,7 +7,7 @@
 		<signature_postfix>GHWLO5</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
-			<model_file>f1024.osim</model_file>
+			<model_file>f1024cs7.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
