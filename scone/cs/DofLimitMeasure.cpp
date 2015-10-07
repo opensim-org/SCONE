@@ -29,7 +29,7 @@ namespace scone
 			range.max = Degree( props.GetReal( "max_deg", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
-			INIT_PROPERTY( props, squared_velocity_penalty, 0.0 );
+			INIT_PROPERTY( props, abs_velocity_penalty, 0.0 );
 		}
 
 		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
@@ -50,9 +50,9 @@ namespace scone
 					l.penalty.AddSample( timestamp, fp );
 				}
 
-				if ( l.squared_velocity_penalty > 0.0 )
+				if ( l.abs_velocity_penalty > 0.0 )
 				{
-					double vp = l.squared_velocity_penalty * GetSquared( l.dof.GetVel() );
+					double vp = l.abs_velocity_penalty * abs( l.dof.GetVel() );
 					l.penalty.AddSample( timestamp, vp );
 				}
 			}
