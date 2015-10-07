@@ -22,6 +22,9 @@ namespace scone
 	/// Get file without extension (without dot)
 	String CORE_API GetFileNameNoExt( const String& str );
 
+	/// Match string patten
+	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true );
+
 	/// convert any streamable type to string
 	template< typename T >
 	String ToString( const T& value )

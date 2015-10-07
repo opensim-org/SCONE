@@ -141,6 +141,14 @@ namespace scone
 			if ( !state_init_file.empty() )
 			{
 				std::map< String, Real > state = ReadState( GetSconeFolder( "models" ) + state_init_file );
+				if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
+				{
+					for ( auto& nvp : state )
+					{
+						if ( MatchesPattern( nvp.first, iso.GetStr( "include_states" ) ) && !MatchesPattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+							nvp.second = par.Get( opt::ParamInfo( nvp.first, nvp.second, iso.GetReal( "init_std" ), 0, 0, -1000, 1000 ) );
+					}
+				}
 				SetStateVariables( state );
 				FixState( initial_leg_load * GetMass() * -GetGravity().y );
 			}

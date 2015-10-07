@@ -9,6 +9,7 @@
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>

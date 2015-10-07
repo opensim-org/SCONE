@@ -38,9 +38,10 @@ namespace scone
 		// comparison
 		bool operator==( const PropNode& other ) const;
 		bool operator!=( const PropNode& other ) const { return !(*this == other); }
+		explicit operator bool() const { return !IsEmpty();  }
 
 		// check if empty
-		bool IsEmpty() { return m_Children.empty() && !HasValue(); }
+		bool IsEmpty() const { return m_Children.empty() && !HasValue(); }
 
 		// clear
 		void Clear() { m_Children.clear(); m_Value.clear(); }

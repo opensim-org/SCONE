@@ -2,6 +2,11 @@
 #include "tools.h"
 #include <time.h>
 
+#ifdef WIN32
+#include <shlwapi.h>
+#pragma comment( lib, "shlwapi.lib" )
+#endif
+
 using std::cout;
 using std::endl;
 
@@ -22,13 +27,6 @@ namespace scone
 	
 	std::string GetDateTimeAsString()
 	{
-        /*
-        time_t timer;
-        time(&timer);
-        struct tm* t;
-        t = localtime(&timer);
-        */
-        
 		__time64_t long_time;
 		_time64(&long_time);
 		struct tm t;
@@ -67,6 +65,15 @@ namespace scone
 		if ( n == std::string::npos )
 			return str; // no extension found
 		else return str.substr( 0, n );
+	}
+
+	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns )
+	{
+#ifdef WIN32
+		return PathMatchSpecEx( str.c_str(), pattern.c_str(), multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
+#else
+		SCONE_THROW_NOT_IMPLEMENTED;
+#endif
 	}
 
 	void LogUntouched( const PropNode& p, log::Level level, size_t depth )
