@@ -171,7 +171,7 @@ namespace scone
 
 			std::array< SensorDelayAdapter*, 3 > m_OriSensors;
 			Real balance_sensor_delay;
-			Real balance_sensor_orientation_velocity_gain;
+			Real balance_sensor_ori_vel_gain;
 			const PropNode& custom_properties;
 
 			// storage for HasData classes
