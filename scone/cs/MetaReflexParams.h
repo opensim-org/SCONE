@@ -17,6 +17,7 @@ namespace scone
 			Real length_gain;
 			Real force_gain;
 			Real constant;
+			Real symmetry;
 			Real stiffness;
 		};
 	}

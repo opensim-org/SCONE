@@ -97,6 +97,7 @@ namespace scone
 			// custom model properties
 			template< typename T >
 			T GetCustomProp( const String& key, const T& default_value ) const { return custom_properties.Get( key, default_value );  }
+			const PropNode& GetCustomProps() { return custom_properties; }
 
 			// TODO: perhaps remove termination request here
 			virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
