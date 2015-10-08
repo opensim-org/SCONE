@@ -51,7 +51,8 @@ namespace scone
 			// now compute the max available moment for each dof
 			BOOST_FOREACH( DofInfo& di, dof_infos )
 			{
-				di.w = di.moment_arm / total_abs_moment_arm;
+				Real mom_w = di.moment_arm / total_abs_moment_arm;
+				di.w = mom_w + di.dof.dof_par.symmetry * abs( mom_w );
 				di.abs_w = abs( di.w );
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
