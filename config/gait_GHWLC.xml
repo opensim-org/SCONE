@@ -22,50 +22,7 @@
 					<swing_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
-						<!-- Feed forward components for three states -->
-						<!--ConditionalController states="EarlyStance LateStance, Liftoff Swing, Landing">
-							<Controller type="FeedForwardController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<Function type="Polynomial">
-									<degree>0</degree>
-									<coefficient0 init_mean="0.05" init_std="0.01" min="-1" max="1"/>
-								</Function>
-							</Controller>
-						</ConditionalController-->
-
-						<!-- TA stretch reflexes, present during all states -->
-						<ConditionalController states="Swing, Landing EarlyStance">
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<Reflexes>
-									<!-- TA =L+(TA) + F-(SOL) -->
-									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<KL init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<C init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-									</Reflex>
-								</Reflexes>
-							</Controller>
-						</ConditionalController>
-
-						<!-- Stance reflexes that also work during lift-off (i.e. F+ SOL / GAS)-->
-						<ConditionalController states="LateStance Liftoff">
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
-								<Reflexes>
-									<!-- L+ SOL -->
-									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
-										<KL init_mean="0.5" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<C init_mean="0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
-									</Reflex>
-									<!-- L+ GAS -->
-									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
-										<KL init_mean="3.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<C init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-									</Reflex>
-								</Reflexes>
-							</Controller>
-						</ConditionalController>
-						
+					
 						<!-- Stance reflexes, based on [Wang2012] -->
 						<ConditionalController states="EarlyStance LateStance">
 							<Controller type="ReflexController">
@@ -106,6 +63,25 @@
 							</Controller>						
 						</ConditionalController>
 						
+						<!-- Stance reflexes that also work during lift-off (i.e. F+ SOL / GAS)-->
+						<ConditionalController states="LateStance Liftoff">
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Reflexes>
+									<!-- L+ SOL -->
+									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
+										<KL init_mean="0.5" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<C init_mean="0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<!-- L+ GAS -->
+									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
+										<KL init_mean="3.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<C init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+									</Reflex>
+								</Reflexes>
+							</Controller>
+						</ConditionalController>
+						
 						<!-- Swing reflexes, based on [Wang2012] -->
 						<ConditionalController states="Liftoff Swing">
 							<Controller type="ReflexController">
@@ -130,6 +106,20 @@
 							</Controller>						
 						</ConditionalController>
 						
+						<!-- TA stretch reflexes, present during all states -->
+						<ConditionalController states="Swing, Landing EarlyStance">
+							<Controller type="ReflexController">
+								<use_symmetric_actuators>1</use_symmetric_actuators>
+								<Reflexes>
+									<!-- TA =L+(TA) + F-(SOL) -->
+									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
+										<KL init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
+										<C init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
+									</Reflex>
+								</Reflexes>
+							</Controller>
+						</ConditionalController>
+
 						<!-- Landing reflexes, based on [Wang2012] -->
 						<ConditionalController states="Landing">
 							<Controller type="ReflexController">
