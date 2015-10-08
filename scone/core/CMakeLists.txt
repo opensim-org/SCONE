@@ -3,7 +3,6 @@ set(BASE_FILES
     Exception.h
     Factory.h
     HasData.h
-    HasName.cpp
     HasName.h
     HasSignature.cpp
     HasSignature.h

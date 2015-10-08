@@ -30,6 +30,7 @@ set(SIMULATIONANDCONTROL_FILES
 set(SYSTEM_FILES
     Factories.cpp
     Factories.h
+    sim.cpp
     sim.h
     stdafx.cpp
     stdafx.h
@@ -49,7 +50,7 @@ add_library(scone-sim # Name of the library file.
     ${MODELCOMPONENTS_FILES} ${SENSORSANDACTUATORS_FILES}
     ${SIMULATIONANDCONTROL_FILES} ${SYSTEM_FILES} ${TOPOLOGY_FILES} 
     )
-target_link_libraries(scone-sim scone-core)
+target_link_libraries(scone-sim scone-opt)
 
 set_target_properties(scone-sim PROPERTIES
     DEFINE_SYMBOL SCONE_SIM_EXPORTS # For controlling WIN32 dllimport/export.
