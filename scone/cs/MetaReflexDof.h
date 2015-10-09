@@ -28,7 +28,7 @@ namespace scone
 			static const TargetDir PositiveDir = 1;
 			static const TargetDir NegativeDir = -1;
 			static const TargetDir BothDirs = 0;
-			int target_dir;
+			int dof_sign;
 
 			MetaReflexParams dof_par;
 			MetaReflexParams bal_par;

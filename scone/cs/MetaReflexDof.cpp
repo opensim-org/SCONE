@@ -26,12 +26,12 @@ namespace scone
 		bal_par(),
 		local_balance( 0 )
 		{
-			INIT_PROPERTY( props, target_dir, BothDirs );
+			INIT_PROPERTY( props, dof_sign, BothDirs );
 
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
 
-			const char* tdpostfix = target_dir == PositiveDir ? "+" : ( target_dir == NegativeDir ? "-" : "" );
+			const char* tdpostfix = dof_sign == PositiveDir ? "+" : ( dof_sign == NegativeDir ? "-" : "" );
 			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + tdpostfix + "." );
 
 			dof_par = MetaReflexParams( props, par, model );

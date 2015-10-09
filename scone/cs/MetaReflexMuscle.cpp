@@ -55,7 +55,7 @@ namespace scone
 				Real mom_w = di.moment_arm / total_abs_moment_arm;
 
 				// see if we have a target dir
-				if ( di.dof.target_dir == MetaReflexDof::BothDirs )
+				if ( di.dof.dof_sign == MetaReflexDof::BothDirs )
 				{
 					// compute using symmetry parameter
 					Real sym = di.dof.dof_par.symmetry;
@@ -63,7 +63,7 @@ namespace scone
 				}
 				else
 				{
-					if ( signbit( mom_w ) == ( di.dof.target_dir == MetaReflexDof::NegativeDir ) )
+					if ( signbit( mom_w ) == ( di.dof.dof_sign == MetaReflexDof::NegativeDir ) )
 						di.w = mom_w;
 					else di.w = 0;
 				}
