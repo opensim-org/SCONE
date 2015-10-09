@@ -24,6 +24,11 @@ namespace scone
 			void UpdateLocalBalance( const Vec3& global_balance );
 
 			sim::Dof& target_dof;
+			typedef int TargetDir;
+			static const TargetDir PositiveDir = 1;
+			static const TargetDir NegativeDir = -1;
+			static const TargetDir BothDirs = 0;
+			int target_dir;
 
 			MetaReflexParams dof_par;
 			MetaReflexParams bal_par;

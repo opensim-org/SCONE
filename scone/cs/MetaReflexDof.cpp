@@ -26,9 +26,13 @@ namespace scone
 		bal_par(),
 		local_balance( 0 )
 		{
+			INIT_PROPERTY( props, target_dir, BothDirs );
+
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
-			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
+
+			const char* tdpostfix = target_dir == PositiveDir ? "+" : ( target_dir == NegativeDir ? "-" : "" );
+			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + tdpostfix + "." );
 
 			dof_par = MetaReflexParams( props, par, model );
 			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )

@@ -8,6 +8,7 @@
 #include "boost/foreach.hpp"
 #include "MetaReflexController.h"
 #include "tools.h"
+#include "SimTKcommon/internal/common.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
 //#define INFO_MUSCLE "glut_max_l"
@@ -52,8 +53,21 @@ namespace scone
 			BOOST_FOREACH( DofInfo& di, dof_infos )
 			{
 				Real mom_w = di.moment_arm / total_abs_moment_arm;
-				Real sym = di.dof.dof_par.symmetry;
-				di.w = mom_w + sym * abs( mom_w ) / ( 1 + abs( sym ) );
+
+				// see if we have a target dir
+				if ( di.dof.target_dir == MetaReflexDof::BothDirs )
+				{
+					// compute using symmetry parameter
+					Real sym = di.dof.dof_par.symmetry;
+					di.w = mom_w + sym * abs( mom_w ) / ( 1 + abs( sym ) );
+				}
+				else
+				{
+					if ( signbit( mom_w ) == ( di.dof.target_dir == MetaReflexDof::NegativeDir ) )
+						di.w = mom_w;
+					else di.w = 0;
+				}
+
 				di.abs_w = abs( di.w );
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
