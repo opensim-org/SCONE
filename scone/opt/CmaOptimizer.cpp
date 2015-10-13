@@ -41,7 +41,7 @@ namespace scone
 			INIT_PROPERTY_NAMED( props, m_Lambda, "lambda", 0 );
 			INIT_PROPERTY_NAMED( props, m_Mu, "mu", 0 );
 			INIT_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
-			INIT_PROPERTY( props, max_generations, 10000u );
+			INIT_PROPERTY( props, max_generations, size_t( 10000 ) );
 			INIT_PROPERTY( props, random_seed, long( 123 ) );
 		}
 

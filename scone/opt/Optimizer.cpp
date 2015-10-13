@@ -23,7 +23,7 @@ namespace scone
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) )
 		{
-			INIT_PROPERTY( props, max_threads, 1u );
+			INIT_PROPERTY( props, max_threads, size_t( 1 ) );
 			INIT_PROPERTY( props, thread_priority, 0 );
 			INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
 			INIT_PROPERTY_REQUIRED( props, maximize_objective );
