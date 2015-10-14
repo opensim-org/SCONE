@@ -50,6 +50,7 @@ namespace scone
 
 	// index type
 	typedef size_t Index;
+	typedef size_t Count;
 	const Index NoIndex = std::numeric_limits< Index >::max();
 	typedef double TimeInSeconds;
 

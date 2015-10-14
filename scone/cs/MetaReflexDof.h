@@ -25,13 +25,11 @@ namespace scone
 
 			sim::Dof& target_dof;
 			typedef int TargetDir;
-			static const TargetDir PositiveDir = 1;
-			static const TargetDir NegativeDir = -1;
-			static const TargetDir BothDirs = 0;
-			int dof_sign;
 
-			MetaReflexParams dof_par;
-			MetaReflexParams bal_par;
+			MetaReflexParams dof_pos;
+			MetaReflexParams bal_pos;
+			MetaReflexParams dof_neg;
+			MetaReflexParams bal_neg;
 
 			// delay, TODO: move this to muscle
 			Real delay;

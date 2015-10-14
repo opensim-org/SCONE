@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>MRBLCD11</signature_postfix>
+		<signature_postfix>MRBLCD12</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024cs7.osim</model_file>
@@ -30,57 +30,40 @@
 						<ConditionalController states="EarlyStance LateStance">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005" dof_sign="1">
-										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										</Balance>
+									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005">
+										<LP init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<CP init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
+										<CPB init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<LN init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<CN init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
+										<CNB init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005" dof_sign="-1">
-										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										</Balance>
+									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
+										<LP init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
+										<CP init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
+										<CPB init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<LN init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
+										<CN init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
+										<CNB init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="1">
-										<len init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										</Balance>
-									</Reflex>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="-1">
-										<len init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
-										</Balance>
-									</Reflex>
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="1">
-										<len init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
-										<con init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
-									</Reflex>
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="-1">
-										<len init_mean="0.1" init_std="0.2" min="0" max="10" is_free="1"/>
-										<con init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
+									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
+										<LP init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<CP init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
+										<LN init_mean="0.1" init_std="0.1" min="0" max="10" is_free="1"/>
+										<CN init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
 						
-						<!-- Ankle push-off during late stance/liftoff -->
+						<!-- Ankle push-off during late stance/liftoff (negative sign) -->
 						<ConditionalController states="LateStance Liftoff">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020" dof_sign="-1">
-										<len init_mean="0.5" init_std="0.01" min="0" max="10" is_free="1"/>
-										<con init_mean="-0.3" init_std="0.1" min="-10" max="10" is_free="1"/>
-									</Reflex>
-									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020" dof_sign="1">
-										<len init_mean="0.1" init_std="0.01" min="0" max="10" is_free="1"/>
-										<con init_mean="-0.3" init_std="0.1" min="-10" max="10" is_free="1"/>
+									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
+										<LN init_mean="0.5" init_std="0.01" min="0" max="10" is_free="1"/>
+										<CN init_mean="-0.3" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<CP init_mean="-0.3" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -90,28 +73,14 @@
 						<ConditionalController states="Liftoff Swing">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="1">
-										<len init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="0.1" init_std="0.05" min="-1" max="1" is_free="1"/>
-										</Balance>
+									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
+										<LP init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<CP init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<CPB init_mean="0.1" init_std="0.05" min="-1" max="1" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="-1">
-										<len init_mean="0.1" init_std="0.1" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.1" min="-1" max="1" is_free="1"/>
-										<Balance>
-											<con init_mean="0.1" init_std="0.05" min="-1" max="1" is_free="1"/>
-										</Balance>
-									</Reflex>
-									
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="1">
-										<len init_mean="0.01" init_std="0.01" min="0" max="1" is_free="1"/>
-										<con init_mean="-0.5" init_std="0.02" min="-1" max="1" is_free="1"/>
-									</Reflex>
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="-1">
-										<len init_mean="0.01" init_std="0.001" min="0" max="1" is_free="1"/>
-										<con init_mean="0.2" init_std="0.02" min="-1" max="1" is_free="1"/>
+									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
+										<LP init_mean="0.01" init_std="0.01" min="0" max="1" is_free="1"/>
+										<CP init_mean="-1.0" init_std="0.02" min="-1" max="1" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -121,9 +90,9 @@
 						<ConditionalController states="Swing, Landing EarlyStance">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020" dof_sign="1">
-										<len init_mean="2.0" init_std="0.5" min="0" max="10" is_free="1"/>
-										<con init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+									<Reflex type="MetaReflex" target="ankle_angle" delay="0.020">
+										<LP init_mean="2.0" init_std="0.5" min="0" max="10" is_free="1"/>
+										<CP init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -133,28 +102,14 @@
 						<ConditionalController states="Landing">
 							<Controller type="MetaReflexController">
 								<Reflexes>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="1">
-										<len init_mean="0.2" init_std="0.02" min="0.0" max="10.0" is_free="1"/>
-										<con init_mean="0.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<Balance>
-											<con init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										</Balance>
+									<!-- L+ retraction reflex for end of swing -->
+									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
+										<LN init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<CN init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
-									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005" dof_sign="-1">
-										<len init_mean="0.2" init_std="0.02" min="0.0" max="10.0" is_free="1"/>
-										<con init_mean="0.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<Balance>
-											<con init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										</Balance>
-									</Reflex>
-									
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="1">
-										<len init_mean="0.3" init_std=".01" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-10" max="10" is_free="1"/>
-									</Reflex>
-									<Reflex type="MetaReflex" target="knee_angle" delay="0.010" dof_sign="-1">
-										<len init_mean="0.3" init_std=".01" min="0" max="10" is_free="1"/>
-										<con init_mean="0.0" init_std="0.01" min="-10" max="10" is_free="1"/>
+									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
+										<LN init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
+										<CN init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>

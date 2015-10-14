@@ -69,7 +69,7 @@ namespace scone
 			// now set the DOFs
 			// TODO: include mirror_left variable!
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
-				mr->target_dof.SetPos( Radian( Degree( mr->dof_par.ref_pos ) ), false );
+				mr->target_dof.SetPos( Radian( Degree( mr->dof_pos.ref_pos ) ), false );
 
 			// set target dof rotation axes (required for local balance)
 			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )

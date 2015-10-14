@@ -22,23 +22,21 @@ namespace scone
 		target_dof( *FindByName( model.GetDofs(), props.GetStr( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
-		dof_par(),
-		bal_par(),
 		local_balance( 0 )
 		{
-			INIT_PROPERTY( props, dof_sign, BothDirs );
-
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "MetaReflex" );
 
-			const char* tdpostfix = dof_sign == PositiveDir ? "+" : ( dof_sign == NegativeDir ? "-" : "" );
-			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + tdpostfix + "." );
+			opt::ScopedParamSetPrefixer prefixer( par, props.GetStr( "target" ) + "." );
 
-			dof_par = MetaReflexParams( props, par, model );
-			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
+			// init dof parameters
+			dof_pos.Init( props, par, model, "P" );
+			dof_neg.Init( props, par, model, "N" );
+
+			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) )
 			{
-				opt::ScopedParamSetPrefixer pre2( par, "B." );
-				bal_par = MetaReflexParams( props.GetChild( "Balance" ), par, model );
+				bal_pos.Init( props, par, model, "PB" );
+				bal_neg.Init( props, par, model, "NB" );
 			}
 
 			// TODO: move to muscle

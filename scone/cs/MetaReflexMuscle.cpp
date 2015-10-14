@@ -53,21 +53,7 @@ namespace scone
 			BOOST_FOREACH( DofInfo& di, dof_infos )
 			{
 				Real mom_w = di.moment_arm / total_abs_moment_arm;
-
-				// see if we have a target dir
-				if ( di.dof.dof_sign == MetaReflexDof::BothDirs )
-				{
-					// compute using symmetry parameter
-					Real sym = di.dof.dof_par.symmetry;
-					di.w = mom_w + sym * abs( mom_w ) / ( 1 + abs( sym ) );
-				}
-				else
-				{
-					if ( signbit( mom_w ) == ( di.dof.dof_sign == MetaReflexDof::NegativeDir ) )
-						di.w = mom_w;
-					else di.w = 0;
-				}
-
+				di.w = mom_w;
 				di.abs_w = abs( di.w );
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
@@ -90,16 +76,20 @@ namespace scone
 			// compute muscle feedback parameters
 			BOOST_FOREACH( const DofInfo& di, dof_infos )
 			{
-				ref_length += di.w * di.lengthening_speed * di.dof.bal_par.ref_pos * di.dof.GetLocalBalance();
+				// TODO: store these in DofInfo
+				const MetaReflexParams& dof_par = di.w > 0 ? di.dof.dof_pos : di.dof.dof_neg;
+				const MetaReflexParams& bal_par = di.w > 0 ? di.dof.bal_pos : di.dof.bal_neg;
 
-				length_gain += di.abs_w * di.dof.dof_par.length_gain;
-				length_gain += di.abs_w * di.dof.bal_par.length_gain * di.dof.GetLocalBalance();
+				ref_length += di.w * di.lengthening_speed * bal_par.ref_pos * di.dof.GetLocalBalance();
 
-				force_gain += di.w * di.dof.dof_par.force_gain;
-				force_gain += di.w * di.dof.bal_par.force_gain * di.dof.GetLocalBalance();
+				length_gain += di.abs_w * dof_par.length_gain;
+				length_gain += di.abs_w * bal_par.length_gain * di.dof.GetLocalBalance();
 
-				constant += di.w * di.dof.dof_par.constant;
-				constant += di.w * di.dof.bal_par.constant * di.dof.GetLocalBalance();
+				force_gain += di.w * dof_par.force_gain;
+				force_gain += di.w * bal_par.force_gain * di.dof.GetLocalBalance();
+
+				constant += di.w * dof_par.constant;
+				constant += di.w * bal_par.constant * di.dof.GetLocalBalance();
 
 				// stiffness
 				//if ( di.dof.dof_par.stiffness > 0.0 )
@@ -124,20 +114,21 @@ namespace scone
 
 		Real MetaReflexMuscle::ComputeStiffnessExcitation( MetaReflexDof& dof )
 		{
-			Real mus_mom_arm = muscle.GetMomentArm( dof.target_dof );
-			Real max_mus_mom = mus_mom_arm * muscle.GetMaxIsometricForce();
+			SCONE_THROW_NOT_IMPLEMENTED;
+			//Real mus_mom_arm = muscle.GetMomentArm( dof.target_dof );
+			//Real max_mus_mom = mus_mom_arm * muscle.GetMaxIsometricForce();
 
-			Real max_abs_dof_mom = std::min( abs( dof.tot_available_neg_mom ), dof.tot_available_pos_mom );
-			Real des_dof_mom = dof.dof_par.stiffness * Sign( mus_mom_arm ) * max_abs_dof_mom;
+			//Real max_abs_dof_mom = std::min( abs( dof.tot_available_neg_mom ), dof.tot_available_pos_mom );
+			//Real des_dof_mom = dof.dof_par.stiffness * Sign( mus_mom_arm ) * max_abs_dof_mom;
 
-			Real max_stiffness_mom = ( mus_mom_arm < 0 ) ? dof.tot_available_neg_mom : dof.tot_available_pos_mom;
-			Real available_mus_mom = ( abs( mus_mom_arm ) / total_abs_moment_arm ) * max_mus_mom;
-			Real mus_mom_contrib = available_mus_mom / max_stiffness_mom;
+			//Real max_stiffness_mom = ( mus_mom_arm < 0 ) ? dof.tot_available_neg_mom : dof.tot_available_pos_mom;
+			//Real available_mus_mom = ( abs( mus_mom_arm ) / total_abs_moment_arm ) * max_mus_mom;
+			//Real mus_mom_contrib = available_mus_mom / max_stiffness_mom;
 
-			Real des_mus_mom = mus_mom_contrib * des_dof_mom;
-			Real a = des_mus_mom / max_mus_mom;
+			//Real des_mus_mom = mus_mom_contrib * des_dof_mom;
+			//Real a = des_mus_mom / max_mus_mom;
 
-			return a;
+			//return a;
 		}
 
 		void MetaReflexMuscle::UpdateControls()
