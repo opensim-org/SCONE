@@ -16,8 +16,8 @@ set(CONTROLLERS_FILES
 	FeedForwardController.h
 	GaitStateController.cpp
 	GaitStateController.h
-	#MetaReflex.cpp TODO
-	#MetaReflex.h
+	MetaReflexParams.cpp
+	MetaReflexParams.h
 	MetaReflexController.cpp
 	MetaReflexController.h
     MetaReflexDof.cpp
@@ -77,7 +77,7 @@ add_library(scone-cs # Name of the library file.
     ${CONTROLLERS_OLDREFLEXES_FILES} ${CONTROLLERS_FILES}
     ${FUNCTIONS_FILES} ${MEASURES_FILES} ${SYSTEM_FILES} 
     ${TOOLS_FILES})
-target_link_libraries(scone-cs scone-sim scone-sim_simbody scone-opt
+target_link_libraries(scone-cs scone-sim_simbody
     ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
 set_target_properties(scone-cs PROPERTIES
