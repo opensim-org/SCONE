@@ -98,6 +98,33 @@ namespace scone
 			Leg& m_Leg;
 		};
 
+		// Base class for body sensors
+		class SCONE_SIM_API BodySensor : public Sensor
+		{
+		public:
+			BodySensor( Body& body, size_t channel_idx ) : m_Body( body ), m_ChannelIdx( channel_idx ) { SCONE_ASSERT( channel_idx <= 3 ); }
+			BodySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+		protected:
+			Body& m_Body;
+			Index m_ChannelIdx;
+		};
+
+		class SCONE_SIM_API BodyOriSensor : public BodySensor
+		{
+		public:
+			BodyOriSensor( Body& body, size_t channel_idx ) : BodySensor( body, channel_idx ) {}
+			virtual Real GetValue() const override;
+			virtual String GetName() const override;
+		};
+
+		class SCONE_SIM_API BodyAngVelSensor : public BodySensor
+		{
+		public:
+			BodyAngVelSensor( Body& body, size_t channel_idx ) : BodySensor( body, channel_idx ) {}
+			virtual Real GetValue() const override;
+			virtual String GetName() const override;
+		};
+
 		// Sensor to measure the sagittal orientation of a body in world coordinates
 		class SCONE_SIM_API OrientationSensor : public Sensor
 		{

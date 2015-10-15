@@ -15,8 +15,7 @@ namespace scone
 		MuscleSensor::MuscleSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 			Sensor( pn, par, model, target_area ),
 			m_Muscle( *FindByName( model.GetMuscles(), pn.GetStr( "muscle" ) ) )
-		{
-		}
+		{}
 
 		scone::Real MuscleForceSensor::GetValue() const
 		{
@@ -63,8 +62,7 @@ namespace scone
 			Sensor( pn, par, model, target_area ),
 			m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) ),
 			m_pRootDof( pn.HasKey( "root_dof" ) ? FindByName( model.GetDofs(), pn.GetStr( "root_dof" ) ).get() : nullptr )
-		{
-		}
+		{}
 
 		scone::Real DofPositionSensor::GetValue() const
 		{
@@ -95,8 +93,7 @@ namespace scone
 		LegLoadSensor::LegLoadSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 			Sensor( pn, par, model, target_area ),
 			m_Leg( *FindBySide( model.GetLegs(), target_area.side ) )
-		{
-		}
+		{}
 
 		scone::Real LegLoadSensor::GetValue() const
 		{
@@ -168,6 +165,33 @@ namespace scone
 		scone::String OrientationSensor::GetName() const
 		{
 			return String( "Ori." ) + g_PlaneNames[ m_Plane ];
+		}
+
+		BodySensor::BodySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
+		Sensor( pn, par, model, target_area ),
+		m_Body( *FindByName( model.GetBodies(), pn.GetStr( "body" ) ) )
+		{}
+
+		const char* g_BodyChannelNames[] = { "X", "Y", "Z" };
+
+		scone::Real BodyOriSensor::GetValue() const
+		{
+			return m_Body.GetOri().ToExponentialMap2()[ m_ChannelIdx ];
+		}
+
+		scone::String BodyOriSensor::GetName() const
+		{
+			return m_Body.GetName() + ".Ori." + g_BodyChannelNames[ m_ChannelIdx ];
+		}
+
+		scone::Real BodyAngVelSensor::GetValue() const
+		{
+			return m_Body.GetAngVel()[ m_ChannelIdx ];
+		}
+
+		scone::String BodyAngVelSensor::GetName() const
+		{
+			return m_Body.GetName() + ".AngVel." + g_BodyChannelNames[ m_ChannelIdx ];
 		}
 	}
 }
