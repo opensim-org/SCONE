@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>MRBLCD12</signature_postfix>
+		<signature_postfix>MRBLCD20</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024cs7.osim</model_file>
@@ -33,18 +33,22 @@
 									<Reflex type="MetaReflex" target="lumbar_extension" delay="0.005">
 										<LP init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<CP init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<CPB init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<LN init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<CN init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<CNB init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<Balance body="torso">
+											<CP init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+											<CN init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
 										<LP init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
 										<CP init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<CPB init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<LN init_mean="0.1" init_std=".01" min="0" max="10" is_free="1"/>
 										<CN init_mean="0.0" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<CNB init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<Balance body="torso">
+											<CP init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+											<CN init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
 										<LP init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
@@ -76,7 +80,9 @@
 									<Reflex type="MetaReflex" target="hip_flexion" delay="0.005">
 										<LP init_mean="2.0" init_std="0.1" min="0" max="10" is_free="1"/>
 										<CP init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
-										<CPB init_mean="0.1" init_std="0.05" min="-1" max="1" is_free="1"/>
+										<Balance body="torso">
+											<CP init_mean="0.1" init_std="0.05" min="-1" max="1" is_free="1"/>
+										</Balance>
 									</Reflex>
 									<Reflex type="MetaReflex" target="knee_angle" delay="0.010">
 										<LP init_mean="0.01" init_std="0.01" min="0" max="1" is_free="1"/>

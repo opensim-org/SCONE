@@ -102,38 +102,28 @@ namespace scone
 		class SCONE_SIM_API BodySensor : public Sensor
 		{
 		public:
-			BodySensor( Body& body, size_t channel_idx ) : m_Body( body ), m_ChannelIdx( channel_idx ) { SCONE_ASSERT( channel_idx <= 3 ); }
+			BodySensor( Body& body ) : m_Body( body ) {}
 			BodySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 		protected:
 			Body& m_Body;
-			Index m_ChannelIdx;
 		};
 
 		class SCONE_SIM_API BodyOriSensor : public BodySensor
 		{
 		public:
-			BodyOriSensor( Body& body, size_t channel_idx ) : BodySensor( body, channel_idx ) {}
-			virtual Real GetValue() const override;
+			BodyOriSensor( Body& body ) : BodySensor( body ) {}
 			virtual String GetName() const override;
-
-			// multichannel sensor bit
 			virtual Count GetChannelCount() override { return 3; }
-			virtual Real* GetValueArray() const override { SCONE_THROW_NOT_IMPLEMENTED; }
-		private:
-			mutable Real m_Values[ 3 ];
+			virtual Real GetValue( Index idx ) const override;
 		};
 
 		class SCONE_SIM_API BodyAngVelSensor : public BodySensor
 		{
 		public:
-			BodyAngVelSensor( Body& body, size_t channel_idx ) : BodySensor( body, channel_idx ) {}
-			virtual Real GetValue() const override;
+			BodyAngVelSensor( Body& body ) : BodySensor( body ) {}
 			virtual String GetName() const override;
-
 			virtual Count GetChannelCount() override { return 3; }
-			virtual Real* GetValueArray() const override { SCONE_THROW_NOT_IMPLEMENTED; }
-		private:
-			mutable Real m_Values[ 3 ];
+			virtual Real GetValue( Index idx ) const override;
 		};
 
 		// Sensor to measure the sagittal orientation of a body in world coordinates

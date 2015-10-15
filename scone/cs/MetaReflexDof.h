@@ -5,17 +5,19 @@
 #include "../sim/Model.h"
 #include "../opt/ParamSet.h"
 #include "MetaReflexParams.h"
+#include "../sim/SensorDelayAdapter.h"
+#include "../core/HasData.h"
 
 namespace scone
 {
 	namespace cs
 	{
 		// TODO: derive from either Reflex or Controller, or don't and remove this TODO
-		class CS_API MetaReflexDof
+		class CS_API MetaReflexDof : public HasData
 		{
 		public:
 			MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
-			virtual ~MetaReflexDof();
+			virtual ~MetaReflexDof() {}
 
 			void SetupUsingCurrentPose();
 			void UpdateControls();
@@ -43,10 +45,16 @@ namespace scone
 			Vec3 dof_rotation_axis;
 
 			Real GetLocalBalance();
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
 			bool MuscleCrossesDof( const sim::Muscle& mus );
+
 			Real local_balance;
+			Real body_angvel_sensor_gain;
+			sim::SensorDelayAdapter* body_ori_sensor;
+			sim::SensorDelayAdapter* body_angvel_sensor;
+			Real body_sensor_delay;
 		};
 	}
 }

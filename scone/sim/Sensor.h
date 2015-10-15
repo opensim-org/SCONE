@@ -15,12 +15,12 @@ namespace scone
 			Sensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
 			virtual ~Sensor();
 
-			virtual Real GetValue() const = 0;
+			virtual Real GetValue() const { SCONE_THROW_NOT_IMPLEMENTED; }
 			virtual String GetName() const = 0;
 
 			// special case for multichannel sensors
 			virtual Count GetChannelCount() { return 1; }
-			virtual Real* GetValueArray() const { SCONE_THROW_NOT_IMPLEMENTED; }
+			virtual Real GetValue( Index idx ) const { SCONE_ASSERT( idx == 0 ); return GetValue(); }
 		};
 	}
 }

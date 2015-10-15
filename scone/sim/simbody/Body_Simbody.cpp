@@ -47,15 +47,16 @@ namespace scone
 			// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 			auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 			auto& quat = mb.getBodyRotation( m_Model.GetTkState() ).convertRotationToQuaternion();
-			return Quat( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
+			Quat q1( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
 
 			// OpenSim: can this be done more efficient?
 			//double dir_cos[3][3];
-			//m_osBody.ind
 			//m_osBody.getModel().getSimbodyEngine().getDirectionCosines( m_Model.GetTkState(), m_osBody, dir_cos );
 			//double a1, a2, a3;
 			//m_osBody.getModel().getSimbodyEngine().convertDirectionCosinesToAngles( dir_cos, &a1, &a2, &a3 );
-			//return QuatFromEuler( Radian( a1 ), Radian( a2 ), Radian( a3 ) );
+			//Quat q2 = QuatFromEuler( Radian( a1 ), Radian( a2 ), Radian( a3 ) );
+
+			return q1;
 		}
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const

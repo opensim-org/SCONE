@@ -73,6 +73,7 @@ namespace scone
 			INIT_PROPERTY( props, max_step_size, 0.001 );
 			INIT_PROPERTY( props, use_fixed_control_step_size, false );
 			INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
+
 			INIT_PROPERTY_REQUIRED( props, model_file );
 			INIT_PROPERTY( props, state_init_file, String() );
 			INIT_PROPERTY( props, probe_class, String() );

@@ -174,24 +174,24 @@ namespace scone
 
 		const char* g_BodyChannelNames[] = { "X", "Y", "Z" };
 
-		scone::Real BodyOriSensor::GetValue() const
+		scone::Real BodyOriSensor::GetValue( Index idx ) const
 		{
-			return m_Body.GetOri().ToExponentialMap2()[ m_ChannelIdx ];
+			return m_Body.GetOri().ToExponentialMap()[ idx ];
 		}
 
 		scone::String BodyOriSensor::GetName() const
 		{
-			return m_Body.GetName() + ".Ori." + g_BodyChannelNames[ m_ChannelIdx ];
+			return m_Body.GetName() + ".Ori";
 		}
 
-		scone::Real BodyAngVelSensor::GetValue() const
+		scone::Real BodyAngVelSensor::GetValue( Index idx ) const
 		{
-			return m_Body.GetAngVel()[ m_ChannelIdx ];
+			return m_Body.GetAngVel()[ idx ];
 		}
 
 		scone::String BodyAngVelSensor::GetName() const
 		{
-			return m_Body.GetName() + ".AngVel." + g_BodyChannelNames[ m_ChannelIdx ];
+			return m_Body.GetName() + ".AngVel";
 		}
 	}
 }

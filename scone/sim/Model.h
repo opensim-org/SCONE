@@ -140,6 +140,8 @@ namespace scone
 			}
 
 			Real sensor_delay_scaling_factor;
+			Real balance_sensor_ori_vel_gain;
+			Real balance_sensor_delay;
 			Vec3 GetDelayedOrientation();
 
 			virtual void SetStoreData( bool store ) { m_StoreData = store; }
@@ -170,8 +172,6 @@ namespace scone
 			std::vector< std::unique_ptr< Sensor > > m_Sensors;
 
 			std::array< SensorDelayAdapter*, 3 > m_OriSensors;
-			Real balance_sensor_delay;
-			Real balance_sensor_ori_vel_gain;
 			const PropNode& custom_properties;
 
 			// storage for HasData classes
