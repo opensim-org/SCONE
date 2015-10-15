@@ -14,8 +14,10 @@ namespace scone
 			virtual ~SensorDelayAdapter();
 
 			virtual Real GetValue() const override;
-			Real GetValue( Real delay ) const;
 			virtual String GetName() const override;
+
+			Real GetValue( Real delay ) const;
+			Real* GetValueArray( Real delay ) const;
 
 			void UpdateStorage();
 			Sensor& GetInputSensor() { return m_InputSensor; }
