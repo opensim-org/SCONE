@@ -33,10 +33,13 @@ namespace scone
 			dof_pos.Init( props, par, model, "P" );
 			dof_neg.Init( props, par, model, "N" );
 
-			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) )
+			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
 			{
-				bal_pos.Init( props, par, model, "PB" );
-				bal_neg.Init( props, par, model, "NB" );
+				opt::ScopedParamSetPrefixer pre2( par, "B." );
+				auto& balprops = props.GetChild( "Balance" );
+
+				bal_pos.Init( balprops, par, model, "P" );
+				bal_neg.Init( balprops, par, model, "N" );
 			}
 
 			// TODO: move to muscle
