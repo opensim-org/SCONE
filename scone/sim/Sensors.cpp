@@ -131,10 +131,12 @@ namespace scone
 			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + GetQuoted( pn.GetStr( "plane" ) ) );
 
 			// init Dofs (if they exist)
+            // first check if pelvis exists, if not don't add a sensor. then add lumbar if it exists.
 			if ( HasElementWithName( model.GetDofs(), g_PelvisNames[ m_Plane ] ) )
 			{
 				m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
-				m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
+                if ( HasElementWithName(model.GetDofs(), g_LumbarNames[ m_Plane ] ) ) 
+                    m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[m_Plane] ).get();
 			}
 			else log::Warning( "Could not find Dof for balance sensor: " + String( g_PelvisNames[ m_Plane ] ) );
 
@@ -150,18 +152,24 @@ namespace scone
 		m_Pelvis( nullptr ),
 		m_Lumbar( nullptr )
 		{
-			// init Dofs (if they exist)
-			if ( HasElementWithName( model.GetDofs(), g_PelvisNames[ m_Plane ] ) )
-			{
-				m_Pelvis = FindByName( model.GetDofs(), g_PelvisNames[ m_Plane ] ).get();
-				m_Lumbar = FindByName( model.GetDofs(), g_LumbarNames[ m_Plane ] ).get();
-			}
+            // init Dofs (if they exist)
+            // first check if pelvis exists, if not don't add a sensor. then add lumbar if it exists.
+            if (HasElementWithName(model.GetDofs(), g_PelvisNames[m_Plane]))
+            {
+                m_Pelvis = FindByName(model.GetDofs(), g_PelvisNames[m_Plane]).get();
+                if (HasElementWithName(model.GetDofs(), g_LumbarNames[m_Plane]))
+                    m_Lumbar = FindByName(model.GetDofs(), g_LumbarNames[m_Plane]).get();
+            }
 		}
 
-		scone::Real OrientationSensor::GetValue() const
-		{
-			if ( m_Pelvis )
-				return m_PosGain * ( m_Pelvis->GetPos() + m_Lumbar->GetPos() ) + m_VelGain * ( m_Pelvis->GetVel() + m_Lumbar->GetVel() );
+        scone::Real OrientationSensor::GetValue() const
+        {
+            if (m_Pelvis) {
+                if (m_Lumbar)
+                    return m_PosGain * (m_Pelvis->GetPos() + m_Lumbar->GetPos()) + m_VelGain * (m_Pelvis->GetVel() + m_Lumbar->GetVel());
+                else
+                    return m_PosGain * (m_Pelvis->GetPos()) + m_VelGain * (m_Pelvis->GetVel());
+            }
 			else return 0.0;
 		}
 
