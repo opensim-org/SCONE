@@ -29,7 +29,8 @@ namespace scone
 		stiffness( 0.0 ),
 		total_abs_moment_arm( 0.0 )
 		{
-			ref_length_base = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
+			//ref_length_base = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
+			ref_length_base = 1.0;
 
 			// precompute number of dofs and total moment arm
 			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
@@ -134,20 +135,18 @@ namespace scone
 		void MetaReflexMuscle::UpdateControls()
 		{
 			// length feedback
-			// TODO: include stiffness
 			Real current_length = length_sensor.GetValue( delay );
-			Real ul = length_gain * std::max( 0.0, current_length - ref_length );
+			Real ul = length_gain * ( current_length - ref_length );
 
 			// constant excitation
-			Real uc = std::max( 0.0, constant );
+			Real uc = constant;
 
 			// force feedback
 			Real uf = force_gain * std::max( 0.0, force_sensor.GetValue( delay ) );
 
 			// compute total
 			Real total = ul + uc + uf;
-
-			muscle.AddControlValue( total );
+			muscle.AddControlValue( std::max( 0.0, total ) );
 
 #ifdef DEBUG_MUSCLE
 			if ( muscle.GetName() == DEBUG_MUSCLE )
