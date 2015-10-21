@@ -49,6 +49,8 @@ namespace scone
 
 				bal_pos.Init( balprops, par, model, "P" );
 				bal_neg.Init( balprops, par, model, "N" );
+
+				INIT_PARAM_NAMED( balprops, par, body_angvel_sensor_gain, "KAV", model.balance_sensor_ori_vel_gain );
 			}
 
 			// TODO: move to muscle
