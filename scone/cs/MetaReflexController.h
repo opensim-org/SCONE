@@ -23,6 +23,8 @@ namespace scone
 
 			virtual String GetClassSignature() const override;
 
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
+
 			std::vector< MetaReflexDofUP > m_ReflexDofs;
 			std::vector< MetaReflexMuscleUP > m_ReflexMuscles;
 		};

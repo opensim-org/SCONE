@@ -103,8 +103,8 @@ namespace scone
 			// get balance
 			Vec3 global_balance = model.GetDelayedOrientation();
 
-			BOOST_FOREACH( MetaReflexDofUP& mrmus, m_ReflexDofs)
-				mrmus->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
+			BOOST_FOREACH( MetaReflexDofUP& mrdof, m_ReflexDofs )
+				mrdof->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
 			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
 			{
@@ -134,6 +134,12 @@ namespace scone
 			if ( s > 0 ) str += "S";
 
 			return str;
+		}
+
+		void MetaReflexController::StoreData( Storage< Real >::Frame& frame )
+		{
+			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+				mr->StoreData( frame );
 		}
 	}
 }

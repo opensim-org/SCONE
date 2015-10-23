@@ -27,6 +27,8 @@ namespace scone
 		m_StoreData( false )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
+			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
+			INIT_PARAM( props, par, balance_sensor_ori_vel_gain, 0.0 );
 
 			log::DebugF( "Orientation sensors initial values: %p %p %p", m_OriSensors[ 0 ], m_OriSensors[ 1 ], m_OriSensors[ 2 ] );
 		}
@@ -103,12 +105,12 @@ namespace scone
 
 		void Model::CreateBalanceSensors( const PropNode& props, opt::ParamSet& par )
 		{
-			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
-			INIT_PARAM( props, par, balance_sensor_ori_vel_gain, 0.0 );
+			Real kp = 1;
+			Real kd = balance_sensor_ori_vel_gain;
 
-			m_OriSensors[ 0 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Coronal, 1, balance_sensor_ori_vel_gain );
-			m_OriSensors[ 1 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Transverse, 1, balance_sensor_ori_vel_gain );
-			m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, 1, balance_sensor_ori_vel_gain );
+			m_OriSensors[ 0 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Coronal, kp, kd );
+			m_OriSensors[ 1 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Transverse, kp, kd );
+			m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 		}
 
 		void Model::StoreData( Storage< Real >::Frame& frame )
