@@ -12,7 +12,7 @@
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
 //#define INFO_MUSCLE "glut_max_l"
-#define DEBUG_MUSCLE "rect_fem_l"
+//#define DEBUG_MUSCLE "rect_fem_l"
 
 namespace scone
 {
