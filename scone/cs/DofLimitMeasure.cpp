@@ -17,9 +17,7 @@ namespace scone
 				m_Limits.push_back( Limit( *it->second, model ) );
 		}
 
-		DofLimitMeasure::~DofLimitMeasure()
-		{
-		}
+		DofLimitMeasure::~DofLimitMeasure() {}
 
 		DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
 		dof( *FindByName( model.GetDofs(), props.GetStr( "dof" ) ) ),
@@ -27,7 +25,10 @@ namespace scone
 		{
 			range.min = Degree( props.GetReal( "min_deg", 0.0 ) );
 			range.max = Degree( props.GetReal( "max_deg", 0.0 ) );
+			velocity_range.min = Degree( props.GetReal( "min_deg_s", 0.0 ) );
+			velocity_range.max = Degree( props.GetReal( "max_deg_s", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
+			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_velocity_penalty, 0.0 );
 		}
@@ -42,6 +43,12 @@ namespace scone
 				{
 					double rp = l.squared_range_penalty * GetSquared( l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ) );
 					l.penalty.AddSample( timestamp, rp );
+				}
+
+				if ( l.squared_velocity_range_penalty > 0.0 )
+				{
+					double vrp = l.squared_velocity_range_penalty* GetSquared( l.range.GetRangeViolation( Radian( l.dof.GetVel() ) ) );
+					l.penalty.AddSample( timestamp, vrp );
 				}
 
 				if ( l.squared_force_penalty > 0.0 )

@@ -31,8 +31,10 @@ namespace scone
 				Limit( const PropNode& props, sim::Model& model );
 				sim::Dof& dof;
 				Range< Degree > range;
+				Range< Degree > velocity_range;
 				Real squared_range_penalty;
 				Real squared_force_penalty;
+				Real squared_velocity_range_penalty;
 				Real abs_velocity_penalty;
 				Statistic<> penalty;
 			};
