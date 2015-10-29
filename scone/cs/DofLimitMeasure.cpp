@@ -29,8 +29,8 @@ namespace scone
 			velocity_range.max = Degree( props.GetReal( "max_deg_s", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
+			INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
-			INIT_PROPERTY( props, abs_velocity_penalty, 0.0 );
 		}
 
 		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
@@ -45,22 +45,18 @@ namespace scone
 					l.penalty.AddSample( timestamp, rp );
 				}
 
-				if ( l.squared_velocity_range_penalty > 0.0 )
+				if ( l.squared_velocity_range_penalty > 0 || l.abs_velocity_range_penalty > 0 )
 				{
-					double vrp = l.squared_velocity_range_penalty* GetSquared( l.range.GetRangeViolation( Radian( l.dof.GetVel() ) ) );
-					l.penalty.AddSample( timestamp, vrp );
+					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetVel() ) );
+					double vrps = l.squared_velocity_range_penalty * GetSquared( range_violation );
+					double vrpa = l.abs_velocity_range_penalty * abs( range_violation );
+					l.penalty.AddSample( timestamp, vrps + vrpa );
 				}
 
 				if ( l.squared_force_penalty > 0.0 )
 				{
 					double fp = l.squared_force_penalty * GetSquared( l.dof.GetLimitForce() );
 					l.penalty.AddSample( timestamp, fp );
-				}
-
-				if ( l.abs_velocity_penalty > 0.0 )
-				{
-					double vp = l.abs_velocity_penalty * abs( l.dof.GetVel() );
-					l.penalty.AddSample( timestamp, vp );
 				}
 			}
 
