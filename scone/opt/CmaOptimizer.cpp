@@ -81,6 +81,7 @@ namespace scone
 			}
 
 			// init random seed
+            if (random_seed == 0) random_seed = time(NULL);
 			Rng::seed( random_seed );
 
 			// initialize settings from file
