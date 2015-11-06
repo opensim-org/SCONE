@@ -28,7 +28,6 @@ namespace scone
 			virtual Real GetMaxIsometricForce() const = 0;
 			virtual Real GetOptimalFiberLength() const = 0;
 			virtual Real GetTendonSlackLength() const = 0;
-			//virtual Real GetMass() const = 0;
             virtual Real GetMass( Real specific_tension, Real muscle_density) const = 0;
 
 			virtual Real GetForce() const = 0;
