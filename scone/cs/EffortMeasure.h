@@ -32,6 +32,8 @@ namespace scone
 			Statistic< double > m_Energy;
 			Vec3 m_InitComPos;
 			PropNode m_Report;
+            Real specific_tension;
+            Real muscle_density;
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;
