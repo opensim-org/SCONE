@@ -1,12 +1,7 @@
 syntax: glob
 bin/
 intermediate/
-build/vc*/GeneratedFiles/
-build/vc*/*.suo
-build/vc*/*.opensdf
-build/vc*/*.sdf
-build/vc*/*.user
-build/vc*/ipch/
+build/
 *.log
 models/test/*
 config/backup/*
