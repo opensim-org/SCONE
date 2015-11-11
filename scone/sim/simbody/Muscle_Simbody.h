@@ -30,7 +30,7 @@ namespace scone
 			virtual Real GetMaxIsometricForce() const override;
 			virtual Real GetOptimalFiberLength() const override;
 			virtual Real GetTendonSlackLength() const override;
-			virtual Real GetMass() const override;
+			virtual Real GetMass( Real specific_tension, Real muscle_density) const override;
 			
 			// current force / length / velocity
 			virtual Real GetForce() const override;
