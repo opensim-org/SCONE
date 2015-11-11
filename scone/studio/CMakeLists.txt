@@ -34,9 +34,9 @@ if(${Qt5Widgets_FOUND})
         foreach(qt5lib ${QT5_LIBS})
             add_custom_command(TARGET scone-studio POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy ${Qt5Widgets_DIR}/../../../bin/${qt5lib}.dll
-                                             ${CMAKE_BINARY_DIR}/$<CONFIGURATION>
+                                             ${EXECUTABLE_OUTPUT_PATH}/$<CONFIGURATION>
                 COMMAND ${CMAKE_COMMAND} -E copy ${Qt5Widgets_DIR}/../../../bin/${qt5lib}d.dll
-                                             ${CMAKE_BINARY_DIR}/$<CONFIGURATION>
+                                             ${EXECUTABLE_OUTPUT_PATH}/$<CONFIGURATION>
                 COMMENT "Copying Qt library ${qt5lib} to binary directory." VERBATIM
                                              )
         endforeach()
