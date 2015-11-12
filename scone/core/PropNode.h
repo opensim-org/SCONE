@@ -206,11 +206,6 @@ namespace scone
 			return value;
 		}
 
-		template<>
-		String GetInternalValue< String >() const {
-			return m_Value;
-		}
-
 		template< typename T >
 		void SetInternalValue( T& value ) {
 			std::ostringstream ss;
@@ -218,6 +213,12 @@ namespace scone
 			m_Value = ss.str();
 		}
 	};
+
+	template<>
+	String PropNode::GetInternalValue< String >() const {
+		return m_Value;
+	}
+
 
 	// shortcut file readers for lazy people
 	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );

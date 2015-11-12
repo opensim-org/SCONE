@@ -4,6 +4,8 @@
 #include "math.h"
 #include "Vec3.h"
 
+#include <string.h>
+
 namespace scone
 {
 	enum EulerOrder

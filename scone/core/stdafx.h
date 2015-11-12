@@ -14,6 +14,11 @@
 
 #include <windows.h>
 
+#else
+
+#include <stdarg.h>
+#include <stdio.h>
+
 #endif
 
 #include <string>

@@ -34,14 +34,12 @@ namespace scone
 		return str.str();
 	}
 
-	/// convert any streamable type to string
+	/// convert any string to streamable type
 	template< typename T >
 	T FromString( const String& str )
 	{
-		T value;
 		std::ostringstream ostr( str );
-		str << value;
-		return str.str();
+		return ostr;
 	}
 
 	/// Get clean class, removes everything before "::" (if present)
