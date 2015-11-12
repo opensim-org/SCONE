@@ -69,7 +69,7 @@ set(SYSTEM_FILES
 set(TOOLS_FILES
 	SimulationObjective.cpp
 	SimulationObjective.h
-	tools.h
+	Tools.h
 	)
 add_library(scone-cs # Name of the library file.
     SHARED # versus static.

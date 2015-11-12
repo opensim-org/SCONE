@@ -49,8 +49,20 @@ include_directories(${Shark_INCLUDE_DIRS})
 # ---------------
 # Must compile with C++11 with gcc/clang.
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
-        ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
+   ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
+    if(APPLE)
+        if(XCODE)
+            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
+            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+        else()
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+            if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+            endif()
+        endif()
+    else()
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    endif()
 endif()
 
 
