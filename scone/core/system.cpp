@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "system.h"
 
-#include <shlobj.h>
 #include <fstream>
 #include <boost/thread.hpp>
 #include <boost/filesystem/path.hpp>
+
+#ifdef _MSC_VER
+#include <shlobj.h>
+#endif
 
 namespace scone
 {
@@ -12,6 +15,7 @@ namespace scone
 	PropNode g_GlobalSettings;
 	String g_Version;
 
+#ifdef _MSC_VER
 	String GetLocalAppDataFolder()
 	{
 		// get the string
@@ -39,22 +43,6 @@ namespace scone
 		return folder.parent_path().string();
 	}
 
-	const PropNode& GetSconeSettings()
-	{
-		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
-
-		// lazy initialization
-		if ( g_GlobalSettings.IsEmpty() )
-			g_GlobalSettings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
-
-		return g_GlobalSettings;
-	}
-
-	CORE_API String GetSconeFolder( const String& folder )
-	{
-		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
-	}
-
 	CORE_API String GetApplicationVersion()
 	{
 		if ( g_Version.empty() )
@@ -67,4 +55,25 @@ namespace scone
 
 		return g_Version;
 	}
+#endif
+
+	const PropNode& GetSconeSettings()
+	{
+		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+
+		// lazy initialization
+		if ( g_GlobalSettings.IsEmpty() )
+#ifdef _MSC_VER
+			g_GlobalSettings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
+#else
+            g_GlobalSettings.FromIniFile( "~/.scone");
+#endif
+		return g_GlobalSettings;
+	}
+
+	CORE_API String GetSconeFolder( const String& folder )
+	{
+		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
+	}
+
 }
