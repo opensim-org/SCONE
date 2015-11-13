@@ -7,8 +7,12 @@
 #pragma comment( lib, "shlwapi.lib" )
 #endif
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <sstream>
+
 using std::cout;
 using std::endl;
+using namespace boost::posix_time;
 
 namespace scone
 {
@@ -27,7 +31,7 @@ namespace scone
 	
 	std::string GetDateTimeAsString()
 	{
-		__time64_t long_time;
+/*		__time64_t long_time;
 		_time64(&long_time);
 		struct tm t;
 		_localtime64_s(&t, &long_time);
@@ -35,8 +39,14 @@ namespace scone
 	
 		char buf[100];
 		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d", t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min);
-	
-		return buf;
+*/
+        time_facet *facet = new time_facet("%m%d.%H%M");
+        static std::locale loc(std::cout.getloc(), facet);
+        std::stringstream ss;
+        ss.imbue(loc);
+        ss << second_clock::local_time();
+        	
+		return ss.str();
 	}
 
 	String CORE_API GetCleanVarName( const String& str )
