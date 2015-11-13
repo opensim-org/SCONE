@@ -15,7 +15,7 @@
 
 #else
 
-#define CORE_API
+#define OPT_API
 
 #endif
 
