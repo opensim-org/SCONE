@@ -114,7 +114,7 @@ namespace scone
 
 		void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority )
 		{
-			::SetThreadPriority( ::GetCurrentThread(), priority );
+			Optimizer::SetThreadPriority( priority );
 			*fitness = obj->Evaluate( par );
 		}
 
@@ -173,5 +173,14 @@ namespace scone
 				}
 			}
 		}
+
+        void Optimizer::SetThreadPriority( int priority )
+        {
+#ifdef _MSC_VER
+            ::SetThreadPriority( ::GetCurrentThread(), priority );
+#else
+            pthread_setschedprio( pthread_self(), priority );
+#endif
+        }
 	}
 }

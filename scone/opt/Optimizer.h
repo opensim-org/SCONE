@@ -48,6 +48,7 @@ namespace scone
 			std::vector< double > EvaluateMultiThreaded( std::vector< ParamSet >& parsets );
 			static void EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority );
 			void InitOutputFolder();
+            static void SetThreadPriority( int priority );
 
 			String m_Name;
 			String m_OutputFolder;

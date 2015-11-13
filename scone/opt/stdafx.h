@@ -14,6 +14,10 @@
 
 #include <windows.h>
 
+#else
+
+#include <pthread.h>
+
 #endif
 
 #include <string>
