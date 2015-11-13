@@ -4,7 +4,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
 
-#ifdef _MSC_VER
+//#ifdef _MSC_VER
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
 if ( LEVEL >= g_LogLevel ) \
@@ -16,8 +16,8 @@ if ( LEVEL >= g_LogLevel ) \
 		va_end( args ); \
 }
 
-#else
-
+//#else
+/*
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
 if ( LEVEL >= g_LogLevel ) \
 { \
@@ -27,8 +27,8 @@ if ( LEVEL >= g_LogLevel ) \
 		LogMessageNoCheck( LEVEL, _buf_ ); \
 		va_end( args ); \
 }
-
-#endif
+*/
+//#endif
 
 namespace scone
 {
