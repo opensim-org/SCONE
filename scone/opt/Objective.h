@@ -12,7 +12,7 @@ namespace scone
 		class OPT_API Objective : public HasSignature
 		{
 		public:
-			Objective( const PropNode& props, ParamSet& par );
+			Objective( const PropNode& props, const  ParamSet& par );
 			virtual ~Objective();
 
 			// get all parameters in this objective

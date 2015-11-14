@@ -14,7 +14,7 @@ namespace scone
 
 		static ObjectiveFactory g_ObjectiveFactory;
 		OPT_API ObjectiveFactory& GetObjectiveFactory() { return g_ObjectiveFactory; }
-		OPT_API ObjectiveUP CreateObjective( const PropNode& props, ParamSet& par ) {
+		OPT_API ObjectiveUP CreateObjective( const PropNode& props, const ParamSet& par ) {
 			return ObjectiveUP( GetObjectiveFactory().Create( props )( props, par ) );
 		}
 	}
