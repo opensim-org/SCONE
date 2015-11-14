@@ -3,10 +3,18 @@
 #include <memory>
 #include "../core/core.h"
 
+#if defined(_MSC_VER)
+
 #ifdef SCONE_SIM_EXPORTS
 #define SCONE_SIM_API __declspec(dllexport)
 #else
 #define SCONE_SIM_API __declspec(dllimport)
+#endif
+
+#else
+
+#define SCONE_SIM_API
+
 #endif
 
 namespace scone
