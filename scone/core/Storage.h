@@ -45,9 +45,9 @@ namespace scone
 			}
 
 		private:
-			typename Storage< ValueT, TimeT >& m_Store;
-			typename TimeT m_Time;
-			typename std::vector< ValueT > m_Values;
+			Storage< ValueT, TimeT >& m_Store;
+			TimeT m_Time;
+			std::vector< ValueT > m_Values;
 		};
 		typedef std::unique_ptr< Frame > FrameUP;
 

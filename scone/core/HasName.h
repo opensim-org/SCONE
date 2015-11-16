@@ -2,13 +2,16 @@
 
 #include "core.h"
 #include "Exception.h"
+#include "tools.h"
+
+#include <algorithm>
 
 namespace scone
 {
 	class HasName
 	{
 	public:
-		virtual ~HasName() = 0 {}
+		virtual ~HasName();
 		virtual const String& GetName() const = 0;
 	};
 

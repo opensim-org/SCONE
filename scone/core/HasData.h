@@ -7,7 +7,7 @@ namespace scone
 	class HasData
 	{
 	public:
-		virtual ~HasData() = 0 {}
+		virtual ~HasData();
 		virtual void StoreData( Storage< Real >::Frame& frame ) = 0;
 	};
 }
