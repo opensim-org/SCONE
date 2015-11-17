@@ -3,6 +3,9 @@
 #include <map>
 #include <string>
 #include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
+
+#include "Exception.h"
 
 namespace scone
 {

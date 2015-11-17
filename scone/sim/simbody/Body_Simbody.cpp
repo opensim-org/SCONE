@@ -46,7 +46,7 @@ namespace scone
 		{
 			// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 			auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
-			auto& quat = mb.getBodyRotation( m_Model.GetTkState() ).convertRotationToQuaternion();
+			const auto& quat = mb.getBodyRotation( m_Model.GetTkState() ).convertRotationToQuaternion();
 			Quat q1( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
 
 			// OpenSim: can this be done more efficient?

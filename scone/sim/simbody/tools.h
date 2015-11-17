@@ -9,15 +9,8 @@
 namespace scone
 {
 	// opensim model resource cache
-	template <> OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Model( name );
-	}
-
-	template <> OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Storage( name );
-	}
+	template <> OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name );
+	template <> OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name );
 
 	namespace sim
 	{

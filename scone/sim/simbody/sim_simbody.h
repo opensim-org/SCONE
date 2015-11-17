@@ -2,10 +2,18 @@
 
 #include "../../core/core.h"
 
+#if defined(_MSC_VER)
+
 #ifdef SCONE_SIM_SIMBODY_EXPORTS
 #define SCONE_SIM_SIMBODY_API __declspec(dllexport)
 #else
 #define SCONE_SIM_SIMBODY_API __declspec(dllimport)
+#endif
+
+#else
+
+#define SCONE_SIM_SIMBODY_API
+
 #endif
 
 namespace scone
