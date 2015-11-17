@@ -161,7 +161,11 @@ find_path(OPENSIM_INCLUDE_DIR
 
 # This change is necessary for Simbody 3.4 and beyond, and is incompatible
 # with Simbody 3.3 and below.
-set(OPENSIM_SIMBODY_INCLUDE_RELPATH "include")
+if(WIN32)
+    set(OPENSIM_SIMBODY_INCLUDE_RELPATH "include")
+else()
+    set(OPENSIM_SIMBODY_INCLUDE_RELPATH "simbody")
+endif()
 
 set(OPENSIMSIMBODY_INCLUDE_DIR
     ${OPENSIM_INCLUDE_DIR}
