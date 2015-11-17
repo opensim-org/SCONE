@@ -2,10 +2,18 @@
 
 #include "../core/core.h"
 
+#if defined(_MSC_VER)
+
 #ifdef CS_EXPORTS
 #define CS_API __declspec(dllexport)
 #else
 #define CS_API __declspec(dllimport)
+#endif
+
+#else
+
+#define CS_API
+
 #endif
 
 // TODO: do this in a nicer way (i.e. push/pop warnings)

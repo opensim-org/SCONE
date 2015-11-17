@@ -3,7 +3,7 @@
 #include "MuscleReflex.h"
 #include "../sim/Muscle.h"
 #include "../sim/Area.h"
-#include "Tools.h"
+#include "tools.h"
 #include "../sim/Dof.h"
 
 //#define DEBUG_MUSCLE "vasti_r"

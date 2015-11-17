@@ -11,7 +11,7 @@
 #include "../sim/Model.h"
 #include "../sim/Muscle.h"
 
-#include "Tools.h"
+#include "tools.h"
 #include "Factories.h"
 #include "../sim/Area.h"
 #include "../core/Profiler.h"

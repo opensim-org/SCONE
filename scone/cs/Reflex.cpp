@@ -3,7 +3,7 @@
 #include "../core/InitFromPropNode.h"
 #include "../sim/Actuator.h"
 #include "../sim/Area.h"
-#include "Tools.h"
+#include "tools.h"
 
 namespace scone
 {
