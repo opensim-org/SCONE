@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace opt
 	{
-		Objective::Objective( const PropNode& props, const ParamSet& par ) :
+		Objective::Objective( const PropNode& props, ParamSet& par ) :
 		HasSignature( props ),
 		debug_idx( -1 )
 		{
