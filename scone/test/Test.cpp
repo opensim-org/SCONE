@@ -1,6 +1,11 @@
 #include "stdafx.h"
 
+#ifdef _MSC_VER
+
 #define SCONE_ENABLE_PROFILING
+#include "../core/Profiler.h"
+
+#endif
 
 #include "Test.h"
 #include "../cs/cs.h"
@@ -12,7 +17,6 @@
 #include <boost/filesystem.hpp>
 #include "../opt/Factories.h"
 #include "../cs/SimulationObjective.h"
-#include "../core/Profiler.h"
 #include "../core/Delayer.h"
 #include "../core/system.h"
 #include "boost/foreach.hpp"
@@ -39,7 +43,9 @@ namespace scone
 
 	void ModelTest()
 	{
+#ifdef SCONE_ENABLE_PROFILING
 		SCONE_PROFILE_SCOPE;
+#endif
 		const double simulation_time = 0.2;
 
 		cs::RegisterFactoryTypes();
@@ -112,9 +118,9 @@ namespace scone
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
-
+#ifdef SCONE_ENABLE_PROFILING
 		Profiler::GetGlobalInstance().Reset();
-
+#endif
 		double result;
 		Timer timer;
 		result = so.Evaluate();
@@ -203,8 +209,9 @@ namespace scone
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
-
+#ifdef SCONE_ENABLE_PROFILING
 		Profiler::GetGlobalInstance().Reset();
+#endif
 		Timer timer;
 		double result;
 
@@ -222,8 +229,10 @@ namespace scone
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
+#ifdef SCONE_ENABLE_PROFILING
 		cout << "Profile report:" << endl;
 		cout << Profiler::GetGlobalInstance().GetReport();
+#endif
 		cout << "All done!" << endl;
 	}
 
@@ -243,8 +252,10 @@ namespace scone
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
 
+#ifdef SCONE_ENABLE_PROFILING
 		// reset profiler
 		Profiler::GetGlobalInstance().Reset();
+#endif
 
 		Timer timer;
 		double result = so.Evaluate();
@@ -260,8 +271,10 @@ namespace scone
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
+#ifdef SCONE_ENABLE_PROFILING
 		cout << "Profile report:" << endl;
 		cout << Profiler::GetGlobalInstance().GetReport();
+#endif
 		cout << "All done!" << endl;
 	}
 
