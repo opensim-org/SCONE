@@ -282,7 +282,7 @@ namespace scone
 	{
 		cs::RegisterFactoryTypes();
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.Set( "Model.model_file", "gait2354.osim" );
+		props.Set( "Model.model_file", "f2354.osim" );
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
@@ -309,7 +309,7 @@ namespace scone
 	{
 		cs::RegisterFactoryTypes();
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.Set( "Model.model_file", "gait2354.osim" );
+		props.Set( "Model.model_file", "f2354.osim" );
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
