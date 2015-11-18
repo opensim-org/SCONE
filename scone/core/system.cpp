@@ -33,7 +33,9 @@ namespace scone
 		// convert to String and return
 		return String( mbsLocalAppData );
 #else
-        return "~/.config";
+        String homeDir = std::getenv("HOME");
+        String configDir = homeDir + "/.config";
+        return configDir;
 #endif
 	}
 
