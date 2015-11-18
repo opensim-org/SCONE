@@ -15,9 +15,9 @@ namespace scone
 	PropNode g_GlobalSettings;
 	String g_Version;
 
-#ifdef _MSC_VER
 	String GetLocalAppDataFolder()
 	{
+#ifdef _MSC_VER
 		// get the string
 		wchar_t* wcsLocalAppData = 0;
 		SHGetKnownFolderPath( FOLDERID_LocalAppData, 0, NULL, &wcsLocalAppData );
@@ -32,15 +32,22 @@ namespace scone
 
 		// convert to String and return
 		return String( mbsLocalAppData );
+#else
+        return "~/.config";
+#endif
 	}
 
 	CORE_API String GetApplicationFolder()
 	{
+#ifdef _MSC_VER
 		char buf[ 1024 ];
 		GetModuleFileName( 0, buf, sizeof( buf ) );
 
 		boost::filesystem::path folder( buf );
 		return folder.parent_path().string();
+#else
+        return GetLocalAppDataFolder();
+#endif
 	}
 
 	CORE_API String GetApplicationVersion()
@@ -55,7 +62,6 @@ namespace scone
 
 		return g_Version;
 	}
-#endif
 
 	const PropNode& GetSconeSettings()
 	{
@@ -63,11 +69,8 @@ namespace scone
 
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
-#ifdef _MSC_VER
-			g_GlobalSettings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
-#else
-            g_GlobalSettings.FromIniFile( "~/.scone");
-#endif
+        	g_GlobalSettings.FromIniFile( GetLocalAppDataFolder() + "/Scone/settings.ini" );
+
 		return g_GlobalSettings;
 	}
 

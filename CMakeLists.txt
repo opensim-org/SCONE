@@ -20,7 +20,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/build/cmake")
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
-	filesystem system thread date_time chrono)
+	filesystem system thread date_time chrono timer)
 
 
 # This uses the FindOpenSim.cmake file in build/cmake.

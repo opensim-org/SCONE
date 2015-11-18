@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 
-#include <conio.h>
+//#include <conio.h>
 #include "../core/Log.h"
 #include "../core/system.h"
 #include "Test.h"
