@@ -13,7 +13,7 @@
 	<Objective type="SimulationObjective">
 		<max_duration>3.0</max_duration>
 		<Model type="Simbody">
-			<model_file>models/jump1024.osim</model_file>
+			<model_file>f1024.osim</model_file>
 			<integration_accuracy>0.0001</integration_accuracy>
 			<Controllers>
 				<Controller type="FeedForwardController">
