@@ -60,7 +60,6 @@ namespace scone
         String str = String(cleanType);
         free(cleanType);
 #endif
-        std::cout << str << " ";
 		size_t pos = str.find_last_of(": ");
 		if (pos != std::string::npos)
 			return str.substr(pos + 1);
