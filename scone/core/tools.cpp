@@ -5,6 +5,8 @@
 #ifdef WIN32
 #include <shlwapi.h>
 #pragma comment( lib, "shlwapi.lib" )
+#else
+#include <fnmatch.h>
 #endif
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -77,12 +79,24 @@ namespace scone
 		else return str.substr( 0, n );
 	}
 
-	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns )
+    // TODO: Could use regex to remove platform dependencies
+    // Currently assumes one delimeter char. Can extend with boost if needed
+	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
 	{
 #ifdef WIN32
 		return PathMatchSpecEx( str.c_str(), pattern.c_str(), multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
 #else
-		SCONE_THROW_NOT_IMPLEMENTED;
+        std::vector<std::string> tokens;
+        std::stringstream ss(pattern);
+        std::string token;
+        while ( std::getline(ss, token, delim) ) {
+            tokens.push_back(token);
+        }
+        for ( auto thisPattern : tokens ) {
+            bool isMatch = fnmatch(thisPattern.c_str(), str.c_str(), FNM_NOESCAPE) == 0;
+            if ( isMatch ) return isMatch;
+        }
+	    return false;	
 #endif
 	}
 

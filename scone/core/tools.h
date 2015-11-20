@@ -28,7 +28,7 @@ namespace scone
 	String CORE_API GetFileNameNoExt( const String& str );
 
 	/// Match string patten
-	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true );
+	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true, char delim = ';' );
 
 	/// convert any streamable type to string
 	template< typename T >
