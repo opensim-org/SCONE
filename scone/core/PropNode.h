@@ -214,12 +214,10 @@ namespace scone
 			m_Value = ss.str();
 		}
 	};
-/*
+
  	template<>
-    String PropNode::GetInternalValue< String >() const {
-  		return m_Value;
-   	}
-*/
+    String PropNode::GetInternalValue< String >() const;
+
 
 	// shortcut file readers for lazy people
 	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
