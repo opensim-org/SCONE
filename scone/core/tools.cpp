@@ -44,7 +44,7 @@ namespace scone
 
 	std::string GetDateTimeExactAsString()
 	{
-        time_facet *facet = new time_facet("%m%d.%H%M%s");
+        time_facet *facet = new time_facet("%m%d.%H%M%S");
         static std::locale loc(std::cout.getloc(), facet);
         std::stringstream ss;
         ss.imbue(loc);
