@@ -4,15 +4,15 @@
 
 namespace scone
 {
-	template <> OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Model( name );
-	}
+	//OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
+	//{
+	//	return new OpenSim::Model( name );
+	//}
 
-	template <> OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Storage( name );
-	}
+	//OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
+	//{
+	//	return new OpenSim::Storage( name );
+	//}
 
 	namespace sim
 	{
