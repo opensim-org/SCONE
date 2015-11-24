@@ -51,6 +51,26 @@ namespace scone
 		return ss.str();
 	}
 
+	std::string GetDateTimeExactAsString()
+	{
+/*		__time64_t long_time;
+		_time64(&long_time);
+		struct tm t;
+		_localtime64_s(&t, &long_time);
+        
+	
+		char buf[100];
+		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d", t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min);
+*/
+        time_facet *facet = new time_facet("%m%d.%H%M%s");
+        static std::locale loc(std::cout.getloc(), facet);
+        std::stringstream ss;
+        ss.imbue(loc);
+        ss << second_clock::local_time();
+        	
+		return ss.str();
+	}
+
 	String CORE_API GetCleanVarName( const String& str )
 	{
 		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;

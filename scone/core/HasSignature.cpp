@@ -15,6 +15,14 @@ namespace scone
 		if ( signature_postfix == "DATE_TIME" )
 			signature_postfix = GetDateTimeAsString();
 
+        // use DATE_TIME_EXACT to add fractional seconds. meant for use when
+        // there may be folder conflicts (i.e. running many in parallel on 
+        // a cluster)
+        if ( signature_prefix == "DATE_TIME_EXACT" )
+            signature_prefix = GetDateTimeExactAsString();
+        if ( signature_postfix == "DATE_TIME_EXACT" )
+            signature_postfix = GetDateTimeExactAsString();
+
 		// add dots if they aren't there
 		if ( !signature_postfix.empty() && signature_postfix.find_first_of( "._-" ) != 0 )
 			signature_postfix = "." + signature_postfix;

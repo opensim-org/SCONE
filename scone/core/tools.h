@@ -18,6 +18,9 @@ namespace scone
 	/// Get formatted date/time string
 	String CORE_API GetDateTimeAsString();
 
+    /// Get formatted date/time with exact fractional seconds as string
+    String CORE_API GetDateTimeExactAsString();
+
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
 
