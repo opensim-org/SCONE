@@ -215,8 +215,10 @@ namespace scone
 		}
 	};
 
- 	template<>
-    String PropNode::GetInternalValue< String >() const;
+ 	template<> inline
+    String PropNode::GetInternalValue< String >() const {
+        return m_Value;
+    }
 
 
 	// shortcut file readers for lazy people

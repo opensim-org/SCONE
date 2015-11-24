@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	class HasName
+	class CORE_API HasName
 	{
 	public:
 		virtual ~HasName();

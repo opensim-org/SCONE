@@ -482,9 +482,9 @@ namespace scone
 		return pn;
 	}
 
- 	template<>
-    String PropNode::GetInternalValue< String >() const {
-  		return m_Value;
-   	}
+ 	//template<>
+  //  String PropNode::GetInternalValue< String >() const {
+  //		return m_Value;
+  // 	}
     
 }

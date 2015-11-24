@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	class HasData
+	class CORE_API HasData
 	{
 	public:
 		virtual ~HasData();
