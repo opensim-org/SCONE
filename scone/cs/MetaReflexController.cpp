@@ -82,7 +82,7 @@ namespace scone
 				if ( GetSide( mus->GetName() ) == area.side )
 				{
 					MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this, area ) );
-					if ( mrm->dof_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
+					if ( mrm->dof_infos.size() > 0 || mrm->vm_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
 						m_ReflexMuscles.push_back( std::move( mrm ) );
 				}
 			}

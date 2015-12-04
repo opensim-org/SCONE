@@ -95,6 +95,19 @@ namespace scone
 			delay = 0;
 
 			// compute muscle feedback parameters
+			for ( const VirtualMuscleInfo& vmi : vm_infos )
+			{
+				length_gain += vmi.similarity * vmi.vm.mrp.length_gain;
+				force_gain += vmi.similarity * vmi.vm.mrp.force_gain;
+				constant += vmi.similarity * vmi.vm.mrp.constant;
+				constant += vmi.similarity * vmi.vm.bal_mrp.constant * vmi.vm.GetLocalBalance();
+
+				// delay, average of all VMs
+				// TODO: move away from here!
+				delay += vmi.similarity * vmi.vm.delay / total_vm_similarity; // TODO: compute per muscle
+			}
+
+			// compute muscle feedback parameters
 			BOOST_FOREACH( const DofInfo& di, dof_infos )
 			{
 				// TODO: store these in DofInfo
@@ -111,10 +124,6 @@ namespace scone
 
 				constant += di.w * dof_par.constant;
 				constant += di.w * bal_par.constant * di.dof.GetLocalBalance();
-
-				// stiffness
-				//if ( di.dof.dof_par.stiffness > 0.0 )
-				//	mus_par.stiffness += ComputeStiffnessExcitation( *di.dof );
 
 				// delay, average of all MetaMuscleDofs
 				// TODO: move away from here!

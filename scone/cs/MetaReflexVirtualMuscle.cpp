@@ -38,7 +38,7 @@ namespace scone
 			opt::ScopedParamSetPrefixer prefixer( par, name + "." );
 
 			// init reflex parameters
-			mrpar.Init( props, par, model );
+			mrp.Init( props, par, model );
 
 			// init balance parameters
 			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
@@ -51,7 +51,7 @@ namespace scone
 				body_ori_sensor = &model.AcquireDelayedSensor< sim::BodyOriSensor >( *body );
 				body_angvel_sensor = &model.AcquireDelayedSensor< sim::BodyAngVelSensor >( *body );
 
-				bal_mrpar.Init( balprops, par, model );
+				bal_mrp.Init( balprops, par, model );
 
 				INIT_PARAM_NAMED( balprops, par, body_angvel_sensor_gain, "KAV", model.balance_sensor_ori_vel_gain );
 			}

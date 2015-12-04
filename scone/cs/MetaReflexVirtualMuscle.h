@@ -19,10 +19,13 @@ namespace scone
 			MetaReflexVirtualMuscle( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~MetaReflexVirtualMuscle() {}
 
+			Real GetLocalBalance() { return 0.0; } // TODO!
+
 			String name;
 
-			MetaReflexParams mrpar;
-			MetaReflexParams bal_mrpar;
+			MetaReflexParams mrp;
+			MetaReflexParams bal_mrp;
+			Real delay;
 
 			Real GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm );
 
@@ -34,7 +37,6 @@ namespace scone
 			};
 			std::vector< DofInfo > dof_infos;
 
-			Real delay;
 			Real local_balance;
 			Real body_angvel_sensor_gain;
 			sim::SensorDelayAdapter* body_ori_sensor;
