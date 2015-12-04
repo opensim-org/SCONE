@@ -76,7 +76,7 @@ namespace scone
 				{
 					vm_infos.push_back( VirtualMuscleInfo{ *vm, s } );
 					total_vm_similarity += s;
-					log::TraceF( "%-20s%-20ssim=%.3f tot=%.3f", muscle.GetName().c_str(), vm->name.c_str(), s, total_vm_similarity );
+					log::TraceF( "%-20s%-32ssim=%.3f tot=%.3f", muscle.GetName().c_str(), vm->name.c_str(), s, total_vm_similarity );
 				}
 			}
 		}

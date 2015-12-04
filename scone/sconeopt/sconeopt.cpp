@@ -13,8 +13,10 @@ int main(int argc, char* argv[])
 {
 	try
 	{
-		// set log level
+		// set log level to trace in debug mode
+#ifdef _DEBUG
 		log::SetLevel( log::TraceLevel );
+#endif
 
 		// register all types
 		opt::RegisterFactoryTypes();

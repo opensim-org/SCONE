@@ -62,12 +62,18 @@ namespace scone
 
 		scone::Real MetaReflexVirtualMuscle::GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm )
 		{
-			Real similarity = 0;
+			// check if this muscle has a moment arm for all dofs
 			for ( auto& di : dof_infos )
 			{
-				if ( mus.HasMomentArm( di.dof ) )
-					similarity += di.w * ( mus.GetMomentArm( di.dof ) / tot_abs_moment_arm );
+				if ( !mus.HasMomentArm( di.dof ) )
+					return 0;
 			}
+
+			// caclulate simularity
+			Real similarity = 0;
+			for ( auto& di : dof_infos )
+				similarity += di.w * ( mus.GetMomentArm( di.dof ) / tot_abs_moment_arm );
+
 			return similarity;
 		}
 	}
