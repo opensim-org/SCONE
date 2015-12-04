@@ -6,6 +6,7 @@
 #include "../sim/Muscle.h"
 #include <vector>
 #include "MetaReflexParams.h"
+#include "MetaReflexVirtualMuscle.h"
 
 namespace scone
 {
@@ -46,7 +47,17 @@ namespace scone
 				Real max_moment;
 				Real lengthening_speed;
 			};
+
+			struct VirtualMuscleInfo
+			{
+				MetaReflexVirtualMuscle& vm;
+				Real similarity;
+			};
+			Real total_vm_similarity;
+
 			std::vector< DofInfo > dof_infos;
+			std::vector< VirtualMuscleInfo > vm_infos;
+
 		private:
 			Real ComputeStiffnessExcitation( MetaReflexDof& dof );
 		};

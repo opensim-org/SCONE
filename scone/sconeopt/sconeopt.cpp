@@ -13,6 +13,9 @@ int main(int argc, char* argv[])
 {
 	try
 	{
+		// set log level
+		log::SetLevel( log::TraceLevel );
+
 		// register all types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();

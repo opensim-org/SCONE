@@ -93,6 +93,7 @@ namespace scone
 					}
 				}
 			}
+			log::Trace( "Controller created" );
 		}
 
 		GaitStateController::~GaitStateController()

@@ -29,5 +29,6 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexController );
 		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexDof );
 		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexMuscle );
+		SCONE_DECLARE_CLASS_AND_PTR( MetaReflexVirtualMuscle );
 	}
 }

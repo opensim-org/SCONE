@@ -27,7 +27,8 @@ namespace scone
 		force_gain( 0.0 ),
 		delay( 0.0 ),
 		stiffness( 0.0 ),
-		total_abs_moment_arm( 0.0 )
+		total_abs_moment_arm( 0.0 ),
+		total_vm_similarity( 0.0 )
 		{
 			//ref_length_base = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
 			ref_length_base = 1.0;
@@ -58,6 +59,25 @@ namespace scone
 				di.abs_w = abs( di.w );
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
+			}
+
+			// virtual muscles
+			Real summed_muscle_moment_arms = 0;
+			for ( const auto& dof : model.GetDofs() )
+			{
+				if ( muscle.HasMomentArm( *dof ) )
+					summed_muscle_moment_arms += abs( muscle.GetMomentArm( *dof ) );
+			}
+
+			for( const MetaReflexVirtualMuscleUP& vm : controller.GetVirtualMuscles() )
+			{
+				Real s = vm->GetSimilarity( muscle, summed_muscle_moment_arms );
+				if ( s > 0 )
+				{
+					vm_infos.push_back( VirtualMuscleInfo{ *vm, s } );
+					total_vm_similarity += s;
+					log::TraceF( "%-20s%-20ssim=%.3f tot=%.3f", muscle.GetName().c_str(), vm->name.c_str(), s, total_vm_similarity );
+				}
 			}
 		}
 

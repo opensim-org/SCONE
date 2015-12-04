@@ -126,6 +126,9 @@
     <ClInclude Include="..\..\scone\cs\MetaReflexParams.h">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexVirtualMuscle.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\cs\Polynomial.cpp">
@@ -210,6 +213,9 @@
       <Filter>Controllers\State Control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexVirtualMuscle.cpp">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClCompile>
   </ItemGroup>
