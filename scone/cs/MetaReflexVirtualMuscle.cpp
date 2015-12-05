@@ -11,8 +11,10 @@ namespace scone
 		MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		local_balance( 0 ),
 		body_angvel_sensor_gain( model.balance_sensor_ori_vel_gain ),
+		body_sensor_delay( model.balance_sensor_delay ),
 		body_ori_sensor( nullptr ),
-		body_angvel_sensor( nullptr )
+		body_angvel_sensor( nullptr ),
+		average_moment_axis( Vec3::ZERO )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "VirtualMuscleReflex" );
