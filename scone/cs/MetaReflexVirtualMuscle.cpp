@@ -30,10 +30,15 @@ namespace scone
 						dof_infos.push_back( DofInfo{ *FindByName( model.GetDofs(), dofname ), weight } );
 					else // try to add a sided version of the dof
 						dof_infos.push_back( DofInfo{ *FindByName( model.GetDofs(), dofname + GetSideName( area.side ) ), weight } );
-					name += dofname + ( weight > 0 ? '+' : '-' );
+
+					name += dofname + ( weight > 0 ? '+' : '-' ); // update name
+					average_moment_axis += dof_infos.back().dof.GetRotationAxis(); // update average moment axis
 				}
 				else break;
 			}
+
+			// normalize average moment axis
+			average_moment_axis.Normalize();
 
 			opt::ScopedParamSetPrefixer prefixer( par, name + "." );
 
@@ -58,6 +63,18 @@ namespace scone
 
 			// TODO: move to muscle
 			INIT_PROPERTY_REQUIRED( props, delay );
+		}
+
+		void MetaReflexVirtualMuscle::UpdateLocalBalance( const Vec3& global_balance )
+		{
+			if ( body_ori_sensor && body_angvel_sensor )
+			{
+				Vec3 glob_ori = Vec3( body_ori_sensor->GetValue( 0u, body_sensor_delay ), body_ori_sensor->GetValue( 1u, body_sensor_delay ), body_ori_sensor->GetValue( 2u, body_sensor_delay ) );
+				Vec3 glob_angvel = Vec3( body_angvel_sensor->GetValue( 0u, body_sensor_delay ), body_angvel_sensor->GetValue( 1u, body_sensor_delay ), body_angvel_sensor->GetValue( 2u, body_sensor_delay ) );
+
+				local_balance = GetDotProduct( glob_ori, average_moment_axis ) + body_angvel_sensor_gain * GetDotProduct( glob_angvel, average_moment_axis );
+				Real org_lb = GetDotProduct( global_balance, average_moment_axis );
+			}
 		}
 
 		scone::Real MetaReflexVirtualMuscle::GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm )

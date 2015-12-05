@@ -19,7 +19,8 @@ namespace scone
 			MetaReflexVirtualMuscle( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~MetaReflexVirtualMuscle() {}
 
-			Real GetLocalBalance() { return 0.0; } // TODO!
+			Real GetLocalBalance() { return local_balance; }
+			void UpdateLocalBalance( const Vec3& global_balance );
 
 			String name;
 
@@ -28,6 +29,9 @@ namespace scone
 			Real delay;
 
 			Real GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm );
+
+			void SetDofRotationAxis();
+			Vec3 average_moment_axis;
 
 		private:
 
@@ -41,6 +45,7 @@ namespace scone
 			Real body_angvel_sensor_gain;
 			sim::SensorDelayAdapter* body_ori_sensor;
 			sim::SensorDelayAdapter* body_angvel_sensor;
+			Real body_sensor_delay;
 		};
 	}
 }

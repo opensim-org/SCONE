@@ -89,7 +89,7 @@ namespace scone
 
 			// init meta reflex control parameters
 			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
-				mrm->UpdateMuscleControlParameters();
+				mrm->UpdateMuscleControlParameters( true );
 
 			// restore original state
 			model.SetStateValues( org_state );
@@ -106,6 +106,9 @@ namespace scone
 
 			BOOST_FOREACH( MetaReflexDofUP& mrdof, m_ReflexDofs )
 				mrdof->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
+
+			BOOST_FOREACH( MetaReflexVirtualMuscleUP& vm, m_VirtualMuscles )
+				vm->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
 			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
 			{

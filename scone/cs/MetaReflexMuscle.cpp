@@ -85,8 +85,8 @@ namespace scone
 		{
 		}
 
-		void MetaReflexMuscle::UpdateMuscleControlParameters()
-		{
+		void MetaReflexMuscle::UpdateMuscleControlParameters( bool debug /*= false */ )
+{
 			// initialize reference length
 			ref_length = ref_length_base;
 			length_gain = 0;
@@ -128,6 +128,11 @@ namespace scone
 				// delay, average of all MetaMuscleDofs
 				// TODO: move away from here!
 				delay += ( 1.0 / dof_infos.size() ) * di.dof.delay; // TODO: compute per muscle
+			}
+
+			if ( debug )
+				log::TraceF( "%-20sl=%.3f f=%.3f c=%.3f d=%.3f", muscle.GetName().c_str(), length_gain, force_gain, constant, delay );
+
 
 #ifdef INFO_MUSCLE
 				if ( muscle.GetName() == INFO_MUSCLE || strlen( INFO_MUSCLE ) == 0 )
@@ -139,7 +144,7 @@ namespace scone
 						ref_length, constant, di.w, lb, di.dof.bal_par.constant, di.dof.dof_par.constant );
 				}
 #endif
-			}
+
 		}
 
 		Real MetaReflexMuscle::ComputeStiffnessExcitation( MetaReflexDof& dof )
