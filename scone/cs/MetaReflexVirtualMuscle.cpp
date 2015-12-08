@@ -81,6 +81,10 @@ namespace scone
 
 		scone::Real MetaReflexVirtualMuscle::GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm )
 		{
+			// multi-articulate muscles have 0 similarity with single-articular VMs
+			if ( dof_infos.size() == 1 && mus.GetJointCount() > 1 )
+				return 0;
+
 			// check if this muscle has a moment arm for all dofs
 			for ( auto& di : dof_infos )
 			{

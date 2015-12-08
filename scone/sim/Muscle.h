@@ -55,6 +55,9 @@ namespace scone
 			// checks if a muscle crosses a Dof. Default implementation
 			virtual bool HasMomentArm( const Dof& dof ) const;
 
+			// count the number of joints this muscle crosses
+			virtual Count GetJointCount() const;
+
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		};
 	}
