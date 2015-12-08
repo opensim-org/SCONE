@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>VMC2</signature_postfix>
+		<signature_postfix>VMC3</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024cs7.osim</model_file>
@@ -21,6 +21,7 @@
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<late_stance_threshold init_mean="-0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<stance_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<swing_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
@@ -101,11 +102,7 @@
 										<L init_mean="0.1" init_std="0.01" min="0" max="1" is_free="1"/>
 										<C init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
 									</Reflex>
-									
-									<Reflex type="VirtualMuscleReflex" target="knee_angle 1" delay="0.010">
-										<L init_mean="0.01" init_std="0.01" min="0" max="1" is_free="1"/>
-										<C init_mean="-1.0" init_std="0.02" min="-1" max="1" is_free="1"/>
-									</Reflex>
+								
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
