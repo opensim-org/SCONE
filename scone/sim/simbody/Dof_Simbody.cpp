@@ -3,12 +3,14 @@
 #include "Dof_Simbody.h"
 #include "OpenSim/Simulation/SimbodyEngine/Coordinate.h"
 #include "Model_Simbody.h"
+#include "Joint_Simbody.h"
 
 namespace scone
 {
 	namespace sim
 	{
 		Dof_Simbody::Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord ) :
+		Dof( *FindByName( model.GetJoints(), coord.getJoint().getName() ) ),
 		m_Model( model ),
 		m_osCoord( coord ),
 		m_pOsLimitForce( nullptr )

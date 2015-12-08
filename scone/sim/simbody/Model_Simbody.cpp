@@ -230,6 +230,12 @@ namespace scone
 			//for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
 			//	m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
 
+			// create BodySensor
+			//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
+
+			// setup hierarchy and create wrappers
+			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
+
 			// create wrappers for dofs
 			m_Dofs.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
@@ -237,12 +243,6 @@ namespace scone
 				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
 				//m_ChannelSensors.push_back( m_Dofs.back().get() );
 			}
-
-			// create BodySensor
-			//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
-
-			// setup hierarchy and create wrappers
-			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
 			// create legs and connect stance_contact forces
 			if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )

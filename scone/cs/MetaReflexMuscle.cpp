@@ -69,15 +69,29 @@ namespace scone
 					summed_muscle_moment_arms += abs( muscle.GetMomentArm( *dof ) );
 			}
 
+			size_t max_articulation = 0;
 			for( const MetaReflexVirtualMuscleUP& vm : controller.GetVirtualMuscles() )
 			{
 				Real s = vm->GetSimilarity( muscle, summed_muscle_moment_arms );
 				if ( s > 0 )
 				{
-					vm_infos.push_back( VirtualMuscleInfo{ *vm, s } );
+					vm_infos.push_back( VirtualMuscleInfo{ vm.get(), s } );
 					total_vm_similarity += s;
+					max_articulation = std::max( max_articulation, vm->GetDofCount() );
 					log::TraceF( "%-20s%-32ssim=%.3f tot=%.3f", muscle.GetName().c_str(), vm->name.c_str(), s, total_vm_similarity );
 				}
+			}
+
+			// prune 
+			for ( auto iter = vm_infos.begin(); iter != vm_infos.end(); )
+			{
+				if ( iter->vm->GetDofCount() < max_articulation )
+				{
+					total_vm_similarity -= iter->similarity;
+					log::TraceF( "%-20s%-32ssim=%.3f tot=%.3f", muscle.GetName().c_str(), iter->vm->name.c_str(), iter->similarity, total_vm_similarity );
+					iter = vm_infos.erase( iter );
+				}
+				else ++iter;
 			}
 		}
 
@@ -97,14 +111,15 @@ namespace scone
 			// compute muscle feedback parameters
 			for ( const VirtualMuscleInfo& vmi : vm_infos )
 			{
-				length_gain += vmi.similarity * vmi.vm.mrp.length_gain;
-				force_gain += vmi.similarity * vmi.vm.mrp.force_gain;
-				constant += vmi.similarity * vmi.vm.mrp.constant;
-				constant += vmi.similarity * vmi.vm.bal_mrp.constant * vmi.vm.GetLocalBalance();
+				auto& vm = *vmi.vm;
+				length_gain += vmi.similarity * vm.mrp.length_gain;
+				force_gain += vmi.similarity * vm.mrp.force_gain;
+				constant += vmi.similarity * vm.mrp.constant;
+				constant += vmi.similarity * vm.bal_mrp.constant * vm.GetLocalBalance();
 
 				// delay, average of all VMs
 				// TODO: move away from here!
-				delay += vmi.similarity * vmi.vm.delay / total_vm_similarity; // TODO: compute per muscle
+				delay += vmi.similarity * vm.delay / total_vm_similarity; // TODO: compute per muscle
 			}
 
 			// compute muscle feedback parameters

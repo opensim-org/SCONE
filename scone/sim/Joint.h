@@ -18,6 +18,9 @@ namespace scone
 			virtual Real GetDof( size_t index = 0 ) const = 0;
 			virtual const String& GetDofName( size_t index = 0 ) const = 0;
 			bool HasDof( const String& dof_name ) const;
+			const Joint* GetParent() const { return m_pParent; }
+			const Body& GetBody() const { return m_Body; }
+
 
 		protected:
 			Body& m_Body;

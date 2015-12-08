@@ -11,7 +11,7 @@ namespace scone
 		class SCONE_SIM_API Dof : public HasName
 		{
 		public:
-			Dof();
+			Dof( Joint& j );
 			virtual ~Dof();
 
 			virtual Real GetPos() const = 0;
@@ -23,6 +23,10 @@ namespace scone
 			virtual void SetVel( Real vel ) = 0;
 
 			virtual Vec3 GetRotationAxis() const = 0;
+			virtual const Joint& GetJoint() const { return m_Joint; }
+
+		private:
+			Joint& m_Joint;
 		};
 	}
 }

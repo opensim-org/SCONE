@@ -3,6 +3,8 @@
 #include "../sim/Model.h"
 #include "../core/InitFromPropNode.h"
 #include "../sim/Muscle.h"
+#include "../core/Exception.h"
+#include "../sim/Joint.h"
 
 namespace scone
 {
@@ -41,6 +43,9 @@ namespace scone
 
 			// normalize average moment axis
 			average_moment_axis.Normalize();
+
+			// make sure the first body has a parent
+			SCONE_ASSERT( dof_infos.front().dof.GetJoint().GetParent() );
 
 			opt::ScopedParamSetPrefixer prefixer( par, name + "." );
 
@@ -81,9 +86,17 @@ namespace scone
 
 		scone::Real MetaReflexVirtualMuscle::GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm )
 		{
-			// multi-articulate muscles have 0 similarity with single-articular VMs
-			if ( dof_infos.size() == 1 && mus.GetJointCount() > 1 )
-				return 0;
+			//// make sure origin and insertion are the same
+			//auto& mus_ob = mus.GetOriginLink().GetBody();
+			//auto& mus_ib = mus.GetInsertionLink().GetBody();
+			//auto& vm_ob = dof_infos.front().dof.GetJoint().GetParent()->GetBody();
+			//auto& vm_ib = dof_infos.front().dof.GetJoint().GetBody();
+
+			//if ( vm_ob.GetName() != mus_ob.GetName() || vm_ib.GetName() != mus_ib.GetName() )
+			//{
+			//	log::Trace( "Mismatch: " + mus.GetName() + " and " + name + " -> " + vm_ob.GetName() + "-" + vm_ib.GetName() );
+			//	return 0;
+			//}
 
 			// check if this muscle has a moment arm for all dofs
 			for ( auto& di : dof_infos )
@@ -92,7 +105,7 @@ namespace scone
 					return 0;
 			}
 
-			// caclulate simularity
+			// calculate similarity
 			Real similarity = 0;
 			for ( auto& di : dof_infos )
 				similarity += di.w * ( mus.GetMomentArm( di.dof ) / tot_abs_moment_arm );

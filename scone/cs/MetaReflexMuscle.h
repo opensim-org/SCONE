@@ -50,7 +50,7 @@ namespace scone
 
 			struct VirtualMuscleInfo
 			{
-				MetaReflexVirtualMuscle& vm;
+				MetaReflexVirtualMuscle* vm;
 				Real similarity;
 			};
 			Real total_vm_similarity;
