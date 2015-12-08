@@ -38,6 +38,9 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
+
 			BOOST_FOREACH( Limit& l, m_Limits )
 			{
 				if ( l.squared_range_penalty > 0.0 )

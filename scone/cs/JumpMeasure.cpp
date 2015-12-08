@@ -30,6 +30,9 @@ namespace scone
 
 		sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
+
 			if ( timestamp < ignore_time )
 			{
 				init_dist = std::min( model.GetComPos().x, target_body.GetPos().x );

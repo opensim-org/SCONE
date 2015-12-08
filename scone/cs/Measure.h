@@ -15,6 +15,11 @@ namespace scone
 
 			virtual double GetResult( sim::Model& model ) = 0;
 			virtual PropNode GetReport() { return PropNode(); }
+
+			virtual bool IsActive( const sim::Model& model, TimeInSeconds timestamp ) { return timestamp >= start_time; }
+
+		private:
+			TimeInSeconds start_time;
 		};
 	}
 }

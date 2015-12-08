@@ -39,8 +39,9 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
-			// make sure this is a new step
-			if ( model.GetIntegrationStep() == model.GetPreviousIntegrationStep() )
+			// make sure this is a new step and the measure is active
+			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
+			if ( !IsActive( model, timestamp ) )
 				return NoUpdate;
 
 			double current_effort = GetEnergy( model );

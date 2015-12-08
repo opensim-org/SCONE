@@ -63,6 +63,9 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
+
 			bool terminate = false;
 			BOOST_FOREACH( Term& t, m_Terms )
 				terminate |= t.measure->UpdateAnalysis( model, timestamp ) == RequestTermination;

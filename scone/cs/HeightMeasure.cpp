@@ -31,6 +31,9 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
+
 			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
 
