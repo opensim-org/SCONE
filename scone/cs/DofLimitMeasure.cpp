@@ -28,6 +28,7 @@ namespace scone
 			velocity_range.min = Degree( props.GetReal( "min_deg_s", 0.0 ) );
 			velocity_range.max = Degree( props.GetReal( "max_deg_s", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
+			INIT_PROPERTY( props, abs_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_force_penalty, 0.0 );
@@ -41,8 +42,10 @@ namespace scone
 			{
 				if ( l.squared_range_penalty > 0.0 )
 				{
-					double rp = l.squared_range_penalty * GetSquared( l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ) );
-					l.penalty.AddSample( timestamp, rp );
+					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) );
+					double rps = l.squared_range_penalty * GetSquared( range_violation );
+					double rpa = l.abs_range_penalty * abs( range_violation );
+					l.penalty.AddSample( timestamp, rps + rpa );
 				}
 
 				if ( l.squared_velocity_range_penalty > 0 || l.abs_velocity_range_penalty > 0 )
