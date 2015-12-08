@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>VMC3</signature_postfix>
+		<signature_postfix>VMC31</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024cs7.osim</model_file>
@@ -16,14 +16,14 @@
 				<meta_reflex_control use_length="1" use_constant="1" use_force="1" use_stiffness="1" use_balance="1"/>
 			</custom_properties>
 			<balance_sensor_delay>0.0</balance_sensor_delay>
-			<balance_sensor_ori_vel_gain init_mean="0.1" init_std="0.01" min="0" max="1" is_free="1"/>
+			<balance_sensor_ori_vel_gain init_mean="0.15" init_std="0.01" min="0" max="1" is_free="1"/>
 			
 			<Controllers>
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<late_stance_threshold init_mean="-0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<stance_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
-					<swing_load_threshold init_mean="0.05" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
+					<swing_load_threshold init_mean="0.03" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
 					
@@ -63,7 +63,7 @@
 									</Reflex>
 									<!-- Knee extension -->
 									<Reflex type="VirtualMuscleReflex" target="knee_angle 1" delay="0.010">
-										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<L init_mean="1.5" init_std="0.2" min="0" max="10" is_free="1"/>
 										<C init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
@@ -97,12 +97,10 @@
 											<C init_mean="-0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
 										</Balance>
 									</Reflex>
-									
 									<Reflex type="VirtualMuscleReflex" target="hip_flexion 1 knee_angle 1" delay="0.005">
 										<L init_mean="0.1" init_std="0.01" min="0" max="1" is_free="1"/>
-										<C init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
+										<C init_mean="0.05" init_std="0.01" min="-1" max="1" is_free="1"/>
 									</Reflex>
-								
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
@@ -125,7 +123,7 @@
 								<Reflexes>
 									<!-- hamstring retraction reflex at end of swing -->
 									<Reflex type="VirtualMuscleReflex" target="hip_flexion -1 knee_angle -1" delay="0.005">
-										<L init_mean="0.5" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<L init_mean="0.2" init_std="0.02" min="0.0" max="10.0" is_free="1"/>
 										<C init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
