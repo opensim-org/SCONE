@@ -5,6 +5,7 @@
 #include <fstream>
 #include <boost/thread.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 namespace scone
 {
@@ -59,10 +60,24 @@ namespace scone
 	{
 		if ( g_Version.empty() )
 		{
-			std::ifstream ifstr( GetApplicationFolder() + "/.version" );
-			if ( ifstr.good() )
-				ifstr >> g_Version;
-			else g_Version = "UNKNOWN_VERSION";
+			boost::filesystem::path versionpath( GetApplicationFolder() );
+
+			// look for .version file, up to three levels from application folder
+			for ( int level = 0; level <= 3; ++level )
+			{
+				if ( boost::filesystem::exists( versionpath / ".version" ) )
+				{
+					// .version file found, read its contents
+					std::ifstream ifstr( ( versionpath / ".version" ).string() );
+					ifstr >> g_Version;
+					break;
+
+				}
+				else versionpath = versionpath / "..";
+			}
+
+			if ( g_Version.empty() ) 
+				g_Version = "UNKNOWN_VERSION"; // reading has failed, version unknown
 		}
 
 		return g_Version;
