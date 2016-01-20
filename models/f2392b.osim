@@ -2,6 +2,8 @@
 <OpenSimDocument Version="20303">
 	<Model name="f2392b">
 		<!--Feed forward version of the Gait2392 model. Adapted by Thomas Geijtenbeek.
+
+		2016.01.20: Changed HuntCrossleyForce stiffness from 10^8 to 10^7
 		
 		Version b:
 		2015.08.19: Changed pelvis (root) rotation order to Rotate -> Lisp -> Tilt
@@ -10131,7 +10133,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform r_heel_lat r_heel_med r_toe_lat r_toe_med r_toe</geometry>
-								<stiffness>100000000</stiffness>
+								<stiffness>10000000</stiffness>
 								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.9</dynamic_friction>
@@ -10152,7 +10154,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel_lat l_heel_med l_toe_lat l_toe_med l_toe</geometry>
-								<stiffness>100000000</stiffness>
+								<stiffness>10000000</stiffness>
 								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.9</dynamic_friction>
