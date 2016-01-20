@@ -114,7 +114,7 @@
 										<C init_mean="0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<!-- Toe push-off -->
-									<Reflex type="VirtualMuscleReflex" target="mpt_angle -1" delay="0.020">
+									<Reflex type="VirtualMuscleReflex" target="mtp_angle -1" delay="0.020">
 										<L init_mean="0.2" init_std="0.1" min="0" max="10" is_free="1"/>
 										<C init_mean="0.2" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
