@@ -2,7 +2,7 @@
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>VMC5</signature_postfix>
+		<signature_postfix>VMC6</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f2392b.osim</model_file>
@@ -77,13 +77,6 @@
 										</Balance>
 									</Reflex>
 									<!-- Root balance (coronal) -->
-									<Reflex type="VirtualMuscleReflex" target="hip_adduction -1" delay="0.005">
-										<L init_mean="0.5" init_std="0.1" min="0" max="10" is_free="1"/>
-										<C init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
-										<Balance body="pelvis">
-											<C init_mean="-2" init_std="0.2" min="-10" max="10" is_free="1"/>
-										</Balance>
-									</Reflex>
 									<Reflex type="VirtualMuscleReflex" target="hip_adduction 1" delay="0.005">
 										<L init_mean="0.1" init_std="0.01" min="0" max="10" is_free="1"/>
 										<C init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
@@ -91,12 +84,51 @@
 											<C init_mean="2" init_std="0.2" min="-10" max="10" is_free="1"/>
 										</Balance>
 									</Reflex>
-									
+									<Reflex type="VirtualMuscleReflex" target="hip_adduction -1" delay="0.005">
+										<L init_mean="0.5" init_std="0.1" min="0" max="10" is_free="1"/>
+										<C init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
+										<Balance body="pelvis">
+											<C init_mean="-2" init_std="0.2" min="-10" max="10" is_free="1"/>
+										</Balance>
+									</Reflex>
+									<!-- Root balance (transverse) -->
+									<Reflex type="VirtualMuscleReflex" target="hip_rotation 1" delay="0.005">
+										<L init_mean="1.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<C init_mean="0.1" init_std="0.02" min="-1" max="1" is_free="1"/>
+										<Balance body="pelvis">
+											<C init_mean="2" init_std="0.2" min="-10" max="10" is_free="1"/>
+										</Balance>
+									</Reflex>
+									<Reflex type="VirtualMuscleReflex" target="hip_rotation -1" delay="0.005">
+										<L init_mean="1.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<C init_mean="0.1" init_std="0.02" min="-1" max="1" is_free="1"/>
+										<Balance body="pelvis">
+											<C init_mean="-2" init_std="0.2" min="-10" max="10" is_free="1"/>
+										</Balance>
+									</Reflex>
 									<!-- Knee extension -->
 									<Reflex type="VirtualMuscleReflex" target="knee_angle 1" delay="0.010">
 										<L init_mean="1.5" init_std="0.2" min="0" max="10" is_free="1"/>
 										<C init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
 									</Reflex>
+									<!-- Ankle stability -->
+									<Reflex type="VirtualMuscleReflex" target="ankle_angle 1" delay="0.020">
+										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<C init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<Reflex type="VirtualMuscleReflex" target="ankle_angle -1" delay="0.020">
+										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<C init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<Reflex type="VirtualMuscleReflex" target="subtalar_angle 1" delay="0.020">
+										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<C init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<Reflex type="VirtualMuscleReflex" target="subtalar_angle -1" delay="0.020">
+										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
+										<C init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
@@ -134,22 +166,6 @@
 										</Balance>
 									</Reflex>
 									
-									<!-- Hip adduction correction -->
-									<Reflex type="VirtualMuscleReflex" target="hip_adduction 1" delay="0.005">
-										<L init_mean="0.1" init_std="0.01" min="0" max="10" is_free="1"/>
-										<C init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance body="torso">
-											<C init_mean="-0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
-										</Balance>
-									</Reflex>
-									<Reflex type="VirtualMuscleReflex" target="hip_adduction -1" delay="0.005">
-										<L init_mean="0.1" init_std="0.01" min="0" max="10" is_free="1"/>
-										<C init_mean="0.1" init_std="0.01" min="-1" max="1" is_free="1"/>
-										<Balance body="torso">
-											<C init_mean="0.5" init_std="0.1" min="-1" max="1" is_free="1"/>
-										</Balance>
-									</Reflex>
-									
 									<Reflex type="VirtualMuscleReflex" target="hip_flexion 1 knee_angle 1" delay="0.005">
 										<L init_mean="0.1" init_std="0.01" min="0" max="1" is_free="1"/>
 										<C init_mean="0.05" init_std="0.01" min="-1" max="1" is_free="1"/>
@@ -159,12 +175,16 @@
 						</ConditionalController>
 
 						<!-- Ankle retraction during swing and landing -->
-						<ConditionalController states="Swing, Landing EarlyStance">
+						<ConditionalController states="Swing, Landing">
 							<Controller type="MetaReflexController">
 								<Reflexes>
 									<Reflex type="VirtualMuscleReflex" target="ankle_angle 1" delay="0.020">
 										<L init_mean="2.0" init_std="0.2" min="0" max="10" is_free="1"/>
 										<C init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
+									</Reflex>
+									<Reflex type="VirtualMuscleReflex" target="mtp_angle 1" delay="0.020">
+										<L init_mean="1.0" init_std="0.1" min="0" max="10" is_free="1"/>
+										<C init_mean="0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
