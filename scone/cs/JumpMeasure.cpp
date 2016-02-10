@@ -34,10 +34,7 @@ namespace scone
 				return NoUpdate;
 
 			if ( timestamp < ignore_time )
-			{
-				init_dist = std::min( model.GetComPos().x, target_body.GetPos().x );
 				return SuccessfulUpdate;
-			}
 
 			Real y_com = model.GetComPos().y;
 			if ( y_com < termination_height * init_height )

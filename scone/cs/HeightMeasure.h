@@ -25,10 +25,15 @@ namespace scone
 			bool use_average_height;
 			bool terminate_on_peak;
 			double termination_height;
+			double max_admitted_counter_height;
+			double ignore_time;
+			double min_upward_velocity;
 
 			sim::Body* m_pTargetBody; // non-owning pointer
 			Statistic< double > m_Height;
 			bool m_Upward;
+			double m_JumpStartHeight;
+			double m_InitialHeight;
 		};
 	}
 }
