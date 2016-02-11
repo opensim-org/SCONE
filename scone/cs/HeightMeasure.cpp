@@ -12,15 +12,17 @@ namespace scone
 		HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr ),
-		m_JumpStartHeight( 0 )
+		m_JumpStartHeight( 0 ),
+		m_JumpState( InitialState )
 		{
 			INIT_PROPERTY( props, target_body, String("") );
 			INIT_PROPERTY( props, use_average_height, false );
 			INIT_PROPERTY( props, terminate_on_peak, true );
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, max_admitted_counter_height, 0.0 );
-			INIT_PROPERTY( props, ignore_time, 0.1 );
-			INIT_PROPERTY( props, min_upward_velocity, 0.1 );
+			INIT_PROPERTY( props, ignore_time, 0.05 );
+			INIT_PROPERTY( props, upward_velocity_threshold, 0.05 );
+			INIT_PROPERTY( props, downward_velocity_threshold, -0.05 );
 
 			m_Upward = false;
 			m_Height.Reset();
@@ -48,20 +50,25 @@ namespace scone
 			if ( pos < termination_height * m_Height.GetInitial() )
 				return RequestTermination;
 
-			// check if there's a velocity flip
-			if ( !m_Upward )
+			// update the state
+			if ( timestamp > ignore_time )
 			{
-				if ( timestamp > ignore_time && vel > min_upward_velocity )
+				switch ( m_JumpState )
 				{
-					// initiate move upward
-					m_Upward = true;
-					m_JumpStartHeight = pos; // set start height if lower than initial height
+				case InitialState:
+					if ( vel < downward_velocity_threshold )
+						m_JumpState = DownState;
+					break;
+				case DownState:
+					m_JumpStartHeight = std::min( m_JumpStartHeight, pos );
+					if ( vel > upward_velocity_threshold )
+						m_JumpState = UpState;
+					break;
+				case UpState:
+					if ( terminate_on_peak && vel < 0.0 )
+						return RequestTermination;
+					break;
 				}
-			}
-			else
-			{
-				if ( terminate_on_peak && vel < 0.0 )
-					return RequestTermination;
 			}
 
 			return SuccessfulUpdate;
@@ -69,6 +76,9 @@ namespace scone
 
 		double HeightMeasure::GetResult( sim::Model& model )
 		{
+			if ( m_JumpState != UpState )
+				return -50.0;
+
 			// compute admissible start height
 			double lo_height = std::max( m_InitialHeight - max_admitted_counter_height, m_JumpStartHeight );
 			double hi_height = terminate_on_peak ? m_Height.GetLatest() : m_Height.GetHighest();

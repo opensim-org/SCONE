@@ -4,6 +4,8 @@
 	<use_average_height>0</use_average_height>
 	<terminate_on_peak>1</terminate_on_peak>
 	<termination_height>0.75</termination_height>
-	<max_admitted_counter_height>0.05</max_admitted_counter_height>
-	<ignore_time>0.1</ignore_time>
+	<max_admitted_counter_height>0</max_admitted_counter_height>
+	<ignore_time>0.05</ignore_time>
+	<upward_velocity_threshold>0.01</upward_velocity_threshold>
+	<downward_velocity_threshold>-0.01</downward_velocity_threshold>
 </Measure>
