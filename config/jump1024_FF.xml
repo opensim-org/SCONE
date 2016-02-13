@@ -4,8 +4,8 @@
 	<max_generations>1000</max_generations>
 	<maximize_objective>1</maximize_objective>
 	<random_seed>2</random_seed>
+	<signature_postfix></signature_postfix>
 	<Objective type="SimulationObjective">
-		<signature_postfix></signature_postfix>
 		<max_duration>1.0</max_duration>
 		<Model type="Simbody">
 			<model_file>f1024.osim</model_file>
