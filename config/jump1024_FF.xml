@@ -22,7 +22,16 @@
 						<control_point_delta_time init_mean="0.2" init_std="0.02" is_free="1"/>
 					</Function>
 				</Controller>
-				<INCLUDE file="measures/M_Jump.xml"/>
+				<Measure type="HeightMeasure">
+					<target_body></target_body>
+					<use_average_height>0</use_average_height>
+					<terminate_on_peak>1</terminate_on_peak>
+					<termination_height>0.75</termination_height>
+					<max_admitted_counter_height>0.05</max_admitted_counter_height>
+					<ignore_time>0</ignore_time>
+					<upward_velocity_threshold>0.1</upward_velocity_threshold>
+					<downward_velocity_threshold>-0.1</downward_velocity_threshold>
+				</Measure>
 			</Controllers>
 		</Model>
 	</Objective>
