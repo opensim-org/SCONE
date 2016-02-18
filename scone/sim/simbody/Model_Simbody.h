@@ -47,8 +47,6 @@ namespace scone
 
 			virtual void SetTerminationRequest() override;
 
-			//virtual State GetState() const override;
-			//virtual void SetState( const State& state ) override;
 			virtual double GetTime() const override;
 			virtual double GetPreviousTime() const override;
 			virtual int GetIntegrationStep() const override;
@@ -76,6 +74,8 @@ namespace scone
 			void ValidateDofAxes();
 
 			void StoreCurrentFrame() override;
+
+			void UpdateOsimStorage();
 
 		protected:
 			virtual String GetClassSignature() const override;

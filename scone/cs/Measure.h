@@ -14,12 +14,14 @@ namespace scone
 			virtual ~Measure() { };
 
 			virtual double GetResult( sim::Model& model ) = 0;
-			virtual PropNode GetReport() { return PropNode(); }
+			PropNode& GetReport() { return report; }
+			const PropNode& GetReport() const { return report; }
 
 			virtual bool IsActive( const sim::Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
 
 		private:
 			TimeInSeconds start_time;
+			PropNode report;
 		};
 	}
 }

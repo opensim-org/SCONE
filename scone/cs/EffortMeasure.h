@@ -19,8 +19,6 @@ namespace scone
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
 
-			virtual PropNode GetReport() override;
-
 			EnergyMeasureType measure_type;
 			bool use_cost_of_transport;
 

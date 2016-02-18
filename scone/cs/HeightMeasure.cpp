@@ -76,12 +76,17 @@ namespace scone
 
 		double HeightMeasure::GetResult( sim::Model& model )
 		{
-			if ( m_JumpState != UpState )
+			if ( m_JumpState == InitialState )
 				return -50.0;
 
 			// compute admissible start height
 			double lo_height = std::max( m_InitialHeight - max_admitted_counter_height, m_JumpStartHeight );
 			double hi_height = terminate_on_peak ? m_Height.GetLatest() : m_Height.GetHighest();
+
+			GetReport().Set( "Initial", m_InitialHeight );
+			GetReport().Set( "JumpStartHeight", m_JumpStartHeight );
+			GetReport().Set( "lo_height", lo_height );
+			GetReport().Set( "hi_height", hi_height );
 
 			// results are in cm to get nice scaling
 			if ( use_average_height )

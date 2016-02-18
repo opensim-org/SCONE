@@ -265,10 +265,6 @@ namespace scone
 			boost::filesystem::path path( file + ".sto" );
 			auto name = ( path.parent_path().filename() / path.stem() ).string();
 
-#if 0
-			m_pOsimManager->getStateStorage().setName( name );
-			m_pOsimManager->getStateStorage().print( path.filename().string() + "_osim.sto" );
-#endif
 			// write scone data
 			WriteStorageSto( m_Data, path.string(), name );
 
@@ -401,18 +397,8 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
-			if ( GetStoreData() )
-			{
-				// OpenSim: add state to storage, why so complicated?
-				OpenSim::Array<double> stateValues;
-				m_pOsimModel->getStateValues( GetTkState(), stateValues );
-				OpenSim::StateVector vec;
-				vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[ 0 ] );
-				m_pOsimManager->getStateStorage().append( vec );
-
-				// store scone data
-				Model::StoreCurrentFrame();
-			}
+			// store scone data
+			Model::StoreCurrentFrame();
 		}
 
 		bool Model_Simbody::AdvanceSimulationTo( double final_time )
@@ -453,7 +439,8 @@ namespace scone
 
 						++current_step;
 
-						StoreCurrentFrame();
+						if ( GetStoreData() )
+							StoreCurrentFrame();
 
 						// update the sensor delays and other analyses
 						UpdateSensorDelayAdapters();
@@ -707,5 +694,15 @@ namespace scone
 					dof.m_RotationAxis[ j ] = jsmat( mbIdx * 6 + j, coIdx );
 			}
 		}
+
+		void Model_Simbody::UpdateOsimStorage()
+		{
+			OpenSim::Array<double> stateValues;
+			m_pOsimModel->getStateValues( GetTkState(), stateValues );
+			OpenSim::StateVector vec;
+			vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0] );
+			m_pOsimManager->getStateStorage().append( vec );
+		}
+
 	}
 }

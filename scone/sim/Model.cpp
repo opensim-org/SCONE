@@ -124,12 +124,23 @@ namespace scone
 			for ( size_t i = 0; i < state_values.size(); ++i )
 				frame[ state_names[ i ] ] = state_values[ i ];
 
-			// store entities
+			// store muscle data
 			for ( MuscleUP& m : GetMuscles() )
 				m->StoreData( frame );
 
+			// store controller data
 			for ( ControllerUP& c : GetControllers() )
 				c->StoreData( frame );
+
+			// store COP data
+			auto cop = GetComPos();
+			auto cop_u = GetComVel();
+			frame[ "cop_x" ] = cop.x;
+			frame[ "cop_y" ] = cop.y;
+			frame[ "cop_z" ] = cop.z;
+			frame[ "cop_x_u" ] = cop_u.x;
+			frame[ "cop_y_u" ] = cop_u.y;
+			frame[ "cop_z_u" ] = cop_u.z;
 		}
 
 		void Model::StoreCurrentFrame()
