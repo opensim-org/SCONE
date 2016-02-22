@@ -14,6 +14,8 @@ namespace scone
 {
 	namespace opt
 	{
+		const long DEFAULT_RANDOM_SEED = 123;
+
 		typedef PopulationT< double > Population;
 		typedef std::unique_ptr< Population > PopulationPtr;
 		struct CmaOptimizer::Impl
@@ -42,7 +44,12 @@ namespace scone
 			INIT_PROPERTY_NAMED( props, m_Mu, "mu", 0 );
 			INIT_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_PROPERTY( props, max_generations, size_t( 10000 ) );
-			INIT_PROPERTY( props, random_seed, long( 123 ) );
+			INIT_PROPERTY( props, random_seed, DEFAULT_RANDOM_SEED );
+		}
+
+		scone::String CmaOptimizer::GetClassSignature() const
+		{
+			return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? GetStringF( ".R%d", random_seed ) : ""  );
 		}
 
 		CmaOptimizer::~CmaOptimizer()
