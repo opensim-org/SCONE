@@ -20,9 +20,7 @@ namespace scone
 
 		protected:
 			void UpdateCurrentState( double timestamp );
-
 			virtual String GetClassSignature() const override;
-
 
 			struct TimeState
 			{

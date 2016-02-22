@@ -55,7 +55,7 @@ namespace scone
 
 		scone::String TimeStateController::GetClassSignature() const
 		{
-			return GetStringF( "T%d", m_States.size() );
+			return "T" + StateController::GetClassSignature();
 		}
 
 	}
