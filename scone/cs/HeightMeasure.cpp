@@ -56,12 +56,14 @@ namespace scone
 				switch ( m_JumpState )
 				{
 				case InitialState:
-					if ( vel < downward_velocity_threshold )
+					if ( vel <= downward_velocity_threshold )
 						m_JumpState = DownState;
+					else if ( vel >= upward_velocity_threshold )
+						return RequestTermination; // moving up too soon
 					break;
 				case DownState:
 					m_JumpStartHeight = std::min( m_JumpStartHeight, pos );
-					if ( vel > upward_velocity_threshold )
+					if ( vel >= upward_velocity_threshold )
 						m_JumpState = UpState;
 					break;
 				case UpState:
@@ -77,7 +79,7 @@ namespace scone
 		double HeightMeasure::GetResult( sim::Model& model )
 		{
 			if ( m_JumpState == InitialState )
-				return -50.0;
+				return 100 * ( 1 - termination_height ) * m_InitialHeight;
 
 			// compute admissible start height
 			double lo_height = std::max( m_InitialHeight - max_admitted_counter_height, m_JumpStartHeight );

@@ -19,9 +19,7 @@ namespace scone
 			INIT_PROPERTY( props, ignore_time, 0.1 );
 		}
 
-		JumpMeasure::~JumpMeasure()
-		{
-		}
+		JumpMeasure::~JumpMeasure() { }
 
 		double JumpMeasure::GetResult( sim::Model& model )
 		{
