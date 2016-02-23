@@ -34,6 +34,7 @@ namespace scone
 			const PropNode& reflexvec = props.GetChild( "Reflexes" );
 			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
 			{
+				// todo: handle "targets" tag
 				m_Reflexes.push_back( CreateReflex( *item.second, par, model, area ) );
 			}
 		}
