@@ -79,7 +79,7 @@ namespace scone
 		double HeightMeasure::GetResult( sim::Model& model )
 		{
 			if ( m_JumpState == InitialState )
-				return 100 * ( 1 - termination_height ) * m_InitialHeight;
+				return 100 * ( termination_height - 1 ) * m_InitialHeight; // same score as just falling
 
 			// compute admissible start height
 			double lo_height = std::max( m_InitialHeight - max_admitted_counter_height, m_JumpStartHeight );

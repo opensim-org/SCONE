@@ -26,9 +26,9 @@
 							<Controller type="FeedForwardController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Function type="Polynomial">
-									<degree>1</degree>
+									<degree>0</degree>
 									<coefficient0 init_mean="0.25" init_std="0.25" min="0" max="1"/>
-									<coefficient1 init_mean="0" init_std="1" min="-10" max="10"/>
+									<!--coefficient1 init_mean="0" init_std="1" min="-10" max="10"/-->
 								</Function>
 							</Controller>
 						</ConditionalController>
@@ -36,9 +36,9 @@
 							<Controller type="FeedForwardController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
 								<Function type="Polynomial">
-									<degree>1</degree>
+									<degree>0</degree>
 									<coefficient0 init_mean="0.25" init_std="0.25" min="0" max="1"/>
-									<coefficient1 init_mean="0" init_std="1" min="-10" max="10"/>
+									<!--coefficient1 init_mean="0" init_std="1" min="-10" max="10"/-->
 								</Function>
 							</Controller>
 						</ConditionalController>

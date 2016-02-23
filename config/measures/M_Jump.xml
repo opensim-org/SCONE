@@ -5,6 +5,6 @@
 	<termination_height>0.75</termination_height>
 	<max_admitted_counter_height>0.05</max_admitted_counter_height>
 	<ignore_time>0</ignore_time>
+	<downward_velocity_threshold>-0.2</downward_velocity_threshold>
 	<upward_velocity_threshold>0.1</upward_velocity_threshold>
-	<downward_velocity_threshold>-0.1</downward_velocity_threshold>
 </Measure>
