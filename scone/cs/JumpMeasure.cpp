@@ -19,9 +19,7 @@ namespace scone
 			INIT_PROPERTY( props, ignore_time, 0.1 );
 		}
 
-		JumpMeasure::~JumpMeasure()
-		{
-		}
+		JumpMeasure::~JumpMeasure() { }
 
 		double JumpMeasure::GetResult( sim::Model& model )
 		{
@@ -30,11 +28,11 @@ namespace scone
 
 		sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
+
 			if ( timestamp < ignore_time )
-			{
-				init_dist = std::min( model.GetComPos().x, target_body.GetPos().x );
 				return SuccessfulUpdate;
-			}
 
 			Real y_com = model.GetComPos().y;
 			if ( y_com < termination_height * init_height )

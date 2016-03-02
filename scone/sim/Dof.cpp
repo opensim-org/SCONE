@@ -7,12 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		Dof::Dof()
-		{
-		}
-
-		Dof::~Dof()
-		{
-		}
+		Dof::Dof( Joint& j ) : m_Joint( j ) {}
+		Dof::~Dof() {}
 	}
 }

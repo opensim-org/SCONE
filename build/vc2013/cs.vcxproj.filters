@@ -16,9 +16,6 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{36c20868-41b5-4582-bf0c-357aa824d485}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Controllers\Old Reflexes">
-      <UniqueIdentifier>{eba34c33-9b5c-432a-840b-d40db1ca6a7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controllers\Feed Forward Control">
       <UniqueIdentifier>{6f90e964-63ce-41c3-9f3e-46cea725a809}</UniqueIdentifier>
     </Filter>
@@ -27,6 +24,9 @@
     </Filter>
     <Filter Include="Controllers\State Control">
       <UniqueIdentifier>{0aa14c42-1c35-438a-a716-3e3f5428bc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controllers\Reflexes">
+      <UniqueIdentifier>{eba34c33-9b5c-432a-840b-d40db1ca6a7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -85,19 +85,19 @@
       <Filter>Measures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\DofReflex.h">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\Reflex.h">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\ReflexController.h">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\ConditionalMuscleReflex.h">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\JumpMeasure.h">
       <Filter>Measures</Filter>
@@ -124,6 +124,9 @@
       <Filter>Controllers\State Control</Filter>
     </ClInclude>
     <ClInclude Include="..\..\scone\cs\MetaReflexParams.h">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\scone\cs\MetaReflexVirtualMuscle.h">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClInclude>
   </ItemGroup>
@@ -171,19 +174,19 @@
       <Filter>Measures</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\DofReflex.cpp">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\Reflex.cpp">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\ReflexController.cpp">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\ConditionalMuscleReflex.cpp">
-      <Filter>Controllers\Old Reflexes</Filter>
+      <Filter>Controllers\Reflexes</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\JumpMeasure.cpp">
       <Filter>Measures</Filter>
@@ -210,6 +213,9 @@
       <Filter>Controllers\State Control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp">
+      <Filter>Controllers\Meta Reflex Control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\scone\cs\MetaReflexVirtualMuscle.cpp">
       <Filter>Controllers\Meta Reflex Control</Filter>
     </ClCompile>
   </ItemGroup>

@@ -22,6 +22,7 @@ namespace scone
 			typedef size_t StateIndex;
 			virtual size_t GetStateCount() = 0;
 			virtual const String& GetStateName( StateIndex i ) = 0;
+			virtual String GetClassSignature() const override;
 
 			struct ConditionalControllerState
 			{
@@ -39,9 +40,6 @@ namespace scone
 		private:
 			StateController( const StateController& other );
 			StateController& operator=( const StateController& other );
-
-			virtual String GetClassSignature() const override;
-
 		};
 	}
 }

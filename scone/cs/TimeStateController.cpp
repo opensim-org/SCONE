@@ -52,5 +52,11 @@ namespace scone
 
 			UpdateConditionalControllerStates( m_CurrentState, timestamp );
 		}
+
+		scone::String TimeStateController::GetClassSignature() const
+		{
+			return "T" + StateController::GetClassSignature();
+		}
+
 	}
 }

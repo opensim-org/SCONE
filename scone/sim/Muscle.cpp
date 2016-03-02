@@ -35,6 +35,16 @@ namespace scone
 			return false;
 		}
 
+		scone::Count Muscle::GetJointCount() const
+		{
+			Count joint_count = 0;
+			const sim::Link* orgLink = &GetOriginLink();
+			const sim::Link* insLink = &GetInsertionLink();
+			for ( const Link* l = orgLink; l && l != insLink; l = &l->GetParent() )
+				++joint_count;
+			return joint_count;
+		}
+
 		void Muscle::StoreData( Storage< Real >::Frame& frame )
 		{
 			//frame[ GetName() + ".length" ] = GetLength();

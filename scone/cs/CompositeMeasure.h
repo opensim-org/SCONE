@@ -16,7 +16,6 @@ namespace scone
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
-			virtual PropNode GetReport() override;
 
 			struct Term
 			{
@@ -42,7 +41,6 @@ namespace scone
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 			std::vector< Term > m_Terms;
-			PropNode m_Report;
 		};
 	}
 }

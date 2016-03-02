@@ -27,7 +27,8 @@ namespace scone
 		force_gain( 0.0 ),
 		delay( 0.0 ),
 		stiffness( 0.0 ),
-		total_abs_moment_arm( 0.0 )
+		total_abs_moment_arm( 0.0 ),
+		total_vm_similarity( 0.0 )
 		{
 			//ref_length_base = ( muscle.GetLength() - muscle.GetTendonSlackLength() ) / muscle.GetOptimalFiberLength();
 			ref_length_base = 1.0;
@@ -59,20 +60,67 @@ namespace scone
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
 			}
+
+			// virtual muscles
+			Real summed_muscle_moment_arms = 0;
+			for ( const auto& dof : model.GetDofs() )
+			{
+				if ( muscle.HasMomentArm( *dof ) )
+					summed_muscle_moment_arms += abs( muscle.GetMomentArm( *dof ) );
+			}
+
+			size_t max_articulation = 0;
+			for( const MetaReflexVirtualMuscleUP& vm : controller.GetVirtualMuscles() )
+			{
+				Real s = vm->GetSimilarity( muscle, summed_muscle_moment_arms );
+				if ( s > 0 )
+				{
+					vm_infos.push_back( VirtualMuscleInfo{ vm.get(), s } );
+					total_vm_similarity += s;
+					max_articulation = std::max( max_articulation, vm->GetDofCount() );
+					log::TraceF( "%-20s%-32ssim=%.3f tot=%.3f", muscle.GetName().c_str(), vm->name.c_str(), s, total_vm_similarity );
+				}
+			}
+
+			// prune 
+			for ( auto iter = vm_infos.begin(); iter != vm_infos.end(); )
+			{
+				if ( iter->vm->GetDofCount() < max_articulation )
+				{
+					total_vm_similarity -= iter->similarity;
+					log::TraceF( "%-20s%-32ssim=%.3f tot=%.3f", muscle.GetName().c_str(), iter->vm->name.c_str(), iter->similarity, total_vm_similarity );
+					iter = vm_infos.erase( iter );
+				}
+				else ++iter;
+			}
 		}
 
 		MetaReflexMuscle::~MetaReflexMuscle()
 		{
 		}
 
-		void MetaReflexMuscle::UpdateMuscleControlParameters()
-		{
+		void MetaReflexMuscle::UpdateMuscleControlParameters( bool debug /*= false */ )
+{
 			// initialize reference length
 			ref_length = ref_length_base;
 			length_gain = 0;
 			constant = 0;
 			force_gain = 0;
 			delay = 0;
+
+			// compute muscle feedback parameters
+			for ( const VirtualMuscleInfo& vmi : vm_infos )
+			{
+				auto& vm = *vmi.vm;
+				length_gain += vmi.similarity * vm.mrp.length_gain;
+				force_gain += vmi.similarity * vm.mrp.force_gain;
+				constant += vmi.similarity * vm.mrp.constant;
+				constant += vmi.similarity * vm.bal_mrp.constant * vm.GetLocalBalance();
+
+				// delay, average of all VMs
+				// TODO: move away from here!
+				delay += vmi.similarity * vm.delay / total_vm_similarity; // TODO: compute per muscle
+			}
 
 			// compute muscle feedback parameters
 			BOOST_FOREACH( const DofInfo& di, dof_infos )
@@ -92,13 +140,14 @@ namespace scone
 				constant += di.w * dof_par.constant;
 				constant += di.w * bal_par.constant * di.dof.GetLocalBalance();
 
-				// stiffness
-				//if ( di.dof.dof_par.stiffness > 0.0 )
-				//	mus_par.stiffness += ComputeStiffnessExcitation( *di.dof );
-
 				// delay, average of all MetaMuscleDofs
 				// TODO: move away from here!
 				delay += ( 1.0 / dof_infos.size() ) * di.dof.delay; // TODO: compute per muscle
+			}
+
+			if ( debug )
+				log::TraceF( "%-20sl=%.3f f=%.3f c=%.3f d=%.3f", muscle.GetName().c_str(), length_gain, force_gain, constant, delay );
+
 
 #ifdef INFO_MUSCLE
 				if ( muscle.GetName() == INFO_MUSCLE || strlen( INFO_MUSCLE ) == 0 )
@@ -110,7 +159,7 @@ namespace scone
 						ref_length, constant, di.w, lb, di.dof.bal_par.constant, di.dof.dof_par.constant );
 				}
 #endif
-			}
+
 		}
 
 		Real MetaReflexMuscle::ComputeStiffnessExcitation( MetaReflexDof& dof )

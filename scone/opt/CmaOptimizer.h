@@ -30,6 +30,9 @@ namespace scone
 		private: // non-copyable and non-assignable
 			CmaOptimizer( const CmaOptimizer& );
 			CmaOptimizer& operator=( const CmaOptimizer& );
+
+			virtual String GetClassSignature() const override;
+
 		};
 	}
 }

@@ -34,6 +34,7 @@ namespace scone
 			const PropNode& reflexvec = props.GetChild( "Reflexes" );
 			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
 			{
+				// todo: handle "targets" tag? or create a new class for groups of monosynaptic muscles?
 				m_Reflexes.push_back( CreateReflex( *item.second, par, model, area ) );
 			}
 		}

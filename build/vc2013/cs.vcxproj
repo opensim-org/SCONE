@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\scone\cs\MetaReflexDof.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflexMuscle.h" />
     <ClInclude Include="..\..\scone\cs\MetaReflexParams.h" />
+    <ClInclude Include="..\..\scone\cs\MetaReflexVirtualMuscle.h" />
     <ClInclude Include="..\..\scone\cs\MuscleReflex.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseConstantFunction.h" />
     <ClInclude Include="..\..\scone\cs\PieceWiseFunction.h" />
@@ -63,6 +64,7 @@
     <ClCompile Include="..\..\scone\cs\MetaReflexDof.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflexMuscle.cpp" />
     <ClCompile Include="..\..\scone\cs\MetaReflexParams.cpp" />
+    <ClCompile Include="..\..\scone\cs\MetaReflexVirtualMuscle.cpp" />
     <ClCompile Include="..\..\scone\cs\MuscleReflex.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseConstantFunction.cpp" />
     <ClCompile Include="..\..\scone\cs\PieceWiseLinearFunction.cpp" />

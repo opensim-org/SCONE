@@ -16,6 +16,7 @@
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"
 #include "../core/InitFromPropNode.h"
+#include <memory>
 
 namespace scone
 {
@@ -31,29 +32,29 @@ namespace scone
 			const PropNode& reflexes = props.GetChild( "Reflexes" );
 			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexes.GetChildren() )
 			{
-				// check if the target dof is sided
-				// TODO: see if we can come up with something nicer here...
-				const String& target_dof = item.second->GetStr( "target" );
-				SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
-				if ( HasElementWithName( model.GetDofs(), target_dof ) )
+				if ( item.second->GetStr( "type" ) == "MetaReflex" )
 				{
-					// this is a dof with no sides: only create one controller
-					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, sim::Area::WHOLE_BODY ) ) );
-				}
-				else
-				{
-					// this is a dof that has sides (probably), create a controller that matches the Area side
-					SCONE_ASSERT( area.side != NoSide )
-					if ( area.side == NoSide )
+					// check if the target dof is sided
+					// TODO: see if we can come up with something nicer here...
+					const String& target_dof = item.second->GetStr( "target" );
+					SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
+					if ( HasElementWithName( model.GetDofs(), target_dof ) )
 					{
-						for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
-							m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, model.GetLeg( legIdx ).GetArea() ) ) );
+						// this is a dof with no sides: only create one controller
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, sim::Area::WHOLE_BODY ) ) );
 					}
 					else
 					{
+						// this is a dof that has sides (probably), create a controller that matches the Area side
+						SCONE_ASSERT( area.side != NoSide );
 						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, area ) ) );
 					}
 				}
+				else if ( item.second->GetStr( "type" ) == "VirtualMuscleReflex" )
+				{
+					m_VirtualMuscles.push_back( MetaReflexVirtualMuscleUP( new MetaReflexVirtualMuscle( *item.second, par, model, area ) ) );
+				}
+				else SCONE_THROW( "Invalid MetaReflex type: " + item.second->GetStr( "type " ) );
 			}
 
 			// backup the current state
@@ -81,14 +82,14 @@ namespace scone
 				if ( GetSide( mus->GetName() ) == area.side )
 				{
 					MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this, area ) );
-					if ( mrm->dof_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
+					if ( mrm->dof_infos.size() > 0 || mrm->vm_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
 						m_ReflexMuscles.push_back( std::move( mrm ) );
 				}
 			}
 
 			// init meta reflex control parameters
 			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
-				mrm->UpdateMuscleControlParameters();
+				mrm->UpdateMuscleControlParameters( true );
 
 			// restore original state
 			model.SetStateValues( org_state );
@@ -105,6 +106,9 @@ namespace scone
 
 			BOOST_FOREACH( MetaReflexDofUP& mrdof, m_ReflexDofs )
 				mrdof->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
+
+			BOOST_FOREACH( MetaReflexVirtualMuscleUP& vm, m_VirtualMuscles )
+				vm->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
 			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
 			{

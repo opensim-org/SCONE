@@ -230,6 +230,12 @@ namespace scone
 			//for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
 			//	m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
 
+			// create BodySensor
+			//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
+
+			// setup hierarchy and create wrappers
+			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
+
 			// create wrappers for dofs
 			m_Dofs.clear();
 			for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
@@ -237,12 +243,6 @@ namespace scone
 				m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
 				//m_ChannelSensors.push_back( m_Dofs.back().get() );
 			}
-
-			// create BodySensor
-			//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
-
-			// setup hierarchy and create wrappers
-			m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
 			// create legs and connect stance_contact forces
 			if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
@@ -265,10 +265,6 @@ namespace scone
 			boost::filesystem::path path( file + ".sto" );
 			auto name = ( path.parent_path().filename() / path.stem() ).string();
 
-#if 0
-			m_pOsimManager->getStateStorage().setName( name );
-			m_pOsimManager->getStateStorage().print( path.filename().string() + "_osim.sto" );
-#endif
 			// write scone data
 			WriteStorageSto( m_Data, path.string(), name );
 
@@ -401,18 +397,8 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 
-			if ( GetStoreData() )
-			{
-				// OpenSim: add state to storage, why so complicated?
-				OpenSim::Array<double> stateValues;
-				m_pOsimModel->getStateValues( GetTkState(), stateValues );
-				OpenSim::StateVector vec;
-				vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[ 0 ] );
-				m_pOsimManager->getStateStorage().append( vec );
-
-				// store scone data
-				Model::StoreCurrentFrame();
-			}
+			// store scone data
+			Model::StoreCurrentFrame();
 		}
 
 		bool Model_Simbody::AdvanceSimulationTo( double final_time )
@@ -453,7 +439,8 @@ namespace scone
 
 						++current_step;
 
-						StoreCurrentFrame();
+						if ( GetStoreData() )
+							StoreCurrentFrame();
 
 						// update the sensor delays and other analyses
 						UpdateSensorDelayAdapters();
@@ -707,5 +694,15 @@ namespace scone
 					dof.m_RotationAxis[ j ] = jsmat( mbIdx * 6 + j, coIdx );
 			}
 		}
+
+		void Model_Simbody::UpdateOsimStorage()
+		{
+			OpenSim::Array<double> stateValues;
+			m_pOsimModel->getStateValues( GetTkState(), stateValues );
+			OpenSim::StateVector vec;
+			vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0] );
+			m_pOsimManager->getStateStorage().append( vec );
+		}
+
 	}
 }

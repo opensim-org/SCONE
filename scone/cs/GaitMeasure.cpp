@@ -56,6 +56,8 @@ namespace scone
 
 			// make sure this is a new step
 			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
+			if ( !IsActive( model, timestamp ) )
+				return NoUpdate;
 
 			// check termination
 			bool terminate = false;
