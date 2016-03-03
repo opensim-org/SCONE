@@ -3,6 +3,8 @@
 #include "opt.h"
 #include "Optimizer.h"
 
+#define USE_SHARK_V2 0
+
 namespace scone
 {
 	namespace opt
