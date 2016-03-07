@@ -28,7 +28,11 @@ namespace scone
 			void RestrainValues();
 			void InitRandom();
 
+			size_t GetParamCount() const { return m_Params.size(); }
+			const ParamInfo& GetParamInfo( Index idx ) { return m_Params[ idx ].first; }
+
 			void UpdateMeanStd( const std::vector< ParamSet >& parsets );
+			void UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds );
 
 			size_t GetFreeParamCount();
 			std::vector< double > GetFreeParamValues();
@@ -78,4 +82,3 @@ namespace scone
 		inline std::istream& operator>>( std::istream& str, ParamSet& par ) { return par.FromStream( str ); }
 	}
 }
-

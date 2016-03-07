@@ -3,8 +3,6 @@
 #include "opt.h"
 #include "Optimizer.h"
 
-#define USE_SHARK_V2 0
-
 namespace scone
 {
 	namespace opt
@@ -23,8 +21,6 @@ namespace scone
 			double m_Sigma;
 			size_t max_generations;
 
-			struct Impl;
-			std::unique_ptr< Impl > m_pImpl;
 			size_t num_elitists;
 			int max_attempts;
 			long random_seed;

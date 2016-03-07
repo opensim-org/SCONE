@@ -24,8 +24,9 @@ namespace scone
 			bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 			bool IsMinimizing() { return !maximize_objective; }
 
-		protected:
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
+
+		protected:
 			void CreateObjectives( size_t count );
 			const PropNode& m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;

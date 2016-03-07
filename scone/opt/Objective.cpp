@@ -18,7 +18,7 @@ namespace scone
 
 		}
 
-		scone::opt::ParamSet Objective::GetParamSet()
+		scone::opt::ParamSet Objective::MakeParamSet()
 		{
 			ParamSet par( ParamSet::ConstructionMode );
 			ProcessParameters( par );

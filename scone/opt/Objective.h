@@ -16,7 +16,7 @@ namespace scone
 			virtual ~Objective();
 
 			// get all parameters in this objective
-			ParamSet GetParamSet();
+			ParamSet MakeParamSet();
 
 			// update all parameters and call Evaluate
 			double Evaluate( ParamSet& par );
@@ -24,13 +24,14 @@ namespace scone
 			// write results and return all files written
 			virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
 
+			int debug_idx;
+
+		protected:
 			// process parameters
 			virtual void ProcessParameters( opt::ParamSet& par ) = 0;
 
 			// virtual evaluation function
 			virtual double Evaluate() = 0;
-
-			int debug_idx;
 		};
 	}
 }

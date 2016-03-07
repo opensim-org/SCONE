@@ -168,6 +168,15 @@ namespace scone
 			}
 		}
 
+		void ParamSet::UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds )
+		{
+			for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
+			{
+				m_Params[ parIdx ].first.init_mean = means[ parIdx ];
+				m_Params[ parIdx ].first.init_std = stds[ parIdx ];
+			}
+		}
+
 		void ParamSet::PushNamePrefix( const String& prefix )
 		{
 			m_NamePrefixes.push_back( prefix );

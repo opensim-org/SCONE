@@ -18,6 +18,7 @@
     <ClInclude Include="..\..\scone\opt\Optimizer.h" />
     <ClInclude Include="..\..\scone\opt\ParamInfo.h" />
     <ClInclude Include="..\..\scone\opt\ParamSet.h" />
+    <ClInclude Include="..\..\scone\opt\SharkHelperClasses.h" />
     <ClInclude Include="..\..\scone\opt\stdafx.h" />
   </ItemGroup>
   <ItemGroup>

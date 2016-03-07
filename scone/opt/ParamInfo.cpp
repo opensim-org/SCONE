@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "ParamInfo.h"
 
+#if USE_SHARK_V2
 #include "Rng/GlobalRng.h"
+#endif
+
 #include "../core/InitFromPropNode.h"
 
 namespace scone
@@ -41,6 +44,7 @@ namespace scone
 
 		double ParamInfo::GetInitialValue() const
 		{
+#if USE_SHARK_V2
 			if ( is_free )
 			{
 				if ( init_mean != 0.0 || init_std != 0.0 )
@@ -49,6 +53,9 @@ namespace scone
 					return Rng::uni( init_min, init_max );
 			}
 			else return init_mean;
+#endif
+			// this function cannot be used with Shark 3
+			return init_mean;
 		}
 	}
 }

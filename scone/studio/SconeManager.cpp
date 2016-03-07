@@ -60,7 +60,7 @@ namespace scone
 
 		m_Statistics.Clear();
 		Timer timer;
-		double result = so.Evaluate();
+		double result = obj->Evaluate( so.MakeParamSet() );
 		timer.Pause();
 	
 		// collect statistics

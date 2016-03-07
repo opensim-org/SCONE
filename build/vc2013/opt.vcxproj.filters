@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\scone\opt\ParamInfo.h">
       <Filter>API</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\scone\opt\SharkHelperClasses.h">
+      <Filter>System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\scone\opt\opt.cpp">

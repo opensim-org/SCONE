@@ -117,7 +117,7 @@ namespace scone
 
 		double result;
 		Timer timer;
-		result = so.Evaluate();
+		result = obj->Evaluate( so.MakeParamSet() );
 
 		timer.Pause();
 
@@ -209,7 +209,7 @@ namespace scone
 		double result;
 
 		timer.Restart();
-		result = so.Evaluate();
+		result = obj->Evaluate( so.MakeParamSet() );
 		timer.Pause();
 
 		// collect statistics
@@ -247,7 +247,7 @@ namespace scone
 		Profiler::GetGlobalInstance().Reset();
 
 		Timer timer;
-		double result = so.Evaluate();
+		double result = obj->Evaluate( obj->MakeParamSet() );
 		timer.Pause();
 
 		// collect statistics
