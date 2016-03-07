@@ -24,6 +24,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, max_duration, 6000.0 );
 
+			// process parameters to flag unused model props
 			ProcessParameters( par );
 		}
 

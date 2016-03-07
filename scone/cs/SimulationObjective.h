@@ -21,6 +21,8 @@ namespace scone
 			SimulationObjective( const PropNode& props, opt::ParamSet& par );
 			virtual ~SimulationObjective();
 
+			virtual double Evaluate() override;
+
 			virtual std::vector< String > WriteResults( const String& file ) override;
 
 			sim::Model& GetModel() { return *m_Model; }
@@ -30,7 +32,6 @@ namespace scone
 
 		protected:
 			virtual String GetClassSignature() const override;
-			virtual double Evaluate() override;
 			virtual void ProcessParameters( opt::ParamSet& par ) override;
 
 		private:
