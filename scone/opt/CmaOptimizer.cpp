@@ -268,6 +268,7 @@ namespace scone
 						mean[ i ] = cma.mean()[ i ];
 						std[ i ] = sqrt( cma.covarianceMatrix()( i, i ) );
 					}
+					par.UpdateMeanStd( mean, std );
 
 					// write .par file
 					String ind_name = GetStringF( "%04d_%.3f_%.3f", gen, 0.0, best );
