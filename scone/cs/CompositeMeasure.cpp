@@ -2,7 +2,6 @@
 
 #include "CompositeMeasure.h"
 #include "../sim/Factories.h"
-#include <boost/foreach.hpp>
 #include "../core/Profiler.h"
 
 namespace scone

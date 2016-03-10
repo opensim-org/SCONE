@@ -2,7 +2,6 @@
 
 #include "DofLimitMeasure.h"
 #include "../sim/Model.h"
-#include <boost/foreach.hpp>
 #include "../core/Profiler.h"
 
 namespace scone

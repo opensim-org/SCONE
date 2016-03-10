@@ -2,8 +2,6 @@
 
 #include "MetaReflexController.h"
 
-#include <boost/foreach.hpp>
-
 #include "../sim/sim.h"
 #include "../sim/Area.h"
 #include "../sim/Model.h"

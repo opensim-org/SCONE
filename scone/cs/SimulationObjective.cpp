@@ -3,7 +3,6 @@
 #include "SimulationObjective.h"
 #include "../core/Exception.h"
 
-#include <boost/foreach.hpp>
 #include <algorithm>
 
 #include "../sim/Model.h"

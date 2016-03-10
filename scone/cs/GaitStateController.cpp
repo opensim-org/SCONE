@@ -7,7 +7,6 @@
 #include "../sim/Muscle.h"
 #include "../core/InitFromPropNode.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 
 #include "../sim/Body.h"

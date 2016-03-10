@@ -3,7 +3,6 @@
 #include "../sim/Model.h"
 #include "../sim/Body.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "../core/Log.h"
 #include "../sim/sim.h"

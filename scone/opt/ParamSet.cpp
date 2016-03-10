@@ -7,7 +7,6 @@
 #include <boost/format.hpp>
 #include "../core/Log.h"
 
-#include <boost/foreach.hpp>
 #include "../core/tools.h"
 
 namespace scone

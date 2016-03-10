@@ -2,7 +2,6 @@
 
 #include "ReflexController.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 
 #include "../core/InitFromPropNode.h"

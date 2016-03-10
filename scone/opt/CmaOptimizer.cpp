@@ -9,7 +9,6 @@
 #endif
 
 #include <boost/format.hpp>
-#include <boost/foreach.hpp>
 
 #include "../core/Timer.h"
 #include "../core/Log.h"

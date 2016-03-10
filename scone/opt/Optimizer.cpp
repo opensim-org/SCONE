@@ -4,7 +4,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
-#include <boost/foreach.hpp>
 
 #include "Factories.h"
 #include "../core/Log.h"

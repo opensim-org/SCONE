@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "FeedForwardController.h"
 
-#include <boost/foreach.hpp>
-
 #include "../core/InitFromPropNode.h"
 #include "../core/Log.h"
 

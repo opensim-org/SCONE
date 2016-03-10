@@ -2,7 +2,6 @@
 
 #include "StateController.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "../sim/Factories.h"
 
