@@ -34,7 +34,7 @@ namespace scone
 			ref_length_base = 1.0;
 
 			// precompute number of dofs and total moment arm
-			BOOST_FOREACH( const MetaReflexDofUP& mrdof, controller.GetReflexDofs() )
+			for ( const MetaReflexDofUP& mrdof: controller.GetReflexDofs() )
 			{
 				if ( muscle.HasMomentArm( mrdof->target_dof ) )
 				{
@@ -52,7 +52,7 @@ namespace scone
 			}
 
 			// now compute the max available moment for each dof
-			BOOST_FOREACH( DofInfo& di, dof_infos )
+			for ( DofInfo& di: dof_infos )
 			{
 				Real mom_w = di.moment_arm / total_abs_moment_arm;
 				di.w = mom_w;
@@ -123,7 +123,7 @@ namespace scone
 			}
 
 			// compute muscle feedback parameters
-			BOOST_FOREACH( const DofInfo& di, dof_infos )
+			for ( const DofInfo& di: dof_infos )
 			{
 				// TODO: store these in DofInfo
 				const MetaReflexParams& dof_par = di.w > 0 ? di.dof.dof_pos : di.dof.dof_neg;

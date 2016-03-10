@@ -35,7 +35,7 @@ namespace scone
 			// extract individual body names from gait_bodies string
 			boost::char_separator< char > separator(", ");
 			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
-			BOOST_FOREACH( const String& t, tokens )
+			for ( const String& t: tokens )
 			{
 				sim::Body& b = *FindByName( model.GetBodies(), t );
 				m_GaitBodies.push_back( &b );
@@ -120,7 +120,7 @@ namespace scone
 		{
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;
-			BOOST_FOREACH( const sim::LegUP& leg, model.GetLegs() )
+			for ( const sim::LegUP& leg: model.GetLegs() )
 				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
 			distances.insert( model.GetComPos().x );
 
@@ -139,7 +139,7 @@ namespace scone
 			if ( m_PrevContactState.empty() )
 			{
 				// initialize
-				BOOST_FOREACH( const sim::LegUP& leg, model.GetLegs() )
+				for ( const sim::LegUP& leg: model.GetLegs() )
 					m_PrevContactState.push_back( leg->GetLoad() >= load_threshold );
 				return false;
 			}

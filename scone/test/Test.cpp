@@ -275,11 +275,11 @@ namespace scone
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
-			BOOST_FOREACH( sim::DofUP& dof, m->GetDofs() )
+			for ( sim::DofUP& dof: m->GetDofs() )
 				dof->SetPos( dof_val, true );
 
 			cout << "DOF offset = " << dof_val << endl;
-			BOOST_FOREACH( sim::MuscleUP& mus, m->GetMuscles() )
+			for ( sim::MuscleUP& mus: m->GetMuscles() )
 			{
 				if ( GetSide( mus->GetName() ) == RightSide )
 				{

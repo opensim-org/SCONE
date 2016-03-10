@@ -250,7 +250,7 @@ namespace scone
 	void FromPropertyTree( PropNode& props, const ptree& tree )
 	{
 		props.SetValueType( tree.get_value("") );
-		BOOST_FOREACH( const ptree::value_type& v, tree )
+		for ( const ptree::value_type& v: tree )
 		{
 			if ( v.first == "<xmlattr>" )
 			{

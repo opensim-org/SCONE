@@ -32,7 +32,7 @@ namespace scone
 
 			// create normal reflexes
 			const PropNode& reflexvec = props.GetChild( "Reflexes" );
-			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexvec.GetChildren() )
+			for ( const PropNode::KeyChildPair& item: reflexvec.GetChildren() )
 			{
 				// todo: handle "targets" tag? or create a new class for groups of monosynaptic muscles?
 				m_Reflexes.push_back( CreateReflex( *item.second, par, model, area ) );
@@ -48,7 +48,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 
 			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
-			BOOST_FOREACH( ReflexUP& r, m_Reflexes )
+			for ( ReflexUP& r: m_Reflexes )
 				r->ComputeControls( timestamp );
 
 			return SuccessfulUpdate;
@@ -60,7 +60,7 @@ namespace scone
 
 			// count reflex types
 			//int l = 0, v = 0, f = 0;
-			//BOOST_FOREACH( const MuscleReflexUP& r, m_Reflexes )
+			//for ( const MuscleReflexUP& r, m_Reflexes )
 			//{
 			//	if ( r->length_gain != 0.0 ) ++l;
 			//	if ( r->velocity_gain != 0.0 ) ++v;

@@ -97,7 +97,7 @@ namespace scone
 
 			// add a new frame and update
 			m_SensorDelayStorage.AddFrame( GetTime() );
-			BOOST_FOREACH( std::unique_ptr< SensorDelayAdapter >& sda, m_SensorDelayAdapters )
+			for ( std::unique_ptr< SensorDelayAdapter >& sda: m_SensorDelayAdapters )
 				sda->UpdateStorage();
 
 			//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
@@ -155,12 +155,12 @@ namespace scone
 
 			// reset actuator values
 			// TODO: not only muscles!
-			BOOST_FOREACH( MuscleUP& mus, GetMuscles() )
+			for ( MuscleUP& mus: GetMuscles() )
 				mus->ResetControlValue();
 
 			// update all controllers
 			bool terminate = false;
-			BOOST_FOREACH( ControllerUP& con, GetControllers() )
+			for ( ControllerUP& con: GetControllers() )
 				terminate |= con->UpdateControls( *this, GetTime() ) == Controller::RequestTermination;
 
 			//log::TraceF( "Controls updated for Int=%03d time=%.6f", GetIntegrationStep(), GetTime() );
@@ -174,7 +174,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 
 			bool terminate = false;
-			BOOST_FOREACH( ControllerUP& con, GetControllers() )
+			for ( ControllerUP& con: GetControllers() )
 				terminate |= con->UpdateAnalysis( *this, GetTime() ) == sim::Controller::RequestTermination;
 
 			if ( terminate )
@@ -191,7 +191,7 @@ namespace scone
 		scone::Real Model::GetTotalContactForce() const
 		{
 			Real force = 0.0;
-			BOOST_FOREACH( const LegUP& leg, GetLegs() )
+			for ( const LegUP& leg: GetLegs() )
 				force += leg->GetContactForce().GetLength();
 			return force;
 		}

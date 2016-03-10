@@ -71,7 +71,7 @@ namespace scone
 		{
 			String str = GetApplicationVersion() + "." + m_Model->GetSignature();
 
-			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
+			for ( sim::ControllerUP& c: m_Model->GetControllers() )
 				str += "." + c->GetSignature();
 			str += GetStringF( ".D%.0f", max_duration );
 

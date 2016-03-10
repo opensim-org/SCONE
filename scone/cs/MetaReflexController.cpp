@@ -30,7 +30,7 @@ namespace scone
 
 			// create Meta Reflexes
 			const PropNode& reflexes = props.GetChild( "Reflexes" );
-			BOOST_FOREACH( const PropNode::KeyChildPair& item, reflexes.GetChildren() )
+			for ( const PropNode::KeyChildPair& item: reflexes.GetChildren() )
 			{
 				if ( item.second->GetStr( "type" ) == "MetaReflex" )
 				{
@@ -61,7 +61,7 @@ namespace scone
 			auto org_state = model.GetStateValues();
 
 			// reset all dofs to ensure consistency when there are unspecified dofs
-			BOOST_FOREACH( sim::DofUP& dof, model.GetDofs() )
+			for ( sim::DofUP& dof: model.GetDofs() )
 			{
 				dof->SetPos( 0, false );
 				dof->SetVel( 0 );
@@ -69,15 +69,15 @@ namespace scone
 
 			// now set the DOFs
 			// TODO: include mirror_left variable!
-			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+			for ( MetaReflexDofUP& mr: m_ReflexDofs )
 				mr->target_dof.SetPos( Radian( Degree( mr->dof_pos.ref_pos ) ), false );
 
 			// set target dof rotation axes (required for local balance)
-			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+			for ( MetaReflexDofUP& mr: m_ReflexDofs )
 				mr->SetDofRotationAxis();
 
 			// Create meta reflex muscles
-			BOOST_FOREACH( sim::MuscleUP& mus, model.GetMuscles() )
+			for ( sim::MuscleUP& mus: model.GetMuscles() )
 			{
 				if ( GetSide( mus->GetName() ) == area.side )
 				{
@@ -88,7 +88,7 @@ namespace scone
 			}
 
 			// init meta reflex control parameters
-			BOOST_FOREACH( MetaReflexMuscleUP& mrm, m_ReflexMuscles )
+			for ( MetaReflexMuscleUP& mrm: m_ReflexMuscles )
 				mrm->UpdateMuscleControlParameters( true );
 
 			// restore original state
@@ -104,13 +104,13 @@ namespace scone
 			// get balance
 			Vec3 global_balance = model.GetDelayedOrientation();
 
-			BOOST_FOREACH( MetaReflexDofUP& mrdof, m_ReflexDofs )
+			for ( MetaReflexDofUP& mrdof: m_ReflexDofs )
 				mrdof->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
-			BOOST_FOREACH( MetaReflexVirtualMuscleUP& vm, m_VirtualMuscles )
+			for ( MetaReflexVirtualMuscleUP& vm: m_VirtualMuscles )
 				vm->UpdateLocalBalance( global_balance ); // TODO: perhaps not every time?
 
-			BOOST_FOREACH( MetaReflexMuscleUP& mrmus, m_ReflexMuscles )
+			for ( MetaReflexMuscleUP& mrmus: m_ReflexMuscles )
 			{
 				mrmus->UpdateMuscleControlParameters(); // TODO: perhaps not every time?
 				mrmus->UpdateControls();
@@ -123,7 +123,7 @@ namespace scone
 		{
 			// count reflex types
 			int l = 0, c = 0, f = 0, s = 0;
-			BOOST_FOREACH( const MetaReflexMuscleUP& r, m_ReflexMuscles )
+			for ( const MetaReflexMuscleUP& r: m_ReflexMuscles )
 			{
 				if ( r->length_gain != 0.0 ) ++l;
 				if ( r->constant != 0.0 ) ++c;
@@ -142,7 +142,7 @@ namespace scone
 
 		void MetaReflexController::StoreData( Storage< Real >::Frame& frame )
 		{
-			BOOST_FOREACH( MetaReflexDofUP& mr, m_ReflexDofs )
+			for ( MetaReflexDofUP& mr: m_ReflexDofs )
 				mr->StoreData( frame );
 		}
 	}

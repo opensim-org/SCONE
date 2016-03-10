@@ -371,7 +371,7 @@ namespace scone
 					SCONE_PROFILE_SCOPE_NAMED( "addInControls" );
 					SimTK::Vector controlValue( 1 );
 					int idx = 0;
-					BOOST_FOREACH( MuscleUP& mus, m_Model.GetMuscles() )
+					for ( MuscleUP& mus: m_Model.GetMuscles() )
 					{
 						// This is an optimization that only works when there are only muscles
 						// OpenSim: addInControls is rather inefficient, that's why we changed it
@@ -612,7 +612,7 @@ namespace scone
 
 		void Model_Simbody::SetStateVariables( const std::map< String, Real >& state )
 		{
-			BOOST_FOREACH( const State::value_type& nvp, state )
+			for ( const State::value_type& nvp: state )
 				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
 		}
 

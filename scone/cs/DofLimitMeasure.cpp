@@ -41,7 +41,7 @@ namespace scone
 			if ( !IsActive( model, timestamp ) )
 				return NoUpdate;
 
-			BOOST_FOREACH( Limit& l, m_Limits )
+			for ( Limit& l: m_Limits )
 			{
 				if ( l.squared_range_penalty > 0.0 )
 				{
@@ -72,7 +72,7 @@ namespace scone
 		double DofLimitMeasure::GetResult( sim::Model& model )
 		{
 			double result = 0.0;
-			BOOST_FOREACH( Limit& l, m_Limits )
+			for ( Limit& l: m_Limits )
 			{
 				result += l.penalty.GetAverage();
 				m_Report.Set( l.dof.GetName(), GetStringF( "%g", l.penalty.GetAverage() ) );
@@ -88,7 +88,7 @@ namespace scone
 
 		void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame )
 		{
-			BOOST_FOREACH( Limit& l, m_Limits )
+			for ( Limit& l: m_Limits )
 				frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
 		}
 

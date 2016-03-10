@@ -192,7 +192,7 @@ namespace scone
 		String ParamSet::GetNamePrefix() const
 		{
 			String full_prefix;
-			BOOST_FOREACH( const String& s, m_NamePrefixes )
+			for ( const String& s: m_NamePrefixes )
 				full_prefix += s;
 			return full_prefix;
 		}
