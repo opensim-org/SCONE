@@ -3,9 +3,9 @@
 #    Shark_INCLUDE_DIRS
 
 find_path(Shark_INCLUDE_DIR
-    NAMES "SharkDefs.h"
+    NAMES "shark/Core/Shark.h"
     PATHS "${SHARK_ROOT}"
-    PATH_SUFFIXES "include"
+    PATH_SUFFIXES "include/shark"
     )
 
 find_library(Shark_LIBRARY
