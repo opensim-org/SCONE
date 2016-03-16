@@ -1,7 +1,5 @@
 #include "stdafx.h"
 
-#include <boost/foreach.hpp>
-
 #include "MetaReflexDof.h"
 #include "../sim/Area.h"
 #include "../sim/Dof.h"

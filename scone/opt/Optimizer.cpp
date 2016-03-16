@@ -4,7 +4,6 @@
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
-#include <boost/foreach.hpp>
 
 #include "Factories.h"
 #include "../core/Log.h"
@@ -166,7 +165,7 @@ namespace scone
 				if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
 				{
 					// delete the file(s)
-					BOOST_FOREACH( String& file, testIt->second )
+					for ( String& file: testIt->second )
 						boost::filesystem::remove( path( file ) );
 
 					m_OutputFiles.erase( testIt );

@@ -78,7 +78,7 @@ namespace scone
 		double EffortMeasure::GetTotalForce( const sim::Model& model ) const
 		{
 			double f = 1.0; // base muscle force
-			BOOST_FOREACH( const sim::MuscleUP& mus, model.GetMuscles() )
+			for ( const sim::MuscleUP& mus: model.GetMuscles() )
 				f += mus->GetForce();
 
 			return f;
@@ -87,7 +87,7 @@ namespace scone
 		double EffortMeasure::GetWang2012( const sim::Model& model ) const
 		{
 			double e = m_Wang2012BasalEnergy;
-			BOOST_FOREACH( const sim::MuscleUP& mus, model.GetMuscles() )
+			for ( const sim::MuscleUP& mus: model.GetMuscles() )
 			{
 				double mass = mus->GetMass( specific_tension, muscle_density);
 				Real l = 0.5;

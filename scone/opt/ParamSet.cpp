@@ -7,7 +7,6 @@
 #include <boost/format.hpp>
 #include "../core/Log.h"
 
-#include <boost/foreach.hpp>
 #include "../core/tools.h"
 
 namespace scone
@@ -168,6 +167,15 @@ namespace scone
 			}
 		}
 
+		void ParamSet::UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds )
+		{
+			for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
+			{
+				m_Params[ parIdx ].first.init_mean = means[ parIdx ];
+				m_Params[ parIdx ].first.init_std = stds[ parIdx ];
+			}
+		}
+
 		void ParamSet::PushNamePrefix( const String& prefix )
 		{
 			m_NamePrefixes.push_back( prefix );
@@ -183,7 +191,7 @@ namespace scone
 		String ParamSet::GetNamePrefix() const
 		{
 			String full_prefix;
-			BOOST_FOREACH( const String& s, m_NamePrefixes )
+			for ( const String& s: m_NamePrefixes )
 				full_prefix += s;
 			return full_prefix;
 		}

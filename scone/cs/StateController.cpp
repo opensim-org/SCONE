@@ -2,7 +2,6 @@
 
 #include "StateController.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 #include "../sim/Factories.h"
 
@@ -29,7 +28,7 @@ namespace scone
 				String state_masks = ccIt->second->GetStr( "states" );
 				boost::char_separator< char > state_mask_seperator(";,");
 				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
-				BOOST_FOREACH( const String& instance_states, state_tokens )
+				for ( const String& instance_states: state_tokens )
 				{
 					// create new conditional controller
 					m_ConditionalControllers.push_back( ConditionalController() );
@@ -65,7 +64,7 @@ namespace scone
 			SCONE_ASSERT( current_state < GetStateCount() );
 
 			// update controller states
-			BOOST_FOREACH( ConditionalController& cc, m_ConditionalControllers )
+			for ( ConditionalController& cc: m_ConditionalControllers )
 			{
 				ConditionalControllerState& ccs = cc.first;
 				bool activate = ccs.state_mask[ current_state ];
@@ -81,7 +80,7 @@ namespace scone
 
 		StateController::UpdateResult StateController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			BOOST_FOREACH( ConditionalController& cc, m_ConditionalControllers )
+			for ( ConditionalController& cc: m_ConditionalControllers )
 			{
 				if ( cc.first.is_active )
 					cc.second->UpdateControls( model, timestamp - cc.first.is_active_since );
@@ -95,7 +94,7 @@ namespace scone
 			String s = "S";
 
 			std::map< String, int > controllers;
-			BOOST_FOREACH( const ConditionalController& cc, m_ConditionalControllers )
+			for ( const ConditionalController& cc: m_ConditionalControllers )
 				controllers[ cc.second->GetSignature() ] += 1;
 
 			// output number of controllers per leg

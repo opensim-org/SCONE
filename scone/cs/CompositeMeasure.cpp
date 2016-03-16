@@ -2,7 +2,6 @@
 
 #include "CompositeMeasure.h"
 #include "../sim/Factories.h"
-#include <boost/foreach.hpp>
 #include "../core/Profiler.h"
 
 namespace scone
@@ -51,7 +50,7 @@ namespace scone
 
 		void CompositeMeasure::StoreData( Storage< Real >::Frame& frame )
 		{
-			BOOST_FOREACH( Term& t, m_Terms )
+			for ( Term& t: m_Terms )
 				t.measure->StoreData( frame );
 		}
 
@@ -67,7 +66,7 @@ namespace scone
 				return NoUpdate;
 
 			bool terminate = false;
-			BOOST_FOREACH( Term& t, m_Terms )
+			for ( Term& t: m_Terms )
 				terminate |= t.measure->UpdateAnalysis( model, timestamp ) == RequestTermination;
 
 			return terminate ? RequestTermination : SuccessfulUpdate;
@@ -76,7 +75,7 @@ namespace scone
 		double CompositeMeasure::GetResult( sim::Model& model )
 		{
 			double total = 0.0;
-			BOOST_FOREACH( Term& t, m_Terms )
+			for ( Term& t: m_Terms )
 			{
 				double org_result = t.measure->GetResult( model );
 				double ofset_result = org_result + t.offset;
@@ -98,7 +97,7 @@ namespace scone
 		scone::String CompositeMeasure::GetClassSignature() const
 		{
 			String str;
-			BOOST_FOREACH( auto& t, m_Terms )
+			for ( auto& t: m_Terms )
 				str += t.measure->GetSignature();
 
 			return str;

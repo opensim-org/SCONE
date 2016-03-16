@@ -1,5 +1,7 @@
 #pragma once
 
+#define USE_SHARK_V2 0
+
 #include <memory>
 #include "../core/core.h"
 #include "../core/PropNode.h"

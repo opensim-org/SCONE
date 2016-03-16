@@ -117,7 +117,7 @@ namespace scone
 
 		double result;
 		Timer timer;
-		result = so.Evaluate();
+		result = obj->Evaluate();
 
 		timer.Pause();
 
@@ -209,7 +209,7 @@ namespace scone
 		double result;
 
 		timer.Restart();
-		result = so.Evaluate();
+		result = obj->Evaluate();
 		timer.Pause();
 
 		// collect statistics
@@ -247,7 +247,7 @@ namespace scone
 		Profiler::GetGlobalInstance().Reset();
 
 		Timer timer;
-		double result = so.Evaluate();
+		double result = obj->Evaluate();
 		timer.Pause();
 
 		// collect statistics
@@ -275,11 +275,11 @@ namespace scone
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
-			BOOST_FOREACH( sim::DofUP& dof, m->GetDofs() )
+			for ( sim::DofUP& dof: m->GetDofs() )
 				dof->SetPos( dof_val, true );
 
 			cout << "DOF offset = " << dof_val << endl;
-			BOOST_FOREACH( sim::MuscleUP& mus, m->GetMuscles() )
+			for ( sim::MuscleUP& mus: m->GetMuscles() )
 			{
 				if ( GetSide( mus->GetName() ) == RightSide )
 				{

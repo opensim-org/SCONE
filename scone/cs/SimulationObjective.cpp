@@ -3,7 +3,6 @@
 #include "SimulationObjective.h"
 #include "../core/Exception.h"
 
-#include <boost/foreach.hpp>
 #include <algorithm>
 
 #include "../sim/Model.h"
@@ -24,6 +23,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, max_duration, 6000.0 );
 
+			// process parameters to flag unused model props
 			ProcessParameters( par );
 		}
 
@@ -70,7 +70,7 @@ namespace scone
 		{
 			String str = GetApplicationVersion() + "." + m_Model->GetSignature();
 
-			BOOST_FOREACH( sim::ControllerUP& c, m_Model->GetControllers() )
+			for ( sim::ControllerUP& c: m_Model->GetControllers() )
 				str += "." + c->GetSignature();
 			str += GetStringF( ".D%.0f", max_duration );
 

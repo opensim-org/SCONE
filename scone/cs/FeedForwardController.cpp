@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "FeedForwardController.h"
 
-#include <boost/foreach.hpp>
-
 #include "../core/InitFromPropNode.h"
 #include "../core/Log.h"
 
@@ -51,7 +49,7 @@ namespace scone
 				}
 			}
 
-			BOOST_FOREACH( ActInfo& ai, m_ActInfos )
+			for ( ActInfo& ai: m_ActInfos )
 			{
 				if ( use_symmetric_actuators )
 				{
@@ -94,7 +92,7 @@ namespace scone
 				funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
 			// apply results to all actuators
-			BOOST_FOREACH( ActInfo& ai, m_ActInfos )
+			for ( ActInfo& ai: m_ActInfos )
 			{
 				if ( UseModes() )
 				{

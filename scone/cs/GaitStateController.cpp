@@ -7,7 +7,6 @@
 #include "../sim/Muscle.h"
 #include "../core/InitFromPropNode.h"
 
-#include <boost/foreach.hpp>
 #include <boost/tokenizer.hpp>
 
 #include "../sim/Body.h"
@@ -51,7 +50,7 @@ namespace scone
 			INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
 			
 			// create leg states
-			BOOST_FOREACH( sim::LegUP& leg, model.GetLegs() )
+			for ( sim::LegUP& leg: model.GetLegs() )
 			{		
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 				log::TraceF( "leg %d leg_length=%.2f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
@@ -65,7 +64,7 @@ namespace scone
 				String state_masks = ccIt->second->GetStr( "states" );
 				boost::char_separator< char > state_mask_seperator(";,");
 				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
-				BOOST_FOREACH( const String& instance_states, state_tokens )
+				for ( const String& instance_states: state_tokens )
 				{
 					// automatically create controllers for all legs (sides)
 					for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
@@ -111,7 +110,7 @@ namespace scone
 				UpdateControllerStates( model, timestamp );
 			}
 
-			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
+			for ( ConditionalControllerUP& cc: m_ConditionalControllers )
 			{
 				if ( cc->active )
 				{
@@ -207,7 +206,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 
 			// update controller states
-			BOOST_FOREACH( ConditionalControllerUP& cc, m_ConditionalControllers )
+			for ( ConditionalControllerUP& cc: m_ConditionalControllers )
 			{
 				bool activate = cc->state_mask.test( m_LegStates[ cc->leg_index ]->state );
 
@@ -225,7 +224,7 @@ namespace scone
 			String s = "G";
 
 			std::map< String, int > controllers;
-			BOOST_FOREACH( const ConditionalControllerUP& cc, m_ConditionalControllers )
+			for ( const ConditionalControllerUP& cc: m_ConditionalControllers )
 				controllers[ cc->controller->GetSignature() ] += 1;
 
 			// output number of controllers per leg

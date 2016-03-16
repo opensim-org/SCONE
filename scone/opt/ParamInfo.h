@@ -21,8 +21,7 @@ namespace scone
 			String name;
 
 			/// current state
-			//double value; // TODO: use this
-			double init_mean; // TODO: rename to init_mean?
+			double init_mean;
 			double init_std;
 
 			/// initialization options
