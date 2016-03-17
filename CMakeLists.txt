@@ -16,18 +16,17 @@ set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/build/cmake")
 
+# This uses the FindShark.cmake file in build/cmake.
+find_package(Shark REQUIRED)
+
 # Link with boost's static libraries.
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
-	filesystem system thread date_time chrono)
-
+	filesystem system thread date_time chrono serialization)
 
 # This uses the FindOpenSim.cmake file in build/cmake.
 find_package(OpenSim 3.3 REQUIRED)
-
-# This uses the FindShark.cmake file in build/cmake.
-find_package(Shark REQUIRED)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
