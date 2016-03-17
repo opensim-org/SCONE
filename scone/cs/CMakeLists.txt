@@ -1,5 +1,20 @@
-
-set(CONTROLLERS_OLDREFLEXES_FILES
+set(CONTROLLERS_FEEDFORWARD_FILES
+	FeedForwardController.cpp
+	FeedForwardController.h
+	)
+set(CONTROLLERS_MRC_FILES
+	MetaReflexParams.cpp
+	MetaReflexParams.h
+	MetaReflexController.cpp
+	MetaReflexController.h
+    MetaReflexDof.cpp
+    MetaReflexDof.h
+    MetaReflexMuscle.cpp
+    MetaReflexMuscle.h
+    MetaReflexVirtualMuscle.cpp
+    MetaReflexVirtualMuscle.h
+	)
+set(CONTROLLERS_REFLEX_FILES
 	ConditionalMuscleReflex.cpp
 	ConditionalMuscleReflex.h
 	DofReflex.cpp
@@ -11,19 +26,9 @@ set(CONTROLLERS_OLDREFLEXES_FILES
 	ReflexController.cpp
 	ReflexController.h
 	)
-set(CONTROLLERS_FILES
-	FeedForwardController.cpp
-	FeedForwardController.h
+set(CONTROLLERS_STATE_FILES
 	GaitStateController.cpp
 	GaitStateController.h
-	MetaReflexParams.cpp
-	MetaReflexParams.h
-	MetaReflexController.cpp
-	MetaReflexController.h
-    MetaReflexDof.cpp
-    MetaReflexDof.h
-    MetaReflexMuscle.cpp
-    MetaReflexMuscle.h
 	StateController.cpp
 	StateController.h
 	TimeStateController.cpp
@@ -74,8 +79,13 @@ set(TOOLS_FILES
 add_library(scone-cs # Name of the library file.
     SHARED # versus static.
     # Source code files:
-    ${CONTROLLERS_OLDREFLEXES_FILES} ${CONTROLLERS_FILES}
-    ${FUNCTIONS_FILES} ${MEASURES_FILES} ${SYSTEM_FILES} 
+    ${CONTROLLERS_FEEDFORWARD_FILES}
+	${CONTROLLERS_MRC_FILES}
+	${CONTROLLERS_REFLEX_FILES}
+	${CONTROLLERS_STATE_FILES}
+    ${FUNCTIONS_FILES}
+	${MEASURES_FILES}
+	${SYSTEM_FILES} 
     ${TOOLS_FILES})
 target_link_libraries(scone-cs scone-sim_simbody
     ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
@@ -88,8 +98,10 @@ set_target_properties(scone-cs PROPERTIES
 
 # To create folders in Visual Studio.
 # The '\\' creates a nested directory.
-source_group("Controllers\\Old Reflexes" FILES ${CONTROLLERS_OLDREFLEXES_FILES})
-source_group("Controllers" FILES ${CONTROLLERS_FILES})
+source_group("Controllers\\Feed Forward Control" FILES ${CONTROLLERS_FEEDFORWARD_FILES})
+source_group("Controllers\\Meta Reflex Control" FILES ${CONTROLLERS_MRC_FILES})
+source_group("Controllers\\Reflex Control" FILES ${CONTROLLERS_REFLEX_FILES})
+source_group("Controllers\\State Control" FILES ${CONTROLLERS_STATE_FILES})
 source_group("Functions" FILES ${FUNCTIONS_FILES})
 source_group("Measures" FILES ${MEASURES_FILES})
 source_group("System" FILES ${SYSTEM_FILES})

@@ -6,6 +6,7 @@ set(BASE_FILES
     HasName.h
     HasSignature.cpp
     HasSignature.h
+	Result.h
     )
 set(MATH_FILES
     Angle.h
@@ -36,6 +37,7 @@ set(TOOLS_FILES
     Profiler.h
     ResourceCache.h
     Storage.h
+	StorageIo.h
     StringMap.h
     system.cpp
     system.h
