@@ -64,13 +64,11 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\Hg-3rdPartyLibs\Boost\boost-1.58-msvc2013.props" />
-    <Import Project="..\..\..\3rdParty\Shark\shark-2.3.4-msvc2013.props" />
     <Import Project="..\..\..\3rdParty\Shark\shark-3.0.0-msvc2013.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\Hg-3rdPartyLibs\Boost\boost-1.58-msvc2013.props" />
-    <Import Project="..\..\..\3rdParty\Shark\shark-2.3.4-msvc2013.props" />
     <Import Project="..\..\..\3rdParty\Shark\shark-3.0.0-msvc2013.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
