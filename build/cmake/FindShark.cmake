@@ -32,4 +32,4 @@ mark_as_advanced(
     Shark_INCLUDE_DIR
 )
 
-unset(Shark_INCLUDE_DIR CACHE)
+#unset(Shark_INCLUDE_DIR CACHE)
