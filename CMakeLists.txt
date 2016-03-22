@@ -6,11 +6,9 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-
 # User options.
 # -------------
 set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
-
 
 # Find dependencies.
 # ------------------
@@ -52,7 +50,6 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
     set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
 endif()
 
-
 # Various settings
 # ----------------
 # Place build products (libraries, executables) in root
@@ -61,7 +58,6 @@ endif()
 get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
-
 
 # Process source code.
 # --------------------

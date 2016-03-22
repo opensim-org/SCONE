@@ -1,4 +1,3 @@
-
 set(BASE_FILES
     Exception.h
     Factory.h
