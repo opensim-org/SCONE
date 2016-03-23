@@ -3,17 +3,25 @@
 #    Shark_INCLUDE_DIRS
 
 find_path(Shark_INCLUDE_DIR
-    NAMES "SharkDefs.h"
+    NAMES "shark/Core/Shark.h"
     PATHS "${SHARK_ROOT}"
-    PATH_SUFFIXES "include"
+    PATH_SUFFIXES "include/shark"
     )
 
-find_library(Shark_LIBRARY
+find_library(Shark_LIBRARY_RELEASE
     NAMES shark
     PATHS "${SHARK_ROOT}"
     PATH_SUFFIXES "lib"
     )
 
+find_library(Shark_LIBRARY_DEBUG
+    NAMES shark_debug
+    PATHS "${SHARK_ROOT}"
+    PATH_SUFFIXES "lib"
+    )
+
+set(Shark_LIBRARY optimized ${Shark_LIBRARY_RELEASE} debug ${Shark_LIBRARY_DEBUG})
+	
 # This CMake-supplied script provides standard error handling.
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Shark
@@ -32,4 +40,4 @@ mark_as_advanced(
     Shark_INCLUDE_DIR
 )
 
-unset(Shark_INCLUDE_DIR CACHE)
+#unset(Shark_INCLUDE_DIR CACHE)
