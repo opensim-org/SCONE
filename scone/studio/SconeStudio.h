@@ -10,7 +10,7 @@
     namespace Qt { typedef WFlags WindowFlags; }
 #endif
 #include "ui_SconeStudio.h"
-#include "../core/PropNode.h"
+#include "scone/core/PropNode.h"
 #include "SconeManager.h"
 
 class QFileSystemModel;

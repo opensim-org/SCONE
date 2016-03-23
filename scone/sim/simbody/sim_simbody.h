@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../core/core.h"
+#include "scone/core/core.h"
 
 #ifdef SCONE_SIM_SIMBODY_EXPORTS
 #define SCONE_SIM_SIMBODY_API __declspec(dllexport)

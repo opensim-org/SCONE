@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SconeStudio.h"
-#include "../core/system.h"
+#include "scone/core/system.h"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QFileSystemModel.h>

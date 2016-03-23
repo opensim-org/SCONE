@@ -14,6 +14,9 @@ set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/build/cmake")
 
+# find flut include path
+find_package(Flut REQUIRED)
+
 # This uses the FindShark.cmake file in build/cmake.
 find_package(Shark REQUIRED)
 
@@ -40,7 +43,8 @@ endif()
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
 include_directories(${Shark_INCLUDE_DIRS})
-
+include_directories(${FLUT_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR})
 
 # Compiler flags.
 # ---------------
@@ -61,6 +65,8 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Process source code.
 # --------------------
+add_subdirectory(subrepos/flut)
+
 add_subdirectory(scone/core)
 add_subdirectory(scone/sim)
 add_subdirectory(scone/sim/simbody)

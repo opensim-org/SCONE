@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Polynomial.h"
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 namespace scone
 {

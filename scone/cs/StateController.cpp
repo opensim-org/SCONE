@@ -3,7 +3,7 @@
 #include "StateController.h"
 
 #include <boost/tokenizer.hpp>
-#include "../sim/Factories.h"
+#include "scone/sim/Factories.h"
 
 namespace scone
 {

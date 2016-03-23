@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "DofReflex.h"
-#include "../sim/Dof.h"
-#include "../sim/Actuator.h"
-#include "../sim/Model.h"
-#include "../sim/SensorDelayAdapter.h"
+#include "scone/sim/Dof.h"
+#include "scone/sim/Actuator.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/SensorDelayAdapter.h"
 
 //#define DEBUG_MUSCLE "glut_max_r"
 

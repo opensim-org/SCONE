@@ -1,12 +1,11 @@
 #include "stdafx.h"
 #include "EffortMeasure.h"
-#include "boost/foreach.hpp"
-#include "../sim/Model.h"
-#include "../sim/sim.h"
-#include "../sim/Muscle.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Muscle.h"
 
 #include <boost/assign.hpp>
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

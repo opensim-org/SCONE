@@ -2,8 +2,8 @@
 
 #include "cs.h"
 
-#include "../core/core.h"
-#include "../sim/Muscle.h"
+#include "scone/core/core.h"
+#include "scone/sim/Muscle.h"
 #include <vector>
 #include "MetaReflexParams.h"
 #include "MetaReflexVirtualMuscle.h"

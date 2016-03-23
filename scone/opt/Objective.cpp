@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Objective.h"
-#include "../core/Exception.h"
+#include "scone/core/Exception.h"
 
 namespace scone
 {

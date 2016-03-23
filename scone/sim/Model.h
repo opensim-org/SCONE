@@ -2,21 +2,21 @@
 
 #include "sim.h"
 
-#include "../core/core.h"
-#include "../core/Vec3.h"
+#include "scone/core/core.h"
+#include "scone/core/Vec3.h"
 #include "Controller.h"
 #include "Link.h"
 #include "Leg.h"
 
-#include "../opt/ParamSet.h"
+#include "scone/opt/ParamSet.h"
 
 #include <map>
 #include <vector>
 #include "State.h"
-#include "../core/HasName.h"
-#include "../core/HasSignature.h"
+#include "scone/core/HasName.h"
+#include "scone/core/HasSignature.h"
 #include "Sensor.h"
-#include "../core/Storage.h"
+#include "scone/core/Storage.h"
 #include <array>
 #include <type_traits>
 

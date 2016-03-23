@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "DofLimitMeasure.h"
-#include "../sim/Model.h"
-#include "../core/Profiler.h"
+#include "scone/sim/Model.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

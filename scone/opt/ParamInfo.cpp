@@ -5,7 +5,7 @@
 #include "Rng/GlobalRng.h"
 #endif
 
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 namespace scone
 {

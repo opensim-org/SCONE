@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "ExampleObjective.h"
-#include "../core/Exception.h"
-#include "../core/PropNode.h"
-#include "../core/InitFromPropNode.h"
-#include "../opt/ParamSet.h"
+#include "scone/core/Exception.h"
+#include "scone/core/PropNode.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/opt/ParamSet.h"
 
 namespace scone
 {

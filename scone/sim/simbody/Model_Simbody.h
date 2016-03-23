@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "../Model.h"
+#include "scone/sim/Model.h"
 
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"

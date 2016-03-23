@@ -1,11 +1,11 @@
 #pragma once
 
 #include "cs.h"
-#include "../sim/Controller.h"
-#include "../core/PropNode.h"
-#include "../opt/ParamSet.h"
+#include "scone/sim/Controller.h"
+#include "scone/core/PropNode.h"
+#include "scone/opt/ParamSet.h"
 #include "Function.h"
-#include "../sim/Leg.h"
+#include "scone/sim/Leg.h"
 
 namespace OpenSim
 {

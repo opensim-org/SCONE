@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "MetaReflexVirtualMuscle.h"
-#include "../sim/Model.h"
-#include "../core/InitFromPropNode.h"
-#include "../sim/Muscle.h"
-#include "../core/Exception.h"
-#include "../sim/Joint.h"
+#include "scone/sim/Model.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/sim/Muscle.h"
+#include "scone/core/Exception.h"
+#include "scone/sim/Joint.h"
 
 namespace scone
 {

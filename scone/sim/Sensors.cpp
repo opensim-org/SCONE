@@ -4,7 +4,7 @@
 #include "Muscle.h"
 #include "Area.h"
 #include "Body.h"
-#include "../cs/Tools.h"
+#include "scone/cs/Tools.h"
 #include "Dof.h"
 #include <string.h>
 

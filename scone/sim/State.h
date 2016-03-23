@@ -2,7 +2,7 @@
 
 #include "sim.h"
 #include <map>
-#include "../core/core.h"
+#include "scone/core/core.h"
 
 namespace scone
 {

@@ -1,13 +1,13 @@
 #include "stdafx.h"
 
 #include "ParamSet.h"
-#include "../core/Exception.h"
+#include "scone/core/Exception.h"
 #include <algorithm>
 #include <fstream>
 #include <boost/format.hpp>
-#include "../core/Log.h"
+#include "scone/core/Log.h"
 
-#include "../core/tools.h"
+#include "scone/core/tools.h"
 
 namespace scone
 {

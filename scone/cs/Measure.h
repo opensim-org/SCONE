@@ -1,7 +1,7 @@
 #pragma once
-#include "../sim/sim.h"
-#include "../core/InitFromPropNode.h"
-#include "../sim/Controller.h"
+#include "scone/sim/sim.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/sim/Controller.h"
 
 namespace scone
 {

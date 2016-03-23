@@ -2,9 +2,9 @@
 
 #include <conio.h>
 
-#include "../core/Log.h"
-#include "../opt/opt.h"
-#include "../cs/cs.h"
+#include "scone/core/Log.h"
+#include "scone/opt/opt.h"
+#include "scone/cs/cs.h"
 
 using namespace scone;
 using namespace std;

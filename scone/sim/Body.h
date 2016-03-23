@@ -1,9 +1,9 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/Vec3.h"
-#include "../core/Quat.h"
-#include "../core/HasName.h"
+#include "scone/core/Vec3.h"
+#include "scone/core/Quat.h"
+#include "scone/core/HasName.h"
 
 namespace scone
 {

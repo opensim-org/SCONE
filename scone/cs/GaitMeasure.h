@@ -1,6 +1,6 @@
 #pragma once
 #include "Measure.h"
-#include "../core/Statistic.h"
+#include "scone/core/Statistic.h"
 #include "EffortMeasure.h"
 #include "DofLimitMeasure.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "../core/core.h"
+#include "scone/core/core.h"
 
 #ifdef SCONE_SIM_EXPORTS
 #define SCONE_SIM_API __declspec(dllexport)

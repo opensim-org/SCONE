@@ -5,12 +5,11 @@
 #include "Joint.h"
 #include "Dof.h"
 #include "Muscle.h"
-#include "boost/foreach.hpp"
 #include <algorithm>
 
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "SensorDelayAdapter.h"
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 #include "Factories.h"
 
 using std::endl;

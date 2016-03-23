@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/core.h"
+#include "scone/core/core.h"
 
 #ifdef CS_EXPORTS
 #define CS_API __declspec(dllexport)

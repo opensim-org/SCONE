@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../core/core.h"
-#include "../opt/ParamSet.h"
-#include "../core/HasName.h"
+#include "scone/core/core.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/core/HasName.h"
 #include "cs.h"
 
 namespace scone

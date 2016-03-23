@@ -1,7 +1,7 @@
 #pragma once
 
 #include "opt.h"
-#include "../core/Factory.h"
+#include "scone/core/Factory.h"
 #include "Optimizer.h"
 
 namespace scone

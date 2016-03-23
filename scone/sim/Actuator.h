@@ -1,8 +1,8 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/HasName.h"
-#include "../core/HasData.h"
+#include "scone/core/HasName.h"
+#include "scone/core/HasData.h"
 
 namespace scone
 {

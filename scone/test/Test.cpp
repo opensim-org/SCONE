@@ -3,26 +3,25 @@
 #define SCONE_ENABLE_PROFILING
 
 #include "Test.h"
-#include "../cs/cs.h"
-#include "../opt/ParamSet.h"
-#include "../sim/Factories.h"
-#include "../core/Timer.h"
+#include "scone/cs/cs.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/sim/Factories.h"
+#include "scone/core/Timer.h"
 #include <fstream>
 
 #include <boost/filesystem.hpp>
-#include "../opt/Factories.h"
-#include "../cs/SimulationObjective.h"
-#include "../core/Profiler.h"
-#include "../core/Delayer.h"
-#include "../core/system.h"
-#include "boost/foreach.hpp"
-#include "../sim/sim.h"
-#include "../sim/Muscle.h"
+#include "scone/opt/Factories.h"
+#include "scone/cs/SimulationObjective.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/Delayer.h"
+#include "scone/core/system.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Muscle.h"
 #include "boost/format.hpp"
-#include "../sim/Dof.h"
-#include "../cs/tools.h"
-#include "../sim/Side.h"
-#include "../sim/simbody/Model_Simbody.h"
+#include "scone/sim/Dof.h"
+#include "scone/cs/tools.h"
+#include "scone/sim/Side.h"
+#include "scone/sim/simbody/Model_Simbody.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;

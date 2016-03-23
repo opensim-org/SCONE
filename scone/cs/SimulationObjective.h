@@ -1,11 +1,11 @@
 #pragma once
 
 #include "cs.h"
-#include "../sim/sim.h"
-#include "../opt/Objective.h"
-#include "../opt/ParamSet.h"
-#include "../sim/Simulation.h"
-#include "../core/PropNode.h"
+#include "scone/sim/sim.h"
+#include "scone/opt/Objective.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/sim/Simulation.h"
+#include "scone/core/PropNode.h"
 
 #include "Measure.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Measure.h"
-#include "../core/StringMap.h"
-#include "../core/Statistic.h"
+#include "scone/core/StringMap.h"
+#include "scone/core/Statistic.h"
 
 namespace scone
 {

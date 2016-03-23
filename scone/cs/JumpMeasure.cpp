@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "JumpMeasure.h"
-#include "../sim/Area.h"
+#include "scone/sim/Area.h"
 
 namespace scone
 {

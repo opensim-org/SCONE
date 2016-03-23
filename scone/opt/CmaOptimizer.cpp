@@ -10,8 +10,8 @@
 
 #include <boost/format.hpp>
 
-#include "../core/Timer.h"
-#include "../core/Log.h"
+#include "scone/core/Timer.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {

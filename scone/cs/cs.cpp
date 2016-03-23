@@ -4,19 +4,19 @@
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
 
-#include "../sim/simbody/sim_simbody.h"
+#include "scone/sim/simbody/sim_simbody.h"
 #include <OpenSim/OpenSim.h>
 
-#include "../opt/Optimizer.h"
+#include "scone/opt/Optimizer.h"
 
 #include "SimulationObjective.h"
 #include "FeedForwardController.h"
 #include "HeightMeasure.h"
 #include "GaitMeasure.h"
 #include "EffortMeasure.h"
-#include "../sim/Factories.h"
-#include "../sim/simbody/Model_Simbody.h"
-#include "../opt/Factories.h"
+#include "scone/sim/Factories.h"
+#include "scone/sim/simbody/Model_Simbody.h"
+#include "scone/opt/Factories.h"
 #include "Factories.h"
 #include "PieceWiseConstantFunction.h"
 #include "PieceWiseLinearFunction.h"

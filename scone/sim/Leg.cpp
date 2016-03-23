@@ -4,7 +4,7 @@
 #include "Link.h"
 #include "Body.h"
 #include "Joint.h"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "Model.h"
 
 namespace scone

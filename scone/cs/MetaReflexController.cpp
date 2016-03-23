@@ -2,18 +2,18 @@
 
 #include "MetaReflexController.h"
 
-#include "../sim/sim.h"
-#include "../sim/Area.h"
-#include "../sim/Model.h"
-#include "../sim/Dof.h"
-#include "../sim/Muscle.h"
-#include "../core/HasName.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Area.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Dof.h"
+#include "scone/sim/Muscle.h"
+#include "scone/core/HasName.h"
 
 #include "tools.h"
 #include "Factories.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 #include <memory>
 
 namespace scone

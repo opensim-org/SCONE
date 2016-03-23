@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "Simulation_Simbody.h"
-#include "../../core/Exception.h"
+#include "scone/core/Exception.h"
 #include "Model_Simbody.h"
-#include "../../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 namespace scone
 {

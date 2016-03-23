@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/core.h"
+#include "scone/core/core.h"
 
 namespace scone
 {

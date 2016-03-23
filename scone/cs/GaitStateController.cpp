@@ -1,19 +1,19 @@
 #include "stdafx.h"
 
 #include "GaitStateController.h"
-#include "../sim/Model.h"
-#include "../sim/sim.h"
-#include "../sim/Leg.h"
-#include "../sim/Muscle.h"
-#include "../core/InitFromPropNode.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Leg.h"
+#include "scone/sim/Muscle.h"
+#include "scone/core/InitFromPropNode.h"
 
 #include <boost/tokenizer.hpp>
 
-#include "../sim/Body.h"
-#include "../sim/Factories.h"
-#include "../core/Log.h"
-#include "../core/Profiler.h"
-#include "../sim/SensorDelayAdapter.h"
+#include "scone/sim/Body.h"
+#include "scone/sim/Factories.h"
+#include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
+#include "scone/sim/SensorDelayAdapter.h"
 
 namespace scone
 {

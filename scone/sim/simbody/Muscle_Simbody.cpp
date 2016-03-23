@@ -2,8 +2,8 @@
 #include "Muscle_Simbody.h"
 #include "Model_Simbody.h"
 
-#include "../../core/Exception.h"
-#include "../../core/Profiler.h"
+#include "scone/core/Exception.h"
+#include "scone/core/Profiler.h"
 #include "Dof_Simbody.h"
 
 namespace scone

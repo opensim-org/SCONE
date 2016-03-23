@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Measure.h"
-#include "../sim/Body.h"
-#include "../core/Statistic.h"
+#include "scone/sim/Body.h"
+#include "scone/core/Statistic.h"
 
 namespace scone
 {

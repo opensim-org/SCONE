@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../core/Factory.h"
-#include "../core/PropNode.h"
-#include "../opt/ParamSet.h"
+#include "scone/core/Factory.h"
+#include "scone/core/PropNode.h"
+#include "scone/opt/ParamSet.h"
 
 #include "Function.h"
 #include "Reflex.h"

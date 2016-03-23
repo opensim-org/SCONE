@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "MuscleReflex.h"
-#include "../sim/Muscle.h"
-#include "../sim/Area.h"
+#include "scone/sim/Muscle.h"
+#include "scone/sim/Area.h"
 #include "Tools.h"
-#include "../sim/Dof.h"
+#include "scone/sim/Dof.h"
 
 //#define DEBUG_MUSCLE "vasti_r"
 

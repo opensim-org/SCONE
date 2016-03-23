@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "GaitMeasure.h"
-#include "../sim/Model.h"
-#include "../sim/Body.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Body.h"
 
 #include <boost/tokenizer.hpp>
-#include "../core/Log.h"
-#include "../sim/sim.h"
-#include "../sim/Muscle.h"
+#include "scone/core/Log.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Muscle.h"
 #include "boost/format.hpp"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

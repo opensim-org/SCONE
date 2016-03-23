@@ -6,9 +6,9 @@
 #include <boost/thread.hpp>
 
 #include "Factories.h"
-#include "../core/Log.h"
+#include "scone/core/Log.h"
 #include <sstream>
-#include "../core/system.h"
+#include "scone/core/system.h"
 
 using namespace boost::filesystem;
 

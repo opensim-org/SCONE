@@ -3,8 +3,8 @@
 #include "Model.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
-#include "../core/core.h"
-#include "../core/Storage.h"
+#include "scone/core/core.h"
+#include "scone/core/Storage.h"
 
 namespace scone
 {

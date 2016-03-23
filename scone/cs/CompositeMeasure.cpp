@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
 #include "CompositeMeasure.h"
-#include "../sim/Factories.h"
-#include "../core/Profiler.h"
+#include "scone/sim/Factories.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

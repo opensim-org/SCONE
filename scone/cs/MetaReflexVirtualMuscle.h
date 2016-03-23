@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../core/PropNode.h"
-#include "../opt/ParamSet.h"
-#include "../sim/Model.h"
-#include "../sim/Area.h"
-#include "../sim/SensorDelayAdapter.h"
-#include "../sim/Dof.h"
+#include "scone/core/PropNode.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Area.h"
+#include "scone/sim/SensorDelayAdapter.h"
+#include "scone/sim/Dof.h"
 #include "MetaReflexParams.h"
 #include <vector>
 
