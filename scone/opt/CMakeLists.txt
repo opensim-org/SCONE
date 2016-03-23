@@ -17,7 +17,9 @@ set(SYSTEM_FILES
     opt.h
     stdafx.cpp
     stdafx.h
+	SharkHelperClasses.h
     )
+
 add_library(scone-opt # Name of the library file.
     SHARED # versus static.
     # Source code files:
