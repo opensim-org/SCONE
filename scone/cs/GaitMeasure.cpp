@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include <boost/tokenizer.hpp>
 #include "boost/format.hpp"
 

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "StateController.h"
 
 #include <boost/tokenizer.hpp>

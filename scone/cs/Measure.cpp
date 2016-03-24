@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Measure.h"
 
 namespace scone

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "MetaReflexMuscle.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/SensorDelayAdapter.h"

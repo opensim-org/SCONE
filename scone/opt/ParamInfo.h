@@ -2,7 +2,6 @@
 
 #include "scone/core/core.h"
 #include "opt.h"
-#include "scone/core/math.h"
 
 namespace scone
 {

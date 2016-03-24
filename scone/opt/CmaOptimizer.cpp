@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CmaOptimizer.h"
 
 #if USE_SHARK_V2

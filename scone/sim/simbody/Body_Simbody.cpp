@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Body_Simbody.h"
 #include "scone/core/Exception.h"
 

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "GaitStateController.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/sim.h"

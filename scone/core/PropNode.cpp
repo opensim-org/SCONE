@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "PropNode.h"
 
 #include <set>

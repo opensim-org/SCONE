@@ -6,6 +6,7 @@
 namespace OpenSim
 {
 	class Coordinate;
+	class CoordinateLimitForce;
 }
 
 namespace scone

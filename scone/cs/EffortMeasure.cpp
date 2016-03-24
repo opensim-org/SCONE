@@ -1,10 +1,7 @@
-#include "stdafx.h"
 #include "EffortMeasure.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
-
-#include <boost/assign.hpp>
 #include "scone/core/Profiler.h"
 
 namespace scone

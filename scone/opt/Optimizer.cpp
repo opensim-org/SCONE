@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Optimizer.h"
 
 #include <boost/filesystem.hpp>

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Sensors.h"
 #include "Model.h"
 #include "Muscle.h"

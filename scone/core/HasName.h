@@ -2,6 +2,7 @@
 
 #include "core.h"
 #include "Exception.h"
+#include <vector>
 
 namespace scone
 {

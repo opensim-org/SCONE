@@ -1,4 +1,4 @@
-#include "stdafx.h"
+
 #include "HasSignature.h"
 #include "InitFromPropNode.h"
 

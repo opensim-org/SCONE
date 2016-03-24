@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Simulation.h"
 
 #include "scone/core/InitFromPropNode.h"

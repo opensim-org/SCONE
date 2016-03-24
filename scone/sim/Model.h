@@ -3,7 +3,6 @@
 #include "sim.h"
 
 #include "scone/core/core.h"
-#include "scone/core/math.h"
 #include "Controller.h"
 #include "Link.h"
 #include "Leg.h"

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "MetaReflexDof.h"
 #include "scone/sim/Area.h"
 #include "scone/sim/Dof.h"

@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ParamInfo.h"
 
 #if USE_SHARK_V2

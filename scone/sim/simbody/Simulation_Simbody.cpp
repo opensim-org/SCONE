@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Simulation_Simbody.h"
 #include "scone/core/Exception.h"
 #include "Model_Simbody.h"

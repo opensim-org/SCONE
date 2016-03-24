@@ -11,10 +11,6 @@
 
 namespace scone
 {
-	// import Vec3 and Quat from FLUT
-	using Vec3 = flut::math::vec3d;
-	using Quat = flut::math::quatd;
-
 	// math helper functions
 	inline Real DegToRad( Real d ) { return ( REAL_PI / 180 ) * d; }
 	inline Real RadToDeg( Real d ) { return ( 180 / REAL_PI ) * d; }

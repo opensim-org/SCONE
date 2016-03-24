@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
 

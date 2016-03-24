@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "MuscleReflex.h"
 #include "scone/sim/Muscle.h"
 #include "scone/sim/Area.h"

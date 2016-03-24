@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "ExampleObjective.h"
 #include "scone/core/Exception.h"
 #include "scone/core/PropNode.h"

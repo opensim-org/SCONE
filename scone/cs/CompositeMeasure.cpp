@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "CompositeMeasure.h"
 #include "scone/sim/Factories.h"
 #include "scone/core/Profiler.h"

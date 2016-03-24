@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "PieceWiseConstantFunction.h"
 #include "scone/core/InitFromPropNode.h"
 

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "MetaReflexController.h"
 
 #include "scone/sim/sim.h"

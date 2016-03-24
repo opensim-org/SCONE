@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "SconeStudio.h"
 #include "scone/core/system.h"
 

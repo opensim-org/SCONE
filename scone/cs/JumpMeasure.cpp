@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "JumpMeasure.h"
 #include "scone/sim/Area.h"
 

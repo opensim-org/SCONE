@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "HeightMeasure.h"
 #include "scone/sim/Model.h"
 #include "scone/core/Log.h"

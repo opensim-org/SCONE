@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "SimulationObjective.h"
 #include "scone/core/Exception.h"
 

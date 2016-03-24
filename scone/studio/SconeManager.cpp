@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
@@ -15,6 +13,8 @@
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
 
+#include "scone/sim/simbody/sim_simbody.h"
+
 using namespace boost::filesystem;
 using boost::format;
 using namespace std;
@@ -29,6 +29,7 @@ namespace scone
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
+		sim::RegisterSimbody();
 	}
 
 	SconeManager::~SconeManager()

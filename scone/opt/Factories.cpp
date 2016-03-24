@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Factories.h"
 
 namespace scone

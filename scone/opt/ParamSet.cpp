@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "ParamSet.h"
 #include "scone/core/Exception.h"
 #include <algorithm>

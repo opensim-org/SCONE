@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "DofLimitMeasure.h"
 #include "scone/sim/Model.h"
 #include "scone/core/Profiler.h"

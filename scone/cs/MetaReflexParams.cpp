@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "MetaReflexParams.h"
 
 namespace scone

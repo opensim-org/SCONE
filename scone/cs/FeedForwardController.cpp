@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "FeedForwardController.h"
 
 #include "scone/core/InitFromPropNode.h"

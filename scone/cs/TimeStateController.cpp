@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "TimeStateController.h"
 #include "scone/core/InitFromPropNode.h"
 

@@ -1,8 +1,4 @@
-#include "stdafx.h"
 #include "Timer.h"
-
-#include <Windows.h>
-#include <winbase.h>
 
 namespace scone
 {

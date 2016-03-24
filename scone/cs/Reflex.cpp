@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Reflex.h"
 #include "scone/core/InitFromPropNode.h"
 #include "scone/sim/Actuator.h"

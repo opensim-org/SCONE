@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Objective.h"
 #include "scone/core/Exception.h"
 

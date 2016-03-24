@@ -2,7 +2,6 @@
 
 #include "sim.h"
 #include "scone/core/HasName.h"
-#include "scone/core/math.h"
 
 namespace scone
 {

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "Leg.h"
 #include "Link.h"
 #include "Body.h"

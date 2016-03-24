@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "DofReflex.h"
 #include "scone/sim/Dof.h"
 #include "scone/sim/Actuator.h"

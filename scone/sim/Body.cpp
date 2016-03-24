@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Body.h"
 
 namespace scone

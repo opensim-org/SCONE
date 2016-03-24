@@ -11,6 +11,7 @@
 
 namespace OpenSim
 {
+	class Body;
 	class Model;
 	class Manager;
 	class Probe;

@@ -9,8 +9,6 @@ if(${Qt5Widgets_FOUND})
 		SconeManager.h
 		SconeStudio.cpp
 		SconeStudio.h
-		stdafx.cpp
-		stdafx.h
 		main.cpp
 		studio.rc
 		)

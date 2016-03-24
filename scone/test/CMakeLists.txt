@@ -3,8 +3,6 @@ set(FILES
     ExampleObjective.cpp
     ExampleObjective.h
     main.cpp
-    stdafx.cpp
-    stdafx.h
     Test.cpp
     Test.h
     )

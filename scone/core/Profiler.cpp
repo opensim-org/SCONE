@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Profiler.h"
 #include "tools.h"
 

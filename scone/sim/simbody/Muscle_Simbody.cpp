@@ -1,9 +1,11 @@
-#include "stdafx.h"
+#include <OpenSim/OpenSim.h>
+
 #include "Muscle_Simbody.h"
 #include "Model_Simbody.h"
 
 #include "scone/core/Exception.h"
 #include "scone/core/Profiler.h"
+
 #include "Dof_Simbody.h"
 
 namespace scone

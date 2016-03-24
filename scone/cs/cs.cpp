@@ -1,11 +1,7 @@
-#include "stdafx.h"
 #include "cs.h"
 
 #include <boost/filesystem.hpp>
 using namespace boost::filesystem;
-
-#include "scone/sim/simbody/sim_simbody.h"
-#include <OpenSim/OpenSim.h>
 
 #include "scone/opt/Optimizer.h"
 
@@ -15,7 +11,6 @@ using namespace boost::filesystem;
 #include "GaitMeasure.h"
 #include "EffortMeasure.h"
 #include "scone/sim/Factories.h"
-#include "scone/sim/simbody/Model_Simbody.h"
 #include "scone/opt/Factories.h"
 #include "Factories.h"
 #include "PieceWiseConstantFunction.h"
@@ -41,9 +36,6 @@ namespace scone
 		{
 			// register sim factory types
 			sim::RegisterFactoryTypes();
-
-			// simulation engines
-			sim::RegisterSimbody();
 
 			// register objective
 			opt::GetObjectiveFactory().Register< SimulationObjective >();

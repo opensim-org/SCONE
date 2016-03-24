@@ -8,6 +8,11 @@
 #define CORE_API __declspec(dllimport)
 #endif
 
+#include <SDKDDKVer.h>
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #else
 
 #define CORE_API
@@ -17,6 +22,9 @@
 #include <limits>
 #include <string>
 #include <memory>
+
+#include "flut/math/quat_type.hpp"
+#include "flut/math/vec3_type.hpp"
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
@@ -53,6 +61,10 @@ namespace scone
 	typedef size_t Count;
 	const Index NoIndex = std::numeric_limits< Index >::max();
 	typedef double TimeInSeconds;
+
+	// import Vec3 and Quat from FLUT
+	using Vec3 = flut::math::vec3_< Real >;
+	using Quat = flut::math::quat_< Real >;
 
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );

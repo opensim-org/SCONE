@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Muscle.h"
 
 #include "Link.h"

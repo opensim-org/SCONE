@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "GaitCycleMeasure.h"
 #include "scone/sim/Model.h"
 

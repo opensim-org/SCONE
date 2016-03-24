@@ -1,8 +1,8 @@
-#include "stdafx.h"
 #include "Log.h"
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
+#include <stdarg.h>
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
 if ( LEVEL >= g_LogLevel ) \

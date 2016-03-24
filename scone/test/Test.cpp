@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #define SCONE_ENABLE_PROFILING
 
 #include "Test.h"

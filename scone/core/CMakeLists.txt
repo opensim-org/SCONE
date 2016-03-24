@@ -22,8 +22,6 @@ set(PROPNODE_FILES
     )
 set(SYSTEM_FILES
     core.h
-    stdafx.cpp
-    stdafx.h
     )
 set(TOOLS_FILES
     Log.cpp

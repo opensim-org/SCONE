@@ -15,8 +15,6 @@ set(SYSTEM_FILES
     Factories.h
     opt.cpp
     opt.h
-    stdafx.cpp
-    stdafx.h
 	SharkHelperClasses.h
     )
 

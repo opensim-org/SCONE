@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Polynomial.h"
 #include "scone/core/InitFromPropNode.h"
 

@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #include "ReflexController.h"
 
 #include <boost/tokenizer.hpp>
