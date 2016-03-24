@@ -184,7 +184,7 @@ namespace scone
 
 		scone::Real BodyOriSensor::GetValue( Index idx ) const
 		{
-			return m_Body.GetOri().ToExponentialMap()[ idx ];
+			return flut::math::make_rotation_vector( m_Body.GetOri() )[ idx ];
 		}
 
 		scone::String BodyOriSensor::GetName() const

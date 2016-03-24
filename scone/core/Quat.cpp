@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#if 0
 #include "Quat.h"
 #include "Exception.h"
 
@@ -386,3 +387,4 @@ namespace scone
 		return q_ret;
 	}
 }
+#endif

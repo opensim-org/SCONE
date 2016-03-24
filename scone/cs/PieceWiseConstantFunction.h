@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Function.h"
-#include <OpenSim/OpenSim.h>
 #include <OpenSim/Common/PiecewiseConstantFunction.h>
 #include "PieceWiseFunction.h"
 #include "scone/core/tools.h"

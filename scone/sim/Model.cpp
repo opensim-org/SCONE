@@ -191,7 +191,7 @@ namespace scone
 		{
 			Real force = 0.0;
 			for ( const LegUP& leg: GetLegs() )
-				force += leg->GetContactForce().GetLength();
+				force += leg->GetContactForce().length();
 			return force;
 		}
 	}

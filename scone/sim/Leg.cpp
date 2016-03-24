@@ -37,7 +37,7 @@ namespace scone
 			// HACK: this uses body positions because joint positions are too hard for OpenSim
 			// TODO: do it right
 			// OpenSim: how can we get the actual position of a joint
-			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).GetLength();
+			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).length();
 		}
 
 		scone::Real Leg::GetLoad() const

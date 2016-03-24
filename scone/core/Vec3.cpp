@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#if 0
 #include "Vec3.h"
 #include "Exception.h"
 #include <sstream>
@@ -200,3 +201,4 @@ namespace scone
 		return ( GetDotProduct( vec ) / GetSquaredLength() ) * (*this);
 	}
 }
+#endif

@@ -95,7 +95,7 @@ namespace scone
 				// assume total force is the first 3 values
 				return Vec3( -force[0], -force[1], -force[2] );
 			}
-			else return Vec3::ZERO;
+			else return Vec3::make_zero();
 		}
 
 		Vec3 Body_Simbody::GetContactTorque() const

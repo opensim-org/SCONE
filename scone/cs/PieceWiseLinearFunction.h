@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Function.h"
-#include <OpenSim/OpenSim.h>
+#include "OpenSim/Common/PiecewiseLinearFunction.h"
 #include "PieceWiseFunction.h"
 #include "scone/core/tools.h"
 

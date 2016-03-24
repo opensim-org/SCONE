@@ -64,8 +64,4 @@ namespace scone
 	const Real REAL_MIN = std::numeric_limits< Real >::min();
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
 	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
-
-	// forward declarations
-	class Vec3;
-	class Quat;
 }

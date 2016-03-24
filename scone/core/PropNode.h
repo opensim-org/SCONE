@@ -7,8 +7,8 @@
 #include <sstream>
 #include <type_traits>
 
-#include "Vec3.h"
 #include "Exception.h"
+#include "math.h"
 
 namespace scone
 {

@@ -69,8 +69,8 @@ namespace scone
 				Vec3 glob_ori = Vec3( body_ori_sensor->GetValue( 0u, body_sensor_delay ), body_ori_sensor->GetValue( 1u, body_sensor_delay ), body_ori_sensor->GetValue( 2u, body_sensor_delay ) );
 				Vec3 glob_angvel = Vec3( body_angvel_sensor->GetValue( 0u, body_sensor_delay ), body_angvel_sensor->GetValue( 1u, body_sensor_delay ), body_angvel_sensor->GetValue( 2u, body_sensor_delay ) );
 
-				local_balance = GetDotProduct( glob_ori, dof_rotation_axis ) + body_angvel_sensor_gain * GetDotProduct( glob_angvel, dof_rotation_axis );
-				Real org_lb = GetDotProduct( global_balance, dof_rotation_axis );
+				local_balance = dot_product( glob_ori, dof_rotation_axis ) + body_angvel_sensor_gain * dot_product( glob_angvel, dof_rotation_axis );
+				Real org_lb = dot_product( global_balance, dof_rotation_axis );
 
 				//std::cout << "gb=" << global_balance << " gori=" << glob_ori << " gav=" << glob_angvel << std::endl;
 				//std::ofstream str( "d:/test.txt", std::ios_base::app );
