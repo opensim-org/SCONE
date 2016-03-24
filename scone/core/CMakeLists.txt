@@ -11,13 +11,9 @@ set(MATH_FILES
     Angle.h
     Delayer.h
     math.h
-    Quat.cpp
-    Quat.h
     Range.h
     Statistic.h
     TimedValue.h
-    Vec3.cpp
-    Vec3.h
     )
 set(PROPNODE_FILES
     InitFromPropNode.h
