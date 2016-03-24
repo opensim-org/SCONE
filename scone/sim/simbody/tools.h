@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "scone/core/Vec3.h"
+#include "scone/core/math.h"
 
 #include <OpenSim/OpenSim.h>
 #include "scone/core/ResourceCache.h"

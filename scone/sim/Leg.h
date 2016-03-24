@@ -2,7 +2,7 @@
 
 #include "Link.h"
 #include "Types.h"
-#include "scone/core/Vec3.h"
+#include "scone/core/math.h"
 #include "scone/core/HasName.h"
 #include "Body.h"
 #include "Area.h"
