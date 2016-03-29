@@ -14,7 +14,6 @@
 
 using std::cout;
 using std::endl;
-using namespace boost::posix_time;
 
 namespace scone
 {
@@ -33,27 +32,31 @@ namespace scone
 
 	std::string GetDateTimeAsString()
 	{
-		auto now = second_clock::local_time();
-		return GetStringF( "%02d" )
+		auto now = boost::posix_time::second_clock::local_time();
+		auto month = static_cast<int>( now.date().month() );
+		auto day = static_cast<int>( now.date().day() );
+		auto hours = static_cast<int>( now.time_of_day().hours() );
+		auto mins = static_cast<int>( now.time_of_day().minutes() );
 
-		static time_facet* facet = new time_facet( "%m%d.%H%M" );
-		static std::locale loc( std::cout.getloc(), facet );
-		std::stringstream ss;
-		ss.imbue( loc );
-		ss << second_clock::local_time();
-
-		return ss.str();
+		char buf[100];
+		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d", month, day, hours, mins );
+	
+		return std::string( buf );
 	}
 
 	std::string GetDateTimeExactAsString()
 	{
-		static time_facet* facet = new time_facet( "%m%d.%H%M%S" );
-		static std::locale loc( std::cout.getloc(), facet );
-		std::stringstream ss;
-		ss.imbue( loc );
-		ss << second_clock::local_time();
+		auto now = boost::posix_time::second_clock::local_time();
+		auto month = static_cast<int>( now.date().month() );
+		auto day = static_cast<int>( now.date().day() );
+		auto hours = static_cast<int>( now.time_of_day().hours() );
+		auto mins = static_cast<int>( now.time_of_day().minutes() );
+		auto secs = static_cast<int>( now.time_of_day().seconds() );
 
-		return ss.str();
+		char buf[100];
+		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
+	
+		return std::string( buf );
 	}
 
 	String CORE_API GetCleanVarName( const String& str )
