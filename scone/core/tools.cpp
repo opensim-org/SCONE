@@ -22,34 +22,37 @@ namespace scone
 	{
 		va_list args;
 		va_start( args, format );
-	
+
 		char buf[8192];
-		vsprintf_s(buf, sizeof(buf), format, args);
+		vsprintf_s( buf, sizeof( buf ), format, args );
 
 		va_end( args );
-	
-		return std::string(buf);
+
+		return std::string( buf );
 	}
-	
+
 	std::string GetDateTimeAsString()
 	{
-        time_facet *facet = new time_facet("%m%d.%H%M");
-        static std::locale loc(std::cout.getloc(), facet);
-        std::stringstream ss;
-        ss.imbue(loc);
-        ss << second_clock::local_time();
-        	
+		auto now = second_clock::local_time();
+		return GetStringF( "%02d" )
+
+		static time_facet* facet = new time_facet( "%m%d.%H%M" );
+		static std::locale loc( std::cout.getloc(), facet );
+		std::stringstream ss;
+		ss.imbue( loc );
+		ss << second_clock::local_time();
+
 		return ss.str();
 	}
 
 	std::string GetDateTimeExactAsString()
 	{
-        time_facet *facet = new time_facet("%m%d.%H%M%S");
-        static std::locale loc(std::cout.getloc(), facet);
-        std::stringstream ss;
-        ss.imbue(loc);
-        ss << second_clock::local_time();
-        	
+		static time_facet* facet = new time_facet( "%m%d.%H%M%S" );
+		static std::locale loc( std::cout.getloc(), facet );
+		std::stringstream ss;
+		ss.imbue( loc );
+		ss << second_clock::local_time();
+
 		return ss.str();
 	}
 
@@ -60,45 +63,45 @@ namespace scone
 
 	String CORE_API GetFilenameExt( const String& str )
 	{
-		size_t n = str.find_last_of(".");
+		size_t n = str.find_last_of( "." );
 
-		if (n == std::string::npos) 
-			return std::string(""); // no extension found
-		
+		if ( n == std::string::npos )
+			return std::string( "" ); // no extension found
+
 		// dot could be part of a folder name
-		if (str.substr(n).find_last_of("/\\") != std::string::npos)
-			return std::string(""); // no extension found
+		if ( str.substr( n ).find_last_of( "/\\" ) != std::string::npos )
+			return std::string( "" ); // no extension found
 
-		return str.substr(n);
+		return str.substr( n );
 	}
 
 	String GetFileNameNoExt( const String& str )
 	{
-		size_t n = str.find_last_of(".");
+		size_t n = str.find_last_of( "." );
 
 		if ( n == std::string::npos )
 			return str; // no extension found
 		else return str.substr( 0, n );
 	}
 
-    // TODO: Could use regex to remove platform dependencies
-    // Currently assumes one delimeter char. Can extend with boost if needed
+	// TODO: Could use regex to remove platform dependencies
+	// Currently assumes one delimeter char. Can extend with boost if needed
 	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
 	{
 #ifdef WIN32
 		return PathMatchSpecEx( str.c_str(), pattern.c_str(), multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;
 #else
-        std::vector<std::string> tokens;
-        std::stringstream ss(pattern);
-        std::string token;
-        while ( std::getline(ss, token, delim) ) {
-            tokens.push_back(token);
-        }
-        for ( auto thisPattern : tokens ) {
-            bool isMatch = fnmatch(thisPattern.c_str(), str.c_str(), FNM_NOESCAPE) == 0;
-            if ( isMatch ) return isMatch;
-        }
-	    return false;	
+		std::vector<std::string> tokens;
+		std::stringstream ss(pattern);
+		std::string token;
+		while ( std::getline(ss, token, delim) ) {
+			tokens.push_back(token);
+		}
+		for ( auto thisPattern : tokens ) {
+			bool isMatch = fnmatch(thisPattern.c_str(), str.c_str(), FNM_NOESCAPE) == 0;
+			if ( isMatch ) return isMatch;
+		}
+		return false;	
 #endif
 	}
 
