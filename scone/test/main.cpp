@@ -7,6 +7,7 @@
 #include "../core/Log.h"
 #include "../core/system.h"
 #include "Test.h"
+#include "../core/tools.h"
 //#include "../core/Angle.h"
 
 using std::cout;
@@ -20,7 +21,10 @@ int main( int argc, const char* argv[] )
 
 	try
 	{
-		DofAxisTest();
+		//DofAxisTest();
+		cout << GetDateTimeAsString() << endl;
+		cout << GetDateTimeExactAsString() << endl;
+
 		//String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";
 		//PlaybackTest( fname );
 
