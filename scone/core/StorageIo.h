@@ -25,7 +25,8 @@ namespace scone
 
 	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		WriteStorageTxt( storage, std::ofstream( file ) );
+		std::ofstream ofs( file );
+        WriteStorageTxt( storage, ofs );
 	}
 
 	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const String& file, const String& name )

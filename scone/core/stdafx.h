@@ -14,6 +14,13 @@
 
 #include <windows.h>
 
+#else
+
+#include <stdarg.h>
+#include <stdio.h>
+
+#define vsprintf_s vsnprintf
+
 #endif
 
 #include <string>

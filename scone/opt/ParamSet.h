@@ -13,7 +13,7 @@ namespace scone
 		class OPT_API ParamSet
 		{
 		public:
-			typedef enum Mode { ConstructionMode, UpdateMode };
+			enum Mode { ConstructionMode, UpdateMode };
 			ParamSet( Mode m = ConstructionMode ) : m_Mode( m ) { };
 			ParamSet( const String& filename );
 			virtual ~ParamSet() { };

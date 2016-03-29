@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../core/core.h"
+#include "../core/tools.h"
+
+#include <algorithm>
 
 namespace scone
 {

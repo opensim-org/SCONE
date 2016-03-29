@@ -7,10 +7,18 @@
 #include "../core/PropNode.h"
 #include "../core/tools.h"
 
+#if defined(_MSC_VER)
+
 #ifdef OPT_EXPORTS
 #define OPT_API __declspec(dllexport)
 #else
 #define OPT_API __declspec(dllimport)
+#endif
+
+#else
+
+#define OPT_API
+
 #endif
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \

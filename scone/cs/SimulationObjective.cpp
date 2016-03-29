@@ -48,7 +48,7 @@ namespace scone
 
 			// find measure controller
 			auto& controllers = m_Model->GetControllers();
-			auto& is_measure = [&]( sim::ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
+			const auto& is_measure = [&]( sim::ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
 			auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );
 
 			if ( measureIter == controllers.end() )

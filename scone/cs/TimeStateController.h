@@ -25,7 +25,7 @@ namespace scone
 			struct TimeState
 			{
 				TimeState( const PropNode& pn, opt::ParamSet& par );
-				bool operator<( const TimeState& other ) { return start_time < other.start_time; }
+				bool operator<( const TimeState& other ) const { return start_time < other.start_time; }
 				String name;
 				TimeInSeconds start_time;
 			};

@@ -2,7 +2,9 @@ set(BASE_FILES
     Exception.h
     Factory.h
     HasData.h
+    HasData.cpp
     HasName.h
+    HasName.cpp
     HasSignature.cpp
     HasSignature.h
 	Result.h
@@ -32,8 +34,6 @@ set(SYSTEM_FILES
 set(TOOLS_FILES
     Log.cpp
     Log.h
-    Profiler.cpp
-    Profiler.h
     ResourceCache.h
     Storage.h
 	StorageIo.h
@@ -45,6 +45,11 @@ set(TOOLS_FILES
     tools.cpp
     tools.h
     )
+
+if(WIN32)
+    list(APPEND TOOLS_FILES Profiler.cpp Profiler.h)
+endif()
+
 add_library(scone-core # Name of the library file.
     SHARED # versus static.
     # Source code files:

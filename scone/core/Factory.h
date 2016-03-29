@@ -6,6 +6,7 @@
 
 #include "core.h"
 #include "PropNode.h"
+#include "tools.h"
 
 #define DECLARE_FACTORY( _call_, _base_, _args_ ) \
 	typedef Factory< boost::function< _base_*_args_ > > _base_##Factory; \

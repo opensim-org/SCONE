@@ -1,6 +1,15 @@
 #include "stdafx.h"
 
+#ifdef _MSC_VER
+
 #include <conio.h>
+
+#else
+
+#include <curses.h>
+#define _getch() getch()
+
+#endif
 
 #include "../core/Log.h"
 #include "../opt/opt.h"

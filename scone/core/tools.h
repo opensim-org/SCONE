@@ -5,6 +5,11 @@
 #include "PropNode.h"
 #include "Log.h"
 
+// need for demangling with gcc
+#ifndef _MSC_VER
+#include <cxxabi.h>
+#endif
+
 namespace scone
 {
 	/// Get formatted string (printf style)
@@ -12,6 +17,9 @@ namespace scone
 
 	/// Get formatted date/time string
 	String CORE_API GetDateTimeAsString();
+
+    /// Get formatted date/time with exact fractional seconds as string
+    String CORE_API GetDateTimeExactAsString();
 
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
@@ -23,7 +31,7 @@ namespace scone
 	String CORE_API GetFileNameNoExt( const String& str );
 
 	/// Match string patten
-	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true );
+	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true, char delim = ';' );
 
 	/// convert any streamable type to string
 	template< typename T >
@@ -34,21 +42,27 @@ namespace scone
 		return str.str();
 	}
 
-	/// convert any streamable type to string
+	/// convert any string to streamable type
 	template< typename T >
 	T FromString( const String& str )
 	{
-		T value;
 		std::ostringstream ostr( str );
-		str << value;
-		return str.str();
+		return ostr;
 	}
 
 	/// Get clean class, removes everything before "::" (if present)
 	template< typename T >
 	String GetCleanClassName()
 	{
+#ifdef _MSC_VER
 		String str = typeid( T ).name();
+#else
+        const char* typeInfo = typeid ( T ).name();
+        int status;
+        char* cleanType = abi::__cxa_demangle(typeInfo, 0, 0, &status);
+        String str = String(cleanType);
+        free(cleanType);
+#endif
 		size_t pos = str.find_last_of(": ");
 		if (pos != std::string::npos)
 			return str.substr(pos + 1);

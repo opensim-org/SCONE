@@ -16,7 +16,7 @@
 
 #include "Factories.h"
 #include "MuscleReflex.h"
-#include "Tools.h"
+#include "tools.h"
 
 namespace scone
 {

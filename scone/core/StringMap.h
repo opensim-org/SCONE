@@ -45,7 +45,7 @@ namespace scone
 
 		T GetValue( const String& s ) const
 		{
-			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( const MapType::value_type& v) { return v.second == s; } );
+			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( const typename MapType::value_type& v) { return v.second == s; } );
 			SCONE_THROW_IF( iter == m_Map.end(), "Could not find " + s );
 			return iter->first;
 		}
