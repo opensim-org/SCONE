@@ -24,7 +24,7 @@ namespace scone
 		OpenSim::PiecewiseConstantFunction& GetOsFunc() { return m_osFunc; }
 
 		// a signature describing the function
-		virtual String GetSignature() override { return GetStringF( "C%d", m_osFunc.getSize() ); }
+		virtual String GetSignature() override { return stringf( "C%d", m_osFunc.getSize() ); }
 
 	private:
 		OpenSim::PiecewiseConstantFunction m_osFunc;

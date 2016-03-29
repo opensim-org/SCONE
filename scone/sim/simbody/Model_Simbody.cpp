@@ -129,7 +129,7 @@ namespace scone
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
 			else if ( integration_method == "SemiExplicitEuler2" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-			else SCONE_THROW( "Invalid integration method: " + GetQuoted( integration_method ) );
+			else SCONE_THROW( "Invalid integration method: " + quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
@@ -143,7 +143,7 @@ namespace scone
 				{
 					for ( auto& nvp : state )
 					{
-						if ( MatchesPattern( nvp.first, iso.GetStr( "include_states" ) ) && !MatchesPattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						if ( glob_match( nvp.first, iso.GetStr( "include_states" ) ) && !glob_match( nvp.first, iso.GetStr( "exclude_states" ) ) )
 							nvp.second = par.Get( opt::ParamInfo( nvp.first, nvp.second, iso.GetReal( "init_std" ), 0, 0, -1000, 1000 ) );
 					}
 				}

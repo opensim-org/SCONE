@@ -227,7 +227,7 @@ namespace scone
 
 			// output number of controllers per leg
 			for ( auto it = controllers.begin(); it != controllers.end(); ++it )
-				s += "_" + ToString( it->second / m_LegStates.size() ) + it->first;
+				s += "_" + make_str( it->second / m_LegStates.size() ) + it->first;
 
 			return s;
 		}

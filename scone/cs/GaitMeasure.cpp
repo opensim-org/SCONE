@@ -131,7 +131,7 @@ namespace scone
 
 		String GaitMeasure::GetClassSignature() const
 		{
-			return GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
+			return stringf( "S%02d", static_cast< int >( 10 * min_velocity ) );
 		}
 
 		bool GaitMeasure::HasNewFootContact( const sim::Model& model )

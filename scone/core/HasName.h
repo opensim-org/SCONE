@@ -17,7 +17,7 @@ namespace scone
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
-		SCONE_THROW_IF( it == cont.end(), "Could not find " + GetQuoted( name ) );
+		SCONE_THROW_IF( it == cont.end(), "Could not find " + quoted( name ) );
 		return *it;
 	}
 
@@ -40,7 +40,7 @@ namespace scone
 	Index FindIndexOrThrow( const std::vector< T > cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
-		SCONE_THROW_IF( it == cont.end(), "Could not find " + ToString( item ) );
+		SCONE_THROW_IF( it == cont.end(), "Could not find " + make_str( item ) );
 		return static_cast< Index >( it - cont.begin() );
 	}
 }

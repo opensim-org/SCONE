@@ -53,7 +53,7 @@ namespace scone
 
 		scone::String ReflexController::GetClassSignature() const
 		{
-			//String str = GetStringF( "r%d", m_Reflexes.size() );
+			//String str = stringf( "r%d", m_Reflexes.size() );
 
 			// count reflex types
 			//int l = 0, v = 0, f = 0;

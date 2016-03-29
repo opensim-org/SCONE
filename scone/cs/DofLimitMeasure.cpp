@@ -72,7 +72,7 @@ namespace scone
 			for ( Limit& l: m_Limits )
 			{
 				result += l.penalty.GetAverage();
-				m_Report.Set( l.dof.GetName(), GetStringF( "%g", l.penalty.GetAverage() ) );
+				m_Report.Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;

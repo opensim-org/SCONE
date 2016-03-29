@@ -11,7 +11,6 @@
 #include "scone/opt/Factories.h"
 #include "scone/cs/SimulationObjective.h"
 #include "scone/core/Profiler.h"
-#include "scone/core/Delayer.h"
 #include "scone/core/system.h"
 #include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
@@ -73,7 +72,7 @@ namespace scone
 
 			std::cout << "performance (x real-time): " << m->GetTime() / time << endl;
 
-			m->WriteData( GetFileNameNoExt( *iter ) + "_simulation_test" );
+			m->WriteData( get_filename_without_ext( *iter ) + "_simulation_test" );
 
 			//if ( par.IsInConstructionMode() )
 			//	par.SetMode( opt::ParamSet::UpdateMode );
@@ -151,7 +150,7 @@ namespace scone
 				store.Back()[ "Cos" ] = v;
 
 				for ( int i = 1; i < 6; ++i )
-					store.Back()[ "Test" + ToString( i ) ] = store.GetInterpolatedValue( t - 1.0, i - 1 );
+					store.Back()[ "Test" + make_str( i ) ] = store.GetInterpolatedValue( t - 1.0, i - 1 );
 			}
 			str << t << "\t" << v << "\t" << dv.GetDelayedValue( t ) << "\t" << store.GetInterpolatedValue( t - delay, 0 );
 
@@ -298,7 +297,7 @@ namespace scone
 		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
 
 		for ( sim::DofUP& dof : m->GetDofs() )
-			log::Info( dof->GetName() + ": " + ToString( dof->GetRotationAxis() ) );
+			log::Info( dof->GetName() + ": " + make_str( dof->GetRotationAxis() ) );
 
 		dynamic_cast<sim::Model_Simbody&>( *m ).ValidateDofAxes();
 	}

@@ -29,7 +29,7 @@ namespace scone
 	void ExampleObjective::ProcessParameters( opt::ParamSet& par )
 	{
 		for ( size_t i = 0; i < params.size(); ++i )
-			params[ i ] = par.GetMeanStd( GetStringF( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
+			params[ i ] = par.GetMeanStd( stringf( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
 	double ExampleObjective::Rosenbrock( const std::vector< double >& v )

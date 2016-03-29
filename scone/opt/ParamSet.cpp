@@ -43,7 +43,7 @@ namespace scone
 				// return parameter value
 				return iter->second;
 			}
-			SCONE_THROW( "Invalid mode: " + ToString( m_Mode ) );
+			SCONE_THROW( "Invalid mode: " + make_str( m_Mode ) );
 		}
 
 		double ParamSet::Get( const String& name, const PropNode& props, const String node_name )
@@ -138,7 +138,7 @@ namespace scone
 
 		void ParamSet::Read( const String& filename )
 		{
-			log::Debug( "Reading " + GetQuoted( filename ) );
+			log::Debug( "Reading " + quoted( filename ) );
 			std::ifstream ifstr( filename );
 			SCONE_THROW_IF( !ifstr.good(), "Error opening file: " + filename );
 			FromStream( ifstr, true );

@@ -70,7 +70,7 @@ namespace scone
 
 			for ( sim::ControllerUP& c: m_Model->GetControllers() )
 				str += "." + c->GetSignature();
-			str += GetStringF( ".D%.0f", max_duration );
+			str += stringf( ".D%.0f", max_duration );
 
 			return str;
 		}
