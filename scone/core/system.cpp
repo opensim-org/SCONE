@@ -53,19 +53,6 @@ namespace scone
 #endif
 	}
 
-	CORE_API String GetApplicationVersion()
-	{
-		if ( g_Version.empty() )
-		{
-			std::ifstream ifstr( GetApplicationFolder() + "/.version" );
-			if ( ifstr.good() )
-				ifstr >> g_Version;
-			else g_Version = "UNKNOWN_VERSION";
-		}
-
-		return g_Version;
-	}
-
 	const PropNode& GetSconeSettings()
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );

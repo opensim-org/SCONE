@@ -21,7 +21,7 @@ find_package(Shark REQUIRED)
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
-	filesystem system thread date_time chrono timer)
+	filesystem system thread date_time chrono timer serialization)
 
 # This uses the FindOpenSim.cmake file in build/cmake.
 find_package(OpenSim 3.3 REQUIRED)
