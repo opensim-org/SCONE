@@ -137,7 +137,7 @@ namespace scone
 		std::ofstream str( "delay_test.txt" );
 
 		double delay = 5.0;
-		DelayedReal dv( delay );
+		//DelayedReal dv( delay );
 		Storage< double > store;
 		for ( double t = 0.0; t < 20.0; t += ( 1 + rand() % 100 ) / 100.0 )
 		{
@@ -145,14 +145,13 @@ namespace scone
 
 			if ( t < 15 )
 			{
-				dv.AddSample( t, v );
 				store.AddFrame( t );
 				store.Back()[ "Cos" ] = v;
 
 				for ( int i = 1; i < 6; ++i )
 					store.Back()[ "Test" + make_str( i ) ] = store.GetInterpolatedValue( t - 1.0, i - 1 );
 			}
-			str << t << "\t" << v << "\t" << dv.GetDelayedValue( t ) << "\t" << store.GetInterpolatedValue( t - delay, 0 );
+			str << t << "\t" << v << "\t" << store.GetInterpolatedValue( t - delay, 0 );
 
 			for ( size_t idx = 1; idx < store.GetChannelCount(); ++idx )
 			{
