@@ -4,8 +4,6 @@
 
 #ifdef _MSC_VER
 
-#if defined(_MSC_VER)
-
 #ifdef SCONE_SIM_SIMBODY_EXPORTS
 #define SCONE_SIM_SIMBODY_API __declspec(dllexport)
 #else

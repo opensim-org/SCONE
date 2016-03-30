@@ -6,10 +6,10 @@
 
 namespace scone
 {
-	class CORE_API HasName
+	class HasName
 	{
 	public:
-		virtual ~HasName() {}
+		virtual ~HasName() = 0 {}
 		virtual const String& GetName() const = 0;
 	};
 

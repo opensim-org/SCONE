@@ -2,9 +2,7 @@ set(BASE_FILES
     Exception.h
     Factory.h
     HasData.h
-    HasData.cpp
     HasName.h
-    HasName.cpp
     HasSignature.cpp
     HasSignature.h
 	Result.h

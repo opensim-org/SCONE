@@ -7,6 +7,7 @@
 #include "scone/core/Log.h"
 #include "scone/core/system.h"
 #include "Test.h"
+#include "scone/core/tools.h"
 //#include "scone/core/Angle.h"
 
 using std::cout;
