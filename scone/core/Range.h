@@ -1,6 +1,7 @@
 #pragma once
 
 #include <limits>
+#include "core.h"
 
 namespace scone
 {

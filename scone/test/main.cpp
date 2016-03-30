@@ -8,6 +8,7 @@
 #include "scone/core/system.h"
 #include "Test.h"
 #include "scone/core/tools.h"
+#include "flut/system_tools.hpp"
 //#include "scone/core/Angle.h"
 
 using std::cout;
@@ -39,7 +40,7 @@ int main( int argc, const char* argv[] )
 	}
 
 #ifdef _DEBUG
-	_getch();
+	flut::wait_for_key();
 #endif
 	return 0;
 }
