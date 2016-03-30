@@ -1,15 +1,10 @@
-// test.cpp : Defines the entry point for the console application.
-//
-
-
-
-//#include <conio.h>
 #include "scone/core/Log.h"
 #include "scone/core/system.h"
 #include "Test.h"
 #include "scone/core/tools.h"
 #include "flut/system_tools.hpp"
-//#include "scone/core/Angle.h"
+#include "../core/Timer.h"
+#include <chrono>
 
 using std::cout;
 using std::endl;
@@ -25,6 +20,17 @@ int main( int argc, const char* argv[] )
 		//DofAxisTest();
 		cout << GetDateTimeAsString() << endl;
 		cout << GetDateTimeExactAsString() << endl;
+		cout << _MSC_VER << endl;
+
+		Timer t;
+		auto start = std::chrono::high_resolution_clock::now();
+		for ( int i = 0; i < 1000; ++i )
+		{
+			auto ctime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start);
+			auto cticks = (std::chrono::high_resolution_clock::now() - start).count();
+			auto ttime = t.GetTime();
+			printf( "%.6f\t%.6f\n", ctime.count(), ttime );
+		}
 
 		//String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";
 		//PlaybackTest( fname );
