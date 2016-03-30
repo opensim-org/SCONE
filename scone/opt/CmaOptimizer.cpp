@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "CmaOptimizer.h"
 
 #if USE_SHARK_V2
@@ -10,8 +9,8 @@
 
 #include <boost/format.hpp>
 
-#include "../core/Timer.h"
-#include "../core/Log.h"
+#include "scone/core/Timer.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -37,7 +36,7 @@ namespace scone
 
 		scone::String CmaOptimizer::GetClassSignature() const
 		{
-			return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? GetStringF( ".R%d", random_seed ) : ""  );
+			return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? stringf( ".R%d", random_seed ) : ""  );
 		}
 
 		CmaOptimizer::~CmaOptimizer()
@@ -142,7 +141,7 @@ namespace scone
 					printf(" B=%.3f", best );
 
 					// write results
-					String ind_name = GetStringF( "%04d_%.3f_%.3f", gen, pOffspring->meanFitness(), best );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, pOffspring->meanFitness(), best );
 					String file_base = AcquireOutputFolder() + ind_name;
 					parsets[ pOffspring->bestIndex() ].UpdateMeanStd( parsets );
 
@@ -270,7 +269,7 @@ namespace scone
 					par.UpdateMeanStd( mean, std );
 
 					// write .par file
-					String ind_name = GetStringF( "%04d_%.3f_%.3f", gen, 0.0, best );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, 0.0, best );
 					String file_base = AcquireOutputFolder() + ind_name;
 					std::vector< String > outputFiles;
 					par.Write( file_base + ".par" );

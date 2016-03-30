@@ -1,7 +1,5 @@
-#include "stdafx.h"
-
-#include "../../core/Exception.h"
-#include "../../core/Log.h"
+#include "scone/core/Exception.h"
+#include "scone/core/Log.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
@@ -9,22 +7,21 @@
 #include "Simulation_Simbody.h"
 #include "Joint_Simbody.h"
 #include "tools.h"
-#include "../../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
-#include "boost/foreach.hpp"
-#include "../Factories.h"
+#include "scone/sim/Factories.h"
 
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
-#include "../../core/system.h"
-#include "../../core/Profiler.h"
+#include "scone/core/system.h"
+#include "scone/core/Profiler.h"
 
 #include "Dof_Simbody.h"
-#include "../../core/StorageIo.h"
+#include "scone/core/StorageIo.h"
 
 using std::cout;
 using std::endl;
@@ -132,7 +129,7 @@ namespace scone
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
 			else if ( integration_method == "SemiExplicitEuler2" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-			else SCONE_THROW( "Invalid integration method: " + GetQuoted( integration_method ) );
+			else SCONE_THROW( "Invalid integration method: " + quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
@@ -146,7 +143,7 @@ namespace scone
 				{
 					for ( auto& nvp : state )
 					{
-						if ( MatchesPattern( nvp.first, iso.GetStr( "include_states" ) ) && !MatchesPattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						if ( glob_match( nvp.first, iso.GetStr( "include_states" ) ) && !glob_match( nvp.first, iso.GetStr( "exclude_states" ) ) )
 							nvp.second = par.Get( opt::ParamInfo( nvp.first, nvp.second, iso.GetReal( "init_std" ), 0, 0, -1000, 1000 ) );
 					}
 				}

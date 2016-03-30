@@ -1,8 +1,8 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/PropNode.h"
-#include "../opt/ParamSet.h"
+#include "scone/core/PropNode.h"
+#include "scone/opt/ParamSet.h"
 
 namespace scone
 {

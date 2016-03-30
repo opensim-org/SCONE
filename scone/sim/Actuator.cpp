@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Actuator.h"
 
 namespace scone

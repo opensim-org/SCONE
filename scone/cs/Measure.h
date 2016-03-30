@@ -1,13 +1,16 @@
 #pragma once
-#include "../sim/sim.h"
-#include "../core/InitFromPropNode.h"
-#include "../sim/Controller.h"
+
+#include "cs.h"
+
+#include "scone/sim/sim.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/sim/Controller.h"
 
 namespace scone
 {
 	namespace cs
 	{
-		class Measure : public sim::Controller
+		class CS_API Measure : public sim::Controller
 		{
 		public:
 			Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

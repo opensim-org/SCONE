@@ -32,8 +32,6 @@ set(SYSTEM_FILES
     Factories.h
     sim.cpp
     sim.h
-    stdafx.cpp
-    stdafx.h
     Types.h
     )
 set(TOPOLOGY_FILES

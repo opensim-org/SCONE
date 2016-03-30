@@ -67,8 +67,6 @@ set(SYSTEM_FILES
 	cs.h
 	Factories.cpp
 	Factories.h
-	stdafx.cpp
-	stdafx.h
 	version.h
 	)
 set(TOOLS_FILES

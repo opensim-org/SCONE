@@ -1,12 +1,12 @@
 #pragma once
 
 #include "cs.h"
-#include "../core/PropNode.h"
-#include "../sim/Model.h"
-#include "../opt/ParamSet.h"
+#include "scone/core/PropNode.h"
+#include "scone/sim/Model.h"
+#include "scone/opt/ParamSet.h"
 #include "MetaReflexParams.h"
-#include "../sim/SensorDelayAdapter.h"
-#include "../core/HasData.h"
+#include "scone/sim/SensorDelayAdapter.h"
+#include "scone/core/HasData.h"
 
 namespace scone
 {

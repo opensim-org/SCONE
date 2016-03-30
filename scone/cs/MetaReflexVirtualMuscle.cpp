@@ -1,10 +1,9 @@
-#include "stdafx.h"
 #include "MetaReflexVirtualMuscle.h"
-#include "../sim/Model.h"
-#include "../core/InitFromPropNode.h"
-#include "../sim/Muscle.h"
-#include "../core/Exception.h"
-#include "../sim/Joint.h"
+#include "scone/sim/Model.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/sim/Muscle.h"
+#include "scone/core/Exception.h"
+#include "scone/sim/Joint.h"
 
 namespace scone
 {
@@ -16,7 +15,7 @@ namespace scone
 		body_sensor_delay( model.balance_sensor_delay ),
 		body_ori_sensor( nullptr ),
 		body_angvel_sensor( nullptr ),
-		average_moment_axis( Vec3::ZERO )
+		average_moment_axis( Vec3::make_zero() )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "VirtualMuscleReflex" );
@@ -42,7 +41,7 @@ namespace scone
 			}
 
 			// normalize average moment axis
-			average_moment_axis.Normalize();
+			normalize( average_moment_axis );
 
 			// make sure the first body has a parent
 			SCONE_ASSERT( dof_infos.front().dof.GetJoint().GetParent() );
@@ -79,8 +78,8 @@ namespace scone
 				Vec3 glob_ori = Vec3( body_ori_sensor->GetValue( 0u, body_sensor_delay ), body_ori_sensor->GetValue( 1u, body_sensor_delay ), body_ori_sensor->GetValue( 2u, body_sensor_delay ) );
 				Vec3 glob_angvel = Vec3( body_angvel_sensor->GetValue( 0u, body_sensor_delay ), body_angvel_sensor->GetValue( 1u, body_sensor_delay ), body_angvel_sensor->GetValue( 2u, body_sensor_delay ) );
 
-				local_balance = GetDotProduct( glob_ori, average_moment_axis ) + body_angvel_sensor_gain * GetDotProduct( glob_angvel, average_moment_axis );
-				Real org_lb = GetDotProduct( global_balance, average_moment_axis );
+				local_balance = dot_product( glob_ori, average_moment_axis ) + body_angvel_sensor_gain * dot_product( glob_angvel, average_moment_axis );
+				Real org_lb = dot_product( global_balance, average_moment_axis );
 			}
 		}
 

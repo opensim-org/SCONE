@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../../core/core.h"
+#include "scone/core/core.h"
+
+#ifdef _MSC_VER
 
 #if defined(_MSC_VER)
 

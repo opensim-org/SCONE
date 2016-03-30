@@ -1,5 +1,8 @@
 #pragma once
 
+#include "math.h"
+
+#if 0
 #include "core.h"
 #include <iostream>
 
@@ -156,3 +159,4 @@ namespace scone
 
 	CORE_API Real GetDotProduct( const Vec3& v1, const Vec3& v2 );
 };
+#endif

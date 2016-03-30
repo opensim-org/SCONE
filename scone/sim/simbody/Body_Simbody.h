@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "../Body.h"
+#include "scone/sim/Body.h"
 #include "Model_Simbody.h"
 
 namespace OpenSim

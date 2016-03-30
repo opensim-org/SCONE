@@ -1,9 +1,8 @@
-#include "stdafx.h"
-
 #include "Dof_Simbody.h"
-#include "OpenSim/Simulation/SimbodyEngine/Coordinate.h"
 #include "Model_Simbody.h"
 #include "Joint_Simbody.h"
+
+#include <OpenSim/OpenSim.h>
 
 namespace scone
 {

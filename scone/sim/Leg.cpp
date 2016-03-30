@@ -1,10 +1,8 @@
-#include "stdafx.h"
-
 #include "Leg.h"
 #include "Link.h"
 #include "Body.h"
 #include "Joint.h"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "Model.h"
 
 namespace scone
@@ -18,7 +16,7 @@ namespace scone
 		m_Index( index ),
 		m_Rank( rank ),
 		m_ForceToLoadFactor( 0.0 ),
-		m_Name( GetStringF( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
+		m_Name( stringf( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
 		{
 		}
 
@@ -37,7 +35,7 @@ namespace scone
 			// HACK: this uses body positions because joint positions are too hard for OpenSim
 			// TODO: do it right
 			// OpenSim: how can we get the actual position of a joint
-			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).GetLength();
+			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).length();
 		}
 
 		scone::Real Leg::GetLoad() const

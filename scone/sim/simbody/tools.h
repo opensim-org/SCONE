@@ -1,14 +1,13 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "../../core/Vec3.h"
 
 #include <OpenSim/OpenSim.h>
-#include "../../core/ResourceCache.h"
+#include "scone/core/ResourceCache.h"
 
 namespace scone
 {
-	// opensim model resource cache
+	// OpenSim model resource cache
     template<> inline OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name ) 
     {
         return new OpenSim::Model( name );

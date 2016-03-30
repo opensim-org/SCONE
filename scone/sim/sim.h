@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "../core/core.h"
+#include "scone/core/core.h"
 
 #if defined(_MSC_VER)
 

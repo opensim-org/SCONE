@@ -1,14 +1,13 @@
 // test.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+
 
 //#include <conio.h>
-#include "../core/Log.h"
-#include "../core/system.h"
+#include "scone/core/Log.h"
+#include "scone/core/system.h"
 #include "Test.h"
-#include "../core/tools.h"
-//#include "../core/Angle.h"
+//#include "scone/core/Angle.h"
 
 using std::cout;
 using std::endl;

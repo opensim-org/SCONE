@@ -3,9 +3,9 @@
 #define USE_SHARK_V2 0
 
 #include <memory>
-#include "../core/core.h"
-#include "../core/PropNode.h"
-#include "../core/tools.h"
+#include "scone/core/core.h"
+#include "scone/core/PropNode.h"
+#include "scone/core/tools.h"
 
 #if defined(_MSC_VER)
 

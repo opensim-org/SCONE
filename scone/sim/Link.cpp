@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Link.h"
 
 #include "Body.h"

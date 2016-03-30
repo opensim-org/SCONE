@@ -1,9 +1,8 @@
-#include "stdafx.h"
 #include "ExampleObjective.h"
-#include "../core/Exception.h"
-#include "../core/PropNode.h"
-#include "../core/InitFromPropNode.h"
-#include "../opt/ParamSet.h"
+#include "scone/core/Exception.h"
+#include "scone/core/PropNode.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/opt/ParamSet.h"
 
 namespace scone
 {
@@ -30,7 +29,7 @@ namespace scone
 	void ExampleObjective::ProcessParameters( opt::ParamSet& par )
 	{
 		for ( size_t i = 0; i < params.size(); ++i )
-			params[ i ] = par.GetMeanStd( GetStringF( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
+			params[ i ] = par.GetMeanStd( stringf( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
 	double ExampleObjective::Rosenbrock( const std::vector< double >& v )

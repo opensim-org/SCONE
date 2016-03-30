@@ -1,9 +1,7 @@
-#include "stdafx.h"
-
 #include "HeightMeasure.h"
-#include "../sim/Model.h"
-#include "../core/Log.h"
-#include "../core/Profiler.h"
+#include "scone/sim/Model.h"
+#include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

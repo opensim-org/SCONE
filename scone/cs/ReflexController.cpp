@@ -1,18 +1,16 @@
-#include "stdafx.h"
-
 #include "ReflexController.h"
 
 #include <boost/tokenizer.hpp>
 
-#include "../core/InitFromPropNode.h"
-#include "../core/Log.h"
-#include "../core/Profiler.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
 
-#include "../sim/sim.h"
-#include "../sim/Controller.h"
-#include "../sim/Model.h"
-#include "../sim/Muscle.h"
-#include "../sim/Area.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Controller.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Muscle.h"
+#include "scone/sim/Area.h"
 
 #include "Factories.h"
 #include "MuscleReflex.h"
@@ -55,7 +53,7 @@ namespace scone
 
 		scone::String ReflexController::GetClassSignature() const
 		{
-			//String str = GetStringF( "r%d", m_Reflexes.size() );
+			//String str = stringf( "r%d", m_Reflexes.size() );
 
 			// count reflex types
 			//int l = 0, v = 0, f = 0;

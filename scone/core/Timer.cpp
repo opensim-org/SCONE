@@ -1,12 +1,5 @@
-#include "stdafx.h"
 #include "Timer.h"
 
-/*
-#ifdef _MSC_VER
-#include <Windows.h>
-#include <winbase.h>
-#endif
-*/
 namespace scone
 {
 /*	class Timer::Impl

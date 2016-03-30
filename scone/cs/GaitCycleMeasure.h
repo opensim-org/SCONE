@@ -2,7 +2,7 @@
 
 #include "cs.h"
 #include "Measure.h"
-#include "../sim/State.h"
+#include "scone/sim/State.h"
 
 namespace scone
 {

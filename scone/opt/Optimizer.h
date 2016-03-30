@@ -2,7 +2,7 @@
 
 #include "opt.h"
 #include "Objective.h"
-#include "../core/HasSignature.h"
+#include "scone/core/HasSignature.h"
 
 namespace scone
 {

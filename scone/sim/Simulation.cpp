@@ -1,7 +1,6 @@
-#include "stdafx.h"
 #include "Simulation.h"
 
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 namespace scone
 {

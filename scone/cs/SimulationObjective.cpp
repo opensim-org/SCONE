@@ -1,17 +1,15 @@
-#include "stdafx.h"
-
 #include "SimulationObjective.h"
-#include "../core/Exception.h"
+#include "scone/core/Exception.h"
 
 #include <algorithm>
 
-#include "../sim/Model.h"
-#include "../sim/Factories.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Factories.h"
 
 #include <boost/thread.hpp>
 #include "version.h"
-#include "../core/Profiler.h"
-#include "../core/system.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/system.h"
 
 namespace scone
 {
@@ -72,7 +70,7 @@ namespace scone
 
 			for ( sim::ControllerUP& c: m_Model->GetControllers() )
 				str += "." + c->GetSignature();
-			str += GetStringF( ".D%.0f", max_duration );
+			str += stringf( ".D%.0f", max_duration );
 
 			return str;
 		}

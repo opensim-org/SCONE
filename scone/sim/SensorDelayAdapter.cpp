@@ -1,10 +1,10 @@
-#include "stdafx.h"
+
 
 #include "Model.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
-#include "../core/core.h"
-#include "../core/Storage.h"
+#include "scone/core/core.h"
+#include "scone/core/Storage.h"
 
 namespace scone
 {
@@ -21,7 +21,7 @@ namespace scone
 				// special case because we need to add postfixes to the channel names
 				m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + ".0" );
 				for ( Index idx = 1; idx < source.GetChannelCount(); ++idx )
-					m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + ToString( idx ) );
+					m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + make_str( idx ) );
 			}
 			else
 			{

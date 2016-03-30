@@ -4,8 +4,10 @@
 
 #include <stdlib.h>
 #include <cmath>
-
 #include <iostream>
+
+#include "flut/math/vec3.hpp"
+#include "flut/math/quat.hpp"
 
 namespace scone
 {

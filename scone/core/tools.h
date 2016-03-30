@@ -5,6 +5,8 @@
 #include "PropNode.h"
 #include "Log.h"
 
+#include "flut/string_tools.hpp"
+
 // need for demangling with gcc
 #ifndef _MSC_VER
 #include <cxxabi.h>
@@ -12,8 +14,14 @@
 
 namespace scone
 {
-	/// Get formatted string (printf style)
-	String CORE_API GetStringF(const char* format, ...);
+	// import string tools from flut
+	using flut::stringf;
+	using flut::get_filename_ext;
+	using flut::get_filename_without_ext;
+	using flut::glob_match;
+	using flut::make_str;
+	using flut::from_string;
+	using flut::quoted;
 
 	/// Get formatted date/time string
 	String CORE_API GetDateTimeAsString();
@@ -23,32 +31,6 @@ namespace scone
 
 	/// Get clean name, removes "m_" (if present)
 	String CORE_API GetCleanVarName( const String& str );
-
-	/// Get file extension (without dot)
-	String CORE_API GetFileNameExt( const String& str );
-
-	/// Get file without extension (without dot)
-	String CORE_API GetFileNameNoExt( const String& str );
-
-	/// Match string patten
-	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns = true, char delim = ';' );
-
-	/// convert any streamable type to string
-	template< typename T >
-	String ToString( const T& value )
-	{
-		std::ostringstream str;
-		str << value;
-		return str.str();
-	}
-
-	/// convert any string to streamable type
-	template< typename T >
-	T FromString( const String& str )
-	{
-		std::ostringstream ostr( str );
-		return ostr;
-	}
 
 	/// Get clean class, removes everything before "::" (if present)
 	template< typename T >
@@ -68,8 +50,6 @@ namespace scone
 			return str.substr(pos + 1);
 		else return str;
 	}
-
-	inline String GetQuoted( const String& s ) { return "\"" + s + "\""; }
 
 	void CORE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

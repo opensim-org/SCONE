@@ -1,8 +1,6 @@
-#include "stdafx.h"
-
 #include "sim_simbody.h"
 #include "Model_Simbody.h"
-#include "../Factories.h"
+#include "scone/sim/Factories.h"
 
 namespace scone
 {

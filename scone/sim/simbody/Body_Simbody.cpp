@@ -1,11 +1,10 @@
-#include "stdafx.h"
 #include "Body_Simbody.h"
-#include "../../core/Exception.h"
+#include "scone/core/Exception.h"
 
 #include <OpenSim/OpenSim.h>
 #include "tools.h"
 #include "Model_Simbody.h"
-#include "../../core/Profiler.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -95,7 +94,7 @@ namespace scone
 				// assume total force is the first 3 values
 				return Vec3( -force[0], -force[1], -force[2] );
 			}
-			else return Vec3::ZERO;
+			else return Vec3::make_zero();
 		}
 
 		Vec3 Body_Simbody::GetContactTorque() const

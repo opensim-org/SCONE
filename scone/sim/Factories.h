@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Model.h"
-#include "../core/Factory.h"
+#include "scone/core/Factory.h"
 #include "Area.h"
 
 namespace scone

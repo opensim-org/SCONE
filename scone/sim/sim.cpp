@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "sim.h"
 #include "Sensors.h"
 #include "Factories.h"

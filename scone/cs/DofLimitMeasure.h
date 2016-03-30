@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Measure.h"
-#include "../core/InitFromPropNode.h"
-#include "../core/Range.h"
-#include "../sim/Dof.h"
-#include "../core/Statistic.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/core/Range.h"
+#include "scone/sim/Dof.h"
+#include "scone/core/Statistic.h"
 
 namespace scone
 {

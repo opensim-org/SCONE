@@ -1,11 +1,10 @@
-#include "stdafx.h"
 #include "ParamInfo.h"
 
 #if USE_SHARK_V2
 #include "Rng/GlobalRng.h"
 #endif
 
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 
 namespace scone
 {

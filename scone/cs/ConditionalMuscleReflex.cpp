@@ -1,10 +1,8 @@
-#include "stdafx.h"
-
 #include "ConditionalMuscleReflex.h"
-#include "../sim/Area.h"
+#include "scone/sim/Area.h"
 #include "tools.h"
-#include "../sim/Sensors.h"
-#include "../sim/Dof.h"
+#include "scone/sim/Sensors.h"
+#include "scone/sim/Dof.h"
 
 namespace scone
 {

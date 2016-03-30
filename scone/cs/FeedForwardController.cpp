@@ -1,18 +1,17 @@
-#include "stdafx.h"
 #include "FeedForwardController.h"
 
-#include "../core/InitFromPropNode.h"
-#include "../core/Log.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/core/Log.h"
 
-#include "../sim/sim.h"
-#include "../sim/Controller.h"
-#include "../sim/Model.h"
-#include "../sim/Muscle.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Controller.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Muscle.h"
 
 #include "tools.h"
 #include "Factories.h"
-#include "../sim/Area.h"
-#include "../core/Profiler.h"
+#include "scone/sim/Area.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -44,7 +43,7 @@ namespace scone
 				// create mode functions
 				for ( size_t idx = 0; idx < number_of_modes; ++idx )
 				{
-					opt::ScopedParamSetPrefixer prefixer( par, GetStringF( "Mode%d.", idx ) );
+					opt::ScopedParamSetPrefixer prefixer( par, stringf( "Mode%d.", idx ) );
 					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
 				}
 			}
@@ -69,7 +68,7 @@ namespace scone
 					ai.mode_weights.resize( number_of_modes );
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
 					for ( size_t mode = 0; mode < number_of_modes; ++mode )
-						ai.mode_weights[ mode ] = par.Get( prefix + GetStringF( ".Mode%d", mode ), props, "mode_weight" );
+						ai.mode_weights[ mode ] = par.Get( prefix + stringf( ".Mode%d", mode ), props, "mode_weight" );
 				}
 				else
 				{
@@ -117,7 +116,7 @@ namespace scone
 		{
 			String s = "F" + m_Functions.front()->GetSignature();
 			if ( number_of_modes > 0 )
-				s += GetStringF( "M%d", number_of_modes );
+				s += stringf( "M%d", number_of_modes );
 
 			return s;
 		}

@@ -1,10 +1,9 @@
-#include "stdafx.h"
 #include "Sensors.h"
 #include "Model.h"
 #include "Muscle.h"
 #include "Area.h"
 #include "Body.h"
-#include "../cs/tools.h"
+#include "scone/cs/Tools.h"
 #include "Dof.h"
 #include <string.h>
 
@@ -125,7 +124,7 @@ namespace scone
 					if ( pn.GetStr( "plane" ) == g_PlaneNames[ i ] )
 						m_Plane = Plane( i );
 			}
-			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + GetQuoted( pn.GetStr( "plane" ) ) );
+			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + quoted( pn.GetStr( "plane" ) ) );
 
 			// init Dofs (if they exist)
             // first check if pelvis exists, if not don't add a sensor. then add lumbar if it exists.
@@ -184,7 +183,7 @@ namespace scone
 
 		scone::Real BodyOriSensor::GetValue( Index idx ) const
 		{
-			return m_Body.GetOri().ToExponentialMap()[ idx ];
+			return flut::math::make_rotation_vector( m_Body.GetOri() )[ idx ];
 		}
 
 		scone::String BodyOriSensor::GetName() const

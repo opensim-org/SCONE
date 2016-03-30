@@ -1,5 +1,3 @@
-#include "stdafx.h"
-
 #ifdef _MSC_VER
 
 #include <conio.h>
@@ -11,9 +9,10 @@
 
 #endif
 
-#include "../core/Log.h"
-#include "../opt/opt.h"
-#include "../cs/cs.h"
+#include "scone/core/Log.h"
+#include "scone/opt/opt.h"
+#include "scone/cs/cs.h"
+#include "scone/sim/simbody/sim_simbody.h"
 
 using namespace scone;
 using namespace std;
@@ -30,6 +29,7 @@ int main(int argc, char* argv[])
 		// register all types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
+		sim::RegisterSimbody();
 
 		// perform the optimization
 		opt::PerformOptimization( argc, argv );

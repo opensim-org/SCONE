@@ -15,8 +15,6 @@ set(MODELCOMPONENTS_FILES
 set(SYSTEM_FILES
     sim_simbody.cpp
     sim_simbody.h
-    stdafx.cpp
-    stdafx.h
     )
 
 set(TOOLS_FILES

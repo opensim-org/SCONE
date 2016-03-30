@@ -1,7 +1,5 @@
-#include "stdafx.h"
-
 #include "Joint_Simbody.h"
-#include "../../core/Exception.h"
+#include "scone/core/Exception.h"
 #include "Model_Simbody.h"
 
 #include <OpenSim/OpenSim.h>

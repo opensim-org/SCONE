@@ -1,11 +1,12 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "../Dof.h"
+#include "scone/sim/Dof.h"
 
 namespace OpenSim
 {
 	class Coordinate;
+	class CoordinateLimitForce;
 }
 
 namespace scone

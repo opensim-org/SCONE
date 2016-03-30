@@ -1,14 +1,15 @@
-#include "stdafx.h"
-#include "GaitMeasure.h"
-#include "../sim/Model.h"
-#include "../sim/Body.h"
-
 #include <boost/tokenizer.hpp>
-#include "../core/Log.h"
-#include "../sim/sim.h"
-#include "../sim/Muscle.h"
 #include "boost/format.hpp"
-#include "../core/Profiler.h"
+
+#include <set>
+
+#include "GaitMeasure.h"
+#include "scone/sim/Model.h"
+#include "scone/sim/Body.h"
+#include "scone/core/Log.h"
+#include "scone/sim/sim.h"
+#include "scone/sim/Muscle.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -130,7 +131,7 @@ namespace scone
 
 		String GaitMeasure::GetClassSignature() const
 		{
-			return GetStringF( "S%02d", static_cast< int >( 10 * min_velocity ) );
+			return stringf( "S%02d", static_cast< int >( 10 * min_velocity ) );
 		}
 
 		bool GaitMeasure::HasNewFootContact( const sim::Model& model )

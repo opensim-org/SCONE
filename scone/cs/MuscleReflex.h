@@ -2,8 +2,8 @@
 
 #include "cs.h"
 #include "Reflex.h"
-#include "../sim/SensorDelayAdapter.h"
-#include "../core/Range.h"
+#include "scone/sim/SensorDelayAdapter.h"
+#include "scone/core/Range.h"
 
 namespace scone
 {

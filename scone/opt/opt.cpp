@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "opt.h"
 #include "CmaOptimizer.h"
 #include "Factories.h"

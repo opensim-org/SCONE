@@ -7,7 +7,7 @@
 // very basic logging
 #define SCONE_LOG( MESSAGE_ ) { std::stringstream STR_; STR_ << MESSAGE_; scone::Log( STR_.str() ); }
 
-#define VARSTR( VAR_ ) ( String( #VAR_ ) + "=" + ToString( VAR_ ) + " " )
+#define VARSTR( VAR_ ) ( String( #VAR_ ) + "=" + make_str( VAR_ ) + " " )
 
 namespace scone
 {

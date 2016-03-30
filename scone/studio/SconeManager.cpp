@@ -1,19 +1,19 @@
-#include "stdafx.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include "SconeManager.h"
-#include "../opt/opt.h"
-#include "../cs/cs.h"
-#include "../core/system.h"
-#include "../opt/ParamSet.h"
-#include "../sim/Factories.h"
-#include "../opt/Factories.h"
-#include "../core/Timer.h"
-#include "../cs/SimulationObjective.h"
-#include "../core/Log.h"
-#include "../core/Profiler.h"
+#include "scone/opt/opt.h"
+#include "scone/cs/cs.h"
+#include "scone/core/system.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/sim/Factories.h"
+#include "scone/opt/Factories.h"
+#include "scone/core/Timer.h"
+#include "scone/cs/SimulationObjective.h"
+#include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
+
+#include "scone/sim/simbody/sim_simbody.h"
 
 using namespace boost::filesystem;
 using boost::format;
@@ -29,6 +29,7 @@ namespace scone
 		// register scone types
 		opt::RegisterFactoryTypes();
 		cs::RegisterFactoryTypes();
+		sim::RegisterSimbody();
 	}
 
 	SconeManager::~SconeManager()

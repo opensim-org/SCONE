@@ -1,5 +1,8 @@
 #pragma once
 
+#include "math.h"
+
+#if 0
 #include "core.h"
 #include "math.h"
 #include "Vec3.h"
@@ -134,3 +137,4 @@ namespace scone
 	/** Get quaternion from exponential map. */
 	Quat CORE_API QuatFromExponentialMap(const Vec3& v);
 };
+#endif

@@ -2,8 +2,8 @@
 
 #include "opt.h"
 #include "ParamSet.h"
-#include "../core/InitFromPropNode.h"
-#include "../core/HasSignature.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/core/HasSignature.h"
 
 namespace scone
 {

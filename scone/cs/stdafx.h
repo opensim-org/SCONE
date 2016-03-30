@@ -18,7 +18,3 @@
 
 #include <string>
 #include <vector>
-
-#include <OpenSim/OpenSim.h>
-#include <OpenSim/Common/PiecewiseLinearFunction.h>
-#include <OpenSim/Common/PiecewiseConstantFunction.h>

@@ -2,9 +2,9 @@
 
 #include "sim.h"
 #include <functional>
-#include "../opt/ParamSet.h"
-#include "../core/HasSignature.h"
-#include "../core/HasData.h"
+#include "scone/opt/ParamSet.h"
+#include "scone/core/HasSignature.h"
+#include "scone/core/HasData.h"
 
 namespace scone
 {

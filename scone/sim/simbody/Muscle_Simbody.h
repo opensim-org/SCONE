@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim_simbody.h"
-#include "../Muscle.h"
+#include "scone/sim/Muscle.h"
 
 #include <vector>
 

@@ -1,8 +1,6 @@
-#include "stdafx.h"
-
 #include "CompositeMeasure.h"
-#include "../sim/Factories.h"
-#include "../core/Profiler.h"
+#include "scone/sim/Factories.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -85,7 +83,7 @@ namespace scone
 				log::DebugF( "%20s\t%8.3f\t%g * (%g + %g if > %g)", t.name.c_str(), weighted_result, t.weight, org_result, t.offset, t.threshold );
 				total += weighted_result;
 
-				GetReport().AddChild( t.name, t.measure->GetReport() ).Set( GetStringF( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
+				GetReport().AddChild( t.name, t.measure->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
 			}
 
 			log::DebugF( "%20s\t%8.3f", "TOTAL", total );

@@ -2,8 +2,8 @@
 
 #include "sim.h"
 
-#include "../core/core.h"
-#include "../core/HasData.h"
+#include "scone/core/core.h"
+#include "scone/core/HasData.h"
 
 #include "Actuator.h"
 #include "Sensors.h"

@@ -1,7 +1,5 @@
-#include "stdafx.h"
 #include "GaitCycleMeasure.h"
-#include "../sim/Model.h"
-#include "boost/foreach.hpp"
+#include "scone/sim/Model.h"
 
 namespace scone
 {

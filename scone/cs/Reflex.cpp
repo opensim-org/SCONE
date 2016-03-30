@@ -1,8 +1,7 @@
-#include "stdafx.h"
 #include "Reflex.h"
-#include "../core/InitFromPropNode.h"
-#include "../sim/Actuator.h"
-#include "../sim/Area.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/sim/Actuator.h"
+#include "scone/sim/Area.h"
 #include "tools.h"
 
 namespace scone

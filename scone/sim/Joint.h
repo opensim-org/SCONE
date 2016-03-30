@@ -1,7 +1,7 @@
 #pragma once
 
 #include "sim.h"
-#include "../core/HasName.h"
+#include "scone/core/HasName.h"
 
 namespace scone
 {

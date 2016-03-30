@@ -1,16 +1,14 @@
-#include "stdafx.h"
 #include "Model.h"
 
 #include "Body.h"
 #include "Joint.h"
 #include "Dof.h"
 #include "Muscle.h"
-#include "boost/foreach.hpp"
 #include <algorithm>
 
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "SensorDelayAdapter.h"
-#include "../core/InitFromPropNode.h"
+#include "scone/core/InitFromPropNode.h"
 #include "Factories.h"
 
 using std::endl;
@@ -192,7 +190,7 @@ namespace scone
 		{
 			Real force = 0.0;
 			for ( const LegUP& leg: GetLegs() )
-				force += leg->GetContactForce().GetLength();
+				force += leg->GetContactForce().length();
 			return force;
 		}
 	}
