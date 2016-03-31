@@ -6,8 +6,9 @@
 #include "Log.h"
 
 #include "flut/string_tools.hpp"
+#include "flut/timer.hpp"
 
-// need for demangling with gcc
+// need for demangling with GCC
 #ifndef _MSC_VER
 #include <cxxabi.h>
 #endif
@@ -22,6 +23,7 @@ namespace scone
 	using flut::make_str;
 	using flut::from_string;
 	using flut::quoted;
+	using flut::timer;
 
 	/// Get formatted date/time string
 	String CORE_API GetDateTimeAsString();

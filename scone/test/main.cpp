@@ -3,8 +3,8 @@
 #include "Test.h"
 #include "scone/core/tools.h"
 #include "flut/system_tools.hpp"
-#include "../core/Timer.h"
 #include <chrono>
+#include "flut/timer.hpp"
 
 using std::cout;
 using std::endl;
@@ -22,14 +22,14 @@ int main( int argc, const char* argv[] )
 		cout << GetDateTimeExactAsString() << endl;
 		cout << _MSC_VER << endl;
 
-		Timer t;
+		flut::timer ft;
 		auto start = std::chrono::high_resolution_clock::now();
 		for ( int i = 0; i < 1000; ++i )
 		{
 			auto ctime = std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start);
 			auto cticks = (std::chrono::high_resolution_clock::now() - start).count();
-			auto ttime = t.GetTime();
-			printf( "%.6f\t%.6f\n", ctime.count(), ttime );
+			auto ftime = ft.seconds();
+			printf( "%.6f\t%.6f\n", ctime.count(), ftime );
 		}
 
 		//String fname = GetSconeFolder( "output" ) + "/347.f2354.G_2ML_1MLC_2MLS.S10CW.D5.3DMR11/0000_95.635_94.908.par";

@@ -32,8 +32,6 @@ set(TOOLS_FILES
     StringMap.h
     system.cpp
     system.h
-    Timer.cpp
-    Timer.h
     tools.cpp
     tools.h
     )

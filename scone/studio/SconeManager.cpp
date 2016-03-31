@@ -8,7 +8,7 @@
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"
 #include "scone/opt/Factories.h"
-#include "scone/core/Timer.h"
+#include "scone/core/tools.h"
 #include "scone/cs/SimulationObjective.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
@@ -60,16 +60,16 @@ namespace scone
 		Profiler::GetGlobalInstance().Reset();
 
 		m_Statistics.Clear();
-		Timer timer;
+		timer tmr;
 		double result = obj->Evaluate();
-		timer.Pause();
+		auto duration = tmr.seconds();
 	
 		// collect statistics
 		m_Statistics.Clear();
 		m_Statistics.Set( "result", result );
 		m_Statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
 		m_Statistics.Set( "simulation time", so.GetModel().GetTime() );
-		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 	
 		cout << "--- Evaluation report ---" << endl;
 		cout << m_Statistics << endl;

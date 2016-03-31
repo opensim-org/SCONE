@@ -9,7 +9,7 @@
 
 #include <boost/format.hpp>
 
-#include "scone/core/Timer.h"
+#include "scone/core/tools.h"
 #include "scone/core/Log.h"
 
 namespace scone
@@ -115,7 +115,7 @@ namespace scone
 			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
 
 			// optimization loop
-			Timer timer;
+			timer tmr;
 			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
@@ -160,7 +160,7 @@ namespace scone
 
 				// show time if needed
 				if ( show_optimization_time )
-					printf( " T=%.1f", timer.GetTime() );
+					printf( " T=%.1f", tmr.GetTime() );
 
 				// done reporting
 				printf( new_best ? "\n" : "\r" );
@@ -237,7 +237,7 @@ namespace scone
 			cma.init( objfunc, initPoint, m_Lambda, m_Mu, m_Sigma, initCovar );
 
 			// optimization loop
-			Timer timer;
+			timer tmr;
 			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
@@ -281,7 +281,7 @@ namespace scone
 
 				// show time if needed
 				if ( show_optimization_time )
-					printf( " T=%.1f", timer.GetTime() );
+					printf( " T=%.1f", tmr.seconds() );
 
 				// done reporting
 				printf( new_best ? "\n" : "\r" );

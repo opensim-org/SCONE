@@ -9,7 +9,7 @@
 #include "scone/cs/cs.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"
-#include "scone/core/Timer.h"
+#include "scone/core/tools.h"
 #include <fstream>
 
 #include <boost/filesystem.hpp>
@@ -68,9 +68,9 @@ namespace scone
 			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
 
-			Timer t;
+			timer t;
 			m->AdvanceSimulationTo( simulation_time );
-			auto time = t.GetTime();
+			auto time = t.seconds();
 
 			//std::cout << *m;
 			//std::cout << "Total metabolic energy: " << m->GetTotalEnergyConsumption() << std::endl;
@@ -118,10 +118,9 @@ namespace scone
 		Profiler::GetGlobalInstance().Reset();
 #endif
 		double result;
-		Timer timer;
+		timer t;
 		result = obj->Evaluate();
-
-		timer.Pause();
+		auto duration = t.seconds();
 
 		// collect statistics
 		PropNode stats;
@@ -129,7 +128,7 @@ namespace scone
 		stats.Set( "result", result );
 		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
 		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
@@ -207,12 +206,10 @@ namespace scone
 #ifdef SCONE_ENABLE_PROFILING
 		Profiler::GetGlobalInstance().Reset();
 #endif
-		Timer timer;
 		double result;
-
-		timer.Restart();
+		timer t;
 		result = obj->Evaluate();
-		timer.Pause();
+		auto duration = t.seconds();
 
 		// collect statistics
 		PropNode stats;
@@ -220,7 +217,7 @@ namespace scone
 		stats.Set( "result", result );
 		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
 		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
@@ -252,9 +249,9 @@ namespace scone
 		Profiler::GetGlobalInstance().Reset();
 #endif
 
-		Timer timer;
+		timer t;
 		double result = obj->Evaluate();
-		timer.Pause();
+		auto duration = t.seconds();
 
 		// collect statistics
 		PropNode stats;
@@ -262,7 +259,7 @@ namespace scone
 		stats.Set( "result", result );
 		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
 		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / timer.GetTime() );
+		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
