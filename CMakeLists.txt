@@ -79,13 +79,24 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 # --------------------
 add_subdirectory(subrepos/flut)
 
-add_subdirectory(scone/core)
-add_subdirectory(scone/sim)
-add_subdirectory(scone/sim/simbody)
-add_subdirectory(scone/opt)
-add_subdirectory(scone/cs)
-add_subdirectory(scone/vis)
+#
+# Add single sconelib target
+#
+add_subdirectory(scone)
 
+#
+# Add individual libs
+#
+#add_subdirectory(scone/core)
+#add_subdirectory(scone/sim)
+#add_subdirectory(scone/sim/simbody)
+#add_subdirectory(scone/opt)
+#add_subdirectory(scone/cs)
+#add_subdirectory(scone/vis)
+
+#
+# Add target executables
+#
 add_subdirectory(scone/sconeopt)
 add_subdirectory(scone/studio)
 add_subdirectory(scone/test)

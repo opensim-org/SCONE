@@ -23,7 +23,7 @@ if(${Qt5Widgets_FOUND})
 		OUTPUT_NAME sconestudio
 		)
 
-	target_link_libraries(scone-studio scone-cs Qt5::Widgets ${Boost_LIBRARIES})
+	target_link_libraries(scone-studio sconelib Qt5::Widgets ${Boost_LIBRARIES})
 	
 	if(WIN32)
 		# Set DLL target
