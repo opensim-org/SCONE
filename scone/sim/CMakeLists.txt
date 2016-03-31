@@ -1,4 +1,4 @@
-set(MODELCOMPONENTS_FILES
+set(SIM_MODELCOMPONENTS_FILES
     Body.cpp
     Body.h
     Dof.cpp
@@ -10,7 +10,7 @@ set(MODELCOMPONENTS_FILES
     Muscle.cpp
     Muscle.h
     )
-set(SENSORSANDACTUATORS_FILES
+set(SIM_SENSORSANDACTUATORS_FILES
     Actuator.cpp
     Actuator.h
     Sensor.cpp
@@ -20,21 +20,21 @@ set(SENSORSANDACTUATORS_FILES
     Sensors.cpp
     Sensors.h
     )
-set(SIMULATIONANDCONTROL_FILES
+set(SIM_SIMULATIONANDCONTROL_FILES
     Controller.cpp
     Controller.h
     Simulation.cpp
     Simulation.h
     State.h
     )
-set(SYSTEM_FILES
+set(SIM_SYSTEM_FILES
     Factories.cpp
     Factories.h
     sim.cpp
     sim.h
     Types.h
     )
-set(TOPOLOGY_FILES
+set(SIM_TOPOLOGY_FILES
     Area.cpp
     Area.h
     Leg.cpp
@@ -45,8 +45,8 @@ set(TOPOLOGY_FILES
 add_library(scone-sim # Name of the library file.
     SHARED # versus static.
     # Source code files:
-    ${MODELCOMPONENTS_FILES} ${SENSORSANDACTUATORS_FILES}
-    ${SIMULATIONANDCONTROL_FILES} ${SYSTEM_FILES} ${TOPOLOGY_FILES} 
+    ${SIM_MODELCOMPONENTS_FILES} ${SIM_SENSORSANDACTUATORS_FILES}
+    ${SIM_SIMULATIONANDCONTROL_FILES} ${SIM_SYSTEM_FILES} ${SIM_TOPOLOGY_FILES} 
     )
 target_link_libraries(scone-sim scone-opt)
 
@@ -58,8 +58,8 @@ set_target_properties(scone-sim PROPERTIES
 
 # To create folders in Visual Studio.
 # The '\\' creates a nested directory.
-source_group("Model Components" FILES ${MODELCOMPONENTS_FILES})
-source_group("Sensors and Actuators" FILES ${SENSORSANDACTUATORS_FILES})
-source_group("Simulation and Control" FILES ${SIMULATIONANDCONTROL_FILES})
-source_group("System" FILES ${SYSTEM_FILES})
-source_group("Topology" FILES ${TOPOLOGY_FILES})
+source_group("Model Components" FILES ${SIM_MODELCOMPONENTS_FILES})
+source_group("Sensors and Actuators" FILES ${SIM_SENSORSANDACTUATORS_FILES})
+source_group("Simulation and Control" FILES ${SIM_SIMULATIONANDCONTROL_FILES})
+source_group("System" FILES ${SIM_SYSTEM_FILES})
+source_group("Topology" FILES ${SIM_TOPOLOGY_FILES})

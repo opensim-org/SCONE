@@ -1,4 +1,4 @@
-set(BASE_FILES
+set(CORE_BASE_FILES
     Exception.h
     Factory.h
     HasData.h
@@ -7,7 +7,7 @@ set(BASE_FILES
     HasSignature.h
 	Result.h
     )
-set(MATH_FILES
+set(CORE_MATH_FILES
     Angle.h
     Delayer.h
     math.h
@@ -15,15 +15,15 @@ set(MATH_FILES
     Statistic.h
     TimedValue.h
     )
-set(PROPNODE_FILES
+set(CORE_PROPNODE_FILES
     InitFromPropNode.h
     PropNode.cpp
     PropNode.h
     )
-set(SYSTEM_FILES
+set(CORE_SYSTEM_FILES
     core.h
     )
-set(TOOLS_FILES
+set(CORE_TOOLS_FILES
     Log.cpp
     Log.h
     ResourceCache.h
@@ -37,14 +37,14 @@ set(TOOLS_FILES
     )
 
 if(WIN32)
-    list(APPEND TOOLS_FILES Profiler.cpp Profiler.h)
+    list(APPEND CORE_TOOLS_FILES Profiler.cpp Profiler.h)
 endif()
 
 add_library(scone-core # Name of the library file.
     SHARED # versus static.
     # Source code files:
-    ${BASE_FILES} ${MATH_FILES} ${PROPNODE_FILES}
-    ${SYSTEM_FILES} ${TOOLS_FILES})
+    ${CORE_BASE_FILES} ${CORE_MATH_FILES} ${CORE_PROPNODE_FILES}
+    ${CORE_SYSTEM_FILES} ${CORE_TOOLS_FILES})
 target_link_libraries(scone-core ${Boost_LIBRARIES})
 
 set_target_properties(scone-core PROPERTIES
@@ -54,9 +54,9 @@ set_target_properties(scone-core PROPERTIES
     )
 
 # To create folders in Visual Studio.
-source_group("Base" FILES ${BASE_FILES})
-source_group("Math" FILES ${MATH_FILES})
-source_group("PropNode" FILES ${PROPNODE_FILES})
-source_group("System" FILES ${SYSTEM_FILES})
-source_group("Tools" FILES ${TOOLS_FILES})
+source_group("Base" FILES ${CORE_BASE_FILES})
+source_group("Math" FILES ${CORE_MATH_FILES})
+source_group("PropNode" FILES ${CORE_PROPNODE_FILES})
+source_group("System" FILES ${CORE_SYSTEM_FILES})
+source_group("Tools" FILES ${CORE_TOOLS_FILES})
 

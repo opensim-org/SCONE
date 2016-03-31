@@ -1,4 +1,4 @@
-set(MODELCOMPONENTS_FILES
+set(SIMBODY_MODELCOMPONENTS_FILES
     Body_Simbody.cpp
     Body_Simbody.h
     Dof_Simbody.cpp
@@ -12,7 +12,7 @@ set(MODELCOMPONENTS_FILES
     Simulation_Simbody.cpp
     Simulation_Simbody.h
     )
-set(SYSTEM_FILES
+set(SIMBODY_SYSTEM_FILES
     sim_simbody.cpp
     sim_simbody.h
     )
@@ -24,7 +24,7 @@ set(TOOLS_FILES
 add_library(scone-sim_simbody # Name of the library file.
     SHARED # versus static.
     # Source code files:
-    ${MODELCOMPONENTS_FILES} ${SYSTEM_FILES} ${TOOLS_FILES}
+    ${SIMBODY_MODELCOMPONENTS_FILES} ${SIMBODY_SYSTEM_FILES} ${TOOLS_FILES}
     )
 target_link_libraries(scone-sim_simbody scone-sim
     ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
@@ -36,6 +36,6 @@ set_target_properties(scone-sim_simbody PROPERTIES
     )
 
 # To create folders in Visual Studio.
-source_group("Model Components" FILES ${MODELCOMPONENTS_FILES})
-source_group("System" FILES ${SYSTEM_FILES})
+source_group("Model Components" FILES ${SIMBODY_MODELCOMPONENTS_FILES})
+source_group("System" FILES ${SIMBODY_SYSTEM_FILES})
 source_group("Tools" FILES ${TOOLS_FILES})

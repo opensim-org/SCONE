@@ -1,4 +1,4 @@
-set(API_FILES
+set(OPT_API_FILES
     CmaOptimizer.cpp
     CmaOptimizer.h
     Objective.cpp
@@ -10,7 +10,7 @@ set(API_FILES
     ParamSet.cpp
     ParamSet.h
     )
-set(SYSTEM_FILES
+set(OPT_SYSTEM_FILES
     Factories.cpp
     Factories.h
     opt.cpp
@@ -21,7 +21,7 @@ set(SYSTEM_FILES
 add_library(scone-opt # Name of the library file.
     SHARED # versus static.
     # Source code files:
-    ${API_FILES} ${SYSTEM_FILES}
+    ${OPT_API_FILES} ${OPT_SYSTEM_FILES}
     )
 target_link_libraries(scone-opt scone-core
     ${Shark_LIBRARIES} ${Boost_LIBRARIES})
@@ -33,5 +33,5 @@ set_target_properties(scone-opt PROPERTIES
     )
 
 # To create folders in Visual Studio.
-source_group("API" FILES ${API_FILES})
-source_group("System" FILES ${SYSTEM_FILES})
+source_group("API" FILES ${OPT_API_FILES})
+source_group("System" FILES ${OPT_SYSTEM_FILES})
