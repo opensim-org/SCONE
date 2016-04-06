@@ -20,8 +20,8 @@ namespace scone
 	using flut::get_filename_ext;
 	using flut::get_filename_without_ext;
 	using flut::glob_match;
-	using flut::make_str;
-	using flut::from_string;
+	using flut::to_str;
+	using flut::from_str;
 	using flut::quoted;
 	using flut::timer;
 

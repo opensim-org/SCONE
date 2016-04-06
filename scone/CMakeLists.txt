@@ -181,6 +181,7 @@ set(SIM_TOPOLOGY_FILES
     sim/Leg.h
     sim/Link.cpp
     sim/Link.h
+	sim/Side.h
     )
 	
 set(SIMBODY_MODELCOMPONENTS_FILES

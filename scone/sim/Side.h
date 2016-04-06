@@ -55,7 +55,7 @@ namespace scone
 	T& FindBySide( std::vector< T >& cont, Side side )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetSide() == side; } );
-		SCONE_THROW_IF( it == cont.end(), "Could not find item with side " + make_str( side ) );
+		SCONE_THROW_IF( it == cont.end(), "Could not find item with side " + to_str( side ) );
 		return *it;
 	}
 

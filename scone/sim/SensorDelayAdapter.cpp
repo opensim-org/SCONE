@@ -21,7 +21,7 @@ namespace scone
 				// special case because we need to add postfixes to the channel names
 				m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + ".0" );
 				for ( Index idx = 1; idx < source.GetChannelCount(); ++idx )
-					m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + make_str( idx ) );
+					m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + to_str( idx ) );
 			}
 			else
 			{

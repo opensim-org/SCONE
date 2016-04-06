@@ -43,7 +43,7 @@ namespace scone
 				// return parameter value
 				return iter->second;
 			}
-			SCONE_THROW( "Invalid mode: " + make_str( m_Mode ) );
+			SCONE_THROW( "Invalid mode: " + to_str( m_Mode ) );
 		}
 
 		double ParamSet::Get( const String& name, const PropNode& props, const String node_name )

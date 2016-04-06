@@ -39,7 +39,7 @@ namespace scone
 
 		const String& GetString( T e ) const {
 			auto iter = m_Map.find( e );
-			SCONE_THROW_IF( iter == m_Map.end(), "Could not find value " + make_str( e ) );
+			SCONE_THROW_IF( iter == m_Map.end(), "Could not find value " + to_str( e ) );
 			return iter->second;
 		}
 

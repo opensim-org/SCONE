@@ -40,7 +40,7 @@ namespace scone
 	Index FindIndexOrThrow( const std::vector< T > cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
-		SCONE_THROW_IF( it == cont.end(), "Could not find " + make_str( item ) );
+		SCONE_THROW_IF( it == cont.end(), "Could not find " + to_str( item ) );
 		return static_cast< Index >( it - cont.begin() );
 	}
 }
