@@ -12,7 +12,7 @@ set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
 
 # Find dependencies.
 # ------------------
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/build/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # find flut include path
 find_package(Flut REQUIRED)
