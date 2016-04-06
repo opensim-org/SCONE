@@ -1,0 +1,6 @@
+[submodule "sub/flut"]
+	path = sub/flut
+	url = https://bitbucket.org/tgeijtenbeek/flutgit
+[submodule "submodules/flut"]
+	path = submodules/flut
+	url = https://bitbucket.org/tgeijtenbeek/flutgit
