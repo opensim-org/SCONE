@@ -77,7 +77,7 @@ set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Process source code.
 # --------------------
-add_subdirectory(subrepos/flut)
+add_subdirectory(submodules/flut)
 
 #
 # Add single sconelib target

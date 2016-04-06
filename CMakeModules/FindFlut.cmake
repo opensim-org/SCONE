@@ -2,7 +2,7 @@
 # TODO: use a better path estimate!
 find_path(FLUT_INCLUDE_DIR
     NAMES flut/system/types.hpp
-    PATHS ${CMAKE_SOURCE_DIR}/subrepos/flut
+    PATHS ${CMAKE_SOURCE_DIR}/submodules/flut
    )
 
 # This CMake-supplied script provides standard error handling.
