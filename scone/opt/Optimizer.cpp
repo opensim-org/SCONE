@@ -177,6 +177,8 @@ namespace scone
         {
 #ifdef _MSC_VER
             ::SetThreadPriority( ::GetCurrentThread(), priority );
+#elif __APPLE__
+            // TODO setschedprio unavailable; maybe use getschedparam?
 #else
             pthread_setschedprio( pthread_self(), priority );
 #endif

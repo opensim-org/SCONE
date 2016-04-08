@@ -24,7 +24,7 @@ add_library(scone-opt # Name of the library file.
     ${OPT_API_FILES} ${OPT_SYSTEM_FILES}
     )
 target_link_libraries(scone-opt scone-core
-    ${Shark_LIBRARIES} ${Boost_LIBRARIES})
+    shark ${Boost_LIBRARIES})
 
 set_target_properties(scone-opt PROPERTIES
     DEFINE_SYMBOL OPT_EXPORTS # For controlling WIN32 dllimport/export.

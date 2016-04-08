@@ -38,7 +38,7 @@ namespace scone
 					DofInfo di( *mrdof );
 
 					di.moment_arm = muscle.GetMomentArm( mrdof->target_dof );
-					total_abs_moment_arm += abs( di.moment_arm );
+					total_abs_moment_arm += std::abs( di.moment_arm );
 
 					di.dof.target_dof.SetVel( Radian( Degree( 1 ) ) );
 					di.lengthening_speed = muscle.GetVelocity();
@@ -53,7 +53,7 @@ namespace scone
 			{
 				Real mom_w = di.moment_arm / total_abs_moment_arm;
 				di.w = mom_w;
-				di.abs_w = abs( di.w );
+				di.abs_w = std::abs( di.w );
 				di.max_moment = di.abs_w * di.moment_arm * muscle.GetMaxIsometricForce();
 				di.dof.AddAvailableMoment( di.max_moment );
 			}
@@ -63,7 +63,7 @@ namespace scone
 			for ( const auto& dof : model.GetDofs() )
 			{
 				if ( muscle.HasMomentArm( *dof ) )
-					summed_muscle_moment_arms += abs( muscle.GetMomentArm( *dof ) );
+					summed_muscle_moment_arms += std::abs( muscle.GetMomentArm( *dof ) );
 			}
 
 			size_t max_articulation = 0;

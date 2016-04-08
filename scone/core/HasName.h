@@ -3,19 +3,21 @@
 #include "core.h"
 #include "Exception.h"
 #include <vector>
+#include <flut/string_tools.hpp>
 
 namespace scone
 {
 	class HasName
 	{
 	public:
-		virtual ~HasName() = 0 {}
+		virtual ~HasName() {}
 		virtual const String& GetName() const = 0;
 	};
 
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
+		using flut::quoted;
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 		SCONE_THROW_IF( it == cont.end(), "Could not find " + quoted( name ) );
 		return *it;

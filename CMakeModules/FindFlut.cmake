@@ -12,7 +12,7 @@ find_package_handle_standard_args(FLUT
     REQUIRED_VARS FLUT_INCLUDE_DIR
     )
     
-# SHARK_FOUND is set automatically for us by find_package().
+# FLUT_FOUND is set automatically for us by find_package().
 if(FLUT_FOUND)
     set(FLUT_INCLUDE_DIRS ${FLUT_INCLUDE_DIR})
 endif()

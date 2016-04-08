@@ -22,7 +22,7 @@ namespace scone
 		va_start( args, format );
 
 		char buf[8192];
-		vsprintf_s( buf, sizeof( buf ), format, args );
+		vsnprintf( buf, sizeof( buf ), format, args );
 
 		va_end( args );
 
@@ -38,7 +38,7 @@ namespace scone
 		auto mins = static_cast<int>( now.time_of_day().minutes() );
 
 		char buf[100];
-		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d", month, day, hours, mins );
+		snprintf(buf, sizeof(buf), "%02d%02d.%02d%02d", month, day, hours, mins );
 	
 		return std::string( buf );
 	}
@@ -53,7 +53,7 @@ namespace scone
 		auto secs = static_cast<int>( now.time_of_day().seconds() );
 
 		char buf[100];
-		sprintf_s(buf, sizeof(buf), "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
+		snprintf(buf, sizeof(buf), "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
 	
 		return std::string( buf );
 	}
