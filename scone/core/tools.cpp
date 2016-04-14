@@ -63,29 +63,6 @@ namespace scone
 		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
 	}
 
-	String CORE_API GetFilenameExt( const String& str )
-	{
-		size_t n = str.find_last_of( "." );
-
-		if ( n == std::string::npos )
-			return std::string( "" ); // no extension found
-
-		// dot could be part of a folder name
-		if ( str.substr( n ).find_last_of( "/\\" ) != std::string::npos )
-			return std::string( "" ); // no extension found
-
-		return str.substr( n );
-	}
-
-	String GetFileNameNoExt( const String& str )
-	{
-		size_t n = str.find_last_of( "." );
-
-		if ( n == std::string::npos )
-			return str; // no extension found
-		else return str.substr( 0, n );
-	}
-
 	// TODO: Could use regex to remove platform dependencies
 	// Currently assumes one delimeter char. Can extend with boost if needed
 	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
