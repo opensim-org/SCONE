@@ -143,7 +143,7 @@ namespace scone
 				{
 					for ( auto& nvp : state )
 					{
-						if ( glob_match( nvp.first, iso.GetStr( "include_states" ) ) && !glob_match( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						if ( matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
 							nvp.second = par.Get( opt::ParamInfo( nvp.first, nvp.second, iso.GetReal( "init_std" ), 0, 0, -1000, 1000 ) );
 					}
 				}

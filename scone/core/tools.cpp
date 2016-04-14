@@ -16,19 +16,6 @@ using std::endl;
 
 namespace scone
 {
-	std::string GetStringF( const char* format, ... )
-	{
-		va_list args;
-		va_start( args, format );
-
-		char buf[8192];
-		vsprintf_s( buf, sizeof( buf ), format, args );
-
-		va_end( args );
-
-		return std::string( buf );
-	}
-
 	std::string GetDateTimeAsString()
 	{
 		auto now = boost::posix_time::second_clock::local_time();
@@ -61,29 +48,6 @@ namespace scone
 	String CORE_API GetCleanVarName( const String& str )
 	{
 		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
-	}
-
-	String CORE_API GetFilenameExt( const String& str )
-	{
-		size_t n = str.find_last_of( "." );
-
-		if ( n == std::string::npos )
-			return std::string( "" ); // no extension found
-
-		// dot could be part of a folder name
-		if ( str.substr( n ).find_last_of( "/\\" ) != std::string::npos )
-			return std::string( "" ); // no extension found
-
-		return str.substr( n );
-	}
-
-	String GetFileNameNoExt( const String& str )
-	{
-		size_t n = str.find_last_of( "." );
-
-		if ( n == std::string::npos )
-			return str; // no extension found
-		else return str.substr( 0, n );
 	}
 
 	// TODO: Could use regex to remove platform dependencies
