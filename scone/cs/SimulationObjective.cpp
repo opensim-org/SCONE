@@ -66,7 +66,8 @@ namespace scone
 
 		String SimulationObjective::GetClassSignature() const
 		{
-			String str = GetApplicationVersion() + "." + m_Model->GetSignature();
+			// use date/time, since automatic version numbers no longer work with Git :-(
+			String str = GetDateTimeAsString() + "." + m_Model->GetSignature();
 
 			for ( sim::ControllerUP& c: m_Model->GetControllers() )
 				str += "." + c->GetSignature();

@@ -4,7 +4,9 @@
 #include <boost/thread/lock_guard.hpp>
 #include <stdarg.h>
 
-//#ifdef _MSC_VER
+#ifdef WIN32
+#	pragma warning( disable: 4996 ) // we don't need to push/pop because it's not a header
+#endif
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
 if ( LEVEL >= g_LogLevel ) \
@@ -15,20 +17,6 @@ if ( LEVEL >= g_LogLevel ) \
 		LogMessageNoCheck( LEVEL, _buf_ ); \
 		va_end( args ); \
 }
-
-//#else
-/*
-#define LOG_MESSAGE_F( LEVEL, FORMAT ) \
-if ( LEVEL >= g_LogLevel ) \
-{ \
-	va_list args; va_start( args, FORMAT ); \
-		char _buf_[ g_MaxLogMessageSize ]; \
-        vsnprintf( _buf_, sizeof( _buf_ ), FORMAT, args ); \
-		LogMessageNoCheck( LEVEL, _buf_ ); \
-		va_end( args ); \
-}
-*/
-//#endif
 
 namespace scone
 {

@@ -4,6 +4,7 @@
 #ifdef WIN32
 #include <shlwapi.h>
 #pragma comment( lib, "shlwapi.lib" )
+#pragma warning( disable: 4996 ) // no push/pop because it's a cpp file
 #else
 #include <fnmatch.h>
 #endif
@@ -37,10 +38,7 @@ namespace scone
 		auto hours = static_cast<int>( now.time_of_day().hours() );
 		auto mins = static_cast<int>( now.time_of_day().minutes() );
 
-		char buf[100];
-		snprintf(buf, sizeof(buf), "%02d%02d.%02d%02d", month, day, hours, mins );
-	
-		return std::string( buf );
+		return stringf( "%02d%02d.%02d%02d", month, day, hours, mins );
 	}
 
 	std::string GetDateTimeExactAsString()
@@ -52,10 +50,7 @@ namespace scone
 		auto mins = static_cast<int>( now.time_of_day().minutes() );
 		auto secs = static_cast<int>( now.time_of_day().seconds() );
 
-		char buf[100];
-		snprintf(buf, sizeof(buf), "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
-	
-		return std::string( buf );
+		return stringf( "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
 	}
 
 	String CORE_API GetCleanVarName( const String& str )

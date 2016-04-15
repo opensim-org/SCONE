@@ -241,7 +241,7 @@ namespace scone
 			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
-				printf("%04zu:", gen );
+				printf("%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
 
 				cma.step_mt();
 
