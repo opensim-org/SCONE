@@ -11,7 +11,7 @@ if ( LEVEL >= g_LogLevel ) \
 { \
 	va_list args; va_start( args, FORMAT ); \
 		char _buf_[ g_MaxLogMessageSize ]; \
-		vsprintf_s( _buf_, sizeof( _buf_ ), FORMAT, args ); \
+		vsnprintf( _buf_, sizeof( _buf_ ), FORMAT, args ); \
 		LogMessageNoCheck( LEVEL, _buf_ ); \
 		va_end( args ); \
 }

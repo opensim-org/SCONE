@@ -44,7 +44,7 @@ namespace scone
 				{
 					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) );
 					double rps = l.squared_range_penalty * GetSquared( range_violation );
-					double rpa = l.abs_range_penalty * abs( range_violation );
+					double rpa = l.abs_range_penalty * std::abs( range_violation );
 					l.penalty.AddSample( timestamp, rps + rpa );
 				}
 
@@ -52,7 +52,7 @@ namespace scone
 				{
 					double range_violation = l.velocity_range.GetRangeViolation( Radian( l.dof.GetVel() ) );
 					double vrps = l.squared_velocity_range_penalty * GetSquared( range_violation );
-					double vrpa = l.abs_velocity_range_penalty * abs( range_violation );
+					double vrpa = l.abs_velocity_range_penalty * std::abs( range_violation );
 					l.penalty.AddSample( timestamp, vrps + vrpa );
 				}
 

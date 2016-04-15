@@ -17,8 +17,9 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 # find flut include path
 find_package(Flut REQUIRED)
 
-# This uses the FindShark.cmake file in build/cmake.
-find_package(Shark REQUIRED)
+# Shark 3.0 provides a SharkConfig.cmake.
+find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
+# For future reference (in case it's needed): include("${Shark_DIR}/UseShark.cmake")
 
 # Link with boost's static libraries.
 set(Boost_USE_STATIC_LIBS OFF)
@@ -74,6 +75,9 @@ endif()
 get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
+
+# Silence CMake warning on OSX.
+set(CMAKE_MACOSX_RPATH ON)
 
 # Process source code.
 # --------------------

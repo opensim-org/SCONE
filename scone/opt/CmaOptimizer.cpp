@@ -241,7 +241,7 @@ namespace scone
 			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
-				printf("%04d:", gen );
+				printf("%04zu:", gen );
 
 				cma.step_mt();
 

@@ -291,7 +291,7 @@ namespace scone
 					sim::Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
 					cout << boost::format( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f" )
 						% mus->GetName() % mus->GetLength() % lmus.GetName() % lmus.GetLength()
-						% abs( mus->GetLength() - lmus.GetLength() ) << endl;
+						% std::abs( mus->GetLength() - lmus.GetLength() ) << endl;
 				}
 			}
 		}
