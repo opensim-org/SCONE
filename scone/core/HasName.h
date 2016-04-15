@@ -10,9 +10,10 @@ namespace scone
 	class HasName
 	{
 	public:
-		virtual ~HasName() {}
+		virtual ~HasName() = 0;
 		virtual const String& GetName() const = 0;
 	};
+	inline HasName::~HasName() {} // must provide implementation for destructor of pure virtual class
 
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
