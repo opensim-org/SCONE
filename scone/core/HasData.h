@@ -4,12 +4,10 @@
 
 namespace scone
 {
-	class HasData
+	class CORE_API HasData
 	{
 	public:
-		virtual ~HasData() = 0;
 		virtual void StoreData( Storage< Real >::Frame& frame ) = 0;
+		inline virtual ~HasData() {}
 	};
-
-	inline HasData::~HasData() {} // must provide implementation for destructor of pure virtual class
 }

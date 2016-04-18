@@ -7,13 +7,12 @@
 
 namespace scone
 {
-	class HasName
+	class CORE_API HasName
 	{
 	public:
-		virtual ~HasName() = 0;
 		virtual const String& GetName() const = 0;
+		inline virtual ~HasName() {}
 	};
-	inline HasName::~HasName() {} // must provide implementation for destructor of pure virtual class
 
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
