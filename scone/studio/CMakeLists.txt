@@ -33,7 +33,7 @@ if(${Qt5Widgets_FOUND})
 		)
 
 		# Copy all Boost DLLs to the binary directory.
-		SET(BOOST_DLLS filesystem system thread date_time chrono serialization timer)
+		SET(BOOST_DLLS filesystem system thread date_time chrono serialization timer unit_test_framework)
 		foreach(boostdll ${BOOST_DLLS})
 			add_custom_command(TARGET scone-studio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Boost_LIBRARY_DIRS}/boost_${boostdll}-vc120-mt-$<$<CONFIG:debug>:gd->${Boost_LIB_VERSION}.dll ${DLL_TARGET_DIR}

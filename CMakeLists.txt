@@ -25,7 +25,7 @@ find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
 set(Boost_USE_STATIC_LIBS OFF)
 set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
-	filesystem system thread date_time chrono timer serialization)
+	filesystem system thread date_time chrono timer serialization unit_test_framework)
 
 # This uses the FindOpenSim.cmake file in build/cmake.
 find_package(OpenSim 3.3 REQUIRED)
@@ -107,4 +107,5 @@ add_subdirectory(scone)
 #
 add_subdirectory(scone/sconeopt)
 add_subdirectory(scone/studio)
+add_subdirectory(scone/unittests)
 add_subdirectory(scone/test)
