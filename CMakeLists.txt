@@ -6,10 +6,6 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# User options.
-# -------------
-set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
-
 # Find dependencies.
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
@@ -19,7 +15,6 @@ find_package(Flut REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
 find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
-# For future reference (in case it's needed): include("${Shark_DIR}/UseShark.cmake")
 
 # Link with boost's static libraries.
 set(Boost_USE_STATIC_LIBS OFF)
@@ -43,13 +38,9 @@ if(WIN32)
 endif()
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
-include_directories(${Shark_INCLUDE_DIRS}) # TODO: this doesn't add anything on WIN32, remove?
 include_directories(${FLUT_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR})
-
-# Force adding the shark include path, because it doesn't get added on WIN32
-# TODO: fix. This may be an issue in SharkConfig.cmake, or just random CMake shabbiness
-include_directories(${SHARK_ROOT}/include/shark) 
+include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
 
 # Compiler flags.
 # ---------------
