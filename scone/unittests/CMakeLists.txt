@@ -1,5 +1,6 @@
 set(FILES
     common.h
+	platform.h
     main.cpp
 	propnode_test.cpp
 	simulation_test.cpp

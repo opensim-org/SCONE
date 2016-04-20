@@ -15,7 +15,7 @@ struct SconeGlobalFixture
 		scone::cs::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 
-		scone::log::SetLevel( scone::log::InfoLevel );
+		scone::log::SetLevel( scone::log::WarningLevel );
 	}
 
     ~SconeGlobalFixture()
