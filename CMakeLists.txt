@@ -18,7 +18,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 find_package(Flut REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
-find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}/lib/cmake/Shark")
+find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
 
 # Link with boost's static libraries.
 set(Boost_USE_STATIC_LIBS OFF)
