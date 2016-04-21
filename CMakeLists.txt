@@ -6,6 +6,10 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# User options.
+# -------------
+set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
+
 # Find dependencies.
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
@@ -14,7 +18,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 find_package(Flut REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
-find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
+find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}/lib/cmake/Shark")
 
 # Link with boost's static libraries.
 set(Boost_USE_STATIC_LIBS OFF)
