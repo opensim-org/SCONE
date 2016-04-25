@@ -1,10 +1,11 @@
 set(FILES
     common.h
 	platform.h
+	global_fixture.cpp
     main.cpp
+	optimization_test.cpp
 	propnode_test.cpp
 	simulation_test.cpp
-	global_fixture.cpp
 	)
 
 add_executable(scone-unit-tests ${FILES})
