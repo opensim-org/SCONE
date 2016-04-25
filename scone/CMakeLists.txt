@@ -116,6 +116,7 @@ set(CS_TOOLS_FILES
 	cs/SimulationObjective.cpp
 	cs/SimulationObjective.h
 	cs/tools.h
+	cs/tools.cpp
 	)
 
 set(OPT_API_FILES
