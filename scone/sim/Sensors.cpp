@@ -3,7 +3,7 @@
 #include "Muscle.h"
 #include "Area.h"
 #include "Body.h"
-#include "scone/cs/Tools.h"
+#include "scone/cs/tools.h"
 #include "Dof.h"
 #include <string.h>
 
