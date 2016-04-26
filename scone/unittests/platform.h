@@ -11,11 +11,13 @@ using flut::stringf;
 #	define SCONE_ARCH "UnknownArch"
 #endif
 
-#if defined( BOOST_COMP_MSVC )
+#if defined( _MSC_VER )
 #	define SCONE_COMP stringf( "MSVC%d", _MSC_VER )
-#elif defined( BOOST_COMP_CLANG )
+#elif defined( __clang__ )
 #	define SCONE_COMP "Clang"
-#else
+#elif defined( __GNUC__ )
+#   define SCONE_COMP "GCC"
+#else 
 #	define SCONE_COMP "UnknownComp"
 #endif
 
