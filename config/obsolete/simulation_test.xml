@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Model type="Simbody">
+	<model_file>../models/f1024.osim</model_file>
+	<!--state_init_file>../models/f2354_init_walk.sto</state_init_file-->
+	<!--probe_class>Umberger2010MuscleMetabolicsProbe</probe_class-->
+	<integration_method>SemiExplicitEuler2</integration_method>
+	<integration_accuracy>0.001</integration_accuracy>
+	<use_fixed_control_step_size>0</use_fixed_control_step_size>
+	<max_step_size>0.01</max_step_size>
+	<Controllers>
+		<Controller type="FeedForwardController">
+			<use_symmetric_actuators>0</use_symmetric_actuators>
+			<Function type="PieceWiseConstantFunction">
+				<control_points>1</control_points>
+				<control_point_y init_min="0.02" init_max="0.2" min="0.02" max="1" is_free="1"/>
+				<!--control_point_delta_time mean="0.2" std="0.0" is_free="0"/-->
+			</Function>
+		</Controller>
+		<Measure type="HeightMeasure">
+			<target_body></target_body>
+			<use_average_height>0</use_average_height>
+			<terminate_on_peak>0</terminate_on_peak>
+			<termination_height>0.0</termination_height>
+		</Measure>
+	</Controllers>
+</Model>

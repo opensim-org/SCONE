@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<name></name>
+	<max_threads>32</max_threads>
+	<thread_priority>-2</thread_priority>
+	<lambda>0</lambda>
+	<mu>0</mu>
+	<sigma>1</sigma>
+	<max_generations>5000</max_generations>
+	<output_folder_base>../../_SconeOutput/</output_folder_base>
+	<maximize_objective>1</maximize_objective>
+
+	<Objective type="SimulationObjective">
+		<signature_postfix>Back2ComFeet</signature_postfix>
+		<max_duration>2.0</max_duration>
+		<Model type="Simbody">
+			<model_file>../models/f1024.osim</model_file>
+			<state_init_file>../models/f2354_init_walk.sto</state_init_file>
+			<integration_accuracy>0.0001</integration_accuracy>
+			<Controllers>
+				<Controller type="FeedForwardController">
+					<use_symmetric_actuators>0</use_symmetric_actuators>
+					<Function type="PieceWiseLinearFunction">
+						<control_points>10</control_points>
+						<control_point_y init_min="0.25" init_max="0.75" min="0" max="1"/>
+						<control_point_delta_time mean="0.15" std="0" is_free="0"/>
+					</Function>
+					<number_of_modes>0</number_of_modes>
+					<!--mode_weight init_min="0.0" init_max="1.0" min="-1" max="1"/-->
+				</Controller>
+				<Measure type="GaitMeasure">
+					<termination_height>0.98</termination_height>
+					<gait_bodies>toes_r toes_l pelvis torso</gait_bodies>
+				</Measure>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>
