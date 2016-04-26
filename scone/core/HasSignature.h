@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	class CORE_API HasSignature
+	class SCONE_API HasSignature
 	{
 	public:
 		HasSignature( const PropNode& pn );

@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API ParamSet
+		class SCONE_API ParamSet
 		{
 		public:
 			enum Mode { ConstructionMode, UpdateMode };
@@ -60,7 +60,7 @@ namespace scone
 			std::vector< String > m_NamePrefixes;
 		};
 
-		class OPT_API ScopedParamSetPrefixer
+		class SCONE_API ScopedParamSetPrefixer
 		{
 		public:
 			ScopedParamSetPrefixer( ParamSet& par, const String& prefix ) : m_ParamSet( par ) { m_ParamSet.PushNamePrefix( prefix ); }
@@ -69,7 +69,7 @@ namespace scone
 			ParamSet& m_ParamSet;
 		};
 
-		class OPT_API Parameterizable
+		class SCONE_API Parameterizable
 		{
 		public:
 			Parameterizable() { };

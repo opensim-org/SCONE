@@ -13,7 +13,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_SIMBODY_API Dof_Simbody : public Dof
+		class SCONE_API Dof_Simbody : public Dof
 		{
 		public:
 			Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord );

@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API GaitCycleMeasure : public Measure
+		class SCONE_API GaitCycleMeasure : public Measure
 		{
 		public:
 			GaitCycleMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

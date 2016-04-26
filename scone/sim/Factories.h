@@ -8,8 +8,8 @@ namespace scone
 {
 	namespace sim
 	{
-		DECLARE_FACTORY( SCONE_SIM_API, Model, ( const PropNode&, opt::ParamSet& ) );
-		DECLARE_FACTORY( SCONE_SIM_API, Controller, ( const PropNode&, opt::ParamSet&, Model&, const Area& ) );
-		DECLARE_FACTORY( SCONE_SIM_API, Sensor, ( const PropNode&, opt::ParamSet&, Model&, const Area& ) );
+		DECLARE_FACTORY( SCONE_API, Model, ( const PropNode&, opt::ParamSet& ) );
+		DECLARE_FACTORY( SCONE_API, Controller, ( const PropNode&, opt::ParamSet&, Model&, const Area& ) );
+		DECLARE_FACTORY( SCONE_API, Sensor, ( const PropNode&, opt::ParamSet&, Model&, const Area& ) );
 	}
 }

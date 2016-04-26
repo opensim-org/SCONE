@@ -16,7 +16,7 @@ namespace scone
 {
 	typedef long long HighResolutionTime;
 
-	class CORE_API ScopedProfile
+	class SCONE_API ScopedProfile
 	{
 	public:
 		ScopedProfile( class Profiler& prof, const String& name );
@@ -27,7 +27,7 @@ namespace scone
 		HighResolutionTime m_StartTime;
 	};
 
-	class CORE_API Profiler
+	class SCONE_API Profiler
 	{
 	public:
 		friend class ScopedProfile;

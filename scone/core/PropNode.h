@@ -15,7 +15,7 @@ namespace scone
 	class PropNode;
 	typedef std::unique_ptr< PropNode > PropNodePtr;
 
-	class CORE_API PropNode
+	class SCONE_API PropNode
 	{
 	public:
 		typedef String KeyType;
@@ -222,11 +222,11 @@ namespace scone
 
 
 	// shortcut file readers for lazy people
-	PropNode CORE_API ReadPropNodeFromXml( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromInfo( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNodeFromIni( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API ReadPropNode( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
-	PropNode CORE_API GetPropNodeFromArgs( int begin_idx, int end_idx, char* argv[] );
+	PropNode SCONE_API ReadPropNodeFromXml( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode SCONE_API ReadPropNodeFromInfo( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode SCONE_API ReadPropNodeFromIni( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode SCONE_API ReadPropNode( const String& filename, const PropNode::KeyType& include_directive = "INCLUDE", int level = 0 );
+	PropNode SCONE_API GetPropNodeFromArgs( int begin_idx, int end_idx, char* argv[] );
 
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }

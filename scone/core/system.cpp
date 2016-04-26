@@ -17,7 +17,7 @@ namespace scone
 	PropNode g_GlobalSettings;
 	String g_Version;
 
-	CORE_API String GetApplicationFolder()
+	SCONE_API String GetApplicationFolder()
 	{
 #ifdef _MSC_VER
 		char buf[ 1024 ];
@@ -41,12 +41,12 @@ namespace scone
 		return g_GlobalSettings;
 	}
 
-	CORE_API String GetSconeFolder( const String& folder )
+	SCONE_API String GetSconeFolder( const String& folder )
 	{
 		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
 	}
 
-	CORE_API String GetApplicationVersion()
+	SCONE_API String GetApplicationVersion()
 	{
 		if ( g_Version.empty() )
 		{

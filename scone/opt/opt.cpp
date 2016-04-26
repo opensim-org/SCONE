@@ -14,7 +14,7 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
-		void OPT_API PerformOptimization( int argc, char* argv[] )
+		void SCONE_API PerformOptimization( int argc, char* argv[] )
 		{
 			SCONE_THROW_IF( argc < 2, "No config file argument provided" );
 

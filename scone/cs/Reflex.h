@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API Reflex
+		class SCONE_API Reflex
 		{
 		public:
 			Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

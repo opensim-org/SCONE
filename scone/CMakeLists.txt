@@ -248,7 +248,7 @@ set_target_properties(sconelib PROPERTIES
     #FOLDER "sconelib"
     )
 
-target_compile_definitions( sconelib PRIVATE CORE_EXPORTS CS_EXPORTS OPT_EXPORTS SCONE_SIM_EXPORTS SCONE_SIM_SIMBODY_EXPORTS )
+target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )
 
 # To create folders in Visual Studio.
 source_group("core\\Base" FILES ${CORE_BASE_FILES})

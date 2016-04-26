@@ -43,57 +43,57 @@ namespace scone
 				LogMessageNoCheck( level, message );
 		}
 
-		void CORE_API LogMessage( Level level, const String& msg )
+		void SCONE_API LogMessage( Level level, const String& msg )
 		{
 			LogMessageCheck( level, msg.c_str() );
 		}
 
-		void CORE_API SetLevel( Level level )
+		void SCONE_API SetLevel( Level level )
 		{
 			g_LogLevel = level;	
 		}
 
-		Level CORE_API GetLevel()
+		Level SCONE_API GetLevel()
 		{
 			return g_LogLevel;
 		}
 
-		void CORE_API Trace( const String& msg )
+		void SCONE_API Trace( const String& msg )
 		{
 			LogMessageCheck( TraceLevel, msg.c_str() );
 		}
 
-		void CORE_API Debug( const String& msg )
+		void SCONE_API Debug( const String& msg )
 		{
 			LogMessageCheck( DebugLevel, msg.c_str() );
 		}
 
-		void CORE_API Info( const String& msg )
+		void SCONE_API Info( const String& msg )
 		{
 			LogMessageCheck( InfoLevel, msg.c_str() );
 		}
 
-		void CORE_API Warning( const String& msg )
+		void SCONE_API Warning( const String& msg )
 		{
 			LogMessageCheck( WarningLevel, msg.c_str() );
 		}
 
-		void CORE_API Error( const String& msg )
+		void SCONE_API Error( const String& msg )
 		{
 			LogMessageCheck( ErrorLevel, msg.c_str() );
 		}
 
-		void CORE_API Critical( const String& msg )
+		void SCONE_API Critical( const String& msg )
 		{
 			LogMessageCheck( CriticalLevel, msg.c_str() );
 		}
 
-		void CORE_API WarningF( const char* msg, ... )
+		void SCONE_API WarningF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( WarningLevel, msg );
 		}
 
-		void CORE_API PeriodicTraceF( int period, const char* msg, ... )
+		void SCONE_API PeriodicTraceF( int period, const char* msg, ... )
 		{
 			static int counter = 0;
 			if ( counter++ % period == 0 ) {
@@ -101,27 +101,27 @@ namespace scone
 			}
 		}
 
-		void CORE_API TraceF( const char* msg, ... )
+		void SCONE_API TraceF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( TraceLevel, msg );
 		}
 
-		void CORE_API DebugF( const char* msg, ... )
+		void SCONE_API DebugF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( DebugLevel, msg );
 		}
 
-		void CORE_API InfoF( const char* msg, ... )
+		void SCONE_API InfoF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( InfoLevel, msg );
 		}
 
-		void CORE_API ErrorF( const char* msg, ... )
+		void SCONE_API ErrorF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( ErrorLevel, msg );
 		}
 
-		void CORE_API CriticalF( const char* msg, ... )
+		void SCONE_API CriticalF( const char* msg, ... )
 		{
 			LOG_MESSAGE_F( CriticalLevel, msg );
 		}

@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Objective : public HasSignature
+		class SCONE_API Objective : public HasSignature
 		{
 		public:
 			Objective( const PropNode& props, ParamSet& par );

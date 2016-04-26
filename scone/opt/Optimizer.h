@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace opt
 	{
-		class OPT_API Optimizer : public HasSignature
+		class SCONE_API Optimizer : public HasSignature
 		{
 		public:
 			Optimizer( const PropNode& props );

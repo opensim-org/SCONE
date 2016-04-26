@@ -12,7 +12,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API MetaReflexMuscle
+		class SCONE_API MetaReflexMuscle
 		{
 		public:
 			MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller, const sim::Area& area );

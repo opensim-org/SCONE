@@ -8,7 +8,7 @@ namespace scone
 	namespace sim
 	{
 		// Base class for muscle sensors
-		class SCONE_SIM_API MuscleSensor : public Sensor
+		class SCONE_API MuscleSensor : public Sensor
 		{
 		public:
 			MuscleSensor( Muscle& m ) : m_Muscle( m ) {}
@@ -18,7 +18,7 @@ namespace scone
 		};
 
 		// Sensor for normalized muscle force
-		class SCONE_SIM_API MuscleForceSensor : public MuscleSensor
+		class SCONE_API MuscleForceSensor : public MuscleSensor
 		{
 		public:
 			MuscleForceSensor( Muscle& m ) : MuscleSensor( m ) {}
@@ -28,7 +28,7 @@ namespace scone
 		};
 
 		// Sensor for normalized muscle length
-		class SCONE_SIM_API MuscleLengthSensor : public MuscleSensor
+		class SCONE_API MuscleLengthSensor : public MuscleSensor
 		{
 		public:
 			MuscleLengthSensor( Muscle& m ) : MuscleSensor( m ) {}
@@ -38,7 +38,7 @@ namespace scone
 		};
 
 		// Sensor for normalized muscle lengthening speed
-		class SCONE_SIM_API MuscleVelocitySensor : public MuscleSensor
+		class SCONE_API MuscleVelocitySensor : public MuscleSensor
 		{
 		public:
 			MuscleVelocitySensor( Muscle& m ) : MuscleSensor( m ) {}
@@ -48,7 +48,7 @@ namespace scone
 		};
 
 		// Sensor that simulates (based on [Prochazka 1999])
-		class SCONE_SIM_API MuscleSpindleSensor : public MuscleSensor
+		class SCONE_API MuscleSpindleSensor : public MuscleSensor
 		{
 		public:
 			MuscleSpindleSensor( Muscle& m ) : MuscleSensor( m ) {}
@@ -58,7 +58,7 @@ namespace scone
 		};
 
 		// Base class for dof sensors
-		class SCONE_SIM_API DofSensor : public Sensor
+		class SCONE_API DofSensor : public Sensor
 		{
 		public:
 			DofSensor( Dof& dof ) : m_Dof( dof ), m_pRootDof( nullptr ) {}
@@ -68,7 +68,7 @@ namespace scone
 			Dof* m_pRootDof;
 		};
 
-		class SCONE_SIM_API DofPositionSensor : public DofSensor
+		class SCONE_API DofPositionSensor : public DofSensor
 		{
 		public:
 			DofPositionSensor( Dof& dof ) : DofSensor( dof ) {}
@@ -77,7 +77,7 @@ namespace scone
 			virtual String GetName() const override;
 		};
 
-		class SCONE_SIM_API DofVelocitySensor : public DofSensor
+		class SCONE_API DofVelocitySensor : public DofSensor
 		{
 		public:
 			DofVelocitySensor( Dof& dof ) : DofSensor( dof ) {}
@@ -87,7 +87,7 @@ namespace scone
 		};
 
 		// Sensor for normalized leg load, based on target_area
-		class SCONE_SIM_API LegLoadSensor : public Sensor
+		class SCONE_API LegLoadSensor : public Sensor
 		{
 		public:
 			LegLoadSensor( Leg& leg ) : m_Leg( leg ) {}
@@ -99,7 +99,7 @@ namespace scone
 		};
 
 		// Base class for body sensors
-		class SCONE_SIM_API BodySensor : public Sensor
+		class SCONE_API BodySensor : public Sensor
 		{
 		public:
 			BodySensor( Body& body ) : m_Body( body ) {}
@@ -108,7 +108,7 @@ namespace scone
 			Body& m_Body;
 		};
 
-		class SCONE_SIM_API BodyOriSensor : public BodySensor
+		class SCONE_API BodyOriSensor : public BodySensor
 		{
 		public:
 			BodyOriSensor( Body& body ) : BodySensor( body ) {}
@@ -117,7 +117,7 @@ namespace scone
 			virtual Real GetValue( Index idx ) const override;
 		};
 
-		class SCONE_SIM_API BodyAngVelSensor : public BodySensor
+		class SCONE_API BodyAngVelSensor : public BodySensor
 		{
 		public:
 			BodyAngVelSensor( Body& body ) : BodySensor( body ) {}
@@ -127,7 +127,7 @@ namespace scone
 		};
 
 		// Sensor to measure the sagittal orientation of a body in world coordinates
-		class SCONE_SIM_API OrientationSensor : public Sensor
+		class SCONE_API OrientationSensor : public Sensor
 		{
 		public:
 			enum Plane { Invalid = -1, Sagittal, Coronal, Transverse };

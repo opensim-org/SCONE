@@ -26,13 +26,13 @@ namespace scone
 	using flut::timer;
 
 	/// Get formatted date/time string
-	String CORE_API GetDateTimeAsString();
+	String SCONE_API GetDateTimeAsString();
 
     /// Get formatted date/time with exact fractional seconds as string
-    String CORE_API GetDateTimeExactAsString();
+    String SCONE_API GetDateTimeExactAsString();
 
 	/// Get clean name, removes "m_" (if present)
-	String CORE_API GetCleanVarName( const String& str );
+	String SCONE_API GetCleanVarName( const String& str );
 
 	/// Get clean class, removes everything before "::" (if present)
 	template< typename T >
@@ -53,5 +53,5 @@ namespace scone
 		else return str;
 	}
 
-	void CORE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
+	void SCONE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	class CS_API PieceWiseLinearFunction : public PieceWiseFunction
+	class SCONE_API PieceWiseLinearFunction : public PieceWiseFunction
 	{
 	public:
 		PieceWiseLinearFunction( bool flatExtrapolation );

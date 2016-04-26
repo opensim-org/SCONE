@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	class CORE_API HasName
+	class SCONE_API HasName
 	{
 	public:
 		virtual const String& GetName() const = 0;

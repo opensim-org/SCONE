@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	class CS_API PieceWiseConstantFunction : public PieceWiseFunction
+	class SCONE_API PieceWiseConstantFunction : public PieceWiseFunction
 	{
 	public:
 		PieceWiseConstantFunction();

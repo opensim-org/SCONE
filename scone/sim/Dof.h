@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Dof : public HasName
+		class SCONE_API Dof : public HasName
 		{
 		public:
 			Dof( Joint& j );

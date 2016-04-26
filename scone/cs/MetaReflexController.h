@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API MetaReflexController : public sim::Controller
+		class SCONE_API MetaReflexController : public sim::Controller
 		{
 		public:
 			MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

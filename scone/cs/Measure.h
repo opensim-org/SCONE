@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API Measure : public sim::Controller
+		class SCONE_API Measure : public sim::Controller
 		{
 		public:
 			Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

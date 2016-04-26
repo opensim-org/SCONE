@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_SIMBODY_API Simulation_Simbody : public Simulation
+		class SCONE_API Simulation_Simbody : public Simulation
 		{
 		public:
 			Simulation_Simbody( const PropNode& props );

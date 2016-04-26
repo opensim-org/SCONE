@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API GaitStateController : public sim::Controller
+		class SCONE_API GaitStateController : public sim::Controller
 		{
 		public:
 			struct LegState

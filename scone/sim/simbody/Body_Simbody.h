@@ -13,7 +13,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_SIMBODY_API Body_Simbody : public Body
+		class SCONE_API Body_Simbody : public Body
 		{
 		public:
 			Body_Simbody( class Model_Simbody& model, OpenSim::Body& body );

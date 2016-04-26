@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API MuscleReflex : public Reflex
+		class SCONE_API MuscleReflex : public Reflex
 		{
 		public:
 			MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Actuator : public virtual HasName, public HasData
+		class SCONE_API Actuator : public virtual HasName, public HasData
 		{
 		public:
 			Actuator();

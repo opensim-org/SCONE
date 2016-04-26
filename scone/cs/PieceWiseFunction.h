@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	class CS_API PieceWiseFunction : public Function
+	class SCONE_API PieceWiseFunction : public Function
 	{
 	public:
 		PieceWiseFunction() { };

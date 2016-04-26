@@ -10,7 +10,7 @@ namespace scone
 	namespace sim
 	{
 		/// Simple struct to allow tree hierarchy
-		class SCONE_SIM_API Link
+		class SCONE_API Link
 		{
 		public:
 			Link( Body& b, Joint& j, Link* parent = nullptr ) : m_Body( &b ), m_Joint( &j ), m_Parent( parent ), type( UnknownLink ) { };

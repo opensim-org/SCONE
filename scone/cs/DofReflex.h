@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API DofReflex : public Reflex
+		class SCONE_API DofReflex : public Reflex
 		{
 		public:
 			DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

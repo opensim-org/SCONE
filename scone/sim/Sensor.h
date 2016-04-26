@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Sensor
+		class SCONE_API Sensor
 		{
 		public:
 			Sensor();

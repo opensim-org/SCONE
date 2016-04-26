@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API CompositeMeasure : public Measure
+		class SCONE_API CompositeMeasure : public Measure
 		{
 		public:
 			CompositeMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

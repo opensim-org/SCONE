@@ -16,7 +16,7 @@ namespace scone
 	{
 		class Model_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Muscle_Simbody : public Muscle
+		class SCONE_API Muscle_Simbody : public Muscle
 		{
 		public:
 			Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus );

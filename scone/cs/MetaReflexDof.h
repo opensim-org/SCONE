@@ -13,7 +13,7 @@ namespace scone
 	namespace cs
 	{
 		// TODO: derive from either Reflex or Controller, or don't and remove this TODO
-		class CS_API MetaReflexDof : public HasData
+		class SCONE_API MetaReflexDof : public HasData
 		{
 		public:
 			MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

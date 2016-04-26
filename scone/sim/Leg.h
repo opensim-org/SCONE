@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Leg : public HasName
+		class SCONE_API Leg : public HasName
 		{
 		public:
 			Leg( Link& upper, Link& foot, size_t index, Side side = NoSide, size_t rank = 0 );

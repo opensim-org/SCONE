@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API JumpMeasure : public Measure
+		class SCONE_API JumpMeasure : public Measure
 		{
 		public:
 			JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

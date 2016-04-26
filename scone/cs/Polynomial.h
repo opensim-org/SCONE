@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	class CS_API Polynomial : public Function
+	class SCONE_API Polynomial : public Function
 	{
 	public:
 		Polynomial( size_t degree );

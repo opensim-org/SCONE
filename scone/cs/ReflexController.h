@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API ReflexController : public sim::Controller
+		class SCONE_API ReflexController : public sim::Controller
 		{
 		public:
 			ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );

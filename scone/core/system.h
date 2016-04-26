@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	CORE_API String GetApplicationVersion();
-	CORE_API const PropNode& GetSconeSettings();
-	CORE_API String GetSconeFolder( const String& folder );
+	SCONE_API String GetApplicationVersion();
+	SCONE_API const PropNode& GetSconeSettings();
+	SCONE_API String GetSconeFolder( const String& folder );
 }

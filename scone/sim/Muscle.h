@@ -14,7 +14,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Muscle : public Actuator
+		class SCONE_API Muscle : public Actuator
 		{
 		public:
 			Muscle();

@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API TimeStateController : public StateController
+		class SCONE_API TimeStateController : public StateController
 		{
 		public:
 			TimeStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );

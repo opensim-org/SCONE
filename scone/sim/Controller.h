@@ -10,7 +10,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Controller : public HasSignature, public HasData
+		class SCONE_API Controller : public HasSignature, public HasData
 		{
 		public:
 			Controller( const PropNode& props, opt::ParamSet& par, sim::Model& model, const Area& target_area );

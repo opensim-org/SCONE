@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	class CORE_API HasData
+	class SCONE_API HasData
 	{
 	public:
 		virtual void StoreData( Storage< Real >::Frame& frame ) = 0;

@@ -12,7 +12,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_SIMBODY_API Joint_Simbody : public Joint
+		class SCONE_API Joint_Simbody : public Joint
 		{
 		public:
 			Joint_Simbody( Body& body, Joint* parent, class Model_Simbody& model, OpenSim::Joint& osJoint );

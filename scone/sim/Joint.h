@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Joint : public HasName
+		class SCONE_API Joint : public HasName
 		{
 		public:
 			Joint( Body& body, Joint* parent = nullptr );

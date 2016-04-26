@@ -1,17 +1,17 @@
 #pragma once
 
 #if defined(_MSC_VER)
-#	ifdef CORE_EXPORTS
-#		define CORE_API __declspec(dllexport)
+#	ifdef SCONE_EXPORTS
+#		define SCONE_API __declspec(dllexport)
 #	else
-#		define CORE_API __declspec(dllimport)
+#		define SCONE_API __declspec(dllimport)
 #	endif
 #	include <SDKDDKVer.h>
 #	define NOMINMAX
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
 #else
-#	define CORE_API
+#	define SCONE_API
 #endif
 
 #include <limits>

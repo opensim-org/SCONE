@@ -7,20 +7,6 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/tools.h"
 
-#if defined(_MSC_VER)
-
-#ifdef OPT_EXPORTS
-#define OPT_API __declspec(dllexport)
-#else
-#define OPT_API __declspec(dllimport)
-#endif
-
-#else
-
-#define OPT_API
-
-#endif
-
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PAR_.TryGet( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )
 
@@ -44,9 +30,9 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( ParamSet );
 
 		// register factory types
-		void OPT_API RegisterFactoryTypes();
+		void SCONE_API RegisterFactoryTypes();
 
 		// TODO: move this to sconeopt?
-		void OPT_API PerformOptimization( int argc, char* argv[] );
+		void SCONE_API PerformOptimization( int argc, char* argv[] );
 	}
 }

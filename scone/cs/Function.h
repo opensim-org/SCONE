@@ -8,7 +8,7 @@
 namespace scone
 {
 	/// Parameterizable function
-	class CS_API Function
+	class SCONE_API Function
 	{
 	public:
 		Function() { };

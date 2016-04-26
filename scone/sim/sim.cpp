@@ -6,7 +6,7 @@ namespace scone
 {
 	namespace sim
 	{
-		void SCONE_SIM_API RegisterFactoryTypes()
+		void SCONE_API RegisterFactoryTypes()
 		{
 			GetSensorFactory().Register< MuscleForceSensor >();
 			GetSensorFactory().Register< MuscleLengthSensor >();

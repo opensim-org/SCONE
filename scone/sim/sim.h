@@ -3,20 +3,6 @@
 #include <memory>
 #include "scone/core/core.h"
 
-#if defined(_MSC_VER)
-
-#ifdef SCONE_SIM_EXPORTS
-#define SCONE_SIM_API __declspec(dllexport)
-#else
-#define SCONE_SIM_API __declspec(dllimport)
-#endif
-
-#else
-
-#define SCONE_SIM_API
-
-#endif
-
 namespace scone
 {
 	namespace sim
@@ -36,6 +22,6 @@ namespace scone
 		SCONE_DECLARE_CLASS_AND_PTR( Sensor );
 		SCONE_DECLARE_CLASS_AND_PTR( SensorDelayAdapter );
 
-		void SCONE_SIM_API RegisterFactoryTypes();
+		void SCONE_API RegisterFactoryTypes();
 	}
 }

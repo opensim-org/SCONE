@@ -32,7 +32,7 @@ namespace scone
 {
 	namespace cs
 	{
-		void CS_API RegisterFactoryTypes()
+		void SCONE_API RegisterFactoryTypes()
 		{
 			// register sim factory types
 			sim::RegisterFactoryTypes();

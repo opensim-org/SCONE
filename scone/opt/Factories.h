@@ -8,7 +8,7 @@ namespace scone
 {
 	namespace opt
 	{
-		DECLARE_FACTORY( OPT_API, Optimizer, ( const PropNode& ) );
-		DECLARE_FACTORY( OPT_API, Objective, ( const PropNode&, ParamSet& ) );
+		DECLARE_FACTORY( SCONE_API, Optimizer, ( const PropNode& ) );
+		DECLARE_FACTORY( SCONE_API, Objective, ( const PropNode&, ParamSet& ) );
 	}
 }

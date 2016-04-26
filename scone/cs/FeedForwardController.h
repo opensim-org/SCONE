@@ -16,7 +16,7 @@ namespace scone
 {
 	namespace cs
 	{
-		class CS_API FeedForwardController : public sim::Controller
+		class SCONE_API FeedForwardController : public sim::Controller
 		{
 		public:
 			FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );

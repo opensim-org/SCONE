@@ -53,14 +53,14 @@ namespace scone
 		return stringf( "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
 	}
 
-	String CORE_API GetCleanVarName( const String& str )
+	String SCONE_API GetCleanVarName( const String& str )
 	{
 		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
 	}
 
 	// TODO: Could use regex to remove platform dependencies
 	// Currently assumes one delimeter char. Can extend with boost if needed
-	bool CORE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
+	bool SCONE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
 	{
 #ifdef WIN32
 		return PathMatchSpecEx( str.c_str(), pattern.c_str(), multiple_patterns ? PMSF_MULTIPLE : PMSF_NORMAL ) == S_OK;

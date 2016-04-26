@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API Area
+		class SCONE_API Area
 		{
 		public:
 			Area( Side = NoSide, unsigned long long mask = 0 );

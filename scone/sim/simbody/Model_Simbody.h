@@ -29,7 +29,7 @@ namespace scone
 	{
 		class Simulation_Simbody;
 
-		class SCONE_SIM_SIMBODY_API Model_Simbody : public Model
+		class SCONE_API Model_Simbody : public Model
 		{
 		public:
 			Model_Simbody( const PropNode& props, opt::ParamSet& par );

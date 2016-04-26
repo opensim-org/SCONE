@@ -7,7 +7,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_SIM_API SensorDelayAdapter : public Sensor
+		class SCONE_API SensorDelayAdapter : public Sensor
 		{
 		public:
 			SensorDelayAdapter( Model& model, Sensor& source, TimeInSeconds default_delay );

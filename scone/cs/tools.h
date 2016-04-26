@@ -5,5 +5,5 @@
 
 namespace scone
 {
-	PropNode CS_API RunSimulation( const String& par_file, bool write_results = false );
+	PropNode SCONE_API RunSimulation( const String& par_file, bool write_results = false );
 }
