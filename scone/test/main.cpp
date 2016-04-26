@@ -20,7 +20,9 @@ int main( int argc, const char* argv[] )
 		//DofAxisTest();
 		cout << GetDateTimeAsString() << endl;
 		cout << GetDateTimeExactAsString() << endl;
-		cout << _MSC_VER << endl;
+#if defined ( _MSC_VER )
+        cout << _MSC_VER << endl;
+#endif
 
 		flut::timer ft;
 		auto start = std::chrono::high_resolution_clock::now();
