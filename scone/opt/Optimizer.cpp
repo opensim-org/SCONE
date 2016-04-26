@@ -19,7 +19,8 @@ namespace scone
 		HasSignature( props ),
 		max_threads( 1 ),
 		thread_priority( 0 ),
-		m_ObjectiveProps( props.GetChild( "Objective" ) )
+		m_ObjectiveProps( props.GetChild( "Objective" ) ),
+		console_output( true )
 		{
 			INIT_PROPERTY( props, max_threads, size_t( 1 ) );
 			INIT_PROPERTY( props, thread_priority, 0 );
@@ -30,6 +31,8 @@ namespace scone
 			INIT_PROPERTY( props, init_file, String("") );
 			INIT_PROPERTY( props, use_init_file, true );
 			INIT_PROPERTY( props, output_objective_result_files, true );
+
+			m_BestFitness = maximize_objective ? REAL_LOWEST : REAL_MAX;
 
 			// create at least one objective from props, so that all nodes are properly flagged
 			CreateObjectives( 1 );
@@ -66,7 +69,8 @@ namespace scone
 			{
 				// copy values into par
 				fitnesses[ ind_idx ] = m_Objectives[ ind_idx ]->Evaluate( parsets[ ind_idx ] );
-				printf(" %3.0f", fitnesses[ ind_idx ] );
+				if ( console_output )
+					printf(" %3.0f", fitnesses[ ind_idx ] );
 			}
 			return fitnesses;
 		}
@@ -102,7 +106,8 @@ namespace scone
 						num_active_threads--;
 
 						// print some stuff
-						printf( "%3.0f ", fitnesses[ thread_idx ] );
+						if ( console_output )
+							printf( "%3.0f ", fitnesses[ thread_idx ] );
 					}
 				}
 			}

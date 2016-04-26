@@ -26,15 +26,24 @@ namespace scone
 
 			std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 
+			const ParamSet& GetBestParamSet() { return m_BestParams; }
+			double GetBestFitness() { return m_BestFitness; }
+
+			void SetConsoleOutput( bool output ) { console_output = output; }
+
 		protected:
 			void CreateObjectives( size_t count );
 			const PropNode& m_ObjectiveProps;
 			std::vector< ObjectiveUP > m_Objectives;
-
 			void ManageFileOutput( double fitness, const std::vector< String >& files );
-
 			virtual String GetClassSignature() const override;
 
+			// current status
+			ParamSet m_BestParams;
+			double m_BestFitness;
+			bool console_output;
+
+			// properties
 			size_t max_threads;
 			int thread_priority;
 			bool maximize_objective;

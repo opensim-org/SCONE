@@ -30,7 +30,6 @@ namespace scone
 			CmaOptimizer& operator=( const CmaOptimizer& );
 
 			virtual String GetClassSignature() const override;
-
 		};
 	}
 }

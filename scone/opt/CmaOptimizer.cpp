@@ -238,22 +238,27 @@ namespace scone
 
 			// optimization loop
 			timer tmr;
-			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
+			m_BestFitness = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
-				printf("%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
+				if ( console_output )
+					printf("%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
 
 				cma.step_mt();
 
 				// report results
 				double result = IsMinimizing() ? cma.solution().value : -cma.solution().value;
 				double avg = IsMinimizing() ? cma.average() : -cma.average();
-				printf(" A=%.3f", result );
-				bool new_best = IsBetterThan( result, best );
+				if ( console_output )
+					printf(" A=%.3f", result );
+
+				bool new_best = IsBetterThan( result, m_BestFitness );
 				if ( new_best )
 				{
-					best = result;
-					printf(" B=%.3f", best );
+					m_BestFitness = result;
+
+					if ( console_output )
+						printf(" B=%.3f", m_BestFitness );
 
 					// copy best solution to par
 					std::vector< double > values( cma.solution().point.begin(), cma.solution().point.end() );
@@ -268,23 +273,28 @@ namespace scone
 					}
 					par.UpdateMeanStd( mean, std );
 
+					// update best params after mean / std have been updated
+					m_BestParams = par;
+
 					// write .par file
-					String ind_name = stringf( "%04d_%.3f_%.3f", gen, 0.0, best );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, 0.0, m_BestFitness );
 					String file_base = AcquireOutputFolder() + ind_name;
 					std::vector< String > outputFiles;
 					par.Write( file_base + ".par" );
 					outputFiles.push_back( file_base + ".par" );
 
 					// cleanup superfluous output files
-					ManageFileOutput( best, outputFiles );
+					ManageFileOutput( m_BestFitness, outputFiles );
 				}
 
 				// show time if needed
-				if ( show_optimization_time )
-					printf( " T=%.1f", tmr.seconds() );
+				if ( console_output )
+				{
+					if ( show_optimization_time )
+						printf( " T=%.1f", tmr.seconds() );
 
-				// done reporting
-				printf( new_best ? "\n" : "\r" );
+					printf( new_best ? "\n" : "\r" ); // only start newline if there's been a new best
+				}
 			}
 		}
 #endif
