@@ -21,7 +21,7 @@ int main( int argc, const char* argv[] )
 		cout << GetDateTimeAsString() << endl;
 		cout << GetDateTimeExactAsString() << endl;
 #if defined ( _MSC_VER )
-        cout << _MSC_VER << endl;
+		cout << _MSC_VER << endl;
 #endif
 
 		flut::timer ft;

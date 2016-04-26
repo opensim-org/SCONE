@@ -26,7 +26,7 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost REQUIRED COMPONENTS 
 	filesystem system thread date_time chrono timer serialization unit_test_framework)
 if(UNIX)
-    ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
+	ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
 endif()
 
 # This uses the FindOpenSim.cmake file in build/cmake.

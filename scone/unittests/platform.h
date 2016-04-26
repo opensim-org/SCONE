@@ -16,7 +16,7 @@ using flut::stringf;
 #elif defined( __clang__ )
 #	define SCONE_COMP "Clang"
 #elif defined( __GNUC__ )
-#   define SCONE_COMP "GCC"
+#	define SCONE_COMP "GCC"
 #else 
 #	define SCONE_COMP "UnknownComp"
 #endif
