@@ -4,28 +4,33 @@
 #include <iomanip>
 #include "core.h"
 
-// very basic logging
-#define SCONE_LOG( MESSAGE_ ) { std::stringstream STR_; STR_ << MESSAGE_; scone::Log( STR_.str() ); }
-
-#define VARSTR( VAR_ ) ( String( #VAR_ ) + "=" + to_str( VAR_ ) + " " )
+#include <flut/system/log.hpp>
 
 namespace scone
 {
 	namespace log
 	{
-		enum Level { LogAllLevel, TraceLevel, DebugLevel, InfoLevel, WarningLevel, ErrorLevel, CriticalLevel, IgnoreAllLevel };
-
-		class LogStream
-		{
-		public:
-			LogStream() { };
-			virtual ~LogStream() { };
-
-			template< typename T >
-			LogStream& operator<<( const T& value );
+		enum Level {
+			LogAllLevel = FLUT_LOG_LEVEL_ALL,
+			TraceLevel = FLUT_LOG_LEVEL_TRACE,
+			DebugLevel = FLUT_LOG_LEVEL_DEBUG,
+			InfoLevel = FLUT_LOG_LEVEL_INFO,
+			WarningLevel = FLUT_LOG_LEVEL_WARNING,
+			ErrorLevel = FLUT_LOG_LEVEL_ERROR,
+			CriticalLevel = FLUT_LOG_LEVEL_CRITICAL,
+			IgnoreAllLevel = FLUT_LOG_LEVEL_NONE
 		};
 
+		// import flut logging
+		using flut::log::trace;
+		using flut::log::debug;
+		using flut::log::info;
+		using flut::log::warning;
+		using flut::log::error;
+		using flut::log::critical;
+
 		void CORE_API SetLevel( Level level );
+		Level CORE_API GetLevel();
 		void CORE_API LogMessage( Level level, const String& msg );
 
 		// string style logging

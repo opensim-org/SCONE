@@ -1,30 +1,26 @@
 #pragma once
 
 #if defined(_MSC_VER)
-
-#ifdef CORE_EXPORTS
-#define CORE_API __declspec(dllexport)
+#	ifdef CORE_EXPORTS
+#		define CORE_API __declspec(dllexport)
+#	else
+#		define CORE_API __declspec(dllimport)
+#	endif
+#	include <SDKDDKVer.h>
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
 #else
-#define CORE_API __declspec(dllimport)
-#endif
-
-#include <SDKDDKVer.h>
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#else
-
-#define CORE_API
-
+#	define CORE_API
 #endif
 
 #include <limits>
 #include <string>
 #include <memory>
 
-#include "flut/math/quat_type.hpp"
-#include "flut/math/vec3_type.hpp"
+// import FLUT logging, using only dynamic logging
+#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_INFO
+#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
@@ -61,19 +57,4 @@ namespace scone
 	typedef size_t Count;
 	const Index NoIndex = std::numeric_limits< Index >::max();
 	typedef double TimeInSeconds;
-
-	// import Vec3 and Quat from FLUT
-	using Vec3 = flut::math::vec3_< Real >;
-	using Quat = flut::math::quat_< Real >;
-
-	// constants
-	const Real REAL_PI = Real( 3.14159265358979323846 );
-	const Real REAL_HALF_PI = Real( 1.57079632679489661923 );
-	const Real REAL_EPSILON = std::numeric_limits< Real >::epsilon();
-	const Real REAL_0 = Real( 0 );
-	const Real REAL_1 = Real( 1 );
-	const Real REAL_NAN = std::numeric_limits< Real >::quiet_NaN();
-	const Real REAL_MIN = std::numeric_limits< Real >::min();
-	const Real REAL_MAX = std::numeric_limits< Real >::max();
-	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
 }

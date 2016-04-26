@@ -6,19 +6,37 @@
 #include <cmath>
 #include <iostream>
 
-#include "flut/math/vec3.hpp"
-#include "flut/math/quat.hpp"
+#include <flut/math/vec3.hpp>
+#include <flut/math/quat.hpp>
 
 namespace scone
 {
+	// import Vec3 and Quat from FLUT
+	using Vec3 = flut::math::vec3_< Real >;
+	using Quat = flut::math::quat_< Real >;
+
+	// constants
+	const Real REAL_PI = Real( 3.14159265358979323846 );
+	const Real REAL_HALF_PI = Real( 1.57079632679489661923 );
+	const Real REAL_EPSILON = std::numeric_limits< Real >::epsilon();
+	const Real REAL_0 = Real( 0 );
+	const Real REAL_1 = Real( 1 );
+	const Real REAL_NAN = std::numeric_limits< Real >::quiet_NaN();
+	const Real REAL_MIN = std::numeric_limits< Real >::min();
+	const Real REAL_MAX = std::numeric_limits< Real >::max();
+	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
+
 	// math helper functions
 	inline Real DegToRad( Real d ) { return ( REAL_PI / 180 ) * d; }
 	inline Real RadToDeg( Real d ) { return ( 180 / REAL_PI ) * d; }
-	template< typename T > void Restrain( T& value, const T& min, const T& max ) { if ( value > max ) value = max; else if ( value < min ) value = min; }
-	template< typename T > T GetRestrained( const T& value, const T& min, const T& max ) {
-		if ( value > max ) return max; else if ( value < min ) return min; else return value;
-	}
-	template< typename T > bool IsWithinRange( const T& value, const T& min, const T& max ) { return ( value >= min ) && ( value <= max ); }
+	template< typename T > void Restrain( T& value, const T& min, const T& max )
+	{ if ( value > max ) value = max; else if ( value < min ) value = min; }
+
+	template< typename T > T GetRestrained( const T& value, const T& min, const T& max )
+	{ if ( value > max ) return max; else if ( value < min ) return min; else return value; }
+
+	template< typename T > bool IsWithinRange( const T& value, const T& min, const T& max )
+	{ return ( value >= min ) && ( value <= max ); }
 
 	// get uniform random value
 	inline Real RandUni( Real lower, Real upper ) { return lower + ( upper - lower ) * rand() / RAND_MAX; }

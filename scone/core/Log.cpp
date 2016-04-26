@@ -53,6 +53,11 @@ namespace scone
 			g_LogLevel = level;	
 		}
 
+		Level CORE_API GetLevel()
+		{
+			return g_LogLevel;
+		}
+
 		void CORE_API Trace( const String& msg )
 		{
 			LogMessageCheck( TraceLevel, msg.c_str() );

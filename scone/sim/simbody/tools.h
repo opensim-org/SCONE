@@ -4,6 +4,7 @@
 
 #include <OpenSim/OpenSim.h>
 #include "scone/core/ResourceCache.h"
+#include "scone/core/math.h"
 
 namespace scone
 {
