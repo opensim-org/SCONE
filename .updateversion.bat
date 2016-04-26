@@ -1,1 +1,1 @@
-git show -s --format=%%ct > "%~dp0\.version"
+git rev-list --count HEAD > "%~dp0\.version"
