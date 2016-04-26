@@ -1,1 +1,1 @@
-".\bin\v120-ReleaseCopy\sconestudio.exe"
+".\bin\msvc2013_release_copy\sconestudio.exe"
