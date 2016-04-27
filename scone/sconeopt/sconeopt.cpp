@@ -1,18 +1,8 @@
-#ifdef _MSC_VER
-
-#include <conio.h>
-
-#else
-
-#include <curses.h>
-#define _getch() getch()
-
-#endif
-
 #include "scone/core/Log.h"
 #include "scone/opt/opt.h"
 #include "scone/cs/cs.h"
 #include "scone/sim/simbody/sim_simbody.h"
+#include "flut/system_tools.hpp"
 
 using namespace scone;
 using namespace std;
@@ -37,7 +27,7 @@ int main(int argc, char* argv[])
 	catch (std::exception& e)
 	{
 		log::Critical( e.what() );
-		_getch();
+		flut::wait_for_key();
 	}
 
 	return 0;
