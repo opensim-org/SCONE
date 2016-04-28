@@ -38,9 +38,13 @@ namespace scone
 			std::vector< ParamSet > parsets( individuals.size(), par );
 			for ( size_t ind_idx = 0; ind_idx < individuals.size(); ++ind_idx )
 			{
-				std::vector< double > v( individuals[ind_idx].searchPoint().begin(), individuals[ind_idx].searchPoint().end() );
+				std::vector< double > v( individuals[ ind_idx ].searchPoint().begin(), individuals[ ind_idx ].searchPoint().end() );
 				parsets[ind_idx].SetFreeParamValues( v );
 				parsets[ind_idx].RestrainValues(); // ensure the values are within min / max
+
+				// important: copy restrained values back to Shark individuals, as they are used to store results
+				v = parsets[ ind_idx ].GetFreeParamValues();
+				std::copy( v.begin(), v.end(), individuals[ ind_idx ].searchPoint().begin() ); 
 			}
 
 			// evaluate parameter sets using scone::Optimizer
