@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
+#include "scone/core/Exception.h"
 #include <vector>
 
 #include <algorithm>

@@ -20,7 +20,9 @@ int main( int argc, const char* argv[] )
 		//DofAxisTest();
 		cout << GetDateTimeAsString() << endl;
 		cout << GetDateTimeExactAsString() << endl;
+#if defined ( _MSC_VER )
 		cout << _MSC_VER << endl;
+#endif
 
 		for ( int i = log::TraceLevel; i <= log::CriticalLevel; ++i )
 		{
