@@ -4,7 +4,7 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GWG2</signature_postfix>
+		<signature_postfix>GH1</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1022.osim</model_file>

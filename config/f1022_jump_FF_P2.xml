@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<max_generations>3000</max_generations>
+	<maximize_objective>1</maximize_objective>
+	<random_seed>1</random_seed>
+	<signature_postfix></signature_postfix>
+	<Objective type="SimulationObjective">
+		<max_duration>2</max_duration>
+		<Model type="Simbody">
+			<model_file>f1022.osim</model_file>
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<Controllers>
+				<Controller type="FeedForwardController">
+					<use_symmetric_actuators>1</use_symmetric_actuators>
+					<Function type="Polynomial">
+						<degree>2</degree>
+						<coefficient0 init_mean="0.5" init_std="0.5" min="0" max="1"/>
+						<coefficient1 init_mean="0" init_std="1" min="-10" max="10"/>
+						<coefficient2 init_mean="0" init_std="1" min="-10" max="10"/>
+					</Function>
+				</Controller>
+				<Measure type="HeightMeasure">
+					<target_body></target_body>
+					<use_average_height>0</use_average_height>
+					<terminate_on_peak>1</terminate_on_peak>
+					<termination_height>0.75</termination_height>
+					<max_admitted_counter_height>0.05</max_admitted_counter_height>
+					<ignore_time>0</ignore_time>
+					<upward_velocity_threshold>0.1</upward_velocity_threshold>
+					<downward_velocity_threshold>-0.1</downward_velocity_threshold>
+				</Measure>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>
