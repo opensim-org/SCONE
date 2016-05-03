@@ -1,7 +1,7 @@
 #ifdef _MSC_VER
 
 #define SCONE_ENABLE_PROFILING
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 
 #endif
 

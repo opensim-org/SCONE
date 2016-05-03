@@ -12,7 +12,7 @@
 #include "scone/cs/SimulationObjective.h"
 
 #include <boost/filesystem.hpp>
-#include "sim/simbody/sim_simbody.h"
+#include "scone/sim/simbody/sim_simbody.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
