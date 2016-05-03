@@ -3,13 +3,14 @@
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
+	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
 		<signature_postfix>GH1</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1022.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
-			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.001"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
