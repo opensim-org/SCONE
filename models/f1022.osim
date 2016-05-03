@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f1022">
+	<Model name="f1022sss">
 		<!--Feed forward model with 10 DOF 22 Muscles. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
+		2016.05.03:
+			- Set sphere radius back to 0.01 
+			- Set stiffness back to 1x10^7
+		
+		2016.04.16:
+			- Made heel collision sphere the same size as other spheres (0.015)
+			- Increased stiffness to 3x10^7 to compensate for increased sphere size
+		
 		2016.04.26: Created initial version based on f1024
 			- Removed extobl muscles
 			- Removed lateral heel and toe collision spheres
@@ -3356,55 +3364,55 @@
 					<!--Body name to connect the contact geometry to-->
 					<body_name>calcn_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.01 0.01 -0.005</location>
+					<location>0 0 -0.005</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.02</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe_med">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>calcn_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.185 0.005 -0.0275</location>
+					<location>0.185 0 -0.0275</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.015</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.007 0.014</location>
+					<location>0.07 0.002 0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.015</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_heel">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>calcn_l</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.01 0.01 0.005</location>
+					<location>0 0 0.005</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.02</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe_med">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>calcn_l</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.185 0.005 0.0275</location>
+					<location>0.185 0 0.0275</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.015</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_l</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.007 -0.014</location>
+					<location>0.07 0.005 -0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.015</radius>
+					<radius>0.01</radius>
 				</ContactSphere>
 			</objects>
 			<groups />

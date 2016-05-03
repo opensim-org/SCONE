@@ -7,7 +7,7 @@
 		<signature_postfix>GWG2</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
-			<model_file>f1022sss.osim</model_file>
+			<model_file>f1022.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
 			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
