@@ -144,7 +144,7 @@ namespace scone
 					for ( auto& nvp : state )
 					{
 						if ( matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
-							nvp.second = par.Get( opt::ParamInfo( nvp.first, nvp.second, iso.GetReal( "init_std" ), 0, 0, -1000, 1000 ) );
+							nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
 					}
 				}
 				SetStateVariables( state );
