@@ -123,9 +123,15 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			m_OutputFolder = GetSconeFolder( "output" ) + GetSignature() + "/";
-			SCONE_THROW_IF( exists( path( m_OutputFolder ) ), "Output folder already exists: " + quoted( m_OutputFolder ) );
+			auto output_base = GetSconeFolder( "output" ) + GetSignature();
+			m_OutputFolder = output_base;
+
+			for ( int i = 1; exists( path( m_OutputFolder ) ); ++i )
+				m_OutputFolder = output_base + stringf( " (%d)", i );
+
 			create_directories( path( m_OutputFolder ) );
+
+			m_OutputFolder += "/";
 			log::Info( "Output: " + m_OutputFolder );
 		}
 
