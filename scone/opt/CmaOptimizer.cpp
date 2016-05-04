@@ -250,7 +250,7 @@ namespace scone
 				double result = IsMinimizing() ? cma.solution().value : -cma.solution().value;
 				double avg = IsMinimizing() ? cma.average() : -cma.average();
 				if ( console_output )
-					printf(" A=%.3f", result );
+					printf(" A=%.3f", avg );
 
 				bool new_best = IsBetterThan( result, m_BestFitness );
 				if ( new_best )
