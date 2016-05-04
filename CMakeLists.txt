@@ -88,7 +88,7 @@ add_subdirectory(submodules/flut)
 #
 # Add single sconelib target
 #
-add_subdirectory(scone)
+add_subdirectory(scone/sconelib)
 
 #
 # Add individual libs
@@ -104,6 +104,6 @@ add_subdirectory(scone)
 # Add target executables
 #
 add_subdirectory(scone/sconeopt)
-add_subdirectory(scone/studio)
-add_subdirectory(scone/unittests)
+add_subdirectory(scone/sconestudio)
+add_subdirectory(scone/sconeunittests)
 add_subdirectory(scone/test)
