@@ -22,7 +22,7 @@ public:
         // disable the default setting of viewer.done() by pressing Escape.
         setKeyEventSetsDone(0);
 
-        QWidget* widget1 = addViewWidget( createGraphicsWindow(0,0,100,100, "", true ), osgDB::readNodeFile("axes.osgt") );
+        QWidget* widget1 = addViewWidget( createGraphicsWindow(0,0,100,100, "", true ), osgDB::readNodeFile( "resources/osg/axes.osgt") );
         auto* grid = new QVBoxLayout;
         grid->addWidget( widget1 );
         setLayout( grid );
