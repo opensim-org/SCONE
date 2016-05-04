@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f1022sss">
+	<Model name="f1022">
 		<!--Feed forward model with 10 DOF 22 Muscles. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
+		2016.05.04:
+			- Increased stiffness to 2x10^7 to compensate for less spheres
+		
 		2016.05.03:
 			- Set sphere radius back to 0.01 
 			- Set stiffness back to 1x10^7
@@ -3254,7 +3257,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform r_heel r_toe_med r_toe</geometry>
-								<stiffness>10000000</stiffness>
+								<stiffness>20000000</stiffness>
 								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.9</dynamic_friction>
@@ -3275,7 +3278,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel l_toe_med l_toe</geometry>
-								<stiffness>10000000</stiffness>
+								<stiffness>20000000</stiffness>
 								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.9</dynamic_friction>
