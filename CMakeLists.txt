@@ -46,8 +46,10 @@ endif()
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
 include_directories(${FLUT_INCLUDE_DIRS})
-include_directories(${CMAKE_SOURCE_DIR})
 include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
+
+# Add sconelib include folder to all projects
+include_directories(${CMAKE_SOURCE_DIR}/scone/sconelib)
 
 # Compiler flags.
 # ---------------
