@@ -9,6 +9,7 @@ if(${Qt5Widgets_FOUND})
 		SconeManager.h
 		SconeStudio.cpp
 		SconeStudio.h
+		qosgviewer.h
 		main.cpp
 		studio.rc
 		)
@@ -18,12 +19,38 @@ if(${Qt5Widgets_FOUND})
 
 	add_executable(scone-studio ${FILES} ${UI_HEADERS} ${RESOURCES})
 
+	qt5_use_modules( scone-studio Widgets OpenGL )
+	
 	set_target_properties(scone-studio PROPERTIES
 		PROJECT_LABEL "sconestudio"
 		OUTPUT_NAME sconestudio
 		)
+		
+	# setup OpenSceneGraph stuff
+	set(OSG_DIR "" CACHE PATH "Installation directory of OpenSceneGraph")
+	
+	FIND_PACKAGE( osg )
+	FIND_PACKAGE( osgwidget )
+	FIND_PACKAGE( osgqt )
+	FIND_PACKAGE( osgga )
+	FIND_PACKAGE( osgviewer )
+	FIND_PACKAGE( osgutil )
+	FIND_PACKAGE( osgdb )
+	FIND_PACKAGE( OpenThreads )
+	INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
 
-	target_link_libraries(scone-studio sconelib Qt5::Widgets ${Boost_LIBRARIES})
+	target_link_libraries(scone-studio
+		sconelib
+#		Qt5::Widgets
+		${Boost_LIBRARIES}
+		${OSG_LIBRARIES}
+		${OSGWIDGET_LIBRARIES}
+		${OSGGA_LIBRARIES}
+		${OSGVIEWER_LIBRARIES}
+		${OSGQT_LIBRARIES}
+		${OSGDB_LIBRARIES}
+		${OPENTHREADS_LIBRARIES}
+		)
 	
 	if(WIN32)
 		# Set DLL target
