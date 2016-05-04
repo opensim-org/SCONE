@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GH2</signature_postfix>
+		<signature_postfix>GH3</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1022.osim</model_file>
@@ -42,11 +42,11 @@
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
 									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<KL init_mean="2.0" init_std="0.5" min="0.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.9" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<KL init_mean="3.0" init_std="0.3" min="0.0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.7" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
-										<KF init_mean="-2.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KF init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -103,7 +103,7 @@
 									</Reflex>
 									<Reflex type="DofReflex" target="intobl" source="lumbar_extension" delay="0.005">
 										<KP init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										<KV init_mean="-0.3" init_std="0.03" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
@@ -123,11 +123,11 @@
 									<!-- L+ reflex for hip flexion (not in [Wang2012]) -->
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
 										<KL	init_mean="0.3" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<L0	init_mean="0.5" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
+										<L0	init_mean="0.8" init_std="0.1" min="0.0" max="2.0" is_free="1"/>
 									</Reflex>
 									<!-- Balance hip correction -->
 									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
-										<KP init_mean="-0.5" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KP init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
 										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
