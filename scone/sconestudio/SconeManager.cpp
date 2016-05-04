@@ -39,7 +39,6 @@ namespace scone
 	void SconeManager::SimulateObjective( const String& filename )
 	{
 		cout << "--- Starting evaluation ---" << endl;
-	
 		opt::ParamSet par( filename );
 	
 		path config_path = path( filename ).parent_path() / "config.xml";

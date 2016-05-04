@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>894</width>
-    <height>613</height>
+    <width>929</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,8 +27,21 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>320</width>
+         <height>16777215</height>
+        </size>
+       </property>
       </widget>
-      <widget class="QOsgViewer" name="osgViewer" native="true"/>
+      <widget class="QOsgViewer" name="osgViewer" native="true">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -38,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>894</width>
+     <width>929</width>
      <height>21</height>
     </rect>
    </property>

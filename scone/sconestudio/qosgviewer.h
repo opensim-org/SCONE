@@ -7,9 +7,7 @@
 #include <osgViewer/ViewerEventHandlers>
 
 #include <osgGA/MultiTouchTrackballManipulator>
-
 #include <osgDB/ReadFile>
-
 #include <osgQt/GraphicsWindowQt>
 
 #include <iostream>
@@ -24,19 +22,11 @@ public:
         // disable the default setting of viewer.done() by pressing Escape.
         setKeyEventSetsDone(0);
 
-        QWidget* widget1 = addViewWidget( createGraphicsWindow(0,0,100,100), osgDB::readNodeFile("cow.osgt") );
-        QWidget* widget2 = addViewWidget( createGraphicsWindow(0,0,100,100), osgDB::readNodeFile("glider.osgt") );
-        QWidget* widget3 = addViewWidget( createGraphicsWindow(0,0,100,100), osgDB::readNodeFile("axes.osgt") );
-        QWidget* widget4 = addViewWidget( createGraphicsWindow(0,0,100,100), osgDB::readNodeFile("fountain.osgt") );
-        QWidget* popupWidget = addViewWidget( createGraphicsWindow(900,100,320,240,"Popup window",true), osgDB::readNodeFile("dumptruck.osgt") );
-        popupWidget->show();
-
-        QGridLayout* grid = new QGridLayout;
-        grid->addWidget( widget1, 0, 0 );
-        grid->addWidget( widget2, 0, 1 );
-        grid->addWidget( widget3, 1, 0 );
-        grid->addWidget( widget4, 1, 1 );
+        QWidget* widget1 = addViewWidget( createGraphicsWindow(0,0,100,100, "", true ), osgDB::readNodeFile("axes.osgt") );
+        auto* grid = new QVBoxLayout;
+        grid->addWidget( widget1 );
         setLayout( grid );
+		grid->setMargin( 1 );
 
         connect( &_timer, SIGNAL(timeout()), this, SLOT(update()) );
         _timer.start( 10 );
@@ -60,6 +50,7 @@ public:
         view->addEventHandler( new osgViewer::StatsHandler );
         view->setCameraManipulator( new osgGA::MultiTouchTrackballManipulator );
         gw->setTouchEventsEnabled( true );
+
         return gw->getGLWidget();
     }
 
