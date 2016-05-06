@@ -5,8 +5,8 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(FILES
-		SconeManager.cpp
-		SconeManager.h
+		../SconeManager.cpp
+		../SconeManager.h
 		SconeStudio.cpp
 		SconeStudio.h
 		main.cpp
