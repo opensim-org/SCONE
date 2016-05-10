@@ -28,6 +28,8 @@ namespace scone
 
 			class Model_Simbody& m_Model;
 			OpenSim::Joint& m_osJoint;
+
+			virtual Vec3 GetReactionForce() const override;
 		};
 	}
 }

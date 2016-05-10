@@ -102,6 +102,8 @@ set(CS_MEASURES_FILES
 	scone/cs/HeightMeasure.h
 	scone/cs/JumpMeasure.cpp
 	scone/cs/JumpMeasure.h
+	scone/cs/JointLoadMeasure.cpp
+	scone/cs/JointLoadMeasure.h
 	scone/cs/Measure.cpp
 	scone/cs/Measure.h
 	)
