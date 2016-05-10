@@ -247,15 +247,15 @@ namespace scone
 				cma.step_mt();
 
 				// report results
-				double result = IsMinimizing() ? cma.solution().value : -cma.solution().value;
-				double avg = IsMinimizing() ? cma.average() : -cma.average();
+				double current_best_fitness = IsMinimizing() ? cma.solution().value : -cma.solution().value;
+				double current_avg_fitness = IsMinimizing() ? cma.average() : -cma.average();
 				if ( console_output )
-					printf(" A=%.3f", avg );
+					printf(" A=%.3f", current_avg_fitness );
 
-				bool new_best = IsBetterThan( result, m_BestFitness );
+				bool new_best = IsBetterThan( current_best_fitness, m_BestFitness );
 				if ( new_best )
 				{
-					m_BestFitness = result;
+					m_BestFitness = current_best_fitness;
 
 					if ( console_output )
 						printf(" B=%.3f", m_BestFitness );
@@ -277,7 +277,7 @@ namespace scone
 					m_BestParams = par;
 
 					// write .par file
-					String ind_name = stringf( "%04d_%.3f_%.3f", gen, 0.0, m_BestFitness );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, m_BestFitness );
 					String file_base = AcquireOutputFolder() + ind_name;
 					std::vector< String > outputFiles;
 					par.Write( file_base + ".par" );
