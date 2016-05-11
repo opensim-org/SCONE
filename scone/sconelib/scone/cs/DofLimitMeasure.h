@@ -18,7 +18,6 @@ namespace scone
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
-			virtual PropNode GetReport();
 
 		protected:
 			virtual String GetClassSignature() const override;
@@ -39,7 +38,6 @@ namespace scone
 				Statistic<> penalty;
 			};
 
-			PropNode m_Report;
 			std::vector< Limit > m_Limits;
 		};
 	}

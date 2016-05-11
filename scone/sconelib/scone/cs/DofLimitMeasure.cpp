@@ -72,7 +72,7 @@ namespace scone
 			for ( Limit& l: m_Limits )
 			{
 				result += l.penalty.GetAverage();
-				m_Report.Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
+				GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;
@@ -87,11 +87,6 @@ namespace scone
 		{
 			for ( Limit& l: m_Limits )
 				frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
-		}
-
-		scone::PropNode DofLimitMeasure::GetReport()
-		{
-			return m_Report;
 		}
 	}
 }

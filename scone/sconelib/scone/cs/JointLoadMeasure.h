@@ -2,6 +2,7 @@
 
 #include "Measure.h"
 #include "scone/core/Statistic.h"
+#include "../sim/Joint.h"
 
 namespace scone
 {
@@ -25,6 +26,7 @@ namespace scone
 		private:
 			int method;
 			Statistic<> penalty;
+			sim::Joint& joint;
 		};
 	}
 }

@@ -104,6 +104,7 @@ set(CS_MEASURES_FILES
 	scone/cs/JumpMeasure.h
 	scone/cs/JointLoadMeasure.cpp
 	scone/cs/JointLoadMeasure.h
+	scone/cs/RangePenalty.h
 	scone/cs/Measure.cpp
 	scone/cs/Measure.h
 	)

@@ -1,13 +1,14 @@
 #include "JointLoadMeasure.h"
 
-//#include "scone/core/InitFromPropNode.h"
+#include "../sim/Model.h"
 
 namespace scone
 {
 	namespace cs
 	{
 		JointLoadMeasure::JointLoadMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Measure( props, par, model, area )
+		Measure( props, par, model, area ),
+		joint( *FindByName( model.GetJoints(), props.GetStr( "joint" ) ) )
 		{
 			INIT_PROPERTY( props, method, 0 );
 		}
@@ -19,7 +20,7 @@ namespace scone
 
 		scone::sim::Controller::UpdateResult JointLoadMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			// TODO: calculate joint load value
+
 
 			return Controller::SuccessfulUpdate;
 		}
