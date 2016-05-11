@@ -214,10 +214,10 @@ namespace scone
 			SconeSingleObjectiveFunction objfunc( GetObjective(), IsMinimizing() );
 
 			// init random seed
-            if ( random_seed == 0 ) {
-                std::random_device rd;
-                random_seed = rd();
-            }
+			if ( random_seed == 0 ) {
+				std::random_device rd;
+				random_seed = rd();
+			}
 			shark::Rng::seed( random_seed );
 
 			// initialize settings from file
