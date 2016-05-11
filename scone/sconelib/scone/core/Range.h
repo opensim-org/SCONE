@@ -17,10 +17,10 @@ namespace scone
 
 		// get how much a value is outside the range
 		// negative == below min, positive == above max, 0 = within range
-		double GetRangeViolation( const T& value ) {
+		T GetRangeViolation( const T& value ) {
 			if ( value < min ) return value - min;
 			else if ( value > max ) return value - max;
-			else return 0.0;
+			else return T( 0 );
 		}
 
 		T min;

@@ -62,10 +62,6 @@ namespace scone
 		Degree( const Radian& v );
 		operator Real&() { return value; }
 		operator const Real&() const { return value; }
-
-		//friend std::ostream& operator<<( std::ostream& str, const Degree& v ) { return str << v.value; }
-		//friend std::istream& operator>>( std::istream& str, Degree& v ) { return str >> v.value; }
-
 		Real value;
 	};
 
@@ -80,4 +76,18 @@ namespace scone
 	};
 
 	inline Degree::Degree( const Radian& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
+
+	inline bool operator<( const Degree& d1, const Degree& d2 ) { return d1.value < d2.value; }
+	inline bool operator>( const Degree& d1, const Degree& d2 ) { return d1.value > d2.value; }
+	inline bool operator==( const Degree& d1, const Degree& d2 ) { return d1.value == d2.value; }
+	inline bool operator!=( const Degree& d1, const Degree& d2 ) { return d1.value != d2.value; }
+	inline Degree operator-( const Degree& d1, const Degree& d2 ) { return Degree( d1.value - d2.value ); }
+	inline Degree operator+( const Degree& d1, const Degree& d2 ) { return Degree( d1.value + d2.value ); }
+
+	inline bool operator<( const Radian& d1, const Radian& d2 ) { return d1.value < d2.value; }
+	inline bool operator>( const Radian& d1, const Radian& d2 ) { return d1.value > d2.value; }
+	inline bool operator==( const Radian& d1, const Radian& d2 ) { return d1.value == d2.value; }
+	inline bool operator!=( const Radian& d1, const Radian& d2 ) { return d1.value != d2.value; }
+	inline Radian operator-( const Radian& d1, const Radian& d2 ) { return Radian( d1.value - d2.value ); }
+	inline Radian operator+( const Radian& d1, const Radian& d2 ) { return Radian( d1.value + d2.value ); }
 }
