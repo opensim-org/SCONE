@@ -3,6 +3,7 @@
 #include "Measure.h"
 #include "scone/core/Statistic.h"
 #include "../sim/Joint.h"
+#include "RangePenalty.h"
 
 namespace scone
 {
@@ -25,7 +26,7 @@ namespace scone
 
 		private:
 			int method;
-			Statistic<> penalty;
+			RangePenalty< Real > load_penalty;
 			sim::Joint& joint;
 		};
 	}

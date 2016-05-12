@@ -4,15 +4,17 @@
 
 namespace scone
 {
+	/// Helper class to compute penalty if a value is outside a specific range
 	template< typename T >
-	class Penalty
+	class RangePenalty
 	{
 	public:
-		Penalty( const PropNode& prop )
+		RangePenalty( const PropNode& prop )
 		{
 			INIT_PROPERTY_NAMED( prop, range.min, "min", T( 0 ) );
 			INIT_PROPERTY_NAMED( prop, range.max, "max", T( 0 ) );
-			INIT_PROPERTY( prop, factor, Real( 1 ) );
+			INIT_PROPERTY( prop, abs_factor, T( 0 ) );
+			INIT_PROPERTY( prop, squared_factor, T( 1 ) );
 		}
 
 		void Update( TimeInSeconds timestamp, const T& value )
@@ -24,7 +26,7 @@ namespace scone
 
 		T Get() { return penalty.GetAverage(); }
 
-		virtual ~Penalty() {}
+		virtual ~RangePenalty() {}
 		
 	private:
 		Real abs_factor;

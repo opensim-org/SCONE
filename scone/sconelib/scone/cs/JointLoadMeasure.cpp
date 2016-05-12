@@ -8,19 +8,21 @@ namespace scone
 	{
 		JointLoadMeasure::JointLoadMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
-		joint( *FindByName( model.GetJoints(), props.GetStr( "joint" ) ) )
+		joint( *FindByName( model.GetJoints(), props.GetStr( "joint" ) ) ),
+		load_penalty( props )
 		{
-			INIT_PROPERTY( props, method, 0 );
+			INIT_PROPERTY( props, method, 1 );
+
 		}
 
 		double JointLoadMeasure::GetResult( sim::Model& model )
 		{
-			return penalty.GetAverage();
+			return load_penalty.Get();
 		}
 
 		scone::sim::Controller::UpdateResult JointLoadMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-
+			load_penalty.Update( timestamp, joint.GetReactionForce().length() );
 
 			return Controller::SuccessfulUpdate;
 		}

@@ -60,11 +60,12 @@ namespace scone
 		{
 			for ( Term& t: m_Terms )
 				t.measure->StoreData( frame );
+
+			for ( MeasureUP& m: m_Measures )
+				m->StoreData( frame );
 		}
 
-		CompositeMeasure::~CompositeMeasure()
-		{
-		}
+		CompositeMeasure::~CompositeMeasure() { }
 
 		sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
@@ -125,6 +126,9 @@ namespace scone
 			String str;
 			for ( auto& t: m_Terms )
 				str += t.measure->GetSignature();
+
+			for ( auto& m: m_Measures )
+				str += m->GetSignature();
 
 			return str;
 		}
