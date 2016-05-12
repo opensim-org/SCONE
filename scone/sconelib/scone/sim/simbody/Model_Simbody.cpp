@@ -413,8 +413,12 @@ namespace scone
 					SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
 					ts.initialize( GetTkState() );
 
-					// store initial state
-					StoreCurrentFrame();
+					if ( GetStoreData() )
+					{
+						// store initial frame
+						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+						StoreCurrentFrame();
+					}
 
 					// start integration loop
 					int number_of_steps = static_cast<int>( 0.5 + final_time / fixed_control_step_size );

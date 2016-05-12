@@ -148,6 +148,10 @@ namespace scone
 				frame[ leg->GetName() + ".grf_y" ] = grf.y;
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;
 			}
+
+			// store joint reaction force magnitude
+			for ( auto& joint : GetJoints() )
+				frame[ joint->GetName() + ".jrf" ] = joint->GetReactionForce().length();
 		}
 
 		void Model::StoreCurrentFrame()

@@ -46,14 +46,14 @@ namespace scone
 			auto& model = m_osJoint.getModel();
 			auto& matter = model.getMatterSubsystem();
 			auto& state = m_Model.GetTkState();
-
-			//model.getMultibodySystem().realize( state, SimTK::Stage::Acceleration );
-
-			SimTK::Vector_< SimTK::SpatialVec > forcesAtMInG;
-			matter.calcMobilizerReactionForces( state, forcesAtMInG );
-
 			auto child_body_idx = m_osJoint.getBody().getIndex();
 
+			SimTK::Vector_< SimTK::SpatialVec > forcesAtMInG;
+			matter.calcMobilizerReactionForces( state, forcesAtMInG ); // state should be at acceleration
+
+#if 1
+			return ToVec3( forcesAtMInG[ child_body_idx ][ 1 ] );
+#else
 			const SimTK::MobilizedBody& mobod  = matter.getMobilizedBody(child_body_idx);
 			const SimTK::MobilizedBody& parent = mobod.getParentMobilizedBody();
 
@@ -66,8 +66,8 @@ namespace scone
 			SimTK::Vec3 p_MF_G = -( R_GF * p_FM ); // Re-express and negate shift vector. 
 			SimTK::SpatialVec forcesAtFInG = -SimTK::shiftForceBy( forcesAtMInG[ child_body_idx ], p_MF_G );
 
-			//return ToVec3( forcesAtFInG[ 1 ] );
-			return ToVec3( forcesAtMInG[ child_body_idx ][ 1 ] );
+			return ToVec3( forcesAtFInG[ 1 ] );
+#endif
 		}
 
 		Vec3 Joint_Simbody::GetPos() const
