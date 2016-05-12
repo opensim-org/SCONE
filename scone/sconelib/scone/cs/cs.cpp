@@ -27,6 +27,7 @@ using namespace boost::filesystem;
 #include "JumpMeasure.h"
 #include "TimeStateController.h"
 #include "MetaReflexController.h"
+#include "JointLoadMeasure.h"
 
 namespace scone
 {
@@ -61,6 +62,7 @@ namespace scone
 			sim::GetControllerFactory().Register< DofLimitMeasure >();
 			sim::GetControllerFactory().Register< CompositeMeasure >();
 			sim::GetControllerFactory().Register< JumpMeasure >();
+			sim::GetControllerFactory().Register< JointLoadMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();

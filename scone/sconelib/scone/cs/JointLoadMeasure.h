@@ -25,6 +25,7 @@ namespace scone
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
+			Vec3 joint_force;
 			int method;
 			RangePenalty< Real > load_penalty;
 			sim::Joint& joint;

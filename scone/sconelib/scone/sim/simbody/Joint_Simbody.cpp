@@ -43,26 +43,31 @@ namespace scone
 
 		scone::Vec3 Joint_Simbody::GetReactionForce() const
 		{
-			auto& matter = m_osJoint.getModel().getMatterSubsystem();
+			auto& model = m_osJoint.getModel();
+			auto& matter = model.getMatterSubsystem();
 			auto& state = m_Model.GetTkState();
+
+			//model.getMultibodySystem().realize( state, SimTK::Stage::Acceleration );
+
 			SimTK::Vector_< SimTK::SpatialVec > forcesAtMInG;
 			matter.calcMobilizerReactionForces( state, forcesAtMInG );
 
-			auto mbidx = m_osJoint.getBody().getIndex();
+			auto child_body_idx = m_osJoint.getBody().getIndex();
 
-		    const SimTK::MobilizedBody& mobod  = matter.getMobilizedBody(mbidx);
-		    const SimTK::MobilizedBody& parent = mobod.getParentMobilizedBody();
+			const SimTK::MobilizedBody& mobod  = matter.getMobilizedBody(child_body_idx);
+			const SimTK::MobilizedBody& parent = mobod.getParentMobilizedBody();
 
 			// Want to shift reaction by p_MF, the vector from M to F across the
 			// mobilizer, and negate. Can get p_FM; must reexpress in G.
 			const SimTK::Vec3& p_FM = mobod.getMobilizerTransform(state).p();
 			const SimTK::Rotation& R_PF = mobod.getInboardFrame(state).R(); // In parent.
 			const SimTK::Rotation& R_GP = parent.getBodyTransform(state).R();
-			SimTK::Rotation R_GF   =   R_GP*R_PF;  // F frame orientation in Ground.
+			SimTK::Rotation R_GF = R_GP * R_PF;  // F frame orientation in Ground.
 			SimTK::Vec3 p_MF_G = -( R_GF * p_FM ); // Re-express and negate shift vector. 
-			SimTK::SpatialVec forcesAtFInG = -SimTK::shiftForceBy( forcesAtMInG[ mbidx ], p_MF_G );
+			SimTK::SpatialVec forcesAtFInG = -SimTK::shiftForceBy( forcesAtMInG[ child_body_idx ], p_MF_G );
 
-			return ToVec3( forcesAtFInG[ 1 ] );
+			//return ToVec3( forcesAtFInG[ 1 ] );
+			return ToVec3( forcesAtMInG[ child_body_idx ][ 1 ] );
 		}
 
 		Vec3 Joint_Simbody::GetPos() const
