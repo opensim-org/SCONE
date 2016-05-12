@@ -165,26 +165,26 @@ namespace scone
 				m_pOsimManager->integrate( GetTkState() );
 			}
 
-			// TODO: perhaps realize velocity or dynamics here, so that controllers have access valid properties
-			// right now, this is not needed because each individual call realizes the correct state
+			// Realize acceleration because controllers may need it and in this way the results are consistent
+			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
 			// create and initialize controllers
 			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
-			// update SensorDelayAdapters here because they may be needed by controllers
-			// muscles are first equilibrated to ensure they contain valid data
+			// Initialize muscle dynamics
+
+			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), 0.05 );
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
-			UpdateAnalyses();
 			UpdateSensorDelayAdapters();
 
-			// get initial controller values and inject results
+			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), ( *iter )->GetControlValue() );
-
-			// (re-)equilibrate muscles with initial control values set
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
 
@@ -333,7 +333,6 @@ namespace scone
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			SCONE_PROFILE_SCOPE;
-			//log::TraceF( "%03d %03d %.8f", m_Model.GetIntegrationStep(), m_Model.GetPreviousIntegrationStep(), s.getTime() );
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
@@ -371,11 +370,9 @@ namespace scone
 					for ( MuscleUP& mus: m_Model.GetMuscles() )
 					{
 						// This is an optimization that only works when there are only muscles
-						// OpenSim: addInControls is rather inefficient, that's why we changed it
-						// TODO: fix this into a generic version
+						// OpenSim: addInControls is rather inefficient, that's why we don't use it
+						// TODO: fix this into a generic version (i.e. work with other actuators)
 						controls[ idx++ ] += mus->GetControlValue();
-						//controlValue[ 0 ] = mus->GetControlValue();
-						//dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 					}
 				}
 			}
@@ -436,12 +433,19 @@ namespace scone
 
 						++current_step;
 
+						// Realize Acceleration, analysis components may need it
+						// this way the results are always consistent
+						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+
+						// update the sensor delays
+						UpdateSensorDelayAdapters();
+
+						// call UpdateAnalysis() on all controllers
+						UpdateAnalyses();
+
+						// store external data for later analysis
 						if ( GetStoreData() )
 							StoreCurrentFrame();
-
-						// update the sensor delays and other analyses
-						UpdateSensorDelayAdapters();
-						UpdateAnalyses();
 
 						// terminate on request
 						if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
