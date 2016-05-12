@@ -9,9 +9,13 @@ namespace scone
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			const PropNode& lp = props.GetChild( "Limits" );
+			const PropNode& lp = props.TryGetChild( "Limits" );
 			for ( auto it = lp.Begin(); it != lp.End(); ++it )
 				m_Limits.push_back( Limit( *it->second, model ) );
+
+			// see if we have a limit defined internally
+			if ( props.TryGetChild( "dof" ) )
+				m_Limits.push_back( Limit( props, model ) );
 		}
 
 		DofLimitMeasure::~DofLimitMeasure() {}
@@ -72,7 +76,8 @@ namespace scone
 			for ( Limit& l: m_Limits )
 			{
 				result += l.penalty.GetAverage();
-				GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
+				if ( m_Limits.size() > 1 )
+					GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;
