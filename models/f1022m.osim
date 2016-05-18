@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f1022millard">
+	<Model name="f1022m">
 		<!--Feed forward model with 10 DOF 22 Muscles. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
+		2016.05.12:
+			- Changed muscle model to Millard2012EquilibriumMuscle
+		
 		2016.05.04:
 			- Increased stiffness to 2x10^7 to compensate for less spheres
 		
