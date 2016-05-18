@@ -151,7 +151,7 @@ namespace scone
 
 			// store joint reaction force magnitude
 			for ( auto& joint : GetJoints() )
-				frame[ joint->GetName() + ".jrf" ] = joint->GetReactionForce().length();
+				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
 		}
 
 		void Model::StoreCurrentFrame()

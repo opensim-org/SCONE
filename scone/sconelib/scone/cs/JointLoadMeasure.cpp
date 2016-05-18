@@ -22,8 +22,8 @@ namespace scone
 
 		scone::sim::Controller::UpdateResult JointLoadMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			joint_force = joint.GetReactionForce();
-			load_penalty.Update( timestamp, joint_force.length() );
+			joint_load = joint.GetLoad();
+			load_penalty.Update( timestamp, joint_load );
 
 			return Controller::SuccessfulUpdate;
 		}
@@ -36,7 +36,7 @@ namespace scone
 		void JointLoadMeasure::StoreData( Storage< Real >::Frame& frame )
 		{
 			// TODO: store joint load value
-			frame[ joint.GetName() + ".load" ] = joint_force.length();
+			frame[ joint.GetName() + ".load" ] = joint_load;
 		}
 	}
 }

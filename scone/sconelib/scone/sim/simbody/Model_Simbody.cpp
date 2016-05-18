@@ -55,7 +55,9 @@ namespace scone
 		m_pControllerDispatcher( nullptr ),
 		m_PrevIntStep( -1 ),
 		m_PrevTime( 0.0 ),
-		m_pProbe( 0 )
+		m_pProbe( 0 ),
+		m_Mass( 0.0 ),
+		m_BW( 0.0 )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -116,6 +118,10 @@ namespace scone
 			m_pTkState = &m_pOsimModel->initSystem();
 			g_SimBodyMutex.unlock();
 
+			// initialize cached variables to save computation time
+			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
+			m_BW = GetGravity().length() * GetMass();
+
 			ValidateDofAxes();
 
 			// Create the integrator for the simulation.
@@ -148,7 +154,7 @@ namespace scone
 					}
 				}
 				SetStateVariables( state );
-				FixState( initial_leg_load * GetMass() * -GetGravity().y );
+				FixState( initial_leg_load * GetBW() );
 			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
@@ -276,11 +282,6 @@ namespace scone
 		Vec3 Model_Simbody::GetComVel() const
 		{
 			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
-		}
-
-		Real Model_Simbody::GetMass() const
-		{
-			return m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 		}
 
 		scone::Vec3 Model_Simbody::GetGravity() const

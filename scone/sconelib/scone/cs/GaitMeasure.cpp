@@ -25,9 +25,6 @@ namespace scone
 			INIT_PROPERTY( props, min_velocity, 0.5 );
 			INIT_PROPERTY( props, load_threshold, 0.1 );
 
-			// make contact_force_threshold a factor of the model's downward gravity force
-			//contact_force_threshold *= model.GetMass() * -model.GetGravity().y;
-
 			// get string of gait bodies
 			String gait_bodies;
 			INIT_PROPERTY( props, gait_bodies, String() );

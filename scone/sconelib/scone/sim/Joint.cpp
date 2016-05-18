@@ -1,4 +1,6 @@
 #include "Joint.h"
+#include "Body.h"
+#include "Model.h"
 
 namespace scone
 {
@@ -8,6 +10,11 @@ namespace scone
 		m_Body( body ),
 		m_pParent( parent )
 		{
+		}
+
+		scone::Real Joint::GetLoad() const
+		{
+			return GetReactionForce().length() / m_Body.GetModel().GetBW();
 		}
 
 		bool Joint::HasDof( const String& dof_name ) const
