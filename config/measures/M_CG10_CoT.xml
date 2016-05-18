@@ -8,8 +8,8 @@
 		<Measure type="DofLimitMeasure" name="AnkleR" weight="0.1" dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
 		<Measure type="DofLimitMeasure" name="KneeL" weight="0.001" threshold="250" dof="knee_angle_l" squared_force_penalty="1"/>
 		<Measure type="DofLimitMeasure" name="KneeR" weight="0.001" threshold="250" dof="knee_angle_r" squared_force_penalty="1"/>
-		<Measure type="JointLoadMeasure" name="KneeLoadL" weight="1" joint="knee_l" max="3" squared_range_penalty="10"/>
-		<Measure type="JointLoadMeasure" name="KneeLoadR" weight="1" joint="knee_r" max="3" squared_range_penalty="10"/>
+		<Measure type="JointLoadMeasure" name="KneeLoadL" weight="1" joint="knee_l" max="3" squared_range_penalty="1"/>
+		<Measure type="JointLoadMeasure" name="KneeLoadR" weight="1" joint="knee_r" max="3" squared_range_penalty="1"/>
 		<Measure type="CompositeMeasure" name="Posture" weight="1" threshold="0">
 			<Measures>
 				<Measure type="DofLimitMeasure" name="Lumbar" dof="lumbar_extension" min_deg="-15" max_deg="15" abs_range_penalty="1"/>
