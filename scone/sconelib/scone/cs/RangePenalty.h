@@ -14,14 +14,14 @@ namespace scone
 			INIT_PROPERTY_NAMED( prop, range.min, "min", T( 0 ) );
 			INIT_PROPERTY_NAMED( prop, range.max, "max", T( 0 ) );
 			INIT_PROPERTY( prop, abs_range_penalty, T( 0 ) );
-			INIT_PROPERTY( prop, squared_range_penalty, T( 1 ) );
+			INIT_PROPERTY( prop, squared_range_penalty, T( 0 ) );
 		}
 
 		void AddSample( TimeInSeconds timestamp, const T& value )
 		{
 			auto range_violation = range.GetRangeViolation( value );
-			auto v = abs_range_penalty * abs( range_violation ) + squared_range_penalty * GetSquared( range_violation );
-			penalty.AddSample( timestamp, range_violation );
+			auto pen = abs_range_penalty * abs( range_violation ) + squared_range_penalty * GetSquared( range_violation );
+			penalty.AddSample( timestamp, pen );
 		}
 
 		T GetAverage() { return penalty.GetAverage(); }
