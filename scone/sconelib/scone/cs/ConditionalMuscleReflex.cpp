@@ -33,7 +33,7 @@ namespace scone
 			if ( !m_ConditionalPosRange.Test( dofpos ) )
 			{
 				// check if the sign of the violation is equal to the sign of the velocity
-				Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos );
+				Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos ).value;
 				Real dofvel = m_pConditionalDofVel->GetValue( delay );
 				if ( std::signbit( violation ) == std::signbit( dofvel ) )
 				{

@@ -8,12 +8,15 @@
 
 #include <flut/math/vec3.hpp>
 #include <flut/math/quat.hpp>
+#include <flut/math/angle.hpp>
 
 namespace scone
 {
 	// import Vec3 and Quat from FLUT
 	using Vec3 = flut::math::vec3_< Real >;
 	using Quat = flut::math::quat_< Real >;
+	using Degree = flut::math::degree_< Real >;
+	using Radian = flut::math::radian_< Real >;
 
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );
@@ -53,41 +56,4 @@ namespace scone
 	// square function
 	template< typename T > T GetSquared( T value ) { return value * value; }
 	template< typename T > T GetCubed( T value ) { return value * value * value; }
-
-	// Degree struct
-	struct Radian;
-	struct Degree
-	{
-		explicit Degree( Real v = 0.0 ) : value( v ) { };
-		Degree( const Radian& v );
-		operator Real&() { return value; }
-		operator const Real&() const { return value; }
-		Real value;
-	};
-
-	// Radian struct
-	struct Radian
-	{
-		explicit Radian( Real v = 0.0 ) : value( v ) { };
-		Radian( const Degree& v ) : value( v * Real( REAL_PI / 180.0 ) ) { };
-		operator Real&() { return value; }
-		operator const Real&() const { return value; }
-		Real value;
-	};
-
-	inline Degree::Degree( const Radian& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
-
-	inline bool operator<( const Degree& d1, const Degree& d2 ) { return d1.value < d2.value; }
-	inline bool operator>( const Degree& d1, const Degree& d2 ) { return d1.value > d2.value; }
-	inline bool operator==( const Degree& d1, const Degree& d2 ) { return d1.value == d2.value; }
-	inline bool operator!=( const Degree& d1, const Degree& d2 ) { return d1.value != d2.value; }
-	inline Degree operator-( const Degree& d1, const Degree& d2 ) { return Degree( d1.value - d2.value ); }
-	inline Degree operator+( const Degree& d1, const Degree& d2 ) { return Degree( d1.value + d2.value ); }
-
-	inline bool operator<( const Radian& d1, const Radian& d2 ) { return d1.value < d2.value; }
-	inline bool operator>( const Radian& d1, const Radian& d2 ) { return d1.value > d2.value; }
-	inline bool operator==( const Radian& d1, const Radian& d2 ) { return d1.value == d2.value; }
-	inline bool operator!=( const Radian& d1, const Radian& d2 ) { return d1.value != d2.value; }
-	inline Radian operator-( const Radian& d1, const Radian& d2 ) { return Radian( d1.value - d2.value ); }
-	inline Radian operator+( const Radian& d1, const Radian& d2 ) { return Radian( d1.value + d2.value ); }
 }

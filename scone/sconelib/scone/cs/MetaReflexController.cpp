@@ -65,8 +65,9 @@ namespace scone
 
 			// now set the DOFs
 			// TODO: include mirror_left variable!
+			// TODO: SetPos should use Radian as input parameter
 			for ( MetaReflexDofUP& mr: m_ReflexDofs )
-				mr->target_dof.SetPos( Radian( Degree( mr->dof_pos.ref_pos ) ), false );
+				mr->target_dof.SetPos( Radian( Degree( mr->dof_pos.ref_pos ) ).value, false );
 
 			// set target dof rotation axes (required for local balance)
 			for ( MetaReflexDofUP& mr: m_ReflexDofs )
