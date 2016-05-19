@@ -168,13 +168,11 @@ namespace scone
 		bool GetBool( const KeyType& key ) const { return Get< bool >( key ); }
 		Real GetReal( const KeyType& key ) const { return Get< Real >( key ); }
 		String GetStr( const KeyType& key ) const { return Get< String >( key ); }
-		Vec3 GetVec3( const KeyType& key ) const { return Get< Vec3 >( key ); }
 
 		int GetInt( const KeyType& key, int def ) const { return Get< int >( key, def ); }
 		bool GetBool( const KeyType& key, bool def ) const { return Get< bool >( key, def ); }
 		Real GetReal( const KeyType& key, Real def ) const { return Get< Real >( key, def ); }
 		String GetStr( const KeyType& key, const String& def ) const { return Get< String >( key, def ); }
-		Vec3 GetVec3( const KeyType& key, const Vec3& def ) const { return Get< Vec3 >( key, def ); }
 
 		std::ostream& ToStream( std::ostream& str, const String& prefix = "  ", bool unflaggedOnly = false, int key_width = -1, int depth = 0 ) const;
 

@@ -8,6 +8,8 @@ set(CORE_BASE_FILES
 	Result.h
     )
 set(CORE_MATH_FILES
+    Vec3.h
+    Quat.h
     Angle.h
     Delayer.h
     math.h

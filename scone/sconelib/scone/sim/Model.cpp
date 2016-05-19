@@ -206,5 +206,10 @@ namespace scone
 				force += leg->GetContactForce().length();
 			return force;
 		}
+
+		scone::Real Model::GetBW() const
+		{
+			return GetMass() * GetGravity().length();
+		}
 	}
 }

@@ -4,6 +4,7 @@
 
 #include "scone/core/core.h"
 #include "scone/core/HasData.h"
+#include "scone/core/Vec3.h"
 
 #include "Actuator.h"
 #include "Sensors.h"

@@ -94,7 +94,7 @@ namespace scone
 			// get static model info
 			virtual Real GetMass() const = 0;
 			virtual Vec3 GetGravity() const = 0;
-			virtual Real GetBW() const { return GetMass() * GetGravity().length(); }
+			virtual Real GetBW() const;
 			
 			// custom model properties
 			template< typename T >

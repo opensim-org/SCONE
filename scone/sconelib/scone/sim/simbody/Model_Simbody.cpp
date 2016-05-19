@@ -20,6 +20,8 @@
 #include "scone/core/system.h"
 #include "scone/core/Profiler.h"
 
+#include <flut/string_pattern_match.hpp>
+
 #include "Dof_Simbody.h"
 #include "scone/core/StorageIo.h"
 
@@ -149,7 +151,7 @@ namespace scone
 				{
 					for ( auto& nvp : state )
 					{
-						if ( matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
 							nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
 					}
 				}

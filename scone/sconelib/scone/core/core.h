@@ -6,12 +6,15 @@
 #	else
 #		define SCONE_API __declspec(dllimport)
 #	endif
+#else
+#	define SCONE_API
+#endif
+
+#if defined(_MSC_VER)
 #	include <SDKDDKVer.h>
 #	define NOMINMAX
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
-#else
-#	define SCONE_API
 #endif
 
 #include <limits>

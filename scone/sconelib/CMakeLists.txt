@@ -11,6 +11,8 @@ set(CORE_BASE_FILES
 )
 set(CORE_MATH_FILES
 	scone/core/Angle.h
+	scone/core/Vec3.h
+	scone/core/Quat.h
 	scone/core/Delayer.h
 	scone/core/math.h
 	scone/core/Range.h

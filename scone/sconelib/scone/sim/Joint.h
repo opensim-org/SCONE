@@ -3,6 +3,7 @@
 #include "sim.h"
 #include "scone/core/HasName.h"
 #include "scone/core/math.h"
+#include "scone/core/Vec3.h"
 
 namespace scone
 {

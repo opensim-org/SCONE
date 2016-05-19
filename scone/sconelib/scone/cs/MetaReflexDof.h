@@ -7,6 +7,7 @@
 #include "MetaReflexParams.h"
 #include "scone/sim/SensorDelayAdapter.h"
 #include "scone/core/HasData.h"
+#include "scone/core/Vec3.h"
 
 namespace scone
 {

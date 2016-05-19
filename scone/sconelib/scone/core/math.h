@@ -6,18 +6,8 @@
 #include <cmath>
 #include <iostream>
 
-#include <flut/math/vec3.hpp>
-#include <flut/math/quat.hpp>
-#include <flut/math/angle.hpp>
-
 namespace scone
 {
-	// import Vec3 and Quat from FLUT
-	using Vec3 = flut::math::vec3_< Real >;
-	using Quat = flut::math::quat_< Real >;
-	using Degree = flut::math::degree_< Real >;
-	using Radian = flut::math::radian_< Real >;
-
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );
 	const Real REAL_HALF_PI = Real( 1.57079632679489661923 );
