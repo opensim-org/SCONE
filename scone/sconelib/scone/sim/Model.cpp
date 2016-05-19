@@ -139,6 +139,19 @@ namespace scone
 			frame[ "cop_x_u" ] = cop_u.x;
 			frame[ "cop_y_u" ] = cop_u.y;
 			frame[ "cop_z_u" ] = cop_u.z;
+
+			// store GRF data
+			for ( auto& leg : GetLegs() )
+			{
+				auto grf = leg->GetContactForce();
+				frame[ leg->GetName() + ".grf_x" ] = grf.x;
+				frame[ leg->GetName() + ".grf_y" ] = grf.y;
+				frame[ leg->GetName() + ".grf_z" ] = grf.z;
+			}
+
+			// store joint reaction force magnitude
+			for ( auto& joint : GetJoints() )
+				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
 		}
 
 		void Model::StoreCurrentFrame()
@@ -192,6 +205,11 @@ namespace scone
 			for ( const LegUP& leg: GetLegs() )
 				force += leg->GetContactForce().length();
 			return force;
+		}
+
+		scone::Real Model::GetBW() const
+		{
+			return GetMass() * GetGravity().length();
 		}
 	}
 }

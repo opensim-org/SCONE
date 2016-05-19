@@ -3,8 +3,10 @@
 #include "Measure.h"
 #include "scone/core/InitFromPropNode.h"
 #include "scone/core/Range.h"
-#include "scone/sim/Dof.h"
+#include "scone/core/Angle.h"
 #include "scone/core/Statistic.h"
+
+#include "scone/sim/Dof.h"
 
 namespace scone
 {
@@ -18,11 +20,9 @@ namespace scone
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
-			virtual PropNode GetReport();
 
 		protected:
 			virtual String GetClassSignature() const override;
-
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
@@ -40,7 +40,6 @@ namespace scone
 				Statistic<> penalty;
 			};
 
-			PropNode m_Report;
 			std::vector< Limit > m_Limits;
 		};
 	}

@@ -2,6 +2,7 @@
 #include "Measure.h"
 #include "scone/core/StringMap.h"
 #include "scone/core/Statistic.h"
+#include "scone/core/Vec3.h"
 
 namespace scone
 {

@@ -15,7 +15,6 @@ namespace scone
 		m_Side( side ),
 		m_Index( index ),
 		m_Rank( rank ),
-		m_ForceToLoadFactor( 0.0 ),
 		m_Name( stringf( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
 		{
 		}
@@ -40,12 +39,10 @@ namespace scone
 
 		scone::Real Leg::GetLoad() const
 		{
-			if ( m_ForceToLoadFactor == 0.0 )
-				m_ForceToLoadFactor = 1.0 / ( m_Foot.GetBody().GetModel().GetMass() * -m_Foot.GetBody().GetModel().GetGravity().y );
-			return m_ForceToLoadFactor * GetContactForce().y;
+			return GetContactForce().y / GetModel().GetBW();
 		}
 
-		Model& Leg::GetModel()
+		Model& Leg::GetModel() const
 		{
 			return m_Upper.GetBody().GetModel();
 		}

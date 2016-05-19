@@ -41,6 +41,7 @@ namespace scone
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 			std::vector< Term > m_Terms;
+			std::vector< MeasureUP > m_Measures;
 		};
 	}
 }

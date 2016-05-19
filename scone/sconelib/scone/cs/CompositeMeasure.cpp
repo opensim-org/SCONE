@@ -32,17 +32,27 @@ namespace scone
 		CompositeMeasure::CompositeMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			const PropNode& termNode = props.GetChild( "Terms" );
-			for ( auto it = termNode.Begin(); it != termNode.GetChildren().cend(); ++it )
+			// get Terms (obsolete)
+			const PropNode& termNode = props.TryGetChild( "Terms" );
+			for ( auto it = termNode.Begin(); it != termNode.End(); ++it )
 			{
 				Term t( *it->second );
 
-				// first cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
 				Measure* m = dynamic_cast< Measure* >( sim::CreateController( it->second->GetChild( "Measure" ), par, model, area ).release() );
 				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
 				t.measure = MeasureUP( m );
-
 				m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
+			}
+
+			// get Measures
+			const PropNode& mprops = props.TryGetChild( "Measures" );
+			for ( auto it = mprops.Begin(); it != mprops.End(); ++it )
+			{
+				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+				Measure* m = dynamic_cast< Measure* >( sim::CreateController( *it->second, par, model, area ).release() );
+				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
+				m_Measures.push_back( MeasureUP( m ) );
 			}
 		}
 
@@ -50,11 +60,12 @@ namespace scone
 		{
 			for ( Term& t: m_Terms )
 				t.measure->StoreData( frame );
+
+			for ( MeasureUP& m: m_Measures )
+				m->StoreData( frame );
 		}
 
-		CompositeMeasure::~CompositeMeasure()
-		{
-		}
+		CompositeMeasure::~CompositeMeasure() { }
 
 		sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
@@ -64,8 +75,14 @@ namespace scone
 				return NoUpdate;
 
 			bool terminate = false;
+
+			// update Terms (obsolete)
 			for ( Term& t: m_Terms )
 				terminate |= t.measure->UpdateAnalysis( model, timestamp ) == RequestTermination;
+
+			// update Measures
+			for ( MeasureUP& m: m_Measures )
+				terminate |= m->UpdateAnalysis( model, timestamp ) == RequestTermination;
 
 			return terminate ? RequestTermination : SuccessfulUpdate;
 		}
@@ -86,6 +103,18 @@ namespace scone
 				GetReport().AddChild( t.name, t.measure->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
 			}
 
+			for ( MeasureUP& m: m_Measures )
+			{
+				double org_result = m->GetResult( model );
+				double ofset_result = org_result + m->GetOffset();
+				double thresh_result = ofset_result <= m->GetThreshold() ? 0.0 : ofset_result;
+				double weighted_result = m->GetWeight() * thresh_result;
+
+				total += weighted_result;
+
+				GetReport().AddChild( m->GetName(), m->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
+			}
+
 			log::DebugF( "%20s\t%8.3f", "TOTAL", total );
 			GetReport().Set( total );
 
@@ -97,6 +126,9 @@ namespace scone
 			String str;
 			for ( auto& t: m_Terms )
 				str += t.measure->GetSignature();
+
+			for ( auto& m: m_Measures )
+				str += m->GetSignature();
 
 			return str;
 		}

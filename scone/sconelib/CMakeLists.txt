@@ -11,6 +11,8 @@ set(CORE_BASE_FILES
 )
 set(CORE_MATH_FILES
 	scone/core/Angle.h
+	scone/core/Vec3.h
+	scone/core/Quat.h
 	scone/core/Delayer.h
 	scone/core/math.h
 	scone/core/Range.h
@@ -102,6 +104,9 @@ set(CS_MEASURES_FILES
 	scone/cs/HeightMeasure.h
 	scone/cs/JumpMeasure.cpp
 	scone/cs/JumpMeasure.h
+	scone/cs/JointLoadMeasure.cpp
+	scone/cs/JointLoadMeasure.h
+	scone/cs/RangePenalty.h
 	scone/cs/Measure.cpp
 	scone/cs/Measure.h
 	)

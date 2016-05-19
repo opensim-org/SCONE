@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MuscleReflex.h"
+#include "scone/core/Angle.h"
 
 namespace scone
 {

@@ -1,4 +1,3 @@
-
 #include "HasSignature.h"
 #include "InitFromPropNode.h"
 

@@ -40,9 +40,12 @@ namespace scone
 					di.moment_arm = muscle.GetMomentArm( mrdof->target_dof );
 					total_abs_moment_arm += std::abs( di.moment_arm );
 
-					di.dof.target_dof.SetVel( Radian( Degree( 1 ) ) );
+					// TODO: use Radian as input parameter
+					di.dof.target_dof.SetVel( Radian( Degree( 1 ) ).value );
 					di.lengthening_speed = muscle.GetVelocity();
-					di.dof.target_dof.SetVel( Radian( 0 ) );
+
+					// TODO: use Radian as input parameter
+					di.dof.target_dof.SetVel( Radian( 0 ).value );
 
 					dof_infos.push_back( di );
 				}
@@ -126,7 +129,7 @@ namespace scone
 				const MetaReflexParams& dof_par = di.w > 0 ? di.dof.dof_pos : di.dof.dof_neg;
 				const MetaReflexParams& bal_par = di.w > 0 ? di.dof.bal_pos : di.dof.bal_neg;
 
-				ref_length += di.w * di.lengthening_speed * bal_par.ref_pos * di.dof.GetLocalBalance();
+				ref_length += di.w * di.lengthening_speed * bal_par.ref_pos.value * di.dof.GetLocalBalance();
 
 				length_gain += di.abs_w * dof_par.length_gain;
 				length_gain += di.abs_w * bal_par.length_gain * di.dof.GetLocalBalance();

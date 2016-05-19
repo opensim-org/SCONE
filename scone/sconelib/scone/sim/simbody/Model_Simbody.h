@@ -37,9 +37,11 @@ namespace scone
 
 			virtual Vec3 GetComPos() const override;
 			virtual Vec3 GetComVel() const override;
-			virtual Real GetMass() const override;
-			virtual Vec3 GetGravity() const override;
 			virtual Real GetTotalEnergyConsumption() const override;
+
+			virtual Real GetMass() const override { return m_Mass; }
+			virtual Real GetBW() const override { return m_BW; }
+			virtual Vec3 GetGravity() const override;
 
 			virtual bool AdvanceSimulationTo( double time ) override;
 
@@ -110,6 +112,10 @@ namespace scone
 			class ControllerDispatcher;
 			friend ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model
+
+			// cached variables
+			Real m_Mass;
+			Real m_BW;
 		};
 	}
 }

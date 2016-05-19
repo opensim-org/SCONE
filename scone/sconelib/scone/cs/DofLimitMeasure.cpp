@@ -9,9 +9,13 @@ namespace scone
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			const PropNode& lp = props.GetChild( "Limits" );
+			const PropNode& lp = props.TryGetChild( "Limits" );
 			for ( auto it = lp.Begin(); it != lp.End(); ++it )
 				m_Limits.push_back( Limit( *it->second, model ) );
+
+			// see if we have a limit defined internally
+			if ( props.TryGetChild( "dof" ) )
+				m_Limits.push_back( Limit( props, model ) );
 		}
 
 		DofLimitMeasure::~DofLimitMeasure() {}
@@ -42,7 +46,7 @@ namespace scone
 			{
 				if ( l.squared_range_penalty > 0.0 )
 				{
-					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) );
+					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ).value;
 					double rps = l.squared_range_penalty * GetSquared( range_violation );
 					double rpa = l.abs_range_penalty * std::abs( range_violation );
 					l.penalty.AddSample( timestamp, rps + rpa );
@@ -50,7 +54,7 @@ namespace scone
 
 				if ( l.squared_velocity_range_penalty > 0 || l.abs_velocity_range_penalty > 0 )
 				{
-					double range_violation = l.velocity_range.GetRangeViolation( Radian( l.dof.GetVel() ) );
+					double range_violation = l.velocity_range.GetRangeViolation( Radian( l.dof.GetVel() ) ).value;
 					double vrps = l.squared_velocity_range_penalty * GetSquared( range_violation );
 					double vrpa = l.abs_velocity_range_penalty * std::abs( range_violation );
 					l.penalty.AddSample( timestamp, vrps + vrpa );
@@ -72,7 +76,8 @@ namespace scone
 			for ( Limit& l: m_Limits )
 			{
 				result += l.penalty.GetAverage();
-				m_Report.Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
+				if ( m_Limits.size() > 1 )
+					GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;
@@ -87,11 +92,6 @@ namespace scone
 		{
 			for ( Limit& l: m_Limits )
 				frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
-		}
-
-		scone::PropNode DofLimitMeasure::GetReport()
-		{
-			return m_Report;
 		}
 	}
 }

@@ -20,6 +20,8 @@
 #include "scone/core/system.h"
 #include "scone/core/Profiler.h"
 
+#include <flut/string_pattern_match.hpp>
+
 #include "Dof_Simbody.h"
 #include "scone/core/StorageIo.h"
 
@@ -55,7 +57,9 @@ namespace scone
 		m_pControllerDispatcher( nullptr ),
 		m_PrevIntStep( -1 ),
 		m_PrevTime( 0.0 ),
-		m_pProbe( 0 )
+		m_pProbe( 0 ),
+		m_Mass( 0.0 ),
+		m_BW( 0.0 )
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -116,6 +120,10 @@ namespace scone
 			m_pTkState = &m_pOsimModel->initSystem();
 			g_SimBodyMutex.unlock();
 
+			// initialize cached variables to save computation time
+			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
+			m_BW = GetGravity().length() * GetMass();
+
 			ValidateDofAxes();
 
 			// Create the integrator for the simulation.
@@ -143,12 +151,12 @@ namespace scone
 				{
 					for ( auto& nvp : state )
 					{
-						if ( matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
 							nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
 					}
 				}
 				SetStateVariables( state );
-				FixState( initial_leg_load * GetMass() * -GetGravity().y );
+				FixState( initial_leg_load * GetBW() );
 			}
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
@@ -165,26 +173,26 @@ namespace scone
 				m_pOsimManager->integrate( GetTkState() );
 			}
 
-			// TODO: perhaps realize velocity or dynamics here, so that controllers have access valid properties
-			// right now, this is not needed because each individual call realizes the correct state
+			// Realize acceleration because controllers may need it and in this way the results are consistent
+			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
 			// create and initialize controllers
 			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
 			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
-			// update SensorDelayAdapters here because they may be needed by controllers
-			// muscles are first equilibrated to ensure they contain valid data
+			// Initialize muscle dynamics
+
+			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), 0.05 );
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
-			UpdateAnalyses();
 			UpdateSensorDelayAdapters();
 
-			// get initial controller values and inject results
+			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), ( *iter )->GetControlValue() );
-
-			// (re-)equilibrate muscles with initial control values set
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
 
@@ -278,11 +286,6 @@ namespace scone
 			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 
-		Real Model_Simbody::GetMass() const
-		{
-			return m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
-		}
-
 		scone::Vec3 Model_Simbody::GetGravity() const
 		{
 			return ToVec3( m_pOsimModel->getGravity() );
@@ -333,7 +336,6 @@ namespace scone
 		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			SCONE_PROFILE_SCOPE;
-			//log::TraceF( "%03d %03d %.8f", m_Model.GetIntegrationStep(), m_Model.GetPreviousIntegrationStep(), s.getTime() );
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
@@ -371,11 +373,9 @@ namespace scone
 					for ( MuscleUP& mus: m_Model.GetMuscles() )
 					{
 						// This is an optimization that only works when there are only muscles
-						// OpenSim: addInControls is rather inefficient, that's why we changed it
-						// TODO: fix this into a generic version
+						// OpenSim: addInControls is rather inefficient, that's why we don't use it
+						// TODO: fix this into a generic version (i.e. work with other actuators)
 						controls[ idx++ ] += mus->GetControlValue();
-						//controlValue[ 0 ] = mus->GetControlValue();
-						//dynamic_cast< Muscle_Simbody& >( *mus ).GetOsMuscle().addInControls( controlValue, controls );
 					}
 				}
 			}
@@ -416,8 +416,12 @@ namespace scone
 					SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
 					ts.initialize( GetTkState() );
 
-					// store initial state
-					StoreCurrentFrame();
+					if ( GetStoreData() )
+					{
+						// store initial frame
+						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+						StoreCurrentFrame();
+					}
 
 					// start integration loop
 					int number_of_steps = static_cast<int>( 0.5 + final_time / fixed_control_step_size );
@@ -436,12 +440,19 @@ namespace scone
 
 						++current_step;
 
+						// Realize Acceleration, analysis components may need it
+						// this way the results are always consistent
+						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+
+						// update the sensor delays
+						UpdateSensorDelayAdapters();
+
+						// call UpdateAnalysis() on all controllers
+						UpdateAnalyses();
+
+						// store external data for later analysis
 						if ( GetStoreData() )
 							StoreCurrentFrame();
-
-						// update the sensor delays and other analyses
-						UpdateSensorDelayAdapters();
-						UpdateAnalyses();
 
 						// terminate on request
 						if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )

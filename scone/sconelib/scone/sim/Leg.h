@@ -19,7 +19,7 @@ namespace scone
 			const Link& GetUpperLink() const { return m_Upper; }
 			const Link& GetFootLink() const { return m_Foot; }
 			const Link& GetBaseLink() const { return m_Upper.GetParent(); }
-			Model& GetModel();
+			Model& GetModel() const;
 			Side GetSide() const { return m_Side; }
 			const Area& GetArea() const { return m_Side == LeftSide ? Area::LEFT_LEG : Area::RIGHT_LEG; }
 			size_t GetIndex() const { return m_Index; }
@@ -31,7 +31,6 @@ namespace scone
 			Real MeasureLength() const;
 
 		private:
-			mutable Real m_ForceToLoadFactor; // constant kept for premature optimization of GetLoad();
 			size_t m_Index;
 			Side m_Side; // TODO: use area instead of side
 			size_t m_Rank;

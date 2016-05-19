@@ -6,15 +6,8 @@
 #include <cmath>
 #include <iostream>
 
-#include <flut/math/vec3.hpp>
-#include <flut/math/quat.hpp>
-
 namespace scone
 {
-	// import Vec3 and Quat from FLUT
-	using Vec3 = flut::math::vec3_< Real >;
-	using Quat = flut::math::quat_< Real >;
-
 	// constants
 	const Real REAL_PI = Real( 3.14159265358979323846 );
 	const Real REAL_HALF_PI = Real( 1.57079632679489661923 );
@@ -53,31 +46,4 @@ namespace scone
 	// square function
 	template< typename T > T GetSquared( T value ) { return value * value; }
 	template< typename T > T GetCubed( T value ) { return value * value * value; }
-
-	// Degree struct
-	struct Radian;
-	struct Degree
-	{
-		explicit Degree( Real v = 0.0 ) : value( v ) { };
-		Degree( const Radian& v );
-		operator Real&() { return value; }
-		operator const Real&() const { return value; }
-
-		//friend std::ostream& operator<<( std::ostream& str, const Degree& v ) { return str << v.value; }
-		//friend std::istream& operator>>( std::istream& str, Degree& v ) { return str >> v.value; }
-
-		Real value;
-	};
-
-	// Radian struct
-	struct Radian
-	{
-		explicit Radian( Real v = 0.0 ) : value( v ) { };
-		Radian( const Degree& v ) : value( v * Real( REAL_PI / 180.0 ) ) { };
-		operator Real&() { return value; }
-		operator const Real&() const { return value; }
-		Real value;
-	};
-
-	inline Degree::Degree( const Radian& v ) : value( v * Real( 180.0 / REAL_PI ) ) { };
 }

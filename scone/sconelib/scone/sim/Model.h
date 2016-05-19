@@ -85,13 +85,16 @@ namespace scone
 			virtual double GetSimulationEndTime() const = 0;
 			virtual String WriteData( const String& file_base ) const = 0;
 
-			// get model statistics
+			// get dynamic model statistics
 			virtual Vec3 GetComPos() const = 0;
 			virtual Vec3 GetComVel() const = 0;
-			virtual Real GetMass() const = 0;
-			virtual Vec3 GetGravity() const = 0;
 			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 			virtual Real GetTotalContactForce() const;
+
+			// get static model info
+			virtual Real GetMass() const = 0;
+			virtual Vec3 GetGravity() const = 0;
+			virtual Real GetBW() const;
 			
 			// custom model properties
 			template< typename T >
