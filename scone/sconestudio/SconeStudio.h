@@ -23,7 +23,7 @@ public:
 	SconeStudio(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~SconeStudio();
 
-	bool init();
+	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
 
 public slots:
 	void activateBrowserItem( QModelIndex idx );

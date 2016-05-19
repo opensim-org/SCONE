@@ -15,99 +15,16 @@
 class QOsgViewer : public QWidget, public osgViewer::CompositeViewer
 {
 public:
-    QOsgViewer(QWidget* parent = 0, Qt::WindowFlags f = 0, osgViewer::ViewerBase::ThreadingModel threadingModel=osgViewer::CompositeViewer::SingleThreaded) : QWidget(parent, f)
-    {
-        setThreadingModel(threadingModel);
+	QOsgViewer(QWidget* parent = 0, Qt::WindowFlags f = 0, osgViewer::ViewerBase::ThreadingModel threadingModel=osgViewer::CompositeViewer::SingleThreaded);
+	QWidget* addViewWidget( osgQt::GraphicsWindowQt* gw );
+	osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h, const std::string& name="", bool windowDecoration=false );
 
-        // disable the default setting of viewer.done() by pressing Escape.
-        setKeyEventSetsDone(0);
+	virtual void paintEvent( QPaintEvent* event ) { frame(); }
 
-        QWidget* widget1 = addViewWidget( createGraphicsWindow(0,0,100,100, "", true ), osgDB::readNodeFile( "resources/osg/axes.osgt") );
-        auto* grid = new QVBoxLayout;
-        grid->addWidget( widget1 );
-        setLayout( grid );
-		grid->setMargin( 1 );
-
-        connect( &_timer, SIGNAL(timeout()), this, SLOT(update()) );
-        _timer.start( 10 );
-    }
-
-    QWidget* addViewWidget( osgQt::GraphicsWindowQt* gw, osg::Node* scene )
-    {
-        osgViewer::View* view = new osgViewer::View;
-        addView( view );
-
-        osg::Camera* camera = view->getCamera();
-        camera->setGraphicsContext( gw );
-
-        const osg::GraphicsContext::Traits* traits = gw->getTraits();
-
-        camera->setClearColor( osg::Vec4(0.2, 0.2, 0.6, 1.0) );
-        camera->setViewport( new osg::Viewport(0, 0, traits->width, traits->height) );
-        camera->setProjectionMatrixAsPerspective(30.0f, static_cast<double>(traits->width)/static_cast<double>(traits->height), 1.0f, 10000.0f );
-
-        view->setSceneData( scene );
-        view->addEventHandler( new osgViewer::StatsHandler );
-        view->setCameraManipulator( new osgGA::MultiTouchTrackballManipulator );
-        gw->setTouchEventsEnabled( true );
-
-        return gw->getGLWidget();
-    }
-
-    osgQt::GraphicsWindowQt* createGraphicsWindow( int x, int y, int w, int h, const std::string& name="", bool windowDecoration=false )
-    {
-        osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
-        osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
-        traits->windowName = name;
-        traits->windowDecoration = windowDecoration;
-        traits->x = x;
-        traits->y = y;
-        traits->width = w;
-        traits->height = h;
-        traits->doubleBuffer = true;
-        traits->alpha = ds->getMinimumNumAlphaBits();
-        traits->stencil = ds->getMinimumNumStencilBits();
-        traits->sampleBuffers = ds->getMultiSamples();
-        traits->samples = ds->getNumMultiSamples();
-
-        return new osgQt::GraphicsWindowQt(traits.get());
-    }
-
-    virtual void paintEvent( QPaintEvent* event )
-    { frame(); }
+	void setScene( osg::Node* s );
 
 protected:
 
-    QTimer _timer;
+	QTimer _timer;
+	osg::Node* scene;
 };
-
-#if 0
-int main( int argc, char** argv )
-{
-    osg::ArgumentParser arguments(&argc, argv);
-
-#if QT_VERSION >= 0x050000
-    // Qt5 is currently crashing and reporting "Cannot make QOpenGLContext current in a different thread" when the viewer is run multi-threaded, this is regression from Qt4
-    osgViewer::ViewerBase::ThreadingModel threadingModel = osgViewer::ViewerBase::SingleThreaded;
-#else
-    osgViewer::ViewerBase::ThreadingModel threadingModel = osgViewer::ViewerBase::CullDrawThreadPerContext;
-#endif
-
-    while (arguments.read("--SingleThreaded")) threadingModel = osgViewer::ViewerBase::SingleThreaded;
-    while (arguments.read("--CullDrawThreadPerContext")) threadingModel = osgViewer::ViewerBase::CullDrawThreadPerContext;
-    while (arguments.read("--DrawThreadPerContext")) threadingModel = osgViewer::ViewerBase::DrawThreadPerContext;
-    while (arguments.read("--CullThreadPerCameraDrawThreadPerContext")) threadingModel = osgViewer::ViewerBase::CullThreadPerCameraDrawThreadPerContext;
-
-#if QT_VERSION >= 0x040800
-    // Required for multithreaded QGLWidget on Linux/X11, see http://blog.qt.io/blog/2011/06/03/threaded-opengl-in-4-8/
-    if (threadingModel != osgViewer::ViewerBase::SingleThreaded)
-        QApplication::setAttribute(Qt::AA_X11InitThreads);
-#endif
-    
-    QApplication app(argc, argv);
-    QOsgViewer* viewWidget = new QOsgViewer(0, Qt::Widget, threadingModel);
-    viewWidget->setGeometry( 100, 100, 800, 600 );
-    viewWidget->show();
-    return app.exec();
-}
-#endif

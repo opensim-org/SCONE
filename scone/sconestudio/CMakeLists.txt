@@ -19,6 +19,7 @@ if(${Qt5Widgets_FOUND})
 	
 	set(QTFILES
 		qosgviewer.h
+		qosgviewer.cpp
 		main.cpp
 		studio.rc
 		)

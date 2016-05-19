@@ -15,7 +15,7 @@ QMainWindow(parent, flags)
 	ui.setupUi(this);
 }
 
-bool SconeStudio::init()
+bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
 	QString path = QString( scone::GetSconeFolder( "output" ).c_str() );
@@ -27,6 +27,9 @@ bool SconeStudio::init()
 	ui.browserView->setColumnHidden( 1, true );
 	ui.browserView->setColumnHidden( 2, true );
 	ui.browserView->setColumnHidden( 3, true );
+
+	osg::Node* scene = osgDB::readNodeFile( "resources/osg/axes.osgt" );
+	ui.osgViewer->setScene( scene );
 
 	return true;
 }
