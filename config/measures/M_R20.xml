@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Measure type="CompositeMeasure">
 	<Measures>
-		<Measure type="GaitMeasure" name="Gait" weight="100" threshold="0.05" termination_height="0.9" min_velocity="2.0"/>
-		<Measure type="EffortMeasure" name="Effort" weight="0.1" measure_type="Constant" use_cost_of_transport="1"/>
+		<Measure type="GaitMeasure" name="Gait" weight="100" threshold="0.05" termination_height="0.8" min_velocity="2.0"/>
+		<Measure type="EffortMeasure" name="Effort" weight="1" measure_type="Constant" use_cost_of_transport="1"/>
 		<Measure type="CompositeMeasure" name="DofLimits" weight="1" threshold="0">
 			<Measures>
 				<Measure type="DofLimitMeasure" name="AnkleL" weight="0.1" dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
 				<Measure type="DofLimitMeasure" name="AnkleR" weight="0.1" dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="KneeL" weight="0.001" threshold="250" dof="knee_angle_l" squared_force_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="KneeR" weight="0.001" threshold="250" dof="knee_angle_r" squared_force_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeL" weight="0.01" threshold="500" dof="knee_angle_l" squared_force_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeR" weight="0.01" threshold="500" dof="knee_angle_r" squared_force_penalty="1"/>
 			</Measures>
 		</Measure>
 		<Measure type="CompositeMeasure" name="Posture" weight="1" threshold="0">
 			<Measures>
 				<Measure type="DofLimitMeasure" name="Lumbar" dof="lumbar_extension" min_deg="-30" max_deg="30" abs_range_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="LumbarVel" dof="lumbar_extension" min_deg_s="-90" max_deg_s="90" abs_velocity_range_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="LumbarVel" dof="lumbar_extension" min_deg_s="-120" max_deg_s="120" abs_velocity_range_penalty="1"/>
 				<Measure type="DofLimitMeasure" name="Pelvis" dof="pelvis_tilt" min_deg="-30" max_deg="30" abs_range_penalty="1"/>
 			</Measures>
 		</Measure>
