@@ -55,6 +55,8 @@ namespace scone
 			GetReport().Add( "cost_of_transport", cot );
 			GetReport().Add( "average", m_Energy.GetAverage() );
 			GetReport().Add( "total", m_Energy.GetTotal() );
+			GetReport().Add( "distance", distance );
+			GetReport().Add( "speed", distance / model.GetTime() );
 			GetReport().Add( "probe_total", model.GetTotalEnergyConsumption() );
 
 			if ( use_cost_of_transport )
