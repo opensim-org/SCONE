@@ -272,9 +272,13 @@ namespace scone
 						std[ i ] = sqrt( cma.covarianceMatrix()( i, i ) );
 					}
 					par.UpdateMeanStd( mean, std );
+				}
 
+				if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output )  )
+				{
 					// update best params after mean / std have been updated
 					m_BestParams = par;
+					m_LastFileOutputGen = gen;
 
 					// write .par file
 					String ind_name = stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, m_BestFitness );

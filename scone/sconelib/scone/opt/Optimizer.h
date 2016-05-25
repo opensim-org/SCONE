@@ -42,6 +42,7 @@ namespace scone
 			ParamSet m_BestParams;
 			double m_BestFitness;
 			bool console_output;
+			size_t m_LastFileOutputGen;
 
 			// properties
 			size_t max_threads;
@@ -49,6 +50,7 @@ namespace scone
 			bool maximize_objective;
 			bool show_optimization_time;
 			Real min_improvement_factor_for_file_output;
+			size_t max_generations_without_file_output;
 			String init_file;
 			bool use_init_file;
 			bool output_objective_result_files;
