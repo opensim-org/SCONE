@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GH4</signature_postfix>
+		<signature_postfix>GH5</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1022.osim</model_file>
@@ -20,9 +20,11 @@
 				<Controller type="GaitStateController">
 					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<late_stance_threshold init_mean="0" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<liftoff_threshold init_mean="-0.2" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
-					<swing_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
+					<!--swing_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/-->
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
+					
 					<ConditionalControllers>
 					
 						<!-- Feed forward components for three states -->

@@ -72,6 +72,8 @@ namespace scone
 			std::vector< ConditionalControllerUP > m_ConditionalControllers;
 			Real landing_threshold;
 			Real late_stance_threshold;
+			Real liftoff_threshold;
+
 			Real leg_load_sensor_delay;
 			GaitStateController( const GaitStateController& );
 			GaitStateController& operator=( const GaitStateController& );
