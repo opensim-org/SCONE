@@ -19,6 +19,7 @@ namespace scone
 			Real target_vel;
 			Real pos_gain;
 			Real vel_gain;
+			Real constant_u;
 
 		private:
 			sim::SensorDelayAdapter& m_DelayedPos;

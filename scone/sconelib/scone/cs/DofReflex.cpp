@@ -25,6 +25,7 @@ namespace scone
 			INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
 			INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
 			INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
+			INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
 		}
 
 		DofReflex::~DofReflex()
@@ -47,7 +48,7 @@ namespace scone
 
 			Real u_p = pos_gain * ( target_pos - pos );
 			Real u_d = vel_gain * ( target_vel - vel );
-			m_Target.AddControlValue( u_p + u_d );
+			m_Target.AddControlValue( constant_u + u_p + u_d );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )

@@ -24,7 +24,7 @@ namespace scone
 
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 			INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
-			INIT_PARAM_NAMED( props, par, u_constant, "C", 0.0 );
+			INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
 			INIT_PARAM_NAMED( props, par, velocity_gain, "KV", 0.0 );
 			INIT_PARAM_NAMED( props, par, force_gain, "KF", 0.0 );
 
@@ -57,7 +57,7 @@ namespace scone
 
 			Real u_total = u_l + u_v + u_f + u_constant;
 
-			m_Target.AddControlValue( std::max( 0.0, u_total ) );
+			m_Target.AddControlValue( u_total );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )
