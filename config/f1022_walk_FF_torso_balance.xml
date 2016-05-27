@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file>initializations/f1022_walk_FF.par</init_file>
+	<init_file>initializations/f1022_walk_FF2.par</init_file>
 	<use_init_file>1</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
