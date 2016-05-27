@@ -25,7 +25,8 @@
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
 					
-						<!-- TA stretch reflexes, present during all states -->
+						<!-- TA controllers -->
+						<!-- stretch reflexes, present during all states -->
 						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
 							<Controller type="ReflexController">
 								<use_symmetric_actuators>1</use_symmetric_actuators>
@@ -42,6 +43,7 @@
 							</Controller>
 						</ConditionalController>
 
+						<!-- GAS + SOL controllers -->
 						<!-- Stance reflexes that also work during lift-off (i.e. F+ SOL / GAS)-->
 						<ConditionalController states="LateStance Liftoff">
 							<Controller type="ReflexController">
