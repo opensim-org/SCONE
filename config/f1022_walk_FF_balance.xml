@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file>initializations/f1022_walk_FF2.par</init_file>
+	<init_file>initializations/f1022_walk_FF3.par</init_file>
 	<use_init_file>1</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
@@ -43,11 +43,11 @@
 									<!-- Upper body stability -->
 									<Reflex type="DofReflex" target="intobl" source="lumbar_extension" delay="0">
 										<KP init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										<KV init_mean="-0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.5" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="ercspn" source="lumbar_extension" delay="0">
 										<KP init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										<KV init_mean="0.1" init_std="0.01" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.5" init_std="0.01" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
