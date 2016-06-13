@@ -1,6 +1,8 @@
 #include "SconeStudio.h"
 #include "scone/core/system.h"
 
+#include <osgDB/ReadFile>
+
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QFileSystemModel.h>
     #include <QtWidgets/QMessageBox.h>

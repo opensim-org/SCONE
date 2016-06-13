@@ -1,5 +1,9 @@
 #include "qosgviewer.h"
 
+#include <osgGA/TrackballManipulator>
+#include <osgViewer/ViewerEventHandlers>
+#include "OsgCameraManipulator.h"
+
 QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) : QWidget( parent, f )
 {
 	setThreadingModel( threadingModel );
@@ -16,7 +20,7 @@ QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgV
 	grid->setMargin( 1 );
 
 	connect( &_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
-	_timer.start( 10 );
+	_timer.start( 1 );
 }
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
@@ -35,7 +39,14 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 
 	//view->setSceneData( scene );
 	view->addEventHandler( new osgViewer::StatsHandler );
-	view->setCameraManipulator( new osgGA::MultiTouchTrackballManipulator );
+
+	// setup camera manipulator
+	//osgGA::TrackballManipulator* cm = new osgGA::TrackballManipulator;
+	scone::OsgCameraManipulator* cm = new scone::OsgCameraManipulator;
+	cm->setVerticalAxisFixed( false );
+	cm->setHomePosition( osg::Vec3d( 0, 1, 5 ), osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 1, 0 ) );
+	view->setCameraManipulator( cm );
+
 	gw->setTouchEventsEnabled( true );
 
 	return gw->getGLWidget();

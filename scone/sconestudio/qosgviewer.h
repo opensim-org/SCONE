@@ -4,10 +4,7 @@
 #include <QGridLayout>
 
 #include <osgViewer/CompositeViewer>
-#include <osgViewer/ViewerEventHandlers>
 
-#include <osgGA/MultiTouchTrackballManipulator>
-#include <osgDB/ReadFile>
 #include <osgQt/GraphicsWindowQt>
 
 #include <iostream>
