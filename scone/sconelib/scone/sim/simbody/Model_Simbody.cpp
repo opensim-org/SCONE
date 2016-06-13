@@ -184,16 +184,12 @@ namespace scone
 			// Initialize muscle dynamics
 
 			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
-			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), 0.05 );
-			m_pOsimModel->equilibrateMuscles( GetTkState() );
+			InitializeOpenSimMuscleActivations( 0.05 );
 			UpdateSensorDelayAdapters();
 
 			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
-			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
-				dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle().setActivation( GetOsimModel().updWorkingState(), ( *iter )->GetControlValue() );
-			m_pOsimModel->equilibrateMuscles( GetTkState() );
+			InitializeOpenSimMuscleActivations();
 		}
 
 		Model_Simbody::~Model_Simbody()
@@ -710,6 +706,18 @@ namespace scone
 			OpenSim::StateVector vec;
 			vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[0] );
 			m_pOsimManager->getStateStorage().append( vec );
+		}
+
+		void Model_Simbody::InitializeOpenSimMuscleActivations( double override_activation )
+		{
+			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
+			{
+				OpenSim::Muscle& osmus = dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle();
+				auto a = override_activation != 0.0 ? override_activation : ( *iter )->GetControlValue();
+				osmus.setActivation( GetOsimModel().updWorkingState(), a );
+			}
+
+			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
 
 	}

@@ -10,7 +10,8 @@ namespace scone
 	{
 		StringMap< EffortMeasure::EnergyMeasureType > EffortMeasure::m_MeasureNames = StringMap< EffortMeasure::EnergyMeasureType >(
 			EffortMeasure::TotalForce, "TotalForce",
-			EffortMeasure::Wang2012, "Wang2012"
+			EffortMeasure::Wang2012, "Wang2012",
+			EffortMeasure::Constant, "Constant"
 			);
 
 		EffortMeasure::EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
@@ -54,6 +55,8 @@ namespace scone
 			GetReport().Add( "cost_of_transport", cot );
 			GetReport().Add( "average", m_Energy.GetAverage() );
 			GetReport().Add( "total", m_Energy.GetTotal() );
+			GetReport().Add( "distance", distance );
+			GetReport().Add( "speed", distance / model.GetTime() );
 			GetReport().Add( "probe_total", model.GetTotalEnergyConsumption() );
 
 			if ( use_cost_of_transport )
@@ -67,6 +70,7 @@ namespace scone
 			{
 			case TotalForce: return GetTotalForce( model );
 			case Wang2012: return GetWang2012( model );
+			case Constant: return model.GetMass();
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
 		}
@@ -123,6 +127,7 @@ namespace scone
 			{
 			case TotalForce: s += "F"; break;
 			case Wang2012: s += "W"; break;
+			case Constant: s += "C"; break;
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
 

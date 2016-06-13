@@ -89,12 +89,12 @@ namespace scone
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 
-			m_Report.Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
-			m_Report.Set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
-			m_Report.Set( "distance", distance );
-			m_Report.Set( "speed", speed );
-			m_Report.Set( "steps", m_nSteps );
-			m_Report.Set( "stepsize", m_TotStepSize / m_nSteps );
+			GetReport().Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
+			GetReport().Set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
+			GetReport().Set( "distance", distance );
+			GetReport().Set( "speed", speed );
+			GetReport().Set( "steps", m_nSteps );
+			GetReport().Set( "stepsize", m_TotStepSize / m_nSteps );
 
 			return 1.0 - m_MinVelocityMeasure.GetAverage();
 		}
@@ -154,11 +154,6 @@ namespace scone
 			}
 
 			return has_new_contact;
-		}
-
-		scone::PropNode GaitMeasure::GetReport()
-		{
-			return m_Report;
 		}
 	}
 }

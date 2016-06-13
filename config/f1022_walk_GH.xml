@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GH3</signature_postfix>
+		<signature_postfix>GH4</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
 			<model_file>f1022m.osim</model_file>
@@ -18,7 +18,8 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="GaitStateController">
-					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<landing_threshold init_mean="0.05" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
+					<late_stance_threshold init_mean="0" init_std="0.01" min="-0.5" max="0.5" is_free="1"/>
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<!--swing_load_threshold init_mean="0.001" init_std="0.05" min="0.001" max="1.0" is_free="0"/-->
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
@@ -127,8 +128,8 @@
 									</Reflex>
 									<!-- Balance hip correction -->
 									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
-										<KP init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
-										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="1.0" init_std="0.05" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						

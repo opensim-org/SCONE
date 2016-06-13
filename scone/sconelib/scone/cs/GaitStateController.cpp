@@ -45,6 +45,7 @@ namespace scone
 			INIT_PARAM( props, par, swing_load_threshold, stance_load_threshold );
 			INIT_PARAM( props, par, landing_threshold, 0.0 );
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );
+			INIT_PARAM( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
 			INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
 			
 			// create leg states
@@ -145,6 +146,7 @@ namespace scone
 				switch( ls.state )
 				{
 				case LegState::UnknownState:
+					// initialize state
 					if ( ls.allow_stance_transition )
 					{
 						if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
@@ -162,6 +164,8 @@ namespace scone
 					break;
 
 				case LegState::EarlyStanceState:
+					// --> liftoff if other leg is eligible for stance and before this leg
+					// --> late stance if a position threshold has passed
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
 					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
@@ -169,16 +173,23 @@ namespace scone
 					break;
 
 				case LegState::LateStanceState:
+					// --> liftoff if other leg is eligible for stance and before this leg
+					// --> liftoff if position is beyond swing_threshold
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
+						new_state = LegState::LiftoffState;
+					else if ( ls.sagittal_pos < ls.leg_length * liftoff_threshold )
 						new_state = LegState::LiftoffState;
 					break;
 
 				case LegState::LiftoffState:
+					// --> swing if leg load is below threshold
 					if ( ls.allow_swing_transition )
 						new_state = LegState::SwingState;
 					break;
 
 				case LegState::SwingState:
+					// --> early stance if leg load is above threshold
+					// --> landing if position is beyond landing_threshold
 					if ( ls.allow_stance_transition && ls.sagittal_pos > mir_ls.sagittal_pos )
 						new_state = LegState::EarlyStanceState;
 					if ( !ls.allow_stance_transition && ls.sagittal_pos > ls.leg_length * landing_threshold )
@@ -186,6 +197,7 @@ namespace scone
 					break;
 
 				case LegState::LandingState:
+					// --> early stance if leg load is beyond threshold
 					if ( ls.allow_stance_transition )
 						new_state = LegState::EarlyStanceState;
 					break;

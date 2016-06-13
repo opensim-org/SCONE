@@ -14,7 +14,7 @@ namespace scone
 			EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~EffortMeasure();
 
-			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012 };
+			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant };
 			static StringMap< EnergyMeasureType > m_MeasureNames;
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;

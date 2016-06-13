@@ -33,6 +33,9 @@ namespace scone
 		{
 		public:
 			Model_Simbody( const PropNode& props, opt::ParamSet& par );
+
+			void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
+
 			virtual ~Model_Simbody();
 
 			virtual Vec3 GetComPos() const override;
