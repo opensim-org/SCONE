@@ -105,7 +105,6 @@ add_subdirectory(scone/sconelib)
 #
 # Add target executables
 #
-add_subdirectory(scone/sconemanager)
 add_subdirectory(scone/sconeopt)
 add_subdirectory(scone/sconestudio)
 add_subdirectory(scone/sconeunittests)
