@@ -14,6 +14,8 @@ if(${Qt5Widgets_FOUND})
 		SconeStudio.h
 		OsgScene.h
 		OsgScene.cpp
+		OsgModel.h
+		OsgModel.cpp
 		OsgCameraManipulator.h
 		OsgCameraManipulator.cpp
 		main.cpp
