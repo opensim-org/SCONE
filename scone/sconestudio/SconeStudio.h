@@ -11,7 +11,9 @@
 #endif
 #include "ui_SconeStudio.h"
 #include "scone/core/PropNode.h"
+
 #include "SconeManager.h"
+#include "OsgScene.h"
 
 class QFileSystemModel;
 
@@ -29,6 +31,7 @@ public slots:
 	void activateBrowserItem( QModelIndex idx );
 
 private:
+	scone::OsgScene scene;
 	scone::SconeManager m_Manager;
 	Ui::SconeStudioClass ui;
 	QFileSystemModel *m_pFileModel;

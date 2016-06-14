@@ -73,7 +73,5 @@ osgQt::GraphicsWindowQt* QOsgViewer::createGraphicsWindow( int x, int y, int w, 
 void QOsgViewer::setScene( osg::Node* s )
 {
 	for ( size_t i = 0; i < getNumViews(); ++i )
-	{
 		getView( i )->setSceneData( s );
-	}
 }

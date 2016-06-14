@@ -30,8 +30,8 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.browserView->setColumnHidden( 2, true );
 	ui.browserView->setColumnHidden( 3, true );
 
-	osg::Node* scene = osgDB::readNodeFile( "resources/osg/axes.osgt" );
-	ui.osgViewer->setScene( scene );
+	//osg::Node* scene = osgDB::readNodeFile( "resources/osg/axes.osgt" );
+	ui.osgViewer->setScene( scene.GetOsgRoot() );
 
 	return true;
 }

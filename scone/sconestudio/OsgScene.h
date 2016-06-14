@@ -15,9 +15,11 @@ namespace scone
 		OsgModel& CreateModel( sim::Model& m );
 		void UpdateModels();
 
-	private:
-		osg::Node* scene;
-		std::vector< OsgModelUP > models;
+		osg::ref_ptr< osg::Group > GetOsgRoot() { return root; }
 
+	private:
+		osg::ref_ptr< osg::Group > root;
+		osg::ref_ptr< osg::Geode > ground;
+		std::vector< OsgModelUP > models;
 	};
 }
