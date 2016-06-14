@@ -7,6 +7,7 @@
 
 #include "flut/string_tools.hpp"
 #include "flut/timer.hpp"
+#include "flut/math/math.hpp"
 
 // need for demangling with GCC
 #ifndef _MSC_VER
@@ -22,6 +23,8 @@ namespace scone
 	using flut::to_str;
 	using flut::from_str;
 	using flut::quoted;
+
+	// import timer from flut
 	using flut::timer;
 
 	/// Get formatted date/time string

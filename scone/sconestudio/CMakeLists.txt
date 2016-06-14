@@ -82,7 +82,7 @@ if(${Qt5Widgets_FOUND})
 		endforeach()
 
 		# Copy Qt DLLs to the binary directory.
-		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui)
+		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl)
 		foreach(qt5lib ${QT5_LIBS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}

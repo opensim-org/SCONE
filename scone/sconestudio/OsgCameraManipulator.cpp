@@ -1,32 +1,57 @@
 #include "OsgCameraManipulator.h"
+#include "scone/core/math.h"
 
 using namespace osg;
 
 namespace scone
 {
 	
-	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator()
+	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator(),
+		orbit_yaw( 0 ),
+		orbit_pitch( -30 )
 	{
+		setAllowThrow( false );
+		_distance = 5;
+		updateRotation();
+
+		osg::Vec3d eye, center, up;
+		getTransformation( eye, center, up );
+		setHomePosition( eye, center, up );
+
 	}
 
 	OsgCameraManipulator::~OsgCameraManipulator()
 	{
 	}
 
-	void OsgCameraManipulator::rotateTrackball( const float px0, const float py0, const float px1, const float py1, const float scale )
+	bool OsgCameraManipulator::performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy )
 	{
-		// TODO: do something with this and perhaps other functions
-		// TODO: get rid of 80s orbit animation
+		orbit_pitch += Degree( pitch_scale * dy );
+		orbit_yaw -= Degree( yaw_scale * dx );
 
-		osg::Vec3d axis;
-		float angle;
+		updateRotation();
 
-		trackball( axis, angle, px0 + (px1-px0)*scale, 0, px0, 0 );
-
-		Quat new_rotate;
-		new_rotate.makeRotate( angle, axis );
-
-		_rotation = _rotation * new_rotate;
+		return true;
 	}
 
+	void OsgCameraManipulator::updateRotation()
+	{
+		auto yaw = osg::Quat( orbit_yaw.rad_value(), osg::Vec3d( 0, 1, 0 ) );
+		auto pitch = osg::Quat( orbit_pitch.rad_value(), osg::Vec3d( 1, 0, 0 ) );
+		_rotation = pitch * yaw;
+	}
+
+	bool OsgCameraManipulator::performMovementMiddleMouseButton( const double eventTimeDelta, const double dx, const double dy )
+	{
+	    zoomModel( dy * zoom_scale, true );
+		return true;
+	}
+
+	bool OsgCameraManipulator::performMovementRightMouseButton( const double eventTimeDelta, const double dx, const double dy )
+	{
+		// pan model
+		float scale = -pan_scale * _distance;
+		panModel( dx * scale, dy * scale );
+		return true;
+	}
 }

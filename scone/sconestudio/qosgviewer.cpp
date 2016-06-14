@@ -44,7 +44,6 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	//osgGA::TrackballManipulator* cm = new osgGA::TrackballManipulator;
 	scone::OsgCameraManipulator* cm = new scone::OsgCameraManipulator;
 	cm->setVerticalAxisFixed( false );
-	cm->setHomePosition( osg::Vec3d( 0, 1, 5 ), osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 1, 0 ) );
 	view->setCameraManipulator( cm );
 
 	gw->setTouchEventsEnabled( true );
