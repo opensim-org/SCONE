@@ -56,51 +56,51 @@ namespace scone
 			o->Run();
 		}
 
-        PropNode SCONE_API SimulateObjective( const String& filename )
-        {
-        	cout << "--- Starting evaluation ---" << endl;
+		PropNode SCONE_API SimulateObjective( const String& filename )
+		{
+			cout << "--- Starting evaluation ---" << endl;
 	
-		    opt::ParamSet par( filename );
+			opt::ParamSet par( filename );
 	
-		    path config_path = path( filename ).parent_path() / "config.xml";
-		    if ( config_path.has_parent_path() )
-			    current_path( config_path.parent_path() );
+			path config_path = path( filename ).parent_path() / "config.xml";
+			if ( config_path.has_parent_path() )
+				current_path( config_path.parent_path() );
 	
-		    PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-		    const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
-		    opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		    cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+			const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
+			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
 
-		    // report unused parameters
-		    LogUntouched( objProp );
+			// report unused parameters
+			LogUntouched( objProp );
 
-		    // set data storage
-		    so.GetModel().SetStoreData( true );
+			// set data storage
+			so.GetModel().SetStoreData( true );
 		
-		    Profiler::GetGlobalInstance().Reset();
+			Profiler::GetGlobalInstance().Reset();
 
-            PropNode statistics;
-		    statistics.Clear();
-		    timer tmr;
-		    double result = obj->Evaluate();
-		    auto duration = tmr.seconds();
+			PropNode statistics;
+			statistics.Clear();
+			timer tmr;
+			double result = obj->Evaluate();
+			auto duration = tmr.seconds();
 	
-		    // collect statistics
-		    statistics.Clear();
-		    statistics.Set( "result", result );
-		    statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-		    statistics.Set( "simulation time", so.GetModel().GetTime() );
-		    statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+			// collect statistics
+			statistics.Clear();
+			statistics.Set( "result", result );
+			statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
+			statistics.Set( "simulation time", so.GetModel().GetTime() );
+			statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 	
-		    cout << "--- Evaluation report ---" << endl;
-		    cout << statistics << endl;
+			cout << "--- Evaluation report ---" << endl;
+			cout << statistics << endl;
 
-		    cout << Profiler::GetGlobalInstance().GetReport();
+			cout << Profiler::GetGlobalInstance().GetReport();
 
-		    // write results
-		    obj->WriteResults( path( filename ).replace_extension().string() );
+			// write results
+			obj->WriteResults( path( filename ).replace_extension().string() );
 
-            return statistics;
-        }
+			return statistics;
+		}
 	}
 }

@@ -9,9 +9,6 @@
 #include "scone/sim/Factories.h"
 #include "scone/opt/Factories.h"
 #include "scone/core/tools.h"
-#include "scone/cs/SimulationObjective.h"
-#include "scone/core/Log.h"
-#include "scone/core/Profiler.h"
 
 #include "scone/sim/simbody/sim_simbody.h"
 
