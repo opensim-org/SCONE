@@ -75,6 +75,8 @@ namespace scone
 		};
 		~Storage() { };
 
+		void Clear() { m_Labels.clear(); m_LabelIndexMap.clear(); m_Data.clear(); m_InterpolationCache.clear(); }
+
 		Frame& AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_THROW_IF( !m_Data.empty() && time <= m_Data.back()->GetTime(), "Frame must have higher timestamp" );
 			m_Data.push_back( FrameUP( new Frame( *this, time, default_value ) ) );

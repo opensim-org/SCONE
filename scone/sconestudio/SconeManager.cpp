@@ -14,6 +14,7 @@
 #include "scone/core/Profiler.h"
 
 #include "scone/sim/simbody/sim_simbody.h"
+#include "scone/core/StorageIo.h"
 
 using namespace boost::filesystem;
 using boost::format;
@@ -32,50 +33,75 @@ namespace scone
 		sim::RegisterSimbody();
 	}
 
-	SconeManager::~SconeManager()
-	{
-	}
+	SconeManager::~SconeManager() { }
 
-	void SconeManager::SimulateObjective( const String& filename )
+	void SconeManager::InitParFile( const String& f )
 	{
-		cout << "--- Starting evaluation ---" << endl;
-		opt::ParamSet par( filename );
-	
+		opt::ParamSet par( f );
+
+		SCONE_ASSERT_MSG( !par.Empty(), "Could not open file " + f );
+
+		// accept filename and clear data
+		filename = f;
+		data.Clear();
+
+		// get config path and name
 		path config_path = path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 	
 		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
 		const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
+
+		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		objective = opt::CreateObjective( objProp, par );
+		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *objective );
 
 		// report unused parameters
 		LogUntouched( objProp );
 
+		// see if we can load a matching .sto file
+		path stofile = path( filename ).replace_extension( "sto" );
+		if ( exists( stofile ) )
+			ReadStorageSto( data, stofile.string() );
+	}
+
+	void SconeManager::Evaluate( TimeInSeconds endtime /*= 0.0 */ )
+	{
+		SCONE_ASSERT_MSG( objective, "No objective was loaded" );
+
+		log::info( "--- Starting evaluation ---" );
+
 		// set data storage
+		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *objective );
 		so.GetModel().SetStoreData( true );
-		
+
+		// init profiler
 		Profiler::GetGlobalInstance().Reset();
 
-		m_Statistics.Clear();
+		// prepare stats
+		statistics.Clear();
 		timer tmr;
-		double result = obj->Evaluate();
+
+
+		double result = so.Evaluate();
 		auto duration = tmr.seconds();
 	
 		// collect statistics
-		m_Statistics.Clear();
-		m_Statistics.Set( "result", result );
-		m_Statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-		m_Statistics.Set( "simulation time", so.GetModel().GetTime() );
-		m_Statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
-	
-		cout << "--- Evaluation report ---" << endl;
-		cout << m_Statistics << endl;
+		statistics.Clear();
+		statistics.Set( "result", result );
+		statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
+		statistics.Set( "simulation time", so.GetModel().GetTime() );
+		statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 
-		cout << Profiler::GetGlobalInstance().GetReport();
+		// log some stuff
+		log::info( "--- Evaluation report ---" );
+		log::info( statistics );
+		log::info( Profiler::GetGlobalInstance().GetReport() );
 
-		// write results
-		obj->WriteResults( path( filename ).replace_extension().string() );
+		// copy data and write results
+		so.WriteResults( path( filename ).replace_extension().string() );
+		data = so.GetModel().GetData();
 	}
 }

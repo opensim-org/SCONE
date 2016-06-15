@@ -30,7 +30,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.browserView->setColumnHidden( 2, true );
 	ui.browserView->setColumnHidden( 3, true );
 
-	//osg::Node* scene = osgDB::readNodeFile( "resources/osg/axes.osgt" );
 	ui.osgViewer->setScene( scene.GetOsgRoot() );
 
 	return true;
@@ -44,7 +43,11 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	try
 	{
-		m_Manager.SimulateObjective( m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString() );
+		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
+		m_Manager.InitParFile( filename );
+		if ( m_Manager.GetData().IsEmpty() )
+			m_Manager.Evaluate();
+		else log::info( "I've got data!" );
 	}
 	catch ( std::exception& e )
 	{

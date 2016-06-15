@@ -24,6 +24,7 @@ namespace scone
 			double GetMeanStd( const String& name, double init_mean, double init_std, double min, double max );
 			double GetMinMax( const String& name, double init_min, double init_max, double min, double max );
 
+			bool Empty() { return m_Params.empty(); }
 			bool CheckValues();
 			void RestrainValues();
 			void InitRandom();

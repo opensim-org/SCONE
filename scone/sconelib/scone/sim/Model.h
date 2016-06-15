@@ -73,7 +73,7 @@ namespace scone
 			virtual double GetPreviousTime() const = 0;
 			virtual double GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
 
-			// Model state access
+			/// Model state access
 			virtual std::vector< Real > GetStateValues() const = 0;
 			virtual void SetStateValues( const std::vector< Real >& values ) = 0;
 			virtual std::vector< String > GetStateVariableNames() const = 0;
@@ -83,9 +83,12 @@ namespace scone
 			/// Simulate model
 			virtual bool AdvanceSimulationTo( double time ) = 0;
 			virtual double GetSimulationEndTime() const = 0;
+
+			/// Model data
+			virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
 			virtual String WriteData( const String& file_base ) const = 0;
 
-			// get dynamic model statistics
+			/// get dynamic model statistics
 			virtual Vec3 GetComPos() const = 0;
 			virtual Vec3 GetComVel() const = 0;
 			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
