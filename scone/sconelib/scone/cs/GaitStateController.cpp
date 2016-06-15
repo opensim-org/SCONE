@@ -47,6 +47,7 @@ namespace scone
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );
 			INIT_PARAM( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
 			INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
+            INIT_PROPERTY( props, use_leg_length, true );
 			
 			// create leg states
 			for ( sim::LegUP& leg: model.GetLegs() )
@@ -134,6 +135,18 @@ namespace scone
 				ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
 				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetPos( ).x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
+                if ( use_leg_length )
+                {
+                    ls.allow_late_stance_transition = ls.sagittal_pos < ls.leg_length * late_stance_threshold;
+                    ls.allow_liftoff_transition = ls.sagittal_pos < ls.leg_length * liftoff_threshold;
+                    ls.allow_landing_transition = ls.sagittal_pos > ls.leg_length * landing_threshold;
+                }
+                else
+                {
+                    ls.allow_late_stance_transition = ls.sagittal_pos < late_stance_threshold;
+                    ls.allow_liftoff_transition = ls.sagittal_pos < liftoff_threshold;
+                    ls.allow_landing_transition = ls.sagittal_pos > landing_threshold;
+                }
 			}
 
 			// update states
@@ -151,13 +164,13 @@ namespace scone
 					{
 						if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 							new_state = LegState::LiftoffState;
-						else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
+						else if ( ls.allow_late_stance_transition )
 							new_state = LegState::LateStanceState;
 						else new_state = LegState::EarlyStanceState;
 					}
 					else
 					{
-						if ( ls.sagittal_pos > ls.leg_length * landing_threshold )
+						if ( ls.allow_landing_transition )
 							new_state = LegState::LandingState;
 						else new_state = LegState::SwingState;
 					}
@@ -168,7 +181,7 @@ namespace scone
 					// --> late stance if a position threshold has passed
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
-					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
+					else if ( ls.allow_late_stance_transition )
 						new_state = LegState::LateStanceState;
 					break;
 
@@ -177,7 +190,7 @@ namespace scone
 					// --> liftoff if position is beyond swing_threshold
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
-					else if ( ls.sagittal_pos < ls.leg_length * liftoff_threshold )
+					else if ( ls.allow_liftoff_transition )
 						new_state = LegState::LiftoffState;
 					break;
 
@@ -192,7 +205,7 @@ namespace scone
 					// --> landing if position is beyond landing_threshold
 					if ( ls.allow_stance_transition && ls.sagittal_pos > mir_ls.sagittal_pos )
 						new_state = LegState::EarlyStanceState;
-					if ( !ls.allow_stance_transition && ls.sagittal_pos > ls.leg_length * landing_threshold )
+					if ( !ls.allow_stance_transition && ls.allow_landing_transition )
 						new_state = LegState::LandingState;
 					break;
 
