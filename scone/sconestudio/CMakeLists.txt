@@ -4,22 +4,19 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_AUTOMOC ON)
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
-	set(SCONEMANAGER_FILES
-		../sconeopt/SconeManager.cpp
-		../sconeopt/SconeManager.h
-		)
-		
 	set(FILES
 		SconeStudio.cpp
 		SconeStudio.h
 		main.cpp
 		studio.rc
+		SconeManager.cpp
+		SconeManager.h
 		)
 	
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
-	add_executable(scone-studio ${FILES} ${SCONEMANAGER_FILES} ${UI_HEADERS} ${RESOURCES})
+	add_executable(scone-studio ${FILES} ${UI_HEADERS} ${RESOURCES})
 
 	set_target_properties(scone-studio PROPERTIES
 		PROJECT_LABEL "sconestudio"

@@ -1,4 +1,3 @@
-#include "SconeManager.h"
 #include "scone/core/Log.h"
 #include "scone/opt/opt.h"
 #include "scone/cs/cs.h"
@@ -38,8 +37,7 @@ int main(int argc, char* argv[])
 		// If .par file given, evaluate the objective
 		else if ( fileName.extension().string() == ".par" )
 		{
-			SconeManager manager;
-			manager.SimulateObjective( fileName.string() );
+			opt::SimulateObjective( fileName.string() );
 		}
 
 		// Otherwise, not sure what to do.

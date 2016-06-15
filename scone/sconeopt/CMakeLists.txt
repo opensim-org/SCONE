@@ -1,6 +1,4 @@
-set(MANAGER_FILES SconeManager.cpp SconeManager.h)
-
-add_executable(sconeopt sconeopt.cpp ${MANAGER_FILES})
+add_executable(sconeopt sconeopt.cpp)
 
 if(UNIX)
     set(REALTIME_LIB ncurses)

@@ -11,7 +11,7 @@
 #endif
 #include "ui_SconeStudio.h"
 #include "scone/core/PropNode.h"
-#include "../sconeopt/SconeManager.h"
+#include "SconeManager.h"
 
 class QFileSystemModel;
 
