@@ -64,7 +64,10 @@ namespace scone
 		// see if we can load a matching .sto file
 		path stofile = path( filename ).replace_extension( "sto" );
 		if ( exists( stofile ) )
+		{
+			log::debug( "Reading ", stofile.string() );
 			ReadStorageSto( data, stofile.string() );
+		}
 	}
 
 	void SconeManager::Evaluate( TimeInSeconds endtime /*= 0.0 */ )
