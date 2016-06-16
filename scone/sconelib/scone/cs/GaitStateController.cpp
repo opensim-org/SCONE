@@ -52,7 +52,7 @@ namespace scone
 			for ( sim::LegUP& leg: model.GetLegs() )
 			{		
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
-				log::TraceF( "leg %d leg_length=%.3f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
+				log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 			}
 
 			// create instances for each controller

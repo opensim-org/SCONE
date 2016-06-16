@@ -174,7 +174,6 @@ namespace scone
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
-			log::trace( "Initializing muscle dynamics" );
 
 			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
 			InitializeOpenSimMuscleActivations( 0.05 );
@@ -183,8 +182,6 @@ namespace scone
 			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
 			InitializeOpenSimMuscleActivations();
-
-			log::trace( "Model ", m_pOsimModel->getName(), " initialized" );
 		}
 
 		Model_Simbody::~Model_Simbody() {}
