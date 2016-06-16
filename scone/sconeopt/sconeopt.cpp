@@ -17,35 +17,32 @@ int main(int argc, char* argv[])
 		boost::filesystem::path fileName(argv[1]);
 		SCONE_THROW_IF( !boost::filesystem::exists( fileName ), "File does not exist");
 
-		// If .xml file given, do an optimization
-		if ( fileName.extension().string() == ".xml" )
-		{
-			// set log level to trace in debug mode
+
+		// set log level to trace in debug mode
 #ifdef _DEBUG
-			log::SetLevel( log::TraceLevel );
+		log::SetLevel( log::TraceLevel );
 #endif
 
-			// register all types
-			opt::RegisterFactoryTypes();
-			cs::RegisterFactoryTypes();
-			sim::RegisterSimbody();
+		// register all types
+		opt::RegisterFactoryTypes();
+		cs::RegisterFactoryTypes();
+		sim::RegisterSimbody();
 
-			// perform the optimization
+		if ( fileName.extension().string() == ".xml" )
+		{
+			// if .xml file given, do an optimization
 			opt::PerformOptimization( argc, argv );
 		}
-		
-		// If .par file given, evaluate the objective
 		else if ( fileName.extension().string() == ".par" )
 		{
+			// if .par file given, evaluate the objective
 			opt::SimulateObjective( fileName.string() );
 		}
-
-		// Otherwise, not sure what to do.
 		else
 		{
-			SCONE_THROW( "Must give a .xml or .par file" );
+			// Otherwise, not sure what to do.
+			SCONE_THROW( "Unknown file type (must be .xml or .par): " + fileName.string() );
 		}
-
 	}
 	catch (std::exception& e)
 	{
