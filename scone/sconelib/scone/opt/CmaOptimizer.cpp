@@ -7,6 +7,7 @@
 #include "SharkHelperClasses.h"
 #endif
 
+#include <random>
 #include <boost/format.hpp>
 
 #include "scone/core/tools.h"
@@ -79,7 +80,7 @@ namespace scone
 			}
 
 			// init random seed
-            if ( random_seed == 0 ) random_seed = long( time( NULL ) );
+			if ( random_seed == 0 ) random_seed = long( time( NULL ) );
 			Rng::seed( random_seed );
 
 			// initialize settings from file
@@ -213,7 +214,10 @@ namespace scone
 			SconeSingleObjectiveFunction objfunc( GetObjective(), IsMinimizing() );
 
 			// init random seed
-            if ( random_seed == 0 ) random_seed = long( time( NULL ) );
+			if ( random_seed == 0 ) {
+				std::random_device rd;
+				random_seed = rd();
+			}
 			shark::Rng::seed( random_seed );
 
 			// initialize settings from file
