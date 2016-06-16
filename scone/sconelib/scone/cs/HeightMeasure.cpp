@@ -31,14 +31,14 @@ namespace scone
 			else m_pTargetBody = nullptr;
 
 			// init start height and initial height
-			m_JumpStartHeight = m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
+			m_JumpStartHeight = m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetComPos()[1] : model.GetComPos()[1];
 		}
 
 		sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
 			SCONE_PROFILE_SCOPE;
 
-			double pos = m_pTargetBody ? m_pTargetBody->GetPos()[1] : model.GetComPos()[1];
+			double pos = m_pTargetBody ? m_pTargetBody->GetComPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetLinVel()[1] : model.GetComVel()[1];
 
 			// add sample

@@ -17,6 +17,8 @@ namespace scone
 		m_Rank( rank ),
 		m_Name( stringf( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
 		{
+			// measure length during construction, as it could be pose-dependent
+			m_LegLength = MeasureLength();
 		}
 
 		Leg::~Leg()
@@ -31,10 +33,18 @@ namespace scone
 
 		Real Leg::MeasureLength() const
 		{
-			// HACK: this uses body positions because joint positions are too hard for OpenSim
-			// TODO: do it right
+			// HACK: this uses body positions because we don't have access to joint positions in OpenSim
 			// OpenSim: how can we get the actual position of a joint
-			return ( m_Upper.GetParent().GetBody().GetPos() - m_Foot.GetBody().GetPos() ).length();
+			// add all distances from foot to upper, using body origins
+			double d = 0.0;
+			for ( const Link* body = &m_Foot; body != &m_Upper; body = &body->GetParent() )
+			{
+				double len = length( body->GetBody().GetOrigin() - body->GetParent().GetBody().GetOrigin() );
+				log::info( "Length between ", body->GetBody().GetName(), " and ", body->GetParent().GetBody().GetName(), ": ", len );
+				d += length( body->GetBody().GetOrigin() - body->GetParent().GetBody().GetOrigin() );
+			}
+
+			return d;
 		}
 
 		scone::Real Leg::GetLoad() const

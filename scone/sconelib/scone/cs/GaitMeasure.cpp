@@ -118,7 +118,7 @@ namespace scone
 			// compute average of feet and Com (smallest 2 values)
 			std::set< double > distances;
 			for ( const sim::LegUP& leg: model.GetLegs() )
-				distances.insert( leg->GetFootLink().GetBody().GetPos().x );
+				distances.insert( leg->GetFootLink().GetBody().GetComPos().x );
 			distances.insert( model.GetComPos().x );
 
 			SCONE_ASSERT( distances.size() >= 2 );

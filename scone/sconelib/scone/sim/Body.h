@@ -16,7 +16,8 @@ namespace scone
 			Body();
 			virtual ~Body();
 
-			virtual Vec3 GetPos() const = 0;
+			virtual Vec3 GetOrigin() const = 0;
+			virtual Vec3 GetComPos() const = 0;
 			virtual Quat GetOri() const = 0;
 
 			virtual Vec3 GetLinVel() const = 0;

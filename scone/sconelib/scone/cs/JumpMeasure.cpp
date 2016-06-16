@@ -11,7 +11,7 @@ namespace scone
 		was_airborne( false ),
 		distance( 0.0 ),
 		init_height( model.GetComPos().y ),
-		init_dist( std::min( model.GetComPos().x, target_body.GetPos().x ) ),
+		init_dist( std::min( model.GetComPos().x, target_body.GetComPos().x ) ),
 		prev_force( -1.0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
@@ -48,7 +48,7 @@ namespace scone
 			if ( contact && was_airborne )
 			{
 				// model has landed, update distance and terminate
-				Real d = 100 * ( std::min( model.GetComPos().x, target_body.GetPos().x ) - init_dist );
+				Real d = 100 * ( std::min( model.GetComPos().x, target_body.GetComPos().x ) - init_dist );
 				distance = std::max( distance, d );
 				return Controller::RequestTermination;
 			}
