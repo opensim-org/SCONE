@@ -76,9 +76,9 @@ namespace scone
 
 			// set data storage
 			so.GetModel().SetStoreData( true );
-		
+#ifdef _MSC_VER
 			Profiler::GetGlobalInstance().Reset();
-
+#endif
 			PropNode statistics;
 			statistics.Clear();
 			timer tmr;
@@ -95,8 +95,9 @@ namespace scone
 			cout << "--- Evaluation report ---" << endl;
 			cout << statistics << endl;
 
+#ifdef _MSC_VER
 			cout << Profiler::GetGlobalInstance().GetReport();
-
+#endif
 			// write results
 			obj->WriteResults( path( filename ).replace_extension().string() );
 

@@ -21,10 +21,6 @@
 #include <string>
 #include <memory>
 
-// import FLUT logging, using only dynamic logging
-#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
-#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
-
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
 
