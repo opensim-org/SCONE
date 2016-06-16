@@ -24,7 +24,20 @@ namespace scone
 			return m_osBody.getName();
 		}
 
-		scone::Vec3 scone::sim::Body_Simbody::GetPos() const
+		scone::Vec3 scone::sim::Body_Simbody::GetOrigin() const
+		{
+			SCONE_PROFILE_SCOPE;
+			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
+
+			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
+			SimTK::Vec3 point;
+
+			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
+			return ToVec3( point );
+		}
+
+		scone::Vec3 scone::sim::Body_Simbody::GetComPos() const
 		{
 			SCONE_PROFILE_SCOPE;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)

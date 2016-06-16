@@ -28,9 +28,11 @@ namespace scone
 
 			virtual Vec3 GetContactForce() const;
 			Real GetLoad() const;
-			Real MeasureLength() const;
+			Real GetLength() const { return m_LegLength; }
 
 		private:
+			Real MeasureLength() const;
+			Real m_LegLength;
 			size_t m_Index;
 			Side m_Side; // TODO: use area instead of side
 			size_t m_Rank;

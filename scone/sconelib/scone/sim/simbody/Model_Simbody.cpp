@@ -88,10 +88,6 @@ namespace scone
 			if ( props.HasKey( "SimbodyParameters" ) )
 				SetOpenSimParameters( props.GetChild( "SimbodyParameters" ), par );
 
-			// create model component wrappers and sensors
-			CreateModelWrappers();
-			CreateBalanceSensors( props, par );
-
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
 			m_pOsimModel->addController( m_pControllerDispatcher );
@@ -119,6 +115,10 @@ namespace scone
 			g_SimBodyMutex.lock();
 			m_pTkState = &m_pOsimModel->initSystem();
 			g_SimBodyMutex.unlock();
+
+			// create model component wrappers and sensors
+			CreateModelWrappers();
+			CreateBalanceSensors( props, par );
 
 			// initialize cached variables to save computation time
 			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
@@ -165,14 +165,6 @@ namespace scone
 			m_pOsimManager->setPerformAnalyses( false );
 			m_pOsimManager->setInitialTime( 0.0 );
 
-			// do some pre-control simulation
-			if ( pre_control_simulation_time > 0.0 )
-			{
-				m_pOsimModel->equilibrateMuscles( GetTkState() );
-				m_pOsimManager->setFinalTime( pre_control_simulation_time );
-				m_pOsimManager->integrate( GetTkState() );
-			}
-
 			// Realize acceleration because controllers may need it and in this way the results are consistent
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
@@ -182,6 +174,7 @@ namespace scone
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
+			log::trace( "Initializing muscle dynamics" );
 
 			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
 			InitializeOpenSimMuscleActivations( 0.05 );
@@ -190,11 +183,11 @@ namespace scone
 			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
 			InitializeOpenSimMuscleActivations();
+
+			log::trace( "Model ", m_pOsimModel->getName(), " initialized" );
 		}
 
-		Model_Simbody::~Model_Simbody()
-		{
-		}
+		Model_Simbody::~Model_Simbody() {}
 
 		void Model_Simbody::CreateModelWrappers()
 		{

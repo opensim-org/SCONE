@@ -33,7 +33,7 @@ namespace scone
 		allow_swing_transition( false ),
 		sagittal_pos( 0.0 ),
 		coronal_pos( 0.0 ),
-		leg_length( l.MeasureLength() ),
+		leg_length( l.GetLength() ),
 		load_sensor( l.GetModel().AcquireDelayedSensor< sim::LegLoadSensor >( l ) )
 		{ }
 
@@ -52,7 +52,7 @@ namespace scone
 			for ( sim::LegUP& leg: model.GetLegs() )
 			{		
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
-				log::TraceF( "leg %d leg_length=%.2f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
+				log::TraceF( "leg %d leg_length=%.3f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 			}
 
 			// create instances for each controller
@@ -132,8 +132,8 @@ namespace scone
 				ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
 				ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > stance_load_threshold;
 				ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
-				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetPos( ).x;
-				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetPos().z - ls.leg.GetBaseLink().GetBody().GetPos().z;
+				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetComPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetComPos( ).x;
+				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetComPos().z - ls.leg.GetBaseLink().GetBody().GetComPos().z;
 			}
 
 			// update states
