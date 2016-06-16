@@ -29,15 +29,14 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.browserView->setColumnHidden( 1, true );
 	ui.browserView->setColumnHidden( 2, true );
 	ui.browserView->setColumnHidden( 3, true );
+	ui.splitter->setSizes( QList< int >{ 100, 200 } );
 
 	ui.osgViewer->setScene( scene.GetOsgRoot() );
 
 	return true;
 }
 
-SconeStudio::~SconeStudio()
-{
-}
+SconeStudio::~SconeStudio() {}
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {

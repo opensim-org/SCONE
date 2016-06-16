@@ -33,6 +33,7 @@ set(CORE_TOOLS_FILES
 	scone/core/ResourceCache.h
 	scone/core/Storage.h
 	scone/core/StorageIo.h
+	scone/core/StorageIo.cpp
 	scone/core/StringMap.h
 	scone/core/system.cpp
 	scone/core/system.h
