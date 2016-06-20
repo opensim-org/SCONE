@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 		else if ( fileName.extension().string() == ".par" )
 		{
 			// if .par file given, evaluate the objective and print log
-            log::SetLevel( log::TraceLevel );
+			log::SetLevel( log::TraceLevel );
 			opt::SimulateObjective( fileName.string() );
 		}
 		else
