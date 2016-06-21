@@ -2,6 +2,8 @@
 
 #include "core.h"
 #include "PropNode.h"
+#include "scone/core/tools.h"
+
 #include <map>
 
 #ifdef SCONE_ENABLE_PROFILING
@@ -14,7 +16,7 @@
 
 namespace scone
 {
-	typedef long long HighResolutionTime;
+	typedef timer::clock_ticks_t HighResolutionTime;
 
 	class SCONE_API ScopedProfile
 	{
@@ -63,6 +65,7 @@ namespace scone
 		Item m_Root;
 		Item* m_Current;
 		bool m_bActive;
+		timer m_Timer;
 
 	private:
 		Profiler( const Profiler& other );

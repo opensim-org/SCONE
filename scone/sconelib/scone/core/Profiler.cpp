@@ -42,16 +42,12 @@ namespace scone
 	HighResolutionTime Profiler::StartMeasure( const String& scope )
 	{
 		m_Current = &m_Current->GetOrAddChild( scope );
-		LARGE_INTEGER li;
-		QueryPerformanceCounter( &li );
-		return li.QuadPart;
+		return m_Timer.ticks();
 	}
 
 	void Profiler::StopMeasure( HighResolutionTime start_time )
 	{
-		LARGE_INTEGER li;
-		QueryPerformanceCounter( &li );
-		m_Current->AddSample( li.QuadPart - start_time );
+		m_Current->AddSample( m_Timer.ticks() - start_time );
 		m_Current = m_Current->parent;
 	}
 
