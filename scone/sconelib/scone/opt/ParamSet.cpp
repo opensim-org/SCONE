@@ -167,10 +167,17 @@ namespace scone
 
 		void ParamSet::UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds )
 		{
-			for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
+			SCONE_ASSERT( means.size() == stds.size() );
+			size_t vec_idx = 0;
+			for ( size_t params_idx = 0; params_idx < m_Params.size(); ++params_idx )
 			{
-				m_Params[ parIdx ].first.init_mean = means[ parIdx ];
-				m_Params[ parIdx ].first.init_std = stds[ parIdx ];
+				if ( m_Params[ params_idx ].first.is_free )
+				{
+					SCONE_ASSERT( vec_idx < means.size() );
+					m_Params[ params_idx ].first.init_mean = means[ vec_idx ];
+					m_Params[ params_idx ].first.init_std = stds[ vec_idx ];
+					++vec_idx;
+				}
 			}
 		}
 

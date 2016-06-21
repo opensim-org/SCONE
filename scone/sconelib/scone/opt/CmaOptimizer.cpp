@@ -229,11 +229,17 @@ namespace scone
 			// generate random initial population
 			shark::CMA::SearchPointType initPoint( dim );
 			shark::RealMatrix initCovar( dim, dim, 0.0 );
-			for ( size_t par_idx = 0; par_idx < initPoint.size(); ++par_idx )
+			size_t free_idx = 0;
+			for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
 			{
 				auto& parinf = par.GetParamInfo( par_idx );
-				initPoint[ par_idx ] = parinf.init_mean;
-				initCovar( par_idx, par_idx ) = parinf.init_std * parinf.init_std;
+				if ( parinf.is_free )
+				{
+					SCONE_ASSERT( free_idx < dim );
+					initPoint[ free_idx ] = parinf.init_mean;
+					initCovar( free_idx, free_idx ) = parinf.init_std * parinf.init_std;
+					++free_idx;
+				}
 			}
 
 			// init CMA object
