@@ -17,7 +17,7 @@
 
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
 
 #include <flut/string_pattern_match.hpp>

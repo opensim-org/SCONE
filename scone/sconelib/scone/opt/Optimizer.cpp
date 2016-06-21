@@ -7,9 +7,15 @@
 #include "Factories.h"
 #include "scone/core/Log.h"
 #include <sstream>
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 
 using namespace boost::filesystem;
+
+#if defined(_MSC_VER)
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#endif
 
 namespace scone
 {

@@ -4,11 +4,11 @@
 #include "SconeManager.h"
 #include "scone/opt/opt.h"
 #include "scone/cs/cs.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"
 #include "scone/opt/Factories.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 
 #include "scone/sim/simbody/sim_simbody.h"
 

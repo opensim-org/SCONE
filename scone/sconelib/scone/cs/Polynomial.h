@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Function.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

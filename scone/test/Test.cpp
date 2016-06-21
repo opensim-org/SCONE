@@ -9,13 +9,13 @@
 #include "scone/cs/cs.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 #include <fstream>
 
 #include <boost/filesystem.hpp>
 #include "scone/opt/Factories.h"
 #include "scone/cs/SimulationObjective.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
 #include "boost/format.hpp"
@@ -27,6 +27,9 @@
 namespace bfs = boost::filesystem;
 using std::cout;
 using std::endl;
+
+#include <flut/timer.hpp>
+using flut::timer;
 
 namespace scone
 {

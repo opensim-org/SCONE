@@ -2,10 +2,10 @@
 
 #define USE_SHARK_V2 0
 
-#include <memory>
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
+#include "scone/core/memory_tools.h"
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PAR_.TryGet( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )

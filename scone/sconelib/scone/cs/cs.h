@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
+#include "scone/core/memory_tools.h"
 
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )

@@ -10,8 +10,11 @@
 #include <random>
 #include <boost/format.hpp>
 
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 #include "scone/core/Log.h"
+
+#include <flut/timer.hpp>
+using flut::timer;
 
 namespace scone
 {

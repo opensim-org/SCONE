@@ -1,5 +1,5 @@
 #include "SconeStudio.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QFileSystemModel.h>

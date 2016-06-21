@@ -1,7 +1,7 @@
 #include "scone/core/Log.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "Test.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 #include "flut/system_tools.hpp"
 #include <chrono>
 #include "flut/timer.hpp"

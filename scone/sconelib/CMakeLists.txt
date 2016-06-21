@@ -34,10 +34,11 @@ set(CORE_TOOLS_FILES
 	scone/core/Storage.h
 	scone/core/StorageIo.h
 	scone/core/StringMap.h
-	scone/core/system.cpp
-	scone/core/system.h
-	scone/core/tools.cpp
-	scone/core/tools.h
+	scone/core/system_tools.cpp
+	scone/core/system_tools.h
+	scone/core/string_tools.cpp
+	scone/core/string_tools.h
+	scone/core/memory_tools.h
 )
 if(WIN32)
     list(APPEND CORE_TOOLS_FILES scone/core/Profiler.cpp scone/core/Profiler.h)

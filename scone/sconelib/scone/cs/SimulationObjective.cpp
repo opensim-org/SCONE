@@ -9,7 +9,7 @@
 #include <boost/thread.hpp>
 #include "version.h"
 #include "scone/core/Profiler.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 
 namespace scone
 {

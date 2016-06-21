@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "scone/core/core.h"
+#include "scone/core/memory_tools.h"
 
 namespace scone
 {

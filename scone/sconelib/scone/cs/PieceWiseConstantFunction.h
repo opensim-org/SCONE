@@ -3,7 +3,7 @@
 #include "Function.h"
 #include <OpenSim/Common/PiecewiseConstantFunction.h>
 #include "PieceWiseFunction.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

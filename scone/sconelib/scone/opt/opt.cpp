@@ -7,9 +7,11 @@
 #include "scone/core/Profiler.h"
 
 #include <boost/filesystem.hpp>
-
 using namespace boost::filesystem;
 using namespace std;
+
+#include <flut/timer.hpp>
+using flut::timer;
 
 namespace scone
 {

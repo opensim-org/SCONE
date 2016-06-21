@@ -1,7 +1,7 @@
 #include "tools.h"
 
 #include "scone/core/core.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
 
 #include "scone/opt/opt.h"
@@ -10,9 +10,12 @@
 
 #include "scone/cs/cs.h"
 #include "scone/cs/SimulationObjective.h"
+#include "scone/sim/simbody/sim_simbody.h"
 
 #include <boost/filesystem.hpp>
-#include "scone/sim/simbody/sim_simbody.h"
+
+#include <flut/timer.hpp>
+using flut::timer;
 
 namespace bfs = boost::filesystem;
 using std::cout;
