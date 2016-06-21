@@ -6,6 +6,9 @@
 
 #include <flut/system/log.hpp>
 
+#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_INFO
+#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
+
 namespace scone
 {
 	namespace log
