@@ -34,7 +34,12 @@ namespace scone
 				bool allow_swing_transition;
 				Real sagittal_pos;
 				Real coronal_pos;
-				const Real leg_length;
+				bool allow_late_stance_transition;
+				bool allow_liftoff_transition;
+				bool allow_landing_transition;
+
+				// cached constant state
+				Real leg_length;
 			};
 
 			GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
@@ -73,6 +78,7 @@ namespace scone
 			Real landing_threshold;
 			Real late_stance_threshold;
 			Real liftoff_threshold;
+			Real override_leg_length;
 
 			Real leg_load_sensor_delay;
 			GaitStateController( const GaitStateController& );
