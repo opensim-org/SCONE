@@ -26,6 +26,7 @@ set(CORE_PROPNODE_FILES
 )
 set(CORE_SYSTEM_FILES
 	scone/core/core.h
+	scone/core/String.h
 )
 set(CORE_TOOLS_FILES
 	scone/core/Log.cpp

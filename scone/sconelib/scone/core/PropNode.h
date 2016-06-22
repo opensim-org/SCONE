@@ -1,14 +1,13 @@
 #pragma once
 
 #include "core.h"
+#include "String.h"
 
 #include <memory>
 #include <vector>
 #include <sstream>
-#include <type_traits>
 
 #include "Exception.h"
-#include "math.h"
 
 namespace scone
 {
@@ -203,7 +202,6 @@ namespace scone
 			ss >> value;
 			return value;
 		}
-
 
 		template< typename T >
 		void SetInternalValue( T& value ) {

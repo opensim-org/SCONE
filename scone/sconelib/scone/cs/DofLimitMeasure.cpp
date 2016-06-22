@@ -1,6 +1,7 @@
 #include "DofLimitMeasure.h"
 #include "scone/sim/Model.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/math.h"
 
 namespace scone
 {

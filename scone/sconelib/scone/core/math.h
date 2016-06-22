@@ -1,10 +1,9 @@
 #pragma once
 
 #include "core.h"
-
+#include <limits>
 #include <stdlib.h>
 #include <cmath>
-#include <iostream>
 
 namespace scone
 {
@@ -40,7 +39,7 @@ namespace scone
 	// float comparison
 	template< typename T >
 	bool Equals( const T& v1, const T& v2, const T& tolerance = std::numeric_limits<T>::epsilon() ) { 
-		return ( fabs( v1 - v2 ) <= fabs( v1 ) * tolerance );
+		return ( std::fabs( v1 - v2 ) <= std::fabs( v1 ) * tolerance );
 	}
 
 	// square function

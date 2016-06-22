@@ -10,8 +10,6 @@
 #	define SCONE_API
 #endif
 
-#include <string>
-
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
 
@@ -28,7 +26,6 @@ namespace scone
 #else
 	typedef double Real;
 #endif
-	typedef std::string String;
 
 	// index type
 	typedef size_t Index;

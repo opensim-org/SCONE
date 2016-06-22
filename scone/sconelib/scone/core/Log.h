@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.h"
+#include "String.h"
 
 // import FLUT logging, using only dynamic logging
 #define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE

@@ -1,15 +1,17 @@
 #include "system_tools.h"
 
 #include <fstream>
-#include <boost/thread.hpp>
+
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/lock_guard.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
+
+#include "flut/system_tools.hpp"
 
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
-
-#include "flut/system_tools.hpp"
 
 namespace scone
 {

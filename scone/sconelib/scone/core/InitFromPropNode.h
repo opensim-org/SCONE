@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PropNode.h"
-#include <string>
 #include "string_tools.h"
 
 // convenience macro that automatically derives name from variable name

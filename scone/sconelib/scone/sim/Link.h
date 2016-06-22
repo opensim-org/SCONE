@@ -1,9 +1,11 @@
 #pragma once
 
-#include "scone/core/core.h"
-#include "sim_fwd.h"
 #include <vector>
+
+#include "scone/core/core.h"
+#include "scone/core/String.h"
 #include "scone/core/Exception.h"
+#include "sim_fwd.h"
 #include "Types.h"
 
 namespace scone
