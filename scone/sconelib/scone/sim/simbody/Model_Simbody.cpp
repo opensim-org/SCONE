@@ -520,7 +520,7 @@ namespace scone
 			else return 0.0;
 		}
 
-		State Model_Simbody::ReadState( const String& file )
+		std::map< String, Real > Model_Simbody::ReadState( const String& file )
 		{
 			// OpenSim: why is there no normal way to get a value using a label???
 
@@ -531,7 +531,7 @@ namespace scone
 			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
 
 			// run over all labels
-			State state;
+			std::map< String, Real > state;
 			for ( int i = 0; i < storeLabels.getSize(); i++ )
 			{
 				// check if the label is corresponds to a state
@@ -606,7 +606,7 @@ namespace scone
 
 		void Model_Simbody::SetStateVariables( const std::map< String, Real >& state )
 		{
-			for ( const State::value_type& nvp: state )
+			for ( const auto& nvp : state )
 				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
 		}
 

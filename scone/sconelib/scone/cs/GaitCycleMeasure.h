@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Measure.h"
-#include "scone/sim/State.h"
 
 namespace scone
 {

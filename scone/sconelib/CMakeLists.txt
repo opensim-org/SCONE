@@ -173,7 +173,6 @@ set(SIM_SIMULATIONANDCONTROL_FILES
     scone/sim/Controller.h
     scone/sim/Simulation.cpp
     scone/sim/Simulation.h
-    scone/sim/State.h
     )
 set(SIM_SYSTEM_FILES
     scone/sim/Factories.cpp

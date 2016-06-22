@@ -1,10 +1,8 @@
 #include "FeedForwardController.h"
 
 #include "scone/core/InitFromPropNode.h"
-#include "scone/core/Log.h"
 
 #include "scone/sim/Controller.h"
-#include "scone/sim/Model.h"
 #include "scone/sim/Muscle.h"
 
 #include "Factories.h"

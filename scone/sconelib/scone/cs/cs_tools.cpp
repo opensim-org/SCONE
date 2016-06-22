@@ -6,6 +6,7 @@
 #include "GaitMeasure.h"
 #include "EffortMeasure.h"
 #include "scone/sim/Factories.h"
+#include "scone/sim/sim_tools.h"
 #include "scone/opt/Factories.h"
 #include "Factories.h"
 #include "PieceWiseConstantFunction.h"

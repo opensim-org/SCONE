@@ -1,17 +1,14 @@
 #pragma once
 
-#include "sim_fwd.h"
-
 #include "scone/core/core.h"
+#include "scone/opt/opt_fwd.h"
+#include "scone/sim/sim_fwd.h"
+
 #include "Controller.h"
 #include "Link.h"
 #include "Leg.h"
 
-#include "scone/opt/ParamSet.h"
-
-#include <map>
 #include <vector>
-#include "State.h"
 #include "scone/core/HasName.h"
 #include "scone/core/HasSignature.h"
 #include "Sensor.h"
