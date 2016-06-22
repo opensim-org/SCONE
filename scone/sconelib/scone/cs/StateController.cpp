@@ -1,6 +1,5 @@
 #include "StateController.h"
 
-#include <boost/tokenizer.hpp>
 #include "scone/sim/Factories.h"
 
 namespace scone
@@ -24,9 +23,8 @@ namespace scone
 			{
 				// get state masks
 				String state_masks = ccIt->second->GetStr( "states" );
-				boost::char_separator< char > state_mask_seperator(";,");
-				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
-				for ( const String& instance_states: state_tokens )
+				auto state_tokens = flut::split_str( state_masks, ";," );
+				for ( const String& instance_states : state_tokens )
 				{
 					// create new conditional controller
 					m_ConditionalControllers.push_back( ConditionalController() );

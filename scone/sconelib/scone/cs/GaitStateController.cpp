@@ -4,8 +4,6 @@
 #include "scone/sim/Muscle.h"
 #include "scone/core/InitFromPropNode.h"
 
-#include <boost/tokenizer.hpp>
-
 #include "scone/sim/Body.h"
 #include "scone/sim/Factories.h"
 #include "scone/core/Log.h"
@@ -63,8 +61,7 @@ namespace scone
 			{
 				// get state masks
 				String state_masks = ccIt->second->GetStr( "states" );
-				boost::char_separator< char > state_mask_seperator(";,");
-				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
+				auto state_tokens = flut::split_str( state_masks, ";," );
 				for ( const String& instance_states: state_tokens )
 				{
 					// automatically create controllers for all legs (sides)
