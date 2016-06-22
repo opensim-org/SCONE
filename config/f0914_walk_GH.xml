@@ -6,7 +6,7 @@
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
 		<signature_postfix>GH</signature_postfix>
-		<max_duration>5</max_duration>
+		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
