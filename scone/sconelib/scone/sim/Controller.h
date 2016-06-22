@@ -1,7 +1,6 @@
 #pragma once
 
-#include "sim.h"
-#include <functional>
+#include "scone/sim/sim_fwd.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/core/HasSignature.h"
 #include "scone/core/HasData.h"

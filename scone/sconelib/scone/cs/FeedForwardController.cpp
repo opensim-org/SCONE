@@ -3,12 +3,10 @@
 #include "scone/core/InitFromPropNode.h"
 #include "scone/core/Log.h"
 
-#include "scone/sim/sim.h"
 #include "scone/sim/Controller.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/Muscle.h"
 
-#include "tools.h"
 #include "Factories.h"
 #include "scone/sim/Area.h"
 #include "scone/core/Profiler.h"

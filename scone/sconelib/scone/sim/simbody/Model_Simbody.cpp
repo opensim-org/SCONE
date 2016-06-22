@@ -1,13 +1,14 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/InitFromPropNode.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include "Simulation_Simbody.h"
 #include "Joint_Simbody.h"
-#include "tools.h"
-#include "scone/core/InitFromPropNode.h"
+#include "Dof_Simbody.h"
+#include "simbody_tools.h"
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
@@ -22,7 +23,6 @@
 
 #include <flut/string_pattern_match.hpp>
 
-#include "Dof_Simbody.h"
 #include "scone/core/StorageIo.h"
 
 using std::cout;

@@ -2,7 +2,7 @@
 
 #include <bitset>
 #include "Types.h"
-#include "sim.h"
+#include "sim_fwd.h"
 #include "Side.h"
 
 namespace scone

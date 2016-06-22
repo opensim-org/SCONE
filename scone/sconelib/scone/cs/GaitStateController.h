@@ -1,11 +1,12 @@
 #pragma once
 
-#include "cs.h"
+#include "cs_fwd.h"
 #include "scone/sim/Controller.h"
 #include "scone/sim/Leg.h"
 #include <bitset>
 #include "scone/core/TimedValue.h"
 #include "scone/core/StringMap.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

@@ -4,10 +4,14 @@
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 
-#include "Factories.h"
 #include "scone/core/Log.h"
-#include <sstream>
+#include "scone/core/InitFromPropNode.h"
 #include "scone/core/system_tools.h"
+
+#include "Objective.h"
+#include "Factories.h"
+
+//#include <sstream>
 
 using namespace boost::filesystem;
 

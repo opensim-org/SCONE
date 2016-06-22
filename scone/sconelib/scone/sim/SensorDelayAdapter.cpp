@@ -5,6 +5,7 @@
 #include "Sensor.h"
 #include "scone/core/core.h"
 #include "scone/core/Storage.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

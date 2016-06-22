@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/sim/Controller.h"
-#include "cs.h"
+#include "cs_fwd.h"
 
 namespace scone
 {

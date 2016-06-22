@@ -1,6 +1,7 @@
 #pragma once
 
-#include "sim.h"
+#include "scone/core/core.h"
+#include "sim_fwd.h"
 #include <vector>
 #include "scone/core/Exception.h"
 #include "Types.h"

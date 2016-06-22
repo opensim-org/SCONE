@@ -1,6 +1,5 @@
 #pragma once
 
-#include "cs.h"
 #include "Measure.h"
 #include "scone/sim/State.h"
 

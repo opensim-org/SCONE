@@ -7,8 +7,10 @@
 #include <algorithm>
 
 #include "scone/core/Profiler.h"
-#include "SensorDelayAdapter.h"
+#include "scone/core/Log.h"
 #include "scone/core/InitFromPropNode.h"
+
+#include "SensorDelayAdapter.h"
 #include "Factories.h"
 
 using std::endl;

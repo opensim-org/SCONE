@@ -112,8 +112,7 @@ set(CS_MEASURES_FILES
 	scone/cs/Measure.h
 	)
 set(CS_SYSTEM_FILES
-	scone/cs/cs.cpp
-	scone/cs/cs.h
+    scone/cs/cs_fwd.h
 	scone/cs/Factories.cpp
 	scone/cs/Factories.h
 	scone/cs/version.h
@@ -121,8 +120,8 @@ set(CS_SYSTEM_FILES
 set(CS_TOOLS_FILES
 	scone/cs/SimulationObjective.cpp
 	scone/cs/SimulationObjective.h
-	scone/cs/tools.h
-	scone/cs/tools.cpp
+	scone/cs/cs_tools.cpp
+	scone/cs/cs_tools.h
 	)
 
 set(OPT_API_FILES
@@ -140,8 +139,9 @@ set(OPT_API_FILES
 set(OPT_SYSTEM_FILES
     scone/opt/Factories.cpp
     scone/opt/Factories.h
-    scone/opt/opt.cpp
-    scone/opt/opt.h
+    scone/opt/opt_tools.cpp
+    scone/opt/opt_tools.h
+    scone/opt/opt_fwd.h
 	scone/opt/SharkHelperClasses.h
     )
 	
@@ -177,8 +177,9 @@ set(SIM_SIMULATIONANDCONTROL_FILES
 set(SIM_SYSTEM_FILES
     scone/sim/Factories.cpp
     scone/sim/Factories.h
-    scone/sim/sim.cpp
-    scone/sim/sim.h
+    scone/sim/sim_tools.cpp
+    scone/sim/sim_tools.h
+    scone/sim/sim_fwd.h
     scone/sim/Types.h
     )
 set(SIM_TOPOLOGY_FILES
@@ -210,8 +211,7 @@ set(SIMBODY_SYSTEM_FILES
     scone/sim/simbody/sim_simbody.h
     )
 set(SIMBODY_TOOLS_FILES
-    scone/sim/simbody/tools.cpp
-    scone/sim/simbody/tools.h
+    scone/sim/simbody/simbody_tools.h
     )
 	
 set (SCONELIB_FILES

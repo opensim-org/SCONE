@@ -1,6 +1,5 @@
 #include "EffortMeasure.h"
 #include "scone/sim/Model.h"
-#include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/Profiler.h"
 

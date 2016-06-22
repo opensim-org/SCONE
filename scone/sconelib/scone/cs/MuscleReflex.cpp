@@ -1,7 +1,6 @@
 #include "MuscleReflex.h"
 #include "scone/sim/Muscle.h"
 #include "scone/sim/Area.h"
-#include "tools.h"
 #include "scone/sim/Dof.h"
 
 //#define DEBUG_MUSCLE "vasti_r"

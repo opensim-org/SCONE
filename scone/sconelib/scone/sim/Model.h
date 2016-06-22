@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sim.h"
+#include "sim_fwd.h"
 
 #include "scone/core/core.h"
 #include "Controller.h"

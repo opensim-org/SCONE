@@ -2,8 +2,8 @@
 #include <boost/format.hpp>
 
 #include "SconeManager.h"
-#include "scone/opt/opt.h"
-#include "scone/cs/cs.h"
+#include "scone/opt/opt_tools.h"
+#include "scone/cs/cs_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"

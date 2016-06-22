@@ -2,8 +2,6 @@
 
 #include "core.h"
 #include <iosfwd>
-#include "PropNode.h"
-#include "Log.h"
 
 #include "flut/string_tools.hpp"
 
@@ -49,6 +47,4 @@ namespace scone
 			return str.substr(pos + 1);
 		else return str;
 	}
-
-	void SCONE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

@@ -7,7 +7,6 @@
 #include "scone/sim/Model.h"
 #include "scone/sim/Body.h"
 #include "scone/core/Log.h"
-#include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/Profiler.h"
 

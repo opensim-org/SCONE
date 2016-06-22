@@ -1,6 +1,6 @@
 #include "scone/core/Log.h"
-#include "scone/opt/opt.h"
-#include "scone/cs/cs.h"
+#include "scone/opt/opt_tools.h"
+#include "scone/cs/cs_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
 #include "flut/system_tools.hpp"
 #include <boost/filesystem.hpp>

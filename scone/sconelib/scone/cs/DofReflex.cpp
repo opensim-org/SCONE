@@ -3,6 +3,7 @@
 #include "scone/sim/Actuator.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/SensorDelayAdapter.h"
+#include "scone/sim/Sensors.h"
 
 //#define DEBUG_MUSCLE "glut_max_r"
 

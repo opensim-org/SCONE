@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
-#include "opt.h"
+#include "scone/core/PropNode.h"
 
 namespace scone
 {

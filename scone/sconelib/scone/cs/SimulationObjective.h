@@ -1,7 +1,6 @@
 #pragma once
 
-#include "cs.h"
-#include "scone/sim/sim.h"
+#include "cs_fwd.h"
 #include "scone/opt/Objective.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Simulation.h"

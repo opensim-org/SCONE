@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sim.h"
+#include "sim_fwd.h"
 #include "scone/core/HasName.h"
 #include "scone/core/math.h"
 #include "scone/core/Vec3.h"

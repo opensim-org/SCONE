@@ -2,9 +2,20 @@
 
 #include "scone/core/core.h"
 #include "ParamInfo.h"
-#include "opt.h"
 #include <vector>
 #include <map>
+
+#define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
+	VAR_ = PAR_.TryGet( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )
+
+#define INIT_PARAM_NAMED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
+	VAR_ = PAR_.TryGet( NAME_, PROP_, NAME_, DEFAULT_ )
+
+#define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
+	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ) )
+
+#define INIT_PARAM_NAMED_REQUIRED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
+	VAR_ = PAR_.Get( NAME_, PROP_, NAME_ )
 
 namespace scone
 {

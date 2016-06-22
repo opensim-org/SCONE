@@ -1,6 +1,5 @@
 #include "ConditionalMuscleReflex.h"
 #include "scone/sim/Area.h"
-#include "tools.h"
 #include "scone/sim/Sensors.h"
 #include "scone/sim/Dof.h"
 

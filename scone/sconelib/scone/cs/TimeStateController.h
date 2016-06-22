@@ -1,6 +1,5 @@
 #pragma once
 
-#include "cs.h"
 #include "StateController.h"
 
 namespace scone

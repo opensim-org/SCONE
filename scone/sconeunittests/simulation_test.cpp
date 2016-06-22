@@ -1,7 +1,5 @@
 #include "common.h"
 
-#include "scone/cs/tools.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/predef.h>
 #include "platform.h"
@@ -25,7 +23,7 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 				{
 					path fp = fileit->path();
 					// cout << "Running simulation for " << fp << endl;
-					auto result = scone::RunSimulation( fp.string() );
+					auto result = scone::cs::RunSimulation( fp.string() );
 					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".xml" );
 					if ( !exists( reportpath ) )
 					{
