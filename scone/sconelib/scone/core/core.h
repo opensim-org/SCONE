@@ -10,6 +10,8 @@
 #	define SCONE_API
 #endif
 
+#include <cstddef>
+
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
 
