@@ -15,7 +15,7 @@ namespace scone
 		m_osJoint( osJoint ),
 		m_Model( model )
 		{
-			log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
+			//log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 		}
 
 		Joint_Simbody::~Joint_Simbody()

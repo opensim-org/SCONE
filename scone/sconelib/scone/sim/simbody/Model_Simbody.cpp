@@ -182,6 +182,8 @@ namespace scone
 			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
 			InitializeOpenSimMuscleActivations();
+
+			log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 		}
 
 		Model_Simbody::~Model_Simbody() {}

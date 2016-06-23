@@ -29,8 +29,6 @@ namespace scone
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
 			INIT_PARAM( props, par, balance_sensor_ori_vel_gain, 0.0 );
-
-			log::DebugF( "Orientation sensors initial values: %p %p %p", m_OriSensors[ 0 ], m_OriSensors[ 1 ], m_OriSensors[ 2 ] );
 		}
 
 		Model::~Model()
