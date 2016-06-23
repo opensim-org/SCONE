@@ -31,7 +31,9 @@ set(CORE_SYSTEM_FILES
 set(CORE_TOOLS_FILES
 	scone/core/Log.cpp
 	scone/core/Log.h
-	scone/core/ResourceCache.h
+	scone/core/Profiler.cpp
+    scone/core/Profiler.h
+    scone/core/ResourceCache.h
 	scone/core/Storage.h
 	scone/core/StorageIo.h
 	scone/core/StringMap.h

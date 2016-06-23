@@ -28,6 +28,8 @@ set(CORE_SYSTEM_FILES
 set(CORE_TOOLS_FILES
     Log.cpp
     Log.h
+    Profiler.cpp
+    Profiler.h
     ResourceCache.h
     Storage.h
 	StorageIo.h
@@ -37,10 +39,6 @@ set(CORE_TOOLS_FILES
     tools.cpp
     tools.h
     )
-
-if(WIN32)
-    list(APPEND CORE_TOOLS_FILES Profiler.cpp Profiler.h)
-endif()
 
 add_library(scone-core # Name of the library file.
     SHARED # versus static.

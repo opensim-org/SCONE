@@ -1,5 +1,6 @@
 #pragma once
 
+#include "scone/core/math.h"
 #include "scone/core/Range.h"
 
 namespace scone
