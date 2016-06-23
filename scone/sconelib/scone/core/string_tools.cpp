@@ -44,14 +44,15 @@ namespace scone
 
 	std::string GetDateTimeExactAsString()
 	{
-		auto now = boost::posix_time::second_clock::local_time();
+		auto now = boost::posix_time::microsec_clock::local_time();
 		auto month = static_cast<int>( now.date().month() );
 		auto day = static_cast<int>( now.date().day() );
 		auto hours = static_cast<int>( now.time_of_day().hours() );
 		auto mins = static_cast<int>( now.time_of_day().minutes() );
 		auto secs = static_cast<int>( now.time_of_day().seconds() );
+        auto frac_secs = static_cast<int>( now.time_of_day().fractional_seconds() );
 
-		return stringf( "%02d%02d.%02d%02d%02d", month, day, hours, mins, secs );
+		return stringf( "%02d%02d.%02d%02d%02d.%06d", month, day, hours, mins, secs, frac_secs );
 	}
 
 	String SCONE_API GetCleanVarName( const String& str )
