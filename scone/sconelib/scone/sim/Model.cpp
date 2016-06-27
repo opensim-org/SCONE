@@ -140,10 +140,10 @@ namespace scone
 			frame[ "cop_y_u" ] = cop_u.y;
 			frame[ "cop_z_u" ] = cop_u.z;
 
-			// store GRF data
+			// store GRF data (measured in BW)
 			for ( auto& leg : GetLegs() )
 			{
-				auto grf = leg->GetContactForce();
+				auto grf = leg->GetContactForce() / GetBW();
 				frame[ leg->GetName() + ".grf_x" ] = grf.x;
 				frame[ leg->GetName() + ".grf_y" ] = grf.y;
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;
