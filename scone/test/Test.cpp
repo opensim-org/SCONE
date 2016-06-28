@@ -1,9 +1,5 @@
-#ifdef _MSC_VER
-
 #define SCONE_ENABLE_PROFILING
 #include "scone/core/Profiler.h"
-
-#endif
 
 #include "Test.h"
 #include "scone/cs/cs_tools.h"
