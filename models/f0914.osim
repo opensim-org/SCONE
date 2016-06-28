@@ -4,6 +4,11 @@
 		<!--Feed forward model with 9 DOF 18 Muscles, following [Geyer & Herr 2010]. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
+		2016.06.28:
+			- Changed dissipation to 0.3
+			- Removed med contact sphere
+			- Repositioned heel and toe contact spheres
+		
 		2016.06.22: Changed Hunt-Crossly force to 1e7
 		
 		2016.06.22: Initial version
@@ -2569,9 +2574,9 @@
 						<objects>
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
-								<geometry>platform r_heel r_toe_med r_toe</geometry>
-								<stiffness>5e6</stiffness>
-								<dissipation>0.5</dissipation>
+								<geometry>platform r_heel r_toe</geometry>
+								<stiffness>1e7</stiffness>
+								<dissipation>0.3</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
@@ -2590,9 +2595,9 @@
 						<objects>
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
-								<geometry>platform l_heel l_toe_med l_toe</geometry>
-								<stiffness>5e6</stiffness>
-								<dissipation>0.5</dissipation>
+								<geometry>platform l_heel l_toe</geometry>
+								<stiffness>1e7</stiffness>
+								<dissipation>0.3</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
@@ -2667,20 +2672,11 @@
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>
 				</ContactSphere>
-				<ContactSphere name="r_toe_med">
-					<!--Body name to connect the contact geometry to-->
-					<body_name>calcn_r</body_name>
-					<!--Location of geometry center in the body frame-->
-					<location>0.185 0 -0.0275</location>
-					<!--Orientation of geometry in the body frame-->
-					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
-				</ContactSphere>
 				<ContactSphere name="r_toe">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.002 0.014</location>
+					<location>0.06 0 0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>
@@ -2694,20 +2690,11 @@
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>
 				</ContactSphere>
-				<ContactSphere name="l_toe_med">
-					<!--Body name to connect the contact geometry to-->
-					<body_name>calcn_l</body_name>
-					<!--Location of geometry center in the body frame-->
-					<location>0.185 0 0.0275</location>
-					<!--Orientation of geometry in the body frame-->
-					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
-				</ContactSphere>
 				<ContactSphere name="l_toe">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_l</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.005 -0.014</location>
+					<location>0.06 0 -0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>
