@@ -7,8 +7,10 @@
 #include <algorithm>
 
 #include "scone/core/Profiler.h"
-#include "SensorDelayAdapter.h"
+#include "scone/core/Log.h"
 #include "scone/core/InitFromPropNode.h"
+
+#include "SensorDelayAdapter.h"
 #include "Factories.h"
 
 using std::endl;
@@ -27,8 +29,6 @@ namespace scone
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
 			INIT_PARAM( props, par, balance_sensor_ori_vel_gain, 0.0 );
-
-			log::DebugF( "Orientation sensors initial values: %p %p %p", m_OriSensors[ 0 ], m_OriSensors[ 1 ], m_OriSensors[ 2 ] );
 		}
 
 		Model::~Model()
@@ -140,10 +140,10 @@ namespace scone
 			frame[ "cop_y_u" ] = cop_u.y;
 			frame[ "cop_z_u" ] = cop_u.z;
 
-			// store GRF data
+			// store GRF data (measured in BW)
 			for ( auto& leg : GetLegs() )
 			{
-				auto grf = leg->GetContactForce();
+				auto grf = leg->GetContactForce() / GetBW();
 				frame[ leg->GetName() + ".grf_x" ] = grf.x;
 				frame[ leg->GetName() + ".grf_y" ] = grf.y;
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;

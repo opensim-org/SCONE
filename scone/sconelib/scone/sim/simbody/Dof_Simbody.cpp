@@ -3,6 +3,7 @@
 #include "Joint_Simbody.h"
 
 #include <OpenSim/OpenSim.h>
+#include "scone/core/Log.h"
 
 namespace scone
 {

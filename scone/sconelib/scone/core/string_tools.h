@@ -2,12 +2,9 @@
 
 #include "core.h"
 #include <iosfwd>
-#include "PropNode.h"
-#include "Log.h"
 
 #include "flut/string_tools.hpp"
-#include "flut/timer.hpp"
-#include "flut/math/math.hpp"
+#include "String.h"
 
 // need for demangling with GCC
 #ifndef _MSC_VER
@@ -23,9 +20,6 @@ namespace scone
 	using flut::to_str;
 	using flut::from_str;
 	using flut::quoted;
-
-	// import timer from flut
-	using flut::timer;
 
 	/// Get formatted date/time string
 	String SCONE_API GetDateTimeAsString();
@@ -54,6 +48,4 @@ namespace scone
 			return str.substr(pos + 1);
 		else return str;
 	}
-
-	void SCONE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
 }

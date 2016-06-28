@@ -4,8 +4,8 @@
 #include "scone/sim/Dof.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexController.h"
-#include "tools.h"
 #include "SimTKcommon/internal/common.h"
+#include "scone/core/Log.h"
 
 //#define DEBUG_MUSCLE "iliopsoas_r"
 //#define INFO_MUSCLE "glut_max_l"

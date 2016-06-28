@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sim.h"
+#include "sim_fwd.h"
 #include "Model.h"
 #include <memory>
 

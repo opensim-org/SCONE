@@ -2,9 +2,9 @@
 #include "scone/core/Exception.h"
 
 #include <OpenSim/OpenSim.h>
-#include "tools.h"
 #include "Model_Simbody.h"
 #include "scone/core/Profiler.h"
+#include "simbody_tools.h"
 
 namespace scone
 {

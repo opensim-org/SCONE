@@ -3,7 +3,6 @@
 #include "scone/core/core.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/core/HasName.h"
-#include "cs.h"
 
 namespace scone
 {

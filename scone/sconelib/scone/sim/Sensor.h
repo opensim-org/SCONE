@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sim.h"
+#include "scone/sim/sim_fwd.h"
 #include "scone/core/PropNode.h"
 #include "scone/opt/ParamSet.h"
 

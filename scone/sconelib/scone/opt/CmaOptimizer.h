@@ -1,6 +1,5 @@
 #pragma once
 
-#include "opt.h"
 #include "Optimizer.h"
 
 namespace scone

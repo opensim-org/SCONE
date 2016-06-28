@@ -97,7 +97,6 @@ namespace scone
 				double thresh_result = ofset_result <= t.threshold ? 0.0 : ofset_result;
 				double weighted_result = t.weight * thresh_result;
 
-				log::DebugF( "%20s\t%8.3f\t%g * (%g + %g if > %g)", t.name.c_str(), weighted_result, t.weight, org_result, t.offset, t.threshold );
 				total += weighted_result;
 
 				GetReport().AddChild( t.name, t.measure->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
@@ -115,7 +114,6 @@ namespace scone
 				GetReport().AddChild( m->GetName(), m->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
 			}
 
-			log::DebugF( "%20s\t%8.3f", "TOTAL", total );
 			GetReport().Set( total );
 
 			return total;

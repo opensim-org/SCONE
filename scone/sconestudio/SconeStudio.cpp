@@ -1,5 +1,5 @@
 #include "SconeStudio.h"
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 
 #include <osgDB/ReadFile>
 

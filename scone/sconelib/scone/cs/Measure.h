@@ -1,8 +1,5 @@
 #pragma once
 
-#include "cs.h"
-
-#include "scone/sim/sim.h"
 #include "scone/core/InitFromPropNode.h"
 #include "scone/sim/Controller.h"
 #include "scone/core/HasName.h"

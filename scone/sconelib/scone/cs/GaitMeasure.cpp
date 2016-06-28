@@ -1,13 +1,9 @@
-#include <boost/tokenizer.hpp>
-#include "boost/format.hpp"
-
 #include <set>
 
 #include "GaitMeasure.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/Body.h"
 #include "scone/core/Log.h"
-#include "scone/sim/sim.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/Profiler.h"
 
@@ -30,9 +26,8 @@ namespace scone
 			INIT_PROPERTY( props, gait_bodies, String() );
 
 			// extract individual body names from gait_bodies string
-			boost::char_separator< char > separator(", ");
-			boost::tokenizer< boost::char_separator< char > > tokens( gait_bodies, separator );
-			for ( const String& t: tokens )
+			auto tokens = flut::split_str( gait_bodies, ", " );
+			for ( const String& t : tokens )
 			{
 				sim::Body& b = *FindByName( model.GetBodies(), t );
 				m_GaitBodies.push_back( &b );

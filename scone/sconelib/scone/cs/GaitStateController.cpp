@@ -1,11 +1,8 @@
 #include "GaitStateController.h"
 #include "scone/sim/Model.h"
-#include "scone/sim/sim.h"
 #include "scone/sim/Leg.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/InitFromPropNode.h"
-
-#include <boost/tokenizer.hpp>
 
 #include "scone/sim/Body.h"
 #include "scone/sim/Factories.h"
@@ -47,12 +44,15 @@ namespace scone
 			INIT_PARAM( props, par, late_stance_threshold, 0.0 );
 			INIT_PARAM( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
 			INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
+			INIT_PROPERTY( props, override_leg_length, 0.0 );
 			
 			// create leg states
 			for ( sim::LegUP& leg: model.GetLegs() )
 			{		
 				m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
-				log::TraceF( "leg %d leg_length=%.3f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
+				if ( override_leg_length != 0.0 )
+					m_LegStates.back()->leg_length = override_leg_length;
+				log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 			}
 
 			// create instances for each controller
@@ -61,8 +61,7 @@ namespace scone
 			{
 				// get state masks
 				String state_masks = ccIt->second->GetStr( "states" );
-				boost::char_separator< char > state_mask_seperator(";,");
-				boost::tokenizer< boost::char_separator< char > > state_tokens( state_masks, state_mask_seperator );
+				auto state_tokens = flut::split_str( state_masks, ";," );
 				for ( const String& instance_states: state_tokens )
 				{
 					// automatically create controllers for all legs (sides)
@@ -132,8 +131,11 @@ namespace scone
 				ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
 				ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > stance_load_threshold;
 				ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
-				ls.sagittal_pos = ls.leg.GetFootLink( ).GetBody( ).GetComPos( ).x - ls.leg.GetBaseLink( ).GetBody( ).GetComPos( ).x;
+				ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetComPos().x - ls.leg.GetBaseLink().GetBody().GetComPos().x;
 				ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetComPos().z - ls.leg.GetBaseLink().GetBody().GetComPos().z;
+				ls.allow_late_stance_transition = ls.sagittal_pos < ls.leg_length * late_stance_threshold;
+				ls.allow_liftoff_transition = ls.sagittal_pos < ls.leg_length * liftoff_threshold;
+				ls.allow_landing_transition = ls.sagittal_pos > ls.leg_length * landing_threshold;
 			}
 
 			// update states
@@ -151,13 +153,13 @@ namespace scone
 					{
 						if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 							new_state = LegState::LiftoffState;
-						else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
+						else if ( ls.allow_late_stance_transition )
 							new_state = LegState::LateStanceState;
 						else new_state = LegState::EarlyStanceState;
 					}
 					else
 					{
-						if ( ls.sagittal_pos > ls.leg_length * landing_threshold )
+						if ( ls.allow_landing_transition )
 							new_state = LegState::LandingState;
 						else new_state = LegState::SwingState;
 					}
@@ -168,7 +170,7 @@ namespace scone
 					// --> late stance if a position threshold has passed
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
-					else if ( ls.sagittal_pos < ls.leg_length * late_stance_threshold )
+					else if ( ls.allow_late_stance_transition )
 						new_state = LegState::LateStanceState;
 					break;
 
@@ -177,7 +179,7 @@ namespace scone
 					// --> liftoff if position is beyond swing_threshold
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
 						new_state = LegState::LiftoffState;
-					else if ( ls.sagittal_pos < ls.leg_length * liftoff_threshold )
+					else if ( ls.allow_liftoff_transition )
 						new_state = LegState::LiftoffState;
 					break;
 
@@ -192,7 +194,7 @@ namespace scone
 					// --> landing if position is beyond landing_threshold
 					if ( ls.allow_stance_transition && ls.sagittal_pos > mir_ls.sagittal_pos )
 						new_state = LegState::EarlyStanceState;
-					if ( !ls.allow_stance_transition && ls.sagittal_pos > ls.leg_length * landing_threshold )
+					if ( !ls.allow_stance_transition && ls.allow_landing_transition )
 						new_state = LegState::LandingState;
 					break;
 

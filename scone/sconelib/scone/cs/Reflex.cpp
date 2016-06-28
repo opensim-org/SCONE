@@ -2,7 +2,6 @@
 #include "scone/core/InitFromPropNode.h"
 #include "scone/sim/Actuator.h"
 #include "scone/sim/Area.h"
-#include "tools.h"
 
 namespace scone
 {

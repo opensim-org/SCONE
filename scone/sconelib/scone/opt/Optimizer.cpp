@@ -4,12 +4,22 @@
 #include <boost/format.hpp>
 #include <boost/thread.hpp>
 
-#include "Factories.h"
 #include "scone/core/Log.h"
-#include <sstream>
-#include "scone/core/system.h"
+#include "scone/core/InitFromPropNode.h"
+#include "scone/core/system_tools.h"
+
+#include "Objective.h"
+#include "Factories.h"
+
+//#include <sstream>
 
 using namespace boost::filesystem;
+
+#if defined(_MSC_VER)
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#	include <windows.h>
+#endif
 
 namespace scone
 {
@@ -29,7 +39,7 @@ namespace scone
 			INIT_PROPERTY_REQUIRED( props, maximize_objective );
 			INIT_PROPERTY( props, show_optimization_time, false );
 			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.01 );
-			INIT_PROPERTY( props, max_generations_without_file_output, 500u );
+			INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
 			INIT_PROPERTY( props, init_file, String("") );
 			INIT_PROPERTY( props, use_init_file, true );
 			INIT_PROPERTY( props, output_objective_result_files, true );

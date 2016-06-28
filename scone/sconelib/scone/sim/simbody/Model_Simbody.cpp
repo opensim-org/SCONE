@@ -1,13 +1,14 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/InitFromPropNode.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
 #include "Muscle_Simbody.h"
 #include "Simulation_Simbody.h"
 #include "Joint_Simbody.h"
-#include "tools.h"
-#include "scone/core/InitFromPropNode.h"
+#include "Dof_Simbody.h"
+#include "simbody_tools.h"
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
@@ -17,12 +18,11 @@
 
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
-#include "scone/core/system.h"
+#include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
 
 #include <flut/string_pattern_match.hpp>
 
-#include "Dof_Simbody.h"
 #include "scone/core/StorageIo.h"
 
 using std::cout;
@@ -174,7 +174,6 @@ namespace scone
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
-			log::trace( "Initializing muscle dynamics" );
 
 			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
 			InitializeOpenSimMuscleActivations( 0.05 );
@@ -184,7 +183,7 @@ namespace scone
 			UpdateControlValues();
 			InitializeOpenSimMuscleActivations();
 
-			log::trace( "Model ", m_pOsimModel->getName(), " initialized" );
+			log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 		}
 
 		Model_Simbody::~Model_Simbody() {}
@@ -523,7 +522,7 @@ namespace scone
 			else return 0.0;
 		}
 
-		State Model_Simbody::ReadState( const String& file )
+		std::map< String, Real > Model_Simbody::ReadState( const String& file )
 		{
 			// OpenSim: why is there no normal way to get a value using a label???
 
@@ -534,7 +533,7 @@ namespace scone
 			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
 
 			// run over all labels
-			State state;
+			std::map< String, Real > state;
 			for ( int i = 0; i < storeLabels.getSize(); i++ )
 			{
 				// check if the label is corresponds to a state
@@ -609,7 +608,7 @@ namespace scone
 
 		void Model_Simbody::SetStateVariables( const std::map< String, Real >& state )
 		{
-			for ( const State::value_type& nvp: state )
+			for ( const auto& nvp : state )
 				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
 		}
 

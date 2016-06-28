@@ -1,13 +1,11 @@
 #include "MetaReflexController.h"
 
-#include "scone/sim/sim.h"
 #include "scone/sim/Area.h"
 #include "scone/sim/Model.h"
 #include "scone/sim/Dof.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/HasName.h"
 
-#include "tools.h"
 #include "Factories.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"

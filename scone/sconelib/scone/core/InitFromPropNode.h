@@ -1,8 +1,7 @@
 #pragma once
 
 #include "PropNode.h"
-#include <string>
-#include "tools.h"
+#include "string_tools.h"
 
 // convenience macro that automatically derives name from variable name
 #define INIT_PROPERTY( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )

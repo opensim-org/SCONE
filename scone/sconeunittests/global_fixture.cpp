@@ -1,7 +1,7 @@
 #include "common.h"
 
-#include "scone/opt/opt.h"
-#include "scone/cs/cs.h"
+#include "scone/opt/opt_tools.h"
+#include "scone/cs/cs_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
 
 struct SconeGlobalFixture

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "cs.h"
-
+#include "cs_fwd.h"
 #include "scone/core/core.h"
 #include "scone/sim/Muscle.h"
 #include <vector>

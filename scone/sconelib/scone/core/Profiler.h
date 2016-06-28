@@ -2,6 +2,9 @@
 
 #include "core.h"
 #include "PropNode.h"
+#include "scone/core/string_tools.h"
+#include <flut/timer.hpp>
+
 #include <map>
 
 #ifdef SCONE_ENABLE_PROFILING
@@ -14,7 +17,7 @@
 
 namespace scone
 {
-	typedef long long HighResolutionTime;
+	typedef flut::timer::clock_ticks_t HighResolutionTime;
 
 	class SCONE_API ScopedProfile
 	{
@@ -63,6 +66,7 @@ namespace scone
 		Item m_Root;
 		Item* m_Current;
 		bool m_bActive;
+		flut::timer m_Timer;
 
 	private:
 		Profiler( const Profiler& other );

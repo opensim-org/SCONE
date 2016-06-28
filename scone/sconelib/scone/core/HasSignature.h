@@ -1,9 +1,11 @@
 #pragma once
+
 #include "core.h"
-#include "PropNode.h"
+#include "String.h"
 
 namespace scone
 {
+	class PropNode;
 	class SCONE_API HasSignature
 	{
 	public:

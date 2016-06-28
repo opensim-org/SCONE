@@ -2,7 +2,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "scone/opt/opt.h"
+#include "scone/opt/opt_tools.h"
 #include "scone/opt/Objective.h"
 #include "scone/opt/Factories.h"
 
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 
 	auto pn = ReadPropNodeFromXml( scone::GetSconeFolder( "root" ) + "/unittestdata/optimization_test/rosenbrock_50_test.xml" );
 	opt::OptimizerUP o = opt::CreateOptimizer( pn.GetChild( "Optimizer" ) );
-	LogUntouched( pn );
+	opt::LogUntouched( pn );
 	o->SetConsoleOutput( false );
 	o->Run();
 

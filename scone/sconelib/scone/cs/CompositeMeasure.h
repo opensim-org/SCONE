@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Measure.h"
-#include "cs.h"
-#include "scone/sim/sim.h"
+#include "cs_fwd.h"
+#include "scone/sim/sim_fwd.h"
 
 namespace scone
 {

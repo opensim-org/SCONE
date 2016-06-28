@@ -1,33 +1,22 @@
 #pragma once
 
-#include <iostream>
-#include <iomanip>
 #include "core.h"
-
-#include <flut/system/log.hpp>
+#include "String.h"
 
 namespace scone
 {
 	namespace log
 	{
 		enum Level {
-			LogAllLevel = FLUT_LOG_LEVEL_ALL,
-			TraceLevel = FLUT_LOG_LEVEL_TRACE,
-			DebugLevel = FLUT_LOG_LEVEL_DEBUG,
-			InfoLevel = FLUT_LOG_LEVEL_INFO,
-			WarningLevel = FLUT_LOG_LEVEL_WARNING,
-			ErrorLevel = FLUT_LOG_LEVEL_ERROR,
-			CriticalLevel = FLUT_LOG_LEVEL_CRITICAL,
-			IgnoreAllLevel = FLUT_LOG_LEVEL_NONE
+			LogAllLevel = 1,
+			TraceLevel = 1,
+			DebugLevel = 2,
+			InfoLevel = 3,
+			WarningLevel = 4,
+			ErrorLevel = 5,
+			CriticalLevel = 6,
+			IgnoreAllLevel = 7
 		};
-
-		// import flut logging
-		using flut::log::trace;
-		using flut::log::debug;
-		using flut::log::info;
-		using flut::log::warning;
-		using flut::log::error;
-		using flut::log::critical;
 
 		void SCONE_API SetLevel( Level level );
 		Level SCONE_API GetLevel();
@@ -49,5 +38,24 @@ namespace scone
 		void SCONE_API WarningF( const char* msg, ... );
 		void SCONE_API ErrorF( const char* msg, ... );
 		void SCONE_API CriticalF( const char* msg, ... );
+	}
+}
+
+// import FLUT logging, using dynamic logging
+#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
+#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
+#include <flut/system/log.hpp>
+
+namespace scone
+{
+	namespace log
+	{
+		// import flut logging
+		using flut::log::trace;
+		using flut::log::debug;
+		using flut::log::info;
+		using flut::log::warning;
+		using flut::log::error;
+		using flut::log::critical;
 	}
 }

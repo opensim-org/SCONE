@@ -6,7 +6,6 @@
 #include "scone/sim/Link.h"
 #include "scone/sim/Joint.h"
 #include "scone/sim/SensorDelayAdapter.h"
-#include "tools.h"
 
 //#define DEBUG_MUSCLE "hamstrings_r"
 

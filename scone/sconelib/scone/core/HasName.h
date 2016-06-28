@@ -1,9 +1,10 @@
 #pragma once
 
 #include "core.h"
+#include "String.h"
 #include "Exception.h"
 #include <vector>
-#include <flut/string_tools.hpp>
+#include "string_tools.h"
 
 namespace scone
 {
@@ -17,7 +18,6 @@ namespace scone
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
-		using flut::quoted;
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 		SCONE_THROW_IF( it == cont.end(), "Could not find " + quoted( name ) );
 		return *it;

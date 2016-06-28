@@ -1,5 +1,7 @@
 #pragma once
 
+#include "cs_fwd.h"
+
 #include "scone/core/Factory.h"
 #include "scone/core/PropNode.h"
 #include "scone/opt/ParamSet.h"

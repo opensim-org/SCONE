@@ -1,9 +1,10 @@
 #include "Joint_Simbody.h"
 #include "scone/core/Exception.h"
+#include "scone/core/Log.h"
 #include "Model_Simbody.h"
 
 #include <OpenSim/OpenSim.h>
-#include "tools.h"
+#include "simbody_tools.h"
 
 namespace scone
 {
@@ -14,7 +15,7 @@ namespace scone
 		m_osJoint( osJoint ),
 		m_Model( model )
 		{
-			log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
+			//log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 		}
 
 		Joint_Simbody::~Joint_Simbody()

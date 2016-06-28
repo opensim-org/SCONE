@@ -1,11 +1,9 @@
 #pragma once
 
 #include "core.h"
-
+#include <limits>
 #include <stdlib.h>
 #include <cmath>
-#include <iostream>
-#include <flut/math/math.hpp>
 
 namespace scone
 {
@@ -19,12 +17,6 @@ namespace scone
 	const Real REAL_MIN = std::numeric_limits< Real >::min();
 	const Real REAL_MAX = std::numeric_limits< Real >::max();
 	const Real REAL_LOWEST = std::numeric_limits< Real >::lowest();
-
-	// import math tools from flut
-	using flut::math::rad_to_deg;
-	using flut::math::deg_to_rad;
-	using flut::math::sign;
-	using flut::math::limit;
 
 	// math helper functions
 	inline Real DegToRad( Real d ) { return ( REAL_PI / 180 ) * d; }
@@ -47,7 +39,7 @@ namespace scone
 	// float comparison
 	template< typename T >
 	bool Equals( const T& v1, const T& v2, const T& tolerance = std::numeric_limits<T>::epsilon() ) { 
-		return ( fabs( v1 - v2 ) <= fabs( v1 ) * tolerance );
+		return ( std::fabs( v1 - v2 ) <= std::fabs( v1 ) * tolerance );
 	}
 
 	// square function

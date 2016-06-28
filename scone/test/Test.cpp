@@ -1,32 +1,32 @@
-#ifdef _MSC_VER
-
 #define SCONE_ENABLE_PROFILING
 #include "scone/core/Profiler.h"
 
-#endif
-
 #include "Test.h"
-#include "scone/cs/cs.h"
+#include "scone/cs/cs_tools.h"
 #include "scone/opt/ParamSet.h"
 #include "scone/sim/Factories.h"
-#include "scone/core/tools.h"
+#include "scone/core/string_tools.h"
 #include <fstream>
 
 #include <boost/filesystem.hpp>
 #include "scone/opt/Factories.h"
+#include "scone/opt/opt_tools.h"
 #include "scone/cs/SimulationObjective.h"
-#include "scone/core/system.h"
-#include "scone/sim/sim.h"
+#include "scone/core/system_tools.h"
+#include "scone/core/Log.h"
+#include "scone/sim/sim_tools.h"
 #include "scone/sim/Muscle.h"
 #include "boost/format.hpp"
 #include "scone/sim/Dof.h"
-#include "scone/cs/tools.h"
 #include "scone/sim/Side.h"
 #include "scone/sim/simbody/Model_Simbody.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
 using std::endl;
+
+#include <flut/timer.hpp>
+using flut::timer;
 
 namespace scone
 {

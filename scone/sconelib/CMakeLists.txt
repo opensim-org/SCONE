@@ -26,19 +26,23 @@ set(CORE_PROPNODE_FILES
 )
 set(CORE_SYSTEM_FILES
 	scone/core/core.h
+	scone/core/String.h
 )
 set(CORE_TOOLS_FILES
 	scone/core/Log.cpp
 	scone/core/Log.h
-	scone/core/ResourceCache.h
+	scone/core/Profiler.cpp
+    scone/core/Profiler.h
+    scone/core/ResourceCache.h
 	scone/core/Storage.h
 	scone/core/StorageIo.h
 	scone/core/StorageIo.cpp
 	scone/core/StringMap.h
-	scone/core/system.cpp
-	scone/core/system.h
-	scone/core/tools.cpp
-	scone/core/tools.h
+	scone/core/system_tools.cpp
+	scone/core/system_tools.h
+	scone/core/string_tools.cpp
+	scone/core/string_tools.h
+	scone/core/memory_tools.h
 )
 if(WIN32)
     list(APPEND CORE_TOOLS_FILES scone/core/Profiler.cpp scone/core/Profiler.h)
@@ -112,8 +116,7 @@ set(CS_MEASURES_FILES
 	scone/cs/Measure.h
 	)
 set(CS_SYSTEM_FILES
-	scone/cs/cs.cpp
-	scone/cs/cs.h
+    scone/cs/cs_fwd.h
 	scone/cs/Factories.cpp
 	scone/cs/Factories.h
 	scone/cs/version.h
@@ -121,8 +124,8 @@ set(CS_SYSTEM_FILES
 set(CS_TOOLS_FILES
 	scone/cs/SimulationObjective.cpp
 	scone/cs/SimulationObjective.h
-	scone/cs/tools.h
-	scone/cs/tools.cpp
+	scone/cs/cs_tools.cpp
+	scone/cs/cs_tools.h
 	)
 
 set(OPT_API_FILES
@@ -140,8 +143,9 @@ set(OPT_API_FILES
 set(OPT_SYSTEM_FILES
     scone/opt/Factories.cpp
     scone/opt/Factories.h
-    scone/opt/opt.cpp
-    scone/opt/opt.h
+    scone/opt/opt_tools.cpp
+    scone/opt/opt_tools.h
+    scone/opt/opt_fwd.h
 	scone/opt/SharkHelperClasses.h
     )
 	
@@ -172,13 +176,13 @@ set(SIM_SIMULATIONANDCONTROL_FILES
     scone/sim/Controller.h
     scone/sim/Simulation.cpp
     scone/sim/Simulation.h
-    scone/sim/State.h
     )
 set(SIM_SYSTEM_FILES
     scone/sim/Factories.cpp
     scone/sim/Factories.h
-    scone/sim/sim.cpp
-    scone/sim/sim.h
+    scone/sim/sim_tools.cpp
+    scone/sim/sim_tools.h
+    scone/sim/sim_fwd.h
     scone/sim/Types.h
     )
 set(SIM_TOPOLOGY_FILES
@@ -210,8 +214,7 @@ set(SIMBODY_SYSTEM_FILES
     scone/sim/simbody/sim_simbody.h
     )
 set(SIMBODY_TOOLS_FILES
-    scone/sim/simbody/tools.cpp
-    scone/sim/simbody/tools.h
+    scone/sim/simbody/simbody_tools.h
     )
 	
 set (SCONELIB_FILES

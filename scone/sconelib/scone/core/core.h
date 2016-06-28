@@ -10,20 +10,7 @@
 #	define SCONE_API
 #endif
 
-#if defined(_MSC_VER)
-#	include <SDKDDKVer.h>
-#	define NOMINMAX
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#endif
-
-#include <limits>
-#include <string>
-#include <memory>
-
-// import FLUT logging, using only dynamic logging
-#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
-#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
+#include <cstddef>
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
@@ -33,32 +20,18 @@
 #pragma warning( disable: 4251 )
 #endif
 
-// class and shared pointer forward declaration macro
-#define SCONE_DECLARE_CLASS_AND_PTR( _class_ ) \
-	class _class_; \
-	typedef std::unique_ptr< _class_ > _class_##UP;
-
-// class and shared pointer forward declaration macro
-#define SCONE_DECLARE_STRUCT_AND_PTR( _class_ ) \
-struct _class_; \
-	typedef std::unique_ptr< _class_ > _class_##UP;
-
 namespace scone
 {
-	template< typename T >
-	using uptr = std::unique_ptr< T >;
-
 	// types
 #ifdef SCONE_SINGLE_PRECISION_FLOAT
 	typedef float Real;
 #else
 	typedef double Real;
 #endif
-	typedef std::string String;
 
 	// index type
 	typedef size_t Index;
 	typedef size_t Count;
-	const Index NoIndex = std::numeric_limits< Index >::max();
+	const Index NoIndex = size_t( -1 );
 	typedef double TimeInSeconds;
 }

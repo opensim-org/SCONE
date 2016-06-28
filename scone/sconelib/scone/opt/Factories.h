@@ -1,6 +1,5 @@
 #pragma once
 
-#include "opt.h"
 #include "scone/core/Factory.h"
 #include "Optimizer.h"
 

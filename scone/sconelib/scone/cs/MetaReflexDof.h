@@ -1,6 +1,5 @@
 #pragma once
 
-#include "cs.h"
 #include "scone/core/PropNode.h"
 #include "scone/sim/Model.h"
 #include "scone/opt/ParamSet.h"

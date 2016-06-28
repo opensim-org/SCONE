@@ -1,8 +1,7 @@
 #pragma once
 
-#include "sim.h"
+#include "scone/sim/sim_fwd.h"
 #include "scone/core/HasName.h"
-#include "Sensors.h"
 #include "scone/core/Vec3.h"
 
 namespace scone

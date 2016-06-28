@@ -1,5 +1,11 @@
 #pragma once
 
+// define these variables because shark includes windows.h
+#if defined(_MSC_VER)
+#	define NOMINMAX
+#	define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <shark/Algorithms/DirectSearch/CMA.h>
 #include <shark/Algorithms/DirectSearch/Operators/Evaluation/PenalizingEvaluator.h>
 #include <shark/Algorithms/DirectSearch/FitnessExtractor.h>

@@ -3,9 +3,9 @@
 #include "Muscle.h"
 #include "Area.h"
 #include "Body.h"
-#include "scone/cs/tools.h"
 #include "Dof.h"
-#include <string.h>
+#include "scone/core/string_tools.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {

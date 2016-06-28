@@ -38,11 +38,7 @@ namespace scone
 			// add all distances from foot to upper, using body origins
 			double d = 0.0;
 			for ( const Link* body = &m_Foot; body != &m_Upper; body = &body->GetParent() )
-			{
-				double len = length( body->GetBody().GetOrigin() - body->GetParent().GetBody().GetOrigin() );
-				log::info( "Length between ", body->GetBody().GetName(), " and ", body->GetParent().GetBody().GetName(), ": ", len );
 				d += length( body->GetBody().GetOrigin() - body->GetParent().GetBody().GetOrigin() );
-			}
 
 			return d;
 		}

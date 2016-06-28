@@ -89,7 +89,7 @@ namespace scone
 		private:
 			void SetOpenSimParameters( const PropNode& name, opt::ParamSet& par );
 			void FixState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
-			State ReadState( const String& file );
+			std::map< String, Real > ReadState( const String& file );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 			void SetStateVariables( const std::map< String, Real >& state );
