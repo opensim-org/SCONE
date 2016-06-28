@@ -2,6 +2,8 @@
 
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
+#include "scone/core/Storage.h"
+#include "scone/opt/opt_fwd.h"
 
 namespace scone
 {
@@ -11,10 +13,14 @@ namespace scone
 		SconeManager();
 		virtual ~SconeManager();
 
-		void SimulateObjective( const String& filename );
+		void InitParFile( const String& file );
+		void Evaluate( TimeInSeconds endtime = 0.0 );
+		const Storage< Real, TimeInSeconds >& GetData() { return data; }
 
 	private:
-		PropNode m_Settings;
-		PropNode m_Statistics;
+		Storage< Real, TimeInSeconds > data;
+		String filename;
+		opt::ObjectiveUP objective;
+		PropNode statistics;
 	};
 }

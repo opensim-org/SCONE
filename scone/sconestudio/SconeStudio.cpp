@@ -1,5 +1,6 @@
 #include "SconeStudio.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/Log.h"
 
 #include <osgDB/ReadFile>
 
@@ -46,7 +47,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		m_Manager.InitParFile( filename );
 		if ( m_Manager.GetData().IsEmpty() )
 			m_Manager.Evaluate();
-		else log::info( "I've got data!" );
+		else scone::log::info( "I've got data!" );
 	}
 	catch ( std::exception& e )
 	{
