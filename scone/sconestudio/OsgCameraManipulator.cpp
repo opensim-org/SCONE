@@ -8,16 +8,17 @@ namespace scone
 	
 	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator(),
 		orbit_yaw( 0 ),
-		orbit_pitch( -30 )
+		orbit_pitch( 0 )
 	{
 		setAllowThrow( false );
 		_distance = 5;
+		_center = Vec3d( 0, 1, 0 );
+
 		updateRotation();
 
 		osg::Vec3d eye, center, up;
 		getTransformation( eye, center, up );
 		setHomePosition( eye, center, up );
-
 	}
 
 	OsgCameraManipulator::~OsgCameraManipulator()
