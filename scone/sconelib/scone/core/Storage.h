@@ -4,6 +4,7 @@
 #include "String.h"
 #include "Exception.h"
 
+#include <memory>
 #include <map>
 #include <unordered_map>
 #include <vector>
