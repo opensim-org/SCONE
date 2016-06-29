@@ -4,6 +4,13 @@
 		<!--Feed forward model with 9 DOF 18 Muscles, following [Geyer & Herr 2010]. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
+		2016.06.29:
+			- Lowered transition_velocity from 0.1 to 0.01
+			- Default dissipation is now 0.5 again
+			- Default contact sphere radius 1.5cm
+			- Moved toe contact sphere back 1cm
+			- Default stiffness is 1e6 -- this may be too elastic but results in nice GRF curves
+		
 		2016.06.28:
 			- Changed dissipation to 0.3
 			- Removed med contact sphere
@@ -2575,8 +2582,8 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform r_heel r_toe</geometry>
-								<stiffness>1e7</stiffness>
-								<dissipation>0.3</dissipation>
+								<stiffness>1e6</stiffness>
+								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
@@ -2585,7 +2592,7 @@
 						<groups />
 					</HuntCrossleyForce::ContactParametersSet>
 					<!--Slip velocity (creep) at which peak static friction occurs.-->
-					<transition_velocity>0.1</transition_velocity>
+					<transition_velocity>0.01</transition_velocity>
 				</HuntCrossleyForce>
 				<HuntCrossleyForce name="foot_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
@@ -2596,8 +2603,8 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel l_toe</geometry>
-								<stiffness>1e7</stiffness>
-								<dissipation>0.3</dissipation>
+								<stiffness>1e6</stiffness>
+								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
@@ -2606,7 +2613,7 @@
 						<groups />
 					</HuntCrossleyForce::ContactParametersSet>
 					<!--Slip velocity (creep) at which peak static friction occurs.-->
-					<transition_velocity>0.1</transition_velocity>
+					<transition_velocity>0.01</transition_velocity>
 				</HuntCrossleyForce>
 				<CoordinateLimitForce name="KneeLimit_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
@@ -2670,7 +2677,7 @@
 					<location>0 0 -0.005</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
+					<radius>0.015</radius>
 				</ContactSphere>
 				<ContactSphere name="r_toe">
 					<!--Body name to connect the contact geometry to-->
@@ -2679,7 +2686,7 @@
 					<location>0.06 0 0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
+					<radius>0.015</radius>
 				</ContactSphere>
 				<ContactSphere name="l_heel">
 					<!--Body name to connect the contact geometry to-->
@@ -2688,16 +2695,16 @@
 					<location>0 0 0.005</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
+					<radius>0.015</radius>
 				</ContactSphere>
 				<ContactSphere name="l_toe">
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_l</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.06 0 -0.014</location>
+					<location>0.05 0 -0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
-					<radius>0.01</radius>
+					<radius>0.015</radius>
 				</ContactSphere>
 			</objects>
 			<groups />
