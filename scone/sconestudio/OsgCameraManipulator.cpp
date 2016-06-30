@@ -8,10 +8,10 @@ namespace scone
 	
 	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator(),
 		orbit_yaw( 0 ),
-		orbit_pitch( 0 )
+		orbit_pitch( -10 )
 	{
 		setAllowThrow( false );
-		_distance = 5;
+		_distance = 8;
 		_center = Vec3d( 0, 1, 0 );
 
 		updateRotation();
@@ -21,9 +21,7 @@ namespace scone
 		setHomePosition( eye, center, up );
 	}
 
-	OsgCameraManipulator::~OsgCameraManipulator()
-	{
-	}
+	OsgCameraManipulator::~OsgCameraManipulator() {}
 
 	bool OsgCameraManipulator::performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy )
 	{

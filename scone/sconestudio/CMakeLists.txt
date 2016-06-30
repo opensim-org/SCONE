@@ -12,13 +12,18 @@ if(${Qt5Widgets_FOUND})
 		SconeManager.h
 		SconeStudio.cpp
 		SconeStudio.h
+		main.cpp
+		)
+	
+	SET(VISFILES
+		OsgTools.h
+		OsgTools.cpp
 		OsgScene.h
 		OsgScene.cpp
 		OsgModel.h
 		OsgModel.cpp
 		OsgCameraManipulator.h
 		OsgCameraManipulator.cpp
-		main.cpp
 		)
 	
 	set(QTFILES
@@ -31,7 +36,7 @@ if(${Qt5Widgets_FOUND})
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
-	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
+	add_executable(sconestudio ${STUDIOFILES} ${VISFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
 
 	qt5_use_modules( sconestudio Widgets OpenGL )
 	
@@ -49,6 +54,7 @@ if(${Qt5Widgets_FOUND})
 	FIND_PACKAGE( osgviewer )
 	FIND_PACKAGE( osgutil )
 	FIND_PACKAGE( osgdb )
+	FIND_PACKAGE( osgshadow )
 	FIND_PACKAGE( OpenThreads )
 	INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
 
@@ -62,11 +68,13 @@ if(${Qt5Widgets_FOUND})
 		${OSGVIEWER_LIBRARIES}
 		${OSGQT_LIBRARIES}
 		${OSGDB_LIBRARIES}
+		${OSGSHADOW_LIBRARIES}
 		${OPENTHREADS_LIBRARIES}
 		)
 
 	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc sconestudio_automoc.cpp)
 	source_group("Studio Files" FILES ${STUDIOFILES})
+	source_group("Visualization Files" FILES ${VISFILES})
 	
 	if(WIN32)
 		# Set DLL target
