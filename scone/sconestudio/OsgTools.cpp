@@ -58,19 +58,23 @@ namespace scone
 		return geode;
 	}
 
-	osg::Geode* CreateOsgSphere( float radius, float detail )
+	osg::Geode* CreateOsgSphere( float radius, float detail, const osg::Vec4& color )
 	{
-		auto g = new osg::Geode;
 		auto hints = new osg::TessellationHints;
 		hints->setDetailRatio( detail );
-		g->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), radius ), hints ) );
+		auto sd = new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), radius ), hints );
+		sd->setColor( color );
+		auto g = new osg::Geode;
+		g->addDrawable( sd );
 		return g;
 	}
 
-	osg::Geode* CreateOsgBox( float x_len, float y_len, float z_len )
+	osg::Geode* CreateOsgBox( float x_len, float y_len, float z_len, const osg::Vec4& color )
 	{
+		auto sd = new osg::ShapeDrawable( new osg::Box( osg::Vec3( 0.0f, 0.0f, 0.0f ), x_len, y_len, z_len ) );
+		sd->setColor( color );
 		auto g = new osg::Geode;
-		g->addDrawable( new osg::ShapeDrawable( new osg::Box( osg::Vec3( 0.0f, 0.0f, 0.0f ), x_len, y_len, z_len ) ) );
+		g->addDrawable( sd );
 		return g;
 	}
 

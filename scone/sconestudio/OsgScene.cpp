@@ -20,7 +20,7 @@ namespace scone
 
 		/// setup shadows
 		auto sm = new osgShadow::SoftShadowMap;
-		//sm->setTextureSize( osg::Vec2s( 1024, 1024 ) );
+		sm->setTextureSize( osg::Vec2s( 1024, 1024 ) );
         root->setShadowTechnique( sm );
 
 		auto ss = new osgShadow::ShadowSettings;
@@ -33,7 +33,7 @@ namespace scone
 		SetOsgShadowMask( ground, true, false );
 		root->addChild( ground );
 
-		auto sphere = CreateOsgBox( 0.1, 0.3, 0.5 );
+		auto sphere = CreateOsgBox( 0.1, 0.3, 0.5, OsgColor( 0xff0000 ) );
 		SetOsgShadowMask( sphere, false, true );
 		auto sphere_trans = new osg::PositionAttitudeTransform;
 		sphere_trans->addChild( sphere );
