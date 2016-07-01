@@ -86,6 +86,7 @@ set(CMAKE_MACOSX_RPATH ON)
 # Process source code.
 # --------------------
 add_subdirectory(submodules/flut)
+add_subdirectory(submodules/simvis)
 
 #
 # Add single sconelib target
