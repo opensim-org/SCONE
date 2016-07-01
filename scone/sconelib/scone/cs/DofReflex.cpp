@@ -49,7 +49,8 @@ namespace scone
 
 			Real u_p = pos_gain * ( target_pos - pos );
 			Real u_d = vel_gain * ( target_vel - vel );
-			m_Target.AddControlValue( constant_u + u_p + u_d );
+
+			AddTargetControlValue( constant_u + u_p + u_d );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )

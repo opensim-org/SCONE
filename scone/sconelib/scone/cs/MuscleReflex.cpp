@@ -56,7 +56,7 @@ namespace scone
 
 			Real u_total = u_l + u_v + u_f + u_constant;
 
-			m_Target.AddControlValue( u_total );
+			AddTargetControlValue( u_total );
 
 #ifdef DEBUG_MUSCLE
 			if ( m_Target.GetName() == DEBUG_MUSCLE )
