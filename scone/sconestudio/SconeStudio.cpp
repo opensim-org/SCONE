@@ -44,13 +44,18 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	try
 	{
 		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
-		m_Manager.InitParFile( filename );
-		if ( m_Manager.GetData().IsEmpty() )
-			m_Manager.Evaluate();
+		manager.InitParFile( filename );
+		if ( manager.GetData().IsEmpty() )
+			manager.Evaluate();
 		else scone::log::info( "I've got data!" );
 	}
 	catch ( std::exception& e )
 	{
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
+}
+
+void SconeStudio::updateScrollbar( int pos )
+{
+	scene.Update( double( pos ) / 1000 );
 }

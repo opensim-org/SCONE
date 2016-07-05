@@ -9,13 +9,14 @@
 
 namespace scone
 {
-	class SceneVis 
+	class SceneManager 
 	{
 	public:
-		SceneVis();
-		virtual ~SceneVis();
+		SceneManager();
+		virtual ~SceneManager();
 
 		ModelVis& CreateModel( sim::Model& m );
+		void Update( double v );
 		void UpdateModels();
 
 		osg::Group* GetOsgRoot() { return &scene.osg_root(); }
@@ -23,5 +24,6 @@ namespace scone
 	private:
 		simvis::scene scene;
 		std::vector< ModelVisUP > models;
+		std::vector< simvis::mesh > spheres;
 	};
 }

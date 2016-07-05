@@ -18,8 +18,8 @@ if(${Qt5Widgets_FOUND})
 	SET(VISFILES
 		OsgTools.h
 		OsgTools.cpp
-		SceneVis.h
-		SceneVis.cpp
+		SceneManager.h
+		SceneManager.cpp
 		ModelVis.h
 		ModelVis.cpp
 		OsgCameraManipulator.h
@@ -73,9 +73,8 @@ if(${Qt5Widgets_FOUND})
 		${OPENTHREADS_LIBRARIES}
 		)
 
-	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc sconestudio_automoc.cpp)
-	source_group("Studio Files" FILES ${STUDIOFILES})
-	source_group("Visualization Files" FILES ${VISFILES})
+	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc )
+	source_group("Studio Files" FILES ${STUDIOFILES} ${VISFILES})
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
