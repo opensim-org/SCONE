@@ -1,4 +1,4 @@
-#include "OsgScene.h"
+#include "SceneVis.h"
 
 #include "OsgTools.h"
 
@@ -13,7 +13,7 @@ using namespace osg;
 
 namespace scone
 {
-	OsgScene::OsgScene()
+	SceneVis::SceneVis()
 	{
 		root = new osgShadow::ShadowedScene;
 		root_state = root->getOrCreateStateSet();
@@ -50,18 +50,18 @@ namespace scone
 		root_state->setMode( GL_LIGHT1, osg::StateAttribute::ON );
 	}
 
-	OsgScene::~OsgScene() { }
+	SceneVis::~SceneVis() { }
 
-	scone::OsgModel& OsgScene::CreateModel( sim::Model& m )
+	scone::ModelVis& SceneVis::CreateModel( sim::Model& m )
 	{
-		models.push_back( std::make_unique< OsgModel >( m ) );
+		models.push_back( std::make_unique< ModelVis >( m ) );
 		auto& model = *models.back();
 
 		root->addChild( model.GetOsgRoot() );
 		return model;
 	}
 
-	void OsgScene::UpdateModels()
+	void SceneVis::UpdateModels()
 	{
 		for ( auto& m : models )
 			m->Update();

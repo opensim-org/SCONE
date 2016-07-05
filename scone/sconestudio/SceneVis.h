@@ -4,17 +4,17 @@
 #include <osgDB/ReadFile>
 #include <osgShadow/ShadowedScene>
 
-#include "OsgModel.h"
+#include "ModelVis.h"
 
 namespace scone
 {
-	class OsgScene 
+	class SceneVis 
 	{
 	public:
-		OsgScene();
-		virtual ~OsgScene();
+		SceneVis();
+		virtual ~SceneVis();
 
-		OsgModel& CreateModel( sim::Model& m );
+		ModelVis& CreateModel( sim::Model& m );
 		void UpdateModels();
 
 		osg::ref_ptr< osg::Group > GetOsgRoot() { return root; }
@@ -24,6 +24,6 @@ namespace scone
 		osg::ref_ptr< osgShadow::ShadowedScene > root;
 		osg::ref_ptr< osg::StateSet > root_state;
 		osg::ref_ptr< osg::Geode > ground;
-		std::vector< OsgModelUP > models;
+		std::vector< ModelVisUP > models;
 	};
 }

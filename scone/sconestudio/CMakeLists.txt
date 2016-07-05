@@ -18,10 +18,10 @@ if(${Qt5Widgets_FOUND})
 	SET(VISFILES
 		OsgTools.h
 		OsgTools.cpp
-		OsgScene.h
-		OsgScene.cpp
-		OsgModel.h
-		OsgModel.cpp
+		SceneVis.h
+		SceneVis.cpp
+		ModelVis.h
+		ModelVis.cpp
 		OsgCameraManipulator.h
 		OsgCameraManipulator.cpp
 		)

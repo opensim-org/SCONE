@@ -6,13 +6,13 @@
 
 namespace scone
 {
-	SCONE_DECLARE_CLASS_AND_PTR( OsgModel );
+	SCONE_DECLARE_CLASS_AND_PTR( ModelVis );
 
-	class OsgModel
+	class ModelVis
 	{
 	public:
-		OsgModel( const sim::Model& m );
-		virtual ~OsgModel() {}
+		ModelVis( const sim::Model& m );
+		virtual ~ModelVis() {}
 		void Update();
 
 		osg::ref_ptr< osg::Group > GetOsgRoot() { return root; }

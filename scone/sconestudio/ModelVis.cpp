@@ -1,11 +1,11 @@
-#include "OsgModel.h"
+#include "ModelVis.h"
 
 #include <osg/ShapeDrawable>
 #include <osg/Shape>
 
 namespace scone
 {
-	OsgModel::OsgModel( const sim::Model& m ) : model( m )
+	ModelVis::ModelVis( const sim::Model& m ) : model( m )
 	{
 		root = new osg::Group();
 		body = new osg::Geode();
@@ -14,7 +14,7 @@ namespace scone
 		root->addChild( body );
 	}
 
-	void OsgModel::Update()
+	void ModelVis::Update()
 	{
 	}
 
