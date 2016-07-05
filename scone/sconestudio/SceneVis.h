@@ -5,6 +5,7 @@
 #include <osgShadow/ShadowedScene>
 
 #include "ModelVis.h"
+#include "simvis/scene.h"
 
 namespace scone
 {
@@ -17,13 +18,10 @@ namespace scone
 		ModelVis& CreateModel( sim::Model& m );
 		void UpdateModels();
 
-		osg::ref_ptr< osg::Group > GetOsgRoot() { return root; }
+		osg::Group* GetOsgRoot() { return &scene.osg_root(); }
 
 	private:
-		osg::ref_ptr< osg::LightSource > sky_light;
-		osg::ref_ptr< osgShadow::ShadowedScene > root;
-		osg::ref_ptr< osg::StateSet > root_state;
-		osg::ref_ptr< osg::Geode > ground;
+		simvis::scene scene;
 		std::vector< ModelVisUP > models;
 	};
 }

@@ -60,6 +60,7 @@ if(${Qt5Widgets_FOUND})
 
 	target_link_libraries(sconestudio
 		sconelib
+		simvis
 #		Qt5::Widgets
 		${Boost_LIBRARIES}
 		${OSG_LIBRARIES}
@@ -76,6 +77,9 @@ if(${Qt5Widgets_FOUND})
 	source_group("Studio Files" FILES ${STUDIOFILES})
 	source_group("Visualization Files" FILES ${VISFILES})
 	
+	# Try to add simvis
+	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
+
 	if(WIN32)
 		# Set DLL target
 		SET(DLL_TARGET_DIR ${EXECUTABLE_OUTPUT_PATH}/$<CONFIGURATION>)
