@@ -1,4 +1,6 @@
 #include "cs_tools.h"
+#include "scone/core/memory_tools.h"
+#include "scone/core/Profiler.h"
 #include "scone/opt/Optimizer.h"
 #include "SimulationObjective.h"
 #include "FeedForwardController.h"
@@ -42,6 +44,9 @@ namespace scone
 			// register sim factory types
 			sim::RegisterFactoryTypes();
 
+			// register opt factory types
+			opt::RegisterFactoryTypes();
+
 			// register objective
 			opt::GetObjectiveFactory().Register< SimulationObjective >();
 
@@ -74,43 +79,60 @@ namespace scone
 			GetFunctionFactory().Register< Polynomial >();
 		}
 
-		PropNode SCONE_API RunSimulation( const String& par_file, bool write_results /*= false */ )
+		PropNode SCONE_API RunSimulation( const String& par_file, bool write_results )
 		{
-			opt::RegisterFactoryTypes();
 			cs::RegisterFactoryTypes();
-			sim::RegisterSimbody();
 
+			// create the simulation objective object
+			cs::SimulationObjectiveUP so = CreateSimulationObjective( par_file );
+
+			timer t;
+			double result = so->Evaluate();
+			auto duration = t.seconds();
+
+			// set data storage
+			if ( write_results )
+				so->GetModel().SetStoreData( true );
+
+			// reset profiler (only if enabled)
+			Profiler::GetGlobalInstance().Reset();
+
+			// collect statistics
+			PropNode statistics;
+			statistics.Clear();
+			statistics.Set( "result", result );
+			statistics.GetChild( "result" ).InsertChildren( so->GetMeasure().GetReport() );
+			statistics.Set( "simulation time", so->GetModel().GetTime() );
+			statistics.Set( "performance (x real-time)", so->GetModel().GetTime() / duration );
+	
+			// output profiler results (only if enabled)
+			std::cout << Profiler::GetGlobalInstance().GetReport();
+
+			// write results
+			if ( write_results )
+				so->WriteResults( bfs::path( par_file ).replace_extension().string() );
+
+			return statistics;
+		}
+
+		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& par_file )
+		{
 			opt::ParamSet par( par_file );
-
 			bfs::path config_path = bfs::path( par_file ).parent_path() / "config.xml";
 			if ( config_path.has_parent_path() )
 				bfs::current_path( config_path.parent_path() );
 
+			// read properties
 			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
 			PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
 
-			// create objective
-			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+			// create SimulationObjective object
+			cs::SimulationObjectiveUP so = dynamic_unique_cast< cs::SimulationObjective >( opt::CreateObjective( objProp, par ) );
 
-			double result;
-			timer t;
-			result = obj->Evaluate();
-			auto duration = t.seconds();
+			// report unused parameters
+			LogUntouched( objProp );
 
-			// collect statistics
-			PropNode stats;
-			stats.Clear();
-			stats.Set( "result", result );
-			stats.AddChild( "report", so.GetMeasure().GetReport() );
-			stats.Set( "simulation time", so.GetModel().GetTime() );
-			stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
-
-			// write results
-			if ( write_results )
-				obj->WriteResults( bfs::path( par_file ).replace_extension().string() );
-
-			return stats;
+			return so;
 		}
 	}
 }

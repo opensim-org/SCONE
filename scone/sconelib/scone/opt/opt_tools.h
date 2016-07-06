@@ -17,6 +17,6 @@ namespace scone
 
 		// TODO: move this to sconeopt?
 		void SCONE_API PerformOptimization( int argc, char* argv[] );
-		PropNode SCONE_API SimulateObjective( const String& filename );
+		PropNode SCONE_API SimulateObjective( const String& par_file );
 	}
 }
