@@ -8,25 +8,18 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
-		SconeManager.cpp
-		SconeManager.h
+		StudioManager.cpp
+		StudioManager.h
+		StudioModel.cpp
+		StudioModel.h
 		SconeStudio.cpp
 		SconeStudio.h
 		main.cpp
 		)
 	
-	SET(VISFILES
-		OsgTools.h
-		OsgTools.cpp
-		SceneManager.h
-		SceneManager.cpp
-		ModelVis.h
-		ModelVis.cpp
+	set(QTFILES
 		OsgCameraManipulator.h
 		OsgCameraManipulator.cpp
-		)
-	
-	set(QTFILES
 		qosgviewer.h
 		qosgviewer.cpp
 		main.cpp
@@ -36,7 +29,7 @@ if(${Qt5Widgets_FOUND})
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
-	add_executable(sconestudio ${STUDIOFILES} ${VISFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
+	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
 
 	qt5_use_modules( sconestudio Widgets OpenGL )
 	
@@ -74,7 +67,7 @@ if(${Qt5Widgets_FOUND})
 		)
 
 	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc )
-	source_group("Studio Files" FILES ${STUDIOFILES} ${VISFILES})
+	source_group("Studio Files" FILES ${STUDIOFILES} )
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})

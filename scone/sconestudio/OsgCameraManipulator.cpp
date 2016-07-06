@@ -5,7 +5,6 @@ using namespace osg;
 
 namespace scone
 {
-	
 	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator(),
 		orbit_yaw( 0 ),
 		orbit_pitch( -10 )

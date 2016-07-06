@@ -13,7 +13,7 @@
 #include "scone/core/PropNode.h"
 
 #include "SconeManager.h"
-#include "SceneManager.h"
+#include "StudioManager.h"
 
 class QFileSystemModel;
 
@@ -32,8 +32,7 @@ public slots:
 	void updateScrollbar( int pos );
 
 private:
-	scone::SceneManager scene;
-	scone::SconeManager manager;
+	scone::StudioManager manager;
 	Ui::SconeStudioClass ui;
 	QFileSystemModel *m_pFileModel;
 };

@@ -1,6 +1,4 @@
-#include "SceneManager.h"
-
-#include "OsgTools.h"
+#include "StudioManager.h"
 
 #include <osg/ShapeDrawable>
 #include <osg/LightSource>
@@ -12,11 +10,11 @@
 #include "flut/math/angle.hpp"
 
 using namespace osg;
-using namespace simvis;
+using namespace vis;
 
 namespace scone
 {
-	SceneManager::SceneManager()
+	StudioManager::StudioManager()
 	{
 		auto b = scene.make_cube( vec3f( 0.5, 0.7, 1.5 ), make_red() );
 		b.pos_ori( vec3f( 0, 3, 0 ), flut::math::make_quat_from_euler<float>( flut::math::degree( 45 ), flut::math::degree( 0 ), flut::math::degree( 0 ) ) );
@@ -32,22 +30,16 @@ namespace scone
 		}
 	}
 
-	SceneManager::~SceneManager() { }
+	StudioManager::~StudioManager() { }
 
-	scone::ModelVis& SceneManager::CreateModel( sim::Model& m )
+	scone::StudioModel& StudioManager::CreateModel( const String& par_file )
 	{
-		models.push_back( ModelVisUP( new ModelVis( m ) ) );
-		auto& model = *models.back();
-		return model;
+		model.reset();
+		model = StudioModelUP( new StudioModel( scene, par_file ) );
+		return *model;
 	}
 
-	void SceneManager::UpdateModels()
-	{
-		for ( auto& m : models )
-			m->Update();
-	}
-
-	void SceneManager::Update( double v )
+	void StudioManager::Update( TimeInSeconds v )
 	{
 		for ( size_t i = 0; i < spheres.size(); ++i )
 		{

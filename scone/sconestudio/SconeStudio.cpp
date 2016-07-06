@@ -32,7 +32,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.browserView->setColumnHidden( 3, true );
 	ui.splitter->setSizes( QList< int >{ 100, 200 } );
 
-	ui.osgViewer->setScene( scene.GetOsgRoot() );
+	ui.osgViewer->setScene( manager.GetOsgRoot() );
 
 	return true;
 }
@@ -44,10 +44,10 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	try
 	{
 		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
-		manager.InitParFile( filename );
-		if ( manager.GetData().IsEmpty() )
-			manager.Evaluate();
-		else scone::log::info( "I've got data!" );
+		manager.CreateModel( filename );
+
+		if ( manager.GetModel().GetData().IsEmpty() )
+			manager.GetModel().EvaluateObjective();
 	}
 	catch ( std::exception& e )
 	{
@@ -57,5 +57,5 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 
 void SconeStudio::updateScrollbar( int pos )
 {
-	scene.Update( double( pos ) / 1000 );
+	manager.Update( double( pos ) / 1000 );
 }
