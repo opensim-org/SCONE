@@ -1,6 +1,6 @@
 #include "ReflexController.h"
 
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
 

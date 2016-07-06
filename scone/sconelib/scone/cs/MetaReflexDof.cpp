@@ -1,7 +1,7 @@
 #include "MetaReflexDof.h"
 #include "scone/sim/Area.h"
 #include "scone/sim/Dof.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/sim/Muscle.h"
 #include "scone/sim/Link.h"
 #include "scone/sim/Joint.h"

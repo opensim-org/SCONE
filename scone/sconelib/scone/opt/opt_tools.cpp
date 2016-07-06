@@ -49,7 +49,7 @@ namespace scone
 
 			// create optimizer and report unused parameters
 			opt::OptimizerUP o = opt::CreateOptimizer( props.GetChild( "Optimizer" ) );
-			opt::LogUntouched( props );
+			LogUntouched( props );
 
 			// copy original and write resolved config files
 			path outdir( o->AcquireOutputFolder() );
@@ -75,7 +75,7 @@ namespace scone
 			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
 
 			// report unused parameters
-			opt::LogUntouched( objProp );
+			LogUntouched( objProp );
 
 			// set data storage
 			so.GetModel().SetStoreData( true );
@@ -104,40 +104,6 @@ namespace scone
 			obj->WriteResults( path( filename ).replace_extension().string() );
 
 			return statistics;
-		}
-
-		void LogUntouched( const PropNode& p, log::Level level, size_t depth )
-		{
-			if ( depth == 0 )
-			{
-				size_t unused = p.GetUntouchedCount();
-				if ( unused > 0 )
-				{
-					log::WarningF( "Warning, %d unused parameters found:", unused );
-				}
-				else return; // do nothing
-			}
-
-			// find more touched
-			for ( PropNode::ConstChildIter iter = p.GetChildren().begin(); iter != p.GetChildren().end(); ++iter )
-			{
-				// find if any child is touched (err...)
-				if ( iter->second->GetUntouchedCount() > 0 )
-				{
-					cout << String( depth * 2, ' ' ) << iter->first;
-
-					if ( !iter->second->IsTouched() )
-					{
-						if ( iter->second->HasValue() )
-							cout << " = " << iter->second->GetValueType();
-						cout << " *";
-					}
-
-					cout << endl;
-				}
-
-				LogUntouched( *iter->second, level, depth + 1 );
-			}
 		}
 	}
 }

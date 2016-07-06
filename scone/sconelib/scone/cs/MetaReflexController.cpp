@@ -9,7 +9,7 @@
 #include "Factories.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include <memory>
 
 namespace scone

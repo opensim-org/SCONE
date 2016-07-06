@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 
 	auto pn = ReadPropNodeFromXml( scone::GetSconeFolder( "root" ) + "/unittestdata/optimization_test/rosenbrock_50_test.xml" );
 	opt::OptimizerUP o = opt::CreateOptimizer( pn.GetChild( "Optimizer" ) );
-	opt::LogUntouched( pn );
+	LogUntouched( pn );
 	o->SetConsoleOutput( false );
 	o->Run();
 

@@ -1,6 +1,6 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"

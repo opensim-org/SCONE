@@ -1,5 +1,5 @@
 #include "PieceWiseConstantFunction.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 
 namespace scone
 {

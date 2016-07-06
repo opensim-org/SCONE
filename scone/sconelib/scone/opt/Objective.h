@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ParamSet.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
 
 namespace scone

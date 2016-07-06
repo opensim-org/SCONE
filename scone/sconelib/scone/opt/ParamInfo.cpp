@@ -4,7 +4,7 @@
 #include "Rng/GlobalRng.h"
 #endif
 
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 
 namespace scone
 {
