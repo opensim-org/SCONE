@@ -40,7 +40,7 @@ namespace scone
 		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *objective );
 
 		// report unused parameters
-		opt::LogUntouched( objProp );
+		LogUntouched( objProp );
 
 		// see if we can load a matching .sto file
 		auto stofile = bfs::path( filename ).replace_extension( "sto" );
