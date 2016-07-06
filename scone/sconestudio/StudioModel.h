@@ -2,6 +2,7 @@
 
 #include "scone/sim/Model.h"
 #include "simvis/scene.h"
+#include "scone/cs/SimulationObjective.h"
 #include "scone/opt/Objective.h"
 
 namespace scone
@@ -17,6 +18,8 @@ namespace scone
 		void Update( TimeInSeconds t );
 		void EvaluateObjective();
 		const Storage< Real, TimeInSeconds >& GetData() { return data; }
+
+		cs::SimulationObjective& GetSimulationObjective() { return dynamic_cast< cs::SimulationObjective& >( *objective ); }
 
 	private:
 		void CreateObjective( const String& par_file );

@@ -1,6 +1,5 @@
 #include "StudioModel.h"
 
-#include "scone/cs/SimulationObjective.h"
 #include "scone/opt/Factories.h"
 #include "scone/opt/opt_tools.h"
 #include "scone/core/StorageIo.h"
@@ -35,9 +34,7 @@ namespace scone
 		const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 		objective = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *objective );
 
 		// report unused parameters
 		LogUntouched( objProp );
