@@ -134,13 +134,13 @@ set(OPT_API_FILES
 	scone/opt/ParamInfo.h
 	scone/opt/ParamSet.cpp
 	scone/opt/ParamSet.h
+    scone/opt/opt_tools.cpp
+    scone/opt/opt_tools.h
+    scone/opt/opt_fwd.h
     )
 set(OPT_SYSTEM_FILES
     scone/opt/Factories.cpp
     scone/opt/Factories.h
-    scone/opt/opt_tools.cpp
-    scone/opt/opt_tools.h
-    scone/opt/opt_fwd.h
 	scone/opt/SharkHelperClasses.h
     )
 	
