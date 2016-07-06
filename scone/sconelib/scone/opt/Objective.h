@@ -31,7 +31,6 @@ namespace scone
 		protected:
 			// process parameters
 			virtual void ProcessParameters( opt::ParamSet& par ) = 0;
-
 		};
 	}
 }

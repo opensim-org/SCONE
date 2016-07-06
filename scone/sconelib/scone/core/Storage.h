@@ -27,7 +27,7 @@ namespace scone
 			m_Time( t ),
 			m_Values( store.GetChannelCount(), default_value ) { }
 
-			TimeT GetTime() { return m_Time; }
+			TimeT GetTime() const { return m_Time; }
 
 			ValueT& operator[]( Index idx ) { return m_Values[ idx ]; }
 
@@ -88,17 +88,13 @@ namespace scone
 		
 		bool IsEmpty() const { return m_Data.empty(); }
 
-		Frame& Back() {
-			SCONE_ASSERT( !m_Data.empty() );
-			return *m_Data.back();
-		}
+		Frame& Back() { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
+		const Frame& Back() const { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
+
+		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return m_Data[ frame_idx ]; }
+		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return m_Data[ frame_idx ]; }
 
 		size_t GetFrameCount() const { return m_Data.size(); }
-
-		Frame& GetFrame( Index frame_idx ) {
-			SCONE_ASSERT( frame_idx < m_Data.size() );
-			return m_Data[ frame_idx ];
-		}
 
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
@@ -137,6 +133,7 @@ namespace scone
 			ValueT value( Index channel_idx ) const { return upper_weight * (**upper_frame)[ channel_idx ] + ( 1.0 - upper_weight ) * (**lower_frame)[ channel_idx ]; }
 		};
 
+	public:
 		InterpolatedFrame GetInterpolatedFrame( TimeT time ) const {
 			// check the cache
 			auto cacheIt = m_InterpolationCache.find( time );
@@ -171,6 +168,7 @@ namespace scone
 			return bf;
 		}
 
+	private:
 		mutable std::map< TimeT, InterpolatedFrame > m_InterpolationCache;
 	};
 }
