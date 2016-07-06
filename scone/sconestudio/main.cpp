@@ -7,8 +7,15 @@
     #include <QtGui/QApplication>
 #endif
 
+#include "scone/cs/cs_tools.h"
+#include "scone/sim/simbody/sim_simbody.h"
+
 int main(int argc, char *argv[])
 {
+	// init SCONE. TODO: make this a single function
+	scone::cs::RegisterFactoryTypes();
+	scone::sim::RegisterSimbody();
+
 	QApplication a(argc, argv);
 	SconeStudio w;
 

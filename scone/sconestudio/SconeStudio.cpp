@@ -45,9 +45,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
-
-		if ( manager.GetModel().GetData().IsEmpty() )
-			manager.GetModel().EvaluateObjective();
+		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		ui.horizontalScrollBar->setValue( 0 );
 	}
 	catch ( std::exception& e )
 	{
@@ -57,5 +56,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 
 void SconeStudio::updateScrollbar( int pos )
 {
-	manager.Update( double( pos ) / 1000 );
+	TimeInSeconds t = double( pos ) / 1000;
+	manager.Update( t );
+	ui.lcdNumber->display( t );
 }

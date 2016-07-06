@@ -15,21 +15,22 @@ namespace scone
 		StudioModel( vis::scene &s, const String& par_file );
 		virtual ~StudioModel() {}
 
-		void Update( TimeInSeconds t );
+		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
-		const Storage< Real, TimeInSeconds >& GetData() { return data; }
 
-		cs::SimulationObjective& GetSimulationObjective() { return dynamic_cast< cs::SimulationObjective& >( *objective ); }
+		const Storage< Real, TimeInSeconds >& GetData() { return data; }
+		cs::SimulationObjective& GetSimulationObjective() { return dynamic_cast< cs::SimulationObjective& >( *so ); }
 
 	private:
-		void CreateObjective( const String& par_file );
+		void InitModel( const String& par_file );
 		void InitVis( vis::scene& s );
+		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
 
-		sim::ModelUP model;
 		Storage< Real, TimeInSeconds > data;
+		cs::SimulationObjectiveUP so;
 		String filename;
-		opt::ObjectiveUP objective;
-		PropNode statistics;
+
+		std::vector< size_t > state_data_index;
 
 		std::vector< vis::mesh > bodies;
 		std::vector< vis::mesh > joints;

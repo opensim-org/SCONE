@@ -1,11 +1,8 @@
 #pragma once
 
-#include <osgGA/MultiTouchTrackballManipulator>
-#include <osgDB/ReadFile>
-#include <osgShadow/ShadowedScene>
-
 #include "StudioModel.h"
 #include "simvis/scene.h"
+#include <osg/Group>
 
 namespace scone
 {
@@ -26,5 +23,7 @@ namespace scone
 		vis::scene scene;
 		std::unique_ptr< StudioModel > model;
 		std::vector< vis::mesh > spheres;
+	public:
+		TimeInSeconds GetMaxTime();
 	};
 }
