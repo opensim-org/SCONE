@@ -1,5 +1,5 @@
 #include "HasSignature.h"
-#include "InitFromPropNode.h"
+#include "propnode_tools.h"
 
 namespace scone
 {

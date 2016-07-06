@@ -1,7 +1,7 @@
 #include "ExampleObjective.h"
 #include "scone/core/Exception.h"
 #include "scone/core/PropNode.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/opt/ParamSet.h"
 
 namespace scone

@@ -1,5 +1,5 @@
 #include "Reflex.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/sim/Actuator.h"
 #include "scone/sim/Area.h"
 

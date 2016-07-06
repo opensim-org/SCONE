@@ -2,7 +2,7 @@
 #include "scone/sim/Model.h"
 #include "scone/sim/Leg.h"
 #include "scone/sim/Muscle.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 
 #include "scone/sim/Body.h"
 #include "scone/sim/Factories.h"

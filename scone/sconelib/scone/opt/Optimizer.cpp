@@ -5,7 +5,7 @@
 #include <boost/thread.hpp>
 
 #include "scone/core/Log.h"
-#include "scone/core/InitFromPropNode.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
 
 #include "Objective.h"

@@ -19,11 +19,6 @@ set(CORE_MATH_FILES
 	scone/core/Statistic.h
 	scone/core/TimedValue.h
 )
-set(CORE_PROPNODE_FILES
-	scone/core/InitFromPropNode.h
-	scone/core/PropNode.cpp
-	scone/core/PropNode.h
-)
 set(CORE_SYSTEM_FILES
 	scone/core/core.h
 	scone/core/String.h
@@ -42,11 +37,11 @@ set(CORE_TOOLS_FILES
 	scone/core/string_tools.cpp
 	scone/core/string_tools.h
 	scone/core/memory_tools.h
+	scone/core/propnode_tools.h
+	scone/core/propnode_tools.cpp
+	scone/core/PropNode.cpp
+	scone/core/PropNode.h
 )
-if(WIN32)
-    list(APPEND CORE_TOOLS_FILES scone/core/Profiler.cpp scone/core/Profiler.h)
-endif()
-
 set(CS_CONTROLLERS_FEEDFORWARD_FILES
 	scone/cs/FeedForwardController.cpp
 	scone/cs/FeedForwardController.h
