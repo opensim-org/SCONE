@@ -120,7 +120,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="spinBox">
+           <widget class="QSpinBox" name="slomoBox">
             <property name="buttonSymbols">
              <enum>QAbstractSpinBox::UpDownArrows</enum>
             </property>
@@ -215,9 +215,60 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>startButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>481</x>
+     <y>723</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>526</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>stopButton</sender>
+   <signal>clicked()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>stop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>723</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>526</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>slomoBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>slomo(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>1023</x>
+     <y>722</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>526</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
   <slot>updateScrollbar(int)</slot>
+  <slot>start()</slot>
+  <slot>stop()</slot>
+  <slot>slomo(int)</slot>
  </slots>
 </ui>

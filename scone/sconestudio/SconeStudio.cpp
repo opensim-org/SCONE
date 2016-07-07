@@ -13,7 +13,8 @@ using namespace scone;
 using namespace std;
 
 SconeStudio::SconeStudio(QWidget *parent, Qt::WindowFlags flags) :
-QMainWindow(parent, flags)
+QMainWindow(parent, flags),
+slomo_factor( 1 )
 {
 	ui.setupUi(this);
 }
@@ -33,6 +34,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.splitter->setSizes( QList< int >{ 100, 200 } );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
+	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 
 	return true;
 }
@@ -46,7 +48,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
 		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
-		ui.horizontalScrollBar->setValue( 0 );
+		setTime( 0 );
+		start();
 	}
 	catch ( std::exception& e )
 	{
@@ -56,7 +59,47 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 
 void SconeStudio::updateScrollbar( int pos )
 {
-	TimeInSeconds t = double( pos ) / 1000;
+	setTime( double( pos ) / 1000 );
+}
+
+void SconeStudio::start()
+{
+	if ( current_time >= manager.GetMaxTime() )
+		setTime( 0 );
+
+	qtimer.start( 10 );
+	timer.reset();
+	timer_delta.reset();
+}
+
+void SconeStudio::stop()
+{
+	if ( qtimer.isActive() )
+		qtimer.stop();
+	else setTime( 0 );
+}
+
+void SconeStudio::slomo( int v )
+{
+	slomo_factor = 1.0 / v;
+}
+
+void SconeStudio::updateTimer()
+{
+	setTime( current_time + slomo_factor * timer_delta( timer.seconds() ) );
+}
+
+void SconeStudio::setTime( TimeInSeconds t )
+{
+	current_time = t;
+	if ( current_time >= manager.GetMaxTime() )
+	{
+		current_time = manager.GetMaxTime();
+		stop();
+	}
+
+	// update ui and visualization
 	manager.Update( t );
-	ui.lcdNumber->display( t );
+	ui.horizontalScrollBar->setValue( 1000 * current_time );
+	ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
 }

@@ -55,9 +55,10 @@ namespace scone
 	{
 		sim::Model& model = so->GetModel();
 
-		com = s.make_sphere( 0.2f, vis::make_white(), 0.9f );
+		com = s.make_sphere( 0.1f, vis::make_red(), 0.9f );
 		for ( auto& body : model.GetBodies() )
-			bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.8 ) ) );
+			bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
+		bodies[ 0 ].show( false );
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
@@ -76,12 +77,12 @@ namespace scone
 		auto& model_bodies = model.GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
+			auto bp = model_bodies[ i ]->GetOrigin();
 			bodies[ i ].pos_ori( model_bodies[ i ]->GetOrigin(), model_bodies[ i ]->GetOri() );
 		}
 	}
 
 	void StudioModel::EvaluateObjective()
 	{
-
 	}
 }
