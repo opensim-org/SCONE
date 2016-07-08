@@ -60,10 +60,12 @@ namespace scone
 
 		for ( auto& body : model.GetBodies() )
 		{
-			if ( body->HasVisualizationGeometry() )
+			if ( body->HasDisplayGeom() )
 			{
-				log::info( "Geometry for body ", body->GetName(), ": ", body->GetVisualizationFilename() );
-				bodies.push_back( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + body->GetVisualizationFilename() );
+				String geom_file = body->GetDisplayGeomFile();
+				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
+				//bodies.push_back( s.make_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
 			}
 			else
 			{

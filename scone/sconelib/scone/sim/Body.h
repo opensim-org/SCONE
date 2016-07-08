@@ -28,8 +28,8 @@ namespace scone
 			virtual const Model& GetModel() const = 0;
 			virtual Model& GetModel() = 0;
 
-			virtual bool HasVisualizationGeometry() { return false; }
-			virtual String GetVisualizationFilename() = 0;
+			virtual bool HasDisplayGeom() { return false; }
+			virtual String GetDisplayGeomFile() = 0;
 		};
 	}
 }

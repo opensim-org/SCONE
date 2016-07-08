@@ -40,8 +40,8 @@ namespace scone
 			virtual Model& GetModel() override;
 			virtual const Model& GetModel() const override;
 
-			virtual bool HasVisualizationGeometry() override;
-			virtual String GetVisualizationFilename() override;
+			virtual bool HasDisplayGeom() override;
+			virtual String GetDisplayGeomFile() override;
 
 		private:
 			int m_ForceIndex;
