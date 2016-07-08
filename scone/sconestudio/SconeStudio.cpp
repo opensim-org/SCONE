@@ -8,13 +8,15 @@
     #include <QtWidgets/QFileSystemModel.h>
     #include <QtWidgets/QMessageBox.h>
 #endif
+#include "simvis/osg_tools.h"
 
 using namespace scone;
 using namespace std;
 
 SconeStudio::SconeStudio(QWidget *parent, Qt::WindowFlags flags) :
 QMainWindow(parent, flags),
-slomo_factor( 1 )
+slomo_factor( 1 ),
+com_delta( Vec3( 0, 1, 0 ) )
 {
 	ui.setupUi(this);
 }
@@ -34,6 +36,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.splitter->setSizes( QList< int >{ 100, 200 } );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
+
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 
 	return true;
@@ -100,6 +103,10 @@ void SconeStudio::setTime( TimeInSeconds t )
 
 	// update ui and visualization
 	manager.Update( t );
+	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
+	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+
+	ui.osgViewer->update();
 	ui.horizontalScrollBar->setValue( 1000 * current_time );
 	ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
 }

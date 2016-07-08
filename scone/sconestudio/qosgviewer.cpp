@@ -11,16 +11,17 @@ QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgV
 	// disable the default setting of viewer.done() by pressing Escape.
 	setKeyEventSetsDone( 0 );
 
+	// setup viewer grid
 	QWidget* widget1 = addViewWidget( createGraphicsWindow( 0, 0, 100, 100, "", true ) );
-	//QWidget* widget2 = addViewWidget( createGraphicsWindow(0,0,100,100, "", true ), scene );
-	//auto* grid = new QVBoxLayout;
 	auto* grid = new QGridLayout;
 	grid->addWidget( widget1 );
 	setLayout( grid );
 	grid->setMargin( 1 );
 
+	// start timer
+	// TODO: remove this -- only update after something has changed
 	connect( &_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
-	_timer.start( 1 );
+	_timer.start( 10 );
 }
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
@@ -42,12 +43,11 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	view->setLightingMode( osg::View::HEADLIGHT );
 
 	// setup camera manipulator
-	scone::OsgCameraManipulator* cm = new scone::OsgCameraManipulator;
-	cm->setVerticalAxisFixed( false );
 	gw->setTouchEventsEnabled( true );
 
-	view->setCameraManipulator( cm );
-
+	camera_man = new OsgCameraManipulator( this );
+	camera_man->setVerticalAxisFixed( false );
+	view->setCameraManipulator( camera_man );
 
 	return gw->getGLWidget();
 }
@@ -75,4 +75,9 @@ void QOsgViewer::setScene( osg::Node* s )
 {
 	for ( size_t i = 0; i < getNumViews(); ++i )
 		getView( i )->setSceneData( s );
+}
+
+void QOsgViewer::moveCamera( const osg::Vec3d& delta_pos )
+{
+	camera_man->setCenter( camera_man->getCenter() + delta_pos );
 }

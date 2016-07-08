@@ -19,7 +19,7 @@ namespace scone
 		void EvaluateObjective();
 
 		const Storage< Real, TimeInSeconds >& GetData() { return data; }
-		cs::SimulationObjective& GetSimulationObjective() { return dynamic_cast< cs::SimulationObjective& >( *so ); }
+		sim::Model& GetSimModel() { return so->GetModel(); }
 
 	private:
 		void InitModel( const String& par_file );

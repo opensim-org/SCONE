@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 	scone::cs::RegisterFactoryTypes();
 	scone::sim::RegisterSimbody();
 
+	scone::log::SetLevel( scone::log::TraceLevel );
+
 	QApplication a(argc, argv);
 	SconeStudio w;
 

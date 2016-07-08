@@ -1,55 +1,60 @@
 #include "OsgCameraManipulator.h"
 #include "scone/core/math.h"
+#include "QOsgViewer.h"
 
 using namespace osg;
 
-namespace scone
+OsgCameraManipulator::OsgCameraManipulator( QOsgViewer* v ) :
+	osgGA::OrbitManipulator(),
+	orbit_yaw( 0 ),
+	orbit_pitch( 0 ),
+	viewer( v )
 {
-	OsgCameraManipulator::OsgCameraManipulator() : osgGA::OrbitManipulator(),
-		orbit_yaw( 0 ),
-		orbit_pitch( -10 )
-	{
-		setAllowThrow( false );
-		_distance = 8;
-		_center = Vec3d( 0, 1, 0 );
+	setAllowThrow( false );
+	_distance = 8;
+	_center = Vec3d( 0, 1, 0 );
 
-		updateRotation();
+	updateRotation();
 
-		osg::Vec3d eye, center, up;
-		getTransformation( eye, center, up );
-		setHomePosition( eye, center, up );
-	}
+	osg::Vec3d eye, center, up;
+	getTransformation( eye, center, up );
+	setHomePosition( eye, center, up );
+}
 
-	OsgCameraManipulator::~OsgCameraManipulator() {}
+OsgCameraManipulator::~OsgCameraManipulator() {}
 
-	bool OsgCameraManipulator::performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy )
-	{
-		orbit_pitch += Degree( pitch_scale * dy );
-		orbit_yaw -= Degree( yaw_scale * dx );
+bool OsgCameraManipulator::performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy )
+{
+	orbit_pitch += degree( pitch_scale * dy );
+	orbit_yaw -= degree( yaw_scale * dx );
 
-		updateRotation();
+	updateRotation();
+	viewer->update(); // see if this can be done automatically through a callback
 
-		return true;
-	}
+	return true;
+}
 
-	void OsgCameraManipulator::updateRotation()
-	{
-		auto yaw = osg::Quat( orbit_yaw.rad_value(), osg::Vec3d( 0, 1, 0 ) );
-		auto pitch = osg::Quat( orbit_pitch.rad_value(), osg::Vec3d( 1, 0, 0 ) );
-		_rotation = pitch * yaw;
-	}
+void OsgCameraManipulator::updateRotation()
+{
+	auto yaw = osg::Quat( orbit_yaw.rad_value(), osg::Vec3d( 0, 1, 0 ) );
+	auto pitch = osg::Quat( orbit_pitch.rad_value(), osg::Vec3d( 1, 0, 0 ) );
+	_rotation = pitch * yaw;
+}
 
-	bool OsgCameraManipulator::performMovementMiddleMouseButton( const double eventTimeDelta, const double dx, const double dy )
-	{
-	    zoomModel( dy * zoom_scale, true );
-		return true;
-	}
+bool OsgCameraManipulator::performMovementMiddleMouseButton( const double eventTimeDelta, const double dx, const double dy )
+{
+	zoomModel( dy * zoom_scale, true );
+	viewer->update(); // see if this can be done automatically through a callback
 
-	bool OsgCameraManipulator::performMovementRightMouseButton( const double eventTimeDelta, const double dx, const double dy )
-	{
-		// pan model
-		float scale = -pan_scale * _distance;
-		panModel( dx * scale, dy * scale );
-		return true;
-	}
+	return true;
+}
+
+bool OsgCameraManipulator::performMovementRightMouseButton( const double eventTimeDelta, const double dx, const double dy )
+{
+	// pan model
+	float scale = -pan_scale * _distance;
+	panModel( dx * scale, dy * scale );
+	viewer->update(); // see if this can be done automatically through a callback
+
+	return true;
 }

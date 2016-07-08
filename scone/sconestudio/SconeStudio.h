@@ -53,6 +53,7 @@ private:
 	TimeInSeconds current_time;
 	flut::timer timer;
 	flut::delta< TimeInSeconds > timer_delta;
+	flut::delta< scone::Vec3 > com_delta;
 };
 
 #endif // SCONESTUDIO_H
