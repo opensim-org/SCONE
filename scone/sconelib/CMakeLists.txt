@@ -245,7 +245,7 @@ set (SCONELIB_FILES
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES})
 	
-target_link_libraries(sconelib ${Boost_LIBRARIES} shark ${OPENSIMSIMBODY_LIBRARIES})
+target_link_libraries(sconelib flut shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
 set_target_properties(sconelib PROPERTIES
     PROJECT_LABEL sconelib

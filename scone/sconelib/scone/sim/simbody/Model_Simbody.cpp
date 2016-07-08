@@ -21,7 +21,7 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
 
-#include <flut/string_pattern_match.hpp>
+#include <flut/string_tools.hpp>
 
 #include "scone/core/StorageIo.h"
 
