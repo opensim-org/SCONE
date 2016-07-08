@@ -4,6 +4,7 @@
 #include "scone/opt/opt_tools.h"
 #include "scone/core/StorageIo.h"
 #include "scone/cs/cs_tools.h"
+#include "scone/core/system_tools.h"
 
 #include <boost/filesystem.hpp>
 namespace bfs = boost::filesystem;
@@ -28,7 +29,7 @@ namespace scone
 		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
 		if ( bfs::exists( sto_file ) )
 		{
-			log::debug( "Reading ", sto_file.string() );
+			log::info( "Reading ", sto_file.string() );
 			ReadStorageSto( data, sto_file.string() );
 		}
 		else
@@ -56,8 +57,20 @@ namespace scone
 		sim::Model& model = so->GetModel();
 
 		com = s.make_sphere( 0.1f, vis::make_red(), 0.9f );
+
 		for ( auto& body : model.GetBodies() )
-			bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
+		{
+			if ( body->HasVisualizationGeometry() )
+			{
+				log::info( "Geometry for body ", body->GetName(), ": ", body->GetVisualizationFilename() );
+				bodies.push_back( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + body->GetVisualizationFilename() );
+			}
+			else
+			{
+				bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
+			}
+		}
+
 		bodies[ 0 ].show( false );
 	}
 

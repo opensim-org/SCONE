@@ -24,7 +24,7 @@ com_delta( Vec3( 0, 1, 0 ) )
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
-	QString path = QString( scone::GetSconeFolder( "output" ).c_str() );
+	QString path = QString( scone::GetFolder( "output" ).c_str() );
 	m_pFileModel = new QFileSystemModel( this );
 	QStringList filters( "*.par" );
 	m_pFileModel->setNameFilters( filters );
