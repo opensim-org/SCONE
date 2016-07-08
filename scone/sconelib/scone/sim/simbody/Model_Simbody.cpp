@@ -82,7 +82,7 @@ namespace scone
 			INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
 			// create new OpenSim Model using resource cache
-			m_pOsimModel = g_ModelCache.CreateCopy( GetSconeFolder( "models" ) + model_file );
+			m_pOsimModel = g_ModelCache.CreateCopy( GetFolder( "models" ) + model_file );
 
 			// change model properties
 			if ( props.HasKey( "SimbodyParameters" ) )
@@ -146,7 +146,7 @@ namespace scone
 			// read initial state
 			if ( !state_init_file.empty() )
 			{
-				std::map< String, Real > state = ReadState( GetSconeFolder( "models" ) + state_init_file );
+				std::map< String, Real > state = ReadState( GetFolder( "models" ) + state_init_file );
 				if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
 				{
 					for ( auto& nvp : state )

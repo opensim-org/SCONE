@@ -43,9 +43,25 @@ namespace scone
 		return g_GlobalSettings;
 	}
 
-	SCONE_API String GetSconeFolder( const String& folder )
+	SCONE_API String GetFolder( const String& folder, const String& default_path )
 	{
-		return GetSconeSettings().GetStr( "folders." + folder ) + "/";
+		auto path_to_folder = GetSconeSettings().GetStr( "folders." + folder, "" );
+		if ( path_to_folder.empty() )
+			path_to_folder = GetSconeSettings().GetStr( "folders.root" ) + "/" + default_path;
+		return path_to_folder + "/";
+	}
+
+	SCONE_API String GetFolder( SconeFolder folder )
+	{
+		switch ( folder )
+		{
+		case scone::SCONE_ROOT_FOLDER: return GetFolder( "root" );
+		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output" );
+		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", "models" );
+		case scone::SCONE_CONFIG_FOLDER: return GetFolder( "config" );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", "resources/geometry" );
+		default: SCONE_THROW( "Unknown folder type" );
+		}
 	}
 
 	SCONE_API String GetApplicationVersion()
