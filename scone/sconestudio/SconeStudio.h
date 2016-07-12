@@ -15,7 +15,7 @@
 #include "scone/core/PropNode.h"
 
 #include "SconeManager.h"
-#include "StudioManager.h"
+#include "StudioScene.h"
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"
 
@@ -43,7 +43,7 @@ public slots:
 
 private:
 	void setTime( TimeInSeconds t );
-	scone::StudioManager manager;
+	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
 	QFileSystemModel *m_pFileModel;

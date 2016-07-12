@@ -6,11 +6,11 @@
 
 namespace scone
 {
-	class StudioManager 
+	class StudioScene 
 	{
 	public:
-		StudioManager();
-		virtual ~StudioManager();
+		StudioScene();
+		virtual ~StudioScene();
 
 		StudioModel& CreateModel( const String& par_file );
 		StudioModel& GetModel() { return *model; }

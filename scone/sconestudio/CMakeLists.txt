@@ -8,8 +8,8 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
-		StudioManager.cpp
-		StudioManager.h
+		StudioScene.cpp
+		StudioScene.h
 		StudioModel.cpp
 		StudioModel.h
 		SconeStudio.cpp
