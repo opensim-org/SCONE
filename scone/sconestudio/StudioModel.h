@@ -32,7 +32,7 @@ namespace scone
 
 		std::vector< size_t > state_data_index;
 
-		std::vector< vis::mesh > bodies;
+		std::vector< std::vector< vis::mesh > > body_meshes;
 		std::vector< vis::mesh > joints;
 		std::vector< vis::path > muscles;
 		std::vector< vis::arrow > forces;

@@ -60,20 +60,18 @@ namespace scone
 
 		for ( auto& body : model.GetBodies() )
 		{
-			if ( body->HasDisplayGeom() )
+			body_meshes.push_back( std::vector< vis::mesh >() );
+			auto geom_files = body->GetDisplayGeomFileNames();
+
+			for ( auto& geom_file : geom_files )
 			{
-				String geom_file = body->GetDisplayGeomFile();
 				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				//bodies.push_back( s.make_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
-				bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
-			}
-			else
-			{
-				bodies.push_back( s.make_cube( vis::vec3f( 0.1f, 0.1f, 0.1f ), vis::make_cyan( 0.5 ) ) );
+				body_meshes.back().push_back( s.make_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				body_meshes.back().back().set_color( vis::make_white(), 1, 15, 0.5, 0 );
 			}
 		}
 
-		bodies[ 0 ].show( false );
+		//body_meshes[ 0 ].show( false );
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
@@ -93,7 +91,8 @@ namespace scone
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
 			auto bp = model_bodies[ i ]->GetOrigin();
-			bodies[ i ].pos_ori( model_bodies[ i ]->GetOrigin(), model_bodies[ i ]->GetOri() );
+			for ( auto& bm : body_meshes[ i ] )
+				bm.pos_ori( model_bodies[ i ]->GetOrigin(), model_bodies[ i ]->GetOri() );
 		}
 	}
 

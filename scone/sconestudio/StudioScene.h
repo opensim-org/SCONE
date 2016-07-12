@@ -22,7 +22,7 @@ namespace scone
 	private:
 		vis::scene scene;
 		std::unique_ptr< StudioModel > model;
-		std::vector< vis::mesh > spheres;
+		vis::mesh mesh1, mesh2;
 	public:
 		TimeInSeconds GetMaxTime();
 	};

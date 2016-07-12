@@ -40,7 +40,9 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 
 	// setup view
 	view->addEventHandler( new osgViewer::StatsHandler );
-	view->setLightingMode( osg::View::HEADLIGHT );
+	view->setLightingMode( osg::View::NO_LIGHT );
+	//view->setLightingMode( osg::View::HEADLIGHT );
+	//view->getLight()->setAmbient( osg::Vec4( 1, 1, 1, 1 ) );
 
 	// setup camera manipulator
 	gw->setTouchEventsEnabled( true );

@@ -51,6 +51,7 @@ namespace scone
 		void SCONE_API SetLevel( Level level )
 		{
 			g_LogLevel = level;	
+			flut::log::set_level( level );
 		}
 
 		Level SCONE_API GetLevel()

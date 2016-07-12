@@ -28,8 +28,7 @@ namespace scone
 			virtual const Model& GetModel() const = 0;
 			virtual Model& GetModel() = 0;
 
-			virtual bool HasDisplayGeom() { return false; }
-			virtual String GetDisplayGeomFile() = 0;
+			virtual std::vector< String > GetDisplayGeomFileNames() const { return std::vector< String >(); }
 		};
 	}
 }

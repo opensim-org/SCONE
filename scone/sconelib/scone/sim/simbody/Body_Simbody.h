@@ -40,8 +40,7 @@ namespace scone
 			virtual Model& GetModel() override;
 			virtual const Model& GetModel() const override;
 
-			virtual bool HasDisplayGeom() override;
-			virtual String GetDisplayGeomFile() override;
+			virtual std::vector< String > GetDisplayGeomFileNames() const override;
 
 		private:
 			int m_ForceIndex;

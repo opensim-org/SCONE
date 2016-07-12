@@ -43,7 +43,6 @@ namespace scone
 
 // import FLUT logging, using dynamic logging
 #define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
-#define FLUT_DYNAMIC_LOG_LEVEL_FUNC scone::log::GetLevel
 #include <flut/system/log.hpp>
 
 namespace scone

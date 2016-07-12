@@ -7,11 +7,11 @@ using namespace osg;
 OsgCameraManipulator::OsgCameraManipulator( QOsgViewer* v ) :
 	osgGA::OrbitManipulator(),
 	orbit_yaw( 0 ),
-	orbit_pitch( 0 ),
+	orbit_pitch( -15 ),
 	viewer( v )
 {
 	setAllowThrow( false );
-	_distance = 8;
+	_distance = 5;
 	_center = Vec3d( 0, 1, 0 );
 
 	updateRotation();
@@ -43,7 +43,7 @@ void OsgCameraManipulator::updateRotation()
 
 bool OsgCameraManipulator::performMovementMiddleMouseButton( const double eventTimeDelta, const double dx, const double dy )
 {
-	zoomModel( dy * zoom_scale, true );
+	zoomModel( dy * zoom_scale, false );
 	viewer->update(); // see if this can be done automatically through a callback
 
 	return true;

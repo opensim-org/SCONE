@@ -130,15 +130,12 @@ namespace scone
 			return dynamic_cast< Model& >( m_Model );
 		}
 
-		scone::String Body_Simbody::GetDisplayGeomFile()
+		std::vector< scone::String > Body_Simbody::GetDisplayGeomFileNames() const
 		{
-			return m_osBody.getDisplayer()->getGeometryFileName( 0 );
+			std::vector< String > names;
+			for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
+				names.push_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
+			return names;
 		}
-
-		bool Body_Simbody::HasDisplayGeom()
-		{
-			return m_osBody.getDisplayer()->getNumGeometryFiles() > 0;
-		}
-
 	}
 }
