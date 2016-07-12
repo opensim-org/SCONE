@@ -67,7 +67,7 @@ namespace scone
 			{
 				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( s.make_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
-				body_meshes.back().back().set_color( vis::make_white(), 1, 15, 0.5, 0 );
+				body_meshes.back().back().set_color( vis::make_white(), 1, 15, 0, 0.33f );
 			}
 		}
 
