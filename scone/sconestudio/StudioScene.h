@@ -17,7 +17,7 @@ namespace scone
 
 		void Update( TimeInSeconds t );
 
-		osg::Group* GetOsgRoot() { return &scene.osg_root(); }
+		osg::Group* GetOsgRoot() { return &scene.osg_group(); }
 
 	private:
 		vis::scene scene;

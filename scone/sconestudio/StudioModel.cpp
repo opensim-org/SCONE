@@ -5,6 +5,8 @@
 #include "scone/core/StorageIo.h"
 #include "scone/cs/cs_tools.h"
 #include "scone/core/system_tools.h"
+#include "scone/sim/Muscle.h"
+
 
 #include <boost/filesystem.hpp>
 namespace bfs = boost::filesystem;
@@ -56,7 +58,7 @@ namespace scone
 	{
 		sim::Model& model = so->GetModel();
 
-		com = s.make_sphere( 0.1f, vis::make_red(), 0.9f );
+		com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
 		for ( auto& body : model.GetBodies() )
 		{
@@ -66,12 +68,17 @@ namespace scone
 			for ( auto& geom_file : geom_files )
 			{
 				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				body_meshes.back().push_back( s.make_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				body_meshes.back().push_back( s.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
 				body_meshes.back().back().set_color( vis::make_white(), 1, 15, 0, 0.33f );
 			}
 		}
 
-		//body_meshes[ 0 ].show( false );
+		for ( auto& muscle : model.GetMuscles() )
+		{
+			// add path
+			auto p = muscle->GetMusclePath();
+			muscles.push_back( vis::path( s, p.size(), 0.01f, vis::make_red(), 0.3f ) );
+		}
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
@@ -84,15 +91,24 @@ namespace scone
 			state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
 		model.SetStateValues( state );
 
-		// update objects		
+		// update com
 		com.pos( model.GetComPos() );
 
+		// update bodies
 		auto& model_bodies = model.GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
 			auto bp = model_bodies[ i ]->GetOrigin();
 			for ( auto& bm : body_meshes[ i ] )
 				bm.pos_ori( model_bodies[ i ]->GetOrigin(), model_bodies[ i ]->GetOri() );
+		}
+
+		// update muscle paths
+		auto &model_muscles = model.GetMuscles();
+		for ( Index i = 0; i < model_muscles.size(); ++i )
+		{
+			auto mp = model_muscles[ i ]->GetMusclePath();
+			muscles[ i ].set_points( mp );
 		}
 	}
 

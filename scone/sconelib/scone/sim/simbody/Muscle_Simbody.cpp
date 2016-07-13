@@ -7,6 +7,7 @@
 #include "scone/core/Profiler.h"
 
 #include "Dof_Simbody.h"
+#include "simbody_tools.h"
 
 namespace scone
 {
@@ -137,7 +138,17 @@ namespace scone
 		
 		std::vector< Vec3 > scone::sim::Muscle_Simbody::GetMusclePath() const
 		{
-			SCONE_THROW_NOT_IMPLEMENTED;
+			//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+			//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
+			auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );
+			std::vector< Vec3 > points( pps.getSize() );
+			for ( Index i = 0; i < points.size(); ++i )
+			{
+				const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[i]->getBody().getIndex() );
+				auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[i]->getLocation();
+				points[i] = ToVec3( world_pos );
+			}
+			return points;
 		}
 		
 		scone::Real scone::sim::Muscle_Simbody::GetActivation() const
