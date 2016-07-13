@@ -109,6 +109,9 @@ namespace scone
 		{
 			auto mp = model_muscles[ i ]->GetMusclePath();
 			muscles[ i ].set_points( mp );
+
+			auto a = model_muscles[ i ]->GetActivation();
+			muscles[ i ].set_color( vis::color( a, 0, 1 - a, 1 ) );
 		}
 	}
 
