@@ -42,8 +42,13 @@ namespace scone
 
 			virtual std::vector< String > GetDisplayGeomFileNames() const override;
 
+			virtual const std::vector< Real >& GetContactForceValues() const override;
+			virtual const std::vector< String >& GetContactForceLabels() const override { return m_ContactForceLabels; }
+
 		private:
 			int m_ForceIndex;
+			mutable std::vector< Real > m_ContactForceValues;
+			std::vector< String > m_ContactForceLabels;
 		};
 	}
 }

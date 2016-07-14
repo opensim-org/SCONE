@@ -131,14 +131,14 @@ namespace scone
 				c->StoreData( frame );
 
 			// store COP data
-			auto cop = GetComPos();
-			auto cop_u = GetComVel();
-			frame[ "cop_x" ] = cop.x;
-			frame[ "cop_y" ] = cop.y;
-			frame[ "cop_z" ] = cop.z;
-			frame[ "cop_x_u" ] = cop_u.x;
-			frame[ "cop_y_u" ] = cop_u.y;
-			frame[ "cop_z_u" ] = cop_u.z;
+			auto com = GetComPos();
+			auto com_u = GetComVel();
+			frame[ "com_x" ] = com.x;
+			frame[ "com_y" ] = com.y;
+			frame[ "com_z" ] = com.z;
+			frame[ "com_x_u" ] = com_u.x;
+			frame[ "com_y_u" ] = com_u.y;
+			frame[ "com_z_u" ] = com_u.z;
 
 			// store GRF data (measured in BW)
 			for ( auto& leg : GetLegs() )
@@ -152,6 +152,14 @@ namespace scone
 			// store joint reaction force magnitude
 			for ( auto& joint : GetJoints() )
 				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+
+			// store all force data (measured in BW)
+			for ( auto& body : GetBodies() )
+			{
+				const auto& forces = body->GetContactForceValues();
+				for ( size_t i = 0; i < forces.size(); ++i )
+					frame[ body->GetName() + '.' + body->GetContactForceLabels()[ i ] ] = forces[ i ] / GetBW();
+			}
 		}
 
 		void Model::StoreCurrentFrame()

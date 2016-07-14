@@ -5,6 +5,7 @@
 #include "Model_Simbody.h"
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -102,10 +103,10 @@ namespace scone
 			{
 				// TODO: find out if this can be done less clumsy in OpenSim
 				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-				OpenSim::Array<double> force = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
 
 				// assume total force is the first 3 values
-				return Vec3( -force[0], -force[1], -force[2] );
+				return Vec3( -forces[0], -forces[1], -forces[2] );
 			}
 			else return Vec3::make_zero();
 		}
@@ -118,6 +119,13 @@ namespace scone
 		void Body_Simbody::ConnectContactForce( const String& force_name )
 		{
 			m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( force_name, 0 );
+			if ( m_ForceIndex != -1 )
+			{
+				auto labels = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordLabels();
+				for ( int i = 0; i < labels.size(); ++i )
+					m_ContactForceLabels.push_back( labels[ i ] );
+				m_ContactForceValues.resize( m_ContactForceLabels.size() );
+			}
 		}
 
 		const Model& Body_Simbody::GetModel() const 
@@ -136,6 +144,17 @@ namespace scone
 			for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
 				names.push_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
 			return names;
+		}
+
+		const std::vector< scone::Real >& Body_Simbody::GetContactForceValues() const
+		{
+			if ( m_ForceIndex != -1 )
+			{
+				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+				for ( int i = 0; i < forces.size(); ++i )
+					m_ContactForceValues[ i ] = forces[ i ];
+			}
+			return m_ContactForceValues;
 		}
 	}
 }
