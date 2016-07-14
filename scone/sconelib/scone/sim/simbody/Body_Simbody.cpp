@@ -15,7 +15,8 @@ namespace scone
 		Body(),
 		m_osBody( body ),
 		m_Model( model ),
-		m_ForceIndex( -1 )
+		m_ForceIndex( -1 ),
+		m_LastUpdatedIntegrationStep( -1 )
 		{
 			ConnectContactForce( body.getName() );
 		}
@@ -101,9 +102,9 @@ namespace scone
 			SCONE_PROFILE_SCOPE;
 			if ( m_ForceIndex != -1 )
 			{
-				// TODO: find out if this can be done less clumsy in OpenSim
-				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+				//m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
+				//OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+				const auto& forces = GetContactForceValues();
 
 				// assume total force is the first 3 values
 				return Vec3( -forces[0], -forces[1], -forces[2] );
@@ -150,9 +151,15 @@ namespace scone
 		{
 			if ( m_ForceIndex != -1 )
 			{
-				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
-				for ( int i = 0; i < forces.size(); ++i )
-					m_ContactForceValues[ i ] = forces[ i ];
+				if ( m_LastUpdatedIntegrationStep != m_Model.GetIntegrationStep() )
+				{
+					// TODO: find out if this can be done less clumsy in OpenSim
+					m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
+					OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
+					for ( int i = 0; i < forces.size(); ++i )
+						m_ContactForceValues[i] = forces[i];
+					m_LastUpdatedIntegrationStep = m_Model.GetIntegrationStep();
+				}
 			}
 			return m_ContactForceValues;
 		}

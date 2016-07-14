@@ -47,6 +47,7 @@ namespace scone
 
 		private:
 			int m_ForceIndex;
+			mutable int m_LastUpdatedIntegrationStep;
 			mutable std::vector< Real > m_ContactForceValues;
 			std::vector< String > m_ContactForceLabels;
 		};
