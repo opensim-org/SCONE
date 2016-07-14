@@ -1,5 +1,6 @@
 #include "HasSignature.h"
 #include "propnode_tools.h"
+#include "string_tools.h"
 
 namespace scone
 {

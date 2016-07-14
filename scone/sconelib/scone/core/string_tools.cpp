@@ -55,11 +55,6 @@ namespace scone
 		return stringf( "%02d%02d.%02d%02d%02d.%06d", month, day, hours, mins, secs, frac_secs );
 	}
 
-	String SCONE_API GetCleanVarName( const String& str )
-	{
-		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
-	}
-
 	// TODO: Could use regex to remove platform dependencies
 	// Currently assumes one delimeter char. Can extend with boost if needed
 	bool SCONE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )

@@ -27,9 +27,6 @@ namespace scone
     /// Get formatted date/time with exact fractional seconds as string
     String SCONE_API GetDateTimeExactAsString();
 
-	/// Get clean name, removes "m_" (if present)
-	String SCONE_API GetCleanVarName( const String& str );
-
 	/// Get clean class, removes everything before "::" (if present)
 	template< typename T >
 	String GetCleanClassName()

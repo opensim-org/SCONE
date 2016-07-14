@@ -201,7 +201,7 @@
   </connection>
   <connection>
    <sender>horizontalScrollBar</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>updateScrollbar(int)</slot>
    <hints>

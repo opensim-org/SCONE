@@ -7,8 +7,9 @@
 #include "scone/core/system_tools.h"
 #include "scone/sim/Muscle.h"
 
-
 #include <boost/filesystem.hpp>
+#include "flut/timer.hpp"
+
 namespace bfs = boost::filesystem;
 
 namespace scone
@@ -31,8 +32,10 @@ namespace scone
 		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
 		if ( bfs::exists( sto_file ) )
 		{
+			flut::timer t;
 			log::info( "Reading ", sto_file.string() );
 			ReadStorageSto( data, sto_file.string() );
+			log::trace( "File read in ", t.seconds(), " seconds" );
 		}
 		else
 		{
@@ -58,8 +61,9 @@ namespace scone
 	{
 		sim::Model& model = so->GetModel();
 
-		com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
+		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
+		flut::timer t;
 		for ( auto& body : model.GetBodies() )
 		{
 			body_meshes.push_back( std::vector< vis::mesh >() );
@@ -67,11 +71,12 @@ namespace scone
 
 			for ( auto& geom_file : geom_files )
 			{
-				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
+				//log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( s.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
-				body_meshes.back().back().set_color( vis::make_white(), 1, 15, 0, 0.33f );
+				body_meshes.back().back().set_color( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f );
 			}
 		}
+		log::trace( "Meshes loaded in ", t.seconds(), " seconds" );
 
 		for ( auto& muscle : model.GetMuscles() )
 		{
@@ -92,7 +97,7 @@ namespace scone
 		model.SetStateValues( state );
 
 		// update com
-		com.pos( model.GetComPos() );
+		//com.pos( model.GetComPos() );
 
 		// update bodies
 		auto& model_bodies = model.GetBodies();
@@ -111,7 +116,7 @@ namespace scone
 			muscles[ i ].set_points( mp );
 
 			auto a = model_muscles[ i ]->GetActivation();
-			muscles[ i ].set_color( vis::color( a, 0, 1 - a, 1 ) );
+			muscles[ i ].set_color( vis::color( a, 0, 0.5 - 0.5 * a, 1 ), 0.5f, 15, 0, 0.5f );
 		}
 	}
 

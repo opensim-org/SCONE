@@ -52,12 +52,12 @@ namespace scone
 
 	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		std::ifstream str( file );
+		flut::char_stream str = flut::load_char_buffer( file );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageSto( storage, str );
 	}
 
-	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, std::ifstream& str )
+	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str )
 	{
 		// skip the header since we don't need it
 		String s;
@@ -70,12 +70,12 @@ namespace scone
 
 	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		std::ifstream str( file );
+		flut::char_stream str = flut::load_char_buffer( file );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageTxt( storage, str );
 	}
 
-	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, std::ifstream& str )
+	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str )
 	{
 		storage.Clear();
 
@@ -84,10 +84,9 @@ namespace scone
 		str >> dummy;
 		SCONE_ASSERT_MSG( dummy == "time", "First column should be labeled 'time'" );
 
-		char header[ 10000 ];
-		str.getline( header, 10000 );
+		String header = str.get_line();
 		SCONE_ASSERT_MSG( !str.fail(), "Error reading file labels" );
-		auto labels = flut::split_str( String( header ), "\t " );
+		auto labels = flut::split_str( header, "\t " );
 
 		// add channels to storage
 		for ( auto& s : labels )

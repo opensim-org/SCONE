@@ -8,6 +8,7 @@
     #include <QtWidgets/QFileSystemModel.h>
     #include <QtWidgets/QMessageBox.h>
 #endif
+
 #include "simvis/osg_tools.h"
 
 using namespace scone;
@@ -89,7 +90,9 @@ void SconeStudio::slomo( int v )
 
 void SconeStudio::updateTimer()
 {
+	ui.horizontalScrollBar->blockSignals( true );
 	setTime( current_time + slomo_factor * timer_delta( timer.seconds() ) );
+	ui.horizontalScrollBar->blockSignals( false );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )

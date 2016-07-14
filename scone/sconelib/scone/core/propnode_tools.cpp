@@ -2,6 +2,11 @@
 
 namespace scone
 {
+	String GetCleanVarName( const String& str )
+	{
+		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
+	}
+
 	void LogUntouched( const PropNode& p, log::Level level, size_t depth )
 	{
 		if ( depth == 0 )

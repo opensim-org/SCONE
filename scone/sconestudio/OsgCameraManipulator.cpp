@@ -7,7 +7,7 @@ using namespace osg;
 OsgCameraManipulator::OsgCameraManipulator( QOsgViewer* v ) :
 	osgGA::OrbitManipulator(),
 	orbit_yaw( 0 ),
-	orbit_pitch( -15 ),
+	orbit_pitch( -5 ),
 	viewer( v )
 {
 	setAllowThrow( false );

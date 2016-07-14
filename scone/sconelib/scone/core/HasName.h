@@ -4,7 +4,6 @@
 #include "String.h"
 #include "Exception.h"
 #include <vector>
-#include "string_tools.h"
 
 namespace scone
 {
@@ -19,7 +18,7 @@ namespace scone
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
-		SCONE_THROW_IF( it == cont.end(), "Could not find " + quoted( name ) );
+		SCONE_THROW_IF( it == cont.end(), "Could not find `" + name + "`" );
 		return *it;
 	}
 
