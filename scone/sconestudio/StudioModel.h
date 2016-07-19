@@ -5,6 +5,10 @@
 #include "scone/cs/SimulationObjective.h"
 #include "scone/opt/Objective.h"
 
+#include "simvis/arrow.h"
+#include <thread>
+#include <mutex>
+
 namespace scone
 {
 	SCONE_DECLARE_CLASS_AND_PTR( StudioModel );
@@ -18,23 +22,34 @@ namespace scone
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
 
-		const Storage< Real, TimeInSeconds >& GetData() { return data; }
+		const Storage<>& GetData() { std::lock_guard< std::mutex > lock( eval_mutex ); return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
+
+		bool IsEvaluating() { return thread_is_running; }
 
 	private:
 		void InitModel( const String& par_file );
 		void InitVis( vis::scene& s );
 		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
 
-		Storage< Real, TimeInSeconds > data;
+		Storage<> data;
 		cs::SimulationObjectiveUP so;
 		String filename;
 
 		std::vector< size_t > state_data_index;
 
+		vis::material bone_mat;
+		vis::material arrow_mat;
+		vis::material muscle_mat;
+
+		std::thread eval_thread;
+		std::mutex eval_mutex;
+		bool thread_is_running;
+
+		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;
 		std::vector< vis::mesh > joints;
-		std::vector< vis::path > muscles;
+		std::vector< std::pair< vis::path, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
 		vis::mesh com;
 	};

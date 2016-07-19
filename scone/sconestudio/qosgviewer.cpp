@@ -57,6 +57,8 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 osgQt::GraphicsWindowQt* QOsgViewer::createGraphicsWindow( int x, int y, int w, int h, const std::string& name/*=""*/, bool windowDecoration/*=false */ )
 {
 	osg::DisplaySettings* ds = osg::DisplaySettings::instance().get();
+	ds->setNumMultiSamples( 2 );
+
 	osg::ref_ptr<osg::GraphicsContext::Traits> traits = new osg::GraphicsContext::Traits;
 	traits->windowName = name;
 	traits->windowDecoration = windowDecoration;

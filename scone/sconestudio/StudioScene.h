@@ -26,5 +26,6 @@ namespace scone
 		vis::path circle;
 	public:
 		TimeInSeconds GetMaxTime();
+		bool HasModel();
 	};
 }

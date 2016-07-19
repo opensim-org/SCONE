@@ -29,7 +29,7 @@ namespace scone
 			virtual const String& GetName() const override;
 
 			virtual Vec3 GetContactForce() const override;
-			virtual Vec3 GetContactTorque() const override;
+			virtual Vec3 GetContactMoment() const override;
 
 			OpenSim::Body& m_osBody;
 			class Model_Simbody& m_Model;
@@ -47,7 +47,7 @@ namespace scone
 
 		private:
 			int m_ForceIndex;
-			mutable int m_LastUpdatedIntegrationStep;
+			mutable int m_LastNumDynamicsRealizations;
 			mutable std::vector< Real > m_ContactForceValues;
 			std::vector< String > m_ContactForceLabels;
 		};

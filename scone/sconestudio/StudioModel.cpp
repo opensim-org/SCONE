@@ -10,11 +10,18 @@
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
 
+#include <thread>
+#include <mutex>
+
 namespace bfs = boost::filesystem;
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene &s, const String& par_file )
+	StudioModel::StudioModel( vis::scene &s, const String& par_file ) :
+	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
+	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
+	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
+	thread_is_running( false )
 	{
 		InitModel( par_file );
 		InitVis( s );
@@ -39,27 +46,20 @@ namespace scone
 		}
 		else
 		{
-			so->GetModel().SetStoreData( true );
-			so->Evaluate();
-			log::info( so->GetMeasure().GetReport() );
-			so->WriteResults( flut::get_filename_without_ext( filename ) );
-			data = so->GetModel().GetData();
-		}
+			// start evaluation in separate thread
+			thread_is_running = true;
+			eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
 
-		// setup state_data_index
-		auto state_names = so->GetModel().GetStateVariableNames();
-		state_data_index.resize( state_names.size() );
-		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
-		{
-			auto data_idx = data.GetChannelIndex( state_names[ state_idx ] );
-			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[ state_idx ] );
-			state_data_index[ state_idx ] = data_idx;
+			// TODO: REMOVE this once threading is working
+			eval_thread.join();
 		}
 	}
 
-	void StudioModel::InitVis( vis::scene& s )
+	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
 		sim::Model& model = so->GetModel();
+
+		scone_scene.attach( root );
 
 		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
@@ -72,8 +72,8 @@ namespace scone
 			for ( auto& geom_file : geom_files )
 			{
 				//log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				body_meshes.back().push_back( s.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
-				body_meshes.back().back().set_color( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f );
+				body_meshes.back().push_back( root.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				body_meshes.back().back().set_material( bone_mat );
 			}
 		}
 		log::trace( "Meshes loaded in ", t.seconds(), " seconds" );
@@ -82,13 +82,36 @@ namespace scone
 		{
 			// add path
 			auto p = muscle->GetMusclePath();
-			muscles.push_back( vis::path( s, p.size(), 0.01f, vis::make_red(), 0.3f ) );
+			auto vispath = vis::path( root, p.size(), 0.01f, vis::make_red(), 0.3f );
+			auto vismat = muscle_mat.clone();
+			vispath.set_material( vismat );
+			muscles.push_back( std::make_pair( vispath, vismat ) );
+		}
+
+		for ( Index i = 0; i < model.GetLegCount(); ++i )
+		{
+			forces.push_back( root.add_arrow( 0.01f, vis::make_yellow(), 0.3f ) );
+			forces.back().set_material( arrow_mat );
 		}
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		sim::Model& model = so->GetModel();
+
+		// setup state_data_index (lazy init)
+		// TODO: neater
+		if ( state_data_index.empty() )
+		{
+			auto state_names = model.GetStateVariableNames();
+			state_data_index.resize( state_names.size() );
+			for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
+			{
+				auto data_idx = data.GetChannelIndex( state_names[state_idx] );
+				SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[state_idx] );
+				state_data_index[state_idx] = data_idx;
+			}
+		}
 
 		// update model state from data
 		std::vector< Real > state( state_data_index.size() );
@@ -113,14 +136,37 @@ namespace scone
 		for ( Index i = 0; i < model_muscles.size(); ++i )
 		{
 			auto mp = model_muscles[ i ]->GetMusclePath();
-			muscles[ i ].set_points( mp );
+			muscles[ i ].first.set_points( mp );
 
 			auto a = model_muscles[ i ]->GetActivation();
-			muscles[ i ].set_color( vis::color( a, 0, 0.5 - 0.5 * a, 1 ), 0.5f, 15, 0, 0.5f );
+			muscles[ i ].second.diffuse( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
+			muscles[ i ].second.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
+		}
+
+		// update GRF
+		for ( Index i = 0; i < model.GetLegCount(); ++i )
+		{
+			Vec3 force, moment, cop;
+			model.GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
+
+			forces[i].show( force.y > REAL_WIDE_EPSILON );
+			forces[i].pos( cop, cop + 0.001 * force );
 		}
 	}
 
 	void StudioModel::EvaluateObjective()
 	{
+		so->GetModel().SetStoreData( true );
+		so->Evaluate();
+
+		PropNode results;
+		results.AddChild( "result", so->GetMeasure().GetReport() );
+		log::info( results );
+		so->WriteResults( flut::get_filename_without_ext( filename ) );
+
+		{
+			std::lock_guard< std::mutex > lock( eval_mutex );
+			data = so->GetModel().GetData();
+		}
 	}
 }

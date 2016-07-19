@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	template< typename ValueT, typename TimeT = TimeInSeconds >
+	template< typename ValueT = Real, typename TimeT = TimeInSeconds >
 	class Storage
 	{
 	public:

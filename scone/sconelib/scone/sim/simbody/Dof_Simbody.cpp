@@ -31,10 +31,7 @@ namespace scone
 			}
 		}
 
-		Dof_Simbody::~Dof_Simbody()
-		{
-
-		}
+		Dof_Simbody::~Dof_Simbody() { }
 
 		scone::Real Dof_Simbody::GetPos() const
 		{

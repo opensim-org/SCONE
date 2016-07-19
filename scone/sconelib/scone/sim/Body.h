@@ -26,7 +26,7 @@ namespace scone
 			virtual const std::vector< String >& GetContactForceLabels() const = 0;
 
 			virtual Vec3 GetContactForce() const = 0;
-			virtual Vec3 GetContactTorque() const = 0;
+			virtual Vec3 GetContactMoment() const = 0;
 
 			virtual const Model& GetModel() const = 0;
 			virtual Model& GetModel() = 0;

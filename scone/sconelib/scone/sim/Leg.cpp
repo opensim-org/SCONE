@@ -4,6 +4,7 @@
 #include "Joint.h"
 #include "scone/core/Profiler.h"
 #include "Model.h"
+#include "sim_tools.h"
 
 namespace scone
 {
@@ -29,6 +30,14 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE;
 			return m_Foot.GetBody().GetContactForce();
+		}
+
+		void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
+		{
+			SCONE_PROFILE_SCOPE;
+			force = m_Foot.GetBody().GetContactForce();
+			moment = m_Foot.GetBody().GetContactMoment();
+			cop = GetGroundCop( force, moment );
 		}
 
 		Real Leg::MeasureLength() const

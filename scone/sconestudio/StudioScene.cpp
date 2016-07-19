@@ -11,11 +11,6 @@ namespace scone
 	{
 		// init scene
 		scene.add_light( vec3f( -20, 80, 40 ), make_white( 1 ) );
-		//mesh1 = scene.make_mesh( scone::GetFolder( SCONE_GEOMETRY_FOLDER ) + "femur.vtp" );
-		//mesh1.pos( vec3f( -0.5, 1, 0 ) );
-		//mesh1.set_color( make_blue(), 1, 12, 0.5, 0 );
-		//mesh2 = scene.make_sphere( 0.2f, vis::make_red(), 0.9f );
-		//mesh2.pos( vec3f( 0.5f, 1, 0 ) );
 
 		//circle = scene.add_path( 21, 0.01f, make_cyan(), 0.9f );
 		//std::vector< vec3f > cp( 21 );
@@ -37,16 +32,17 @@ namespace scone
 	{
 		if ( model )
 			model->UpdateVis( t );
-
-		//int points = t * 10;
-		//std::vector< vec3f > cp( points );
-		//for ( int i = 0; i < points; ++ i )
-		//	cp[ i ] = vec3f( i * 0.1, sin( i * flut::math::degree( 20.0 ) ) + 1.5, flut::math::cos( i * flut::math::degree( 20.0 ) ) );
-		//circle.set_points( cp );
 	}
 
 	scone::TimeInSeconds StudioScene::GetMaxTime()
 	{
-		return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+		if ( model )
+			return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+		else return 0.0;
+	}
+
+	bool StudioScene::HasModel()
+	{
+		return static_cast< bool >( model );
 	}
 }

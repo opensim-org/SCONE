@@ -26,7 +26,8 @@ namespace scone
 			size_t GetRank() const { return m_Rank; }
 			const String& GetName() const override { return m_Name; }
 
-			virtual Vec3 GetContactForce() const;
+			Vec3 GetContactForce() const;
+			void GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const;
 			Real GetLoad() const;
 			Real GetLength() const { return m_LegLength; }
 

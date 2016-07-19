@@ -97,6 +97,9 @@ void SconeStudio::updateTimer()
 
 void SconeStudio::setTime( TimeInSeconds t )
 {
+	if ( !manager.HasModel() )
+		return;
+
 	current_time = t;
 	if ( current_time >= manager.GetMaxTime() )
 	{
