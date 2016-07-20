@@ -26,11 +26,11 @@ namespace scone
 			*this = other;
 		}
 
-		void AddSample( double timestamp, const T& value )
+		void AddSample( TimeInSeconds timestamp, const T& value )
 		{
 			if ( m_nSamples == 0 )
 			{
-				m_PrevTime = timestamp; // without interpolation, the first sample will be thrown away (since dt=0)
+				m_StartTime = m_PrevTime = timestamp; // without interpolation, the first sample will be thrown away (since dt=0)
 				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
 			}
 
@@ -67,9 +67,9 @@ namespace scone
 		{
 			if ( m_nSamples == 0 )
 				return 0.0;
-			if ( m_PrevTime == 0.0 )
-				return m_Initial; // only one sample was added
-			else return m_Total / m_PrevTime;
+			if ( m_nSamples == 1 || m_PrevTime == m_StartTime )
+				return m_Initial; // only one sample was added or there was no dt
+			else return m_Total / ( m_PrevTime - m_StartTime );
 		}
 
 		T GetHighest() const { return m_Highest; }
@@ -79,7 +79,8 @@ namespace scone
 		T GetTotal() const { return m_Total; }
 
 	private:
-		T m_Total, m_Initial, m_Highest, m_Lowest, m_PrevTime, m_PrevValue;
+		T m_Total, m_Initial, m_Highest, m_Lowest, m_PrevValue;
+		TimeInSeconds m_StartTime, m_PrevTime;
 		InterpolationMode m_InterpolationMode;
 		size_t m_nSamples;
 	};
