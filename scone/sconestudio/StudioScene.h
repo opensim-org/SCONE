@@ -19,6 +19,7 @@ namespace scone
 
 		osg::Group* GetOsgRoot() { return &scene.osg_group(); }
 
+		bool IsEvaluating();
 	private:
 		vis::scene scene;
 		std::unique_ptr< StudioModel > model;

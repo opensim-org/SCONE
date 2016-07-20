@@ -15,6 +15,7 @@
 #include "scone/core/Storage.h"
 #include <array>
 #include <type_traits>
+#include <mutex>
 
 namespace scone
 {
@@ -150,6 +151,10 @@ namespace scone
 			virtual void SetStoreData( bool store ) { m_StoreData = store; }
 			virtual bool GetStoreData() { return m_StoreData; }
 
+			void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
+			bool GetThreadSafeSimulation() { return thread_safe_simulation; }
+			std::mutex& GetSimulationMutex() { return simulation_mutex; }
+
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
 			void UpdateSensorDelayAdapters();
@@ -180,6 +185,10 @@ namespace scone
 			// storage for HasData classes
 			Storage< Real, TimeInSeconds > m_Data;
 			bool m_StoreData;
+
+			// thread safety stuff
+			bool thread_safe_simulation;
+			std::mutex simulation_mutex;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

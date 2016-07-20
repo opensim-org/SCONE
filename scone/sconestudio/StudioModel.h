@@ -17,7 +17,7 @@ namespace scone
 	{
 	public:
 		StudioModel( vis::scene &s, const String& par_file );
-		virtual ~StudioModel() {}
+		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
@@ -25,7 +25,7 @@ namespace scone
 		const Storage<>& GetData() { std::lock_guard< std::mutex > lock( eval_mutex ); return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
 
-		bool IsEvaluating() { return thread_is_running; }
+		bool IsEvaluating() { return is_evaluating; }
 
 	private:
 		void InitModel( const String& par_file );
@@ -44,7 +44,7 @@ namespace scone
 
 		std::thread eval_thread;
 		std::mutex eval_mutex;
-		bool thread_is_running;
+		bool is_evaluating;
 
 		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;
@@ -52,5 +52,6 @@ namespace scone
 		std::vector< std::pair< vis::path, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
 		vis::mesh com;
+		void InitStateDataIndices();
 	};
 }

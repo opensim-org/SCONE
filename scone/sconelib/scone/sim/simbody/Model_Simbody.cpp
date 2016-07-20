@@ -24,6 +24,7 @@
 #include <flut/string_tools.hpp>
 
 #include "scone/core/StorageIo.h"
+#include <thread>
 
 using std::cout;
 using std::endl;
@@ -393,6 +394,8 @@ namespace scone
 
 			try
 			{
+				std::unique_lock< std::mutex > lock( GetSimulationMutex() );
+
 				if ( use_fixed_control_step_size )
 				{
 					// set this because it's used by GetSimulationEndTime()
@@ -413,6 +416,7 @@ namespace scone
 
 					// start integration loop
 					int number_of_steps = static_cast<int>( 0.5 + final_time / fixed_control_step_size );
+					int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
 					for ( int current_step = 0; current_step < number_of_steps; )
 					{
 						// update controls
@@ -448,6 +452,14 @@ namespace scone
 							log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
 							// TODO: return appropriate result
 							break;
+						}
+
+						// allow time for other threads to access the model
+						if ( GetThreadSafeSimulation() && current_step % thread_interuption_steps == 0 )
+						{
+							lock.unlock();
+							std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+							lock.lock();
 						}
 
 						//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
@@ -711,6 +723,5 @@ namespace scone
 
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
-
 	}
 }

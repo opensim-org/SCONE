@@ -24,7 +24,8 @@ namespace scone
 		m_ShouldTerminate( false ),
 		custom_properties( props.TryGetChild( "custom_properties" ) ),
 		m_OriSensors(),
-		m_StoreData( false )
+		m_StoreData( false ),
+		thread_safe_simulation( false )
 		{
 			INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 			INIT_PARAM( props, par, balance_sensor_delay, 0.0 );

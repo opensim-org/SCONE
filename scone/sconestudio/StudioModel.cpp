@@ -21,10 +21,19 @@ namespace scone
 	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
-	thread_is_running( false )
+	is_evaluating( false )
 	{
 		InitModel( par_file );
 		InitVis( s );
+	}
+
+	StudioModel::~StudioModel()
+	{
+		if ( is_evaluating )
+			log::warning( "Closing model while thread is still running" );
+
+		if ( eval_thread.joinable() )
+			eval_thread.join();
 	}
 
 	void StudioModel::InitModel( const String& par_file )
@@ -42,16 +51,15 @@ namespace scone
 			flut::timer t;
 			log::info( "Reading ", sto_file.string() );
 			ReadStorageSto( data, sto_file.string() );
+			InitStateDataIndices();
 			log::trace( "File read in ", t.seconds(), " seconds" );
 		}
 		else
 		{
 			// start evaluation in separate thread
-			thread_is_running = true;
+			is_evaluating = true;
+			log::info( "Starting simulation in separate thread" );
 			eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
-
-			// TODO: REMOVE this once threading is working
-			eval_thread.join();
 		}
 	}
 
@@ -60,6 +68,9 @@ namespace scone
 		sim::Model& model = so->GetModel();
 
 		scone_scene.attach( root );
+
+		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
+		if ( is_evaluating ) lock.lock();
 
 		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
@@ -95,29 +106,37 @@ namespace scone
 		}
 	}
 
+	void StudioModel::InitStateDataIndices()
+	{
+		// setup state_data_index (lazy init)
+		SCONE_ASSERT( state_data_index.empty() );
+
+		auto state_names = so->GetModel().GetStateVariableNames();
+		state_data_index.resize( state_names.size() );
+		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
+		{
+			auto data_idx = data.GetChannelIndex( state_names[state_idx] );
+			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[state_idx] );
+			state_data_index[state_idx] = data_idx;
+		}
+	}
+
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		sim::Model& model = so->GetModel();
 
-		// setup state_data_index (lazy init)
-		// TODO: neater
-		if ( state_data_index.empty() )
+		if ( !is_evaluating )
 		{
-			auto state_names = model.GetStateVariableNames();
-			state_data_index.resize( state_names.size() );
-			for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
-			{
-				auto data_idx = data.GetChannelIndex( state_names[state_idx] );
-				SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[state_idx] );
-				state_data_index[state_idx] = data_idx;
-			}
+			// update model state from data
+			SCONE_ASSERT( !state_data_index.empty() );
+			std::vector< Real > state( state_data_index.size() );
+			for ( Index i = 0; i < state.size(); ++i )
+				state[i] = data.GetInterpolatedValue( time, state_data_index[i] );
+			model.SetStateValues( state );
 		}
 
-		// update model state from data
-		std::vector< Real > state( state_data_index.size() );
-		for ( Index i = 0; i < state.size(); ++i )
-			state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
-		model.SetStateValues( state );
+		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
+		if ( is_evaluating ) lock.lock();
 
 		// update com
 		//com.pos( model.GetComPos() );
@@ -157,16 +176,16 @@ namespace scone
 	void StudioModel::EvaluateObjective()
 	{
 		so->GetModel().SetStoreData( true );
+		so->GetModel().SetThreadSafeSimulation( true );
 		so->Evaluate();
 
 		PropNode results;
 		results.AddChild( "result", so->GetMeasure().GetReport() );
 		log::info( results );
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
-
-		{
-			std::lock_guard< std::mutex > lock( eval_mutex );
-			data = so->GetModel().GetData();
-		}
+		std::lock_guard< std::mutex > lock( eval_mutex );
+		data = so->GetModel().GetData();
+		InitStateDataIndices();
+		is_evaluating = false;
 	}
 }

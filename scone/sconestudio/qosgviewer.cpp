@@ -34,7 +34,7 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 
 	const osg::GraphicsContext::Traits* traits = gw->getTraits();
 
-	camera->setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+	camera->setClearColor( osg::Vec4( 0.55, 0.55, 0.55, 1.0 ) );
 	camera->setViewport( new osg::Viewport( 0, 0, traits->width, traits->height ) );
 	camera->setProjectionMatrixAsPerspective( 30.0f, static_cast<double>( traits->width ) / static_cast<double>( traits->height ), 1.0f, 10000.0f );
 

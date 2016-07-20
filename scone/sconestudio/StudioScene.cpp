@@ -34,10 +34,20 @@ namespace scone
 			model->UpdateVis( t );
 	}
 
+	bool StudioScene::IsEvaluating()
+	{
+		return ( model && model->IsEvaluating() );
+	}
+
 	scone::TimeInSeconds StudioScene::GetMaxTime()
 	{
 		if ( model )
-			return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+		{
+			if ( model->IsEvaluating() )
+				return model->GetSimModel().GetTime(); // TODO: this should be thread safe
+			else
+				return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+		}
 		else return 0.0;
 	}
 

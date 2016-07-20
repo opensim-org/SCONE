@@ -49,11 +49,16 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	try
 	{
-		String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
-		manager.CreateModel( filename );
-		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
-		setTime( 0 );
-		start();
+		if ( !manager.IsEvaluating() )
+		{
+			String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
+			manager.CreateModel( filename );
+			ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+			setTime( 0 );
+			start();
+		}
+		else log::warning( "Cannot activate new model until current simulation is finished");
+
 	}
 	catch ( std::exception& e )
 	{
@@ -100,19 +105,29 @@ void SconeStudio::setTime( TimeInSeconds t )
 	if ( !manager.HasModel() )
 		return;
 
-	current_time = t;
-	if ( current_time >= manager.GetMaxTime() )
+	if ( manager.GetModel().IsEvaluating() )
 	{
+		// always set current time to most recent simulation time
 		current_time = manager.GetMaxTime();
-		stop();
+		ui.horizontalScrollBar->setRange( 0, int( 1000 * current_time ) );
+	}
+	else
+	{
+		// update current time and stop when done
+		current_time = t;
+		if ( current_time >= manager.GetMaxTime() )
+		{
+			current_time = manager.GetMaxTime();
+			stop();
+		}
 	}
 
 	// update ui and visualization
 	manager.Update( t );
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-
 	ui.osgViewer->update();
+
 	ui.horizontalScrollBar->setValue( 1000 * current_time );
 	ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
 }
