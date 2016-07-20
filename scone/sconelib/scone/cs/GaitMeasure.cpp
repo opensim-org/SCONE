@@ -35,7 +35,9 @@ namespace scone
 
 			m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
 			m_InitialComPos = model.GetComPos();
-			model.GetComVel();
+
+			// add an initial sample to m_MinVelocityMeasure because the first sample is ignored with NoInterpolation
+			m_MinVelocityMeasure.AddSample( 0.0, 0.0 );
 		}
 
 		GaitMeasure::~GaitMeasure()
@@ -102,6 +104,7 @@ namespace scone
 			if ( dt > 0 )
 			{
 				double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
+				log::trace( "Adding sample to GaitMeasure at time: ", timestamp );
 				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
 				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
 			}
