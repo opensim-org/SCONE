@@ -7,11 +7,11 @@ using flut::math::degree;
 
 class QOsgViewer;
 
-class OsgCameraManipulator : public osgGA::OrbitManipulator
+class osg_cam_man : public osgGA::OrbitManipulator
 {
 public:
-	OsgCameraManipulator( QOsgViewer* v );
-	virtual ~OsgCameraManipulator();
+	osg_cam_man( QOsgViewer* v );
+	virtual ~osg_cam_man();
 		
 protected:
     virtual bool performMovementLeftMouseButton( const double eventTimeDelta, const double dx, const double dy );

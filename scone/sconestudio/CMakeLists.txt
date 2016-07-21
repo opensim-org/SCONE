@@ -8,6 +8,8 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
+		QOsgViewer.h
+		QOsgViewer.cpp
 		StudioScene.cpp
 		StudioScene.h
 		StudioModel.cpp
@@ -18,10 +20,6 @@ if(${Qt5Widgets_FOUND})
 		)
 	
 	set(QTFILES
-		OsgCameraManipulator.h
-		OsgCameraManipulator.cpp
-		qosgviewer.h
-		qosgviewer.cpp
 		main.cpp
 		studio.rc
 		)

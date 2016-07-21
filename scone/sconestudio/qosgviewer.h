@@ -7,7 +7,7 @@
 #include <osgQt/GraphicsWindowQt>
 #include <iostream>
 
-#include "OsgCameraManipulator.h"
+#include "simvis/osg_camera_man.h"
 
 class QOsgViewer : public QWidget, public osgViewer::CompositeViewer
 {
@@ -23,7 +23,6 @@ public:
 
 protected:
 	QTimer _timer;
-	osg::ref_ptr< OsgCameraManipulator > camera_man;
+	osg::ref_ptr< vis::osg_camera_man > camera_man;
 	osg::Node* scene;
-
 };

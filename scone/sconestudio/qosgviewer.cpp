@@ -1,8 +1,9 @@
-#include "qosgviewer.h"
+#include "QOsgViewer.h"
 
 #include <osgGA/TrackballManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include "OsgCameraManipulator.h"
+#include "simvis/osg_camera_man.h"
 
 QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) : QWidget( parent, f )
 {
@@ -41,13 +42,11 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	// setup view
 	view->addEventHandler( new osgViewer::StatsHandler );
 	view->setLightingMode( osg::View::NO_LIGHT );
-	//view->setLightingMode( osg::View::HEADLIGHT );
-	//view->getLight()->setAmbient( osg::Vec4( 1, 1, 1, 1 ) );
 
 	// setup camera manipulator
 	gw->setTouchEventsEnabled( true );
 
-	camera_man = new OsgCameraManipulator( this );
+	camera_man = new vis::osg_camera_man();
 	camera_man->setVerticalAxisFixed( false );
 	view->setCameraManipulator( camera_man );
 
