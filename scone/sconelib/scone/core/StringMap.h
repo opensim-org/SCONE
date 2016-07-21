@@ -1,8 +1,10 @@
 #pragma once
 
+#include <algorithm>
 #include <map>
 #include "core.h"
-#include <algorithm>
+#include "string_tools.h"
+
 
 namespace scone
 {
