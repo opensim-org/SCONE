@@ -2,7 +2,6 @@
 
 #include <osgGA/TrackballManipulator>
 #include <osgViewer/ViewerEventHandlers>
-#include "OsgCameraManipulator.h"
 #include "simvis/osg_camera_man.h"
 
 QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) : QWidget( parent, f )
