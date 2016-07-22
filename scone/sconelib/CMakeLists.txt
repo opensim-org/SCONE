@@ -211,7 +211,7 @@ set(SIMBODY_SYSTEM_FILES
 set(SIMBODY_TOOLS_FILES
     scone/sim/simbody/simbody_tools.h
     )
-	
+
 set (SCONELIB_FILES
 	${CORE_BASE_FILES}
 	${CORE_MATH_FILES}
@@ -241,9 +241,20 @@ set (SCONELIB_FILES
 	${SIMBODY_SYSTEM_FILES}
 	${SIMBODY_TOOLS_FILES}
 	)
+	
+# specify precompiled headers for MSVC
+if(MSVC)
+	set(STD_AFX_CPP "stdafx.cpp")
+	set(STD_AFX_H "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h")
+	set(PCH_FILE "${CMAKE_CURRENT_BINARY_DIR}/sconelib.pch")
+	set_source_files_properties( ${STD_AFX_CPP} PROPERTIES COMPILE_FLAGS "/Ycstdafx.h /Fp\"${PCH_FILE}\"" OBJECT_OUTPUTS "${PCH_FILE}" )
+	set_source_files_properties( ${SCONELIB_FILES} PROPERTIES COMPILE_FLAGS "/Yu\"${STD_AFX_H}\" /FI\"${STD_AFX_H}\" /Fp\"${PCH_FILE}\"" OBJECT_DEPENDS "${PCH_FILE}" )
+	set(STD_AFX_FILES ${STD_AFX_H} ${STD_AFX_CPP} )
+	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Zm256" )
+endif(MSVC)
 
 # add sources to single lib
-add_library(sconelib SHARED ${SCONELIB_FILES})
+add_library(sconelib SHARED ${SCONELIB_FILES} ${STD_AFX_FILES} )
 	
 target_link_libraries(sconelib flut shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
@@ -282,3 +293,5 @@ source_group("sim\\Topology" FILES ${SIM_TOPOLOGY_FILES})
 source_group("sim/simbody\\Model Components" FILES ${SIMBODY_MODELCOMPONENTS_FILES})
 source_group("sim/simbody\\System" FILES ${SIMBODY_SYSTEM_FILES})
 source_group("sim/simbody\\Tools" FILES ${SIMBODY_TOOLS_FILES})
+
+source_group("" FILES ${STD_AFX_FILES})

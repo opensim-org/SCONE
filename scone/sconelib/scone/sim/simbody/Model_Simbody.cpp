@@ -20,6 +20,7 @@
 #include <boost/filesystem.hpp>
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/ResourceCache.h"
 
 #include <flut/string_tools.hpp>
 
@@ -31,6 +32,12 @@ using std::endl;
 
 namespace scone
 {
+	// OpenSim model resource cache
+    template<> inline OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name ) 
+    { return new OpenSim::Model( name );  }
+	template<> inline OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
+    { return new OpenSim::Storage( name ); };
+
 	namespace sim
 	{
 		boost::mutex g_SimBodyMutex;
