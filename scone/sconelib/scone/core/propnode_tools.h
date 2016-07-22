@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PropNode.h"
-#include "string_tools.h"
 #include "Log.h"
 
 // convenience macro that automatically derives name from variable name
@@ -50,5 +49,6 @@ namespace scone
 	}
 
 	// log unused parameters
-	void SCONE_API LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
+	SCONE_API void LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
+	SCONE_API String GetCleanVarName( const String& str );
 }

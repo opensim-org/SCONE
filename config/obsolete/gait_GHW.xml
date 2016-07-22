@@ -4,10 +4,10 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHW15</signature_postfix>
+		<signature_postfix>GHW16</signature_postfix>
 		<max_duration>5</max_duration>
 		<Model type="Simbody">
-			<model_file>f1024.osim</model_file>
+			<model_file>f1024m.osim</model_file>
 			<state_init_file>f2354_init_walk_2_S12.sto</state_init_file>
 			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
@@ -99,7 +99,7 @@
 									</Reflex>
 									<Reflex type="DofReflex" target="intobl" source="lumbar_extension" delay="0.005">
 										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="extobl" source="lumbar_extension" delay="0.005">
 										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
@@ -125,8 +125,8 @@
 									</Reflex>
 									<!-- Balance hip correction -->
 									<Reflex type="DofReflex" target="iliopsoas" source="lumbar_extension" delay="0.005">
-										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						

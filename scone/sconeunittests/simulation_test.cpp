@@ -10,7 +10,7 @@ using std::endl;
 
 BOOST_AUTO_TEST_CASE( simulation_test )
 {
-	path testpath = scone::GetSconeFolder( "root" ) + "/unittestdata/simulation_test";
+	path testpath = scone::GetFolder( "root" ) + "/unittestdata/simulation_test";
 
 	for ( directory_iterator dir_it( testpath ); dir_it != directory_iterator(); ++dir_it )
 	{

@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GH</signature_postfix>
+		<signature_postfix>GH2</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -18,9 +18,9 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="GaitStateController">
-					<landing_threshold init_mean="0.1" init_std="0.01" min="-0.1" max="0.5" is_free="1"/>
-					<late_stance_threshold init_mean="0.0" init_std="0.01" min="-0.5" max="0.1" is_free="1"/>
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
+					<!--landing_threshold init_mean="0.1" init_std="0.01" min="-0.1" max="0.5" is_free="1"/>
+					<!--late_stance_threshold init_mean="0.0" init_std="0.01" min="-0.5" max="0.1" is_free="1"/-->
 					<!--swing_load_threshold init_mean="0.001" init_std="0.05" min="0.001" max="1.0" is_free="0"/-->
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
@@ -32,11 +32,11 @@
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
 									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
-										<KL init_mean="1.1" init_std="0.3" min="0.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.7" init_std="0.01" min="0" max="2" is_free="1"/>
+										<KL init_mean="3.0" init_std="0.3" min="0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.7" init_std="0.07" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
-										<KF init_mean="-0.4" init_std="0.1" min="-10" max="10" is_free="1"/>
+										<KF init_mean="-0.4" init_std="0.04" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
@@ -66,8 +66,8 @@
 								<Reflexes>
 									<!-- F+ VAS -->
 									<Reflex type="ConditionalMuscleReflex" target="vasti" delay="0.010">
-										<KF init_mean="1.2" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
-										<C0 init_mean="0.05" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
+										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<C0 init_mean="0.05" init_std="0.005" min="-1.0" max="1.0" is_free="1"/>
 										<Condition dof="knee_angle">
 											<pos_range min="-180" max="-10"/>
 										</Condition>
@@ -85,8 +85,8 @@
 										<C0 init_mean="0.1" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
-										<KP init_mean="-1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-										<KV init_mean="-0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+										<KP init_mean="-3.0" init_std="0.3" min="-10" max="10" is_free="1"/>
+										<KV init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
 										<C0 init_mean="0.1" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
@@ -100,8 +100,8 @@
 								<Reflexes>
 									<!-- L+ reflex for hip flexion -->
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
-										<KL	init_mean="0.5" init_std="0.01" min="0.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.65" init_std="0.01" min="0" max="2" is_free="1"/>
+										<KL	init_mean="0.5" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.65" init_std="0.065" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<!-- Balance correction for hip flexion -->
 									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
@@ -110,15 +110,15 @@
 									</Reflex>
 									<!-- L- inhibion of HAM -> HFL -->
 									<Reflex type="MuscleReflex" target="iliopsoas" source="hamstrings" delay="0.005">
-										<KL	init_mean="-4.0" init_std="0.1" min="-10.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.85" init_std="0.1" min="0" max="2" is_free="1"/>
+										<KL	init_mean="-4.0" init_std="0.4" min="-10.0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.85" init_std="0..085" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">
-										<KF init_mean="0.65" init_std="0.01" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.65" init_std="0.065" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="glut_max" delay="0.005">
-										<KF init_mean="0.5" init_std="0.01" min="0.0" max="10.0" is_free="1"/>
+										<KF init_mean="0.5" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						

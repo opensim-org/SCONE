@@ -22,11 +22,16 @@ namespace scone
 			virtual Vec3 GetLinVel() const = 0;
 			virtual Vec3 GetAngVel() const = 0;
 
+			virtual const std::vector< Real >& GetContactForceValues() const = 0;
+			virtual const std::vector< String >& GetContactForceLabels() const = 0;
+
 			virtual Vec3 GetContactForce() const = 0;
-			virtual Vec3 GetContactTorque() const = 0;
+			virtual Vec3 GetContactMoment() const = 0;
 
 			virtual const Model& GetModel() const = 0;
 			virtual Model& GetModel() = 0;
+
+			virtual std::vector< String > GetDisplayGeomFileNames() const { return std::vector< String >(); }
 		};
 	}
 }

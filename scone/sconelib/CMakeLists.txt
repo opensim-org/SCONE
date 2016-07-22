@@ -31,6 +31,7 @@ set(CORE_TOOLS_FILES
     scone/core/ResourceCache.h
 	scone/core/Storage.h
 	scone/core/StorageIo.h
+	scone/core/StorageIo.cpp
 	scone/core/StringMap.h
 	scone/core/system_tools.cpp
 	scone/core/system_tools.h
@@ -244,7 +245,7 @@ set (SCONELIB_FILES
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES})
 	
-target_link_libraries(sconelib ${Boost_LIBRARIES} shark ${OPENSIMSIMBODY_LIBRARIES})
+target_link_libraries(sconelib flut shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
 set_target_properties(sconelib PROPERTIES
     PROJECT_LABEL sconelib

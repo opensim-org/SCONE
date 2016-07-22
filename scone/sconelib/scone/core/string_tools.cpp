@@ -12,6 +12,7 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <sstream>
+#include <cstdarg>
 
 using std::cout;
 using std::endl;
@@ -53,11 +54,6 @@ namespace scone
         auto frac_secs = static_cast<int>( now.time_of_day().fractional_seconds() );
 
 		return stringf( "%02d%02d.%02d%02d%02d.%06d", month, day, hours, mins, secs, frac_secs );
-	}
-
-	String SCONE_API GetCleanVarName( const String& str )
-	{
-		return str.substr( 0, 2 ) == "m_" ? str.substr( 2 ) : str;
 	}
 
 	// TODO: Could use regex to remove platform dependencies

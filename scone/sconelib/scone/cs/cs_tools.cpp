@@ -81,8 +81,6 @@ namespace scone
 
 		PropNode SCONE_API RunSimulation( const String& par_file, bool write_results )
 		{
-			cs::RegisterFactoryTypes();
-
 			// create the simulation objective object
 			cs::SimulationObjectiveUP so = CreateSimulationObjective( par_file );
 

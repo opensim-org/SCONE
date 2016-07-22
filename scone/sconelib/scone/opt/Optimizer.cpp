@@ -135,7 +135,7 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			auto output_base = GetSconeFolder( "output" ) + GetSignature();
+			auto output_base = GetFolder( "output" ) + GetSignature();
 			m_OutputFolder = output_base;
 
 			for ( int i = 1; exists( path( m_OutputFolder ) ); ++i )

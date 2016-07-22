@@ -78,9 +78,7 @@ namespace scone
 			virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 			void ValidateDofAxes();
-
 			void StoreCurrentFrame() override;
-
 			void UpdateOsimStorage();
 
 		protected:

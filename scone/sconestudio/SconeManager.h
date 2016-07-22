@@ -2,6 +2,8 @@
 
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
+#include "scone/core/Storage.h"
+#include "scone/opt/opt_fwd.h"
 
 namespace scone
 {
@@ -10,11 +12,6 @@ namespace scone
 	public:
 		SconeManager();
 		virtual ~SconeManager();
-
-		void SimulateObjective( const String& filename );
-
 	private:
-		PropNode m_Settings;
-		PropNode m_Statistics;
 	};
 }
