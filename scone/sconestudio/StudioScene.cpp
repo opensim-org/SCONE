@@ -11,12 +11,6 @@ namespace scone
 	{
 		// init scene
 		scene.add_light( vec3f( -20, 80, 40 ), make_white( 1 ) );
-
-		//circle = scene.add_path( 21, 0.01f, make_cyan(), 0.9f );
-		//std::vector< vec3f > cp( 21 );
-		//for ( int i = 0; i < 21; ++ i )
-		//	cp[ i ] = vec3f( flut::math::cos( i * flut::math::degree( 18.0 ) ), sin( i * flut::math::real_pi / 10 ) + 1.5, 0 );
-		//circle.set_points( cp );
 	}
 
 	StudioScene::~StudioScene() { }

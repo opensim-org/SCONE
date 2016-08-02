@@ -93,7 +93,7 @@ namespace scone
 		{
 			// add path
 			auto p = muscle->GetMusclePath();
-			auto vispath = vis::path( root, p.size(), 0.01f, vis::make_red(), 0.3f );
+			auto vispath = vis::path( root, p.size(), 0.005f, vis::make_red(), 0.3f );
 			auto vismat = muscle_mat.clone();
 			vispath.set_material( vismat );
 			muscles.push_back( std::make_pair( vispath, vismat ) );
