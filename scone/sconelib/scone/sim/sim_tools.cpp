@@ -21,7 +21,7 @@ namespace scone
 		{
 			if ( force.y >= min_force )
 				return Vec3( moment.z / force.y, 0, -moment.x / force.y );
-			else return Vec3::make_zero();
+			else return Vec3::zero();
 		}
 
 	}

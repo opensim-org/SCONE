@@ -105,7 +105,7 @@ namespace scone
 				const auto& f = GetContactForceValues();
 				return Vec3( -f[0], -f[1], -f[2] ); // entry 0-2 are forces applied to ground
 			}
-			else return Vec3::make_zero();
+			else return Vec3::zero();
 		}
 
 		Vec3 Body_Simbody::GetContactMoment() const
@@ -115,7 +115,7 @@ namespace scone
 				const auto& f = GetContactForceValues();
 				return Vec3( -f[3], -f[4], -f[5] ); // entry 3-5 are moments applied to ground
 			}
-			else return Vec3::make_zero();
+			else return Vec3::zero();
 		}
 
 		void Body_Simbody::ConnectContactForce( const String& force_name )

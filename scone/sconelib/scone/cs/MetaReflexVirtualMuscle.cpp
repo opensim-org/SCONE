@@ -15,7 +15,7 @@ namespace scone
 		body_sensor_delay( model.balance_sensor_delay ),
 		body_ori_sensor( nullptr ),
 		body_angvel_sensor( nullptr ),
-		average_moment_axis( Vec3::make_zero() )
+		average_moment_axis( Vec3::zero() )
 		{
 			// TODO: remove once a proper factory is used
 			SCONE_ASSERT( props.GetStr( "type" ) == "VirtualMuscleReflex" );
