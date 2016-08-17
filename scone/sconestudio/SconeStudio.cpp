@@ -34,7 +34,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.browserView->setColumnHidden( 1, true );
 	ui.browserView->setColumnHidden( 2, true );
 	ui.browserView->setColumnHidden( 3, true );
-	ui.splitter->setSizes( QList< int >{ 100, 200 } );
+	//ui.splitter->setSizes( QList< int >{ 100, 200 } );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 
@@ -91,6 +91,9 @@ void SconeStudio::stop()
 void SconeStudio::slomo( int v )
 {
 	slomo_factor = 1.0 / v;
+	ui.speedButton1->setChecked( v == 1 );
+	ui.speedButton4->setChecked( v == 4 );
+	ui.speedButton16->setChecked( v == 16 );
 }
 
 void SconeStudio::updateTimer()
@@ -129,5 +132,6 @@ void SconeStudio::setTime( TimeInSeconds t )
 	ui.osgViewer->update();
 
 	ui.horizontalScrollBar->setValue( 1000 * current_time );
+	ui.doubleSpinBox->setValue( current_time );
 	ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
 }

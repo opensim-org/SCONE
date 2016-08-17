@@ -39,6 +39,9 @@ public slots:
 	void start();
 	void stop();
 	void slomo( int v );
+	void speed1() { slomo( 1 ); }
+	void speed4() { slomo( 4 ); }
+	void speed16() { slomo( 16 ); }
 	void updateTimer();
 
 private:
