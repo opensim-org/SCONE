@@ -20,6 +20,8 @@ slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) )
 {
 	ui.setupUi(this);
+	setCentralWidget( nullptr );
+	setDockNestingEnabled( true );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -133,5 +135,5 @@ void SconeStudio::setTime( TimeInSeconds t )
 
 	ui.horizontalScrollBar->setValue( 1000 * current_time );
 	ui.doubleSpinBox->setValue( current_time );
-	ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
+	//ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
 }
