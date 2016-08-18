@@ -17,25 +17,218 @@
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_5">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>4</number>
+    </property>
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Scenario Editor</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4"/>
+      <widget class="QWidget" name="viewer">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QOsgViewer" name="osgViewer" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="startButton">
+            <property name="text">
+             <string>Start</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="stopButton">
+            <property name="text">
+             <string>Stop</string>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>24</width>
+              <height>24</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="doubleSpinBox">
+            <property name="wrapping">
+             <bool>false</bool>
+            </property>
+            <property name="readOnly">
+             <bool>false</bool>
+            </property>
+            <property name="buttonSymbols">
+             <enum>QAbstractSpinBox::UpDownArrows</enum>
+            </property>
+            <property name="correctionMode">
+             <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+            </property>
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="maximum">
+             <double>99.998999999999995</double>
+            </property>
+            <property name="singleStep">
+             <double>0.001000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QScrollBar" name="horizontalScrollBar">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="singleStep">
+             <number>10</number>
+            </property>
+            <property name="pageStep">
+             <number>100</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="speedButton1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>32</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>1X</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="speedButton4">
+            <property name="maximumSize">
+             <size>
+              <width>32</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>4X</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="speedButton16">
+            <property name="maximumSize">
+             <size>
+              <width>32</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>16X</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>3D Viewer</string>
-       </attribute>
+      <widget class="QWidget" name="editor">
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2"/>
+         <widget class="QTextEdit" name="scenarioEdit"/>
         </item>
        </layout>
       </widget>
@@ -75,11 +268,16 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="action3D_Viewer"/>
+    <addaction name="actionScenario_Editor"/>
+    <addaction name="action_Scenario_Browser"/>
+    <addaction name="action_Results_Browser"/>
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
      <string>&amp;Optimize</string>
     </property>
+    <addaction name="action_Run_Optimization"/>
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
@@ -101,17 +299,73 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockWidget">
+  <widget class="QDockWidget" name="scenarioDock">
    <property name="windowTitle">
-    <string>Optimization Results</string>
+    <string>Scenarios</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>8</number>
+     </property>
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
      <item>
-      <widget class="QTreeView" name="browserView">
+      <widget class="QTreeView" name="scenarioBrowser"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QDockWidget" name="resultsDock">
+   <property name="windowTitle">
+    <string>Results</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QTreeView" name="resultsBrowser">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -125,192 +379,6 @@
         </size>
        </property>
       </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_2">
-   <property name="windowTitle">
-    <string>Scenario Editor</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2">
-    <layout class="QVBoxLayout" name="verticalLayout_6">
-     <item>
-      <widget class="QTextEdit" name="scenarioEdit"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_3">
-   <property name="features">
-    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
-   </property>
-   <property name="windowTitle">
-    <string>3D Viewer</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QVBoxLayout" name="verticalLayout_7">
-     <item>
-      <widget class="QOsgViewer" name="osgViewer" native="true">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QPushButton" name="startButton">
-         <property name="text">
-          <string>Start</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-         <property name="flat">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="stopButton">
-         <property name="text">
-          <string>Stop</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>24</width>
-           <height>24</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDoubleSpinBox" name="doubleSpinBox">
-         <property name="wrapping">
-          <bool>true</bool>
-         </property>
-         <property name="readOnly">
-          <bool>false</bool>
-         </property>
-         <property name="buttonSymbols">
-          <enum>QAbstractSpinBox::PlusMinus</enum>
-         </property>
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QScrollBar" name="horizontalScrollBar">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximum">
-          <number>1000</number>
-         </property>
-         <property name="pageStep">
-          <number>100</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="speedButton1">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>32</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>1X</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="speedButton4">
-         <property name="maximumSize">
-          <size>
-           <width>32</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>4X</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="speedButton16">
-         <property name="maximumSize">
-          <size>
-           <width>32</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="baseSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>16X</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-         <property name="flat">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>
@@ -364,8 +432,33 @@
     <string>&amp;About...</string>
    </property>
   </action>
+  <action name="action3D_Viewer">
+   <property name="text">
+    <string>3D &amp;Viewer</string>
+   </property>
+  </action>
+  <action name="actionScenario_Editor">
+   <property name="text">
+    <string>Scenario &amp;Editor</string>
+   </property>
+  </action>
+  <action name="action_Scenario_Browser">
+   <property name="text">
+    <string>&amp;Scenario Browser</string>
+   </property>
+  </action>
+  <action name="action_Results_Browser">
+   <property name="text">
+    <string>&amp;Results Browser</string>
+   </property>
+  </action>
+  <action name="action_Run_Optimization">
+   <property name="text">
+    <string>&amp;Run Optimization</string>
+   </property>
+  </action>
  </widget>
- <layoutdefault spacing="6" margin="11"/>
+ <layoutdefault spacing="4" margin="4"/>
  <customwidgets>
   <customwidget>
    <class>QOsgViewer</class>
@@ -379,7 +472,7 @@
  </resources>
  <connections>
   <connection>
-   <sender>browserView</sender>
+   <sender>resultsBrowser</sender>
    <signal>activated(QModelIndex)</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>activateBrowserItem(QModelIndex)</slot>
@@ -490,6 +583,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>doubleSpinBox</sender>
+   <signal>valueChanged(double)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateSpinBox(double)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>728</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -500,5 +609,6 @@
   <slot>speed1()</slot>
   <slot>speed4()</slot>
   <slot>speed16()</slot>
+  <slot>updateSpinBox(double)</slot>
  </slots>
 </ui>

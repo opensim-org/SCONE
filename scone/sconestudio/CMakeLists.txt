@@ -8,27 +8,39 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
-		QOsgViewer.h
-		QOsgViewer.cpp
-		StudioScene.cpp
-		StudioScene.h
 		StudioModel.cpp
 		StudioModel.h
-		SconeStudio.cpp
-		SconeStudio.h
-		main.cpp
+		StudioScene.cpp
+		StudioScene.h
 		)
 	
-	set(QTFILES
+	set(GUIFILES
 		main.cpp
+		QOsgViewer.h
+		QOsgViewer.cpp
+		SconeStudio.cpp
+		SconeStudio.h
+		)
+	
+	set(RESOURCEFILES
 		studio.rc
 		)
-
+	
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
+	
+	SET( SOURCE_FILES ${STUDIOFILES} ${GUIFILES} ${RESOURCES} )
+	
+	#MESSAGE( "RESOURCES: " ${RESOURCES} )
+	#MESSAGE( "UI_HEADERS: " ${UI_HEADERS} )
+	#MESSAGE( "SOURCE_FILES: " ${SOURCE_FILES} )
+	#MESSAGE( "CMAKE_CURRENT_BINARY_DIR" ${CMAKE_CURRENT_BINARY_DIR} )
+	
+	include( PrecompiledHeaders )
+	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 
-	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
-
+	add_executable(sconestudio ${STUDIOFILES} ${GUIFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCES})
+	
 	qt5_use_modules( sconestudio Widgets OpenGL )
 	
 	set_target_properties(sconestudio PROPERTIES
@@ -64,8 +76,10 @@ if(${Qt5Widgets_FOUND})
 		${OPENTHREADS_LIBRARIES}
 		)
 
-	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc )
+	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
+	source_group("Qt Files" FILES ${GUIFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.qrc "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 	source_group("Studio Files" FILES ${STUDIOFILES} )
+	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui )
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})

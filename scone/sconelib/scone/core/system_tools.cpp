@@ -58,7 +58,7 @@ namespace scone
 		case scone::SCONE_ROOT_FOLDER: return GetFolder( "root" );
 		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output" );
 		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", "models" );
-		case scone::SCONE_CONFIG_FOLDER: return GetFolder( "config" );
+		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios" );
 		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", "resources/geometry" );
 		default: SCONE_THROW( "Unknown folder type" );
 		}

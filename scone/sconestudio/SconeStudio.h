@@ -36,6 +36,7 @@ public:
 public slots:
 	void activateBrowserItem( QModelIndex idx );
 	void updateScrollbar( int pos );
+	void updateSpinBox( double );
 	void start();
 	void stop();
 	void slomo( int v );
@@ -49,7 +50,8 @@ private:
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
-	QFileSystemModel *m_pFileModel;
+	QFileSystemModel *resultsFileModel;
+	QFileSystemModel *scenarioFileModel;
 	QTimer qtimer;
 
 	double slomo_factor;

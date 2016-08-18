@@ -20,26 +20,31 @@ slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) )
 {
 	ui.setupUi(this);
-	setCentralWidget( nullptr );
-	setDockNestingEnabled( true );
+	//setCentralWidget( nullptr );
+	//setDockNestingEnabled( true );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
-	QString path = QString( scone::GetFolder( "output" ).c_str() );
-	m_pFileModel = new QFileSystemModel( this );
-	QStringList filters( "*.par" );
-	m_pFileModel->setNameFilters( filters );
-	ui.browserView->setModel( m_pFileModel );
-	ui.browserView->setRootIndex( m_pFileModel->setRootPath( path ) );
-	ui.browserView->setColumnHidden( 1, true );
-	ui.browserView->setColumnHidden( 2, true );
-	ui.browserView->setColumnHidden( 3, true );
-	//ui.splitter->setSizes( QList< int >{ 100, 200 } );
+	resultsFileModel = new QFileSystemModel( this );
+	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
+	ui.resultsBrowser->setModel( resultsFileModel );
+	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( QString( scone::GetFolder( SCONE_OUTPUT_FOLDER ).c_str() ) ) );
+	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
 
+	// init scenario browser
+	scenarioFileModel = new QFileSystemModel( this );
+	scenarioFileModel->setNameFilters( QStringList( "*.xml" ) );
+	ui.scenarioBrowser->setModel( scenarioFileModel );
+	ui.scenarioBrowser->setRootIndex( scenarioFileModel->setRootPath( QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ) ) );
+	for ( int i = 1; i <= 3; ++i ) ui.scenarioBrowser->hideColumn( i );
+
+	// init osg viewer
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
+	ui.stackedWidget->setCurrentIndex( 0 );
 
+	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 
 	return true;
@@ -53,7 +58,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		if ( !manager.IsEvaluating() )
 		{
-			String filename = m_pFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
+			String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
 			manager.CreateModel( filename );
 			ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
 			setTime( 0 );
@@ -71,6 +76,11 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 void SconeStudio::updateScrollbar( int pos )
 {
 	setTime( double( pos ) / 1000 );
+}
+
+void SconeStudio::updateSpinBox( double value )
+{
+	setTime( value );
 }
 
 void SconeStudio::start()
@@ -100,7 +110,6 @@ void SconeStudio::slomo( int v )
 
 void SconeStudio::updateTimer()
 {
-	ui.horizontalScrollBar->blockSignals( true );
 	setTime( current_time + slomo_factor * timer_delta( timer.seconds() ) );
 	ui.horizontalScrollBar->blockSignals( false );
 }
@@ -123,7 +132,8 @@ void SconeStudio::setTime( TimeInSeconds t )
 		if ( current_time >= manager.GetMaxTime() )
 		{
 			current_time = manager.GetMaxTime();
-			stop();
+			if ( qtimer.isActive() )
+				stop();
 		}
 	}
 
@@ -133,7 +143,12 @@ void SconeStudio::setTime( TimeInSeconds t )
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 	ui.osgViewer->update();
 
+	ui.horizontalScrollBar->blockSignals( true );
+	ui.doubleSpinBox->blockSignals( true );
+
 	ui.horizontalScrollBar->setValue( 1000 * current_time );
 	ui.doubleSpinBox->setValue( current_time );
-	//ui.lcdNumber->display( QString().sprintf( "%.2f", current_time ) );
+
+	ui.horizontalScrollBar->blockSignals( false );
+	ui.doubleSpinBox->blockSignals( false );
 }
