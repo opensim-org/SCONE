@@ -478,5 +478,4 @@ namespace scone
 
 		return pn;
 	}
-    
 }

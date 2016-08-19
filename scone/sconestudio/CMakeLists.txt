@@ -16,6 +16,8 @@ if(${Qt5Widgets_FOUND})
 	
 	set(GUIFILES
 		main.cpp
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
 		QOsgViewer.h
 		QOsgViewer.cpp
 		SconeStudio.cpp

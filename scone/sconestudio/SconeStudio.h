@@ -3,6 +3,7 @@
 
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
+#include <QtCore/QProcess>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
     #include <QtWidgets/QMainWindow>
@@ -12,6 +13,8 @@
 #endif
 
 #include "ui_SconeStudio.h"
+#include <BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h>
+
 #include "scone/core/PropNode.h"
 
 #include "SconeManager.h"
@@ -33,8 +36,10 @@ public:
 
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
 
-public slots:
+	public slots:
 	void activateBrowserItem( QModelIndex idx );
+	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
+	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem );
 	void updateScrollbar( int pos );
 	void updateSpinBox( double );
 	void start();
@@ -44,21 +49,37 @@ public slots:
 	void speed4() { slomo( 4 ); }
 	void speed16() { slomo( 16 ); }
 	void updateTimer();
+	void fileOpen();
+	void fileSave();
+	void fileSaveAs();
+	void fileExit();
+	void showEditor() { ui.stackedWidget->setCurrentIndex( 1 ); }
+	void showViewer() { ui.stackedWidget->setCurrentIndex( 0 ); }
+	void helpAbout() {}
+	void optimizeScenario();
+	void abortOptimizations();
 
 private:
 	void setTime( TimeInSeconds t );
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
+	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
 
-	QFileSystemModel *resultsFileModel;
-	QFileSystemModel *scenarioFileModel;
+	QFileSystemModel* resultsFileModel;
+	QFileSystemModel* scenarioFileModel;
 	QTimer qtimer;
+
+	QString currentFileName;
+	bool fileChanged = false;
 
 	double slomo_factor;
 	TimeInSeconds current_time;
 	flut::timer timer;
 	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;
+	std::vector< QProcess* > processes;
+protected:
+	virtual void closeEvent( QCloseEvent * ) override;
 };
 
 #endif // SCONESTUDIO_H

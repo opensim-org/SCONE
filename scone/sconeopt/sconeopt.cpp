@@ -17,7 +17,6 @@ int main(int argc, char* argv[])
 		boost::filesystem::path fileName(argv[1]);
 		SCONE_THROW_IF( !boost::filesystem::exists( fileName ), "File does not exist");
 
-
 		// set log level to trace in debug mode
 #ifdef _DEBUG
 		log::SetLevel( log::TraceLevel );

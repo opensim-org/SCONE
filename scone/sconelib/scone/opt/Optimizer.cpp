@@ -142,9 +142,7 @@ namespace scone
 				m_OutputFolder = output_base + stringf( " (%d)", i );
 
 			create_directories( path( m_OutputFolder ) );
-
 			m_OutputFolder += "/";
-			log::Info( "Output: " + m_OutputFolder );
 		}
 
 		const String& Optimizer::AcquireOutputFolder()

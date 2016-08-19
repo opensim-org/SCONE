@@ -5,11 +5,25 @@
 #include <osgDB/ReadFile>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    #include <QtWidgets/QFileSystemModel.h>
-    #include <QtWidgets/QMessageBox.h>
+#	include <QtWidgets/QFileSystemModel.h>
+#	include <QtWidgets/QMessageBox.h>
+#	include <QtWidgets/QFileDialog>
 #endif
+#include <QTextStream>
+
 
 #include "simvis/osg_tools.h"
+#include "scone/opt/opt_tools.h"
+#include "flut/system_tools.hpp"
+#include "qt_tools.h"
+#include "qevent.h"
+
+#ifdef _MSC_VER
+	const char* scone_program_name = "sconeopt.exe";
+#else
+	const char* scone_program_name = "sconeopt";
+#endif
+
 
 using namespace scone;
 using namespace std;
@@ -32,17 +46,30 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.resultsBrowser->setModel( resultsFileModel );
 	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( QString( scone::GetFolder( SCONE_OUTPUT_FOLDER ).c_str() ) ) );
 	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
+	connect( ui.resultsBrowser->selectionModel(),
+		SIGNAL( currentChanged( const QModelIndex&,const QModelIndex& ) ),
+		this, SLOT( selectBrowserItem( const QModelIndex&,const QModelIndex& ) ) );
 
 	// init scenario browser
-	scenarioFileModel = new QFileSystemModel( this );
-	scenarioFileModel->setNameFilters( QStringList( "*.xml" ) );
-	ui.scenarioBrowser->setModel( scenarioFileModel );
-	ui.scenarioBrowser->setRootIndex( scenarioFileModel->setRootPath( QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ) ) );
-	for ( int i = 1; i <= 3; ++i ) ui.scenarioBrowser->hideColumn( i );
+	//scenarioFileModel = new QFileSystemModel( this );
+	//scenarioFileModel->setNameFilters( QStringList( "*.xml" ) );
+	//ui.scenarioBrowser->setModel( scenarioFileModel );
+	//ui.scenarioBrowser->setRootIndex( scenarioFileModel->setRootPath( QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ) ) );
+	//for ( int i = 1; i <= 3; ++i ) ui.scenarioBrowser->hideColumn( i );
+	//ui.scenarioDock->hide();
 
 	// init osg viewer
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
-	ui.stackedWidget->setCurrentIndex( 0 );
+	showViewer();
+
+	// init text editor
+	ui.scenarioEdit->setTabStopWidth( 16 );
+	ui.scenarioEdit->setWordWrapMode( QTextOption::NoWrap );
+	xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( ui.scenarioEdit );
+	
+	// init optimizations list
+	ui.optTree->setHeaderLabels( QStringList{ "Name", "Status" } );
+	ui.optTree->addTopLevelItem( new QTreeWidgetItem( QStringList{ "Jazeker", "Meneer" } ) );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
@@ -50,7 +77,10 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	return true;
 }
 
-SconeStudio::~SconeStudio() {}
+SconeStudio::~SconeStudio()
+{
+	delete xmlSyntaxHighlighter;
+}
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
@@ -58,6 +88,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		if ( !manager.IsEvaluating() )
 		{
+			showViewer();
 			String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
 			manager.CreateModel( filename );
 			ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
@@ -71,6 +102,19 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
+}
+
+void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
+{
+	auto item = resultsFileModel->fileInfo( idx );
+	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
+	log::trace( dirname );
+}
+
+void SconeStudio::resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem )
+{
+	for ( auto& i : newitem.indexes() )
+		cout << i.row() << endl;
 }
 
 void SconeStudio::updateScrollbar( int pos )
@@ -114,6 +158,92 @@ void SconeStudio::updateTimer()
 	ui.horizontalScrollBar->blockSignals( false );
 }
 
+void SconeStudio::fileOpen()
+{
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
+	if ( !filename.isEmpty() )
+	{
+		currentFileName = filename;
+		fileChanged = false;
+		QFile f( currentFileName );
+		if ( f.open( QFile::ReadOnly | QFile::Text) )
+		{
+			QTextStream str( &f );
+			ui.scenarioEdit->setText( str.readAll() );		
+			showEditor();		
+		}
+	}
+}
+
+void SconeStudio::fileSave()
+{
+
+}
+
+void SconeStudio::fileSaveAs()
+{
+
+}
+
+void SconeStudio::fileExit()
+{
+	log::info( "Exiting SCONE" );
+	close();
+}
+
+void SconeStudio::optimizeScenario()
+{
+	if ( currentFileName.isEmpty() )
+	{
+		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
+		return;
+	}
+
+	QString program = make_qt( flut::get_application_folder() + scone_program_name );
+	QStringList args;
+	args << currentFileName;
+	QProcess* p = new QProcess( this );
+	p->setReadChannel( QProcess::StandardOutput );
+	p->start( program, args );
+
+	flut_error_if( !p->waitForStarted( 3000 ), "Could not start process" );
+
+	for ( int i = 0; i < 20; ++i )
+	{
+		if ( p->waitForReadyRead( 1000 ) )
+		{
+			string s = QString::fromLocal8Bit( p->readLine() ).toStdString();
+			auto kvp = flut::to_key_value( s );
+			if ( kvp.first == "folder" )
+			{
+				p->setObjectName( make_qt( kvp.second ) );
+				break;
+			}
+		}
+	}
+
+	log::info( "Started optimization ", p->objectName().toStdString() );
+	processes.push_back( p );
+}
+
+void SconeStudio::abortOptimizations()
+{
+	if ( processes.size() > 0 )
+	{
+		QString message = QString().sprintf( "Are you sure you want to terminate %d optimizations?", processes.size() );
+		if ( QMessageBox::warning( this, "Terminate Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
+		{
+			for ( auto* p : processes )
+			{
+				log::info( "Closing process ", p->objectName().toStdString() );
+				p->close();
+				delete p;
+			}
+			processes.clear();
+		}
+	}
+}
+
 void SconeStudio::setTime( TimeInSeconds t )
 {
 	if ( !manager.HasModel() )
@@ -151,4 +281,12 @@ void SconeStudio::setTime( TimeInSeconds t )
 
 	ui.horizontalScrollBar->blockSignals( false );
 	ui.doubleSpinBox->blockSignals( false );
+}
+
+void SconeStudio::closeEvent( QCloseEvent *e )
+{
+	abortOptimizations();
+	if ( processes.empty() )
+		e->accept();
+	else e->ignore();
 }

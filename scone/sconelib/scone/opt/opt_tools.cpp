@@ -27,23 +27,20 @@ namespace scone
 		{
 			SCONE_THROW_IF( argc < 2, "No config file argument provided" );
 
-			// get config file
-			String config_file( argv[ 1 ] );
+			PerformOptimization( String( argv[ 1 ] ), GetPropNodeFromArgs( 2, argc, argv ) );
+		}
 
+		void SCONE_API PerformOptimization( const String& scenario_file, const PropNode& cmd_props )
+		{
 			// load properties
-			PropNode props = ReadPropNode( config_file );
+			PropNode props = ReadPropNode( scenario_file );
 
 			// get command line settings (parameter 2 and further)
-			PropNode cmd_props = GetPropNodeFromArgs( 2, argc, argv );
 			if ( !cmd_props.IsEmpty() )
-			{
-				//log::Info( "Command line properties:" );
-				//std::cout << cmd_props;
 				props.Merge( cmd_props, true );
-			}
 
 			// set current path to config file path
-			path config_path( config_file );
+			path config_path( scenario_file );
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 
@@ -55,6 +52,9 @@ namespace scone
 			path outdir( o->AcquireOutputFolder() );
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
 			props.ToXmlFile( ( outdir / "config.xml" ).string() );
+
+			std::cout << "scenario=" << scenario_file << std::endl;
+			std::cout << "folder=" << o->AcquireOutputFolder() << std::endl;
 
 			o->Run();
 		}

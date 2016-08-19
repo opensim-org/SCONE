@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
-    <height>766</height>
+    <width>1223</width>
+    <height>773</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,7 +36,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="viewer">
        <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -227,8 +227,36 @@
       </widget>
       <widget class="QWidget" name="editor">
        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>4</number>
+        </property>
+        <property name="topMargin">
+         <number>4</number>
+        </property>
+        <property name="rightMargin">
+         <number>4</number>
+        </property>
+        <property name="bottomMargin">
+         <number>4</number>
+        </property>
         <item>
-         <widget class="QTextEdit" name="scenarioEdit"/>
+         <widget class="QTextEdit" name="scenarioEdit">
+          <property name="font">
+           <font>
+            <family>Consolas</family>
+            <pointsize>10</pointsize>
+           </font>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::StyledPanel</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -241,7 +269,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>889</width>
+     <width>1223</width>
      <height>21</height>
     </rect>
    </property>
@@ -270,14 +298,14 @@
     </property>
     <addaction name="action3D_Viewer"/>
     <addaction name="actionScenario_Editor"/>
-    <addaction name="action_Scenario_Browser"/>
-    <addaction name="action_Results_Browser"/>
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
-     <string>&amp;Optimize</string>
+     <string>&amp;Scenario</string>
     </property>
-    <addaction name="action_Run_Optimization"/>
+    <addaction name="action_Optimize_Scenario"/>
+    <addaction name="separator"/>
+    <addaction name="actionTerminate_Running_Optimizations"/>
    </widget>
    <widget class="QMenu" name="menu_Tools">
     <property name="title">
@@ -299,36 +327,6 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="scenarioDock">
-   <property name="windowTitle">
-    <string>Scenarios</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>8</number>
-     </property>
-     <property name="leftMargin">
-      <number>4</number>
-     </property>
-     <property name="topMargin">
-      <number>4</number>
-     </property>
-     <property name="rightMargin">
-      <number>4</number>
-     </property>
-     <property name="bottomMargin">
-      <number>4</number>
-     </property>
-     <item>
-      <widget class="QTreeView" name="scenarioBrowser"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -342,7 +340,7 @@
   </widget>
   <widget class="QDockWidget" name="resultsDock">
    <property name="windowTitle">
-    <string>Results</string>
+    <string>Output</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -374,10 +372,57 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>480</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="optDock">
+   <property name="windowTitle">
+    <string>Optimizations</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_3">
+    <layout class="QVBoxLayout" name="verticalLayout_6">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QTreeWidget" name="optTree">
+       <property name="columnCount">
+        <number>2</number>
+       </property>
+       <column>
+        <property name="text">
+         <string notr="true">1</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string notr="true">2</string>
+        </property>
+       </column>
       </widget>
      </item>
     </layout>
@@ -386,6 +431,9 @@
   <action name="actionE_xit">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
    </property>
   </action>
   <action name="action_Open_Scenario">
@@ -457,6 +505,19 @@
     <string>&amp;Run Optimization</string>
    </property>
   </action>
+  <action name="action_Optimize_Scenario">
+   <property name="text">
+    <string>&amp;Optimize Scenario</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F5</string>
+   </property>
+  </action>
+  <action name="actionTerminate_Running_Optimizations">
+   <property name="text">
+    <string>Terminate Optimizations...</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
  <customwidgets>
@@ -479,7 +540,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>183</x>
-     <y>265</y>
+     <y>620</y>
     </hint>
     <hint type="destinationlabel">
      <x>183</x>
@@ -494,8 +555,8 @@
    <slot>start()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>481</x>
-     <y>723</y>
+     <x>347</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -510,8 +571,8 @@
    <slot>updateScrollbar(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>813</x>
-     <y>723</y>
+     <x>769</x>
+     <y>737</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -526,8 +587,8 @@
    <slot>stop()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>723</y>
+     <x>428</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -542,8 +603,8 @@
    <slot>speed1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>882</x>
-     <y>558</y>
+     <x>807</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -558,8 +619,8 @@
    <slot>speed4()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>920</x>
-     <y>558</y>
+     <x>845</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -574,8 +635,8 @@
    <slot>speed16()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>958</x>
-     <y>558</y>
+     <x>883</x>
+     <y>740</y>
     </hint>
     <hint type="destinationlabel">
      <x>526</x>
@@ -599,6 +660,150 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionScenario_Editor</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>showEditor()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>382</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Open_Scenario</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fileOpen()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Save</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fileSave()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSave_As</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fileSaveAs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>20</x>
+     <y>20</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action3D_Viewer</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>showViewer()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_About</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>helpAbout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Optimize_Scenario</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>optimizeScenario()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTerminate_Running_Optimizations</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>abortOptimizations()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionE_xit</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fileExit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -610,5 +815,17 @@
   <slot>speed4()</slot>
   <slot>speed16()</slot>
   <slot>updateSpinBox(double)</slot>
+  <slot>fileOpen()</slot>
+  <slot>fileClose()</slot>
+  <slot>fileSave()</slot>
+  <slot>fileSaveAs()</slot>
+  <slot>showViewer()</slot>
+  <slot>viewAction()</slot>
+  <slot>showEditor()</slot>
+  <slot>helpAbout()</slot>
+  <slot>optimizeScenario()</slot>
+  <slot>abortOptimizations()</slot>
+  <slot>fileExit()</slot>
+  <slot>selectBrowserItem(QModelIndex)</slot>
  </slots>
 </ui>
