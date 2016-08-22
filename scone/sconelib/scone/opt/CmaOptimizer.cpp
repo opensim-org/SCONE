@@ -114,8 +114,11 @@ namespace scone
 				// report results
 				double current_best_fitness = IsMinimizing() ? cma.solution().value : -cma.solution().value;
 				double current_avg_fitness = IsMinimizing() ? cma.average() : -cma.average();
+
 				if ( console_output )
 					printf(" A=%.3f", current_avg_fitness );
+				if ( status_output )
+					std::cout << "generation=" << gen << " " << current_avg_fitness << " " << current_best_fitness << std::endl;
 
 				bool new_best = IsBetterThan( current_best_fitness, m_BestFitness );
 				if ( new_best )
@@ -124,6 +127,8 @@ namespace scone
 
 					if ( console_output )
 						printf(" B=%.3f", m_BestFitness );
+					if ( status_output )
+						std::cout << "best=" << m_BestFitness << std::endl;
 
 					// copy best solution to par
 					std::vector< double > values( cma.solution().point.begin(), cma.solution().point.end() );

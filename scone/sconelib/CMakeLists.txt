@@ -245,8 +245,6 @@ set (SCONELIB_FILES
 # specify precompiled headers for MSVC
 include( PrecompiledHeaders )
 use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "stdafx.cpp" 256 )
-#message( "PRECOMPILED_HEADER_FILES: " ${PRECOMPILED_HEADER_FILES} )
-#message( "SCONELIB_FILES: " ${SCONELIB_FILES} )
 
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} )

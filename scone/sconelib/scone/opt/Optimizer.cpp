@@ -31,6 +31,7 @@ namespace scone
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) ),
 		console_output( true ),
+		status_output( false ),
 		m_LastFileOutputGen( 0 )
 		{
 			INIT_PROPERTY( props, max_threads, size_t( 1 ) );

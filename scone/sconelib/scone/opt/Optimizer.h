@@ -32,6 +32,8 @@ namespace scone
 			double GetBestFitness() { return m_BestFitness; }
 
 			void SetConsoleOutput( bool output ) { console_output = output; }
+			bool GetStatusOutput() const { return status_output; }
+			void SetStatusOutput( bool s ) { status_output = s; }
 
 		protected:
 			void CreateObjectives( size_t count );
@@ -44,6 +46,7 @@ namespace scone
 			ParamSet m_BestParams;
 			double m_BestFitness;
 			bool console_output;
+			bool status_output;
 			size_t m_LastFileOutputGen;
 
 			// properties

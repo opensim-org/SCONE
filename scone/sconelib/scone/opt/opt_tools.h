@@ -7,17 +7,17 @@
 #include "scone/core/string_tools.h"
 #include "scone/core/memory_tools.h"
 #include "scone/core/Log.h"
+#include "scone/opt/Optimizer.h"
 
 namespace scone
 {
 	namespace opt
 	{
 		// register factory types
-		void SCONE_API RegisterFactoryTypes();
+		SCONE_API void RegisterFactoryTypes();
 
 		// TODO: move this to sconeopt?
-		void SCONE_API PerformOptimization( int argc, char* argv[] );
-		void SCONE_API PerformOptimization( const String& scenario_file, const PropNode& props = PropNode("") );
-		PropNode SCONE_API SimulateObjective( const String& par_file );
+		SCONE_API OptimizerUP PerformOptimization( const String& scenario_file, const PropNode& props = PropNode("") );
+		SCONE_API PropNode SimulateObjective( const String& par_file );
 	}
 }

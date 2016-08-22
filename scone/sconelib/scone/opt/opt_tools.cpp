@@ -23,14 +23,7 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
-		void SCONE_API PerformOptimization( int argc, char* argv[] )
-		{
-			SCONE_THROW_IF( argc < 2, "No config file argument provided" );
-
-			PerformOptimization( String( argv[ 1 ] ), GetPropNodeFromArgs( 2, argc, argv ) );
-		}
-
-		void SCONE_API PerformOptimization( const String& scenario_file, const PropNode& cmd_props )
+		SCONE_API OptimizerUP PerformOptimization( const String& scenario_file, const PropNode& cmd_props )
 		{
 			// load properties
 			PropNode props = ReadPropNode( scenario_file );
@@ -53,10 +46,7 @@ namespace scone
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
 			props.ToXmlFile( ( outdir / "config.xml" ).string() );
 
-			std::cout << "scenario=" << scenario_file << std::endl;
-			std::cout << "folder=" << o->AcquireOutputFolder() << std::endl;
-
-			o->Run();
+			return std::move( o );
 		}
 
 		PropNode SCONE_API SimulateObjective( const String& filename )
