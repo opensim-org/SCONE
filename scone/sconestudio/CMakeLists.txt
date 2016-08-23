@@ -22,11 +22,15 @@ if(${Qt5Widgets_FOUND})
 		QOsgViewer.cpp
 		SconeStudio.cpp
 		SconeStudio.h
+		../../contrib/qcustomplot/qcustomplot.h
+		../../contrib/qcustomplot/qcustomplot.cpp
 		)
 	
 	set(RESOURCEFILES
 		studio.rc
 		)
+	
+	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
 	
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui SconeProgressDockWidget.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
@@ -43,7 +47,7 @@ if(${Qt5Widgets_FOUND})
 
 	add_executable(sconestudio ${STUDIOFILES} ${GUIFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCES})
 	
-	qt5_use_modules( sconestudio Widgets OpenGL )
+	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
 	set_target_properties(sconestudio PROPERTIES
 		PROJECT_LABEL "sconestudio"
