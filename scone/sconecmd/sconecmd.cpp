@@ -33,24 +33,29 @@ int main(int argc, char* argv[])
 		{
 			// set log level
 			log::SetLevel( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel );
+			auto scenario_file = optArg.getValue();
+
+			// load properties
+			PropNode props = ReadPropNode( scenario_file );
 
 			// start optimization
-			PropNode pn;
+			PropNode cmd_props;
 			for ( auto kvstring : propArg )
 			{
 				auto kvp = flut::to_key_value( kvstring );
-				pn.Add( kvp.first, kvp.second );
+				cmd_props.Add( kvp.first, kvp.second );
 			}
 
-			opt::OptimizerUP o = opt::PerformOptimization( optArg.getValue(), pn );
+			// get command line settings (parameter 2 and further)
+			if ( !cmd_props.IsEmpty() )
+				props.Merge( cmd_props, true );
+
+			// create optimizer
+			opt::OptimizerUP o = opt::PrepareOptimization( props, scenario_file );
 			o->SetConsoleOutput( !quietOutput.getValue() );
 			o->SetStatusOutput( statusOutput.getValue() );
-
 			if ( o->GetStatusOutput() )
-			{
 				std::cout << "scenario=" << optArg.getValue() << std::endl;
-				std::cout << "folder=" << o->AcquireOutputFolder() << std::endl;
-			}
 
 			o->Run();
 		}
@@ -65,7 +70,12 @@ int main(int argc, char* argv[])
 	catch (std::exception& e)
 	{
 		log::Critical( e.what() );
-		flut::wait_for_key();
+		cout << "error=" << e.what() << endl;
+		cout.flush();
+	}
+	catch (TCLAP::ExitException& e )
+	{
+		return e.getExitStatus();
 	}
 
 	return 0;

@@ -82,7 +82,7 @@ namespace scone
 			{
 				// copy values into par
 				fitnesses[ ind_idx ] = m_Objectives[ ind_idx ]->Evaluate( parsets[ ind_idx ] );
-				if ( console_output )
+				if ( GetProgressOutput() )
 					printf(" %3.0f", fitnesses[ ind_idx ] );
 			}
 			return fitnesses;
@@ -119,7 +119,7 @@ namespace scone
 						num_active_threads--;
 
 						// print some stuff
-						if ( console_output )
+						if ( GetProgressOutput() )
 							printf( "%3.0f ", fitnesses[ thread_idx ] );
 					}
 				}

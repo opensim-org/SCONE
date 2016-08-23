@@ -32,6 +32,7 @@ namespace scone
 			double GetBestFitness() { return m_BestFitness; }
 
 			void SetConsoleOutput( bool output ) { console_output = output; }
+			bool GetProgressOutput() { return console_output && !status_output; }
 			bool GetStatusOutput() const { return status_output; }
 			void SetStatusOutput( bool s ) { status_output = s; }
 

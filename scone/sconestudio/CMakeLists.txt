@@ -28,7 +28,7 @@ if(${Qt5Widgets_FOUND})
 		studio.rc
 		)
 	
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
+	qt5_wrap_ui(UI_HEADERS SconeStudio.ui SconeProgressDockWidget.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 	
 	SET( SOURCE_FILES ${STUDIOFILES} ${GUIFILES} ${RESOURCES} )
@@ -81,7 +81,7 @@ if(${Qt5Widgets_FOUND})
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${GUIFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.qrc "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 	source_group("Studio Files" FILES ${STUDIOFILES} )
-	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui )
+	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui SconeProgressDockWidget.ui)
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})

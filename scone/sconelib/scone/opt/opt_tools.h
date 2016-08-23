@@ -17,7 +17,7 @@ namespace scone
 		SCONE_API void RegisterFactoryTypes();
 
 		// TODO: move this to sconeopt?
-		SCONE_API OptimizerUP PerformOptimization( const String& scenario_file, const PropNode& props = PropNode("") );
+		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const String& scenario_file );
 		SCONE_API PropNode SimulateObjective( const String& par_file );
 	}
 }

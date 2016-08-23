@@ -13,6 +13,8 @@
 #endif
 
 #include "ui_SconeStudio.h"
+#include "ui_SconeProgressDockWidget.h"
+
 #include <BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h>
 
 #include "scone/core/PropNode.h"
@@ -58,6 +60,7 @@ public:
 	void helpAbout() {}
 	void optimizeScenario();
 	void abortOptimizations();
+	void updateOptimizations();
 
 private:
 	void setTime( TimeInSeconds t );
@@ -68,6 +71,7 @@ private:
 	QFileSystemModel* resultsFileModel;
 	QFileSystemModel* scenarioFileModel;
 	QTimer qtimer;
+	QTimer optimizationUpdateTimer;
 
 	QString currentFileName;
 	bool fileChanged = false;
@@ -77,7 +81,28 @@ private:
 	flut::timer timer;
 	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;
-	std::vector< QProcess* > processes;
+
+	struct Optimization
+	{
+		Optimization() : process( nullptr ), generation( 0 ), max_generations( 0 ), best( 0.0f ), best_gen( 0 ) {}
+		~Optimization() {}
+		
+		scone::String name;
+		QString fileName;
+		QProcess* process;
+		Ui::SconeProgressDockWidget* dock_ui;
+		QDockWidget* dock;
+		int best_gen;
+		float best;
+		float cur_best;
+		float cur_avg;
+		int generation;
+		int max_generations;
+		std::vector< float > bestvec;
+		std::vector< float > avgvec;
+	};
+
+	std::vector< Optimization > optimizations;
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
 };

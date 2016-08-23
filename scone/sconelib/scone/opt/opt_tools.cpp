@@ -23,29 +23,23 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizer >();
 		}
 
-		SCONE_API OptimizerUP PerformOptimization( const String& scenario_file, const PropNode& cmd_props )
+		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const String& scenario_file )
 		{
-			// load properties
-			PropNode props = ReadPropNode( scenario_file );
-
-			// get command line settings (parameter 2 and further)
-			if ( !cmd_props.IsEmpty() )
-				props.Merge( cmd_props, true );
+			// create optimizer and report unused parameters
+			opt::OptimizerUP o = opt::CreateOptimizer( props.GetChild( "Optimizer" ) );
+			LogUntouched( props );
 
 			// set current path to config file path
 			path config_path( scenario_file );
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 
-			// create optimizer and report unused parameters
-			opt::OptimizerUP o = opt::CreateOptimizer( props.GetChild( "Optimizer" ) );
-			LogUntouched( props );
-
 			// copy original and write resolved config files
 			path outdir( o->AcquireOutputFolder() );
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
 			props.ToXmlFile( ( outdir / "config.xml" ).string() );
 
+			// return created optimizer
 			return std::move( o );
 		}
 

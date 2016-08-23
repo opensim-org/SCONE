@@ -14,7 +14,10 @@
 #include "scone/core/Log.h"
 
 #include <flut/timer.hpp>
+
 using flut::timer;
+using std::cout;
+using std::endl;
 
 namespace scone
 {
@@ -98,15 +101,26 @@ namespace scone
 			}
 
 			// init CMA object
-			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
+			log::DebugF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
 			cma.init( objfunc, initPoint, m_Lambda, m_Mu, m_Sigma, initCovar );
+
+			if ( status_output )
+			{
+				// print out some info
+				cout << "folder=" << AcquireOutputFolder() << endl;
+				cout << "dim=" << dim << endl;
+				cout << "sigma=" << m_Sigma << endl;
+				cout << "lambda=" << m_Lambda << endl;
+				cout << "mu=" << m_Mu << endl;
+				cout << "max_generations=" << max_generations << endl;
+			}
 
 			// optimization loop
 			timer tmr;
 			m_BestFitness = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
-				if ( console_output )
+				if ( GetProgressOutput() )
 					printf("%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
 
 				cma.step_mt();
@@ -115,7 +129,7 @@ namespace scone
 				double current_best_fitness = IsMinimizing() ? cma.solution().value : -cma.solution().value;
 				double current_avg_fitness = IsMinimizing() ? cma.average() : -cma.average();
 
-				if ( console_output )
+				if ( GetProgressOutput() )
 					printf(" A=%.3f", current_avg_fitness );
 				if ( status_output )
 					std::cout << "generation=" << gen << " " << current_avg_fitness << " " << current_best_fitness << std::endl;
@@ -125,7 +139,7 @@ namespace scone
 				{
 					m_BestFitness = current_best_fitness;
 
-					if ( console_output )
+					if ( GetProgressOutput() )
 						printf(" B=%.3f", m_BestFitness );
 					if ( status_output )
 						std::cout << "best=" << m_BestFitness << std::endl;
@@ -162,14 +176,18 @@ namespace scone
 				}
 
 				// show time if needed
-				if ( console_output )
+				if ( GetProgressOutput() )
 				{
 					if ( show_optimization_time )
 						printf( " T=%.1f", tmr.seconds() );
-
 					printf( new_best ? "\n" : "\r" ); // only start newline if there's been a new best
 				}
 			}
+			if ( console_output )
+				cout << "Optimization finished" << endl;
+
+			if ( status_output )
+				cout << "finished=1" << endl;
 		}
 	}
 }

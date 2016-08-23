@@ -19,21 +19,21 @@
 #include "qevent.h"
 
 #ifdef _MSC_VER
-	const char* scone_program_name = "sconeopt.exe";
+const char* scone_program_name = "sconecmd.exe";
 #else
-	const char* scone_program_name = "sconeopt";
+const char* scone_program_name = "sconecmd";
 #endif
 
 
 using namespace scone;
 using namespace std;
 
-SconeStudio::SconeStudio(QWidget *parent, Qt::WindowFlags flags) :
-QMainWindow(parent, flags),
+SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
+QMainWindow( parent, flags ),
 slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) )
 {
-	ui.setupUi(this);
+	ui.setupUi( this );
 	//setCentralWidget( nullptr );
 	//setDockNestingEnabled( true );
 }
@@ -47,18 +47,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( QString( scone::GetFolder( SCONE_OUTPUT_FOLDER ).c_str() ) ) );
 	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
 	connect( ui.resultsBrowser->selectionModel(),
-		SIGNAL( currentChanged( const QModelIndex&,const QModelIndex& ) ),
-		this, SLOT( selectBrowserItem( const QModelIndex&,const QModelIndex& ) ) );
+		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	// init scenario browser
-	//scenarioFileModel = new QFileSystemModel( this );
-	//scenarioFileModel->setNameFilters( QStringList( "*.xml" ) );
-	//ui.scenarioBrowser->setModel( scenarioFileModel );
-	//ui.scenarioBrowser->setRootIndex( scenarioFileModel->setRootPath( QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ) ) );
-	//for ( int i = 1; i <= 3; ++i ) ui.scenarioBrowser->hideColumn( i );
-	//ui.scenarioDock->hide();
-
-	// init osg viewer
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 	showViewer();
 
@@ -66,13 +57,12 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.scenarioEdit->setTabStopWidth( 16 );
 	ui.scenarioEdit->setWordWrapMode( QTextOption::NoWrap );
 	xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( ui.scenarioEdit );
-	
-	// init optimizations list
-	ui.optTree->setHeaderLabels( QStringList{ "Name", "Status" } );
-	ui.optTree->addTopLevelItem( new QTreeWidgetItem( QStringList{ "Jazeker", "Meneer" } ) );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
+
+	connect( &optimizationUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateOptimizations() ) );
+	optimizationUpdateTimer.start( 1000 );
 
 	return true;
 }
@@ -95,7 +85,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 			setTime( 0 );
 			start();
 		}
-		else log::warning( "Cannot activate new model until current simulation is finished");
+		else log::warning( "Cannot activate new model until current simulation is finished" );
 
 	}
 	catch ( std::exception& e )
@@ -166,23 +156,43 @@ void SconeStudio::fileOpen()
 		currentFileName = filename;
 		fileChanged = false;
 		QFile f( currentFileName );
-		if ( f.open( QFile::ReadOnly | QFile::Text) )
+		if ( f.open( QFile::ReadOnly | QFile::Text ) )
 		{
 			QTextStream str( &f );
-			ui.scenarioEdit->setText( str.readAll() );		
-			showEditor();		
+			ui.scenarioEdit->setText( str.readAll() );
+			showEditor();
 		}
 	}
 }
 
 void SconeStudio::fileSave()
 {
-
+	if ( !currentFileName.isEmpty() )
+	{
+		QFile file( currentFileName );
+		if ( !file.open( QIODevice::WriteOnly ) )
+		{
+			QMessageBox::critical( this, "Error writing file", "Could not open file " + currentFileName );
+			return;
+		}
+		else
+		{
+			QTextStream stream( &file );
+			stream << ui.scenarioEdit->toPlainText();
+			stream.flush();
+			file.close();
+		}
+	}
 }
 
 void SconeStudio::fileSaveAs()
 {
-
+	QString filename = QFileDialog::getSaveFileName( this, "Save Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
+	if ( !filename.isEmpty() )
+	{
+		currentFileName = filename;
+		fileSave();
+	}
 }
 
 void SconeStudio::fileExit()
@@ -199,47 +209,91 @@ void SconeStudio::optimizeScenario()
 		return;
 	}
 
+	Optimization opt;
 	QString program = make_qt( flut::get_application_folder() + scone_program_name );
 	QStringList args;
-	args << currentFileName;
-	QProcess* p = new QProcess( this );
-	p->setReadChannel( QProcess::StandardOutput );
-	p->start( program, args );
+	args << "-o" << currentFileName << "-s" << "-q";
+	opt.process = new QProcess( this );
+	opt.process->setReadChannel( QProcess::StandardOutput );
+	opt.process->start( program, args );
+	opt.fileName = currentFileName;
 
-	flut_error_if( !p->waitForStarted( 3000 ), "Could not start process" );
+	flut_error_if( !opt.process->waitForStarted( 5000 ), "Could not start process" );
+	log::info( "Started optimization of ", currentFileName.toStdString() );
 
-	for ( int i = 0; i < 20; ++i )
-	{
-		if ( p->waitForReadyRead( 1000 ) )
-		{
-			string s = QString::fromLocal8Bit( p->readLine() ).toStdString();
-			auto kvp = flut::to_key_value( s );
-			if ( kvp.first == "folder" )
-			{
-				p->setObjectName( make_qt( kvp.second ) );
-				break;
-			}
-		}
-	}
+	opt.dock = new QDockWidget;
+	opt.dock_ui = new Ui::SconeProgressDockWidget;
+	opt.dock_ui->setupUi( opt.dock );
+	addDockWidget( Qt::DockWidgetArea::LeftDockWidgetArea, opt.dock );
 
-	log::info( "Started optimization ", p->objectName().toStdString() );
-	processes.push_back( p );
+	optimizations.push_back( opt );
+	updateOptimizations();
 }
 
 void SconeStudio::abortOptimizations()
 {
-	if ( processes.size() > 0 )
+	if ( optimizations.size() > 0 )
 	{
-		QString message = QString().sprintf( "Are you sure you want to terminate %d optimizations?", processes.size() );
+		QString message = QString().sprintf( "Are you sure you want to terminate %d optimizations?", optimizations.size() );
 		if ( QMessageBox::warning( this, "Terminate Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
-			for ( auto* p : processes )
+			for ( auto& o : optimizations )
 			{
-				log::info( "Closing process ", p->objectName().toStdString() );
-				p->close();
-				delete p;
+				log::info( "Closing process ", o.name );
+				removeDockWidget( o.dock );
+				o.process->close();
+				delete o.process;
 			}
-			processes.clear();
+			optimizations.clear();
+		}
+	}
+}
+
+void SconeStudio::updateOptimizations()
+{
+	for ( auto& o : optimizations )
+	{
+		if ( !o.process->isOpen() )
+		{
+			log::info( "Optimization finished: ", o.name );
+			continue;
+		}
+
+		if ( o.name.empty() )
+			o.process->waitForReadyRead( 5000 );
+
+		while ( o.process->canReadLine() )
+		{
+			string s = QString::fromLocal8Bit( o.process->readLine() ).toStdString();
+			auto kvp = flut::to_key_value( s );
+			//log::trace( flut::quoted( kvp.first ), " = ", flut::quoted( kvp.second ) );
+			if ( kvp.first == "folder" )
+			{
+				o.name = flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) );
+				o.dock->setWindowTitle( QString( o.name.c_str() ) );
+			}
+			else if ( kvp.first == "max_generations" )
+			{
+				o.max_generations = from_str< int >( kvp.second );
+				o.dock_ui->generationText->setText( QString().sprintf( "%d of %d", o.generation, o.max_generations ) );
+			}
+			else if ( kvp.first == "generation" )
+			{
+				flut::scan_str( kvp.second, o.generation, o.cur_avg, o.cur_best );
+				o.avgvec.push_back( o.cur_avg );
+				o.bestvec.push_back( o.cur_best );
+				o.dock_ui->generationText->setText( QString().sprintf( "%d of %d", o.generation, o.max_generations ) );
+			}
+			else if ( kvp.first == "best" )
+			{
+				o.best = from_str< float >( kvp.second );
+				o.best_gen = o.generation;
+				o.dock_ui->bestText->setText( QString().sprintf( "%.3f (Generation %d)", o.best, o.best_gen ) );
+			}
+			else if ( kvp.first == "error" )
+			{
+				QMessageBox::critical( this, "Error optimizing " + o.fileName, make_qt( kvp.second ) );
+			}
 		}
 	}
 }
@@ -286,7 +340,7 @@ void SconeStudio::setTime( TimeInSeconds t )
 void SconeStudio::closeEvent( QCloseEvent *e )
 {
 	abortOptimizations();
-	if ( processes.empty() )
+	if ( optimizations.empty() )
 		e->accept();
 	else e->ignore();
 }

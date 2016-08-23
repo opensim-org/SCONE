@@ -153,13 +153,13 @@ namespace scone
 		ConstChildIter FindChild( const KeyType& key ) const;
 
 		/// XML I/O, with optional root name in case there is more than one child
-		void ToXmlFile( const String& filename, const KeyType& rootname = "" );
+		void ToXmlFile( const String& filename, const KeyType& rootname = "" ) const;
 		PropNode& FromXmlFile( const String& filename, const KeyType& rootname = "" );
 
-		void ToIniFile( const String& filename );
+		void ToIniFile( const String& filename ) const;
 		PropNode& FromIniFile( const String& filename );
 
-		void ToInfoFile( const String& filename );
+		void ToInfoFile( const String& filename ) const;
 		PropNode& FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
