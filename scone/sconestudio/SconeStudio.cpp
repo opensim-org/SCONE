@@ -17,6 +17,7 @@
 #include "flut/system_tools.hpp"
 #include "qt_tools.h"
 #include "qevent.h"
+#include "qcustomplot.h"
 
 #ifdef _MSC_VER
 const char* scone_program_name = "sconecmd.exe";
@@ -222,8 +223,20 @@ void SconeStudio::optimizeScenario()
 	log::info( "Started optimization of ", currentFileName.toStdString() );
 
 	opt.dock = new QDockWidget;
-	opt.dock_ui = new Ui::SconeProgressDockWidget;
+	opt.dock_ui = new Ui::ProgressDockWidget;
 	opt.dock_ui->setupUi( opt.dock );
+	opt.dock_ui->plot->addGraph();
+	opt.dock_ui->plot->graph(0)->setPen(QPen(QColor(0, 100, 255)));
+	opt.dock_ui->plot->graph(0)->setLineStyle(QCPGraph::lsLine);
+	//opt.dock_ui->plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+	opt.dock_ui->plot->graph(0)->setName("Left maxwell function");
+
+	opt.dock_ui->plot->addGraph();
+	opt.dock_ui->plot->graph(1)->setPen(QPen(QColor(255, 100, 0), 1, Qt::DashLine ));
+	opt.dock_ui->plot->graph(1)->setLineStyle(QCPGraph::lsLine);
+	//opt.dock_ui->plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+	opt.dock_ui->plot->graph(1)->setName("Left maxwell function");
+
 	addDockWidget( Qt::DockWidgetArea::LeftDockWidgetArea, opt.dock );
 
 	optimizations.push_back( opt );
@@ -282,7 +295,15 @@ void SconeStudio::updateOptimizations()
 				flut::scan_str( kvp.second, o.generation, o.cur_avg, o.cur_best );
 				o.avgvec.push_back( o.cur_avg );
 				o.bestvec.push_back( o.cur_best );
+				o.genvec.push_back( o.generation );
+				o.highest = std::max( o.highest, std::max( o.cur_best, o.cur_avg ) );
+				o.lowest = std::min( o.lowest, std::min( o.cur_best, o.cur_avg ) );
 				o.dock_ui->generationText->setText( QString().sprintf( "%d of %d", o.generation, o.max_generations ) );
+				o.dock_ui->plot->graph( 0 )->setData( o.genvec, o.bestvec );
+				o.dock_ui->plot->graph( 1 )->setData( o.genvec, o.avgvec );
+				o.dock_ui->plot->xAxis->setRange( 0, o.generation );
+				o.dock_ui->plot->yAxis->setRange( o.lowest, o.highest );
+				o.dock_ui->plot->replot();
 			}
 			else if ( kvp.first == "best" )
 			{

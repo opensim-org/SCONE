@@ -13,11 +13,12 @@
 #endif
 
 #include "ui_SconeStudio.h"
-#include "ui_SconeProgressDockWidget.h"
+#include "ui_ProgressDockWidget.h"
 
 #include <BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h>
 
 #include "scone/core/PropNode.h"
+#include "scone/core/Statistic.h"
 
 #include "SconeManager.h"
 #include "StudioScene.h"
@@ -84,22 +85,25 @@ private:
 
 	struct Optimization
 	{
-		Optimization() : process( nullptr ), generation( 0 ), max_generations( 0 ), best( 0.0f ), best_gen( 0 ) {}
+		Optimization() : process( nullptr ), generation( 0 ), max_generations( 0 ), best( 0.0f ), best_gen( 0 ), highest( 0 ), lowest( 0 ) {}
 		~Optimization() {}
 		
 		scone::String name;
 		QString fileName;
 		QProcess* process;
-		Ui::SconeProgressDockWidget* dock_ui;
+		Ui::ProgressDockWidget* dock_ui;
 		QDockWidget* dock;
 		int best_gen;
 		float best;
+		float highest;
+		float lowest;
 		float cur_best;
 		float cur_avg;
 		int generation;
 		int max_generations;
-		std::vector< float > bestvec;
-		std::vector< float > avgvec;
+		QVector< double > bestvec;
+		QVector< double > avgvec;
+		QVector< double > genvec;
 	};
 
 	std::vector< Optimization > optimizations;
