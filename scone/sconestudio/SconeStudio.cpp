@@ -11,7 +11,6 @@
 #endif
 #include <QTextStream>
 
-
 #include "simvis/osg_tools.h"
 #include "scone/opt/opt_tools.h"
 #include "flut/system_tools.hpp"
@@ -19,20 +18,14 @@
 #include "qevent.h"
 #include "qcustomplot.h"
 
-#ifdef _MSC_VER
-const char* scone_program_name = "sconecmd.exe";
-#else
-const char* scone_program_name = "sconecmd";
-#endif
-
-
 using namespace scone;
 using namespace std;
 
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 QMainWindow( parent, flags ),
 slomo_factor( 1 ),
-com_delta( Vec3( 0, 1, 0 ) )
+com_delta( Vec3( 0, 1, 0 ) ),
+close_all( false )
 {
 	ui.setupUi( this );
 	//setCentralWidget( nullptr );
@@ -210,36 +203,10 @@ void SconeStudio::optimizeScenario()
 		return;
 	}
 
-	Optimization opt;
-	QString program = make_qt( flut::get_application_folder() + scone_program_name );
-	QStringList args;
-	args << "-o" << currentFileName << "-s" << "-q";
-	opt.process = new QProcess( this );
-	opt.process->setReadChannel( QProcess::StandardOutput );
-	opt.process->start( program, args );
-	opt.fileName = currentFileName;
+	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFileName );
+	addDockWidget( Qt::DockWidgetArea::LeftDockWidgetArea, pdw );
 
-	flut_error_if( !opt.process->waitForStarted( 5000 ), "Could not start process" );
-	log::info( "Started optimization of ", currentFileName.toStdString() );
-
-	opt.dock = new QDockWidget;
-	opt.dock_ui = new Ui::ProgressDockWidget;
-	opt.dock_ui->setupUi( opt.dock );
-	opt.dock_ui->plot->addGraph();
-	opt.dock_ui->plot->graph(0)->setPen(QPen(QColor(0, 100, 255)));
-	opt.dock_ui->plot->graph(0)->setLineStyle(QCPGraph::lsLine);
-	//opt.dock_ui->plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-	opt.dock_ui->plot->graph(0)->setName("Left maxwell function");
-
-	opt.dock_ui->plot->addGraph();
-	opt.dock_ui->plot->graph(1)->setPen(QPen(QColor(255, 100, 0), 1, Qt::DashLine ));
-	opt.dock_ui->plot->graph(1)->setLineStyle(QCPGraph::lsLine);
-	//opt.dock_ui->plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-	opt.dock_ui->plot->graph(1)->setName("Left maxwell function");
-
-	addDockWidget( Qt::DockWidgetArea::LeftDockWidgetArea, opt.dock );
-
-	optimizations.push_back( opt );
+	optimizations.push_back( pdw );
 	updateOptimizations();
 }
 
@@ -250,72 +217,35 @@ void SconeStudio::abortOptimizations()
 		QString message = QString().sprintf( "Are you sure you want to terminate %d optimizations?", optimizations.size() );
 		if ( QMessageBox::warning( this, "Terminate Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
+			close_all = true;
 			for ( auto& o : optimizations )
 			{
-				log::info( "Closing process ", o.name );
-				removeDockWidget( o.dock );
-				o.process->close();
-				delete o.process;
+				o->close();
 			}
 			optimizations.clear();
+			close_all = false;
 		}
 	}
 }
 
 void SconeStudio::updateOptimizations()
 {
+	// clear out all closed optimizations
+	for ( auto it = optimizations.begin(); it != optimizations.end(); )
+	{
+		ProgressDockWidget* w = *it;
+		if ( w->isFinished() )
+		{
+			delete w;
+			it = optimizations.erase( it );
+		}
+		else ++it;
+	}
+
+	// update all optimizations
 	for ( auto& o : optimizations )
 	{
-		if ( !o.process->isOpen() )
-		{
-			log::info( "Optimization finished: ", o.name );
-			continue;
-		}
-
-		if ( o.name.empty() )
-			o.process->waitForReadyRead( 5000 );
-
-		while ( o.process->canReadLine() )
-		{
-			string s = QString::fromLocal8Bit( o.process->readLine() ).toStdString();
-			auto kvp = flut::to_key_value( s );
-			//log::trace( flut::quoted( kvp.first ), " = ", flut::quoted( kvp.second ) );
-			if ( kvp.first == "folder" )
-			{
-				o.name = flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) );
-				o.dock->setWindowTitle( QString( o.name.c_str() ) );
-			}
-			else if ( kvp.first == "max_generations" )
-			{
-				o.max_generations = from_str< int >( kvp.second );
-				o.dock_ui->generationText->setText( QString().sprintf( "%d of %d", o.generation, o.max_generations ) );
-			}
-			else if ( kvp.first == "generation" )
-			{
-				flut::scan_str( kvp.second, o.generation, o.cur_avg, o.cur_best );
-				o.avgvec.push_back( o.cur_avg );
-				o.bestvec.push_back( o.cur_best );
-				o.genvec.push_back( o.generation );
-				o.highest = std::max( o.highest, std::max( o.cur_best, o.cur_avg ) );
-				o.lowest = std::min( o.lowest, std::min( o.cur_best, o.cur_avg ) );
-				o.dock_ui->generationText->setText( QString().sprintf( "%d of %d", o.generation, o.max_generations ) );
-				o.dock_ui->plot->graph( 0 )->setData( o.genvec, o.bestvec );
-				o.dock_ui->plot->graph( 1 )->setData( o.genvec, o.avgvec );
-				o.dock_ui->plot->xAxis->setRange( 0, o.generation );
-				o.dock_ui->plot->yAxis->setRange( o.lowest, o.highest );
-				o.dock_ui->plot->replot();
-			}
-			else if ( kvp.first == "best" )
-			{
-				o.best = from_str< float >( kvp.second );
-				o.best_gen = o.generation;
-				o.dock_ui->bestText->setText( QString().sprintf( "%.3f (Generation %d)", o.best, o.best_gen ) );
-			}
-			else if ( kvp.first == "error" )
-			{
-				QMessageBox::critical( this, "Error optimizing " + o.fileName, make_qt( kvp.second ) );
-			}
-		}
+		o->updateProgress();
 	}
 }
 

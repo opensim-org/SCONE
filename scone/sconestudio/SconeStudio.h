@@ -13,7 +13,6 @@
 #endif
 
 #include "ui_SconeStudio.h"
-#include "ui_ProgressDockWidget.h"
 
 #include <BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h>
 
@@ -24,6 +23,7 @@
 #include "StudioScene.h"
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"
+#include "ProgressDockWidget.h"
 
 class QFileSystemModel;
 
@@ -63,6 +63,9 @@ public:
 	void abortOptimizations();
 	void updateOptimizations();
 
+public:
+	bool close_all;
+
 private:
 	void setTime( TimeInSeconds t );
 	scone::StudioScene manager;
@@ -83,30 +86,7 @@ private:
 	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;
 
-	struct Optimization
-	{
-		Optimization() : process( nullptr ), generation( 0 ), max_generations( 0 ), best( 0.0f ), best_gen( 0 ), highest( 0 ), lowest( 0 ) {}
-		~Optimization() {}
-		
-		scone::String name;
-		QString fileName;
-		QProcess* process;
-		Ui::ProgressDockWidget* dock_ui;
-		QDockWidget* dock;
-		int best_gen;
-		float best;
-		float highest;
-		float lowest;
-		float cur_best;
-		float cur_avg;
-		int generation;
-		int max_generations;
-		QVector< double > bestvec;
-		QVector< double > avgvec;
-		QVector< double > genvec;
-	};
-
-	std::vector< Optimization > optimizations;
+	std::vector< ProgressDockWidget* > optimizations;
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
 };
