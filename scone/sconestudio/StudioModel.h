@@ -28,7 +28,6 @@ namespace scone
 		bool IsEvaluating() { return is_evaluating; }
 
 	private:
-		void InitModel( const String& par_file );
 		void InitVis( vis::scene& s );
 		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
 

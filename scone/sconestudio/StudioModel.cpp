@@ -23,26 +23,14 @@ namespace scone
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
-		InitModel( par_file );
-		InitVis( s );
-	}
-
-	StudioModel::~StudioModel()
-	{
-		if ( is_evaluating )
-			log::warning( "Closing model while thread is still running" );
-
-		if ( eval_thread.joinable() )
-			eval_thread.join();
-	}
-
-	void StudioModel::InitModel( const String& par_file )
-	{
 		// create the objective form par file
 		so = cs::CreateSimulationObjective( par_file );
 
 		// accept filename and clear data
 		filename = par_file;
+
+		// initialize visualization
+		InitVis( s );
 
 		// see if we can load a matching .sto file
 		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
@@ -58,10 +46,20 @@ namespace scone
 		{
 			// start evaluation in separate thread
 			is_evaluating = true;
-			log::info( "Starting simulation in separate thread" );
+			log::info( "starting simulation in separate thread" );
 			eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
 		}
 	}
+
+	StudioModel::~StudioModel()
+	{
+		if ( is_evaluating )
+			log::warning( "Closing model while thread is still running" );
+
+		if ( eval_thread.joinable() )
+			eval_thread.join();
+	}
+
 
 	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
@@ -71,7 +69,6 @@ namespace scone
 
 		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
 		if ( is_evaluating ) lock.lock();
-
 		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
 		flut::timer t;
@@ -82,7 +79,7 @@ namespace scone
 
 			for ( auto& geom_file : geom_files )
 			{
-				//log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
+				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( root.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
 				body_meshes.back().back().set_material( bone_mat );
 			}
