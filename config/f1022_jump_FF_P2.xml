@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<max_generations>3000</max_generations>
+	<max_generations>50</max_generations>
 	<maximize_objective>1</maximize_objective>
-	<random_seed>1</random_seed>
+	<random_seed>0</random_seed>
 	<signature_postfix></signature_postfix>
 	<Objective type="SimulationObjective">
 		<max_duration>2</max_duration>

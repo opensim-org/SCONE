@@ -22,7 +22,8 @@ max_generations( 0 ),
 best( 0.0f ),
 best_gen( 0 ),
 highest( 0 ),
-lowest( 0 )
+lowest( 0 ),
+state( StartingState )
 {
 	QString program = make_qt( flut::get_application_folder() + scone_program_name );
 	QStringList args;
@@ -49,12 +50,21 @@ lowest( 0 )
 	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 	ui.plot->graph(1)->setName("Average fitness");
 
+	ui.plot->xAxis->setAutoTickCount( 6 );
+	ui.plot->yAxis->setAutoTickCount( 3 );
+
+	ui.plot->replot();
+	updateText();
 }
 
 ProgressDockWidget::~ProgressDockWidget()
 {
-	if ( process )
-		delete process;
+	if ( state != ClosedState )
+	{
+		log::critical( "Deleting Progress Dock that is not closed: ", name );
+		if ( process )
+			delete process;
+	}
 }
 
 bool ProgressDockWidget::updateProgress()
@@ -68,18 +78,21 @@ bool ProgressDockWidget::updateProgress()
 		return false;
 	}
 
-	if ( name.empty() )
-		process->waitForReadyRead( 5000 );
+	if ( state == StartingState )
+	{
+		if ( !process->waitForReadyRead( 5000 ) )
+			log::warning( "Timeout while waiting for data" );
+	}
 
 	while ( process->canReadLine() )
 	{
 		std::string s = QString::fromLocal8Bit( process->readLine() ).toStdString();
 		auto kvp = flut::to_key_value( s );
-		//log::trace( flut::quoted( kvp.first ), " = ", flut::quoted( kvp.second ) );
 
 		if ( kvp.first == "folder" )
 		{
 			name = flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) );
+			state = RunningState;
 			setWindowTitle( QString( name.c_str() ) );
 		}
 		else if ( kvp.first == "max_generations" )
@@ -110,26 +123,30 @@ bool ProgressDockWidget::updateProgress()
 		}
 		else if ( kvp.first == "error" )
 		{
-			QMessageBox::critical( this, "Error optimizing " + fileName, make_qt( kvp.second ) );
+			errorMsg = make_qt( kvp.second );
+			QMessageBox::critical( this, "Error optimizing " + fileName, errorMsg );
+			state = ErrorState;
 		}
 		else if ( kvp.first == "finished" )
 		{
-			QMessageBox::information( this, "Optimization finished", fileName + " is finished" );
+			state = FinishedState;
+			updateText();
 		}
 	}
 
 	return true;
 }
 
-bool ProgressDockWidget::isFinished()
+bool ProgressDockWidget::isClosed()
 {
-	return !name.empty() && isHidden();
+	return state == ClosedState;
 }
 
 void ProgressDockWidget::closeEvent( QCloseEvent *e )
 {
-	if ( !studio->close_all && process->isOpen() )
+	if ( !studio->close_all && state != FinishedState )
 	{
+		// allow user to cancel close
 		QString message = QString( "Are you sure you want to abort optimization " ) + QString( name.c_str() );
 		if ( QMessageBox::warning( this, "Abort Optimization", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Cancel )
 		{
@@ -142,11 +159,32 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 	process->close();
 	delete process;
 	process = nullptr;
+	state = ClosedState;
 	e->accept();
 }
 
 void ProgressDockWidget::updateText()
 {
-	QString s = QString().sprintf( "Generation %d of %d; best=%.3f (Generation %d)", generation + 1, max_generations, best, best_gen );
+	QString s;
+
+	switch ( state )
+	{
+	case ProgressDockWidget::StartingState:
+		s = "Initializing optimization...";
+		break;
+	case ProgressDockWidget::RunningState: 
+		s = QString().sprintf( "Generation %d of %d. Best=%.3f (Gen %d)", generation, max_generations, best, best_gen );
+		break;
+	case ProgressDockWidget::FinishedState:
+		s = QString().sprintf( "Optimization finished. Best=%.3f (Gen %d)", best, best_gen );
+		break;
+	case ProgressDockWidget::ClosedState:
+		break;
+	case ProgressDockWidget::ErrorState:
+		s = errorMsg;
+		break;
+	default:
+		break;
+	}
 	ui.text->setText( s );
 }

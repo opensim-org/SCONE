@@ -17,6 +17,7 @@ public:
 	SconeStudio* studio;
 	String name;
 	QString fileName;
+	QString errorMsg;
 	QProcess* process;
 	Ui::ProgressDockWidget ui;
 	int best_gen;
@@ -31,8 +32,11 @@ public:
 	QVector< double > avgvec;
 	QVector< double > genvec;
 
+	enum State { StartingState, RunningState, FinishedState, ClosedState, ErrorState };
+	State state;
+
 	bool updateProgress();
-	bool isFinished();
+	bool isClosed();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

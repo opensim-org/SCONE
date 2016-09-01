@@ -34,6 +34,8 @@ close_all( false )
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
+	setDockNestingEnabled( true );
+
 	// init file model and browser widget
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
@@ -204,9 +206,29 @@ void SconeStudio::optimizeScenario()
 	}
 
 	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFileName );
-	addDockWidget( Qt::DockWidgetArea::LeftDockWidgetArea, pdw );
-
 	optimizations.push_back( pdw );
+
+	addDockWidget( optimizations.size() <= 2 ? Qt::LeftDockWidgetArea : Qt::RightDockWidgetArea, pdw );
+
+	// move to the right
+	if ( optimizations.size() == 3 )
+	{
+		for ( auto& o : optimizations )
+			addDockWidget( Qt::RightDockWidgetArea, o );
+	}
+
+	// divide into tabs
+	if ( optimizations.size() >= 6 )
+	{
+		auto tab_count = ( optimizations.size() + 4 ) / 5;
+		for ( size_t i = 0; i < optimizations.size(); ++ i )
+		{
+			if ( i % tab_count != 0 )
+				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
+				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+		}
+	}
+
 	updateOptimizations();
 }
 
@@ -234,7 +256,7 @@ void SconeStudio::updateOptimizations()
 	for ( auto it = optimizations.begin(); it != optimizations.end(); )
 	{
 		ProgressDockWidget* w = *it;
-		if ( w->isFinished() )
+		if ( w->isClosed() )
 		{
 			delete w;
 			it = optimizations.erase( it );
