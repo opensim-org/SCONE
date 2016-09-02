@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Measure type="CompositeMeasure">
+	<Terms>
+		<term name="Gait" weight="100" threshold="0.05">
+			<Measure type="GaitMeasure">
+				<termination_height>0.9</termination_height>
+				<min_velocity>1.2</min_velocity>
+			</Measure>
+		</term>
+		<term name="Effort" weight="0.01">
+			<Measure type="EffortMeasure" measure_type="Wang2012" use_cost_of_transport="0"/>
+		</term>
+		<term name="AnkleLimits" weight="0.1">
+			<Measure type="DofLimitMeasure">
+				<Limits>
+					<limit dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
+					<limit dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
+				</Limits>
+			</Measure>
+		</term>
+		<term name="KneeLimits" weight="0.001" threshold="500">
+			<Measure type="DofLimitMeasure">
+				<Limits>
+					<limit dof="knee_angle_l" squared_force_penalty="1"/>
+					<limit dof="knee_angle_r" squared_force_penalty="1"/>
+				</Limits>
+			</Measure>
+		</term>
+		<term name="Posture" weight="0.1">
+			<Measure type="DofLimitMeasure">
+				<Limits>
+					<limit dof="lumbar_extension" min_deg="-45" max_deg="45" squared_range_penalty="1"/>
+				</Limits>
+			</Measure>
+		</term>
+	</Terms>
+</Measure>
