@@ -327,17 +327,6 @@
    <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
   <widget class="QDockWidget" name="resultsDock">
    <property name="windowTitle">
     <string>Output</string>
@@ -466,7 +455,7 @@
     <string>&amp;Optimize Scenario</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F5</string>
+    <string>Ctrl+R</string>
    </property>
   </action>
   <action name="actionTerminate_Running_Optimizations">
