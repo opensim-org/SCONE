@@ -401,7 +401,9 @@ namespace scone
 
 			try
 			{
-				std::unique_lock< std::mutex > lock( GetSimulationMutex() );
+				std::unique_lock< std::mutex > lock( GetSimulationMutex(), std::defer_lock );
+				if ( GetThreadSafeSimulation() )
+					lock.lock();
 
 				if ( use_fixed_control_step_size )
 				{
@@ -464,8 +466,10 @@ namespace scone
 						// allow time for other threads to access the model
 						if ( GetThreadSafeSimulation() && current_step % thread_interuption_steps == 0 )
 						{
+							// notify GUI thread
 							lock.unlock();
-							std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+							GetSimulationCondVar().notify_all();
+							//std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 							lock.lock();
 						}
 
@@ -486,6 +490,10 @@ namespace scone
 				log::Error( e.what() );
 				return false;
 			}
+
+			if ( GetThreadSafeSimulation() )
+				GetSimulationCondVar().notify_all();
+
 			return true;
 		}
 

@@ -121,10 +121,12 @@ namespace scone
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		sim::Model& model = so->GetModel();
+		std::unique_lock< std::mutex > simulation_lock( model.GetSimulationMutex(), std::defer_lock );
 
 		if ( !is_evaluating )
 		{
 			// update model state from data
+			std::unique_lock< std::mutex > data_lock( GetDataMutex() );
 			SCONE_ASSERT( !state_data_index.empty() );
 			std::vector< Real > state( state_data_index.size() );
 			for ( Index i = 0; i < state.size(); ++i )
@@ -132,8 +134,12 @@ namespace scone
 			model.SetStateValues( state );
 		}
 
-		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
-		if ( is_evaluating ) lock.lock();
+		if ( is_evaluating )
+		{
+			// wait until there's new data
+			simulation_lock.lock();
+			model.GetSimulationCondVar().wait( simulation_lock );
+		}
 
 		// update com
 		//com.pos( model.GetComPos() );
@@ -180,9 +186,13 @@ namespace scone
 		results.AddChild( "result", so->GetMeasure().GetReport() );
 		log::info( results );
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
-		std::lock_guard< std::mutex > lock( eval_mutex );
+
+		// copy data
+		std::lock_guard< std::mutex > lock( GetDataMutex() );
 		data = so->GetModel().GetData();
 		InitStateDataIndices();
+
 		is_evaluating = false;
+		so->GetModel().GetSimulationCondVar().notify_one();
 	}
 }

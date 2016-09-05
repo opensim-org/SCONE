@@ -8,6 +8,7 @@
 #include "simvis/arrow.h"
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 namespace scone
 {
@@ -22,10 +23,11 @@ namespace scone
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
 
-		const Storage<>& GetData() { std::lock_guard< std::mutex > lock( eval_mutex ); return data; }
+		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
 
-		bool IsEvaluating() { return is_evaluating; }
+		bool IsEvaluating() { return is_evaluating.load(); }
+		std::mutex& GetDataMutex() { return data_mutex; }
 
 	private:
 		void InitVis( vis::scene& s );
@@ -42,8 +44,8 @@ namespace scone
 		vis::material muscle_mat;
 
 		std::thread eval_thread;
-		std::mutex eval_mutex;
-		bool is_evaluating;
+		std::mutex data_mutex;
+		std::atomic< bool > is_evaluating;
 
 		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;

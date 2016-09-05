@@ -16,6 +16,7 @@
 #include <array>
 #include <type_traits>
 #include <mutex>
+#include <condition_variable>
 
 namespace scone
 {
@@ -154,6 +155,7 @@ namespace scone
 			void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
 			bool GetThreadSafeSimulation() { return thread_safe_simulation; }
 			std::mutex& GetSimulationMutex() { return simulation_mutex; }
+			std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
 
 		protected:
 			virtual String GetClassSignature() const override { return GetName(); }
@@ -189,6 +191,7 @@ namespace scone
 			// thread safety stuff
 			bool thread_safe_simulation;
 			std::mutex simulation_mutex;
+			std::condition_variable simulation_cv;
 		};
 		
 		inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }

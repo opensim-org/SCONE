@@ -40,7 +40,10 @@ namespace scone
 			if ( model->IsEvaluating() )
 				return model->GetSimModel().GetTime(); // TODO: this should be thread safe
 			else
+			{
+				std::unique_lock< std::mutex > lock( model->GetDataMutex() );
 				return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+			}
 		}
 		else return 0.0;
 	}
