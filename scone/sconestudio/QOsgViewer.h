@@ -4,6 +4,7 @@
 #include <QGridLayout>
 
 #include <osgViewer/CompositeViewer>
+#include <osgViewer/ViewerEventHandlers>
 #include <osgQt/GraphicsWindowQt>
 #include <iostream>
 
@@ -20,9 +21,14 @@ public:
 
 	void setScene( osg::Node* s );
 	void moveCamera( const osg::Vec3d& delta_pos );
+	void startCapture( const std::string& filename );
+	void stopCapture();
+	bool isCapturing() { return capture_handler != nullptr; }
 
 protected:
 	QTimer _timer;
 	osg::ref_ptr< vis::osg_camera_man > camera_man;
 	osg::Node* scene;
+	osg::ref_ptr< osgViewer::ScreenCaptureHandler > capture_handler;
+	osg::ref_ptr< osgViewer::View > viewer;
 };

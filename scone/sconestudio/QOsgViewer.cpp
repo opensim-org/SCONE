@@ -4,7 +4,9 @@
 #include <osgViewer/ViewerEventHandlers>
 #include "simvis/osg_camera_man.h"
 
-QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) : QWidget( parent, f )
+QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) :
+QWidget( parent, f ),
+capture_handler( nullptr )
 {
 	setThreadingModel( threadingModel );
 
@@ -26,10 +28,10 @@ QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgV
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 {
-	osgViewer::View* view = new osgViewer::View;
-	addView( view );
+	viewer = new osgViewer::View;
+	addView( viewer );
 
-	osg::Camera* camera = view->getCamera();
+	osg::Camera* camera = viewer->getCamera();
 	camera->setGraphicsContext( gw );
 
 	const osg::GraphicsContext::Traits* traits = gw->getTraits();
@@ -39,15 +41,15 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	camera->setProjectionMatrixAsPerspective( 30.0f, static_cast<double>( traits->width ) / static_cast<double>( traits->height ), 1.0f, 10000.0f );
 
 	// setup view
-	view->addEventHandler( new osgViewer::StatsHandler );
-	view->setLightingMode( osg::View::NO_LIGHT );
+	viewer->addEventHandler( new osgViewer::StatsHandler );
+	viewer->setLightingMode( osg::View::NO_LIGHT );
 
 	// setup camera manipulator
 	gw->setTouchEventsEnabled( true );
 
 	camera_man = new vis::osg_camera_man();
 	camera_man->setVerticalAxisFixed( false );
-	view->setCameraManipulator( camera_man );
+	viewer->setCameraManipulator( camera_man );
 
 	return gw->getGLWidget();
 }
@@ -82,4 +84,22 @@ void QOsgViewer::setScene( osg::Node* s )
 void QOsgViewer::moveCamera( const osg::Vec3d& delta_pos )
 {
 	camera_man->setCenter( camera_man->getCenter() + delta_pos );
+}
+
+void QOsgViewer::startCapture( const std::string& filename )
+{
+	// create capture handler
+	capture_handler = new osgViewer::ScreenCaptureHandler( 
+		new osgViewer::ScreenCaptureHandler::WriteToFile( filename, "png", osgViewer::ScreenCaptureHandler::WriteToFile::SEQUENTIAL_NUMBER ), 20 );
+	viewer->addEventHandler( capture_handler );
+	capture_handler->startCapture();
+}
+
+void QOsgViewer::stopCapture()
+{
+	if ( capture_handler )
+	{
+		capture_handler->stopCapture();
+		capture_handler = nullptr;
+	}
 }

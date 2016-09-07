@@ -94,7 +94,7 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 {
 	auto item = resultsFileModel->fileInfo( idx );
 	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
-	log::trace( dirname );
+	//log::trace( dirname );
 }
 
 void SconeStudio::resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem )
@@ -121,10 +121,14 @@ void SconeStudio::start()
 	qtimer.start( 10 );
 	timer.reset();
 	timer_delta.reset();
+
+	ui.osgViewer->startCapture( "X:/test" );
 }
 
 void SconeStudio::stop()
 {
+	ui.osgViewer->stopCapture();
+
 	if ( qtimer.isActive() )
 		qtimer.stop();
 	else setTime( 0 );
