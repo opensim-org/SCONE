@@ -301,7 +301,7 @@
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
-     <string>&amp;Scenario</string>
+     <string>&amp;Optimize</string>
     </property>
     <addaction name="action_Optimize_Scenario"/>
     <addaction name="separator"/>
@@ -311,6 +311,8 @@
     <property name="title">
      <string>&amp;Tools</string>
     </property>
+    <addaction name="action_Create_Video"/>
+    <addaction name="separator"/>
     <addaction name="action_Preferences"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
@@ -455,12 +457,20 @@
     <string>&amp;Optimize Scenario</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+R</string>
+    <string>F5</string>
    </property>
   </action>
   <action name="actionTerminate_Running_Optimizations">
    <property name="text">
     <string>Terminate Optimizations...</string>
+   </property>
+  </action>
+  <action name="action_Create_Video">
+   <property name="text">
+    <string>Start Video &amp;Recording...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
    </property>
   </action>
  </widget>
@@ -749,6 +759,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Create_Video</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>createVideo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -772,5 +798,6 @@
   <slot>abortOptimizations()</slot>
   <slot>fileExit()</slot>
   <slot>selectBrowserItem(QModelIndex)</slot>
+  <slot>createVideo()</slot>
  </slots>
 </ui>

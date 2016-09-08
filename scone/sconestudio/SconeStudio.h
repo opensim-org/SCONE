@@ -62,9 +62,11 @@ public:
 	void optimizeScenario();
 	void abortOptimizations();
 	void updateOptimizations();
+	void createVideo();
 
 public:
 	bool close_all;
+	bool isRecording() { return !captureFilename.isEmpty(); }
 
 private:
 	void setTime( TimeInSeconds t );
@@ -77,16 +79,18 @@ private:
 	QTimer qtimer;
 	QTimer optimizationUpdateTimer;
 
-	QString currentFileName;
+	QString currentFilename;
 	bool fileChanged = false;
 
 	double slomo_factor;
 	TimeInSeconds current_time;
+	TimeInSeconds capture_frequency;
 	flut::timer timer;
 	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;
 
 	std::vector< ProgressDockWidget* > optimizations;
+	QString captureFilename;
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
 };

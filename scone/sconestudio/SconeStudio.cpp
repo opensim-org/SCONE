@@ -25,7 +25,8 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 QMainWindow( parent, flags ),
 slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) ),
-close_all( false )
+close_all( false ),
+capture_frequency( 60 )
 {
 	ui.setupUi( this );
 	//setCentralWidget( nullptr );
@@ -122,12 +123,17 @@ void SconeStudio::start()
 	timer.reset();
 	timer_delta.reset();
 
-	ui.osgViewer->startCapture( "X:/test" );
+	if ( !captureFilename.isEmpty() )
+		ui.osgViewer->startCapture( captureFilename.toStdString() );
 }
 
 void SconeStudio::stop()
 {
-	ui.osgViewer->stopCapture();
+	if ( !captureFilename.isEmpty() )
+	{
+		ui.osgViewer->stopCapture();
+		captureFilename.clear();
+	}
 
 	if ( qtimer.isActive() )
 		qtimer.stop();
@@ -144,7 +150,9 @@ void SconeStudio::slomo( int v )
 
 void SconeStudio::updateTimer()
 {
-	setTime( current_time + slomo_factor * timer_delta( timer.seconds() ) );
+	TimeInSeconds dt = isRecording() ? ( 1 / capture_frequency ) : timer_delta( timer.seconds() );
+
+	setTime( current_time + slomo_factor * dt );
 	ui.horizontalScrollBar->blockSignals( false );
 }
 
@@ -153,9 +161,9 @@ void SconeStudio::fileOpen()
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
-		currentFileName = filename;
+		currentFilename = filename;
 		fileChanged = false;
-		QFile f( currentFileName );
+		QFile f( currentFilename );
 		if ( f.open( QFile::ReadOnly | QFile::Text ) )
 		{
 			QTextStream str( &f );
@@ -167,12 +175,12 @@ void SconeStudio::fileOpen()
 
 void SconeStudio::fileSave()
 {
-	if ( !currentFileName.isEmpty() )
+	if ( !currentFilename.isEmpty() )
 	{
-		QFile file( currentFileName );
+		QFile file( currentFilename );
 		if ( !file.open( QIODevice::WriteOnly ) )
 		{
-			QMessageBox::critical( this, "Error writing file", "Could not open file " + currentFileName );
+			QMessageBox::critical( this, "Error writing file", "Could not open file " + currentFilename );
 			return;
 		}
 		else
@@ -190,7 +198,7 @@ void SconeStudio::fileSaveAs()
 	QString filename = QFileDialog::getSaveFileName( this, "Save Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
-		currentFileName = filename;
+		currentFilename = filename;
 		fileSave();
 	}
 }
@@ -203,13 +211,13 @@ void SconeStudio::fileExit()
 
 void SconeStudio::optimizeScenario()
 {
-	if ( currentFileName.isEmpty() )
+	if ( currentFilename.isEmpty() )
 	{
 		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
 		return;
 	}
 
-	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFileName );
+	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFilename );
 	optimizations.push_back( pdw );
 
 	addDockWidget( optimizations.size() <= 2 ? Qt::LeftDockWidgetArea : Qt::RightDockWidgetArea, pdw );
@@ -273,6 +281,11 @@ void SconeStudio::updateOptimizations()
 	{
 		o->updateProgress();
 	}
+}
+
+void SconeStudio::createVideo()
+{
+	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), QString() );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
