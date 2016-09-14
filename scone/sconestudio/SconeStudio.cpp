@@ -48,12 +48,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
-	showViewer();
-
-	// init text editor
-	ui.scenarioEdit->setTabStopWidth( 16 );
-	ui.scenarioEdit->setWordWrapMode( QTextOption::NoWrap );
-	xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( ui.scenarioEdit );
+	setCentralWidget( nullptr );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
@@ -66,7 +61,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 
 SconeStudio::~SconeStudio()
 {
-	delete xmlSyntaxHighlighter;
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
@@ -161,46 +155,27 @@ void SconeStudio::fileOpen()
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
-		currentFilename = filename;
-		fileChanged = false;
-		QFile f( currentFilename );
-		if ( f.open( QFile::ReadOnly | QFile::Text ) )
-		{
-			QTextStream str( &f );
-			ui.scenarioEdit->setText( str.readAll() );
-			showEditor();
-		}
+		EditorDockWidget* edw = new EditorDockWidget( this, filename );
+		tabifyDockWidget( scenarios.empty() ? ui.dockViewer : scenarios.back(), edw );
+		scenarios.push_back( edw );
+		edw->show();
+		edw->raise();
 	}
 }
 
 void SconeStudio::fileSave()
 {
-	if ( !currentFilename.isEmpty() )
+	if ( getActiveScenario() )
 	{
-		QFile file( currentFilename );
-		if ( !file.open( QIODevice::WriteOnly ) )
-		{
-			QMessageBox::critical( this, "Error writing file", "Could not open file " + currentFilename );
-			return;
-		}
-		else
-		{
-			QTextStream stream( &file );
-			stream << ui.scenarioEdit->toPlainText();
-			stream.flush();
-			file.close();
-		}
+		log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
+		//getActiveScenario()->save();
 	}
 }
 
 void SconeStudio::fileSaveAs()
 {
-	QString filename = QFileDialog::getSaveFileName( this, "Save Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
-	if ( !filename.isEmpty() )
-	{
-		currentFilename = filename;
-		fileSave();
-	}
+	if ( getActiveScenario() )
+		getActiveScenario()->saveAs();
 }
 
 void SconeStudio::fileExit()
@@ -325,6 +300,17 @@ void SconeStudio::setTime( TimeInSeconds t )
 
 	ui.horizontalScrollBar->blockSignals( false );
 	ui.doubleSpinBox->blockSignals( false );
+}
+
+EditorDockWidget* SconeStudio::getActiveScenario()
+{
+	for ( auto edw : scenarios )
+	{
+		log::trace( edw->fileName.toStdString() );
+		if ( !edw->visibleRegion().isEmpty() )
+			return edw;
+	}
+	return nullptr;
 }
 
 void SconeStudio::closeEvent( QCloseEvent *e )

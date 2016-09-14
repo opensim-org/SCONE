@@ -24,6 +24,7 @@
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"
 #include "ProgressDockWidget.h"
+#include "EditorDockWidget.h"
 
 class QFileSystemModel;
 
@@ -56,8 +57,7 @@ public:
 	void fileSave();
 	void fileSaveAs();
 	void fileExit();
-	void showEditor() { ui.stackedWidget->setCurrentIndex( 1 ); }
-	void showViewer() { ui.stackedWidget->setCurrentIndex( 0 ); }
+	void showViewer() { ui.dockViewer->raise(); }
 	void helpAbout() {}
 	void optimizeScenario();
 	void abortOptimizations();
@@ -70,9 +70,9 @@ public:
 
 private:
 	void setTime( TimeInSeconds t );
+	EditorDockWidget* getActiveScenario();
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
-	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
 
 	QFileSystemModel* resultsFileModel;
 	QFileSystemModel* scenarioFileModel;
@@ -90,6 +90,7 @@ private:
 	flut::delta< scone::Vec3 > com_delta;
 
 	std::vector< ProgressDockWidget* > optimizations;
+	std::vector< EditorDockWidget* > scenarios;
 	QString captureFilename;
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

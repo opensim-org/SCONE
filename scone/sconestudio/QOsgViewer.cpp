@@ -7,6 +7,21 @@
 
 using namespace scone;
 
+class QOsgEventHandler : public osgGA::GUIEventHandler 
+{ 
+public: 
+	virtual bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa, osg::Object* o, osg::NodeVisitor* nv )
+	{
+		if ( ea.getEventType() == osgGA::GUIEventAdapter::RESIZE )
+		{
+			std::cerr << "Resize event, time = " << ea.getTime() << "\n";
+			return true;
+		}
+		else return false;
+	}
+}; 
+
+
 QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) :
 QWidget( parent, f ),
 capture_handler( nullptr )
@@ -43,8 +58,11 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	camera->setViewport( new osg::Viewport( 0, 0, traits->width, traits->height ) );
 	camera->setProjectionMatrixAsPerspective( 30.0f, static_cast<double>( traits->width ) / static_cast<double>( traits->height ), 1.0f, 10000.0f );
 
-	// setup view
+	// add event handlers
 	viewer->addEventHandler( new osgViewer::StatsHandler );
+	viewer->addEventHandler( new QOsgEventHandler );
+
+	// disable lighting by default
 	viewer->setLightingMode( osg::View::NO_LIGHT );
 
 	// setup camera manipulator
