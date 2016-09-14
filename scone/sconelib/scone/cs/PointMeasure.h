@@ -9,11 +9,11 @@ namespace scone
 {
 	namespace cs
 	{
-		class PointYMeasure : public Measure
+		class PointMeasure : public Measure
 		{
 		public:
-			PointYMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
-			virtual ~PointYMeasure() { };
+			PointMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+			virtual ~PointMeasure() { };
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 			virtual double GetResult( sim::Model& model ) override;
@@ -27,6 +27,8 @@ namespace scone
             Real py;
             Real pz;
             Vec3 point;
+            String axis;
+            flut::index_t axis_ind;
 
             Range< Real > range;
             Range< Real > velocity_range;
