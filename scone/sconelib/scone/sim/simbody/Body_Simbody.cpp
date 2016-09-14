@@ -72,6 +72,16 @@ namespace scone
 
 			return q1;
 		}
+
+        scone::Vec3 scone::sim::Body_Simbody::GetPosOfPointFixedOnBody(Vec3 point) const
+        {
+            // TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+
+            const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
+            return ToVec3( mob.findStationLocationInGround( m_Model.GetTkState(), SimTK::Vec3(point.x, point.y, point.z)));
+        
+        }
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
 		{
