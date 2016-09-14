@@ -20,24 +20,24 @@ namespace scone
 
 		protected:
 			virtual String GetClassSignature() const override;
-            virtual void StoreData( Storage< Real >::Frame& frame ) override;
+			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
 			String target_body;
-            Real px;
-            Real py;
-            Real pz;
-            Vec3 point;
-            String axis;
-            flut::index_t axis_ind;
+			Real px;
+			Real py;
+			Real pz;
+			Vec3 point;
+			String axis;
+			flut::index_t axis_ind;
 
-            Range< Real > range;
-            Range< Real > velocity_range;
-            Real squared_range_penalty;
+			Range< Real > range;
+			Range< Real > velocity_range;
+			Real squared_range_penalty;
 			Real abs_range_penalty;
 			Real squared_velocity_range_penalty;
 			Real abs_velocity_range_penalty;
-            Statistic<> penalty;
+			Statistic<> penalty;
 
 			sim::Body* m_pTargetBody; // non-owning pointer
 		};

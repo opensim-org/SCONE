@@ -73,7 +73,7 @@ namespace scone
 			sim::GetControllerFactory().Register< CompositeMeasure >();
 			sim::GetControllerFactory().Register< JumpMeasure >();
 			sim::GetControllerFactory().Register< JointLoadMeasure >();
-            sim::GetControllerFactory().Register< PointMeasure >();
+			sim::GetControllerFactory().Register< PointMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();
