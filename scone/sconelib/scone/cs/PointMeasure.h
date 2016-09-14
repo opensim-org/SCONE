@@ -20,6 +20,7 @@ namespace scone
 
 		protected:
 			virtual String GetClassSignature() const override;
+            virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
 			String target_body;
