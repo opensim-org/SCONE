@@ -28,6 +28,7 @@
 #include "JointLoadMeasure.h"
 #include "scone/opt/opt_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
+#include "PointYMeasure.h"
 
 #include <boost/filesystem.hpp>
 namespace bfs = boost::filesystem;
@@ -72,6 +73,7 @@ namespace scone
 			sim::GetControllerFactory().Register< CompositeMeasure >();
 			sim::GetControllerFactory().Register< JumpMeasure >();
 			sim::GetControllerFactory().Register< JointLoadMeasure >();
+            sim::GetControllerFactory().Register< PointYMeasure >();
 
 			// register functions
 			GetFunctionFactory().Register< PieceWiseConstantFunction >();
