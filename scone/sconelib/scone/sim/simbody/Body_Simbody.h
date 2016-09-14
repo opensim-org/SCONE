@@ -25,6 +25,7 @@ namespace scone
 
 			virtual Vec3 GetLinVel() const override;
 			virtual Vec3 GetAngVel() const override;
+            virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const override;
 
 			virtual const String& GetName() const override;
 

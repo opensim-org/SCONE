@@ -21,6 +21,7 @@ namespace scone
 
 			virtual Vec3 GetLinVel() const = 0;
 			virtual Vec3 GetAngVel() const = 0;
+            virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const = 0;
 
 			virtual const std::vector< Real >& GetContactForceValues() const = 0;
 			virtual const std::vector< String >& GetContactForceLabels() const = 0;
