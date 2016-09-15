@@ -11,8 +11,8 @@ namespace scone
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 		{
-			INIT_PROPERTY( props, target_body, String("") );
-			INIT_PROPERTY( props, offset, Vec3::zero());
+			INIT_PROPERTY( props, body, String("") );
+			INIT_PROPERTY( props, offset, Vec3::zero() );
 			INIT_PROPERTY_REQUIRED( props, axis );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_range_penalty, 0.0 );
@@ -20,8 +20,8 @@ namespace scone
 			INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
 
 			// find target body
-			if ( !target_body.empty() )
-				m_pTargetBody = FindByName( model.GetBodies(), target_body ).get();
+			if ( !body.empty() )
+				m_pTargetBody = FindByName( model.GetBodies(), body ).get();
 			else m_pTargetBody = nullptr;
 
 			// initialize range

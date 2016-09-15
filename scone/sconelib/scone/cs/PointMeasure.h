@@ -23,7 +23,7 @@ namespace scone
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 		private:
-			String target_body;
+			String body;
 			Vec3 offset;
 			String axis;
 			flut::index_t axis_ind;
