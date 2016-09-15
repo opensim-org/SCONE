@@ -26,6 +26,7 @@ namespace scone
 			String body;
 			Vec3 offset;
 			Vec3 axes_to_measure;
+            bool relative_to_model_com;
 
 			Range< Real > range;
 			Range< Real > velocity_range;

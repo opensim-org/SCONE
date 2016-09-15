@@ -14,6 +14,7 @@ namespace scone
 			INIT_PROPERTY_REQUIRED( props, body );
 			INIT_PROPERTY( props, offset, Vec3::zero() );
 			INIT_PROPERTY_REQUIRED( props, axes_to_measure );
+            INIT_PROPERTY( props, relative_to_model_com, false);
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
@@ -42,7 +43,10 @@ namespace scone
 
 			if ( squared_range_penalty > 0.0 || abs_range_penalty > 0.0)
 			{
-				Vec3 vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody(offset);
+				Vec3 vec_pos;
+                if (!relative_to_model_com) vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody(offset);
+                else vec_pos = m_pTargetBody->GetComPos();
+
                 for ( int i = 0; i < 2; ++i ) {
                     vec_pos[i] = vec_pos[i] * axes_to_measure[i];
                 }
@@ -54,7 +58,10 @@ namespace scone
 
 			if ( squared_velocity_range_penalty > 0 || abs_velocity_range_penalty > 0 )
 			{
-				Vec3 vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody(offset);
+				Vec3 vec_vel;
+                if (!relative_to_model_com) vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody(offset);
+                else vec_vel = m_pTargetBody->GetComVel();
+
                 for ( int i = 0; i < 2; ++i ) {
                     vec_vel[i] = vec_vel[i] * axes_to_measure[i];
                 }
