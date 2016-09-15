@@ -20,6 +20,7 @@ namespace scone
 			virtual Quat GetOri() const = 0;
 			virtual Vec3 GetPosOfPointFixedOnBody(Vec3 point) const = 0;
 
+            virtual Vec3 GetComVel() const = 0;
 			virtual Vec3 GetLinVel() const = 0;
 			virtual Vec3 GetAngVel() const = 0;
 			virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const = 0;

@@ -76,13 +76,30 @@ namespace scone
 		scone::Vec3 scone::sim::Body_Simbody::GetPosOfPointFixedOnBody(Vec3 point) const
 		{
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
-			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 			const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 			return ToVec3( mob.findStationLocationInGround( m_Model.GetTkState(), SimTK::Vec3(point.x, point.y, point.z)));
 		
 		}
 		
+        scone::Vec3 scone::sim::Body_Simbody::GetComVel() const
+		{
+			SCONE_PROFILE_SCOPE;
+			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+
+			// TODO: OSIM: find what is the most efficient (compare to linvel)
+			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
+			SimTK::Vec3 com;
+			SimTK::Vec3 point;
+
+			// TODO: validate this!
+			m_osBody.getMassCenter( com );
+			m_osBody.getModel().getSimbodyEngine().getVelocity( m_Model.GetTkState(), m_osBody, com, point );
+			return ToVec3( point );
+		}
+
 		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
 		{
 			SCONE_PROFILE_SCOPE;
