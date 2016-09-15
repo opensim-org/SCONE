@@ -25,8 +25,7 @@ namespace scone
 		private:
 			String body;
 			Vec3 offset;
-			String axis;
-			flut::index_t axis_ind;
+			Vec3 axes_to_measure;
 
 			Range< Real > range;
 			Range< Real > velocity_range;
