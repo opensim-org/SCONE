@@ -24,7 +24,7 @@ namespace scone
 			virtual Quat GetOri() const override;
 			virtual Vec3 GetPosOfPointFixedOnBody(Vec3 point) const override;
 
-            virtual Vec3 GetComVel() const override;
+			virtual Vec3 GetComVel() const override;
 			virtual Vec3 GetLinVel() const override;
 			virtual Vec3 GetAngVel() const override;
 			virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const override;
