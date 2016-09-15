@@ -45,7 +45,7 @@ namespace scone
 			{
 				Vec3 vec_pos;
 				if (!relative_to_model_com) vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody(offset);
-				else vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody(offset) - m_pTargetBody->GetComPos();
+				else vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody(offset) - model.GetComPos();
 
 				for ( int i = 0; i < 2; ++i ) {
 					vec_pos[i] = vec_pos[i] * axes_to_measure[i];
@@ -60,7 +60,7 @@ namespace scone
 			{
 				Vec3 vec_vel;
 				if (!relative_to_model_com) vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody(offset);
-				else vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody(offset) - m_pTargetBody->GetComVel();
+				else vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody(offset) - model.GetComVel();
 
 				for ( int i = 0; i < 2; ++i ) {
 					vec_vel[i] = vec_vel[i] * axes_to_measure[i];
