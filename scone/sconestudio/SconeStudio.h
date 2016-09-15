@@ -80,7 +80,6 @@ private:
 	QFileSystemModel* scenarioFileModel;
 	QTimer qtimer;
 	QTimer backgroundUpdateTimer;
-	QProcess* captureProcess;
 
 	QString currentFilename;
 	bool fileChanged = false;
@@ -95,6 +94,8 @@ private:
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< EditorDockWidget* > scenarios;
 	QString captureFilename;
+	QProcess* captureProcess;
+	QDir captureImageDir;
 	void finalizeCapture();
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

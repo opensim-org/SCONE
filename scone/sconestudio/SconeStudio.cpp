@@ -96,12 +96,17 @@ void SconeStudio::start()
 	if ( current_time >= manager.GetMaxTime() )
 		setTime( 0 );
 
+	ui.osgViewer->stopTimer();
 	qtimer.start( 10 );
+
 	timer.reset();
 	timer_delta.reset();
 
 	if ( !captureFilename.isEmpty() )
-		ui.osgViewer->startCapture( captureFilename.toStdString() );
+	{
+		QDir().mkdir( captureFilename + ".images" );
+		ui.osgViewer->startCapture( captureFilename.toStdString() + ".images/image" );
+	}
 }
 
 void SconeStudio::stop()
@@ -110,7 +115,10 @@ void SconeStudio::stop()
 		finalizeCapture();
 
 	if ( qtimer.isActive() )
+	{
 		qtimer.stop();
+		ui.osgViewer->startTimer();
+	}
 	else setTime( 0 );
 }
 
@@ -245,7 +253,7 @@ void SconeStudio::updateOptimizations()
 
 void SconeStudio::createVideo()
 {
-	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), QString() );
+	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
@@ -304,7 +312,7 @@ void SconeStudio::finalizeCapture()
 
 	QString program = make_qt( flut::get_application_folder() + SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
-	args << "-i" << captureFilename + "_0_%d.png" << "-r 30" << "-c:v mpeg4" << "-q:v 3" << "d:\\test.mp4";
+	args << "-r" << QString::number( capture_frequency ) << "-i" << captureFilename + ".images/image_0_%d.png" << "-c:v" << "mpeg4" << "-q:v" << "3" << captureFilename;
 
 	cout << "starting " << program.toStdString() << endl;
 	auto v = args.toVector();
@@ -313,14 +321,14 @@ void SconeStudio::finalizeCapture()
 	captureProcess = new QProcess( this );
 	captureProcess->start( program, args );
 
-
 	flut_error_if( !captureProcess->waitForStarted( 5000 ), "Could not start process" );
 	scone::log::info( "Generating video for ", captureFilename.toStdString() );
 
-	if ( !captureProcess->waitForFinished( 5000 ) )
+	if ( !captureProcess->waitForFinished( 30000 ) )
 		scone::log::error( "Did not finish in time" );
 
-	scone::log::info( "DONE" );
+	scone::log::info( "Video generated" );
+	QDir( captureFilename + ".images" ).removeRecursively();
 
 	delete captureProcess;
 	captureProcess = nullptr;

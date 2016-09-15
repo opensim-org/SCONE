@@ -14,7 +14,7 @@ public:
 	{
 		if ( ea.getEventType() == osgGA::GUIEventAdapter::RESIZE )
 		{
-			std::cerr << "Resize event, time = " << ea.getTime() << "\n";
+			log::info( "Viewer resized to ", ea.getWindowWidth(), "x", ea.getWindowHeight() );
 			return true;
 		}
 		else return false;
@@ -41,7 +41,6 @@ capture_handler( nullptr )
 	// start timer
 	// TODO: remove this -- only update after something has changed
 	connect( &_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
-	_timer.start( 10 );
 }
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )

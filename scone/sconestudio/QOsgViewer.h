@@ -24,6 +24,8 @@ public:
 	void startCapture( const std::string& filename );
 	void stopCapture();
 	bool isCapturing() { return capture_handler != nullptr; }
+	void startTimer() { _timer.start( 10 ); }
+	void stopTimer() { _timer.stop(); }
 
 protected:
 	QTimer _timer;
