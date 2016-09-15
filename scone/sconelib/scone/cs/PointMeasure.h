@@ -24,10 +24,7 @@ namespace scone
 
 		private:
 			String target_body;
-			Real px;
-			Real py;
-			Real pz;
-			Vec3 point;
+			Vec3 offset;
 			String axis;
 			flut::index_t axis_ind;
 
