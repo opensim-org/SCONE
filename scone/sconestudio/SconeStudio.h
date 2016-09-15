@@ -43,9 +43,10 @@ public:
 	public slots:
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
-	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem );
-	void updateScrollbar( int pos );
-	void updateSpinBox( double );
+
+	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem ) {}
+	void updateScrollbar( int pos ) { setTime( double( pos ) / 1000 ); }
+	void updateSpinBox( double value ) { setTime( value ); }
 	void start();
 	void stop();
 	void slomo( int v );
@@ -61,6 +62,7 @@ public:
 	void helpAbout() {}
 	void optimizeScenario();
 	void abortOptimizations();
+	void updateBackgroundTimer();
 	void updateOptimizations();
 	void createVideo();
 
@@ -77,7 +79,8 @@ private:
 	QFileSystemModel* resultsFileModel;
 	QFileSystemModel* scenarioFileModel;
 	QTimer qtimer;
-	QTimer optimizationUpdateTimer;
+	QTimer backgroundUpdateTimer;
+	QProcess* captureProcess;
 
 	QString currentFilename;
 	bool fileChanged = false;
@@ -92,6 +95,7 @@ private:
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< EditorDockWidget* > scenarios;
 	QString captureFilename;
+	void finalizeCapture();
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
 };

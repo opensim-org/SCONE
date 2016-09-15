@@ -5,14 +5,9 @@
 #include "flut/system/assert.hpp"
 #include "scone/core/Log.h"
 #include "flut/string_tools.hpp"
+#include "studio_config.h"
 
 using namespace scone;
-
-#ifdef _MSC_VER
-	const char* scone_program_name = "sconecmd.exe";
-#else
-	const char* scone_program_name = "sconecmd";
-#endif
 
 ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file ) :
 studio( s ),
@@ -25,7 +20,7 @@ highest( 0 ),
 lowest( 0 ),
 state( StartingState )
 {
-	QString program = make_qt( flut::get_application_folder() + scone_program_name );
+	QString program = make_qt( flut::get_application_folder() + SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q";
 	process = new QProcess( this );

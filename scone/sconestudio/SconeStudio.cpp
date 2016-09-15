@@ -17,6 +17,7 @@
 #include "qt_tools.h"
 #include "qevent.h"
 #include "qcustomplot.h"
+#include "studio_config.h"
 
 using namespace scone;
 using namespace std;
@@ -26,17 +27,16 @@ QMainWindow( parent, flags ),
 slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
-capture_frequency( 60 )
+capture_frequency( 30 ),
+captureProcess( nullptr )
 {
 	ui.setupUi( this );
-	//setCentralWidget( nullptr );
-	//setDockNestingEnabled( true );
+	setCentralWidget( nullptr );
+	setDockNestingEnabled( true );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
-	setDockNestingEnabled( true );
-
 	// init file model and browser widget
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
@@ -48,13 +48,12 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
-	setCentralWidget( nullptr );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 
-	connect( &optimizationUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateOptimizations() ) );
-	optimizationUpdateTimer.start( 1000 );
+	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
+	backgroundUpdateTimer.start( 1000 );
 
 	return true;
 }
@@ -92,22 +91,6 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 	//log::trace( dirname );
 }
 
-void SconeStudio::resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem )
-{
-	for ( auto& i : newitem.indexes() )
-		cout << i.row() << endl;
-}
-
-void SconeStudio::updateScrollbar( int pos )
-{
-	setTime( double( pos ) / 1000 );
-}
-
-void SconeStudio::updateSpinBox( double value )
-{
-	setTime( value );
-}
-
 void SconeStudio::start()
 {
 	if ( current_time >= manager.GetMaxTime() )
@@ -124,10 +107,7 @@ void SconeStudio::start()
 void SconeStudio::stop()
 {
 	if ( !captureFilename.isEmpty() )
-	{
-		ui.osgViewer->stopCapture();
-		captureFilename.clear();
-	}
+		finalizeCapture();
 
 	if ( qtimer.isActive() )
 		qtimer.stop();
@@ -237,6 +217,11 @@ void SconeStudio::abortOptimizations()
 	}
 }
 
+void SconeStudio::updateBackgroundTimer()
+{
+	updateOptimizations();
+}
+
 void SconeStudio::updateOptimizations()
 {
 	// clear out all closed optimizations
@@ -311,6 +296,35 @@ EditorDockWidget* SconeStudio::getActiveScenario()
 			return edw;
 	}
 	return nullptr;
+}
+
+void SconeStudio::finalizeCapture()
+{
+	ui.osgViewer->stopCapture();
+
+	QString program = make_qt( flut::get_application_folder() + SCONE_FFMPEG_EXECUTABLE );
+	QStringList args;
+	args << "-i" << captureFilename + "_0_%d.png" << "-r 30" << "-c:v mpeg4" << "-q:v 3" << "d:\\test.mp4";
+
+	cout << "starting " << program.toStdString() << endl;
+	auto v = args.toVector();
+	for ( auto arg : v ) cout << arg.toStdString() << endl;
+
+	captureProcess = new QProcess( this );
+	captureProcess->start( program, args );
+
+
+	flut_error_if( !captureProcess->waitForStarted( 5000 ), "Could not start process" );
+	scone::log::info( "Generating video for ", captureFilename.toStdString() );
+
+	if ( !captureProcess->waitForFinished( 5000 ) )
+		scone::log::error( "Did not finish in time" );
+
+	scone::log::info( "DONE" );
+
+	delete captureProcess;
+	captureProcess = nullptr;
+	captureFilename.clear();
 }
 
 void SconeStudio::closeEvent( QCloseEvent *e )

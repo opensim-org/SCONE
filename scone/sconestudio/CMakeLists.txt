@@ -12,6 +12,7 @@ if(${Qt5Widgets_FOUND})
 		StudioModel.h
 		StudioScene.cpp
 		StudioScene.h
+		studio_config.h
 		)
 	
 	set(GUIFILES
