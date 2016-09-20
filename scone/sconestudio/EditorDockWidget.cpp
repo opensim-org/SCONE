@@ -18,7 +18,7 @@ fileName( file )
 	ui.textEdit->setTabStopWidth( 16 );
 	ui.textEdit->setWordWrapMode( QTextOption::NoWrap );
 	xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( ui.textEdit );
-	setWindowTitle( fileName );
+	setWindowTitle( QFileInfo( fileName ).fileName() );
 
 	QFile f( fileName );
 	if ( f.open( QFile::ReadOnly | QFile::Text ) )

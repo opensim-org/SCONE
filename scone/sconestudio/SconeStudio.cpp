@@ -58,6 +58,13 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	return true;
 }
 
+void SconeStudio::add_log_entry( flut::log::level l, const std::string& msg )
+{
+	cout << msg << endl;
+	ui.outputText->appendPlainText( QString( msg.c_str() ) );
+	ui.outputText->verticalScrollBar()->setValue( ui.outputText->verticalScrollBar()->maximum() );
+}
+
 SconeStudio::~SconeStudio()
 {
 }
@@ -75,7 +82,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 			setTime( 0 );
 			start();
 		}
-		else log::warning( "Cannot activate new model until current simulation is finished" );
+		else QMessageBox::information( this, "Cannot start simulation", "Please wait until the current simulation has finished" );
 
 	}
 	catch ( std::exception& e )
@@ -144,7 +151,7 @@ void SconeStudio::fileOpen()
 	if ( !filename.isEmpty() )
 	{
 		EditorDockWidget* edw = new EditorDockWidget( this, filename );
-		tabifyDockWidget( scenarios.empty() ? ui.dockViewer : scenarios.back(), edw );
+		tabifyDockWidget( scenarios.empty() ? ui.viewerDock : scenarios.back(), edw );
 		scenarios.push_back( edw );
 		edw->show();
 		edw->raise();
@@ -155,8 +162,8 @@ void SconeStudio::fileSave()
 {
 	if ( getActiveScenario() )
 	{
-		log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
-		//getActiveScenario()->save();
+		//log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
+		getActiveScenario()->save();
 	}
 }
 
@@ -174,12 +181,13 @@ void SconeStudio::fileExit()
 
 void SconeStudio::optimizeScenario()
 {
-	if ( currentFilename.isEmpty() )
+	if ( getActiveScenario() == nullptr )
 	{
 		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
 		return;
 	}
 
+	currentFilename = getActiveScenario()->fileName;
 	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFilename );
 	optimizations.push_back( pdw );
 
@@ -211,8 +219,8 @@ void SconeStudio::abortOptimizations()
 {
 	if ( optimizations.size() > 0 )
 	{
-		QString message = QString().sprintf( "Are you sure you want to terminate %d optimizations?", optimizations.size() );
-		if ( QMessageBox::warning( this, "Terminate Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
+		QString message = QString().sprintf( "Are you sure you want to abort %d optimizations?", optimizations.size() );
+		if ( QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
 			close_all = true;
 			for ( auto& o : optimizations )

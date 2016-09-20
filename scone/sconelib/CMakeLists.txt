@@ -22,10 +22,10 @@ set(CORE_MATH_FILES
 set(CORE_SYSTEM_FILES
 	scone/core/core.h
 	scone/core/String.h
-)
-set(CORE_TOOLS_FILES
 	scone/core/Log.cpp
 	scone/core/Log.h
+)
+set(CORE_TOOLS_FILES
 	scone/core/Profiler.cpp
     scone/core/Profiler.h
     scone/core/ResourceCache.h

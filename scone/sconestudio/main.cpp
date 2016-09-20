@@ -16,10 +16,12 @@ int main(int argc, char *argv[])
 	scone::cs::RegisterFactoryTypes();
 	scone::sim::RegisterSimbody();
 
-	scone::log::SetLevel( scone::log::TraceLevel );
-
 	QApplication a(argc, argv);
 	SconeStudio w;
+
+	scone::log::SetLevel( scone::log::TraceLevel );
+	flut::log::log_output_func f = std::bind( &SconeStudio::add_log_entry, &w, std::placeholders::_1, std::placeholders::_2 );
+	flut::log::set_log_output_func( f );
 
 	try
 	{

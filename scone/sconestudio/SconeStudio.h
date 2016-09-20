@@ -39,8 +39,10 @@ public:
 	~SconeStudio();
 
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
+	void add_log_entry( flut::log::level l, const std::string& msg );
 
 	public slots:
+
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
 
@@ -58,7 +60,7 @@ public:
 	void fileSave();
 	void fileSaveAs();
 	void fileExit();
-	void showViewer() { ui.dockViewer->raise(); }
+	void showViewer() { ui.viewerDock->raise(); }
 	void helpAbout() {}
 	void optimizeScenario();
 	void abortOptimizations();
