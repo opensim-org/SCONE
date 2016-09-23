@@ -41,6 +41,7 @@ capture_handler( nullptr )
 	// start timer
 	// TODO: remove this -- only update after something has changed
 	connect( &_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
+	_timer.start( 1000 / 120 );
 }
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
