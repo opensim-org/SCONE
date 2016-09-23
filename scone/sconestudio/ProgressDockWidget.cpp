@@ -9,7 +9,7 @@
 
 using namespace scone;
 
-ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file ) :
+ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& extra_args ) :
 studio( s ),
 process( nullptr ),
 generation( 0 ),
@@ -22,14 +22,15 @@ state( StartingState )
 {
 	QString program = make_qt( flut::get_application_folder() + SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
-	args << "-o" << config_file << "-s" << "-q";
+	args << "-o" << config_file << "-s" << "-q" << extra_args;
+
 	process = new QProcess( this );
 	process->setReadChannel( QProcess::StandardOutput );
 	process->start( program, args );
 	fileName = config_file;
 
 	flut_error_if( !process->waitForStarted( 5000 ), "Could not start process" );
-	scone::log::info( "Started optimization of ", fileName.toStdString() );
+	scone::log::info( "Successfully started optimization of ", fileName.toStdString() );
 
 	ui.setupUi( this );
 
@@ -47,8 +48,9 @@ state( StartingState )
 
 	ui.plot->xAxis->setAutoTickCount( 6 );
 	ui.plot->yAxis->setAutoTickCount( 3 );
-
 	ui.plot->replot();
+	ui.plot->hide();
+
 	updateText();
 }
 
@@ -56,13 +58,13 @@ ProgressDockWidget::~ProgressDockWidget()
 {
 	if ( state != ClosedState )
 	{
-		log::critical( "Deleting Progress Dock that is not closed: ", name );
+		log::critical( "Deleting Progress Dock that is not closed: ", name.toStdString() );
 		if ( process )
 			delete process;
 	}
 }
 
-bool ProgressDockWidget::updateProgress()
+void ProgressDockWidget::updateProgress()
 {
 	SCONE_ASSERT( process );
 
@@ -70,13 +72,13 @@ bool ProgressDockWidget::updateProgress()
 	{
 		log::trace( "process is closed" );
 		close();
-		return false;
+		return;
 	}
 
 	if ( state == StartingState )
 	{
-		if ( !process->waitForReadyRead( 5000 ) )
-			log::warning( "Timeout while waiting for data" );
+		if ( !process->waitForReadyRead( 1000 ) )
+			return;
 	}
 
 	while ( process->canReadLine() )
@@ -86,9 +88,11 @@ bool ProgressDockWidget::updateProgress()
 
 		if ( kvp.first == "folder" )
 		{
-			name = flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) );
+			name = make_qt( flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) ) );
 			state = RunningState;
-			setWindowTitle( QString( name.c_str() ) );
+			ui.plot->show();
+			setWindowTitle( name );
+			log::debug( "Initialized ", fileName.toStdString(), " to ", name.toStdString() );
 		}
 		else if ( kvp.first == "max_generations" )
 		{
@@ -128,8 +132,6 @@ bool ProgressDockWidget::updateProgress()
 			updateText();
 		}
 	}
-
-	return true;
 }
 
 bool ProgressDockWidget::isClosed()
@@ -142,7 +144,7 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 	if ( !studio->close_all && state != FinishedState )
 	{
 		// allow user to cancel close
-		QString message = QString( "Are you sure you want to abort optimization " ) + QString( name.c_str() );
+		QString message = "Are you sure you want to abort optimization " + name;
 		if ( QMessageBox::warning( this, "Abort Optimization", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Cancel )
 		{
 			e->ignore();
@@ -150,7 +152,7 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 		}
 	}
 
-	scone::log::info( "Closing process ", name );
+	scone::log::info( "Closing process ", name.toStdString() );
 	process->close();
 	delete process;
 	process = nullptr;

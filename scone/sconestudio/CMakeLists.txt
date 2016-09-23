@@ -26,8 +26,8 @@ if(${Qt5Widgets_FOUND})
 		SconeStudio.h
 		ProgressDockWidget.h
 		ProgressDockWidget.cpp
-		EditorDockWidget.h
-		EditorDockWidget.cpp
+		EditorWidget.h
+		EditorWidget.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		
@@ -39,7 +39,7 @@ if(${Qt5Widgets_FOUND})
 	
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
 	
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui EditorDockWidget.ui)
+	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 	
 	SET( SOURCE_FILES ${STUDIOFILES} ${GUIFILES} ${RESOURCES} )

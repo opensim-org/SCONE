@@ -4,18 +4,22 @@
 #include "ui_ProgressDockWidget.h"
 #include "scone/core/core.h"
 #include "scone/core/String.h"
+#include "scone/core/PropNode.h"
 
 using scone::String;
+using scone::PropNode;
 class SconeStudio;
 
 class ProgressDockWidget : public QDockWidget
 {
 public:
-	ProgressDockWidget( SconeStudio* s, const QString& config_file );
+	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
 	virtual ~ProgressDockWidget();
+
+	QString& getIdentifier() { return name.isEmpty() ? fileName : name; } 
 	
 	SconeStudio* studio;
-	String name;
+	QString name;
 	QString fileName;
 	QString errorMsg;
 	QProcess* process;
@@ -35,7 +39,7 @@ public:
 	enum State { StartingState, RunningState, FinishedState, ClosedState, ErrorState };
 	State state;
 
-	bool updateProgress();
+	void updateProgress();
 	bool isClosed();
 
 protected:

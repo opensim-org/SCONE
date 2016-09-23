@@ -1,31 +1,37 @@
 #pragma once
 
-#include <QDockWidget>
 #include "ui_EditorDockWidget.h"
 #include "scone/core/core.h"
 #include "scone/core/String.h"
 #include "BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h"
+#include <QWidget>
+#include <QFileInfo>
 
 using scone::String;
 class SconeStudio;
 
-class EditorDockWidget : public QDockWidget
+class EditorWidget : public QWidget
 {
 public:
-	EditorDockWidget( SconeStudio* s, const QString& file );
-	virtual ~EditorDockWidget();
+	EditorWidget( SconeStudio* s, const QString& file );
+	virtual ~EditorWidget();
 
 public slots:
 	void save();
 	void saveAs();
+	QString getTitle() { return QFileInfo( fileName ).fileName(); }
 
 public:
 	SconeStudio* studio;
 	QString fileName;
-	Ui::EditorDockWidget ui;
 	bool fileChanged = false;
 	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
 
 protected:
-	virtual void closeEvent( QCloseEvent * ) override;
+	//virtual void closeEvent( QCloseEvent * ) override;
+
+private:
+    QWidget *dockWidgetContents;
+    QVBoxLayout *verticalLayout;
+    QTextEdit *textEdit;
 };

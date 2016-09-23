@@ -31,8 +31,17 @@ capture_frequency( 30 ),
 captureProcess( nullptr )
 {
 	ui.setupUi( this );
-	setCentralWidget( nullptr );
-	setDockNestingEnabled( true );
+	//setCentralWidget( nullptr );
+	//setDockNestingEnabled( true );
+
+	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
+	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
+	//setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
+	//setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
+
+	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
+	//addDockWidget( Qt::RightDockWidgetArea, ui.viewerDock );
+	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -48,10 +57,10 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
+	ui.tabWidget->removeTab( 1 );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
-
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 1000 );
 
@@ -150,11 +159,12 @@ void SconeStudio::fileOpen()
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
-		EditorDockWidget* edw = new EditorDockWidget( this, filename );
-		tabifyDockWidget( scenarios.empty() ? ui.viewerDock : scenarios.back(), edw );
+		EditorWidget* edw = new EditorWidget( this, filename );
+		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
+		ui.tabWidget->setCurrentIndex( idx );
 		scenarios.push_back( edw );
-		edw->show();
-		edw->raise();
+		//edw->show();
+		//edw->raise();
 	}
 }
 
@@ -179,6 +189,25 @@ void SconeStudio::fileExit()
 	close();
 }
 
+void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
+{
+	optimizations.push_back( pdw );
+	addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::RightDockWidgetArea, pdw );
+
+	// divide into tabs
+	if ( optimizations.size() >= 3 )
+	{
+		auto tab_count = ( optimizations.size() + 4 ) / 5;
+		for ( size_t i = 0; i < optimizations.size(); ++ i )
+		{
+			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
+			if ( i % tab_count != 0 )
+				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
+				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+		}
+	}
+}
+
 void SconeStudio::optimizeScenario()
 {
 	if ( getActiveScenario() == nullptr )
@@ -187,31 +216,28 @@ void SconeStudio::optimizeScenario()
 		return;
 	}
 
-	currentFilename = getActiveScenario()->fileName;
-	ProgressDockWidget* pdw = new ProgressDockWidget( this, currentFilename );
-	optimizations.push_back( pdw );
+	ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName );
+	addProgressDock( pdw );
 
-	addDockWidget( optimizations.size() <= 2 ? Qt::LeftDockWidgetArea : Qt::RightDockWidgetArea, pdw );
+	updateOptimizations();
+}
 
-	// move to the right
-	if ( optimizations.size() == 3 )
+void SconeStudio::optimizeScenarioMultiple()
+{
+	if ( getActiveScenario() == nullptr )
 	{
-		for ( auto& o : optimizations )
-			addDockWidget( Qt::RightDockWidgetArea, o );
+		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
+		return;
 	}
 
-	// divide into tabs
-	if ( optimizations.size() >= 6 )
+	int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100 );
+	for ( int i = 1; i <= count; ++i )
 	{
-		auto tab_count = ( optimizations.size() + 4 ) / 5;
-		for ( size_t i = 0; i < optimizations.size(); ++ i )
-		{
-			if ( i % tab_count != 0 )
-				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
-				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
-		}
+		QStringList args;
+		args << QString().sprintf( "Optimization.random_seed=%d", i );
+		ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
+		addProgressDock( pdw );
 	}
-
 	updateOptimizations();
 }
 
@@ -219,7 +245,11 @@ void SconeStudio::abortOptimizations()
 {
 	if ( optimizations.size() > 0 )
 	{
-		QString message = QString().sprintf( "Are you sure you want to abort %d optimizations?", optimizations.size() );
+		QString message = QString().sprintf( "Are you sure you want to abort the following optimizations:\n\n", optimizations.size() );
+
+		for ( auto& o : optimizations )
+			message += o->getIdentifier() + "\n";
+
 		if ( QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
 			close_all = true;
@@ -303,11 +333,10 @@ void SconeStudio::setTime( TimeInSeconds t )
 	ui.doubleSpinBox->blockSignals( false );
 }
 
-EditorDockWidget* SconeStudio::getActiveScenario()
+EditorWidget* SconeStudio::getActiveScenario()
 {
 	for ( auto edw : scenarios )
 	{
-		log::trace( edw->fileName.toStdString() );
 		if ( !edw->visibleRegion().isEmpty() )
 			return edw;
 	}
