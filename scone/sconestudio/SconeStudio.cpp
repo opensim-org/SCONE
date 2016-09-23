@@ -234,7 +234,7 @@ void SconeStudio::optimizeScenarioMultiple()
 	for ( int i = 1; i <= count; ++i )
 	{
 		QStringList args;
-		args << QString().sprintf( "Optimization.random_seed=%d", i );
+		args << QString().sprintf( "Optimizer.random_seed=%d", i );
 		ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
 		addProgressDock( pdw );
 	}

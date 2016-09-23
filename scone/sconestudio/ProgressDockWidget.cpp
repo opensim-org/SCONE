@@ -23,6 +23,7 @@ state( StartingState )
 	QString program = make_qt( flut::get_application_folder() + SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << extra_args;
+	//for ( auto& a : args ) log::trace( a.toStdString() );
 
 	process = new QProcess( this );
 	process->setReadChannel( QProcess::StandardOutput );
@@ -92,7 +93,7 @@ void ProgressDockWidget::updateProgress()
 			state = RunningState;
 			ui.plot->show();
 			setWindowTitle( name );
-			log::debug( "Initialized ", fileName.toStdString(), " to ", name.toStdString() );
+			log::debug( "Initialized optimization ", name.toStdString() );
 		}
 		else if ( kvp.first == "max_generations" )
 		{
