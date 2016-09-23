@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
-		TCLAP::MultiArg< string > propArg( "a", "attribute", "Set specific attribute for scenario", false, "key=value" );
+		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
 		cmd.xorAdd( optArg, resArg );
 
 		cmd.parse( argc, argv );
