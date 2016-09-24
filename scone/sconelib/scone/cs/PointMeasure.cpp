@@ -19,6 +19,8 @@ namespace scone
 			INIT_PROPERTY( props, abs_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
+            INIT_PROPERTY( props, squared_acceleration_range_penalty, 0.0 );
+            INIT_PROPERTY( props, abs_acceleration_range_penalty, 0.0 );
 
 			// find target body
 			if ( !body.empty() )
@@ -28,8 +30,10 @@ namespace scone
 			// initialize range
 			range.min = Real( props.GetReal( "pos_min", 0.0 ) );
 			range.max = Real( props.GetReal( "pos_max", 0.0 ) );
-			velocity_range.min = Real( props.GetReal( "vel_min", 0.0 ) );
-			velocity_range.max = Real( props.GetReal( "vel_max", 0.0 ) );
+			vel_range.min = Real( props.GetReal( "vel_min", 0.0 ) );
+			vel_range.max = Real( props.GetReal( "vel_max", 0.0 ) );
+            acc_range.min = Real( props.GetReal( "acc_min", 0.0 ) );
+            acc_range.max = Real( props.GetReal( "acc_max", 0.0 ) );
 
 			// make axes_to_measure all 1's and 0's
 			for ( int i = 0; i < 2; ++i ) {
@@ -65,10 +69,25 @@ namespace scone
 				for ( int i = 0; i < 2; ++i ) {
 					vec_vel[i] = vec_vel[i] * axes_to_measure[i];
 				}
-				double range_violation = velocity_range.GetRangeViolation( vec_vel.length() );
+				double range_violation = vel_range.GetRangeViolation( vec_vel.length() );
 				double vrps = squared_velocity_range_penalty * GetSquared( range_violation );
 				double vrpa = abs_velocity_range_penalty * std::abs( range_violation );
 				penalty.AddSample( timestamp, vrps + vrpa );
+			}
+
+            if ( squared_acceleration_range_penalty > 0 || abs_acceleration_range_penalty > 0 )
+			{
+				Vec3 vec_acc;
+				if (!relative_to_model_com) vec_acc = m_pTargetBody->GetLinAccOfPointFixedOnBody(offset);
+				else vec_acc = m_pTargetBody->GetLinAccOfPointFixedOnBody(offset) - model.GetComAcc();
+
+				for ( int i = 0; i < 2; ++i ) {
+					vec_acc[i] = vec_acc[i] * axes_to_measure[i];
+				}
+				double range_violation = acc_range.GetRangeViolation( vec_acc.length() );
+				double arps = squared_acceleration_range_penalty * GetSquared( range_violation );
+				double arpa = abs_acceleration_range_penalty * std::abs( range_violation );
+				penalty.AddSample( timestamp, arps + arpa );
 			}
 
 			return SuccessfulUpdate;

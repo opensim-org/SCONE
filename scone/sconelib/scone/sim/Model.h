@@ -89,6 +89,7 @@ namespace scone
 			/// get dynamic model statistics
 			virtual Vec3 GetComPos() const = 0;
 			virtual Vec3 GetComVel() const = 0;
+            virtual Vec3 GetComAcc() const = 0;
 			virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 			virtual Real GetTotalContactForce() const;
 

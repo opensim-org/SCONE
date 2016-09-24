@@ -40,6 +40,7 @@ namespace scone
 
 			virtual Vec3 GetComPos() const override;
 			virtual Vec3 GetComVel() const override;
+            virtual Vec3 GetComAcc() const override;
 			virtual Real GetTotalEnergyConsumption() const override;
 
 			virtual Real GetMass() const override { return m_Mass; }

@@ -282,6 +282,11 @@ namespace scone
 			return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 		}
 
+        Vec3 Model_Simbody::GetComAcc() const
+		{
+			return ToVec3( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
+		}
+
 		scone::Vec3 Model_Simbody::GetGravity() const
 		{
 			return ToVec3( m_pOsimModel->getGravity() );
