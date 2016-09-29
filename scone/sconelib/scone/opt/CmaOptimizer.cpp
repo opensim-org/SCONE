@@ -39,6 +39,8 @@ namespace scone
 			INIT_PROPERTY_NAMED( props, m_Sigma, "sigma", 1.0 );
 			INIT_PROPERTY( props, max_generations, size_t( 10000 ) );
 			INIT_PROPERTY( props, random_seed, DEFAULT_RANDOM_SEED );
+			INIT_PROPERTY( props, global_std_factor, 0.0 );
+			INIT_PROPERTY( props, global_std_offset, 0.0 );
 		}
 
 		scone::String CmaOptimizer::GetClassSignature() const
@@ -95,7 +97,13 @@ namespace scone
 				{
 					SCONE_ASSERT( free_idx < dim );
 					initPoint[ free_idx ] = parinf.init_mean;
-					initCovar( free_idx, free_idx ) = parinf.init_std * parinf.init_std;
+					double par_std = parinf.init_std;
+
+					// compute std using global std settings (if they are set)
+					if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
+						par_std = global_std_factor * fabs( parinf.init_mean ) + global_std_offset;
+						
+					initCovar( free_idx, free_idx ) = par_std * par_std;
 					++free_idx;
 				}
 			}

@@ -20,6 +20,9 @@ namespace scone
 			double m_Sigma;
 			size_t max_generations;
 
+			double global_std_factor;
+			double global_std_offset;
+
 			size_t num_elitists;
 			int max_attempts;
 			long random_seed;

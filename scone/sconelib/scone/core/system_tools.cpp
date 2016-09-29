@@ -1,5 +1,10 @@
 #include "system_tools.h"
 
+#define SCONE_VERSION_MAJOR 0
+#define SCONE_VERSION_MINOR 0
+#define SCONE_VERSION_PATCH 0
+#define SCONE_VERSION_POSTFIX "ALPHA"
+
 #include <fstream>
 
 #include <boost/thread/mutex.hpp>
@@ -64,7 +69,17 @@ namespace scone
 		}
 	}
 
-	SCONE_API String GetApplicationVersion()
+	SCONE_API flut::version GetSconeVersion()
+	{
+		auto build = GetSconeBuildNumber();
+		int build_nr = 0;
+		if ( build != "UNKNOWN" )
+			build_nr = flut::from_str< int >( build );
+		return version( SCONE_VERSION_MAJOR, SCONE_VERSION_MINOR, SCONE_VERSION_PATCH, build_nr, SCONE_VERSION_POSTFIX );
+
+	}
+
+	SCONE_API String GetSconeBuildNumber()
 	{
 		if ( g_Version.empty() )
 		{
@@ -85,7 +100,7 @@ namespace scone
 			}
 
 			if ( g_Version.empty() ) 
-				g_Version = "UNKNOWN_VERSION"; // reading has failed, version unknown
+				g_Version = "UNKNOWN"; // reading has failed, version unknown
 		}
 
 		return g_Version;

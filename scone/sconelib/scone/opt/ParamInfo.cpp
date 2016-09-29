@@ -10,7 +10,6 @@ namespace scone
 {
 	namespace opt
 	{
-
 		ParamInfo::ParamInfo( const String& i_name, double i_init_mean, double i_init_std, double i_init_min, double i_init_max, double i_min, double i_max ) :
 		name( i_name ),
 		init_mean( i_init_mean ), init_std( i_init_std ),

@@ -2,10 +2,13 @@
 
 #include "core.h"
 #include "PropNode.h"
+#include "flut/system/version.hpp"
 
 namespace scone
 {
-	SCONE_API String GetApplicationVersion();
+	using flut::version;
+	SCONE_API version GetSconeVersion();
+	SCONE_API String GetSconeBuildNumber();
 	SCONE_API const PropNode& GetSconeSettings();
 
 	enum SconeFolder { SCONE_ROOT_FOLDER, SCONE_OUTPUT_FOLDER, SCONE_MODEL_FOLDER, SCONE_SCENARIO_FOLDER, SCONE_GEOMETRY_FOLDER };
