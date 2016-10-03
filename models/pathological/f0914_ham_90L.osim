@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f0914">
+	<Model name="f0914_ham_90L">
 		<!--Feed forward model with 9 DOF 18 Muscles, following [Geyer & Herr 2010]. Adapted by Thomas Geijtenbeek.
 
 		2016.06.30:
@@ -1455,9 +1455,9 @@
 					<!--Maximum isometric force that the fibers can generate-->
 					<max_isometric_force>2700</max_isometric_force>
 					<!--Optimal length of the muscle fibers-->
-					<optimal_fiber_length>0.109</optimal_fiber_length>
+					<optimal_fiber_length>0.0981</optimal_fiber_length>
 					<!--Resting length of the tendon-->
-					<tendon_slack_length>0.326</tendon_slack_length>
+					<tendon_slack_length>0.293</tendon_slack_length>
 					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
 					<pennation_angle_at_optimal>0</pennation_angle_at_optimal>
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->
@@ -2040,9 +2040,9 @@
 					<!--Maximum isometric force that the fibers can generate-->
 					<max_isometric_force>2700</max_isometric_force>
 					<!--Optimal length of the muscle fibers-->
-					<optimal_fiber_length>0.109</optimal_fiber_length>
+					<optimal_fiber_length>0.0981</optimal_fiber_length>
 					<!--Resting length of the tendon-->
-					<tendon_slack_length>0.326</tendon_slack_length>
+					<tendon_slack_length>0.293</tendon_slack_length>
 					<!--Angle between tendon and fibers at optimal fiber length expressed in radians-->
 					<pennation_angle_at_optimal>0</pennation_angle_at_optimal>
 					<!--Maximum contraction velocity of the fibers, in optimal fiberlengths/second-->

@@ -1,4 +1,4 @@
 bin/
 build/msvc2013/
 models/test/
-models/pathological/
+ignore/
