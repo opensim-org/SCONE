@@ -51,3 +51,10 @@ int main(int argc, char *argv[])
 		QMessageBox::critical( 0, "Exception", "Unknown Exception" );
 	}
 }
+
+#ifndef DEBUG
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
+{
+	return main( __argc, __argv );
+}
+#endif

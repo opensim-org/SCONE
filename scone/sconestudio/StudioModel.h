@@ -22,9 +22,11 @@ namespace scone
 
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
+		void EvaluateTo( TimeInSeconds t );
 
 		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
+		cs::SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating.load(); }
 		std::mutex& GetDataMutex() { return data_mutex; }

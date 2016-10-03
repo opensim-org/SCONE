@@ -28,6 +28,7 @@ slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
 capture_frequency( 30 ),
+evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr )
 {
 	ui.setupUi( this );
@@ -69,8 +70,42 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 
 void SconeStudio::add_log_entry( flut::log::level l, const std::string& msg )
 {
+#ifdef DEBUG
 	cout << msg << endl;
-	ui.outputText->appendPlainText( QString( msg.c_str() ) );
+#endif // DEBUG
+	{
+		ui.outputText->moveCursor( QTextCursor::End );
+		QTextCursor cursor( ui.outputText->textCursor() );
+		QTextCharFormat format;
+		format.setFontWeight( QFont::Normal );
+		format.setForeground( QBrush( Qt::black ) );
+
+		switch ( l )
+		{
+		case flut::log::trace_level:
+		case flut::log::debug_level:
+			format.setForeground( QBrush( Qt::gray ) );
+			break;
+		case flut::log::info_level:
+			format.setForeground( QBrush( Qt::darkBlue ) );
+			break;
+		case flut::log::warning_level:
+			format.setFontWeight( QFont::DemiBold );
+			format.setForeground( QBrush( Qt::darkYellow ) );
+			break;
+		case flut::log::error_level:
+		case flut::log::critical_level:
+			format.setFontWeight( QFont::DemiBold );
+			format.setForeground( QBrush( Qt::darkRed ) );
+			break;
+		default:
+			break;
+		}
+
+		cursor.setCharFormat( format );
+		cursor.insertText( QString( msg.c_str() ) + "\n" );
+	}
+
 	ui.outputText->verticalScrollBar()->setValue( ui.outputText->verticalScrollBar()->maximum() );
 }
 
@@ -82,17 +117,14 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	try
 	{
-		if ( !manager.IsEvaluating() )
-		{
-			showViewer();
-			String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
-			manager.CreateModel( filename );
-			ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
-			setTime( 0 );
-			start();
-		}
-		else QMessageBox::information( this, "Cannot start simulation", "Please wait until the current simulation has finished" );
+		showViewer();
+		String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
+		manager.CreateModel( filename );
+		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		ui.horizontalScrollBar->setDisabled( manager.IsEvaluating() );
 
+		setTime( 0 );
+		start();
 	}
 	catch ( std::exception& e )
 	{
@@ -148,10 +180,57 @@ void SconeStudio::slomo( int v )
 
 void SconeStudio::updateTimer()
 {
-	TimeInSeconds dt = isRecording() ? ( 1 / capture_frequency ) : timer_delta( timer.seconds() );
+	TimeInSeconds dt;
+	if ( isRecording() )
+		dt = slomo_factor / capture_frequency;
+	else if ( isEvalutating() )
+		dt = evaluation_time_step;
+	else
+		dt = slomo_factor * timer_delta( timer.seconds() );
 
-	setTime( current_time + slomo_factor * dt );
+	setTime( current_time + dt );
+}
+
+void SconeStudio::setTime( TimeInSeconds t )
+{
+	if ( !manager.HasModel() )
+		return;
+
+	// update current time and stop when done
+	current_time = t;
+
+	// update ui and visualization
+	bool is_evaluating = manager.IsEvaluating();
+	manager.Update( t );
+
+	if ( current_time >= manager.GetMaxTime() )
+	{
+		current_time = manager.GetMaxTime();
+		if ( qtimer.isActive() )
+			stop();
+	}
+
+	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
+	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+	ui.osgViewer->repaint();
+
+	ui.horizontalScrollBar->blockSignals( true );
+	ui.doubleSpinBox->blockSignals( true );
+
+	ui.horizontalScrollBar->setValue( 1000 * current_time );
+	ui.doubleSpinBox->setValue( current_time );
+
 	ui.horizontalScrollBar->blockSignals( false );
+	ui.doubleSpinBox->blockSignals( false );
+
+	// check if the evaluation has just finished
+	if ( is_evaluating && !manager.IsEvaluating() )
+	{
+		ui.horizontalScrollBar->setEnabled( true );
+		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		setTime( 0 );
+		start();
+	}
 }
 
 void SconeStudio::fileOpen()
@@ -292,45 +371,6 @@ void SconeStudio::updateOptimizations()
 void SconeStudio::createVideo()
 {
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
-}
-
-void SconeStudio::setTime( TimeInSeconds t )
-{
-	if ( !manager.HasModel() )
-		return;
-
-	if ( manager.GetModel().IsEvaluating() )
-	{
-		// always set current time to most recent simulation time
-		current_time = manager.GetMaxTime();
-		ui.horizontalScrollBar->setRange( 0, int( 1000 * current_time ) );
-	}
-	else
-	{
-		// update current time and stop when done
-		current_time = t;
-		if ( current_time >= manager.GetMaxTime() )
-		{
-			current_time = manager.GetMaxTime();
-			if ( qtimer.isActive() )
-				stop();
-		}
-	}
-
-	// update ui and visualization
-	manager.Update( t );
-	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
-	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-	ui.osgViewer->update();
-
-	ui.horizontalScrollBar->blockSignals( true );
-	ui.doubleSpinBox->blockSignals( true );
-
-	ui.horizontalScrollBar->setValue( 1000 * current_time );
-	ui.doubleSpinBox->setValue( current_time );
-
-	ui.horizontalScrollBar->blockSignals( false );
-	ui.doubleSpinBox->blockSignals( false );
 }
 
 EditorWidget* SconeStudio::getActiveScenario()

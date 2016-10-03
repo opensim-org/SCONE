@@ -407,25 +407,24 @@ namespace scone
 
 				if ( use_fixed_control_step_size )
 				{
-					// set this because it's used by GetSimulationEndTime()
-					// TODO: Change this!
-					m_pOsimManager->setFinalTime( final_time );
-
-					// Integrate using time stepper
-					m_pTkIntegrator->setFinalTime( final_time );
-					SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
-					ts.initialize( GetTkState() );
-
-					if ( GetStoreData() )
+					// initialize the time-stepper if this is the first step
+					if ( !m_pTkTimeStepper )
 					{
-						// store initial frame
-						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-						StoreCurrentFrame();
+						// Integrate using time stepper
+						m_pTkTimeStepper = std::unique_ptr< SimTK::TimeStepper >( new SimTK::TimeStepper( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator ) );
+						m_pTkTimeStepper->initialize( GetTkState() );
+						if ( GetStoreData() )
+						{
+							// store initial frame
+							m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+							StoreCurrentFrame();
+						}
 					}
 
 					// start integration loop
-					int number_of_steps = static_cast<int>( 0.5 + final_time / fixed_control_step_size );
+					int number_of_steps = static_cast<int>( 0.5 + ( final_time - GetTime() ) / fixed_control_step_size );
 					int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
+
 					for ( int current_step = 0; current_step < number_of_steps; )
 					{
 						// update controls
@@ -435,9 +434,9 @@ namespace scone
 						m_PrevTime = GetTime();
 						m_PrevIntStep = GetIntegrationStep();
 						double target_time = GetTime() + fixed_control_step_size;
-						SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
+
+						SimTK::Integrator::SuccessfulStepStatus status = m_pTkTimeStepper->stepTo( target_time );
 						SetTkState( m_pTkIntegrator->updAdvancedState() );
-						//SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
 
 						++current_step;
 
@@ -445,21 +444,16 @@ namespace scone
 						// this way the results are always consistent
 						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
-						// update the sensor delays
+						// update the sensor delays, analyses, and store data
 						UpdateSensorDelayAdapters();
-
-						// call UpdateAnalysis() on all controllers
 						UpdateAnalyses();
-
-						// store external data for later analysis
 						if ( GetStoreData() )
 							StoreCurrentFrame();
 
 						// terminate on request
 						if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
 						{
-							log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
-							// TODO: return appropriate result
+							log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 							break;
 						}
 
@@ -469,11 +463,8 @@ namespace scone
 							// notify GUI thread
 							lock.unlock();
 							GetSimulationCondVar().notify_all();
-							//std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
 							lock.lock();
 						}
-
-						//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
 					}
 				}
 				else
@@ -577,6 +568,12 @@ namespace scone
 		double Model_Simbody::GetSimulationEndTime() const
 		{
 			return m_pOsimManager->getFinalTime();
+		}
+
+		void Model_Simbody::SetSimulationEndTime( double t )
+		{
+			m_pOsimManager->setFinalTime( t );
+			m_pTkIntegrator->setFinalTime( t );
 		}
 
 		scone::String Model_Simbody::GetClassSignature() const

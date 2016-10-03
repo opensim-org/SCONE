@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
-    <height>837</height>
+    <width>1192</width>
+    <height>802</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,7 +84,7 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <layout class="QHBoxLayout" name="playControlLayout">
           <item>
            <widget class="QPushButton" name="startButton">
             <property name="text">
@@ -257,7 +257,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>962</width>
+     <width>1192</width>
      <height>21</height>
     </rect>
    </property>
@@ -397,8 +397,14 @@
      </property>
      <item>
       <widget class="QPlainTextEdit" name="outputText">
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
        <property name="lineWrapMode">
-        <enum>QPlainTextEdit::WidgetWidth</enum>
+        <enum>QPlainTextEdit::NoWrap</enum>
        </property>
        <property name="readOnly">
         <bool>true</bool>

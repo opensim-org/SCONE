@@ -88,6 +88,9 @@ if(${Qt5Widgets_FOUND})
 		${OSGSHADOW_LIBRARIES}
 		${OPENTHREADS_LIBRARIES}
 		)
+	
+	# no console in release mode
+	set_target_properties(sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
 
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${GUIFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.qrc "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )

@@ -72,6 +72,7 @@ public:
 public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
+	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
 
 private:
 	void setTime( TimeInSeconds t );
@@ -89,6 +90,7 @@ private:
 	double slomo_factor;
 	TimeInSeconds current_time;
 	TimeInSeconds capture_frequency;
+	TimeInSeconds evaluation_time_step;
 	flut::timer timer;
 	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;

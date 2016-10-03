@@ -21,6 +21,7 @@ namespace SimTK
 {
 	class State;
 	class Integrator;
+	class TimeStepper;
 }
 
 namespace scone
@@ -49,6 +50,7 @@ namespace scone
 			virtual bool AdvanceSimulationTo( double time ) override;
 
 			virtual double GetSimulationEndTime() const override;
+			virtual void SetSimulationEndTime( double t ) override;
 			virtual String WriteData( const String& file_base ) const override;
 
 			virtual void SetTerminationRequest() override;
@@ -107,6 +109,7 @@ namespace scone
 			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
+			std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 			SimTK::State* m_pTkState; // non-owning state reference
 			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
 

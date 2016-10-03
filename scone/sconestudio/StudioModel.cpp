@@ -46,8 +46,10 @@ namespace scone
 		{
 			// start evaluation in separate thread
 			is_evaluating = true;
-			log::info( "starting simulation in separate thread" );
-			eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
+			so->GetModel().SetStoreData( true );
+			so->GetModel().SetSimulationEndTime( so->max_duration );
+			log::info( "Starting simulation" );
+			//eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
 		}
 	}
 
@@ -134,13 +136,6 @@ namespace scone
 			model.SetStateValues( state );
 		}
 
-		if ( is_evaluating )
-		{
-			// wait until there's new data
-			simulation_lock.lock();
-			model.GetSimulationCondVar().wait( simulation_lock );
-		}
-
 		// update com
 		//com.pos( model.GetComPos() );
 
@@ -194,5 +189,29 @@ namespace scone
 
 		is_evaluating = false;
 		so->GetModel().GetSimulationCondVar().notify_one();
+	}
+
+	void StudioModel::EvaluateTo( TimeInSeconds t )
+	{
+		so->GetModel().AdvanceSimulationTo( t );
+
+		if ( so->GetModel().GetTerminationRequest() || t >= so->GetModel().GetSimulationEndTime() )
+		{
+			so->GetMeasure().GetResult( so->GetModel() );
+			PropNode results;
+			results.AddChild( "result", so->GetMeasure().GetReport( ) );
+			so->WriteResults( flut::get_filename_without_ext( filename ) );
+
+			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );
+			log::info( results );
+
+			// copy data and init data
+			std::lock_guard< std::mutex > lock( GetDataMutex() );
+			data = so->GetModel().GetData();
+			InitStateDataIndices();
+
+			// reset this stuff
+			is_evaluating = false;
+		}
 	}
 }

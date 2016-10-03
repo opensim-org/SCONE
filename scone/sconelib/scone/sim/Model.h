@@ -82,6 +82,7 @@ namespace scone
 			/// Simulate model
 			virtual bool AdvanceSimulationTo( double time ) = 0;
 			virtual double GetSimulationEndTime() const = 0;
+			virtual void SetSimulationEndTime( double time ) = 0;
 
 			/// Model data
 			virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
