@@ -37,8 +37,11 @@ fileName( file )
 	if ( f.open( QFile::ReadOnly | QFile::Text ) )
 	{
 		QTextStream str( &f );
-		textEdit->setText( str.readAll() );
+		fileData = str.readAll();
+		textEdit->setText( fileData );
 	}
+
+	connect( textEdit, SIGNAL( textChanged() ), this, SLOT( textEditChanged() ) );
 }
 
 EditorWidget::~EditorWidget()
@@ -59,6 +62,7 @@ void EditorWidget::save()
 		stream << textEdit->toPlainText();
 		stream.flush();
 		file.close();
+		textChangedFlag = false;
 	}
 }
 
@@ -69,6 +73,15 @@ void EditorWidget::saveAs()
 	{
 		fileName = fn;
 		save();
+	}
+}
+
+void EditorWidget::textEditChanged()
+{
+	if ( !textChangedFlag )
+	{
+		textChangedFlag = true;
+		emit textChanged();
 	}
 }
 

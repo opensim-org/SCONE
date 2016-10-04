@@ -12,19 +12,27 @@ class SconeStudio;
 
 class EditorWidget : public QWidget
 {
+	Q_OBJECT
+
 public:
 	EditorWidget( SconeStudio* s, const QString& file );
 	virtual ~EditorWidget();
+	bool hasTextChanged() { return textChangedFlag; }
 
 public slots:
 	void save();
 	void saveAs();
-	QString getTitle() { return QFileInfo( fileName ).fileName(); }
+	QString getTitle() { return QFileInfo( fileName ).fileName() + ( hasTextChanged() ? "*" : "" ); }
+	void textEditChanged();
+
+signals:
+	void textChanged();
 
 public:
 	SconeStudio* studio;
 	QString fileName;
-	bool fileChanged = false;
+	QString fileData;
+	bool textChangedFlag = false;
 	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
 
 protected:

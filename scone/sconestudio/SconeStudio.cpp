@@ -295,6 +295,9 @@ void SconeStudio::optimizeScenario()
 		return;
 	}
 
+	// save the results
+	fileSave();
+
 	ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName );
 	addProgressDock( pdw );
 
