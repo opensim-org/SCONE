@@ -68,6 +68,7 @@ public:
 	void updateBackgroundTimer();
 	void updateOptimizations();
 	void createVideo();
+	void tabCloseRequested( int idx );
 
 public:
 	bool close_all;
@@ -77,6 +78,7 @@ public:
 private:
 	void setTime( TimeInSeconds t );
 	EditorWidget* getActiveScenario();
+	bool checkAndSaveScenario( EditorWidget* s );
 	void addProgressDock( ProgressDockWidget* pdw );
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
@@ -97,6 +99,7 @@ private:
 
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< EditorWidget* > scenarios;
+
 	QString captureFilename;
 	QProcess* captureProcess;
 	QDir captureImageDir;

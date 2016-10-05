@@ -30,8 +30,8 @@ state( StartingState )
 	process->start( program, args );
 	fileName = config_file;
 
-	flut_error_if( !process->waitForStarted( 5000 ), "Could not start process" );
-	scone::log::info( "Successfully started optimization of ", fileName.toStdString() );
+	flut_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName.toStdString() );
+	scone::log::info( "Started scenario ", fileName.toStdString() );
 
 	ui.setupUi( this );
 
@@ -78,13 +78,15 @@ void ProgressDockWidget::updateProgress()
 
 	if ( state == StartingState )
 	{
-		if ( !process->waitForReadyRead( 1000 ) )
-			return;
+		if ( process->waitForReadyRead( 1000 ) )
+			state = InitializingState;
+		else return;
 	}
 
 	while ( process->canReadLine() )
 	{
 		std::string s = QString::fromLocal8Bit( process->readLine() ).toStdString();
+		//log::trace( "MESSAGE: ", s );
 		auto kvp = flut::to_key_value( s );
 
 		if ( kvp.first == "folder" )
@@ -124,8 +126,10 @@ void ProgressDockWidget::updateProgress()
 		else if ( kvp.first == "error" )
 		{
 			errorMsg = make_qt( kvp.second );
-			QMessageBox::critical( this, "Error optimizing " + fileName, errorMsg );
 			state = ErrorState;
+			updateText();
+			QMessageBox::critical( this, "Error optimizing " + fileName, errorMsg );
+			log::error( "Error optimizing ", fileName.toStdString(), ": ", errorMsg.toStdString() );
 		}
 		else if ( kvp.first == "finished" )
 		{
@@ -142,7 +146,7 @@ bool ProgressDockWidget::isClosed()
 
 void ProgressDockWidget::closeEvent( QCloseEvent *e )
 {
-	if ( !studio->close_all && state != FinishedState )
+	if ( !studio->close_all && !( state == FinishedState || state == ErrorState ) )
 	{
 		// allow user to cancel close
 		QString message = "Are you sure you want to abort optimization " + name;
@@ -179,7 +183,7 @@ void ProgressDockWidget::updateText()
 	case ProgressDockWidget::ClosedState:
 		break;
 	case ProgressDockWidget::ErrorState:
-		s = errorMsg;
+		s = "Error!";
 		break;
 	default:
 		break;

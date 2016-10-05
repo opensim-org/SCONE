@@ -13,14 +13,13 @@ EditorWidget::EditorWidget( SconeStudio* s, const QString& file ) :
 studio( s ),
 fileName( file )
 {
-	//dockWidgetContents = new QWidget();
-	//dockWidgetContents->setObjectName(QStringLiteral("dockWidgetContents"));
     verticalLayout = new QVBoxLayout(this);
     verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
 	setLayout(verticalLayout);
 
     textEdit = new QTextEdit(this);
     textEdit->setObjectName(QStringLiteral("textEdit"));
+
     QFont font;
     font.setFamily(QStringLiteral("Consolas"));
     font.setPointSize(9);

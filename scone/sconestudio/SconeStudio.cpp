@@ -59,6 +59,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 	ui.tabWidget->removeTab( 1 );
+	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
@@ -287,40 +288,52 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	}
 }
 
-void SconeStudio::optimizeScenario()
+bool SconeStudio::checkAndSaveScenario( EditorWidget* s )
 {
-	if ( getActiveScenario() == nullptr )
+	if ( s == nullptr )
 	{
 		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
-		return;
+		return false;
 	}
 
-	// save the results
-	fileSave();
+	if ( s->hasTextChanged() )
+	{
+		QString message = "Save changes to " + s->getTitle() + "?";
+		auto ret = QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard );
+		switch ( ret )
+		{
+		case QMessageBox::Save: s->save(); return true;
+		case QMessageBox::Discard: return false;
+		}
+	}
 
-	ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName );
-	addProgressDock( pdw );
+	return true;
+}
 
-	updateOptimizations();
+void SconeStudio::optimizeScenario()
+{
+	if ( checkAndSaveScenario( getActiveScenario() ) )
+	{
+		ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName );
+		addProgressDock( pdw );
+		updateOptimizations();
+	}
 }
 
 void SconeStudio::optimizeScenarioMultiple()
 {
-	if ( getActiveScenario() == nullptr )
+	if ( checkAndSaveScenario( getActiveScenario() ) )
 	{
-		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
-		return;
+		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100 );
+		for ( int i = 1; i <= count; ++i )
+		{
+			QStringList args;
+			args << QString().sprintf( "Optimizer.random_seed=%d", i );
+			ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
+			addProgressDock( pdw );
+		}
+		updateOptimizations();
 	}
-
-	int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100 );
-	for ( int i = 1; i <= count; ++i )
-	{
-		QStringList args;
-		args << QString().sprintf( "Optimizer.random_seed=%d", i );
-		ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
-		addProgressDock( pdw );
-	}
-	updateOptimizations();
 }
 
 void SconeStudio::abortOptimizations()
@@ -368,12 +381,26 @@ void SconeStudio::updateOptimizations()
 	for ( auto& o : optimizations )
 	{
 		o->updateProgress();
+		if ( o->state == ProgressDockWidget::ErrorState )
+			o->close();
 	}
 }
 
 void SconeStudio::createVideo()
 {
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
+}
+
+void SconeStudio::tabCloseRequested( int idx )
+{
+	SCONE_ASSERT( idx > 0 && idx <= (int)scenarios.size() );
+	auto it = scenarios.begin() + ( idx - 1 );
+
+	if ( checkAndSaveScenario( *it ) )
+	{
+		scenarios.erase( it );
+		ui.tabWidget->removeTab( idx );
+	}
 }
 
 EditorWidget* SconeStudio::getActiveScenario()

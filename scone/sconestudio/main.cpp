@@ -9,19 +9,24 @@
 
 #include "scone/cs/cs_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
+#include "scone/core/system_tools.h"
 
 int main(int argc, char *argv[])
 {
-	// init SCONE. TODO: make this a single function
-	scone::cs::RegisterFactoryTypes();
-	scone::sim::RegisterSimbody();
 
 	QApplication a(argc, argv);
 	SconeStudio w;
 
+	// register new logging function
 	scone::log::SetLevel( scone::log::TraceLevel );
 	flut::log::log_output_func f = std::bind( &SconeStudio::add_log_entry, &w, std::placeholders::_1, std::placeholders::_2 );
 	flut::log::set_log_output_func( f );
+
+	// init SCONE. TODO: make this a single function
+	scone::cs::RegisterFactoryTypes();
+	scone::sim::RegisterSimbody();
+
+	scone::log::info( "SCONE version ", scone::GetSconeVersion() );
 
 	try
 	{

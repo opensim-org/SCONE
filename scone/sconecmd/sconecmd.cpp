@@ -5,6 +5,7 @@
 #include "flut/system_tools.hpp"
 #include <boost/filesystem.hpp>
 #include <tclap/CmdLine.h>
+#include <thread>
 
 using namespace scone;
 using namespace std;
@@ -72,6 +73,8 @@ int main(int argc, char* argv[])
 		log::Critical( e.what() );
 		cout << "error=" << e.what() << endl;
 		cout.flush();
+
+		std::this_thread::sleep_for( std::chrono::seconds( 60 ) );
 	}
 	catch (TCLAP::ExitException& e )
 	{

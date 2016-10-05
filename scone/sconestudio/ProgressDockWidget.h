@@ -36,7 +36,7 @@ public:
 	QVector< double > avgvec;
 	QVector< double > genvec;
 
-	enum State { StartingState, RunningState, FinishedState, ClosedState, ErrorState };
+	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	State state;
 
 	void updateProgress();
