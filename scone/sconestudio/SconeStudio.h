@@ -51,10 +51,9 @@ public:
 	void updateSpinBox( double value ) { setTime( value ); }
 	void start();
 	void stop();
+	void next() { if ( !isPlaying() ) setTime( current_time + 0.01 ); }
+	void previous() { if ( !isPlaying() ) setTime( current_time - 0.01 ); }
 	void slomo( int v );
-	void speed1() { slomo( 1 ); }
-	void speed4() { slomo( 4 ); }
-	void speed16() { slomo( 16 ); }
 	void updateTimer();
 	void fileOpen();
 	void fileSave();
@@ -74,6 +73,7 @@ public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
 	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
+	bool isPlaying() { return qtimer.isActive(); }
 
 private:
 	void setTime( TimeInSeconds t );

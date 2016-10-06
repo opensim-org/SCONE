@@ -61,6 +61,14 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.tabWidget->removeTab( 1 );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
+	ui.playControl->setRange( 0, 10000 );
+	connect( ui.playControl, SIGNAL( play() ), this, SLOT( start() ) );
+	connect( ui.playControl, SIGNAL( stop() ), this, SLOT( stop() ) );
+	connect( ui.playControl, SIGNAL( previous() ), this, SLOT( previous() ) );
+	connect( ui.playControl, SIGNAL( next() ), this, SLOT( next() ) );
+	connect( ui.playControl, SIGNAL( sliderChanged(int) ), this, SLOT( updateScrollbar(int) ) );
+	connect( ui.playControl, SIGNAL( slowMotionChanged(int) ), this, SLOT( slomo(int) ) );
+
 	// start timer for viewer
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
@@ -121,8 +129,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		showViewer();
 		String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
-		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
-		ui.horizontalScrollBar->setDisabled( manager.IsEvaluating() );
+		ui.playControl->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		ui.playControl->setDisabled( manager.IsEvaluating() );
 
 		setTime( 0 );
 		start();
@@ -137,7 +145,6 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 {
 	auto item = resultsFileModel->fileInfo( idx );
 	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
-	//log::trace( dirname );
 }
 
 void SconeStudio::start()
@@ -174,9 +181,6 @@ void SconeStudio::stop()
 void SconeStudio::slomo( int v )
 {
 	slomo_factor = 1.0 / v;
-	ui.speedButton1->setChecked( v == 1 );
-	ui.speedButton4->setChecked( v == 4 );
-	ui.speedButton16->setChecked( v == 16 );
 }
 
 void SconeStudio::updateTimer()
@@ -198,37 +202,34 @@ void SconeStudio::setTime( TimeInSeconds t )
 		return;
 
 	// update current time and stop when done
-	current_time = t;
+	current_time = std::max( 0.0, t );
 
 	// update ui and visualization
 	bool is_evaluating = manager.IsEvaluating();
 	manager.Update( t );
 
-	if ( current_time >= manager.GetMaxTime() )
+	if ( current_time > manager.GetMaxTime() )
 	{
-		current_time = manager.GetMaxTime();
-		if ( qtimer.isActive() )
-			stop();
+		if ( !ui.playControl->getLoop() )
+		{
+			current_time = manager.GetMaxTime();
+			if ( qtimer.isActive() )
+				stop();
+		}
+		else current_time = 0.0; // just reset
 	}
 
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 	ui.osgViewer->repaint();
 
-	ui.horizontalScrollBar->blockSignals( true );
-	ui.doubleSpinBox->blockSignals( true );
-
-	ui.horizontalScrollBar->setValue( 1000 * current_time );
-	ui.doubleSpinBox->setValue( current_time );
-
-	ui.horizontalScrollBar->blockSignals( false );
-	ui.doubleSpinBox->blockSignals( false );
+	ui.playControl->setTime( current_time );
 
 	// check if the evaluation has just finished
 	if ( is_evaluating && !manager.IsEvaluating() )
 	{
-		ui.horizontalScrollBar->setEnabled( true );
-		ui.horizontalScrollBar->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		ui.playControl->setEnabled( true );
+		ui.playControl->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
 		setTime( 0 );
 		start();
 	}
@@ -276,7 +277,7 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 
 	// divide into tabs
 	if ( optimizations.size() >= 3 )
-	{
+	{ 
 		auto tab_count = ( optimizations.size() + 4 ) / 5;
 		for ( size_t i = 0; i < optimizations.size(); ++ i )
 		{
