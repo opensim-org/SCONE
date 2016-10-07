@@ -1,3 +1,5 @@
 <RCC>
-  <qresource prefix="SconeStudio"/>
+  <qresource prefix="SconeStudio">
+    <file>scone_splash.png</file>
+  </qresource>
 </RCC>

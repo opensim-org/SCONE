@@ -32,7 +32,6 @@ if(${Qt5Widgets_FOUND})
 		QPlayControl.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
-		
 		)
 	
 	set(RESOURCEFILES
@@ -54,7 +53,7 @@ if(${Qt5Widgets_FOUND})
 	include( PrecompiledHeaders )
 	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 
-	add_executable(sconestudio ${STUDIOFILES} ${GUIFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCES})
+	add_executable(sconestudio ${STUDIOFILES} ${GUIFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCES} studio.rc )
 	
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
@@ -97,7 +96,7 @@ if(${Qt5Widgets_FOUND})
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${GUIFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.qrc "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 	source_group("Studio Files" FILES ${STUDIOFILES} )
-	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui ProgressDockWidget.ui)
+	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui ProgressDockWidget.ui studio.rc)
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})

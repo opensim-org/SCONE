@@ -13,8 +13,14 @@
 
 int main(int argc, char *argv[])
 {
-
 	QApplication a(argc, argv);
+
+	QPixmap splash_pm( ":/SconeStudio/scone_splash.png" );
+	QSplashScreen splash( splash_pm );
+	splash.show();
+	//splash.showMessage( QString( "Initiating SCONE version " ) + scone::GetSconeVersion().to_str().c_str(), Qt::AlignLeft | Qt::AlignBaseline, Qt::black);
+	a.processEvents();
+
 	SconeStudio w;
 
 	// register new logging function
@@ -25,8 +31,9 @@ int main(int argc, char *argv[])
 	// init SCONE. TODO: make this a single function
 	scone::cs::RegisterFactoryTypes();
 	scone::sim::RegisterSimbody();
-
 	scone::log::info( "SCONE version ", scone::GetSconeVersion() );
+
+	QThread::sleep( 2 );
 
 	try
 	{
@@ -45,6 +52,8 @@ int main(int argc, char *argv[])
 	
 		w.init(threadingModel);
 		w.show();
+		splash.close();
+		
 		return a.exec();
 	}
 	catch ( std::exception& e )
