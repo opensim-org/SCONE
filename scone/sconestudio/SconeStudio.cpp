@@ -404,6 +404,14 @@ void SconeStudio::tabCloseRequested( int idx )
 	}
 }
 
+void SconeStudio::updateViewSettings()
+{
+	scone::StudioModel::ViewFlags f;
+	manager.GetModel().SetViewSetting( scone::StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
+	manager.GetModel().SetViewSetting( scone::StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
+	manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+}
+
 EditorWidget* SconeStudio::getActiveScenario()
 {
 	for ( auto edw : scenarios )

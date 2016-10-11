@@ -23,6 +23,8 @@ namespace scone
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
+		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
+
 		// create the objective form par file
 		so = cs::CreateSimulationObjective( par_file );
 
@@ -166,7 +168,7 @@ namespace scone
 			Vec3 force, moment, cop;
 			model.GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
-			forces[i].show( force.y > REAL_WIDE_EPSILON );
+			forces[i].show( force.y > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() );
 			forces[i].pos( cop, cop + 0.001 * force );
 		}
 	}
@@ -212,6 +214,28 @@ namespace scone
 
 			// reset this stuff
 			is_evaluating = false;
+		}
+	}
+
+	void StudioModel::SetViewSetting( ViewSettings e, bool value )
+	{
+		view_flags.set( e, value );
+
+		switch ( e )
+		{
+		case scone::StudioModel::ShowForces:
+			for ( auto f : forces ) f.show( value );
+			break;
+		case scone::StudioModel::ShowMuscles:
+			for ( auto m : muscles ) m.first.show( value );
+			break;
+		case scone::StudioModel::ShowGeometry:
+			for ( auto e : body_meshes ) for ( auto m : e ) m.show( value );
+			break;
+		case scone::StudioModel::EnableShadows:
+			break;
+		default:
+			break;
 		}
 	}
 }

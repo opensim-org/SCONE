@@ -5,7 +5,9 @@
 #include "scone/cs/SimulationObjective.h"
 #include "scone/opt/Objective.h"
 
+#include "flut/flag_set.hpp"
 #include "simvis/arrow.h"
+
 #include <thread>
 #include <mutex>
 #include <atomic>
@@ -17,6 +19,9 @@ namespace scone
 	class StudioModel
 	{
 	public:
+		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows };
+		typedef flut::flag_set< ViewSettings > ViewFlags;
+ 
 		StudioModel( vis::scene &s, const String& par_file );
 		virtual ~StudioModel();
 
@@ -31,6 +36,9 @@ namespace scone
 		bool IsEvaluating() { return is_evaluating.load(); }
 		std::mutex& GetDataMutex() { return data_mutex; }
 
+		void SetViewFlags( const ViewFlags& f ) { view_flags = f; }
+		void SetViewSetting( ViewSettings e, bool value );
+
 	private:
 		void InitVis( vis::scene& s );
 		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
@@ -38,6 +46,8 @@ namespace scone
 		Storage<> data;
 		cs::SimulationObjectiveUP so;
 		String filename;
+
+		ViewFlags view_flags;
 
 		std::vector< size_t > state_data_index;
 

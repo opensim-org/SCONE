@@ -68,6 +68,7 @@ public:
 	void updateOptimizations();
 	void createVideo();
 	void tabCloseRequested( int idx );
+	void updateViewSettings();
 
 public:
 	bool close_all;

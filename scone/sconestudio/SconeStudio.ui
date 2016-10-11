@@ -594,6 +594,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionShow_External_Forces</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Muscles</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Bone_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -601,17 +649,12 @@
   <slot>start()</slot>
   <slot>stop()</slot>
   <slot>slomo(int)</slot>
-  <slot>speed1()</slot>
-  <slot>speed4()</slot>
-  <slot>speed16()</slot>
-  <slot>updateSpinBox(double)</slot>
   <slot>fileOpen()</slot>
   <slot>fileClose()</slot>
   <slot>fileSave()</slot>
   <slot>fileSaveAs()</slot>
   <slot>showViewer()</slot>
   <slot>viewAction()</slot>
-  <slot>showEditor()</slot>
   <slot>helpAbout()</slot>
   <slot>optimizeScenario()</slot>
   <slot>abortOptimizations()</slot>
@@ -620,5 +663,6 @@
   <slot>createVideo()</slot>
   <slot>optimizeScenarioMultiple()</slot>
   <slot>tabCloseRequested(int)</slot>
+  <slot>updateViewSettings()</slot>
  </slots>
 </ui>
