@@ -25,6 +25,7 @@
 #include "flut/math/delta.hpp"
 #include "ProgressDockWidget.h"
 #include "EditorWidget.h"
+#include "Settings.h"
 
 class QFileSystemModel;
 
@@ -69,6 +70,7 @@ public:
 	void createVideo();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
+	void showSettingsDialog() { settings.showDialog( this ); }
 
 public:
 	bool close_all;
@@ -105,6 +107,9 @@ private:
 	QProcess* captureProcess;
 	QDir captureImageDir;
 	void finalizeCapture();
+
+	scone::Settings settings;
+
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
 };

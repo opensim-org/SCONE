@@ -18,6 +18,7 @@
 #include "qevent.h"
 #include "qcustomplot.h"
 #include "studio_config.h"
+#include "ui_SconeSettings.h"
 
 using namespace scone;
 using namespace std;

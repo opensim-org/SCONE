@@ -8,24 +8,24 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
+		main.cpp
 		StudioModel.cpp
 		StudioModel.h
 		StudioScene.cpp
 		StudioScene.h
 		studio_config.h
-		)
-	
-	set(GUIFILES
-		qt_tools.h
-		main.cpp
-		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
-		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
-		QOsgViewer.h
-		QOsgViewer.cpp
 		SconeStudio.cpp
 		SconeStudio.h
 		ProgressDockWidget.h
 		ProgressDockWidget.cpp
+		)
+	
+	set(QTFILES
+		qt_tools.h
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
+		QOsgViewer.h
+		QOsgViewer.cpp
 		EditorWidget.h
 		EditorWidget.cpp
 		QPlayControl.h
@@ -36,14 +36,18 @@ if(${Qt5Widgets_FOUND})
 	
 	set(RESOURCEFILES
 		studio.rc
+		SconeStudio.qrc 
+		SconeStudio.ui
+		ProgressDockWidget.ui
+		SconeSettings.ui
 		)
 	
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
 	
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui)
+	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui SconeSettings.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 	
-	SET( SOURCE_FILES ${STUDIOFILES} ${GUIFILES} ${RESOURCES} )
+	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )
 	
 	#MESSAGE( "RESOURCES: " ${RESOURCES} )
 	#MESSAGE( "UI_HEADERS: " ${UI_HEADERS} )
@@ -53,7 +57,7 @@ if(${Qt5Widgets_FOUND})
 	include( PrecompiledHeaders )
 	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 
-	add_executable(sconestudio ${STUDIOFILES} ${GUIFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCES} studio.rc )
+	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 	
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
@@ -94,9 +98,9 @@ if(${Qt5Widgets_FOUND})
 	set_target_properties(sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
 
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
-	source_group("Qt Files" FILES ${GUIFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.qrc "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
+	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 	source_group("Studio Files" FILES ${STUDIOFILES} )
-	source_group("GUI Files" FILES ${GUIFILES} SconeStudio.ui ProgressDockWidget.ui studio.rc)
+	source_group("Resource Files" FILES ${RESOURCEFILES} )
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})

@@ -88,11 +88,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_6">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -642,6 +637,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Preferences</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>showSettingsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -664,5 +675,6 @@
   <slot>optimizeScenarioMultiple()</slot>
   <slot>tabCloseRequested(int)</slot>
   <slot>updateViewSettings()</slot>
+  <slot>showSettingsDialog()</slot>
  </slots>
 </ui>

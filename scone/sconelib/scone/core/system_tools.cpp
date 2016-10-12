@@ -18,6 +18,8 @@
 #include <shlobj.h>
 #endif
 
+#define SCONE_SETTINGS_PATH ( flut::get_config_folder() + "/Scone/settings.ini" )
+
 namespace scone
 {
 	boost::mutex g_SystemMutex;
@@ -43,9 +45,17 @@ namespace scone
 
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
-        	g_GlobalSettings.FromIniFile( flut::get_config_folder() + "/Scone/settings.ini" );
+        	g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH );
 
 		return g_GlobalSettings;
+	}
+
+	SCONE_API void SaveSconeSettings( const PropNode& newSettings )
+	{
+		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		g_GlobalSettings = newSettings;
+		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH ).parent_path() );
+		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH );
 	}
 
 	SCONE_API String GetFolder( const String& folder, const String& default_path )
