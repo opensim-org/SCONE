@@ -80,7 +80,7 @@ namespace scone
 			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
 			INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
 			INIT_PROPERTY( props, max_step_size, 0.001 );
-			INIT_PROPERTY( props, use_fixed_control_step_size, false );
+			INIT_PROPERTY( props, use_fixed_control_step_size, true );
 			INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
 
 			INIT_PROPERTY_REQUIRED( props, model_file );

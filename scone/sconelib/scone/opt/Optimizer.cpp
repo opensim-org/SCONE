@@ -34,16 +34,16 @@ namespace scone
 		status_output( false ),
 		m_LastFileOutputGen( 0 )
 		{
-			INIT_PROPERTY( props, max_threads, size_t( 1 ) );
-			INIT_PROPERTY( props, thread_priority, 0 );
+			INIT_PROPERTY( props, max_threads, size_t( 32 ) );
+			INIT_PROPERTY( props, thread_priority, -2 );
 			INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
 			INIT_PROPERTY_REQUIRED( props, maximize_objective );
 			INIT_PROPERTY( props, show_optimization_time, false );
-			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.01 );
+			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
 			INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
 			INIT_PROPERTY( props, init_file, String("") );
 			INIT_PROPERTY( props, use_init_file, true );
-			INIT_PROPERTY( props, output_objective_result_files, true );
+			INIT_PROPERTY( props, output_objective_result_files, false );
 
 			m_BestFitness = maximize_objective ? REAL_LOWEST : REAL_MAX;
 
