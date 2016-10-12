@@ -5,7 +5,7 @@ using namespace boost::filesystem;
 
 BOOST_AUTO_TEST_CASE( propnode_stream_test )
 {
-	path rootpath = scone::GetFolder( "root" );
+	path rootpath = scone::GetFolder( "root" ).str();
 	path p1path = rootpath / "config/f1022_gait_GH.xml";
 	auto p1 = scone::ReadPropNodeFromXml( p1path.string() );
 

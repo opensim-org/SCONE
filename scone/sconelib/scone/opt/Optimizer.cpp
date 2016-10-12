@@ -13,7 +13,7 @@
 
 //#include <sstream>
 
-using namespace boost::filesystem;
+namespace bfs = boost::filesystem;
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
@@ -136,13 +136,13 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			auto output_base = GetFolder( "output" ) + GetSignature();
+			auto output_base = ( GetFolder( "output" ) / GetSignature() ).str();
 			m_OutputFolder = output_base;
 
-			for ( int i = 1; exists( path( m_OutputFolder ) ); ++i )
+			for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder ) ); ++i )
 				m_OutputFolder = output_base + stringf( " (%d)", i );
 
-			create_directories( path( m_OutputFolder ) );
+			create_directories( bfs::path( m_OutputFolder ) );
 			m_OutputFolder += "/";
 		}
 
@@ -188,7 +188,7 @@ namespace scone
 				{
 					// delete the file(s)
 					for ( String& file: testIt->second )
-						boost::filesystem::remove( path( file ) );
+						bfs::remove( bfs::path( file ) );
 
 					m_OutputFiles.erase( testIt );
 				}

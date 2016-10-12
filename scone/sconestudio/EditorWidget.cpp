@@ -67,7 +67,7 @@ void EditorWidget::save()
 
 void EditorWidget::saveAs()
 {
-	QString fn = QFileDialog::getSaveFileName( this, "Save Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
+	QString fn = QFileDialog::getSaveFileName( this, "Save Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
 	if ( !fn.isEmpty() )
 	{
 		fileName = fn;

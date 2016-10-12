@@ -18,6 +18,8 @@ if(${Qt5Widgets_FOUND})
 		SconeStudio.h
 		ProgressDockWidget.h
 		ProgressDockWidget.cpp
+		Settings.h
+		Settings.cpp
 		)
 	
 	set(QTFILES

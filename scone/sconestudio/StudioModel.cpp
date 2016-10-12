@@ -84,7 +84,7 @@ namespace scone
 			for ( auto& geom_file : geom_files )
 			{
 				log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				body_meshes.back().push_back( root.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ).str() ) );
 				body_meshes.back().back().set_material( bone_mat );
 			}
 		}

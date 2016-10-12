@@ -2,7 +2,7 @@
 
 #define SCONE_VERSION_MAJOR 0
 #define SCONE_VERSION_MINOR 1
-#define SCONE_VERSION_PATCH 0
+#define SCONE_VERSION_PATCH 1
 #define SCONE_VERSION_POSTFIX "ALPHA"
 
 #include <fstream>
@@ -17,6 +17,8 @@
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
+#include "flut/system/path.hpp"
+#include "Log.h"
 
 #define SCONE_SETTINGS_PATH ( flut::get_config_folder() + "/Scone/settings.ini" )
 
@@ -45,7 +47,10 @@ namespace scone
 
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
-        	g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH );
+		{
+			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
+			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH );
+		}
 
 		return g_GlobalSettings;
 	}
@@ -56,17 +61,18 @@ namespace scone
 		g_GlobalSettings = newSettings;
 		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH ).parent_path() );
 		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH );
+		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
 	}
 
-	SCONE_API String GetFolder( const String& folder, const String& default_path )
+	SCONE_API path GetFolder( const String& folder, const String& default_path )
 	{
-		auto path_to_folder = GetSconeSettings().GetStr( "folders." + folder, "" );
+		auto path_to_folder = flut::path( GetSconeSettings().GetStr( "folders." + folder, "" ) );
 		if ( path_to_folder.empty() )
-			path_to_folder = GetSconeSettings().GetStr( "folders.root" ) + "/" + default_path;
-		return path_to_folder + "/";
+			path_to_folder = path( GetSconeSettings().GetStr( "folders.root" ) ) / default_path;
+		return path_to_folder;
 	}
 
-	SCONE_API String GetFolder( SconeFolder folder )
+	SCONE_API path GetFolder( SconeFolder folder )
 	{
 		switch ( folder )
 		{

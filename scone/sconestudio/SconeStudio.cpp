@@ -52,7 +52,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
 	ui.resultsBrowser->setModel( resultsFileModel );
-	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( QString( scone::GetFolder( SCONE_OUTPUT_FOLDER ).c_str() ) ) );
+	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( scone::GetFolder( SCONE_OUTPUT_FOLDER ) ) ) );
 	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -238,7 +238,7 @@ void SconeStudio::setTime( TimeInSeconds t )
 
 void SconeStudio::fileOpen()
 {
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString( scone::GetFolder( SCONE_SCENARIO_FOLDER ).c_str() ), "SCONE Scenarios (*.xml)" );
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
 		EditorWidget* edw = new EditorWidget( this, filename );
