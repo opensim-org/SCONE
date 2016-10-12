@@ -62,7 +62,7 @@ namespace scone
 		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;
 		std::vector< vis::mesh > joints;
-		std::vector< std::pair< vis::path, vis::material > > muscles;
+		std::vector< std::pair< vis::trail, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
 		vis::mesh com;
 		void InitStateDataIndices();

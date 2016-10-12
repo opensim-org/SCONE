@@ -24,7 +24,7 @@ namespace scone
 		vis::scene scene;
 		std::unique_ptr< StudioModel > model;
 		vis::mesh mesh1, mesh2;
-		vis::path circle;
+		vis::trail circle;
 	public:
 		TimeInSeconds GetMaxTime();
 		bool HasModel();
