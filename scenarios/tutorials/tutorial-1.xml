@@ -21,7 +21,7 @@
 				<Measure type="HeightMeasure">
 					<terminate_on_peak>1</terminate_on_peak>
 					<termination_height>0.5</termination_height>
-					<ignore_time>0.2</ignore_time>
+					<ignore_time>0.3</ignore_time>
 					<signature_postfix></signature_postfix>
 				</Measure>
 			</Controllers>
