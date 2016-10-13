@@ -2,26 +2,27 @@
 <Optimizer type="CmaOptimizer">
 	<max_generations>1000</max_generations>
 	<maximize_objective>1</maximize_objective>
-	<signature_postfix></signature_postfix>
 	<Objective type="SimulationObjective">
-		<max_duration>1.0</max_duration>
+		<max_duration>2</max_duration>
 		<Model type="Simbody">
-			<model_file>f0914.osim</model_file>
+			<model_file>f1020.osim</model_file>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<Controllers>
 				<Controller type="FeedForwardController">
 					<use_symmetric_actuators>1</use_symmetric_actuators>
-					<Function type="PieceWiseConstantFunction">
-						<control_points>3</control_points>
-						<control_point_y init_mean="0.5" init_std="0.1" min="0" max="1"/>
-						<control_point_delta_time init_mean="0.1" init_std="0.02" is_free="0"/>
+					<Function type="Polynomial">
+						<degree>2</degree>
+						<coefficient0 init_mean="0.25" init_std="0.1" min="0" max="1"/>
+						<coefficient1 init_mean="0" init_std="1" min="-10" max="10"/>
+						<coefficient2 init_mean="0" init_std="1" min="-10" max="10"/>
 					</Function>
 				</Controller>
 				<Measure type="HeightMeasure">
 					<terminate_on_peak>1</terminate_on_peak>
 					<termination_height>0.5</termination_height>
-					<ignore_time>0.3</ignore_time>
+					<ignore_time>0.2</ignore_time>
+					<signature_postfix></signature_postfix>
 				</Measure>
 			</Controllers>
 		</Model>
