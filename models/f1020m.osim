@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f1020">
+	<Model name="f1020m">
 		<!--Feed forward model with 10 DOF 20 Muscles. Adapted by Thomas Geijtenbeek.
 		
 		Version history:
