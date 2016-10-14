@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="30000">
-	<Model name="f1024">
+	<Model name="f1024m">
 		<!--Feed forward version of the 1024 model. Adapted by Thomas Geijtenbeek.
 
 		Version history:
