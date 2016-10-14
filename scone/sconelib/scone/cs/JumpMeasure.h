@@ -21,14 +21,16 @@ namespace scone
 			virtual String GetClassSignature() const override;
 
 		private:
-			sim::Body& target_body;
+			enum State { Preparing, Jumping, Landing };
+
+			State state;
+			sim::Body* target_body;
 			Real termination_height;
-			Real init_dist;
-			Real init_height;
-			bool was_airborne;
-			Real distance;
-			Real prev_force;
-			Real ignore_time;
+			bool terminate_on_peak;
+			Vec3 init_com;
+			Vec3 prepare_com;
+			Vec3 jump_com;
+			Real prepare_time;
 		};
 	}
 }
