@@ -134,18 +134,18 @@ namespace scone
 				cma.step_mt();
 
 				// report results
-				double current_best_fitness = IsMinimizing() ? cma.solution().value : -cma.solution().value;
+				double generation_best_fitness = IsMinimizing() ? cma.solution().value : -cma.solution().value;
 				double current_avg_fitness = IsMinimizing() ? cma.average() : -cma.average();
 
 				if ( GetProgressOutput() )
 					printf(" A=%.3f", current_avg_fitness );
 				if ( status_output )
-					std::cout << "generation=" << gen << " " << current_avg_fitness << " " << current_best_fitness << std::endl;
+					std::cout << "generation=" << gen << " " << current_avg_fitness << " " << generation_best_fitness << std::endl;
 
-				bool new_best = IsBetterThan( current_best_fitness, m_BestFitness );
+				bool new_best = IsBetterThan( generation_best_fitness, m_BestFitness );
 				if ( new_best )
 				{
-					m_BestFitness = current_best_fitness;
+					m_BestFitness = generation_best_fitness;
 
 					if ( GetProgressOutput() )
 						printf(" B=%.3f", m_BestFitness );
@@ -173,14 +173,15 @@ namespace scone
 					m_LastFileOutputGen = gen;
 
 					// write .par file
-					String ind_name = stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, m_BestFitness );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, generation_best_fitness );
 					String file_base = AcquireOutputFolder() + ind_name;
 					std::vector< String > outputFiles;
 					par.Write( file_base + ".par" );
 					outputFiles.push_back( file_base + ".par" );
 
 					// cleanup superfluous output files
-					ManageFileOutput( m_BestFitness, outputFiles );
+					if ( new_best )
+						ManageFileOutput( m_BestFitness, outputFiles );
 				}
 
 				// show time if needed

@@ -152,20 +152,24 @@ namespace scone
 			m_pTkIntegrator->resetAllStatistics();
 
 			// read initial state
+			std::map< String, Real > state;
 			if ( !state_init_file.empty() )
+				state = ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
+			else state = GetStateVariables();
+
+			// update state variables if they are being optimized
+			if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
 			{
-				std::map< String, Real > state = ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
-				if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
+				for ( auto& nvp : state )
 				{
-					for ( auto& nvp : state )
-					{
-						if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
-							nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
-					}
+					if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+						nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
 				}
-				SetStateVariables( state );
-				FixState( initial_leg_load * GetBW() );
 			}
+
+			// apply and fix state
+			SetStateVariables( state );
+			FixState( initial_leg_load * GetBW() );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
@@ -556,13 +560,20 @@ namespace scone
 			{
 				// check if the label is corresponds to a state
 				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
-				{
 					state[ storeLabels[ i ] ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
-				}
-				//else log::Trace( "Unused state parameter: " + storeLabels[ i ] );
 			}
 
 			return state;
+		}
+
+		std::map< String, scone::Real > Model_Simbody::GetStateVariables()
+		{
+			std::map< String, Real > variables;
+			auto names = GetStateVariableNames();
+			auto values = GetStateValues();
+			for ( size_t i = 0; i < names.size(); ++i )
+				variables[ names[ i ] ] = values[ i ];
+			return variables;
 		}
 
 		double Model_Simbody::GetSimulationEndTime() const

@@ -26,22 +26,26 @@ namespace scone
 		{
 			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
 
+			double early_jump_penalty = 0.0;
+			double result = 0.0;
+
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Preparing:
 				// failed during preparation, return projected height after 1s
-				return 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
+				result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
 				break;
 			case scone::cs::JumpMeasure::Jumping:
 				// we've managed to jump, return height as result, with penalty for early jumping
-				return 100 * ( pos.y - std::max( 0.0, prepare_com.y - init_com.y ) );
-				break;
-			case scone::cs::JumpMeasure::Landing:
-				return 0;
+				early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
+				result = 100 * ( pos.y - early_jump_penalty );
 				break;
 			}
 
-			return 0;
+			GetReport().Set( result );
+			GetReport().Set( "early_jump_penalty", early_jump_penalty );
+
+			return result;
 		}
 
 		sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )

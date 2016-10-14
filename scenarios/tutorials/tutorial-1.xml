@@ -2,10 +2,12 @@
 <Optimizer type="CmaOptimizer">
 	<max_generations>1000</max_generations>
 	<maximize_objective>1</maximize_objective>
+	<signature_postfix>pose_init</signature_postfix>
 	<Objective type="SimulationObjective">
 		<max_duration>2</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020.osim</model_file>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<Controllers>
@@ -21,7 +23,6 @@
 					<terminate_on_peak>1</terminate_on_peak>
 					<termination_height>0.75</termination_height>
 					<prepare_time>0.2</prepare_time>
-					<signature_postfix></signature_postfix>
 				</Measure>
 			</Controllers>
 		</Model> 
