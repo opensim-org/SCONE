@@ -151,7 +151,10 @@ namespace scone
 						printf(" B=%.3f", m_BestFitness );
 					if ( status_output )
 						std::cout << "best=" << m_BestFitness << std::endl;
+				}
 
+				if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output )  )
+				{
 					// copy best solution to par
 					std::vector< double > values( cma.solution().point.begin(), cma.solution().point.end() );
 					par.SetFreeParamValues( values );
@@ -164,12 +167,11 @@ namespace scone
 						std[ i ] = sqrt( cma.covarianceMatrix()( i, i ) );
 					}
 					par.UpdateMeanStd( mean, std );
-				}
 
-				if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output )  )
-				{
 					// update best params after mean / std have been updated
-					m_BestParams = par;
+					if ( new_best)
+						m_BestParams = par;
+
 					m_LastFileOutputGen = gen;
 
 					// write .par file
