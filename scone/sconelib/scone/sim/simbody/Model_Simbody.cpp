@@ -160,10 +160,14 @@ namespace scone
 			// update state variables if they are being optimized
 			if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
 			{
+				bool symmetric = iso.GetBool( "symmetric", false );
 				for ( auto& nvp : state )
 				{
 					if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
-						nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
+					{
+						auto name = symmetric ? GetNameNoSide( nvp.first ) : nvp.first;
+						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
+					}
 				}
 			}
 
