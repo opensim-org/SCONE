@@ -24,7 +24,7 @@ namespace scone
 				if ( clf && clf->getProperty_coordinate().getValue() == coord.getName() )
 				{
 					// we have found a match!
-					log::Trace( "Found limit force " + clf->getName() + " for coord " + coord.getName() );
+					//log::Trace( "Found limit force " + clf->getName() + " for coord " + coord.getName() );
 					m_pOsLimitForce = clf;
 					break; 
 				}
