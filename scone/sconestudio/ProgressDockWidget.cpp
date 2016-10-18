@@ -136,6 +136,15 @@ void ProgressDockWidget::updateProgress()
 			state = FinishedState;
 			updateText();
 		}
+		else
+		{
+			// if this key has a value, keep it and display it as a tooltip
+			if ( !kvp.second.empty() )
+			{
+				tooltipText += make_qt( ( tooltipText.isEmpty() ? "" : "\n" ) + kvp.first + " = " + kvp.second );
+				ui.text->setToolTip( tooltipText );
+			}
+		}
 	}
 }
 

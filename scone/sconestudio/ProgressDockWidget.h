@@ -22,6 +22,7 @@ public:
 	QString name;
 	QString fileName;
 	QString errorMsg;
+	QString tooltipText;
 	QProcess* process;
 	Ui::ProgressDockWidget ui;
 	int best_gen;
