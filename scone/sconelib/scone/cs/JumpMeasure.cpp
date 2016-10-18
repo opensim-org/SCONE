@@ -13,6 +13,7 @@ namespace scone
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, prepare_time, 0.2 );
 			INIT_PROPERTY( props, terminate_on_peak, true );
+			INIT_PROPERTY( props, negate_result, false );
 
 			if ( props.HasKey( "target_body" ) )
 				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
@@ -41,6 +42,9 @@ namespace scone
 				result = jump_height - early_jump_penalty;
 				break;
 			}
+
+			if ( negate_result )
+				result = -result;
 
 			GetReport().Set( result );
 			GetReport().Set( "jump_height", jump_height );

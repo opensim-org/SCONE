@@ -31,6 +31,7 @@ namespace scone
 			Vec3 prepare_com;
 			Vec3 jump_com;
 			Real prepare_time;
+			bool negate_result;
 		};
 	}
 }
