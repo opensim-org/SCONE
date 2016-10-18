@@ -26,7 +26,8 @@ namespace scone
 		{
 			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
 
-			double early_jump_penalty = 0.0;
+			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
+			double jump_height = 100 * pos.y;
 			double result = 0.0;
 
 			switch ( state )
@@ -37,12 +38,12 @@ namespace scone
 				break;
 			case scone::cs::JumpMeasure::Jumping:
 				// we've managed to jump, return height as result, with penalty for early jumping
-				early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
-				result = 100 * ( pos.y - early_jump_penalty );
+				result = jump_height - early_jump_penalty;
 				break;
 			}
 
 			GetReport().Set( result );
+			GetReport().Set( "jump_height", jump_height );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
