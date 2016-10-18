@@ -41,6 +41,7 @@ namespace scone
 			INIT_PROPERTY( props, random_seed, DEFAULT_RANDOM_SEED );
 			INIT_PROPERTY( props, global_std_factor, 0.0 );
 			INIT_PROPERTY( props, global_std_offset, 0.0 );
+			INIT_PROPERTY( props, recombination_type, int( CMA_MT::SUPERLINEAR ) );
 		}
 
 		scone::String CmaOptimizer::GetClassSignature() const
@@ -72,6 +73,7 @@ namespace scone
 			// init parents and offspring
 			CMA_MT cma( *this );
 			SconeSingleObjectiveFunction objfunc( GetObjective(), IsMinimizing() );
+			cma.recombinationType() = shark::CMA::RecombinationType( recombination_type );
 
 			// init random seed
 			if ( random_seed == 0 ) {
