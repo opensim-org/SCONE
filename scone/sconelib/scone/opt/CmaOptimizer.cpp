@@ -252,6 +252,18 @@ namespace scone
 			if ( random_seed == 0 ) random_seed = long( time( NULL ) );
 			Rng::seed( random_seed );
 
+			if ( status_output )
+			{
+				// print out some info
+				cout << "folder=" << AcquireOutputFolder() << endl;
+				cout << "dim=" << dim << endl;
+				cout << "sigma=" << m_Sigma << endl;
+				cout << "lambda=" << m_Lambda << endl;
+				cout << "mu=" << m_Mu << endl;
+				cout << "max_generations=" << max_generations << endl;
+				cout << "SHARK_VERSION=" << SHARK_VERSION << endl;
+			}
+
 			// initialize settings from file
 			if ( use_init_file && !init_file.empty() )
 				par.Read( init_file );
@@ -286,10 +298,11 @@ namespace scone
 
 			// optimization loop
 			timer tmr;
-			double best = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
+			m_BestFitness = IsMinimizing() ? REAL_MAX : REAL_LOWEST;
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
-				printf("%04d:", gen );
+				if ( GetProgressOutput() )
+					printf("%04d:", gen );
 
 				// setup parameter sets
 				par.SetMode( ParamSet::UpdateMode );
@@ -303,15 +316,23 @@ namespace scone
 					(*pOffspring)[ ind_idx ].setFitness( fitnesses[ ind_idx ] );
 
 				// report results
-				printf(" M=%.3f", pOffspring->meanFitness() );
-				bool new_best = IsBetterThan( pOffspring->best().fitnessValue(), best );
+				if ( GetProgressOutput() )
+					printf(" A=%.3f", pOffspring->meanFitness() );
+
+				if ( status_output )
+					std::cout << "generation=" << gen << " " << pOffspring->meanFitness() << " " << pOffspring->best().fitnessValue() << std::endl;
+
+				bool new_best = IsBetterThan( pOffspring->best().fitnessValue(), m_BestFitness );
 				if ( new_best )
 				{
-					best = pOffspring->best().fitnessValue();
-					printf(" B=%.3f", best );
+					m_BestFitness = pOffspring->best().fitnessValue();
+					if ( GetProgressOutput() )
+						printf(" B=%.3f", m_BestFitness );
+					if ( status_output )
+						std::cout << "best=" << m_BestFitness << std::endl;
 
 					// write results
-					String ind_name = stringf( "%04d_%.3f_%.3f", gen, pOffspring->meanFitness(), best );
+					String ind_name = stringf( "%04d_%.3f_%.3f", gen, pOffspring->meanFitness(), m_BestFitness );
 					String file_base = AcquireOutputFolder() + ind_name;
 					parsets[ pOffspring->bestIndex() ].UpdateMeanStd( parsets );
 
@@ -325,15 +346,18 @@ namespace scone
 					outputFiles.push_back( file_base + ".par" );
 
 					// cleanup superfluous output files
-					ManageFileOutput( best, outputFiles );
+					ManageFileOutput( m_BestFitness, outputFiles );
 				}
 
 				// show time if needed
-				if ( show_optimization_time )
-					printf( " T=%.1f", tmr.GetTime() );
+				if ( GetProgressOutput() )
+				{
+					if ( show_optimization_time )
+						printf( " T=%.1f", tmr.seconds() );
 
-				// done reporting
-				printf( new_best ? "\n" : "\r" );
+					// done reporting
+					printf( new_best ? "\n" : "\r" );
+				}
 
 				// update next generation
 				pParents->selectMuLambda( *pOffspring, num_elitists );
@@ -352,12 +376,16 @@ namespace scone
 
 					if ( !par.CheckValues() )
 					{
+						if ( GetProgressOutput() )
 						printf("%03d: Failed to create valid individual after %d attempts, fixing instead\n", i, max_attempts);
 						par.RestrainValues();
 						(*pOffspring)[i][0] = par.GetFreeParamValues();
 					}
 				}
 			}
+
+			if ( status_output )
+				cout << "finished=1" << endl;
 		}
 
 #endif // USE_SHARK_V2
