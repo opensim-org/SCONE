@@ -1,6 +1,8 @@
 #include "ParamInfo.h"
 
-#if USE_SHARK_V2
+#include "opt_config.h"
+
+#if SHARK_VERSION == 2
 #include "Rng/GlobalRng.h"
 #endif
 
@@ -42,7 +44,7 @@ namespace scone
 
 		double ParamInfo::GetInitialValue() const
 		{
-#if USE_SHARK_V2
+#if SHARK_VERSION == 2
 			if ( is_free )
 			{
 				if ( init_mean != 0.0 || init_std != 0.0 )

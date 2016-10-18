@@ -142,6 +142,7 @@ set(OPT_SYSTEM_FILES
     scone/opt/Factories.cpp
     scone/opt/Factories.h
 	scone/opt/SharkHelperClasses.h
+	scone/opt/opt_config.h
     )
 	
 set(SIM_MODELCOMPONENTS_FILES

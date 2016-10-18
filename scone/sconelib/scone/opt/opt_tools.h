@@ -1,7 +1,5 @@
 #pragma once
 
-#define USE_SHARK_V2 0
-
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/string_tools.h"

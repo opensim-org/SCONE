@@ -1,5 +1,6 @@
 #pragma once
 
+#include "opt_config.h"
 #include "opt_fwd.h"
 #include "Objective.h"
 #include "scone/core/HasSignature.h"
