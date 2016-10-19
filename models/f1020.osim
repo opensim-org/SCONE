@@ -3232,7 +3232,7 @@
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.002 0.014</location>
+					<location>0.07 0.005 0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>
