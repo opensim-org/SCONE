@@ -378,7 +378,7 @@ namespace scone
 					{
 						if ( GetProgressOutput() )
 						printf("%03d: Failed to create valid individual after %d attempts, fixing instead\n", i, max_attempts);
-						par.RestrainValues();
+						par.ClampValues();
 						(*pOffspring)[i][0] = par.GetFreeParamValues();
 					}
 				}

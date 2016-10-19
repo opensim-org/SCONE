@@ -114,10 +114,10 @@ namespace scone
 				[&]( const std::pair< ParamInfo, double >& v ) { return !v.first.CheckValue( v.second ); } ) == m_Params.end();
 		}
 
-		void ParamSet::RestrainValues()
+		void ParamSet::ClampValues()
 		{
 			std::for_each( m_Params.begin(), m_Params.end(),
-				[&]( std::pair< ParamInfo, double >& v ) { v.first.RestrainValue( v.second ); } );
+				[&]( std::pair< ParamInfo, double >& v ) { v.first.ClampValue( v.second ); } );
 		}
 
 		void ParamSet::InitRandom()

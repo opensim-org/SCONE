@@ -6,6 +6,8 @@
 #	define WIN32_LEAN_AND_MEAN
 #endif
 
+const int MAX_INDIVIDUAL_SAMPLE_ATTEMPTS = 256;
+
 #include <shark/Algorithms/DirectSearch/CMA.h>
 #include <shark/Algorithms/DirectSearch/Operators/Evaluation/PenalizingEvaluator.h>
 #include <shark/Algorithms/DirectSearch/FitnessExtractor.h>
@@ -46,11 +48,7 @@ namespace scone
 			{
 				std::vector< double > v( individuals[ ind_idx ].searchPoint().begin(), individuals[ ind_idx ].searchPoint().end() );
 				parsets[ind_idx].SetFreeParamValues( v );
-				parsets[ind_idx].RestrainValues(); // ensure the values are within min / max
-
-				// important: copy restrained values back to Shark individuals, as they are used to store results
-				v = parsets[ ind_idx ].GetFreeParamValues();
-				std::copy( v.begin(), v.end(), individuals[ ind_idx ].searchPoint().begin() ); 
+				SCONE_ASSERT( parsets[ind_idx].CheckValues() ); // values must have been checked at this point
 			}
 
 			// evaluate parameter sets using scone::Optimizer
@@ -75,10 +73,28 @@ namespace scone
 			{
 				std::vector< shark::Individual<shark::RealVector, double, shark::RealVector> > offspring( m_lambda );
 
-				for( std::size_t i = 0; i < offspring.size(); i++ ) {
-					shark::MultiVariateNormalDistribution::result_type sample = m_mutationDistribution();
-					offspring[i].chromosome() = sample.second;
-					offspring[i].searchPoint() = m_mean + m_sigma * sample.first;
+				// get ParamSet instance for checking and clamping parameter boundaries.
+				auto par = m_Optimizer.GetObjective().MakeParamSet();
+				par.SetMode( ParamSet::UpdateMode );
+				SCONE_ASSERT( par.GetFreeParamCount() == m_numberOfVariables );
+
+				for( std::size_t i = 0; i < offspring.size(); i++ )
+				{
+					auto& off = offspring[i];
+					bool is_within_range = false;
+					for ( int attempt = 0; attempt < MAX_INDIVIDUAL_SAMPLE_ATTEMPTS && !is_within_range; ++attempt )
+					{
+						shark::MultiVariateNormalDistribution::result_type sample = m_mutationDistribution();
+						off.chromosome() = sample.second;
+						off.searchPoint() = m_mean + m_sigma * sample.first;
+						is_within_range = par.CheckFreeParamValues( off.searchPoint().begin(), off.searchPoint().end() );
+					}
+
+					if ( !is_within_range ) // failed to find proper sample, clamp instead
+					{
+						log::warning( "Could not find individual after 3 attempts, clamping parameter values" );
+						par.ClampFreeParamValues( off.searchPoint().begin(), off.searchPoint().end() );
+					}
 				}
 
 				EvaluateSharkIndividuals( m_Optimizer, offspring );
