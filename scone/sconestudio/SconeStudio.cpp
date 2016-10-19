@@ -250,6 +250,11 @@ void SconeStudio::fileOpen()
 	}
 }
 
+void SconeStudio::fileOpenRecent()
+{
+	SCONE_THROW_NOT_IMPLEMENTED;
+}
+
 void SconeStudio::fileSave()
 {
 	if ( getActiveScenario() )
@@ -288,6 +293,16 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
 		}
 	}
+}
+
+void SconeStudio::addRecentFile( QString& filename )
+{
+	SCONE_THROW_NOT_IMPLEMENTED;
+}
+
+void SconeStudio::updateRecentFilesMenu()
+{
+	SCONE_THROW_NOT_IMPLEMENTED;
 }
 
 bool SconeStudio::checkAndSaveScenario( EditorWidget* s )

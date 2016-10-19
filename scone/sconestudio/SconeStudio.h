@@ -57,6 +57,7 @@ public:
 	void slomo( int v );
 	void updateTimer();
 	void fileOpen();
+	void fileOpenRecent();
 	void fileSave();
 	void fileSaveAs();
 	void fileExit();
@@ -83,6 +84,8 @@ private:
 	EditorWidget* getActiveScenario();
 	bool checkAndSaveScenario( EditorWidget* s );
 	void addProgressDock( ProgressDockWidget* pdw );
+	void addRecentFile( QString& filename );
+	void updateRecentFilesMenu();
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
