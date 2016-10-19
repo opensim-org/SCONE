@@ -301,12 +301,8 @@ bool SconeStudio::checkAndSaveScenario( EditorWidget* s )
 	if ( s->hasTextChanged() )
 	{
 		QString message = "Save changes to " + s->getTitle() + "?";
-		auto ret = QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard );
-		switch ( ret )
-		{
-		case QMessageBox::Save: s->save(); return true;
-		case QMessageBox::Discard: return false;
-		}
+		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
+			s->save();
 	}
 
 	return true;
