@@ -171,13 +171,8 @@ namespace scone
 					par.SetFreeParamValues( values );
 
 					// update mean / std
-					std::vector< double > mean( dim ), std( dim );
-					for ( size_t i = 0; i < dim; ++i )
-					{
-						mean[ i ] = cma.mean()[ i ];
-						std[ i ] = sqrt( cma.covarianceMatrix()( i, i ) );
-					}
-					par.UpdateMeanStd( mean, std );
+					std::vector< double > mean( cma.mean().begin(), cma.mean().end() );
+					par.UpdateMeanStd( mean, cma.population_std() );
 
 					// update best params after mean / std have been updated
 					if ( new_best)
