@@ -107,7 +107,7 @@ namespace scone
 				Real effort_a = mass * fa;
 				Real effort_m = mass * g * fm;
 				Real effort_s = (-v_ce > 0 ) ? 0.25 * mus->GetForce() * -v_ce : 0.0;
-				Real effort_w = (-v_ce > 0 ) ? mus->GetFiberForce() * -v_ce : 0.0;
+				Real effort_w = (-v_ce > 0 ) ? mus->GetActiveFiberForce() * -v_ce : 0.0;
 				Real effort = effort_a + effort_m + effort_s + effort_w;
 
 				e += effort;

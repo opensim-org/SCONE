@@ -83,6 +83,12 @@ namespace scone
 			return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
 		}
 
+        scone::Real Muscle_Simbody::GetActiveFiberForce() const
+        {
+            SCONE_PROFILE_SCOPE;
+            return m_osMus.getActiveFiberForce( m_Model.GetTkState() );
+        }
+
 		scone::Real scone::sim::Muscle_Simbody::GetFiberLength() const
 		{
 			SCONE_PROFILE_SCOPE;
