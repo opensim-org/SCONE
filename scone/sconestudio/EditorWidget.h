@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ui_EditorDockWidget.h"
 #include "scone/core/core.h"
 #include "scone/core/String.h"
 #include "BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h"
