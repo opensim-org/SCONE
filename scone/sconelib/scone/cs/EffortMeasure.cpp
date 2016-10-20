@@ -21,10 +21,12 @@ namespace scone
 			INIT_PROPERTY( props, use_cost_of_transport, false );
             INIT_PROPERTY( props, specific_tension, 0.25e6 );
             INIT_PROPERTY( props, muscle_density, 1059.7 );
+            INIT_PROPERTY( props, use_Uchida2016_fiber_ratios, false );
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
 			m_InitComPos = model.GetComPos();
+            SetSlowTwitchRatios( model );
 		}
 
 		EffortMeasure::~EffortMeasure()
@@ -88,8 +90,8 @@ namespace scone
 			double e = m_Wang2012BasalEnergy;
 			for ( const sim::MuscleUP& mus: model.GetMuscles() )
 			{
-				double mass = mus->GetMass( specific_tension, muscle_density);
-				Real l = 0.5;
+				double mass = mus->GetMass( specific_tension, muscle_density );
+				Real l = mus->GetSlowTwitchRatio();
 				Real fa = 40 * l * sin( REAL_HALF_PI * mus->GetExcitation() ) + 133 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetExcitation() ) );
 				Real fm = 74 * l * sin( REAL_HALF_PI * mus->GetActivation() ) + 111 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetActivation() ) );
 				Real l_ce_norm = mus->GetFiberLength() / mus->GetOptimalFiberLength();
@@ -113,6 +115,25 @@ namespace scone
 
 			return e;
 		}
+
+        void EffortMeasure::SetSlowTwitchRatios( sim::Model& model ) {
+            for ( const sim::MuscleUP& mus : model.GetMuscles() )
+            {
+                if ( !use_Uchida2016_fiber_ratios ) mus->SetSlowTwitchRatio( 0.5 );
+                else {
+                    if ( mus->GetName().find("glut_max") == 0 ) mus->SetSlowTwitchRatio( 0.55 );
+                    if ( mus->GetName().find("hamstrings") == 0 ) mus->SetSlowTwitchRatio( 0.499 );
+                    if ( mus->GetName().find("bifemsh") == 0 ) mus->SetSlowTwitchRatio( 0.529 );
+                    if ( mus->GetName().find("iliopsoas") == 0 ) mus->SetSlowTwitchRatio( 0.5 );
+                    if ( mus->GetName().find("rect_fem") == 0 ) mus->SetSlowTwitchRatio( 0.387 );
+                    if ( mus->GetName().find("vasti") == 0 ) mus->SetSlowTwitchRatio( 0.484 );
+                    if ( mus->GetName().find("gastroc") == 0 ) mus->SetSlowTwitchRatio( 0.546 );
+                    if ( mus->GetName().find("soleus") == 0 ) mus->SetSlowTwitchRatio( 0.759 );
+                    if ( mus->GetName().find("tib_ant") == 0 ) mus->SetSlowTwitchRatio( 0.721 );
+                    else mus->SetSlowTwitchRatio( 0.5 );
+                }
+            }
+        }
 
 		scone::String EffortMeasure::GetClassSignature() const
 		{

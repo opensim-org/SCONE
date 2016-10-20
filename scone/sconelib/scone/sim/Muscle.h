@@ -59,6 +59,11 @@ namespace scone
 			// count the number of joints this muscle crosses
 			virtual Count GetJointCount() const;
 
+            // store fiber type composition number for fast lookup
+            // in metabolics calculations
+            virtual Real GetSlowTwitchRatio() const = 0;
+            virtual void SetSlowTwitchRatio( Real ratio ) = 0; 
+
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		};
 	}
