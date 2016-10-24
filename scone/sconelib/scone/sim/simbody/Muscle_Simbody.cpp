@@ -174,9 +174,5 @@ namespace scone
 		{
 			m_osMus.setExcitation( m_Model.GetTkState(), u );
 		}
-
-        Real Muscle_Simbody::GetSlowTwitchRatio() const {
-            return m_SlowTwitchRatio;
-        }
 	}
 }

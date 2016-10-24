@@ -26,7 +26,7 @@ namespace scone
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
 			m_InitComPos = model.GetComPos();
-            if ( !fiber_ratio_file.empty() ) SetSlowTwitchRatios( model );
+            SetSlowTwitchRatios( model );
             
 		}
 
@@ -127,9 +127,10 @@ namespace scone
 
             // no file given, just return
             if ( fiber_ratio_file.empty() ) return;
-            
+
             // set up all the muscles
             std::ifstream ifstr( fiber_ratio_file );
+            if ( ifstr.fail() ) SCONE_THROW("cannot access fiber_ratio_file" + fiber_ratio_file);
             String mus_name;
             Real fiber_ratio;
 
