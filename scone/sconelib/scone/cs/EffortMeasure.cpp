@@ -21,12 +21,13 @@ namespace scone
 			INIT_PROPERTY( props, use_cost_of_transport, false );
             INIT_PROPERTY( props, specific_tension, 0.25e6 );
             INIT_PROPERTY( props, muscle_density, 1059.7 );
-            INIT_PROPERTY( props, use_Uchida2016_fiber_ratios, false );
+            INIT_PROPERTY( props, fiber_ratio_file, String("") );
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
 			m_InitComPos = model.GetComPos();
-            SetSlowTwitchRatios( model );
+            if ( !fiber_ratio_file.empty() ) SetSlowTwitchRatios( model );
+            
 		}
 
 		EffortMeasure::~EffortMeasure()
@@ -91,7 +92,7 @@ namespace scone
 			for ( const sim::MuscleUP& mus: model.GetMuscles() )
 			{
 				double mass = mus->GetMass( specific_tension, muscle_density );
-				Real l = mus->GetSlowTwitchRatio();
+				Real l = m_fiberRatioMap.at( mus->GetName() );
 				Real fa = 40 * l * sin( REAL_HALF_PI * mus->GetExcitation() ) + 133 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetExcitation() ) );
 				Real fm = 74 * l * sin( REAL_HALF_PI * mus->GetActivation() ) + 111 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetActivation() ) );
 				Real l_ce_norm = mus->GetFiberLength() / mus->GetOptimalFiberLength();
@@ -116,23 +117,37 @@ namespace scone
 			return e;
 		}
 
-        void EffortMeasure::SetSlowTwitchRatios( sim::Model& model ) {
+        void EffortMeasure::SetSlowTwitchRatios( sim::Model& model ) 
+        {
+            // initialize all muscles to 0.5
             for ( const sim::MuscleUP& mus : model.GetMuscles() )
             {
-                if ( !use_Uchida2016_fiber_ratios ) mus->SetSlowTwitchRatio( 0.5 );
-                else {
-                    if ( mus->GetName().find("glut_max") == 0 ) mus->SetSlowTwitchRatio( 0.55 );
-                    if ( mus->GetName().find("hamstrings") == 0 ) mus->SetSlowTwitchRatio( 0.499 );
-                    if ( mus->GetName().find("bifemsh") == 0 ) mus->SetSlowTwitchRatio( 0.529 );
-                    if ( mus->GetName().find("iliopsoas") == 0 ) mus->SetSlowTwitchRatio( 0.5 );
-                    if ( mus->GetName().find("rect_fem") == 0 ) mus->SetSlowTwitchRatio( 0.387 );
-                    if ( mus->GetName().find("vasti") == 0 ) mus->SetSlowTwitchRatio( 0.484 );
-                    if ( mus->GetName().find("gastroc") == 0 ) mus->SetSlowTwitchRatio( 0.546 );
-                    if ( mus->GetName().find("soleus") == 0 ) mus->SetSlowTwitchRatio( 0.759 );
-                    if ( mus->GetName().find("tib_ant") == 0 ) mus->SetSlowTwitchRatio( 0.721 );
-                    else mus->SetSlowTwitchRatio( 0.5 );
+                m_fiberRatioMap[ mus->GetName() ] = 0.5;
+            }
+
+            // no file given, just return
+            if ( fiber_ratio_file.empty() ) return;
+            
+            // set up all the muscles
+            std::ifstream ifstr( fiber_ratio_file );
+            String mus_name;
+            Real fiber_ratio;
+
+            // update all muscles that start with "mus_name" as long as
+            // fiber_ratio is within correct bounds (i.e. [0,1])
+            while ( ifstr >> mus_name >> fiber_ratio )
+            {
+                if ( fiber_ratio < 0.0 || fiber_ratio > 1.0 ) continue;
+
+                for ( const sim::MuscleUP& mus : model.GetMuscles() )
+                {
+                    if ( mus->GetName().find( mus_name ) == 0 ) {
+                        m_fiberRatioMap[ mus->GetName() ] = fiber_ratio;
+                    }
                 }
             }
+
+
         }
 
 		scone::String EffortMeasure::GetClassSignature() const

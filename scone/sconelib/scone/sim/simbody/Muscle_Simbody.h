@@ -63,13 +63,9 @@ namespace scone
 
 			virtual Real GetMomentArm( const Dof& dof ) const override;
 
-            virtual Real GetSlowTwitchRatio() const override;
-            virtual void SetSlowTwitchRatio( Real ratio ) override;
-
 		private:
 			OpenSim::Muscle& m_osMus;
 			Model_Simbody& m_Model;
-            Real m_SlowTwitchRatio;
 		};
 	}
 }

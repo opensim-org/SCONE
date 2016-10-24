@@ -31,9 +31,10 @@ namespace scone
 			Statistic< double > m_Energy;
 			Vec3 m_InitComPos;
 			PropNode m_Report;
+            std::map< String, Real > m_fiberRatioMap;
             Real specific_tension;
             Real muscle_density;
-            bool use_Uchida2016_fiber_ratios;
+            String fiber_ratio_file;
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;

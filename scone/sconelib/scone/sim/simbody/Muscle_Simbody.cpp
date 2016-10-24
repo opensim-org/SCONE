@@ -178,12 +178,5 @@ namespace scone
         Real Muscle_Simbody::GetSlowTwitchRatio() const {
             return m_SlowTwitchRatio;
         }
-
-        void Muscle_Simbody::SetSlowTwitchRatio( Real ratio ) {
-            // ratio should be between 0 and 1 or it makes no sense
-            if (ratio < 0 || ratio > 1) ratio = 0.5;
-
-            m_SlowTwitchRatio = ratio;
-        }
 	}
 }
