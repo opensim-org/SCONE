@@ -141,8 +141,7 @@ namespace scone
                 else fiberRatioMap[ musc_name ] = ratio;
             }
 
-            // update all muscles that start with "mus_name" as long as
-            // fiber_ratio is within correct bounds (i.e. [0,1])
+            // update muscle if its name is in the map
             for ( int i = 0; i < model.GetMuscles().size(); ++i ) 
             {
                 const sim::MuscleUP& mus = model.GetMuscles()[i];
