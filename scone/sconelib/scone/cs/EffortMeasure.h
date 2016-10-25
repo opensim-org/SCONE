@@ -22,6 +22,10 @@ namespace scone
 
 			EnergyMeasureType measure_type;
 			bool use_cost_of_transport;
+            Real specific_tension;
+            Real muscle_density;
+            Real default_muscle_slow_twitch_ratio;
+            bool use_symmetric_fiber_ratios;
 
 		protected:
 			virtual String GetClassSignature() const override;
@@ -31,15 +35,12 @@ namespace scone
 			Statistic< double > m_Energy;
 			Vec3 m_InitComPos;
 			PropNode m_Report;
-            std::map< String, Real > m_fiberRatioMap;
-            Real specific_tension;
-            Real muscle_density;
-            String fiber_ratio_file;
+            std::vector< Real > m_SlowTwitchFiberRatios;
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;
 			double GetTotalForce( const sim::Model& model ) const;
-            void SetSlowTwitchRatios( sim::Model& model );
+            void SetSlowTwitchRatios( const PropNode& props, const sim::Model& model );
 		};
 	}
 }

@@ -21,12 +21,13 @@ namespace scone
 			INIT_PROPERTY( props, use_cost_of_transport, false );
             INIT_PROPERTY( props, specific_tension, 0.25e6 );
             INIT_PROPERTY( props, muscle_density, 1059.7 );
-            INIT_PROPERTY( props, fiber_ratio_file, String("") );
+            INIT_PROPERTY( props, default_muscle_slow_twitch_ratio, 0.5 );
+            INIT_PROPERTY( props, use_symmetric_fiber_ratios, true);
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
 			m_InitComPos = model.GetComPos();
-            SetSlowTwitchRatios( model );
+            SetSlowTwitchRatios( props, model );
             
 		}
 
@@ -89,10 +90,11 @@ namespace scone
 		double EffortMeasure::GetWang2012( const sim::Model& model ) const
 		{
 			double e = m_Wang2012BasalEnergy;
-			for ( const sim::MuscleUP& mus: model.GetMuscles() )
+            for ( int i = 0; i < model.GetMuscles().size(); ++i )
 			{
+                const sim::MuscleUP& mus = model.GetMuscles()[i];
 				double mass = mus->GetMass( specific_tension, muscle_density );
-				Real l = m_fiberRatioMap.at( mus->GetName() );
+				Real l = m_SlowTwitchFiberRatios[i];
 				Real fa = 40 * l * sin( REAL_HALF_PI * mus->GetExcitation() ) + 133 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetExcitation() ) );
 				Real fm = 74 * l * sin( REAL_HALF_PI * mus->GetActivation() ) + 111 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetActivation() ) );
 				Real l_ce_norm = mus->GetFiberLength() / mus->GetOptimalFiberLength();
@@ -117,38 +119,36 @@ namespace scone
 			return e;
 		}
 
-        void EffortMeasure::SetSlowTwitchRatios( sim::Model& model ) 
+        void EffortMeasure::SetSlowTwitchRatios( const PropNode& props, const sim::Model& model ) 
         {
-            // initialize all muscles to 0.5
-            for ( const sim::MuscleUP& mus : model.GetMuscles() )
+            // initialize all muscles to default
+            std::vector< Real > init(model.GetMuscles().size(), default_muscle_slow_twitch_ratio);
+            m_SlowTwitchFiberRatios = init;
+
+            // read in fiber ratios. use default if out of [0,1] range
+            std::map< String, Real > fiberRatioMap;
+            const PropNode& ratios = props.TryGetChild("MuscleSlowTwitchRatios");
+            for ( auto it = ratios.Begin(); it != ratios.End(); ++ it )
             {
-                m_fiberRatioMap[ mus->GetName() ] = 0.5;
+                String musc_name = it->second->GetStr( "muscle" );
+                Real ratio = it->second->GetReal( "ratio" );
+                if ( ratio < 0.0 || ratio > 1.0 ) ratio = default_muscle_slow_twitch_ratio;
+
+                if ( use_symmetric_fiber_ratios ) {
+                    fiberRatioMap[ musc_name + "_l" ] = ratio;
+                    fiberRatioMap[ musc_name + "_r" ] = ratio;
+                }
+                else fiberRatioMap[ musc_name ] = ratio;
             }
-
-            // no file given, just return
-            if ( fiber_ratio_file.empty() ) return;
-
-            // set up all the muscles
-            std::ifstream ifstr( fiber_ratio_file );
-            if ( ifstr.fail() ) SCONE_THROW("cannot access fiber_ratio_file" + fiber_ratio_file);
-            String mus_name;
-            Real fiber_ratio;
 
             // update all muscles that start with "mus_name" as long as
             // fiber_ratio is within correct bounds (i.e. [0,1])
-            while ( ifstr >> mus_name >> fiber_ratio )
+            for ( int i = 0; i < model.GetMuscles().size(); ++i ) 
             {
-                if ( fiber_ratio < 0.0 || fiber_ratio > 1.0 ) continue;
-
-                for ( const sim::MuscleUP& mus : model.GetMuscles() )
-                {
-                    if ( mus->GetName().find( mus_name ) == 0 ) {
-                        m_fiberRatioMap[ mus->GetName() ] = fiber_ratio;
-                    }
-                }
+                const sim::MuscleUP& mus = model.GetMuscles()[i];
+                auto it = fiberRatioMap.find( mus->GetName() );
+                if ( it != fiberRatioMap.end() ) m_SlowTwitchFiberRatios[i] = it->second;
             }
-
-
         }
 
 		scone::String EffortMeasure::GetClassSignature() const
