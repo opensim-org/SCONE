@@ -40,8 +40,9 @@ public:
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	State state;
 
-	void updateProgress();
-	bool isClosed();
+	enum UpdateResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
+	UpdateResult updateProgress();
+	bool readyForDestruction();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

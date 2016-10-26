@@ -65,7 +65,7 @@ ProgressDockWidget::~ProgressDockWidget()
 	}
 }
 
-void ProgressDockWidget::updateProgress()
+ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 {
 	SCONE_ASSERT( process );
 
@@ -73,22 +73,25 @@ void ProgressDockWidget::updateProgress()
 	{
 		log::trace( "process is closed" );
 		close();
-		return;
+		return IsClosedResult;
 	}
 
 	if ( state == StartingState )
 	{
 		if ( process->waitForReadyRead( 1000 ) )
 			state = InitializingState;
-		else return;
+		else return OkResult;
 	}
 
 	while ( process->canReadLine() )
 	{
-		std::string s = QString::fromLocal8Bit( process->readLine() ).toStdString();
-		//log::trace( "MESSAGE: ", s );
-		auto kvp = flut::to_key_value( s );
+		std::string s = flut::trim_str( QString::fromLocal8Bit( process->readLine() ).toStdString() );
+		if ( !s.empty() ) log::trace( "MESSAGE: ", s );
 
+		if ( s.empty() || s[ 0 ] != '*' )
+			continue; // this is no message for us
+
+		auto kvp = flut::to_key_value( s.substr( 1 ) );
 		if ( kvp.first == "folder" )
 		{
 			name = make_qt( flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) ) );
@@ -128,8 +131,8 @@ void ProgressDockWidget::updateProgress()
 			errorMsg = make_qt( kvp.second );
 			state = ErrorState;
 			updateText();
-			QMessageBox::critical( this, "Error optimizing " + fileName, errorMsg );
 			log::error( "Error optimizing ", fileName.toStdString(), ": ", errorMsg.toStdString() );
+			return ShowErrorResult;
 		}
 		else if ( kvp.first == "finished" )
 		{
@@ -146,9 +149,11 @@ void ProgressDockWidget::updateProgress()
 			}
 		}
 	}
+
+	return OkResult;
 }
 
-bool ProgressDockWidget::isClosed()
+bool ProgressDockWidget::readyForDestruction()
 {
 	return state == ClosedState;
 }
@@ -166,11 +171,12 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 		}
 	}
 
-	scone::log::info( "Closing process ", name.toStdString() );
 	process->close();
 	delete process;
 	process = nullptr;
+
 	state = ClosedState;
+
 	e->accept();
 }
 
@@ -192,7 +198,7 @@ void ProgressDockWidget::updateText()
 	case ProgressDockWidget::ClosedState:
 		break;
 	case ProgressDockWidget::ErrorState:
-		s = "Error!";
+		s = errorMsg;
 		break;
 	default:
 		break;

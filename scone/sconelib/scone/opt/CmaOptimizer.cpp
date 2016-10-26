@@ -120,18 +120,18 @@ namespace scone
 			}
 
 			// init CMA object
-			log::DebugF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
+			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
 			cma.init( objfunc, initPoint, m_Lambda, m_Mu, m_Sigma, initCovar );
 
 			if ( status_output )
 			{
 				// print out some info
-				cout << "folder=" << AcquireOutputFolder() << endl;
-				cout << "dim=" << dim << endl;
-				cout << "sigma=" << m_Sigma << endl;
-				cout << "lambda=" << m_Lambda << endl;
-				cout << "mu=" << m_Mu << endl;
-				cout << "max_generations=" << max_generations << endl;
+				cout << "*folder=" << AcquireOutputFolder() << endl;
+				cout << "*dim=" << dim << endl;
+				cout << "*sigma=" << m_Sigma << endl;
+				cout << "*lambda=" << m_Lambda << endl;
+				cout << "*mu=" << m_Mu << endl;
+				cout << "*max_generations=" << max_generations << endl;
 			}
 
 			// optimization loop
@@ -150,8 +150,9 @@ namespace scone
 
 				if ( GetProgressOutput() )
 					printf(" A=%.3f", current_avg_fitness );
+
 				if ( status_output )
-					std::cout << "generation=" << gen << " " << current_avg_fitness << " " << generation_best_fitness << std::endl;
+					std::cout << std::endl << "*generation=" << gen << " " << current_avg_fitness << " " << generation_best_fitness << std::endl;
 
 				bool new_best = IsBetterThan( generation_best_fitness, m_BestFitness );
 				if ( new_best )
@@ -161,7 +162,7 @@ namespace scone
 					if ( GetProgressOutput() )
 						printf(" B=%.3f", m_BestFitness );
 					if ( status_output )
-						std::cout << "best=" << m_BestFitness << std::endl;
+						std::cout << "*best=" << m_BestFitness << std::endl;
 				}
 
 				if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output )  )
@@ -204,7 +205,7 @@ namespace scone
 				cout << "Optimization finished" << endl;
 
 			if ( status_output )
-				cout << "finished=1" << endl;
+				cout << "*finished=1" << endl;
 		}
 
 #elif SHARK_VERSION == 2

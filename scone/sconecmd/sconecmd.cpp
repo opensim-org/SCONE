@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 			o->SetConsoleOutput( !quietOutput.getValue() );
 			o->SetStatusOutput( statusOutput.getValue() );
 			if ( o->GetStatusOutput() )
-				std::cout << "scenario=" << optArg.getValue() << std::endl;
+				std::cout << "*scenario=" << optArg.getValue() << std::endl;
 
 			o->Run();
 		}

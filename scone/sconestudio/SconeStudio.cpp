@@ -83,38 +83,40 @@ void SconeStudio::add_log_entry( flut::log::level l, const std::string& msg )
 #ifdef DEBUG
 	cout << msg << endl;
 #endif // DEBUG
+
+	// remove newlines
+	string trimmed_msg = flut::trim_str( msg );
+
+	ui.outputText->moveCursor( QTextCursor::End );
+	QTextCursor cursor( ui.outputText->textCursor() );
+	QTextCharFormat format;
+	format.setFontWeight( QFont::Normal );
+	format.setForeground( QBrush( Qt::black ) );
+
+	switch ( l )
 	{
-		ui.outputText->moveCursor( QTextCursor::End );
-		QTextCursor cursor( ui.outputText->textCursor() );
-		QTextCharFormat format;
-		format.setFontWeight( QFont::Normal );
-		format.setForeground( QBrush( Qt::black ) );
-
-		switch ( l )
-		{
-		case flut::log::trace_level:
-		case flut::log::debug_level:
-			format.setForeground( QBrush( Qt::gray ) );
-			break;
-		case flut::log::info_level:
-			format.setForeground( QBrush( Qt::darkBlue ) );
-			break;
-		case flut::log::warning_level:
-			format.setFontWeight( QFont::DemiBold );
-			format.setForeground( QBrush( Qt::darkYellow ) );
-			break;
-		case flut::log::error_level:
-		case flut::log::critical_level:
-			format.setFontWeight( QFont::DemiBold );
-			format.setForeground( QBrush( Qt::darkRed ) );
-			break;
-		default:
-			break;
-		}
-
-		cursor.setCharFormat( format );
-		cursor.insertText( QString( msg.c_str() ) + "\n" );
+	case flut::log::trace_level:
+	case flut::log::debug_level:
+		format.setForeground( QBrush( Qt::gray ) );
+		break;
+	case flut::log::info_level:
+		format.setForeground( QBrush( Qt::darkBlue ) );
+		break;
+	case flut::log::warning_level:
+		format.setFontWeight( QFont::DemiBold );
+		format.setForeground( QBrush( Qt::darkYellow ) );
+		break;
+	case flut::log::error_level:
+	case flut::log::critical_level:
+		format.setFontWeight( QFont::DemiBold );
+		format.setForeground( QBrush( Qt::darkRed ) );
+		break;
+	default:
+		break;
 	}
+
+	cursor.setCharFormat( format );
+	cursor.insertText( make_qt( trimmed_msg ) + "\n" );
 
 	ui.outputText->verticalScrollBar()->setValue( ui.outputText->verticalScrollBar()->maximum() );
 }
@@ -382,7 +384,7 @@ void SconeStudio::updateOptimizations()
 	for ( auto it = optimizations.begin(); it != optimizations.end(); )
 	{
 		ProgressDockWidget* w = *it;
-		if ( w->isClosed() )
+		if ( w->readyForDestruction() )
 		{
 			delete w;
 			it = optimizations.erase( it );
@@ -393,9 +395,14 @@ void SconeStudio::updateOptimizations()
 	// update all optimizations
 	for ( auto& o : optimizations )
 	{
-		o->updateProgress();
-		if ( o->state == ProgressDockWidget::ErrorState )
+		if ( o->updateProgress() == ProgressDockWidget::ShowErrorResult )
+		{
+			QString title = "Error optimizing " + o->fileName;
+			QString msg = o->errorMsg;
 			o->close();
+			QMessageBox::critical( this, title, msg );
+			return; // must return here because close invalidates the iterator
+		}
 	}
 }
 
