@@ -14,8 +14,6 @@
 
 #include "ui_SconeStudio.h"
 
-#include <BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h>
-
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 

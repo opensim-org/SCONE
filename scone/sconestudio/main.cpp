@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	scone::sim::RegisterSimbody();
 	scone::log::info( "SCONE version ", scone::GetSconeVersion() );
 
-	QThread::sleep( 2 );
+	//QThread::sleep( 2 );
 
 	try
 	{

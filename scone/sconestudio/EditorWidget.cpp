@@ -13,31 +13,31 @@ EditorWidget::EditorWidget( SconeStudio* s, const QString& file ) :
 studio( s ),
 fileName( file )
 {
-    verticalLayout = new QVBoxLayout(this);
-    verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-	setLayout(verticalLayout);
+	verticalLayout = new QVBoxLayout( this );
+	verticalLayout->setObjectName( QStringLiteral( "verticalLayout" ) );
+	setLayout( verticalLayout );
 
-    textEdit = new QTextEdit(this);
-    textEdit->setObjectName(QStringLiteral("textEdit"));
+	textEdit = new QCodeEditor( this );
+	textEdit->setObjectName( QStringLiteral( "textEdit" ) );
 
-    QFont font;
-    font.setFamily(QStringLiteral("Consolas"));
-    font.setPointSize(9);
-    textEdit->setFont(font);
-    textEdit->setLineWrapMode(QTextEdit::NoWrap);
-	verticalLayout->addWidget(textEdit);
-
-	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
+	QFont font;
+	font.setFamily( QStringLiteral( "Consolas" ) );
+	font.setPointSize( 9 );
+	textEdit->setFont( font );
+	textEdit->setLineWrapMode( QPlainTextEdit::NoWrap );
 	textEdit->setTabStopWidth( 16 );
 	textEdit->setWordWrapMode( QTextOption::NoWrap );
-	xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( textEdit );
+
+	verticalLayout->addWidget( textEdit );
+	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( textEdit->document() );
 
 	QFile f( fileName );
 	if ( f.open( QFile::ReadOnly | QFile::Text ) )
 	{
 		QTextStream str( &f );
 		fileData = str.readAll();
-		textEdit->setText( fileData );
+		textEdit->setPlainText( fileData );
+		//textEdit->updateLineNumberAreaWidth( 0 );
 	}
 
 	connect( textEdit, SIGNAL( textChanged() ), this, SLOT( textEditChanged() ) );

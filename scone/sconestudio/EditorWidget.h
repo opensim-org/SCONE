@@ -5,6 +5,7 @@
 #include "BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h"
 #include <QWidget>
 #include <QFileInfo>
+#include "QCodeEditor.h"
 
 using scone::String;
 class SconeStudio;
@@ -40,5 +41,5 @@ protected:
 private:
     QWidget *dockWidgetContents;
     QVBoxLayout *verticalLayout;
-    QTextEdit *textEdit;
+    QCodeEditor *textEdit;
 };

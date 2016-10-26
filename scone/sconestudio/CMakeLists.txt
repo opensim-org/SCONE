@@ -30,6 +30,8 @@ if(${Qt5Widgets_FOUND})
 		QOsgViewer.cpp
 		EditorWidget.h
 		EditorWidget.cpp
+		QCodeEditor.h
+		QCodeEditor.cpp
 		QPlayControl.h
 		QPlayControl.cpp
 		../../contrib/qcustomplot/qcustomplot.h

@@ -43,8 +43,8 @@ void BasicXMLSyntaxHighlighter::highlightBlock(const QString & text)
     }
 
     highlightByRegex(m_xmlAttributeFormat, m_xmlAttributeRegex, text);
-    highlightByRegex(m_xmlCommentFormat, m_xmlCommentRegex, text);
     highlightByRegex(m_xmlValueFormat, m_xmlValueRegex, text);
+    highlightByRegex(m_xmlCommentFormat, m_xmlCommentRegex, text);
 }
 
 void BasicXMLSyntaxHighlighter::highlightByRegex(const QTextCharFormat & format,
@@ -78,7 +78,7 @@ void BasicXMLSyntaxHighlighter::setFormats()
 	m_xmlKeywordFormat.setForeground( Qt::black );
 	m_xmlKeywordFormat.setFontWeight(QFont::Bold);
 
-	m_xmlElementFormat.setForeground( Qt::darkBlue );
+	m_xmlElementFormat.setForeground( Qt::blue );
 	//m_xmlElementFormat.setFontWeight( QFont::Bold );
 
 	m_xmlAttributeFormat.setForeground( Qt::darkCyan );
