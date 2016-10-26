@@ -86,7 +86,7 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 	while ( process->canReadLine() )
 	{
 		std::string s = flut::trim_str( QString::fromLocal8Bit( process->readLine() ).toStdString() );
-		if ( !s.empty() ) log::trace( "MESSAGE: ", s );
+		// if ( !s.empty() ) log::trace( "MESSAGE: ", s );
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
