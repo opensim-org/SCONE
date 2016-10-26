@@ -137,6 +137,16 @@ namespace scone
 			return m_osMus.getTendonLength( m_Model.GetTkState() );
 		}
 		
+        scone::Real scone::sim::Muscle_Simbody::GetActiveForceLengthMultipler() const
+        {
+            return m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() );
+        }
+
+        scone::Real scone::sim::Muscle_Simbody::GetMaxContractionVelocity() const
+        {
+            return m_osMus.getMaxContractionVelocity();
+        }
+
 		scone::Real scone::sim::Muscle_Simbody::GetMaxIsometricForce() const
 		{
 			return m_osMus.getMaxIsometricForce();

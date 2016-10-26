@@ -10,7 +10,8 @@ namespace scone
 		StringMap< EffortMeasure::EnergyMeasureType > EffortMeasure::m_MeasureNames = StringMap< EffortMeasure::EnergyMeasureType >(
 			EffortMeasure::TotalForce, "TotalForce",
 			EffortMeasure::Wang2012, "Wang2012",
-			EffortMeasure::Constant, "Constant"
+			EffortMeasure::Constant, "Constant",
+            EffortMeasure::Uchida2016, "Uchida2016"
 			);
 
 		EffortMeasure::EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
@@ -26,6 +27,8 @@ namespace scone
 
 			// precompute some stuff
 			m_Wang2012BasalEnergy = 1.51 * model.GetMass();
+            m_Uchida2016BasalEnergy = 1.2 * model.GetMass();
+            m_AerobicFactor = 1.5; // 1.5 is for aerobic conditions, 1.0 for anaerobic. may need to add as option later
 			m_InitComPos = model.GetComPos();
             SetSlowTwitchRatios( props, model );
             
@@ -118,6 +121,86 @@ namespace scone
 
 			return e;
 		}
+
+        // Implementation of Umberger (2003, 2010) metabolics model 
+        // with updates from Uchida 2016.
+        double EffortMeasure::GetUchida2016( const sim::Model& model ) const
+        {
+            double e = m_Uchida2016BasalEnergy;
+            for ( int i = 0; i < model.GetMuscles().size(); ++i )
+            {
+                const sim::MuscleUP& mus = model.GetMuscles()[i];
+                double mass = mus->GetMass( specific_tension, muscle_density );
+                
+                // calculate A parameter
+                Real activation = mus->GetActivation();
+                Real excitation = mus->GetExcitation();
+                double A;
+                if ( activation > excitation )
+                    A = excitation;
+                else
+                    A = ( excitation + activation ) / 2;
+
+                // calculate slowTwitchRatio factor
+                Real slowTwitchRatio = m_SlowTwitchFiberRatios[i];
+                double uSlow = slowTwitchRatio * sin( REAL_HALF_PI * excitation );
+                double uFast = (1 - slowTwitchRatio) * (1 - cos( REAL_HALF_PI * excitation ));
+                slowTwitchRatio = (excitation == 0) ? 1.0 : uSlow / (uSlow + uFast);
+
+                // calculate AMdot
+                double AMdot;
+                double unscaledAMdot = 128*(1 - slowTwitchRatio) + 25;
+                double F_iso = mus->GetActiveForceLengthMultipler();
+                if ( mus->GetNormalizedFiberLength() <= 1.0 )
+                    AMdot = m_AerobicFactor * std::pow(A, 0.6) * unscaledAMdot;
+                else
+                    AMdot = m_AerobicFactor * std::pow(A, 0.6) * ((0.4 * unscaledAMdot) + (0.6 * unscaledAMdot * F_iso));
+
+                // calculate shortening heat rate
+                double Sdot;
+                double Vmax_fasttwitch = mus->GetMaxContractionVelocity();
+                double Vmax_slowtwitch = mus->GetMaxContractionVelocity() / 2.5;
+                double alpha_shortening_fasttwitch = 153 / Vmax_fasttwitch;
+                double alpha_shortening_slowtwitch = 100 / Vmax_slowtwitch;
+                double fiber_velocity_normalized = mus->GetFiberVelocity() / mus->GetOptimalFiberLength();
+                double unscaledSdot, tmp_slowTwitch, tmp_fastTwitch;
+
+                if ( fiber_velocity_normalized )
+                {
+                    double maxShorteningRate = 100.0; // (W/kg)
+                    tmp_slowTwitch = -alpha_shortening_slowtwitch * fiber_velocity_normalized;
+                    if ( tmp_slowTwitch > maxShorteningRate ) tmp_slowTwitch = maxShorteningRate;
+
+                    tmp_fastTwitch = alpha_shortening_fasttwitch * fiber_velocity_normalized * (1-slowTwitchRatio);
+                    unscaledSdot = (tmp_slowTwitch * slowTwitchRatio) - tmp_fastTwitch;
+                    Sdot = m_AerobicFactor * A * A * unscaledSdot;
+                }
+                else
+                {
+                    unscaledSdot = 4.0 * alpha_shortening_slowtwitch * fiber_velocity_normalized;
+                    Sdot = m_AerobicFactor * A * unscaledSdot;
+                }
+
+                if ( mus->GetNormalizedFiberLength() > 1.0 ) Sdot *= F_iso;
+
+                // calculate mechanical work rate
+                double Wdot = 
+                    - mus->GetActiveFiberForce() * mus->GetFiberVelocity() / mass;
+
+                // prevent instantaneous negative power by accounting for it through Sdot
+                double Edot_Wkg_beforeClamp = AMdot + Sdot + Wdot;
+                if ( Edot_Wkg_beforeClamp < 0 ) Sdot -= Edot_Wkg_beforeClamp;
+
+                // total heat rate cannot fall below 1.0 W/kg
+                double totalHeatRate = AMdot + Sdot;
+                if ( totalHeatRate < 1.0 ) totalHeatRate = 1.0;
+
+                // total metabolic rate for this muscle
+                double Edot = ( totalHeatRate + Wdot ) * mass;
+
+                e += Edot;
+            }
+        }
 
         void EffortMeasure::SetSlowTwitchRatios( const PropNode& props, const sim::Model& model ) 
         {

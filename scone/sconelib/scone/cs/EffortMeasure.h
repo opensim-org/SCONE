@@ -14,7 +14,7 @@ namespace scone
 			EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
 			virtual ~EffortMeasure();
 
-			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant };
+			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
 			static StringMap< EnergyMeasureType > m_MeasureNames;
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
@@ -32,6 +32,8 @@ namespace scone
 
 		private:
 			Real m_Wang2012BasalEnergy;
+            Real m_Uchida2016BasalEnergy;
+            Real m_AerobicFactor;
 			Statistic< double > m_Energy;
 			Vec3 m_InitComPos;
 			PropNode m_Report;
@@ -39,6 +41,7 @@ namespace scone
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;
+            double GetUchida2016( const sim::Model& model ) const;
 			double GetTotalForce( const sim::Model& model ) const;
             void SetSlowTwitchRatios( const PropNode& props, const sim::Model& model );
 		};

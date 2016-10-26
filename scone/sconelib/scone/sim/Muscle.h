@@ -50,6 +50,9 @@ namespace scone
 			virtual Real GetTendonLength() const = 0;
 			virtual std::vector< Vec3 > GetMusclePath() const = 0;
 
+            virtual Real GetActiveForceLengthMultipler() const = 0;
+            virtual Real GetMaxContractionVelocity() const = 0;
+
 			virtual Real GetActivation() const = 0;
 			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
