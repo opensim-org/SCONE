@@ -1,8 +1,8 @@
 #include "system_tools.h"
 
 #define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 1
-#define SCONE_VERSION_PATCH 1
+#define SCONE_VERSION_MINOR 9
+#define SCONE_VERSION_PATCH 0
 #define SCONE_VERSION_POSTFIX "ALPHA"
 
 #include <fstream>
