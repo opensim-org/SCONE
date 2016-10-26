@@ -77,6 +77,7 @@ namespace scone
 			case TotalForce: return GetTotalForce( model );
 			case Wang2012: return GetWang2012( model );
 			case Constant: return model.GetMass();
+            case Uchida2016: return GetUchida2016( model );
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
 		}
@@ -133,10 +134,10 @@ namespace scone
                 double mass = mus->GetMass( specific_tension, muscle_density );
                 
                 // calculate A parameter
-                Real activation = mus->GetActivation();
                 Real excitation = mus->GetExcitation();
+                Real activation = mus->GetActivation();
                 double A;
-                if ( activation > excitation )
+                if ( excitation > activation )
                     A = excitation;
                 else
                     A = ( excitation + activation ) / 2;
@@ -165,7 +166,7 @@ namespace scone
                 double fiber_velocity_normalized = mus->GetFiberVelocity() / mus->GetOptimalFiberLength();
                 double unscaledSdot, tmp_slowTwitch, tmp_fastTwitch;
 
-                if ( fiber_velocity_normalized )
+                if ( fiber_velocity_normalized <= 0 )
                 {
                     double maxShorteningRate = 100.0; // (W/kg)
                     tmp_slowTwitch = -alpha_shortening_slowtwitch * fiber_velocity_normalized;
@@ -200,6 +201,7 @@ namespace scone
 
                 e += Edot;
             }
+            return e;
         }
 
         void EffortMeasure::SetSlowTwitchRatios( const PropNode& props, const sim::Model& model ) 
@@ -246,6 +248,7 @@ namespace scone
 			case TotalForce: s += "F"; break;
 			case Wang2012: s += "W"; break;
 			case Constant: s += "C"; break;
+            case Uchida2016: s += "U"; break;
 			default: SCONE_THROW( "Invalid energy measure" );
 			}
 
