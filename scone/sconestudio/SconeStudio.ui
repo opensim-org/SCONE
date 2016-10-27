@@ -117,17 +117,15 @@
    </widget>
    <widget class="QMenu" name="menu_View">
     <property name="title">
-     <string>&amp;Viewer</string>
+     <string>&amp;View</string>
     </property>
     <addaction name="actionShow_External_Forces"/>
     <addaction name="actionShow_Muscles"/>
     <addaction name="actionShow_Bone_Geometry"/>
-    <addaction name="separator"/>
-    <addaction name="action_Create_Video"/>
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
-     <string>&amp;Scenario</string>
+     <string>&amp;Optimize</string>
     </property>
     <addaction name="action_Optimize_Scenario"/>
     <addaction name="actionStart_Multiple_Optimizations"/>
@@ -138,6 +136,8 @@
     <property name="title">
      <string>&amp;Tools</string>
     </property>
+    <addaction name="action_Create_Video"/>
+    <addaction name="separator"/>
     <addaction name="action_Preferences"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
