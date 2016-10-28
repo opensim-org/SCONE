@@ -74,7 +74,7 @@ namespace scone
 			void step_mt()
 			{
 				// get ParamSet instance for checking and clamping parameter boundaries.
-				m_Offspring.resize( m_numberOfVariables );
+				m_Offspring.resize( lambda() );
 				auto par = m_Optimizer.GetObjective().MakeParamSet();
 				par.SetMode( ParamSet::UpdateMode );
 				SCONE_ASSERT( par.GetFreeParamCount() == m_numberOfVariables );
