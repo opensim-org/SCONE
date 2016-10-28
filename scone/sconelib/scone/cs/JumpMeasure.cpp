@@ -8,7 +8,7 @@ namespace scone
 		JumpMeasure::JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		target_body( nullptr ),
-		state( Prepraration ),
+		state( Prepare ),
 		init_min_x( 10000.0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
@@ -21,7 +21,6 @@ namespace scone
 				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
 
 			init_com = model.GetComPos();
-
 			for ( auto& body : model.GetBodies() )
 				init_min_x = std::min( init_min_x, body->GetComPos().x );
 		}
@@ -54,7 +53,7 @@ namespace scone
 
 			switch ( state )
 			{
-			case scone::cs::JumpMeasure::Prepraration:
+			case Prepare:
 				if ( pos.y < termination_height * init_com.y )
 					return RequestTermination;
 
@@ -64,19 +63,34 @@ namespace scone
 					prepare_com = pos;
 				}
 				break;
-			case scone::cs::JumpMeasure::Takeoff:
+
+			case Takeoff:
 				if ( model.GetTotalContactForce() <= 0 )
 					state = Flight;
-				// falltrough to allow transition to Landing
-			case scone::cs::JumpMeasure::Flight:
+				if ( terminate_on_peak && vel.y < 0 )
+					return RequestTermination;
+				break;
+
+			case Flight:
 				if ( vel.y < 0 )
 				{
 					if ( terminate_on_peak )
 						return RequestTermination;
 					else state = Landing;
 				}
+				if ( model.GetTotalContactForce() > 0 )
+				{
+					if ( terminate_on_peak )
+						return RequestTermination;
+					else state = Recover;
+				}
+
+			case Landing:
+				if ( model.GetTotalContactForce() > 0 )
+					state = Recover;
 				break;
-			case scone::cs::JumpMeasure::Landing:
+
+			case Recover:
 				break;
 			}
 
@@ -105,7 +119,7 @@ namespace scone
 
 			switch ( state )
 			{
-			case scone::cs::JumpMeasure::Prepraration:
+			case scone::cs::JumpMeasure::Prepare:
 				// failed during preparation, return projected height after 1s
 				result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
 				break;
@@ -130,13 +144,17 @@ namespace scone
 		double JumpMeasure::GetLongJumpResult( const sim::Model& model )
 		{
 			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
+			Vec3 vel = target_body ? target_body->GetLinVel() : model.GetComVel();
 
 			// get position of leftmost body
 			double min_pos_x = 1000.0;
+			double min_pos_y = 1000.0;
 			for ( auto& body : model.GetBodies() )
+			{
 				min_pos_x = std::min( min_pos_x, body->GetComPos().x );
+				min_pos_y = std::min( min_pos_y, body->GetComPos().y );
+			}
 
-			const double no_flight_penalty = 200;
 			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
 			double jump_height = 100 * pos.y;
 			double jump_dist = 100 * ( min_pos_x - init_min_x );
@@ -145,17 +163,18 @@ namespace scone
 			double result = 0.0;
 			switch ( state )
 			{
-			case scone::cs::JumpMeasure::Prepraration:
+			case scone::cs::JumpMeasure::Prepare:
 				// failed during preparation, return projected height after 1s
-				result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() ) - no_flight_penalty;
+				result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
 				break;
 			case scone::cs::JumpMeasure::Takeoff:
 				// we've managed to take-off, return height as result, with penalty for early jumping
-				result = jump_height - early_jump_penalty - no_flight_penalty;
+				result = jump_height - early_jump_penalty;
 				break;
 			case scone::cs::JumpMeasure::Flight:
+			case scone::cs::JumpMeasure::Landing:
 				// we've managed to take-off, return height as result, with penalty for early jumping
-				result = jump_dist - early_jump_penalty;
+				result = jump_height + jump_dist - early_jump_penalty;
 			}
 
 			if ( negate_result ) result = -result;

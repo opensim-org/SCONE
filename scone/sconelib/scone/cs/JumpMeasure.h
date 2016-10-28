@@ -21,7 +21,9 @@ namespace scone
 			virtual String GetClassSignature() const override;
 
 		private:
-			enum State { Prepraration, Takeoff, Flight, Landing };
+			enum State { Prepare, Takeoff, Flight, Landing, Recover };
+			enum JumpType { NoJumpType, HighJump, LongJump };
+
 			double GetHighJumpResult( const sim::Model& m );
 			double GetLongJumpResult( const sim::Model& m );
 
@@ -35,7 +37,6 @@ namespace scone
 			Vec3 jump_com;
 			Real prepare_time;
 			bool negate_result;
-			enum JumpType { NoJumpType, HighJump, LongJump };
 			int jump_type;
 		};
 	}

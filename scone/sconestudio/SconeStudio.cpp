@@ -339,15 +339,19 @@ void SconeStudio::optimizeScenarioMultiple()
 {
 	if ( checkAndSaveScenario( getActiveScenario() ) )
 	{
-		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100 );
-		for ( int i = 1; i <= count; ++i )
+		bool ok = true;
+		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
+		if ( ok )
 		{
-			QStringList args;
-			args << QString().sprintf( "Optimizer.random_seed=%d", i );
-			ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
-			addProgressDock( pdw );
+			for ( int i = 1; i <= count; ++i )
+			{
+				QStringList args;
+				args << QString().sprintf( "Optimizer.random_seed=%d", i );
+				ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName, args );
+				addProgressDock( pdw );
+			}
+			updateOptimizations();
 		}
-		updateOptimizations();
 	}
 }
 
