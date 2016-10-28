@@ -127,12 +127,18 @@ namespace scone
 		{
 			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
 
+			// get position of leftmost body
+			double min_pos_x = 1000.0;
+			for ( auto& body : model.GetBodies() )
+				min_pos_x = std::min( min_pos_x, body->GetComPos().x );
+
 			const double no_flight_penalty = 200;
 			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
 			double jump_height = 100 * pos.y;
-			double jump_dist = 100 * ( pos.x - init_com.x );
-			double result = 0.0;
+			double jump_dist = 100 * ( min_pos_x - init_com.x );
 
+			// compute results based on state
+			double result = 0.0;
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Prepraration:
