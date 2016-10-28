@@ -30,6 +30,7 @@ namespace scone
 			Real termination_height;
 			bool terminate_on_peak;
 			Vec3 init_com;
+			double init_min_x;
 			Vec3 prepare_com;
 			Vec3 jump_com;
 			Real prepare_time;

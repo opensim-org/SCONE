@@ -8,7 +8,8 @@ namespace scone
 		JumpMeasure::JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		target_body( nullptr ),
-		state( Prepraration )
+		state( Prepraration ),
+		init_min_x( 10000.0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, prepare_time, 0.2 );
@@ -20,6 +21,9 @@ namespace scone
 				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
 
 			init_com = model.GetComPos();
+
+			for ( auto& body : model.GetBodies() )
+				init_min_x = std::min( init_min_x, body->GetComPos().x );
 		}
 
 		JumpMeasure::~JumpMeasure() { }
@@ -135,7 +139,7 @@ namespace scone
 			const double no_flight_penalty = 200;
 			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
 			double jump_height = 100 * pos.y;
-			double jump_dist = 100 * ( min_pos_x - init_com.x );
+			double jump_dist = 100 * ( min_pos_x - init_min_x );
 
 			// compute results based on state
 			double result = 0.0;
@@ -151,7 +155,7 @@ namespace scone
 				break;
 			case scone::cs::JumpMeasure::Flight:
 				// we've managed to take-off, return height as result, with penalty for early jumping
-				result = jump_dist;
+				result = jump_dist - early_jump_penalty;
 			}
 
 			if ( negate_result ) result = -result;
