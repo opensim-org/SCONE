@@ -445,7 +445,7 @@ void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = make_qt( flut::get_application_folder() + SCONE_FFMPEG_EXECUTABLE );
+	QString program = make_qt( flut::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
 	args << "-r" << QString::number( capture_frequency ) << "-i" << captureFilename + ".images/image_0_%d.png" << "-c:v" << "mpeg4" << "-q:v" << "3" << captureFilename;
 

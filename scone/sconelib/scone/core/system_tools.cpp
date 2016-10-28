@@ -20,7 +20,7 @@
 #include "flut/system/path.hpp"
 #include "Log.h"
 
-#define SCONE_SETTINGS_PATH ( flut::get_config_folder() + "/Scone/settings.ini" )
+#define SCONE_SETTINGS_PATH ( flut::get_config_folder() / "SCONE/settings.ini" )
 
 namespace scone
 {
@@ -49,7 +49,7 @@ namespace scone
 		if ( g_GlobalSettings.IsEmpty() )
 		{
 			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
-			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH );
+			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
 		}
 
 		return g_GlobalSettings;
@@ -59,8 +59,8 @@ namespace scone
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
 		g_GlobalSettings = newSettings;
-		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH ).parent_path() );
-		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH );
+		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH.str() ).parent_path() );
+		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH.str() );
 		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
 	}
 

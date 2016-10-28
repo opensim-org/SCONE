@@ -20,7 +20,7 @@ highest( 0 ),
 lowest( 0 ),
 state( StartingState )
 {
-	QString program = make_qt( flut::get_application_folder() + SCONE_SCONECMD_EXECUTABLE );
+	QString program = make_qt( flut::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
 	//for ( auto& a : args ) log::trace( a.toStdString() );
