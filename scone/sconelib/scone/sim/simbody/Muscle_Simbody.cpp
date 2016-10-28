@@ -177,13 +177,14 @@ namespace scone
 		{
 			// use our own control value, as OpenSim calls getControls()
 			// this could lead to infinite recursion
-            double excitation = GetControlValue();
+            double u = GetControlValue();
             
             // since the control value is internal, the actual excitation may be
             // incorrect. make sure to clamp it for calls (important for metabolics)
-            if ( excitation < 0.0 ) excitation = 0.0;
-            if ( excitation > 1.0 ) excitation = 1.0;
-			return excitation;
+            if ( u < 0.0 ) u = 0.0;
+            if ( u > 1.0 ) u = 1.0;
+
+			return u;
 		}
 		
 		void scone::sim::Muscle_Simbody::SetExcitation( Real u )

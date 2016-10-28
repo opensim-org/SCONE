@@ -184,9 +184,12 @@ namespace scone
 
                 if ( mus->GetNormalizedFiberLength() > 1.0 ) Sdot *= F_iso;
 
+                double active_fiber_force = mus->GetActiveFiberForce();
+                if ( active_fiber_force < 0 ) active_fiber_force = 0;
+
                 // calculate mechanical work rate
                 double Wdot = 
-                    - mus->GetActiveFiberForce() * mus->GetFiberVelocity() / mass;
+                    -active_fiber_force * mus->GetFiberVelocity() / mass;
 
                 // prevent instantaneous negative power by accounting for it through Sdot
                 double Edot_Wkg_beforeClamp = AMdot + Sdot + Wdot;
@@ -253,6 +256,11 @@ namespace scone
 			}
 
 			return s;
+		}
+
+        void EffortMeasure::StoreData( Storage< Real >::Frame& frame )
+		{
+			frame[ "metabolics_penalty" ] = m_Energy.GetLatest();
 		}
 	}
 }
