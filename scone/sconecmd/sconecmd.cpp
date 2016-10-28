@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 		cout.flush();
 
 		// sleep some time for the error message to sing in...
-		std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
+		std::this_thread::sleep_for( std::chrono::seconds( 5 ) );
 	}
 	catch (TCLAP::ExitException& e )
 	{

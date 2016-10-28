@@ -20,7 +20,8 @@ namespace scone
 			if ( props.HasKey( "target_body" ) )
 				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
 
-			init_com = model.GetComPos();
+			prepare_com = init_com = model.GetComPos();
+
 			for ( auto& body : model.GetBodies() )
 				init_min_x = std::min( init_min_x, body->GetComPos().x );
 		}
@@ -160,7 +161,11 @@ namespace scone
 			double jump_dist = 100 * ( min_pos_x - init_min_x );
 
 			// compute results based on state
-			double result = 0.0;
+			double com_landing_distance = 100 * GetComLandingDist( model );
+			double result = com_landing_distance - early_jump_penalty;
+			log::info( "result=", result );
+
+#if 0
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Prepare:
@@ -176,16 +181,37 @@ namespace scone
 				// we've managed to take-off, return height as result, with penalty for early jumping
 				result = jump_height + jump_dist - early_jump_penalty;
 			}
-
+#endif
 			if ( negate_result ) result = -result;
 
 			GetReport().Set( result );
 			GetReport().Set( "jump_height", jump_height );
 			GetReport().Set( "jump_distance", jump_dist );
+			GetReport().Set( "com_landing_distance", com_landing_distance );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
 
+		}
+
+		double JumpMeasure::GetComLandingDist( const sim::Model& m )
+		{
+			Vec3 com_pos = m.GetComPos();
+			Vec3 com_vel = m.GetComVel();
+
+			double g = -9.81;
+			double y0 = com_pos.y;
+			double dy = com_vel.y;
+			double t = ( -dy - sqrt( dy * dy - 2 * g * y0 ) ) / g;
+			double pos = com_pos.x + t * com_vel.x;
+
+			GetReport().Set( "com_landing_time", t );
+			GetReport().Set( "com_landing_y0", com_pos.y );
+			GetReport().Set( "com_landing_dy", com_vel.y );
+			GetReport().Set( "com_landing_x0", com_pos.x );
+			GetReport().Set( "com_landing_dx", com_vel.x );
+
+			return pos;
 		}
 	}
 }

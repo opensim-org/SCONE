@@ -26,6 +26,7 @@ namespace scone
 
 			double GetHighJumpResult( const sim::Model& m );
 			double GetLongJumpResult( const sim::Model& m );
+			double GetComLandingDist( const sim::Model& m );
 
 			State state;
 			sim::Body* target_body;
