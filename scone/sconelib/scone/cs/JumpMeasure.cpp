@@ -178,8 +178,14 @@ namespace scone
 
 		double JumpMeasure::GetLandingDist( const Vec3& pos, const Vec3& vel )
 		{
+			double t = 0.0;
 			double g = -9.81;
-			double t = ( -vel.y - sqrt( vel.y * vel.y - 2 * g * pos.y ) ) / g;
+			double disc = vel.y * vel.y - 2 * g * pos.y;
+			if ( disc > 0 )
+				t = ( -vel.y - sqrt( vel.y * vel.y - 2 * g * pos.y ) ) / g; // polynomial has two roots
+			else
+				t = ( -vel.y - sqrt( vel.y * vel.y + 2 * g * pos.y ) ) / g; // polynomial has one or complex root
+
 			return pos.x + t * vel.x;
 		}
 	}
