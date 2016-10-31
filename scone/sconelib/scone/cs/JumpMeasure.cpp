@@ -163,13 +163,11 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 
 			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
-			double takeoff_height = com_pos.y - prepare_com.y;
 			double com_landing_distance = GetLandingDist( com_pos, com_vel );
 			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
 
 			GetReport().Set( "com_landing_distance", com_landing_distance );
 			GetReport().Set( "body_landing_distance", body_landing_distance );
-			GetReport().Set( "takeoff_height", takeoff_height );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			double result = 0.0;
@@ -181,16 +179,20 @@ namespace scone
 			case scone::cs::JumpMeasure::Takeoff:
 			case scone::cs::JumpMeasure::Flight:
 			case scone::cs::JumpMeasure::Landing:
-				result = 10 * ( ( 1 + takeoff_height / ( model.GetTime() - prepare_time ) ) * com_landing_distance - early_jump_penalty );
+			{
+				double takeoff_bonus = 1 + 9 * ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
+				GetReport().Set( "takeoff_bonus", takeoff_bonus );
+				result = takeoff_bonus * com_landing_distance - early_jump_penalty;
 				break;
+			}
 			case scone::cs::JumpMeasure::Recover:
-				{
-					double recover_bonus = 10 + 90 * ( model.GetTime() - recover_start_time ) / recover_time;
-					GetReport().Set( "recover_bonus", recover_bonus );
-					GetReport().Set( "recover_cop_dist", recover_cop_dist );
-					result = recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
-				}
+			{
+				double recover_bonus = 10 + 90 * ( model.GetTime() - recover_start_time ) / recover_time;
+				GetReport().Set( "recover_bonus", recover_bonus );
+				GetReport().Set( "recover_cop_dist", recover_cop_dist );
+				result = recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
 				break;
+			}
 			}
 
 			if ( negate_result ) result = -result;
