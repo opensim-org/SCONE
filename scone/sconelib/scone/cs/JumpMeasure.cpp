@@ -51,6 +51,7 @@ namespace scone
 
 			Vec3 com_pos = model.GetComPos();
 			Vec3 com_vel = model.GetComVel();
+			double grf = model.GetTotalContactForce();
 
 			if ( com_pos.y < termination_height * init_com.y )
 			{
@@ -61,7 +62,7 @@ namespace scone
 			switch ( state )
 			{
 			case Prepare:
-				if ( timestamp >= prepare_time && com_vel.y > 0 )
+				if ( timestamp >= prepare_time && ( com_vel.y > 0 || grf <= 0 ) )
 				{
 					state = Takeoff;
 					prepare_com = com_pos;
@@ -70,7 +71,7 @@ namespace scone
 				break;
 
 			case Takeoff:
-				if ( model.GetTotalContactForce() <= 0 )
+				if ( grf <= 0 )
 				{
 					state = Flight;
 					log::trace( timestamp, ": State changed to Flight, com_pos=", com_pos );
@@ -80,23 +81,17 @@ namespace scone
 				break;
 
 			case Flight:
-				if ( com_vel.y < 0 )
+				if ( com_vel.y < 0 || grf > 0 )
 				{
 					state = Landing;
 					log::trace( timestamp, ": State changed to Landing, com_pos=", com_pos );
 					if ( terminate_on_peak )
 						return RequestTermination;
 				}
-				if ( model.GetTotalContactForce() > 0 )
-				{
-					state = Recover;
-					log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
-					if ( terminate_on_peak )
-						return RequestTermination;
-				}
+				break;
 
 			case Landing:
-				if ( model.GetTotalContactForce() > 0 )
+				if ( grf > 0 )
 				{
 					state = Recover;
 					log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
@@ -160,27 +155,29 @@ namespace scone
 			Vec3 com_pos = model.GetComPos();
 			Vec3 com_vel = model.GetComVel();
 
-			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
-			double com_landing_distance = 100 * GetLandingDist( com_pos, com_vel );
-			double body_landing_distance = target_body ? 100 * GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
-			double min_dist = std::min( com_landing_distance, body_landing_distance );
+			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
+			double com_landing_distance = GetLandingDist( com_pos, com_vel );
+			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
+			double grf_distance = model.GetTotalContactForce() > 0 ? model.GetLeg( 0 ).GetContactCop().x : 1000.0;
 
-			if ( state >= Recover )
+			double result = 0.0;
+			switch ( state )
 			{
-				// we have landed, so use the actual contact pos for min dist
-				Vec3 force, moment, cop;
-				model.GetLeg( 0 ).GetContactForceMomentCop( force, moment, cop );
-				min_dist = std::min( min_dist, 100 * cop.x );
-				GetReport().Set( "landing_contact_pos", 100 * cop.x );
+			case scone::cs::JumpMeasure::Prepare:
+			case scone::cs::JumpMeasure::Takeoff:
+				result = 10 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
+				break;
+			default:
+				result = 100 * ( std::min( { com_landing_distance, body_landing_distance, grf_distance } ) - early_jump_penalty );
+				break;
 			}
-
-			double result = min_dist - early_jump_penalty;
 
 			if ( negate_result ) result = -result;
 
 			GetReport().Set( result );
 			GetReport().Set( "com_landing_distance", com_landing_distance );
 			GetReport().Set( "body_landing_distance", body_landing_distance );
+			GetReport().Set( "grf_distance", grf_distance );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
