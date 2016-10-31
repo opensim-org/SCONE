@@ -163,8 +163,18 @@ namespace scone
 			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
 			double com_landing_distance = 100 * GetLandingDist( com_pos, com_vel );
 			double body_landing_distance = target_body ? 100 * GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
+			double min_dist = std::min( com_landing_distance, body_landing_distance );
 
-			double result = std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty;
+			if ( state >= Recover )
+			{
+				// we have landed, so use the actual contact pos for min dist
+				Vec3 force, moment, cop;
+				model.GetLeg( 0 ).GetContactForceMomentCop( force, moment, cop );
+				min_dist = std::min( min_dist, 100 * cop.x );
+				GetReport().Set( "landing_contact_pos", 100 * cop.x );
+			}
+
+			double result = min_dist - early_jump_penalty;
 
 			if ( negate_result ) result = -result;
 
