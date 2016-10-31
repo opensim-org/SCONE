@@ -181,7 +181,7 @@ namespace scone
 			case scone::cs::JumpMeasure::Takeoff:
 			case scone::cs::JumpMeasure::Flight:
 			case scone::cs::JumpMeasure::Landing:
-				result = 10 * ( ( 1 + 9 * takeoff_height ) * com_landing_distance - early_jump_penalty );
+				result = 10 * ( ( 1 + takeoff_height / ( model.GetTime() - prepare_time ) ) * com_landing_distance - early_jump_penalty );
 				break;
 			case scone::cs::JumpMeasure::Recover:
 				{
