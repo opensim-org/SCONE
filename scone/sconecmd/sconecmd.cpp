@@ -71,7 +71,7 @@ int main(int argc, char* argv[])
 	catch (std::exception& e)
 	{
 		log::Critical( e.what() );
-		cout << "error=" << e.what() << endl;
+		cout << "*error=" << e.what() << endl;
 		cout.flush();
 
 		// sleep some time for the error message to sing in...
