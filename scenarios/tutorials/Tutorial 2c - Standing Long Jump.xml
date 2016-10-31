@@ -19,7 +19,7 @@
 					</Function>
 				</Controller>
 				<Measure type="JumpMeasure">
-					<terminate_on_peak>1</terminate_on_peak>
+					<terminate_on_peak>0</terminate_on_peak>
 					<termination_height>0.75</termination_height>
 					<prepare_time>0.2</prepare_time>
 					<jump_type>2</jump_type>

@@ -52,20 +52,20 @@ namespace scone
 			Vec3 com_pos = model.GetComPos();
 			Vec3 com_vel = model.GetComVel();
 
+			if ( com_pos.y < termination_height * init_com.y )
+			{
+				log::trace( timestamp, ": Terminating, com_pos=", com_pos );
+				return RequestTermination;
+			}
+
 			switch ( state )
 			{
 			case Prepare:
-				if ( com_pos.y < termination_height * init_com.y )
-				{
-					log::trace( "Terminating, com_pos=", com_pos );
-					return RequestTermination;
-				}
-
 				if ( timestamp >= prepare_time && com_vel.y > 0 )
 				{
 					state = Takeoff;
 					prepare_com = com_pos;
-					log::trace( "State changed to Takeoff, prepare_com=", prepare_com );
+					log::trace( timestamp, ": State changed to Takeoff, prepare_com=", prepare_com );
 				}
 				break;
 
@@ -73,7 +73,7 @@ namespace scone
 				if ( model.GetTotalContactForce() <= 0 )
 				{
 					state = Flight;
-					log::trace( "State changed to Flight, com_pos=", com_pos );
+					log::trace( timestamp, ": State changed to Flight, com_pos=", com_pos );
 				}
 				if ( terminate_on_peak && com_vel.y < 0 )
 					return RequestTermination;
@@ -82,23 +82,29 @@ namespace scone
 			case Flight:
 				if ( com_vel.y < 0 )
 				{
+					state = Landing;
+					log::trace( timestamp, ": State changed to Landing, com_pos=", com_pos );
 					if ( terminate_on_peak )
 						return RequestTermination;
-					else state = Landing;
 				}
 				if ( model.GetTotalContactForce() > 0 )
 				{
+					state = Recover;
+					log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
 					if ( terminate_on_peak )
 						return RequestTermination;
-					else state = Recover;
 				}
 
 			case Landing:
 				if ( model.GetTotalContactForce() > 0 )
+				{
 					state = Recover;
+					log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
+				}
 				break;
 
 			case Recover:
+				return RequestTermination;
 				break;
 			}
 
