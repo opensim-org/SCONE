@@ -165,9 +165,13 @@ namespace scone
 			{
 			case scone::cs::JumpMeasure::Prepare:
 			case scone::cs::JumpMeasure::Takeoff:
+				result = 1 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
+				break;
+			case scone::cs::JumpMeasure::Flight:
+			case scone::cs::JumpMeasure::Landing:
 				result = 10 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
 				break;
-			default:
+			case scone::cs::JumpMeasure::Recover:
 				result = 100 * ( std::min( { com_landing_distance, body_landing_distance, grf_distance } ) - early_jump_penalty );
 				break;
 			}
