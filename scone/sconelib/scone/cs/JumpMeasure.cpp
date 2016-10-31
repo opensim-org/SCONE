@@ -49,31 +49,38 @@ namespace scone
 			if ( !IsActive( model, timestamp ) )
 				return NoUpdate;
 
-			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
-			Vec3 vel = target_body ? target_body->GetLinVel() : model.GetComVel();
+			Vec3 com_pos = model.GetComPos();
+			Vec3 com_vel = model.GetComVel();
 
 			switch ( state )
 			{
 			case Prepare:
-				if ( pos.y < termination_height * init_com.y )
+				if ( com_pos.y < termination_height * init_com.y )
+				{
+					log::trace( "Terminating, com_pos=", com_pos );
 					return RequestTermination;
+				}
 
-				if ( timestamp >= prepare_time && vel.y > 0 )
+				if ( timestamp >= prepare_time && com_vel.y > 0 )
 				{
 					state = Takeoff;
-					prepare_com = pos;
+					prepare_com = com_pos;
+					log::trace( "State changed to Takeoff, prepare_com=", prepare_com );
 				}
 				break;
 
 			case Takeoff:
 				if ( model.GetTotalContactForce() <= 0 )
+				{
 					state = Flight;
-				if ( terminate_on_peak && vel.y < 0 )
+					log::trace( "State changed to Flight, com_pos=", com_pos );
+				}
+				if ( terminate_on_peak && com_vel.y < 0 )
 					return RequestTermination;
 				break;
 
 			case Flight:
-				if ( vel.y < 0 )
+				if ( com_vel.y < 0 )
 				{
 					if ( terminate_on_peak )
 						return RequestTermination;
@@ -144,74 +151,30 @@ namespace scone
 
 		double JumpMeasure::GetLongJumpResult( const sim::Model& model )
 		{
-			Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
-			Vec3 vel = target_body ? target_body->GetLinVel() : model.GetComVel();
-
-			// get position of leftmost body
-			double min_pos_x = 1000.0;
-			double min_pos_y = 1000.0;
-			for ( auto& body : model.GetBodies() )
-			{
-				min_pos_x = std::min( min_pos_x, body->GetComPos().x );
-				min_pos_y = std::min( min_pos_y, body->GetComPos().y );
-			}
+			Vec3 com_pos = model.GetComPos();
+			Vec3 com_vel = model.GetComVel();
 
 			double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
-			double jump_height = 100 * pos.y;
-			double jump_dist = 100 * ( min_pos_x - init_min_x );
+			double com_landing_distance = 100 * GetLandingDist( com_pos, com_vel );
+			double body_landing_distance = target_body ? 100 * GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
 
-			// compute results based on state
-			double com_landing_distance = 100 * GetComLandingDist( model );
-			double result = com_landing_distance - early_jump_penalty;
-			log::info( "result=", result );
+			double result = std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty;
 
-#if 0
-			switch ( state )
-			{
-			case scone::cs::JumpMeasure::Prepare:
-				// failed during preparation, return projected height after 1s
-				result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
-				break;
-			case scone::cs::JumpMeasure::Takeoff:
-				// we've managed to take-off, return height as result, with penalty for early jumping
-				result = jump_height - early_jump_penalty;
-				break;
-			case scone::cs::JumpMeasure::Flight:
-			case scone::cs::JumpMeasure::Landing:
-				// we've managed to take-off, return height as result, with penalty for early jumping
-				result = jump_height + jump_dist - early_jump_penalty;
-			}
-#endif
 			if ( negate_result ) result = -result;
 
 			GetReport().Set( result );
-			GetReport().Set( "jump_height", jump_height );
-			GetReport().Set( "jump_distance", jump_dist );
 			GetReport().Set( "com_landing_distance", com_landing_distance );
+			GetReport().Set( "body_landing_distance", body_landing_distance );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
-
 		}
 
-		double JumpMeasure::GetComLandingDist( const sim::Model& m )
+		double JumpMeasure::GetLandingDist( const Vec3& pos, const Vec3& vel )
 		{
-			Vec3 com_pos = m.GetComPos();
-			Vec3 com_vel = m.GetComVel();
-
 			double g = -9.81;
-			double y0 = com_pos.y;
-			double dy = com_vel.y;
-			double t = ( -dy - sqrt( dy * dy - 2 * g * y0 ) ) / g;
-			double pos = com_pos.x + t * com_vel.x;
-
-			GetReport().Set( "com_landing_time", t );
-			GetReport().Set( "com_landing_y0", com_pos.y );
-			GetReport().Set( "com_landing_dy", com_vel.y );
-			GetReport().Set( "com_landing_x0", com_pos.x );
-			GetReport().Set( "com_landing_dx", com_vel.x );
-
-			return pos;
+			double t = ( -vel.y - sqrt( vel.y * vel.y - 2 * g * pos.y ) ) / g;
+			return pos.x + t * vel.x;
 		}
 	}
 }

@@ -23,6 +23,7 @@
 					<termination_height>0.75</termination_height>
 					<prepare_time>0.2</prepare_time>
 					<jump_type>2</jump_type>
+					<target_body>calcn_l</target_body>
 				</Measure>
 			</Controllers>
 		</Model> 
