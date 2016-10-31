@@ -163,23 +163,25 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 
 			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
-			double com_landing_distance = GetLandingDist( com_pos - prepare_com, com_vel );
-			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel(), 0.0 ) : 1000.0;
+			double takeoff_height = com_pos.y - prepare_com.y;
+			double com_landing_distance = GetLandingDist( com_pos, com_vel );
+			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
 
 			GetReport().Set( "com_landing_distance", com_landing_distance );
 			GetReport().Set( "body_landing_distance", body_landing_distance );
+			GetReport().Set( "takeoff_height", takeoff_height );
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			double result = 0.0;
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Prepare:
-				result = GetLandingDist( com_pos, com_vel );
+				result = com_landing_distance;
 				break;
 			case scone::cs::JumpMeasure::Takeoff:
 			case scone::cs::JumpMeasure::Flight:
 			case scone::cs::JumpMeasure::Landing:
-				result = 10 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
+				result = 10 * ( ( 1 + 9 * takeoff_height ) * com_landing_distance - early_jump_penalty );
 				break;
 			case scone::cs::JumpMeasure::Recover:
 				{
