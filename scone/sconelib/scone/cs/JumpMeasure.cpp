@@ -9,10 +9,12 @@ namespace scone
 		Measure( props, par, model, area ),
 		target_body( nullptr ),
 		state( Prepare ),
-		init_min_x( 10000.0 )
+		init_min_x( 10000.0 ),
+		recover_start_time( 0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, prepare_time, 0.2 );
+			INIT_PROPERTY( props, recover_time, 2.0 );
 			INIT_PROPERTY( props, terminate_on_peak, true );
 			INIT_PROPERTY( props, negate_result, false );
 			INIT_PROPERTY( props, jump_type, int( HighJump ) );
@@ -53,7 +55,7 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 			double grf = model.GetTotalContactForce();
 
-			if ( com_pos.y < termination_height * init_com.y )
+			if ( state != Landing && com_pos.y < termination_height * init_com.y )
 			{
 				log::trace( timestamp, ": Terminating, com_pos=", com_pos );
 				return RequestTermination;
@@ -76,7 +78,7 @@ namespace scone
 					state = Flight;
 					log::trace( timestamp, ": State changed to Flight, com_pos=", com_pos );
 				}
-				if ( terminate_on_peak && com_vel.y < 0 )
+				if ( com_vel.y < 0 ) // don't allow moving down during takeoff
 					return RequestTermination;
 				break;
 
@@ -84,22 +86,27 @@ namespace scone
 				if ( com_vel.y < 0 || grf > 0 )
 				{
 					state = Landing;
+					peak_com = com_pos;
+					peak_com_vel = com_vel;
 					log::trace( timestamp, ": State changed to Landing, com_pos=", com_pos );
 					if ( terminate_on_peak )
 						return RequestTermination;
 				}
-				break;
 
 			case Landing:
 				if ( grf > 0 )
 				{
 					state = Recover;
+					recover_com = com_pos;
+					recover_start_time = timestamp;
 					log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
 				}
 				break;
 
 			case Recover:
-				return RequestTermination;
+				recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
+				if ( timestamp - recover_start_time >= recover_time )
+					return RequestTermination;
 				break;
 			}
 
@@ -156,46 +163,52 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 
 			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
-			double com_landing_distance = GetLandingDist( com_pos, com_vel );
-			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
-			double grf_distance = model.GetTotalContactForce() > 0 ? model.GetLeg( 0 ).GetContactCop().x : 1000.0;
+			double com_landing_distance = GetLandingDist( com_pos - prepare_com, com_vel );
+			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel(), 0.0 ) : 1000.0;
+
+			GetReport().Set( "com_landing_distance", com_landing_distance );
+			GetReport().Set( "body_landing_distance", body_landing_distance );
+			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			double result = 0.0;
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Prepare:
-			case scone::cs::JumpMeasure::Takeoff:
-				result = 1 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
+				result = GetLandingDist( com_pos, com_vel );
 				break;
+			case scone::cs::JumpMeasure::Takeoff:
 			case scone::cs::JumpMeasure::Flight:
 			case scone::cs::JumpMeasure::Landing:
 				result = 10 * ( std::min( com_landing_distance, body_landing_distance ) - early_jump_penalty );
 				break;
 			case scone::cs::JumpMeasure::Recover:
-				result = 100 * ( std::min( { com_landing_distance, body_landing_distance, grf_distance } ) - early_jump_penalty );
+				{
+					double recover_bonus = 10 + 90 * ( model.GetTime() - recover_start_time ) / recover_time;
+					GetReport().Set( "recover_bonus", recover_bonus );
+					GetReport().Set( "recover_cop_dist", recover_cop_dist );
+					result = recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
+				}
 				break;
 			}
 
 			if ( negate_result ) result = -result;
 
 			GetReport().Set( result );
-			GetReport().Set( "com_landing_distance", com_landing_distance );
-			GetReport().Set( "body_landing_distance", body_landing_distance );
-			GetReport().Set( "grf_distance", grf_distance );
-			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
 		}
 
-		double JumpMeasure::GetLandingDist( const Vec3& pos, const Vec3& vel )
+		double JumpMeasure::GetLandingDist( const Vec3& pos, const Vec3& vel, double floor_height )
 		{
 			double t = 0.0;
 			double g = -9.81;
-			double disc = vel.y * vel.y - 2 * g * pos.y;
+			double y0 = pos.y - floor_height;
+			double disc = vel.y * vel.y - 2 * g * y0;
+
 			if ( disc > 0 )
-				t = ( -vel.y - sqrt( vel.y * vel.y - 2 * g * pos.y ) ) / g; // polynomial has two roots
+				t = ( -vel.y - sqrt( vel.y * vel.y - 2 * g * y0 ) ) / g; // polynomial has two roots
 			else
-				t = ( -vel.y - sqrt( vel.y * vel.y + 2 * g * pos.y ) ) / g; // polynomial has one or complex root
+				t = ( -vel.y - sqrt( vel.y * vel.y + 2 * g * y0 ) ) / g; // polynomial has one or complex root
 
 			return pos.x + t * vel.x;
 		}

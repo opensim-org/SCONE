@@ -26,7 +26,7 @@ namespace scone
 
 			double GetHighJumpResult( const sim::Model& m );
 			double GetLongJumpResult( const sim::Model& m );
-			static double GetLandingDist( const Vec3& pos, const Vec3& vel );
+			static double GetLandingDist( const Vec3& pos, const Vec3& vel, double floor_height = 0.0 );
 
 			State state;
 			sim::Body* target_body;
@@ -35,8 +35,13 @@ namespace scone
 			Vec3 init_com;
 			double init_min_x;
 			Vec3 prepare_com;
-			Vec3 jump_com;
+			Vec3 peak_com;
+			Vec3 peak_com_vel;
+			Vec3 recover_com;
+			TimeInSeconds recover_start_time;
 			Real prepare_time;
+			Real recover_time;
+			Real recover_cop_dist = 1000.0;
 			bool negate_result;
 			int jump_type;
 		};
