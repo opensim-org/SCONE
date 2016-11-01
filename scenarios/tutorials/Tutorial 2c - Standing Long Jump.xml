@@ -4,7 +4,7 @@
 	<maximize_objective>1</maximize_objective>
 	<signature_postfix></signature_postfix>
 	<Objective type="SimulationObjective">
-		<max_duration>4</max_duration>
+		<max_duration>3</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020.osim</model_file>
 			<state_init_optimization symmetric="1" init_std="0.01" min="-0.1" max="0.1" include_states="*" exclude_states="*_tx;*_ty;*_u;*.activation;*.fiber_length"/>
@@ -21,7 +21,7 @@
 				</Controller>
 				<Measure type="JumpMeasure">
 					<terminate_on_peak>0</terminate_on_peak>
-					<termination_height>0.67</termination_height>
+					<termination_height>0.75</termination_height>
 					<prepare_time>0.2</prepare_time>
 					<jump_type>2</jump_type>
 					<!--target_body></target_body!-->

@@ -14,7 +14,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, prepare_time, 0.2 );
-			INIT_PROPERTY( props, recover_time, 2.0 );
+			INIT_PROPERTY( props, recover_time, 1.0 );
 			INIT_PROPERTY( props, terminate_on_peak, true );
 			INIT_PROPERTY( props, negate_result, false );
 			INIT_PROPERTY( props, jump_type, int( HighJump ) );
@@ -104,6 +104,7 @@ namespace scone
 				break;
 
 			case Recover:
+				log::trace( "com_vel=", com_vel.x );
 				recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
 				if ( timestamp - recover_start_time >= recover_time )
 					return RequestTermination;
@@ -162,7 +163,7 @@ namespace scone
 			Vec3 com_pos = model.GetComPos();
 			Vec3 com_vel = model.GetComVel();
 
-			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y );
+			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y ) / prepare_time;
 			double com_landing_distance = GetLandingDist( com_pos, com_vel );
 			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
 
@@ -174,23 +175,24 @@ namespace scone
 			switch ( state )
 			{
 			case scone::cs::JumpMeasure::Prepare:
-				result = com_landing_distance;
+				// take final com vel in y
+				result = com_vel.y;
 				break;
 			case scone::cs::JumpMeasure::Takeoff:
 			case scone::cs::JumpMeasure::Flight:
 			case scone::cs::JumpMeasure::Landing:
 			{
-				double takeoff_bonus = 1 + 9 * ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
-				GetReport().Set( "takeoff_bonus", takeoff_bonus );
-				result = takeoff_bonus * com_landing_distance - early_jump_penalty;
+				double takeoff_speed = ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
+				GetReport().Set( "takeoff_speed", takeoff_speed );
+				result = takeoff_speed - early_jump_penalty;
 				break;
 			}
 			case scone::cs::JumpMeasure::Recover:
 			{
-				double recover_bonus = 10 + 90 * ( model.GetTime() - recover_start_time ) / recover_time;
+				double recover_bonus = 50 + 50 * ( model.GetTime() - recover_start_time ) / recover_time;
 				GetReport().Set( "recover_bonus", recover_bonus );
 				GetReport().Set( "recover_cop_dist", recover_cop_dist );
-				result = recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
+				result = 10 + recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
 				break;
 			}
 			}
