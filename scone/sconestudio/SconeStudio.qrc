@@ -1,5 +1,5 @@
 <RCC>
   <qresource prefix="SconeStudio">
-    <file>scone_splash.png</file>
+    <file>../../resources/ui/scone_splash.png</file>
   </qresource>
 </RCC>
