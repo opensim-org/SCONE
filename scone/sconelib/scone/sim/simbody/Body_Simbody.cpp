@@ -147,7 +147,7 @@ namespace scone
 
 			// TODO: validate this!
 			m_osBody.getMassCenter( com );
-			m_osBody.getModel().getSimbodyEngine().getVelocity( m_Model.GetTkState(), m_osBody, com, acc );
+			m_osBody.getModel().getSimbodyEngine().getAcceleration( m_Model.GetTkState(), m_osBody, com, acc );
 			return ToVec3( acc );
 		}
 
