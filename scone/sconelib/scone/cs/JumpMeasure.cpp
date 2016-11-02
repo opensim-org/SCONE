@@ -55,7 +55,7 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 			double grf = model.GetTotalContactForce();
 
-			if ( state != Landing && com_pos.y < termination_height * init_com.y )
+			if ( com_pos.y < termination_height * init_com.y )
 			{
 				log::trace( timestamp, ": Terminating, com_pos=", com_pos );
 				return RequestTermination;
@@ -164,12 +164,14 @@ namespace scone
 			Vec3 com_vel = model.GetComVel();
 
 			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y ) / prepare_time;
+			double takeoff_speed = ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
 			double com_landing_distance = GetLandingDist( com_pos, com_vel );
 			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
 
+			GetReport().Set( "early_jump_penalty", early_jump_penalty );
+			GetReport().Set( "takeoff_speed", takeoff_speed );
 			GetReport().Set( "com_landing_distance", com_landing_distance );
 			GetReport().Set( "body_landing_distance", body_landing_distance );
-			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 
 			double result = 0.0;
 			switch ( state )
@@ -179,14 +181,12 @@ namespace scone
 				result = com_vel.y;
 				break;
 			case scone::cs::JumpMeasure::Takeoff:
-			case scone::cs::JumpMeasure::Flight:
-			case scone::cs::JumpMeasure::Landing:
 			{
-				double takeoff_speed = ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
-				GetReport().Set( "takeoff_speed", takeoff_speed );
 				result = takeoff_speed - early_jump_penalty;
 				break;
 			}
+			case scone::cs::JumpMeasure::Flight:
+			case scone::cs::JumpMeasure::Landing:
 			case scone::cs::JumpMeasure::Recover:
 			{
 				double recover_bonus = 50 + 50 * ( model.GetTime() - recover_start_time ) / recover_time;
