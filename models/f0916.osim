@@ -1389,7 +1389,7 @@
 		<!--Forces in the model.-->
 		<ForceSet>
 			<objects>
-				<Millard2012EquilibriumMuscle name="hamstrings_r">
+				<Thelen2003Muscle name="hamstrings_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1466,8 +1466,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="glut_max_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="glut_max_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1548,8 +1548,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="iliopsoas_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="iliopsoas_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1636,8 +1636,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="rect_fem_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="rect_fem_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1737,8 +1737,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="vasti_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="vasti_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1842,8 +1842,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="gastroc_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="gastroc_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1922,8 +1922,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="soleus_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="soleus_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -1996,8 +1996,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="tib_ant_r">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="tib_ant_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2074,8 +2074,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="hamstrings_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="hamstrings_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2152,8 +2152,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="glut_max_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="glut_max_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2234,8 +2234,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="iliopsoas_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="iliopsoas_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2322,8 +2322,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="rect_fem_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="rect_fem_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2423,8 +2423,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="vasti_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="vasti_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2528,8 +2528,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="gastroc_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="gastroc_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2608,8 +2608,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="soleus_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="soleus_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2682,8 +2682,8 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
-				<Millard2012EquilibriumMuscle name="tib_ant_l">
+				</Thelen2003Muscle>
+				<Thelen2003Muscle name="tib_ant_l">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
 					<!--Minimum allowed value for control signal. Used primarily when solving for control values.-->
@@ -2760,7 +2760,7 @@
 					<Af>0.3</Af>
 					<!--maximum normalized lengthening force-->
 					<Flen>1.8</Flen>
-				</Millard2012EquilibriumMuscle>
+				</Thelen2003Muscle>
 				<HuntCrossleyForce name="foot_r">
 					<!--Flag indicating whether the force is disabled or not. Disabled means that the force is not active in subsequent dynamics realizations.-->
 					<isDisabled>false</isDisabled>
@@ -2880,7 +2880,7 @@
 					<!--Body name to connect the contact geometry to-->
 					<body_name>toes_r</body_name>
 					<!--Location of geometry center in the body frame-->
-					<location>0.07 0.002 0.014</location>
+					<location>0.07 0.005 0.014</location>
 					<!--Orientation of geometry in the body frame-->
 					<orientation>0 0 0</orientation>
 					<radius>0.01</radius>

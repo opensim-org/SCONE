@@ -51,6 +51,9 @@ include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
 # Add sconelib include folder to all projects
 include_directories(${CMAKE_SOURCE_DIR}/scone/sconelib)
 
+# Add TCLAP
+include_directories(${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
+
 # Compiler flags.
 # ---------------
 # Must compile with C++11 with gcc/clang.
@@ -96,7 +99,7 @@ add_subdirectory(scone/sconelib)
 #
 # Add target executables
 #
-add_subdirectory(scone/sconeopt)
+add_subdirectory(scone/sconecmd)
 add_subdirectory(scone/sconestudio)
 add_subdirectory(scone/sconeunittests)
 add_subdirectory(scone/test)

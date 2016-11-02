@@ -2,6 +2,7 @@
 #include "scone/sim/Muscle.h"
 #include "scone/sim/Area.h"
 #include "scone/sim/Dof.h"
+#include "scone/core/propnode_tools.h"
 
 //#define DEBUG_MUSCLE "vasti_r"
 
@@ -23,9 +24,17 @@ namespace scone
 
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 			INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
-			INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
+			INIT_PROPERTY_NAMED( props, length_allow_negative, "allow_negative_L", true );
+
 			INIT_PARAM_NAMED( props, par, velocity_gain, "KV", 0.0 );
+			INIT_PARAM_NAMED( props, par, velocity_ofs, "V0", 0.0 );
+			INIT_PROPERTY_NAMED( props, velocity_allow_negative, "allow_negative_V", false );
+
 			INIT_PARAM_NAMED( props, par, force_gain, "KF", 0.0 );
+			INIT_PARAM_NAMED( props, par, force_ofs, "F0", 0.0 );
+			INIT_PROPERTY_NAMED( props, force_allow_negative, "allow_negative_F", true );
+
+			INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
 
 			// create delayed sensors
 			if ( force_gain != 0.0 )
@@ -46,13 +55,15 @@ namespace scone
 		{
 			// add stretch reflex
 			Real u_l = m_pLengthSensor ? length_gain * ( m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
+			if ( !length_allow_negative && u_l < 0.0 ) u_l = 0.0;
 
 			// add velocity reflex
-			// TODO: should velocity gain be positive only?
-			Real u_v = m_pVelocitySensor ? velocity_gain * std::max( 0.0, m_pVelocitySensor->GetValue( delay ) ) : 0;
+			Real u_v = m_pVelocitySensor ? velocity_gain * ( m_pVelocitySensor->GetValue( delay ) - velocity_ofs ) : 0;
+			if ( !velocity_allow_negative && u_v < 0.0 ) u_v = 0.0;
 
 			// add force reflex
-			Real u_f = m_pForceSensor ? force_gain * m_pForceSensor->GetValue( delay ) : 0;
+			Real u_f = m_pForceSensor ? force_gain * ( m_pForceSensor->GetValue( delay ) - force_ofs ) : 0;
+			if ( !force_allow_negative && u_f < 0.0 ) u_f = 0.0;
 
 			Real u_total = u_l + u_v + u_f + u_constant;
 

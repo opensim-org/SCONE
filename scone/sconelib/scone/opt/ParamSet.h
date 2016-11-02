@@ -37,7 +37,7 @@ namespace scone
 
 			bool Empty() { return m_Params.empty(); }
 			bool CheckValues();
-			void RestrainValues();
+			void ClampValues();
 			void InitRandom();
 
 			size_t GetParamCount() const { return m_Params.size(); }
@@ -49,6 +49,19 @@ namespace scone
 			size_t GetFreeParamCount();
 			std::vector< double > GetFreeParamValues();
 			void SetFreeParamValues( std::vector< double >& values );
+
+			template< typename Iter > bool CheckFreeParamValues( Iter b, Iter e ) {
+				for ( auto iter = m_Params.begin(); iter != m_Params.end() && b != e; ++iter ) {
+					if ( iter->first.is_free )
+					{ if ( !iter->first.CheckValue( *b ) ) return false; else ++b; }
+				}
+				return true;
+			}
+
+			template< typename Iter > void ClampFreeParamValues( Iter b, Iter e ) {
+				for ( auto iter = m_Params.begin(); iter != m_Params.end() && b != e; ++iter )
+				{ if ( iter->first.is_free ) iter->first.ClampValue( *b++ ); }
+			}
 
 			void SetMode( Mode m ) { m_Mode = m; }
 			bool IsInConstructionMode() { return m_Mode == ConstructionMode; }

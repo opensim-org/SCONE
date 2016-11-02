@@ -57,7 +57,7 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 {
 	opt::GetObjectiveFactory().Register< TestObjective >();
 
-	auto pn = ReadPropNodeFromXml( scone::GetFolder( "root" ) + "/unittestdata/optimization_test/rosenbrock_50_test.xml" );
+	auto pn = ReadPropNodeFromXml( ( scone::GetFolder( "root" ) / "/unittestdata/optimization_test/rosenbrock_50_test.xml" ).str() );
 	opt::OptimizerUP o = opt::CreateOptimizer( pn.GetChild( "Optimizer" ) );
 	LogUntouched( pn );
 	o->SetConsoleOutput( false );

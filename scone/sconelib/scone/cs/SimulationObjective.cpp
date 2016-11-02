@@ -35,6 +35,7 @@ namespace scone
 			SCONE_ASSERT( m_Model && m_Measure );
 
 			// run the simulation
+			m_Model->SetSimulationEndTime( max_duration );
 			m_Model->AdvanceSimulationTo( max_duration );
 			return m_Measure->GetResult( *m_Model );
 		}

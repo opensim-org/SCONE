@@ -5,9 +5,12 @@
 #include "scone/cs/SimulationObjective.h"
 #include "scone/opt/Objective.h"
 
+#include "flut/flag_set.hpp"
 #include "simvis/arrow.h"
+
 #include <thread>
 #include <mutex>
+#include <atomic>
 
 namespace scone
 {
@@ -16,25 +19,35 @@ namespace scone
 	class StudioModel
 	{
 	public:
+		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows };
+		typedef flut::flag_set< ViewSettings > ViewFlags;
+ 
 		StudioModel( vis::scene &s, const String& par_file );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
+		void EvaluateTo( TimeInSeconds t );
 
-		const Storage<>& GetData() { std::lock_guard< std::mutex > lock( eval_mutex ); return data; }
+		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
+		cs::SimulationObjective& GetObjective() { return *so; }
 
-		bool IsEvaluating() { return is_evaluating; }
+		bool IsEvaluating() { return is_evaluating.load(); }
+		std::mutex& GetDataMutex() { return data_mutex; }
+
+		void SetViewFlags( const ViewFlags& f ) { view_flags = f; }
+		void SetViewSetting( ViewSettings e, bool value );
 
 	private:
-		void InitModel( const String& par_file );
 		void InitVis( vis::scene& s );
 		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
 
 		Storage<> data;
 		cs::SimulationObjectiveUP so;
 		String filename;
+
+		ViewFlags view_flags;
 
 		std::vector< size_t > state_data_index;
 
@@ -43,13 +56,13 @@ namespace scone
 		vis::material muscle_mat;
 
 		std::thread eval_thread;
-		std::mutex eval_mutex;
-		bool is_evaluating;
+		std::mutex data_mutex;
+		std::atomic< bool > is_evaluating;
 
 		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;
 		std::vector< vis::mesh > joints;
-		std::vector< std::pair< vis::path, vis::material > > muscles;
+		std::vector< std::pair< vis::trail, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
 		vis::mesh com;
 		void InitStateDataIndices();

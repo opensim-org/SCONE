@@ -22,10 +22,10 @@ set(CORE_MATH_FILES
 set(CORE_SYSTEM_FILES
 	scone/core/core.h
 	scone/core/String.h
-)
-set(CORE_TOOLS_FILES
 	scone/core/Log.cpp
 	scone/core/Log.h
+)
+set(CORE_TOOLS_FILES
 	scone/core/Profiler.cpp
     scone/core/Profiler.h
     scone/core/ResourceCache.h
@@ -144,6 +144,7 @@ set(OPT_SYSTEM_FILES
     scone/opt/Factories.cpp
     scone/opt/Factories.h
 	scone/opt/SharkHelperClasses.h
+	scone/opt/opt_config.h
     )
 	
 set(SIM_MODELCOMPONENTS_FILES
@@ -243,20 +244,13 @@ set (SCONELIB_FILES
 	${SIMBODY_SYSTEM_FILES}
 	${SIMBODY_TOOLS_FILES}
 	)
-	
+
 # specify precompiled headers for MSVC
-if(MSVC)
-	set(STD_AFX_CPP "stdafx.cpp")
-	set(STD_AFX_H "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h")
-	set(PCH_FILE "$(IntermediateOutputPath)stdafx.pch")
-	set_source_files_properties( ${STD_AFX_CPP} PROPERTIES COMPILE_FLAGS "/Ycstdafx.h /Fp\"${PCH_FILE}\"" OBJECT_OUTPUTS "${PCH_FILE}" )
-	set_source_files_properties( ${SCONELIB_FILES} PROPERTIES COMPILE_FLAGS "/Yu\"${STD_AFX_H}\" /FI\"${STD_AFX_H}\" /Fp\"${PCH_FILE}\"" OBJECT_DEPENDS "${PCH_FILE}" )
-	set(STD_AFX_FILES ${STD_AFX_H} ${STD_AFX_CPP} )
-	set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Zm256" )
-endif(MSVC)
+include( PrecompiledHeaders )
+use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "stdafx.cpp" 256 )
 
 # add sources to single lib
-add_library(sconelib SHARED ${SCONELIB_FILES} ${STD_AFX_FILES} )
+add_library(sconelib SHARED ${SCONELIB_FILES} )
 	
 target_link_libraries(sconelib flut shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
@@ -296,4 +290,4 @@ source_group("sim/simbody\\Model Components" FILES ${SIMBODY_MODELCOMPONENTS_FIL
 source_group("sim/simbody\\System" FILES ${SIMBODY_SYSTEM_FILES})
 source_group("sim/simbody\\Tools" FILES ${SIMBODY_TOOLS_FILES})
 
-source_group("" FILES ${STD_AFX_FILES})
+source_group("" FILES ${PRECOMPILED_HEADER_FILES})

@@ -23,26 +23,16 @@ namespace scone
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
-		InitModel( par_file );
-		InitVis( s );
-	}
+		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
-	StudioModel::~StudioModel()
-	{
-		if ( is_evaluating )
-			log::warning( "Closing model while thread is still running" );
-
-		if ( eval_thread.joinable() )
-			eval_thread.join();
-	}
-
-	void StudioModel::InitModel( const String& par_file )
-	{
 		// create the objective form par file
 		so = cs::CreateSimulationObjective( par_file );
 
 		// accept filename and clear data
 		filename = par_file;
+
+		// initialize visualization
+		InitVis( s );
 
 		// see if we can load a matching .sto file
 		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
@@ -58,10 +48,22 @@ namespace scone
 		{
 			// start evaluation in separate thread
 			is_evaluating = true;
-			log::info( "Starting simulation in separate thread" );
-			eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
+			so->GetModel().SetStoreData( true );
+			so->GetModel().SetSimulationEndTime( so->max_duration );
+			log::info( "Starting simulation" );
+			//eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
 		}
 	}
+
+	StudioModel::~StudioModel()
+	{
+		if ( is_evaluating )
+			log::warning( "Closing model while thread is still running" );
+
+		if ( eval_thread.joinable() )
+			eval_thread.join();
+	}
+
 
 	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
@@ -71,7 +73,6 @@ namespace scone
 
 		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
 		if ( is_evaluating ) lock.lock();
-
 		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
 		flut::timer t;
@@ -82,18 +83,18 @@ namespace scone
 
 			for ( auto& geom_file : geom_files )
 			{
-				//log::debug( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				body_meshes.back().push_back( root.add_mesh( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) + geom_file ) );
+				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
+				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ).str() ) );
 				body_meshes.back().back().set_material( bone_mat );
 			}
 		}
-		log::trace( "Meshes loaded in ", t.seconds(), " seconds" );
+		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
 
 		for ( auto& muscle : model.GetMuscles() )
 		{
 			// add path
 			auto p = muscle->GetMusclePath();
-			auto vispath = vis::path( root, p.size(), 0.005f, vis::make_red(), 0.3f );
+			auto vispath = vis::trail( root, p.size(), 0.005f, vis::make_red(), 0.3f );
 			auto vismat = muscle_mat.clone();
 			vispath.set_material( vismat );
 			muscles.push_back( std::make_pair( vispath, vismat ) );
@@ -124,19 +125,18 @@ namespace scone
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		sim::Model& model = so->GetModel();
+		std::unique_lock< std::mutex > simulation_lock( model.GetSimulationMutex(), std::defer_lock );
 
 		if ( !is_evaluating )
 		{
 			// update model state from data
+			std::unique_lock< std::mutex > data_lock( GetDataMutex() );
 			SCONE_ASSERT( !state_data_index.empty() );
 			std::vector< Real > state( state_data_index.size() );
 			for ( Index i = 0; i < state.size(); ++i )
 				state[i] = data.GetInterpolatedValue( time, state_data_index[i] );
 			model.SetStateValues( state );
 		}
-
-		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
-		if ( is_evaluating ) lock.lock();
 
 		// update com
 		//com.pos( model.GetComPos() );
@@ -168,7 +168,7 @@ namespace scone
 			Vec3 force, moment, cop;
 			model.GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
-			forces[i].show( force.y > REAL_WIDE_EPSILON );
+			forces[i].show( force.y > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() );
 			forces[i].pos( cop, cop + 0.001 * force );
 		}
 	}
@@ -183,9 +183,59 @@ namespace scone
 		results.AddChild( "result", so->GetMeasure().GetReport() );
 		log::info( results );
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
-		std::lock_guard< std::mutex > lock( eval_mutex );
+
+		// copy data
+		std::lock_guard< std::mutex > lock( GetDataMutex() );
 		data = so->GetModel().GetData();
 		InitStateDataIndices();
+
 		is_evaluating = false;
+		so->GetModel().GetSimulationCondVar().notify_one();
+	}
+
+	void StudioModel::EvaluateTo( TimeInSeconds t )
+	{
+		so->GetModel().AdvanceSimulationTo( t );
+
+		if ( so->GetModel().GetTerminationRequest() || t >= so->GetModel().GetSimulationEndTime() )
+		{
+			so->GetMeasure().GetResult( so->GetModel() );
+			PropNode results;
+			results.AddChild( "result", so->GetMeasure().GetReport( ) );
+			so->WriteResults( flut::get_filename_without_ext( filename ) );
+
+			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );
+			log::info( results );
+
+			// copy data and init data
+			std::lock_guard< std::mutex > lock( GetDataMutex() );
+			data = so->GetModel().GetData();
+			InitStateDataIndices();
+
+			// reset this stuff
+			is_evaluating = false;
+		}
+	}
+
+	void StudioModel::SetViewSetting( ViewSettings e, bool value )
+	{
+		view_flags.set( e, value );
+
+		switch ( e )
+		{
+		case scone::StudioModel::ShowForces:
+			for ( auto f : forces ) f.show( value );
+			break;
+		case scone::StudioModel::ShowMuscles:
+			for ( auto m : muscles ) m.first.show( value );
+			break;
+		case scone::StudioModel::ShowGeometry:
+			for ( auto e : body_meshes ) for ( auto m : e ) m.show( value );
+			break;
+		case scone::StudioModel::EnableShadows:
+			break;
+		default:
+			break;
+		}
 	}
 }

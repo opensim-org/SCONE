@@ -19,6 +19,10 @@ namespace scone
 			int m_Lambda;
 			double m_Sigma;
 			size_t max_generations;
+			int recombination_type; // 0 = equal, 1 = linear, 2 = superlinear
+
+			double global_std_factor;
+			double global_std_offset;
 
 			size_t num_elitists;
 			int max_attempts;
