@@ -83,6 +83,12 @@ namespace scone
 			return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
 		}
 
+        scone::Real Muscle_Simbody::GetActiveFiberForce() const
+        {
+            SCONE_PROFILE_SCOPE;
+            return m_osMus.getActiveFiberForce( m_Model.GetTkState() );
+        }
+
 		scone::Real scone::sim::Muscle_Simbody::GetFiberLength() const
 		{
 			SCONE_PROFILE_SCOPE;
@@ -168,5 +174,16 @@ namespace scone
 		{
 			m_osMus.setExcitation( m_Model.GetTkState(), u );
 		}
+
+        Real Muscle_Simbody::GetSlowTwitchRatio() const {
+            return m_SlowTwitchRatio;
+        }
+
+        void Muscle_Simbody::SetSlowTwitchRatio( Real ratio ) {
+            // ratio should be between 0 and 1 or it makes no sense
+            if (ratio < 0 || ratio > 1) ratio = 0.5;
+
+            m_SlowTwitchRatio = ratio;
+        }
 	}
 }

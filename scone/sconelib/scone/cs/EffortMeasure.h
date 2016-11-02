@@ -33,10 +33,12 @@ namespace scone
 			PropNode m_Report;
             Real specific_tension;
             Real muscle_density;
+            bool use_Uchida2016_fiber_ratios;
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;
 			double GetTotalForce( const sim::Model& model ) const;
+            void SetSlowTwitchRatios( sim::Model& model );
 		};
 	}
 }

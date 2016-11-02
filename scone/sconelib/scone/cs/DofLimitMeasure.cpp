@@ -45,7 +45,7 @@ namespace scone
 
 			for ( Limit& l: m_Limits )
 			{
-				if ( l.squared_range_penalty > 0.0 )
+				if ( l.squared_range_penalty > 0.0 || l.abs_range_penalty > 0.0)
 				{
 					double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ).value;
 					double rps = l.squared_range_penalty * GetSquared( range_violation );

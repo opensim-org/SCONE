@@ -59,6 +59,8 @@ set(CS_MEASURES_FILES
 	HeightMeasure.h
 	JumpMeasure.cpp
 	JumpMeasure.h
+	PointMeasure.cpp
+	PointMeasure.h
 	Measure.cpp
 	Measure.h
 	)

@@ -39,6 +39,7 @@ namespace scone
 
 			virtual Real GetFiberForce() const = 0;
 			virtual Real GetNormalizedFiberForce() const = 0;
+            virtual Real GetActiveFiberForce() const = 0;
 
 			virtual Real GetFiberLength() const = 0;
 			virtual Real GetNormalizedFiberLength() const = 0;
@@ -58,6 +59,11 @@ namespace scone
 
 			// count the number of joints this muscle crosses
 			virtual Count GetJointCount() const;
+
+            // store fiber type composition number for fast lookup
+            // in metabolics calculations
+            virtual Real GetSlowTwitchRatio() const = 0;
+            virtual void SetSlowTwitchRatio( Real ratio ) = 0; 
 
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		};
