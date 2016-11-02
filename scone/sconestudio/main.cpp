@@ -10,30 +10,32 @@
 #include "scone/cs/cs_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
+#include "qt_tools.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
-	QPixmap splash_pm( ":/SconeStudio/scone_splash.png" );
+	// initialize scone
+	scone::log::SetLevel( scone::log::TraceLevel );
+	scone::cs::RegisterFactoryTypes();
+	scone::sim::RegisterSimbody();
+
+	QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/ui/scone_splash.png" ) );
 	QSplashScreen splash( splash_pm );
 	splash.show();
+
 	//splash.showMessage( QString( "Initiating SCONE version " ) + scone::GetSconeVersion().to_str().c_str(), Qt::AlignLeft | Qt::AlignBaseline, Qt::black);
 	a.processEvents();
 
+	// init logging
 	SconeStudio w;
-
-	// register new logging function
-	scone::log::SetLevel( scone::log::TraceLevel );
 	flut::log::log_output_func f = std::bind( &SconeStudio::add_log_entry, &w, std::placeholders::_1, std::placeholders::_2 );
 	flut::log::set_log_output_func( f );
-
-	// init SCONE. TODO: make this a single function
-	scone::cs::RegisterFactoryTypes();
-	scone::sim::RegisterSimbody();
 	scone::log::info( "SCONE version ", scone::GetSconeVersion() );
 
-	//QThread::sleep( 2 );
+	// sleep a while so people can enjoy the splash screen :-)
+	QThread::sleep( 1 );
 
 	try
 	{
