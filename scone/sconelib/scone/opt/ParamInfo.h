@@ -34,7 +34,7 @@ namespace scone
 			bool is_free;
 
 			bool CheckValue( const double& value ) const { return value >= min && value <= max; }
-			void RestrainValue( double& value ) const { Restrain( value, min, max ); }
+			void ClampValue( double& value ) const { Restrain( value, min, max ); }
 			double GetInitialValue() const;
 		};
 	}

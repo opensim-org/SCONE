@@ -262,7 +262,7 @@ namespace scone
 		}
 	}
 
-	void PropNode::ToXmlFile( const String& filename, const String& rootname )
+	void PropNode::ToXmlFile( const String& filename, const String& rootname ) const
 	{
 		ptree pt;
 		ToPropertyTree( pt, *this, rootname );
@@ -286,7 +286,7 @@ namespace scone
 		return *this;
 	}
 
-	void PropNode::ToIniFile( const String& filename )
+	void PropNode::ToIniFile( const String& filename ) const
 	{
 		ptree pt;
 		ToPropertyTree( pt, *this, m_Value );
@@ -302,7 +302,7 @@ namespace scone
 		return *this;
 	}
 
-	void PropNode::ToInfoFile( const String& filename )
+	void PropNode::ToInfoFile( const String& filename ) const
 	{
 		ptree pt;
 		ToPropertyTree( pt, *this, m_Value );
@@ -478,5 +478,4 @@ namespace scone
 
 		return pn;
 	}
-    
 }

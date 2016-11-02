@@ -13,7 +13,7 @@
 
 //#include <sstream>
 
-using namespace boost::filesystem;
+namespace bfs = boost::filesystem;
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
@@ -31,18 +31,19 @@ namespace scone
 		thread_priority( 0 ),
 		m_ObjectiveProps( props.GetChild( "Objective" ) ),
 		console_output( true ),
+		status_output( false ),
 		m_LastFileOutputGen( 0 )
 		{
-			INIT_PROPERTY( props, max_threads, size_t( 1 ) );
-			INIT_PROPERTY( props, thread_priority, 0 );
+			INIT_PROPERTY( props, max_threads, size_t( 32 ) );
+			INIT_PROPERTY( props, thread_priority, -2 );
 			INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
 			INIT_PROPERTY_REQUIRED( props, maximize_objective );
 			INIT_PROPERTY( props, show_optimization_time, false );
-			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.01 );
+			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
 			INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
 			INIT_PROPERTY( props, init_file, String("") );
 			INIT_PROPERTY( props, use_init_file, true );
-			INIT_PROPERTY( props, output_objective_result_files, true );
+			INIT_PROPERTY( props, output_objective_result_files, false );
 
 			m_BestFitness = maximize_objective ? REAL_LOWEST : REAL_MAX;
 
@@ -81,7 +82,7 @@ namespace scone
 			{
 				// copy values into par
 				fitnesses[ ind_idx ] = m_Objectives[ ind_idx ]->Evaluate( parsets[ ind_idx ] );
-				if ( console_output )
+				if ( GetProgressOutput() )
 					printf(" %3.0f", fitnesses[ ind_idx ] );
 			}
 			return fitnesses;
@@ -118,7 +119,7 @@ namespace scone
 						num_active_threads--;
 
 						// print some stuff
-						if ( console_output )
+						if ( GetProgressOutput() )
 							printf( "%3.0f ", fitnesses[ thread_idx ] );
 					}
 				}
@@ -135,16 +136,14 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			auto output_base = GetFolder( "output" ) + GetSignature();
+			auto output_base = ( GetFolder( "output" ) / GetSignature() ).str();
 			m_OutputFolder = output_base;
 
-			for ( int i = 1; exists( path( m_OutputFolder ) ); ++i )
+			for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder ) ); ++i )
 				m_OutputFolder = output_base + stringf( " (%d)", i );
 
-			create_directories( path( m_OutputFolder ) );
-
+			create_directories( bfs::path( m_OutputFolder ) );
 			m_OutputFolder += "/";
-			log::Info( "Output: " + m_OutputFolder );
 		}
 
 		const String& Optimizer::AcquireOutputFolder()
@@ -156,7 +155,7 @@ namespace scone
 
 		scone::String Optimizer::GetClassSignature() const
 		{
-			String s = GetApplicationVersion() + "." + GetObjective().GetSignature();
+			String s = GetSconeBuildNumber() + "." + GetObjective().GetSignature();
 			if ( use_init_file && !init_file.empty() )
 				s += ".I";
 
@@ -189,7 +188,7 @@ namespace scone
 				{
 					// delete the file(s)
 					for ( String& file: testIt->second )
-						boost::filesystem::remove( path( file ) );
+						bfs::remove( bfs::path( file ) );
 
 					m_OutputFiles.erase( testIt );
 				}

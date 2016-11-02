@@ -1,6 +1,8 @@
 #include "ParamInfo.h"
 
-#if USE_SHARK_V2
+#include "opt_config.h"
+
+#if SHARK_VERSION == 2
 #include "Rng/GlobalRng.h"
 #endif
 
@@ -10,7 +12,6 @@ namespace scone
 {
 	namespace opt
 	{
-
 		ParamInfo::ParamInfo( const String& i_name, double i_init_mean, double i_init_std, double i_init_min, double i_init_max, double i_min, double i_max ) :
 		name( i_name ),
 		init_mean( i_init_mean ), init_std( i_init_std ),
@@ -43,7 +44,7 @@ namespace scone
 
 		double ParamInfo::GetInitialValue() const
 		{
-#if USE_SHARK_V2
+#if SHARK_VERSION == 2
 			if ( is_free )
 			{
 				if ( init_mean != 0.0 || init_std != 0.0 )

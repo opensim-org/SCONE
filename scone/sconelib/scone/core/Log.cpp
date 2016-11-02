@@ -34,7 +34,7 @@ namespace scone
 		void LogMessageNoCheck( Level level, const char* message )
 		{
 			boost::lock_guard< boost::mutex > lock( g_LogMutex );
-			LogStream() << message << std::endl;
+			flut::log::get_log_output_func()( static_cast< flut::log::level >( level ), std::string( message ) );
 		}
 
 		void LogMessageCheck( Level level, const char* message )

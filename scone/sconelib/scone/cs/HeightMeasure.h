@@ -34,8 +34,8 @@ namespace scone
 			sim::Body* m_pTargetBody; // non-owning pointer
 			Statistic< double > m_Height;
 			bool m_Upward;
-			double m_JumpStartHeight;
 			double m_InitialHeight;
+			bool require_downward_movement;
 		};
 	}
 }

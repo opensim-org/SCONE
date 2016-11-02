@@ -3,8 +3,28 @@
 #include <osgGA/TrackballManipulator>
 #include <osgViewer/ViewerEventHandlers>
 #include "simvis/osg_camera_man.h"
+#include "scone/core/Log.h"
 
-QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) : QWidget( parent, f )
+using namespace scone;
+
+class QOsgEventHandler : public osgGA::GUIEventHandler 
+{ 
+public: 
+	virtual bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa, osg::Object* o, osg::NodeVisitor* nv )
+	{
+		if ( ea.getEventType() == osgGA::GUIEventAdapter::RESIZE )
+		{
+			log::info( "Viewer resized to ", ea.getWindowWidth(), "x", ea.getWindowHeight() );
+			return true;
+		}
+		else return false;
+	}
+}; 
+
+
+QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgViewer::ViewerBase::ThreadingModel threadingModel/*=osgViewer::CompositeViewer::SingleThreaded*/ ) :
+QWidget( parent, f ),
+capture_handler( nullptr )
 {
 	setThreadingModel( threadingModel );
 
@@ -21,15 +41,15 @@ QOsgViewer::QOsgViewer( QWidget* parent /*= 0*/, Qt::WindowFlags f /*= 0*/, osgV
 	// start timer
 	// TODO: remove this -- only update after something has changed
 	connect( &_timer, SIGNAL( timeout() ), this, SLOT( update() ) );
-	_timer.start( 10 );
+	_timer.start( 1000 / 120 );
 }
 
 QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 {
-	osgViewer::View* view = new osgViewer::View;
-	addView( view );
+	viewer = new osgViewer::View;
+	addView( viewer );
 
-	osg::Camera* camera = view->getCamera();
+	osg::Camera* camera = viewer->getCamera();
 	camera->setGraphicsContext( gw );
 
 	const osg::GraphicsContext::Traits* traits = gw->getTraits();
@@ -38,16 +58,19 @@ QWidget* QOsgViewer::addViewWidget( osgQt::GraphicsWindowQt* gw )
 	camera->setViewport( new osg::Viewport( 0, 0, traits->width, traits->height ) );
 	camera->setProjectionMatrixAsPerspective( 30.0f, static_cast<double>( traits->width ) / static_cast<double>( traits->height ), 1.0f, 10000.0f );
 
-	// setup view
-	view->addEventHandler( new osgViewer::StatsHandler );
-	view->setLightingMode( osg::View::NO_LIGHT );
+	// add event handlers
+	viewer->addEventHandler( new osgViewer::StatsHandler );
+	viewer->addEventHandler( new QOsgEventHandler );
+
+	// disable lighting by default
+	viewer->setLightingMode( osg::View::NO_LIGHT );
 
 	// setup camera manipulator
 	gw->setTouchEventsEnabled( true );
 
 	camera_man = new vis::osg_camera_man();
 	camera_man->setVerticalAxisFixed( false );
-	view->setCameraManipulator( camera_man );
+	viewer->setCameraManipulator( camera_man );
 
 	return gw->getGLWidget();
 }
@@ -82,4 +105,24 @@ void QOsgViewer::setScene( osg::Node* s )
 void QOsgViewer::moveCamera( const osg::Vec3d& delta_pos )
 {
 	camera_man->setCenter( camera_man->getCenter() + delta_pos );
+}
+
+void QOsgViewer::startCapture( const std::string& filename )
+{
+	// create capture handler
+	log::info( "Started capturing video to ", filename );
+	capture_handler = new osgViewer::ScreenCaptureHandler( 
+		new osgViewer::ScreenCaptureHandler::WriteToFile( filename, "png", osgViewer::ScreenCaptureHandler::WriteToFile::SEQUENTIAL_NUMBER ), -1 );
+	viewer->addEventHandler( capture_handler );
+	capture_handler->startCapture();
+}
+
+void QOsgViewer::stopCapture()
+{
+	if ( capture_handler )
+	{
+		log::info( "Video capture stopped" );
+		capture_handler->stopCapture();
+		capture_handler = nullptr;
+	}
 }

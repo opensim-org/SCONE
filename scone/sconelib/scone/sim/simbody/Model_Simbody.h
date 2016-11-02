@@ -21,6 +21,7 @@ namespace SimTK
 {
 	class State;
 	class Integrator;
+	class TimeStepper;
 }
 
 namespace scone
@@ -49,6 +50,7 @@ namespace scone
 			virtual bool AdvanceSimulationTo( double time ) override;
 
 			virtual double GetSimulationEndTime() const override;
+			virtual void SetSimulationEndTime( double t ) override;
 			virtual String WriteData( const String& file_base ) const override;
 
 			virtual void SetTerminationRequest() override;
@@ -86,11 +88,13 @@ namespace scone
 
 		private:
 			void SetOpenSimParameters( const PropNode& name, opt::ParamSet& par );
-			void FixState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
-			std::map< String, Real > ReadState( const String& file );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
+
+			std::map< String, Real > ReadState( const String& file );
+			std::map< String, Real > GetStateVariables();
 			void SetStateVariables( const std::map< String, Real >& state );
+			void FixState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
 			virtual void SetStoreData( bool store ) override;
 
@@ -107,6 +111,7 @@ namespace scone
 			std::unique_ptr< OpenSim::Model > m_pOsimModel;
 			std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 			std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
+			std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 			SimTK::State* m_pTkState; // non-owning state reference
 			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
 

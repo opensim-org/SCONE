@@ -19,8 +19,16 @@ namespace scone
 			// Reflex parameters
 			Real length_gain;
 			Real length_ofs;
-			Real force_gain;
+			bool length_allow_negative;
+
 			Real velocity_gain;
+			Real velocity_ofs;
+			bool velocity_allow_negative;
+
+			Real force_gain;
+			Real force_ofs;
+			bool force_allow_negative;
+
 			Real u_constant;
 
 		private:

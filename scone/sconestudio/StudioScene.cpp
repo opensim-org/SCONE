@@ -25,7 +25,12 @@ namespace scone
 	void StudioScene::Update( TimeInSeconds t )
 	{
 		if ( model )
+		{
+			if ( model->IsEvaluating() )
+				model->EvaluateTo( t );
+
 			model->UpdateVis( t );
+		}
 	}
 
 	bool StudioScene::IsEvaluating()
@@ -38,9 +43,12 @@ namespace scone
 		if ( model )
 		{
 			if ( model->IsEvaluating() )
-				return model->GetSimModel().GetTime(); // TODO: this should be thread safe
+				return model->GetObjective().max_duration;
 			else
+			{
+				std::unique_lock< std::mutex > lock( model->GetDataMutex() );
 				return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
+			}
 		}
 		else return 0.0;
 	}

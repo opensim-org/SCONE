@@ -6,6 +6,8 @@
 #	define WIN32_LEAN_AND_MEAN
 #endif
 
+const int MAX_INDIVIDUAL_SAMPLE_ATTEMPTS = 256;
+
 #include <shark/Algorithms/DirectSearch/CMA.h>
 #include <shark/Algorithms/DirectSearch/Operators/Evaluation/PenalizingEvaluator.h>
 #include <shark/Algorithms/DirectSearch/FitnessExtractor.h>
@@ -46,11 +48,7 @@ namespace scone
 			{
 				std::vector< double > v( individuals[ ind_idx ].searchPoint().begin(), individuals[ ind_idx ].searchPoint().end() );
 				parsets[ind_idx].SetFreeParamValues( v );
-				parsets[ind_idx].RestrainValues(); // ensure the values are within min / max
-
-				// important: copy restrained values back to Shark individuals, as they are used to store results
-				v = parsets[ ind_idx ].GetFreeParamValues();
-				std::copy( v.begin(), v.end(), individuals[ ind_idx ].searchPoint().begin() ); 
+				SCONE_ASSERT( parsets[ind_idx].CheckValues() ); // values must have been checked at this point
 			}
 
 			// evaluate parameter sets using scone::Optimizer
@@ -68,41 +66,69 @@ namespace scone
 		class CMA_MT : public shark::CMA
 		{
 		public:
-			CMA_MT( Optimizer& opt ) : CMA(), m_Optimizer( opt ), m_Average( 0 ) {}
+			CMA_MT( Optimizer& opt ) : CMA(), m_Optimizer( opt ), m_AverageFitness( 0 ) {}
 
-			double average() { return m_Average; }
+			double average() { return m_AverageFitness; }
+			const std::vector< double > population_std() { return m_Std; }
+
 			void step_mt()
 			{
-				std::vector< shark::Individual<shark::RealVector, double, shark::RealVector> > offspring( m_lambda );
+				// get ParamSet instance for checking and clamping parameter boundaries.
+				m_Offspring.resize( lambda() );
+				auto par = m_Optimizer.GetObjective().MakeParamSet();
+				par.SetMode( ParamSet::UpdateMode );
+				SCONE_ASSERT( par.GetFreeParamCount() == m_numberOfVariables );
 
-				for( std::size_t i = 0; i < offspring.size(); i++ ) {
-					shark::MultiVariateNormalDistribution::result_type sample = m_mutationDistribution();
-					offspring[i].chromosome() = sample.second;
-					offspring[i].searchPoint() = m_mean + m_sigma * sample.first;
+				for( std::size_t i = 0; i < m_Offspring.size(); i++ )
+				{
+					auto& off = m_Offspring[i];
+					bool is_within_range = false;
+					for ( int attempt = 0; attempt < MAX_INDIVIDUAL_SAMPLE_ATTEMPTS && !is_within_range; ++attempt )
+					{
+						shark::MultiVariateNormalDistribution::result_type sample = m_mutationDistribution();
+						off.chromosome() = sample.second;
+						off.searchPoint() = m_mean + m_sigma * sample.first;
+						is_within_range = par.CheckFreeParamValues( off.searchPoint().begin(), off.searchPoint().end() );
+					}
+
+					if ( !is_within_range ) // failed to find proper sample, clamp instead
+					{
+						log::warning( "Could not find individual after 3 attempts, clamping parameter values" );
+						par.ClampFreeParamValues( off.searchPoint().begin(), off.searchPoint().end() );
+					}
 				}
 
-				EvaluateSharkIndividuals( m_Optimizer, offspring );
+				EvaluateSharkIndividuals( m_Optimizer, m_Offspring );
 				
-				// compute average
-				m_Average = 0;			
-				for ( auto ind : offspring )
-					m_Average += ind.unpenalizedFitness() / offspring.size();
+				// compute average en std
+				m_AverageFitness = 0;			
+				m_Std.assign( m_numberOfVariables, 0.0 );
+				for ( auto ind : m_Offspring )
+				{
+					m_AverageFitness += ind.unpenalizedFitness() / m_Offspring.size();
+					for ( size_t i = 0; i < m_numberOfVariables; ++i )
+						m_Std[ i ] += GetSquared( ind.searchPoint()[ i ] - mean()[ i ] );
+				}
+				for ( auto& v : m_Std ) v = sqrt( v );
 
 				// Selection
 				std::vector< shark::Individual<shark::RealVector, double, shark::RealVector> > parents( m_mu );
 				shark::ElitistSelection<shark::FitnessExtractor> selection;
-				selection(offspring.begin(),offspring.end(),parents.begin(), parents.end());
+				selection(m_Offspring.begin(),m_Offspring.end(),parents.begin(), parents.end());
+
 				// Strategy parameter update
 				m_counter++; // increase generation counter
 				updateStrategyParameters( parents );
 
-				m_best.point= parents[ 0 ].searchPoint();
-				m_best.value= parents[ 0 ].unpenalizedFitness();
+				m_best.point = parents[ 0 ].searchPoint();
+				m_best.value = parents[ 0 ].unpenalizedFitness();
 			}
 
 		private:
+			std::vector< shark::Individual<shark::RealVector, double, shark::RealVector> > m_Offspring;
+			std::vector< double > m_Std;
 			Optimizer& m_Optimizer;
-			double m_Average;
+			double m_AverageFitness;
 		};
 	}
 }

@@ -80,7 +80,7 @@ namespace scone
 			INIT_PROPERTY( props, integration_accuracy, 0.0001 );
 			INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
 			INIT_PROPERTY( props, max_step_size, 0.001 );
-			INIT_PROPERTY( props, use_fixed_control_step_size, false );
+			INIT_PROPERTY( props, use_fixed_control_step_size, true );
 			INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
 
 			INIT_PROPERTY_REQUIRED( props, model_file );
@@ -90,7 +90,7 @@ namespace scone
 			INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
 			// create new OpenSim Model using resource cache
-			m_pOsimModel = g_ModelCache.CreateCopy( GetFolder( "models" ) + model_file );
+			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
 
 			// change model properties
 			if ( props.HasKey( "SimbodyParameters" ) )
@@ -152,20 +152,28 @@ namespace scone
 			m_pTkIntegrator->resetAllStatistics();
 
 			// read initial state
+			std::map< String, Real > state;
 			if ( !state_init_file.empty() )
+				state = ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
+			else state = GetStateVariables();
+
+			// update state variables if they are being optimized
+			if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
 			{
-				std::map< String, Real > state = ReadState( GetFolder( "models" ) + state_init_file );
-				if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
+				bool symmetric = iso.GetBool( "symmetric", false );
+				for ( auto& nvp : state )
 				{
-					for ( auto& nvp : state )
+					if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
 					{
-						if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
-							nvp.second += par.Get( opt::ParamInfo( nvp.first + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
+						auto name = symmetric ? GetNameNoSide( nvp.first ) : nvp.first;
+						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
 					}
 				}
-				SetStateVariables( state );
-				FixState( initial_leg_load * GetBW() );
 			}
+
+			// apply and fix state
+			SetStateVariables( state );
+			FixState( initial_leg_load * GetBW() );
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
@@ -401,29 +409,30 @@ namespace scone
 
 			try
 			{
-				std::unique_lock< std::mutex > lock( GetSimulationMutex() );
+				std::unique_lock< std::mutex > lock( GetSimulationMutex(), std::defer_lock );
+				if ( GetThreadSafeSimulation() )
+					lock.lock();
 
 				if ( use_fixed_control_step_size )
 				{
-					// set this because it's used by GetSimulationEndTime()
-					// TODO: Change this!
-					m_pOsimManager->setFinalTime( final_time );
-
-					// Integrate using time stepper
-					m_pTkIntegrator->setFinalTime( final_time );
-					SimTK::TimeStepper ts( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
-					ts.initialize( GetTkState() );
-
-					if ( GetStoreData() )
+					// initialize the time-stepper if this is the first step
+					if ( !m_pTkTimeStepper )
 					{
-						// store initial frame
-						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-						StoreCurrentFrame();
+						// Integrate using time stepper
+						m_pTkTimeStepper = std::unique_ptr< SimTK::TimeStepper >( new SimTK::TimeStepper( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator ) );
+						m_pTkTimeStepper->initialize( GetTkState() );
+						if ( GetStoreData() )
+						{
+							// store initial frame
+							m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+							StoreCurrentFrame();
+						}
 					}
 
 					// start integration loop
-					int number_of_steps = static_cast<int>( 0.5 + final_time / fixed_control_step_size );
+					int number_of_steps = static_cast<int>( 0.5 + ( final_time - GetTime() ) / fixed_control_step_size );
 					int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
+
 					for ( int current_step = 0; current_step < number_of_steps; )
 					{
 						// update controls
@@ -433,9 +442,9 @@ namespace scone
 						m_PrevTime = GetTime();
 						m_PrevIntStep = GetIntegrationStep();
 						double target_time = GetTime() + fixed_control_step_size;
-						SimTK::Integrator::SuccessfulStepStatus status = ts.stepTo( target_time );
+
+						SimTK::Integrator::SuccessfulStepStatus status = m_pTkTimeStepper->stepTo( target_time );
 						SetTkState( m_pTkIntegrator->updAdvancedState() );
-						//SetTkState( const_cast< SimTK::State& >( ts.getState() ) );
 
 						++current_step;
 
@@ -443,33 +452,27 @@ namespace scone
 						// this way the results are always consistent
 						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
-						// update the sensor delays
+						// update the sensor delays, analyses, and store data
 						UpdateSensorDelayAdapters();
-
-						// call UpdateAnalysis() on all controllers
 						UpdateAnalyses();
-
-						// store external data for later analysis
 						if ( GetStoreData() )
 							StoreCurrentFrame();
 
 						// terminate on request
 						if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
 						{
-							log::DebugF( "Terminating simulation at %.6f", ts.getTime() );
-							// TODO: return appropriate result
+							log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 							break;
 						}
 
 						// allow time for other threads to access the model
 						if ( GetThreadSafeSimulation() && current_step % thread_interuption_steps == 0 )
 						{
+							// notify GUI thread
 							lock.unlock();
-							std::this_thread::sleep_for( std::chrono::milliseconds( 1 ) );
+							GetSimulationCondVar().notify_all();
 							lock.lock();
 						}
-
-						//log::TraceF( "cur=%03d Int=%03d Prev=%03d %.6f %.6f", current_step, GetIntegrationStep(), GetPreviousIntegrationStep(), current_time, GetTime() );
 					}
 				}
 				else
@@ -486,6 +489,10 @@ namespace scone
 				log::Error( e.what() );
 				return false;
 			}
+
+			if ( GetThreadSafeSimulation() )
+				GetSimulationCondVar().notify_all();
+
 			return true;
 		}
 
@@ -557,18 +564,31 @@ namespace scone
 			{
 				// check if the label is corresponds to a state
 				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
-				{
 					state[ storeLabels[ i ] ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
-				}
-				//else log::Trace( "Unused state parameter: " + storeLabels[ i ] );
 			}
 
 			return state;
 		}
 
+		std::map< String, scone::Real > Model_Simbody::GetStateVariables()
+		{
+			std::map< String, Real > variables;
+			auto names = GetStateVariableNames();
+			auto values = GetStateValues();
+			for ( size_t i = 0; i < names.size(); ++i )
+				variables[ names[ i ] ] = values[ i ];
+			return variables;
+		}
+
 		double Model_Simbody::GetSimulationEndTime() const
 		{
 			return m_pOsimManager->getFinalTime();
+		}
+
+		void Model_Simbody::SetSimulationEndTime( double t )
+		{
+			m_pOsimManager->setFinalTime( t );
+			m_pTkIntegrator->setFinalTime( t );
 		}
 
 		scone::String Model_Simbody::GetClassSignature() const

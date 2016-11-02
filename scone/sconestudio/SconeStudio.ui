@@ -6,36 +6,67 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1053</width>
-    <height>766</height>
+    <width>1005</width>
+    <height>802</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>SconeStudio</string>
+   <string>SCONE</string>
+  </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <property name="spacing">
+     <number>4</number>
+    </property>
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
     <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
       </property>
-      <widget class="QTreeView" name="browserView">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>480</width>
-         <height>16777215</height>
-        </size>
-       </property>
-      </widget>
-      <widget class="QWidget" name="verticalLayoutWidget">
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="viewerTab">
+       <attribute name="title">
+        <string>Viewer</string>
+       </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="spacing">
+         <number>4</number>
+        </property>
+        <property name="leftMargin">
+         <number>4</number>
+        </property>
+        <property name="topMargin">
+         <number>4</number>
+        </property>
+        <property name="rightMargin">
+         <number>4</number>
+        </property>
+        <property name="bottomMargin">
+         <number>4</number>
+        </property>
         <item>
          <widget class="QOsgViewer" name="osgViewer" native="true">
           <property name="sizePolicy">
@@ -44,101 +75,16 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>642</width>
+            <height>481</height>
+           </size>
+          </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="startButton">
-            <property name="text">
-             <string>Start</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="stopButton">
-            <property name="text">
-             <string>Stop</string>
-            </property>
-            <property name="iconSize">
-             <size>
-              <width>24</width>
-              <height>24</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLCDNumber" name="lcdNumber">
-            <property name="smallDecimalPoint">
-             <bool>true</bool>
-            </property>
-            <property name="digitCount">
-             <number>5</number>
-            </property>
-            <property name="segmentStyle">
-             <enum>QLCDNumber::Flat</enum>
-            </property>
-            <property name="value" stdset="0">
-             <double>88.879999999999995</double>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QScrollBar" name="horizontalScrollBar">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximum">
-             <number>1000</number>
-            </property>
-            <property name="pageStep">
-             <number>100</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Slo-mo</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="slomoBox">
-            <property name="buttonSymbols">
-             <enum>QAbstractSpinBox::UpDownArrows</enum>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>10</number>
-            </property>
-            <property name="singleStep">
-             <number>1</number>
-            </property>
-            <property name="value">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QPlayControl" name="playControl" native="true"/>
         </item>
        </layout>
       </widget>
@@ -151,7 +97,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1053</width>
+     <width>1005</width>
      <height>21</height>
     </rect>
    </property>
@@ -159,23 +105,307 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="action_Open_Scenario"/>
+    <addaction name="action_Recent"/>
+    <addaction name="separator"/>
+    <addaction name="action_Close"/>
+    <addaction name="separator"/>
+    <addaction name="action_Save"/>
+    <addaction name="actionSave_As"/>
+    <addaction name="separator"/>
     <addaction name="actionE_xit"/>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionShow_External_Forces"/>
+    <addaction name="actionShow_Muscles"/>
+    <addaction name="actionShow_Bone_Geometry"/>
+   </widget>
+   <widget class="QMenu" name="menu_Optimize">
+    <property name="title">
+     <string>&amp;Optimize</string>
+    </property>
+    <addaction name="action_Optimize_Scenario"/>
+    <addaction name="actionStart_Multiple_Optimizations"/>
+    <addaction name="separator"/>
+    <addaction name="actionTerminate_Running_Optimizations"/>
+   </widget>
+   <widget class="QMenu" name="menu_Tools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="action_Create_Video"/>
+    <addaction name="separator"/>
+    <addaction name="action_Preferences"/>
+   </widget>
+   <widget class="QMenu" name="menu_Help">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="action_About"/>
+   </widget>
    <addaction name="menu_File"/>
+   <addaction name="menu_View"/>
+   <addaction name="menu_Optimize"/>
+   <addaction name="menu_Tools"/>
+   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="resultsDock">
+   <property name="maximumSize">
+    <size>
+     <width>480</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Optimization Results</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="resultsDockContents">
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QTreeView" name="resultsBrowser">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="messagesDock">
+   <property name="minimumSize">
+    <size>
+     <width>80</width>
+     <height>101</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Messages</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="messagesDockContents">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="spacing">
+      <number>4</number>
+     </property>
+     <property name="leftMargin">
+      <number>4</number>
+     </property>
+     <property name="topMargin">
+      <number>4</number>
+     </property>
+     <property name="rightMargin">
+      <number>4</number>
+     </property>
+     <property name="bottomMargin">
+      <number>4</number>
+     </property>
+     <item>
+      <widget class="QPlainTextEdit" name="outputText">
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="lineWrapMode">
+        <enum>QPlainTextEdit::NoWrap</enum>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionE_xit">
    <property name="text">
     <string>E&amp;xit</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
+   </property>
+  </action>
+  <action name="action_Open_Scenario">
+   <property name="text">
+    <string>&amp;Open Scenario...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="action_Recent">
+   <property name="text">
+    <string>Open &amp;Recent</string>
+   </property>
+  </action>
+  <action name="action_Save">
+   <property name="text">
+    <string>&amp;Save</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionSave_As">
+   <property name="text">
+    <string>Save &amp;As</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="action_Close">
+   <property name="text">
+    <string>&amp;Close</string>
+   </property>
+  </action>
+  <action name="action_Preferences">
+   <property name="text">
+    <string>&amp;Preferences...</string>
+   </property>
+  </action>
+  <action name="action_About">
+   <property name="text">
+    <string>&amp;About...</string>
+   </property>
+  </action>
+  <action name="action3D_Viewer">
+   <property name="text">
+    <string>3D &amp;Viewer</string>
+   </property>
+  </action>
+  <action name="actionScenario_Editor">
+   <property name="text">
+    <string>Scenario &amp;Editor</string>
+   </property>
+  </action>
+  <action name="action_Scenario_Browser">
+   <property name="text">
+    <string>&amp;Scenario Browser</string>
+   </property>
+  </action>
+  <action name="action_Results_Browser">
+   <property name="text">
+    <string>&amp;Results Browser</string>
+   </property>
+  </action>
+  <action name="action_Run_Optimization">
+   <property name="text">
+    <string>&amp;Run Optimization</string>
+   </property>
+  </action>
+  <action name="action_Optimize_Scenario">
+   <property name="text">
+    <string>Run &amp;Optimization</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F5</string>
+   </property>
+  </action>
+  <action name="actionTerminate_Running_Optimizations">
+   <property name="text">
+    <string>&amp;Abort Optimizations...</string>
+   </property>
+  </action>
+  <action name="action_Create_Video">
+   <property name="text">
+    <string>Start Video &amp;Recording...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
+  </action>
+  <action name="actionStart_Multiple_Optimizations">
+   <property name="text">
+    <string>Run &amp;Multiple Optimizations...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F5</string>
+   </property>
+  </action>
+  <action name="actionShow_External_Forces">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;External Forces</string>
+   </property>
+  </action>
+  <action name="actionShow_Muscles">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Muscles</string>
+   </property>
+  </action>
+  <action name="actionShow_Bone_Geometry">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Bone Geometry</string>
+   </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="11"/>
+ <layoutdefault spacing="4" margin="4"/>
  <customwidgets>
   <customwidget>
    <class>QOsgViewer</class>
    <extends>QWidget</extends>
    <header>qosgviewer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QPlayControl</class>
+   <extends>QWidget</extends>
+   <header>qplaycontrol.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -184,14 +414,14 @@
  </resources>
  <connections>
   <connection>
-   <sender>browserView</sender>
+   <sender>resultsBrowser</sender>
    <signal>activated(QModelIndex)</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>activateBrowserItem(QModelIndex)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>183</x>
-     <y>265</y>
+     <y>620</y>
     </hint>
     <hint type="destinationlabel">
      <x>183</x>
@@ -200,66 +430,226 @@
    </hints>
   </connection>
   <connection>
-   <sender>horizontalScrollBar</sender>
-   <signal>valueChanged(int)</signal>
+   <sender>action_Open_Scenario</sender>
+   <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
-   <slot>updateScrollbar(int)</slot>
+   <slot>fileOpen()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>813</x>
-     <y>723</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>526</x>
-     <y>382</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>startButton</sender>
-   <signal>clicked()</signal>
+   <sender>action_Save</sender>
+   <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
-   <slot>start()</slot>
+   <slot>fileSave()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>481</x>
-     <y>723</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>526</x>
-     <y>382</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>stopButton</sender>
-   <signal>clicked()</signal>
+   <sender>actionSave_As</sender>
+   <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
-   <slot>stop()</slot>
+   <slot>fileSaveAs()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>723</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>526</x>
-     <y>382</y>
+     <x>20</x>
+     <y>20</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>slomoBox</sender>
-   <signal>valueChanged(int)</signal>
+   <sender>action_About</sender>
+   <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
-   <slot>slomo(int)</slot>
+   <slot>helpAbout()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1023</x>
-     <y>722</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>526</x>
-     <y>382</y>
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Optimize_Scenario</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>optimizeScenario()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTerminate_Running_Optimizations</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>abortOptimizations()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionE_xit</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fileExit()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Create_Video</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>createVideo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>611</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionStart_Multiple_Optimizations</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>optimizeScenarioMultiple()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>505</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tabWidget</sender>
+   <signal>tabCloseRequested(int)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>tabCloseRequested(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>636</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_External_Forces</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Muscles</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Bone_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Preferences</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>showSettingsDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
     </hint>
    </hints>
   </connection>
@@ -270,5 +660,21 @@
   <slot>start()</slot>
   <slot>stop()</slot>
   <slot>slomo(int)</slot>
+  <slot>fileOpen()</slot>
+  <slot>fileClose()</slot>
+  <slot>fileSave()</slot>
+  <slot>fileSaveAs()</slot>
+  <slot>showViewer()</slot>
+  <slot>viewAction()</slot>
+  <slot>helpAbout()</slot>
+  <slot>optimizeScenario()</slot>
+  <slot>abortOptimizations()</slot>
+  <slot>fileExit()</slot>
+  <slot>selectBrowserItem(QModelIndex)</slot>
+  <slot>createVideo()</slot>
+  <slot>optimizeScenarioMultiple()</slot>
+  <slot>tabCloseRequested(int)</slot>
+  <slot>updateViewSettings()</slot>
+  <slot>showSettingsDialog()</slot>
  </slots>
 </ui>

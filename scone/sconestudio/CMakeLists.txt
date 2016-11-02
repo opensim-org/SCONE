@@ -8,28 +8,62 @@ if(${Qt5Widgets_FOUND})
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
 	
 	set(STUDIOFILES
-		QOsgViewer.h
-		QOsgViewer.cpp
-		StudioScene.cpp
-		StudioScene.h
+		main.cpp
 		StudioModel.cpp
 		StudioModel.h
+		StudioScene.cpp
+		StudioScene.h
+		studio_config.h
 		SconeStudio.cpp
 		SconeStudio.h
-		main.cpp
+		ProgressDockWidget.h
+		ProgressDockWidget.cpp
+		Settings.h
+		Settings.cpp
 		)
 	
 	set(QTFILES
-		main.cpp
-		studio.rc
+		qt_tools.h
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
+		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
+		QOsgViewer.h
+		QOsgViewer.cpp
+		EditorWidget.h
+		EditorWidget.cpp
+		QCodeEditor.h
+		QCodeEditor.cpp
+		QPlayControl.h
+		QPlayControl.cpp
+		../../contrib/qcustomplot/qcustomplot.h
+		../../contrib/qcustomplot/qcustomplot.cpp
 		)
-
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui)
+	
+	set(RESOURCEFILES
+		studio.rc
+		SconeStudio.qrc 
+		SconeStudio.ui
+		ProgressDockWidget.ui
+		SconeSettings.ui
+		)
+	
+	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
+	
+	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui SconeSettings.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
+	
+	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )
+	
+	#MESSAGE( "RESOURCES: " ${RESOURCES} )
+	#MESSAGE( "UI_HEADERS: " ${UI_HEADERS} )
+	#MESSAGE( "SOURCE_FILES: " ${SOURCE_FILES} )
+	#MESSAGE( "CMAKE_CURRENT_BINARY_DIR" ${CMAKE_CURRENT_BINARY_DIR} )
+	
+	include( PrecompiledHeaders )
+	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 
-	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${UI_HEADERS} ${RESOURCES})
-
-	qt5_use_modules( sconestudio Widgets OpenGL )
+	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
+	
+	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
 	set_target_properties(sconestudio PROPERTIES
 		PROJECT_LABEL "sconestudio"
@@ -63,9 +97,14 @@ if(${Qt5Widgets_FOUND})
 		${OSGSHADOW_LIBRARIES}
 		${OPENTHREADS_LIBRARIES}
 		)
+	
+	# no console in release mode
+	set_target_properties(sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
 
-	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} SconeStudio.ui SconeStudio.qrc )
+	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
+	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 	source_group("Studio Files" FILES ${STUDIOFILES} )
+	source_group("Resource Files" FILES ${RESOURCEFILES} )
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
@@ -86,7 +125,7 @@ if(${Qt5Widgets_FOUND})
 		endforeach()
 
 		# Copy Qt DLLs to the binary directory.
-		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl)
+		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport)
 		foreach(qt5lib ${QT5_LIBS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}

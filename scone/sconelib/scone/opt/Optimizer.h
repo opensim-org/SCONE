@@ -1,5 +1,6 @@
 #pragma once
 
+#include "opt_config.h"
 #include "opt_fwd.h"
 #include "Objective.h"
 #include "scone/core/HasSignature.h"
@@ -32,6 +33,9 @@ namespace scone
 			double GetBestFitness() { return m_BestFitness; }
 
 			void SetConsoleOutput( bool output ) { console_output = output; }
+			bool GetProgressOutput() { return console_output && !status_output; }
+			bool GetStatusOutput() const { return status_output; }
+			void SetStatusOutput( bool s ) { status_output = s; }
 
 		protected:
 			void CreateObjectives( size_t count );
@@ -44,6 +48,7 @@ namespace scone
 			ParamSet m_BestParams;
 			double m_BestFitness;
 			bool console_output;
+			bool status_output;
 			size_t m_LastFileOutputGen;
 
 			// properties
