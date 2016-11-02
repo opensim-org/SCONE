@@ -220,7 +220,7 @@ namespace scone
             {
                 String musc_name = it->second->GetStr( "muscle" );
                 Real ratio = it->second->GetReal( "ratio" );
-                if ( ratio < 0.0 || ratio > 1.0 ) ratio = default_muscle_slow_twitch_ratio;
+                SCONE_ASSERT_MSG( (ratio >= 0.0 && ratio <= 1.0), "slow_twitch_ratios must be between 0.0 and 1.0" );
 
                 if ( use_symmetric_fiber_ratios ) {
                     fiberRatioMap[ musc_name + "_l" ] = ratio;
