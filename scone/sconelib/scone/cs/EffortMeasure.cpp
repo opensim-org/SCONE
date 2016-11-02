@@ -215,11 +215,11 @@ namespace scone
 
             // read in fiber ratios. use default if out of [0,1] range
             std::map< String, Real > fiberRatioMap;
-            const PropNode& ratios = props.TryGetChild("MuscleSlowTwitchRatios");
+            const PropNode& ratios = props.TryGetChild( "MuscleProperties" );
             for ( auto it = ratios.Begin(); it != ratios.End(); ++ it )
             {
                 String musc_name = it->second->GetStr( "muscle" );
-                Real ratio = it->second->GetReal( "ratio" );
+                Real ratio = it->second->GetReal( "slow_twitch_ratio" );
                 SCONE_ASSERT_MSG( (ratio >= 0.0 && ratio <= 1.0), "slow_twitch_ratios must be between 0.0 and 1.0" );
 
                 if ( use_symmetric_fiber_ratios ) {
