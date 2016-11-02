@@ -39,6 +39,11 @@ namespace scone
 			Vec3 m_InitComPos;
 			PropNode m_Report;
             std::vector< Real > m_SlowTwitchFiberRatios;
+            struct MuscleProperties {
+                MuscleProperties( const PropNode& props );
+                String muscle;
+                Real slow_twitch_ratio;
+            };
 
 			double GetEnergy( const sim::Model& model ) const;
 			double GetWang2012( const sim::Model& model ) const;

@@ -34,6 +34,14 @@ namespace scone
             
 		}
 
+        EffortMeasure::MuscleProperties::MuscleProperties( const PropNode& props ) :
+            muscle( props.GetStr("muscle") )
+        {
+            Real ratio = props.GetReal( "slow_twitch_ratio" );
+            SCONE_ASSERT_MSG( (ratio >= 0.0 && ratio <= 1.0), "slow_twitch_ratios must be between 0.0 and 1.0" );
+            slow_twitch_ratio = ratio;
+        }
+
 		EffortMeasure::~EffortMeasure()
 		{
 		}
@@ -213,28 +221,30 @@ namespace scone
             std::vector< Real > init(model.GetMuscles().size(), default_muscle_slow_twitch_ratio);
             m_SlowTwitchFiberRatios = init;
 
-            // read in fiber ratios. use default if out of [0,1] range
-            std::map< String, Real > fiberRatioMap;
-            const PropNode& ratios = props.TryGetChild( "MuscleProperties" );
-            for ( auto it = ratios.Begin(); it != ratios.End(); ++ it )
+            // read in fiber ratios. throw exception if out of [0,1] range
+            //std::map< String, Real > fiberRatioMap;
+            std::vector< MuscleProperties > muscPropsInput;
+            const PropNode& muscleProperties = props.TryGetChild( "MuscleProperties" );
+            for ( auto it = muscleProperties.Begin(); it != muscleProperties.End(); ++ it )
             {
-                String musc_name = it->second->GetStr( "muscle" );
-                Real ratio = it->second->GetReal( "slow_twitch_ratio" );
-                SCONE_ASSERT_MSG( (ratio >= 0.0 && ratio <= 1.0), "slow_twitch_ratios must be between 0.0 and 1.0" );
-
-                if ( use_symmetric_fiber_ratios ) {
-                    fiberRatioMap[ musc_name + "_l" ] = ratio;
-                    fiberRatioMap[ musc_name + "_r" ] = ratio;
-                }
-                else fiberRatioMap[ musc_name ] = ratio;
+                muscPropsInput.emplace_back( MuscleProperties( *it->second ) );
             }
 
             // update muscle if its name is in the map
             for ( int i = 0; i < model.GetMuscles().size(); ++i ) 
             {
                 const sim::MuscleUP& mus = model.GetMuscles()[i];
-                auto it = fiberRatioMap.find( mus->GetName() );
-                if ( it != fiberRatioMap.end() ) m_SlowTwitchFiberRatios[i] = it->second;
+
+                bool foundMuscle = false;
+                for ( auto it = muscPropsInput.begin(); it != muscPropsInput.end(); ++ it )
+                {
+                    if ( flut::matches_pattern( mus->GetName(), it->muscle ) )
+                    {
+                        SCONE_ASSERT_MSG(!foundMuscle, "multiple muscle names matched in MuscleProperties");
+                        m_SlowTwitchFiberRatios[i] = it->slow_twitch_ratio;
+                        foundMuscle = true;
+                    }
+                }
             }
         }
 
