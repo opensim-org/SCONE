@@ -102,7 +102,7 @@ namespace scone
 		double EffortMeasure::GetWang2012( const sim::Model& model ) const
 		{
 			double e = m_Wang2012BasalEnergy;
-            for ( int i = 0; i < model.GetMuscles().size(); ++i )
+            for ( Index i = 0; i < model.GetMuscles().size(); ++i )
 			{
                 const sim::MuscleUP& mus = model.GetMuscles()[i];
 				double mass = mus->GetMass( specific_tension, muscle_density );
@@ -136,7 +136,7 @@ namespace scone
         double EffortMeasure::GetUchida2016( const sim::Model& model ) const
         {
             double e = m_Uchida2016BasalEnergy;
-            for ( int i = 0; i < model.GetMuscles().size(); ++i )
+            for ( Index i = 0; i < model.GetMuscles().size(); ++i )
             {
                 const sim::MuscleUP& mus = model.GetMuscles()[i];
                 double mass = mus->GetMass( specific_tension, muscle_density );
@@ -231,7 +231,7 @@ namespace scone
             }
 
             // update muscle if its name is in the map
-            for ( int i = 0; i < model.GetMuscles().size(); ++i ) 
+            for ( Index i = 0; i < model.GetMuscles().size(); ++i ) 
             {
                 const sim::MuscleUP& mus = model.GetMuscles()[i];
 
