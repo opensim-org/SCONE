@@ -52,7 +52,7 @@ namespace scone
 			// add all distances from foot to upper, using body origins
 			double d = 0.0;
 			for ( const Link* body = &m_Foot; body != &m_Upper; body = &body->GetParent() )
-				d += length( body->GetBody().GetOrigin() - body->GetParent().GetBody().GetOrigin() );
+				d += length( body->GetBody().GetOriginPos() - body->GetParent().GetBody().GetOriginPos() );
 
 			return d;
 		}

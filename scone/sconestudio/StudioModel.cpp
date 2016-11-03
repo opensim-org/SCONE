@@ -145,9 +145,9 @@ namespace scone
 		auto& model_bodies = model.GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
-			auto bp = model_bodies[ i ]->GetOrigin();
+			auto bp = model_bodies[ i ]->GetOriginPos();
 			for ( auto& bm : body_meshes[ i ] )
-				bm.pos_ori( model_bodies[ i ]->GetOrigin(), model_bodies[ i ]->GetOrientation() );
+				bm.pos_ori( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
 		}
 
 		// update muscle paths
