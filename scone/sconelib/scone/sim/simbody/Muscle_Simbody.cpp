@@ -137,6 +137,16 @@ namespace scone
 			return m_osMus.getTendonLength( m_Model.GetTkState() );
 		}
 		
+        scone::Real scone::sim::Muscle_Simbody::GetActiveForceLengthMultipler() const
+        {
+            return m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() );
+        }
+
+        scone::Real scone::sim::Muscle_Simbody::GetMaxContractionVelocity() const
+        {
+            return m_osMus.getMaxContractionVelocity();
+        }
+
 		scone::Real scone::sim::Muscle_Simbody::GetMaxIsometricForce() const
 		{
 			return m_osMus.getMaxIsometricForce();
@@ -167,23 +177,19 @@ namespace scone
 		{
 			// use our own control value, as OpenSim calls getControls()
 			// this could lead to infinite recursion
-			return GetControlValue();
+            double u = GetControlValue();
+            
+            // since the control value is internal, the actual excitation may be
+            // incorrect. make sure to clamp it for calls (important for metabolics)
+            if ( u < 0.0 ) u = 0.0;
+            if ( u > 1.0 ) u = 1.0;
+
+			return u;
 		}
 		
 		void scone::sim::Muscle_Simbody::SetExcitation( Real u )
 		{
 			m_osMus.setExcitation( m_Model.GetTkState(), u );
 		}
-
-        Real Muscle_Simbody::GetSlowTwitchRatio() const {
-            return m_SlowTwitchRatio;
-        }
-
-        void Muscle_Simbody::SetSlowTwitchRatio( Real ratio ) {
-            // ratio should be between 0 and 1 or it makes no sense
-            if (ratio < 0 || ratio > 1) ratio = 0.5;
-
-            m_SlowTwitchRatio = ratio;
-        }
 	}
 }

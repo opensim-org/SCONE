@@ -50,6 +50,9 @@ namespace scone
 			virtual Real GetTendonLength() const = 0;
 			virtual std::vector< Vec3 > GetMusclePath() const = 0;
 
+            virtual Real GetActiveForceLengthMultipler() const = 0;
+            virtual Real GetMaxContractionVelocity() const = 0;
+
 			virtual Real GetActivation() const = 0;
 			virtual Real GetExcitation() const = 0;
 			virtual void SetExcitation( Real u ) = 0;
@@ -59,11 +62,6 @@ namespace scone
 
 			// count the number of joints this muscle crosses
 			virtual Count GetJointCount() const;
-
-            // store fiber type composition number for fast lookup
-            // in metabolics calculations
-            virtual Real GetSlowTwitchRatio() const = 0;
-            virtual void SetSlowTwitchRatio( Real ratio ) = 0; 
 
 			virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		};
