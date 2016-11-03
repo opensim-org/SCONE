@@ -88,7 +88,10 @@ set(CMAKE_MACOSX_RPATH ON)
 
 # Process source code.
 # --------------------
-add_subdirectory(submodules/simvis)
+# Only build visualizer if Qt5 was found
+if(${Qt5Widgets_FOUND})
+    add_subdirectory(submodules/simvis)
+endif()
 add_subdirectory(submodules/flut)
 
 #
