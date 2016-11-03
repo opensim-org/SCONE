@@ -183,7 +183,7 @@ namespace scone
 
 		scone::Real BodyOriSensor::GetValue( Index idx ) const
 		{
-			return flut::math::make_rotation_vector( m_Body.GetOri() )[ idx ];
+			return flut::math::make_rotation_vector( m_Body.GetOrientation() )[ idx ];
 		}
 
 		scone::String BodyOriSensor::GetName() const

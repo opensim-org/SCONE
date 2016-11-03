@@ -166,7 +166,7 @@ namespace scone
 			double early_jump_penalty = std::max( 0.0, prepare_com.y - init_com.y ) / prepare_time;
 			double takeoff_speed = ( com_pos.y - prepare_com.y ) / ( model.GetTime() - prepare_time );
 			double com_landing_distance = GetLandingDist( com_pos, com_vel );
-			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetLinVel() ) : 1000.0;
+			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetOriginVel() ) : 1000.0;
 
 			GetReport().Set( "early_jump_penalty", early_jump_penalty );
 			GetReport().Set( "takeoff_speed", takeoff_speed );

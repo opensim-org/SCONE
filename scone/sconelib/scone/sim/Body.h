@@ -17,16 +17,16 @@ namespace scone
 
 			virtual Vec3 GetOrigin() const = 0;
 			virtual Vec3 GetComPos() const = 0;
-			virtual Quat GetOri() const = 0;
+			virtual Quat GetOrientation() const = 0;
 			virtual Vec3 GetPosOfPointFixedOnBody(Vec3 point) const = 0;
 
 			virtual Vec3 GetComVel() const = 0;
-			virtual Vec3 GetLinVel() const = 0;
+			virtual Vec3 GetOriginVel() const = 0;
 			virtual Vec3 GetAngVel() const = 0;
 			virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const = 0;
 
             virtual Vec3 GetComAcc() const = 0;
-			virtual Vec3 GetLinAcc() const = 0;
+			virtual Vec3 GetOriginAcc() const = 0;
 			virtual Vec3 GetAngAcc() const = 0;
             virtual Vec3 GetLinAccOfPointFixedOnBody(Vec3 point) const = 0;
 

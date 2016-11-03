@@ -26,7 +26,7 @@ namespace scone
 			return m_osBody.getName();
 		}
 
-		scone::Vec3 scone::sim::Body_Simbody::GetOrigin() const
+		scone::Vec3 scone::sim::Body_Simbody::GetOriginPos() const
 		{
 			SCONE_PROFILE_SCOPE;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
@@ -56,7 +56,7 @@ namespace scone
 			return ToVec3( point );
 		}
 
-		scone::Quat scone::sim::Body_Simbody::GetOri() const
+		scone::Quat scone::sim::Body_Simbody::GetOrientation() const
 		{
 			// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 			auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
@@ -100,7 +100,7 @@ namespace scone
 			return ToVec3( vel );
 		}
 
-		scone::Vec3 scone::sim::Body_Simbody::GetLinVel() const
+		scone::Vec3 scone::sim::Body_Simbody::GetOriginVel() const
 		{
 			SCONE_PROFILE_SCOPE;
 
@@ -151,7 +151,7 @@ namespace scone
 			return ToVec3( acc );
 		}
 
-        scone::Vec3 scone::sim::Body_Simbody::GetLinAcc() const
+        scone::Vec3 scone::sim::Body_Simbody::GetOriginAcc() const
 		{
 			SCONE_PROFILE_SCOPE;
 

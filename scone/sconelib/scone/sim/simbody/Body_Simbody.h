@@ -19,18 +19,18 @@ namespace scone
 			Body_Simbody( class Model_Simbody& model, OpenSim::Body& body );
 			virtual ~Body_Simbody() { };
 
-			virtual Vec3 GetOrigin() const override;
+			virtual Vec3 GetOriginPos() const override;
 			virtual Vec3 GetComPos() const override;
-			virtual Quat GetOri() const override;
+			virtual Quat GetOrientation() const override;
 			virtual Vec3 GetPosOfPointFixedOnBody(Vec3 point) const override;
 
 			virtual Vec3 GetComVel() const override;
-			virtual Vec3 GetLinVel() const override;
+			virtual Vec3 GetOriginVel() const override;
 			virtual Vec3 GetAngVel() const override;
 			virtual Vec3 GetLinVelOfPointFixedOnBody(Vec3 point) const override;
 
             virtual Vec3 GetComAcc() const override;
-			virtual Vec3 GetLinAcc() const override;
+			virtual Vec3 GetOriginAcc() const override;
 			virtual Vec3 GetAngAcc() const override;
             virtual Vec3 GetLinAccOfPointFixedOnBody(Vec3 point) const override;
 
