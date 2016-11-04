@@ -283,10 +283,10 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	optimizations.push_back( pdw );
 	addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::RightDockWidgetArea, pdw );
 
-	// divide into tabs
+	// organize into columns
 	if ( optimizations.size() >= 3 )
 	{ 
-		auto tab_count = ( optimizations.size() + 4 ) / 5;
+		auto tab_count = ( optimizations.size() + 3 ) / 4;
 		for ( size_t i = 0; i < optimizations.size(); ++ i )
 		{
 			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
