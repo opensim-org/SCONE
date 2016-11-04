@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Changes
+1 : Added reflexes for upper-body
+1b: Added control for rect_fem
+1c: Added retraction for rect_fem
+-->
+
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file></init_file>
-	<use_init_file>0</use_init_file>
-	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHX1b</signature_postfix>
+		<signature_postfix>GHX1c</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020m.osim</model_file>
@@ -126,6 +129,10 @@
 									<Reflex type="MuscleReflex" target="iliopsoas" source="hamstrings" delay="0.005">
 										<KL	init_mean="-4.0" init_std="0.4" min="-10.0" max="10.0" is_free="1"/>
 										<L0 init_mean="0.85" init_std="0..085" min="0" max="2" is_free="1"/>
+									</Reflex>
+									<Reflex type="MuscleReflex" target="rect_fem" source="hamstrings" delay="0.005">
+										<KL	init_mean="-1.0" init_std="0.1" min="-10.0" max="10.0" is_free="1"/>
+										<L0 init_mean="0.9" init_std="0.09" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">
