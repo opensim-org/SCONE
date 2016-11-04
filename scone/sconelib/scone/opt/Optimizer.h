@@ -36,6 +36,10 @@ namespace scone
 			bool GetProgressOutput() { return console_output && !status_output; }
 			bool GetStatusOutput() const { return status_output; }
 			void SetStatusOutput( bool s ) { status_output = s; }
+			template< typename T > void OutputStatus( const String& key, const T& value ) {
+				if ( GetStatusOutput() )
+					std::cout << std::endl << "*" << key << "=" << value << std::endl;
+			}
 
 		protected:
 			void CreateObjectives( size_t count );
