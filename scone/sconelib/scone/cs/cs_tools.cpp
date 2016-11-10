@@ -124,7 +124,7 @@ namespace scone
 
 			// read properties
 			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-			PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+			PropNode objProp = configProp.GetChild( "Optimizer" ).GetChild( "Objective" );
 
 			// create SimulationObjective object
 			cs::SimulationObjectiveUP so = dynamic_unique_cast< cs::SimulationObjective >( opt::CreateObjective( objProp, par ) );

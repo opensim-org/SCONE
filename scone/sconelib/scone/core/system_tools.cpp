@@ -66,9 +66,9 @@ namespace scone
 
 	SCONE_API path GetFolder( const String& folder, const String& default_path )
 	{
-		auto path_to_folder = flut::path( GetSconeSettings().GetStr( "folders." + folder, "" ) );
+		auto path_to_folder = flut::path( GetSconeSettings().GetChild( "folders" ).GetStr( folder, "" ) );
 		if ( path_to_folder.empty() )
-			path_to_folder = path( GetSconeSettings().GetStr( "folders.root" ) ) / default_path;
+			path_to_folder = path( GetSconeSettings().GetChild( "folders" ).GetStr( "root" ) ) / default_path;
 		return path_to_folder;
 	}
 
