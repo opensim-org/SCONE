@@ -10,6 +10,7 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include "boost/filesystem/path.hpp"
+#include "Log.h"
 
 using namespace boost;
 using namespace boost::property_tree;
@@ -112,6 +113,7 @@ namespace scone
 		}
 		else
 		{
+			log::Warning( "PropNode: using '.' to denote child nodes is deprecated" );
 			// create sub-children if necessary
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
@@ -156,6 +158,7 @@ namespace scone
 		}
 		else
 		{
+			log::Warning( "PropNode: using '.' to denote child nodes is deprecated" );
 			// search children
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
@@ -189,6 +192,7 @@ namespace scone
 		}
 		else
 		{
+			log::Warning( "PropNode: using '.' to access child nodes is deprecated" );
 			// search sub keys
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
@@ -215,6 +219,7 @@ namespace scone
 		}
 		else
 		{
+			log::Warning( "PropNode: using '.' to denote child nodes is deprecated" );
 			// search sub keys
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
