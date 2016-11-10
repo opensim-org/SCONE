@@ -9,6 +9,16 @@
 
 #include "Exception.h"
 
+#if 0
+
+#include "flut/prop_node.hpp"
+namespace scone
+{
+	using PropNode = flut::prop_node;
+}
+
+#else
+
 namespace scone
 {
 	class PropNode;
@@ -227,3 +237,5 @@ namespace scone
 	// stream operator
 	inline std::ostream& operator<<( std::ostream& str, const PropNode& props ) { props.ToStream( str ); return str; }
 };
+
+#endif
