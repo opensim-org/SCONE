@@ -59,7 +59,7 @@ namespace scone
 
 		scone::Real Leg::GetLoad() const
 		{
-			return GetContactForce().y / GetModel().GetBW();
+			return GetContactForce().length() / GetModel().GetBW();
 		}
 
 		Model& Leg::GetModel() const

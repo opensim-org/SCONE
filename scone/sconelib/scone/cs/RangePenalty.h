@@ -2,6 +2,7 @@
 
 #include "scone/core/math.h"
 #include "scone/core/Range.h"
+#include "scone/core/Statistic.h"
 
 namespace scone
 {
