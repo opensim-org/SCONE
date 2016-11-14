@@ -33,16 +33,14 @@ evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr )
 {
 	ui.setupUi( this );
-	//setCentralWidget( nullptr );
 	//setDockNestingEnabled( true );
 
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
-	//setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
-	//setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
+	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
+	setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
-	//addDockWidget( Qt::RightDockWidgetArea, ui.viewerDock );
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 }
 
@@ -59,7 +57,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
-	ui.tabWidget->removeTab( 1 );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 10000 );
