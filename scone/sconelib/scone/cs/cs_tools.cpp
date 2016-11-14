@@ -26,6 +26,7 @@
 #include "TimeStateController.h"
 #include "MetaReflexController.h"
 #include "JointLoadMeasure.h"
+#include "ReactionForceMeasure.h"
 #include "scone/opt/opt_tools.h"
 #include "scone/sim/simbody/sim_simbody.h"
 #include "PointMeasure.h"
@@ -73,6 +74,7 @@ namespace scone
 			sim::GetControllerFactory().Register< CompositeMeasure >();
 			sim::GetControllerFactory().Register< JumpMeasure >();
 			sim::GetControllerFactory().Register< JointLoadMeasure >();
+			sim::GetControllerFactory().Register< ReactionForceMeasure >();
 			sim::GetControllerFactory().Register< PointMeasure >();
 
 			// register functions
