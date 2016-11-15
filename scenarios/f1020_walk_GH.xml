@@ -3,12 +3,13 @@
 1 : Added reflexes for upper-body
 1b: Added control for rect_fem
 1c: Added retraction for rect_fem
+1d: Changed measure to include GRF
 -->
 
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHX1c</signature_postfix>
+		<signature_postfix>GHX1d</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020m.osim</model_file>
@@ -146,7 +147,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG05_CoT_GRF.xml"/>
+				<INCLUDE file="measures/M_CG10_CoT_GRF.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>
