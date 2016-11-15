@@ -23,7 +23,7 @@ namespace scone
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
 			// create Meta Reflexes
-			const PropNode& reflexes = props.GetChild( "Reflexes" );
+			const PropNode& reflexes = props.get_child( "Reflexes" );
 			for ( const PropNode::KeyChildPair& item: reflexes.GetChildren() )
 			{
 				if ( item.second->GetStr( "type" ) == "MetaReflex" )

@@ -17,7 +17,7 @@ namespace scone
 	{
 		SimulationObjective::SimulationObjective( const PropNode& props, opt::ParamSet& par ) :
 		Objective( props, par ),
-		m_ModelProps( props.GetChild( "Model" ) )
+		m_ModelProps( props.get_child( "Model" ) )
 		{
 			INIT_PROPERTY( props, max_duration, 6000.0 );
 

@@ -40,7 +40,7 @@ namespace scone
 				for ( size_t idx = 0; idx < number_of_modes; ++idx )
 				{
 					opt::ScopedParamSetPrefixer prefixer( par, stringf( "Mode%d.", idx ) );
-					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
+					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
 				}
 			}
 
@@ -71,7 +71,7 @@ namespace scone
 					// create a new function
 					String prefix = use_symmetric_actuators ? ai.name : ai.full_name;
 					opt::ScopedParamSetPrefixer prefixer( par, prefix + "." );
-					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.GetChild( "Function" ), par ) ) );
+					m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
 					ai.function_idx = m_Functions.size() - 1;
 				}
 			}

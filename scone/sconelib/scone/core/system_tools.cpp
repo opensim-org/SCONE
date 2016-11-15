@@ -46,7 +46,7 @@ namespace scone
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
 
 		// lazy initialization
-		if ( g_GlobalSettings.IsEmpty() )
+		if ( g_GlobalSettings.empty() )
 		{
 			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
 			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
@@ -66,9 +66,9 @@ namespace scone
 
 	SCONE_API path GetFolder( const String& folder, const String& default_path )
 	{
-		auto path_to_folder = flut::path( GetSconeSettings().GetChild( "folders" ).GetStr( folder, "" ) );
+		auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).GetStr( folder, "" ) );
 		if ( path_to_folder.empty() )
-			path_to_folder = path( GetSconeSettings().GetChild( "folders" ).GetStr( "root" ) ) / default_path;
+			path_to_folder = path( GetSconeSettings().get_child( "folders" ).GetStr( "root" ) ) / default_path;
 		return path_to_folder;
 	}
 

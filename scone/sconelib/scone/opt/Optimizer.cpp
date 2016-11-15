@@ -29,7 +29,7 @@ namespace scone
 		HasSignature( props ),
 		max_threads( 1 ),
 		thread_priority( 0 ),
-		m_ObjectiveProps( props.GetChild( "Objective" ) ),
+		m_ObjectiveProps( props.get_child( "Objective" ) ),
 		console_output( true ),
 		status_output( false ),
 		m_LastFileOutputGen( 0 )

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 			}
 
 			// get command line settings (parameter 2 and further)
-			if ( !cmd_props.IsEmpty() )
+			if ( !cmd_props.empty() )
 				props.Merge( cmd_props, true );
 
 			// create optimizer

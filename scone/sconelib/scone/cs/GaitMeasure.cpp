@@ -86,12 +86,12 @@ namespace scone
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 
-			GetReport().Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
-			GetReport().Set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
-			GetReport().Set( "distance", distance );
-			GetReport().Set( "speed", speed );
-			GetReport().Set( "steps", m_nSteps );
-			GetReport().Set( "stepsize", m_TotStepSize / m_nSteps );
+			GetReport().set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
+			GetReport().set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
+			GetReport().set( "distance", distance );
+			GetReport().set( "speed", speed );
+			GetReport().set( "steps", m_nSteps );
+			GetReport().set( "stepsize", m_TotStepSize / m_nSteps );
 
 			return 1.0 - m_MinVelocityMeasure.GetAverage();
 		}

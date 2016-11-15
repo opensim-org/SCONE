@@ -2,10 +2,10 @@
 
 #include "core.h"
 #include "String.h"
+#include "PropNode.h"
 
 namespace scone
 {
-	class PropNode;
 	class SCONE_API HasSignature
 	{
 	public:

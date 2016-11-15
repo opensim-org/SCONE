@@ -225,7 +225,7 @@ namespace scone
             //std::map< String, Real > fiberRatioMap;
             std::vector< MuscleProperties > muscPropsInput;
             const PropNode& muscleProperties = props.TryGetChild( "MuscleProperties" );
-            for ( auto it = muscleProperties.Begin(); it != muscleProperties.End(); ++ it )
+            for ( auto it = muscleProperties.begin(); it != muscleProperties.end(); ++ it )
             {
                 muscPropsInput.emplace_back( MuscleProperties( *it->second ) );
             }

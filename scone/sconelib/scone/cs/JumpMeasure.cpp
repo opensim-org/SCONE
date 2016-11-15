@@ -19,7 +19,7 @@ namespace scone
 			INIT_PROPERTY( props, negate_result, false );
 			INIT_PROPERTY( props, jump_type, int( HighJump ) );
 
-			if ( props.HasKey( "target_body" ) )
+			if ( props.has_child( "target_body" ) )
 				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
 
 			prepare_com = init_com = model.GetComPos();
@@ -151,9 +151,9 @@ namespace scone
 			if ( negate_result )
 				result = -result;
 
-			GetReport().Set( result );
-			GetReport().Set( "jump_height", jump_height );
-			GetReport().Set( "early_jump_penalty", early_jump_penalty );
+			GetReport().set( result );
+			GetReport().set( "jump_height", jump_height );
+			GetReport().set( "early_jump_penalty", early_jump_penalty );
 
 			return result;
 		}
@@ -168,10 +168,10 @@ namespace scone
 			double com_landing_distance = GetLandingDist( com_pos, com_vel );
 			double body_landing_distance = target_body ? GetLandingDist( target_body->GetComPos(), target_body->GetComVel() ) : 1000.0;
 
-			GetReport().Set( "early_jump_penalty", early_jump_penalty );
-			GetReport().Set( "takeoff_speed", takeoff_speed );
-			GetReport().Set( "com_landing_distance", com_landing_distance );
-			GetReport().Set( "body_landing_distance", body_landing_distance );
+			GetReport().set( "early_jump_penalty", early_jump_penalty );
+			GetReport().set( "takeoff_speed", takeoff_speed );
+			GetReport().set( "com_landing_distance", com_landing_distance );
+			GetReport().set( "body_landing_distance", body_landing_distance );
 
 			double result = 0.0;
 			switch ( state )
@@ -190,8 +190,8 @@ namespace scone
 			case scone::cs::JumpMeasure::Recover:
 			{
 				double recover_bonus = 50 + 50 * ( model.GetTime() - recover_start_time ) / recover_time;
-				GetReport().Set( "recover_bonus", recover_bonus );
-				GetReport().Set( "recover_cop_dist", recover_cop_dist );
+				GetReport().set( "recover_bonus", recover_bonus );
+				GetReport().set( "recover_cop_dist", recover_cop_dist );
 				result = 10 + recover_bonus * ( std::min( { com_landing_distance, body_landing_distance, recover_cop_dist } ) - early_jump_penalty );
 				break;
 			}
@@ -199,7 +199,7 @@ namespace scone
 
 			if ( negate_result ) result = -result;
 
-			GetReport().Set( result );
+			GetReport().set( result );
 
 			return result;
 		}

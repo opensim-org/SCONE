@@ -23,7 +23,7 @@ namespace scone
 			String sidename = GetSideName( area.side );
 
 			// create normal reflexes
-			const PropNode& reflexvec = props.GetChild( "Reflexes" );
+			const PropNode& reflexvec = props.get_child( "Reflexes" );
 			for ( const PropNode::KeyChildPair& item: reflexvec.GetChildren() )
 			{
 				// todo: handle "targets" tag? or create a new class for groups of monosynaptic muscles?

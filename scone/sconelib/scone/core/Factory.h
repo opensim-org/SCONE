@@ -41,8 +41,8 @@ namespace scone
 		F& Create( const PropNode& props )
 		{
 			F& f = Create( props.GetStr( "type" ) );
-			props.Touch();
-			props.GetChild( "type" ).Touch();
+			props.touch();
+			props.get_child( "type" ).touch();
 			return f;
 		}
 

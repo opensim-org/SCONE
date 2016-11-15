@@ -26,7 +26,7 @@ namespace scone
 		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const String& scenario_file )
 		{
 			// create optimizer and report unused parameters
-			opt::OptimizerUP o = opt::CreateOptimizer( props.GetChild( "Optimizer" ) );
+			opt::OptimizerUP o = opt::CreateOptimizer( props.get_child( "Optimizer" ) );
 			LogUntouched( props );
 
 			// set current path to config file path
@@ -54,7 +54,7 @@ namespace scone
 				current_path( config_path.parent_path() );
 	
 			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-			const PropNode& objProp = configProp.GetChild( "Optimizer.Objective" );
+			const PropNode& objProp = configProp.get_child( "Optimizer.Objective" );
 			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
 
@@ -67,17 +67,17 @@ namespace scone
 			Profiler::GetGlobalInstance().Reset();
 
 			PropNode statistics;
-			statistics.Clear();
+			statistics.clear();
 			timer tmr;
 			double result = obj->Evaluate();
 			auto duration = tmr.seconds();
 	
 			// collect statistics
-			statistics.Clear();
-			statistics.Set( "result", result );
-			statistics.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-			statistics.Set( "simulation time", so.GetModel().GetTime() );
-			statistics.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+			statistics.clear();
+			statistics.set( "result", result );
+			statistics.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
+			statistics.set( "simulation time", so.GetModel().GetTime() );
+			statistics.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 	
 			cout << "--- Evaluation report ---" << endl;
 			cout << statistics << endl;

@@ -86,14 +86,14 @@ namespace scone
 			double lo_height = std::max( m_InitialHeight - max_admitted_counter_height, m_Height.GetLowest() );
 			double hi_height = terminate_on_peak ? m_Height.GetLatest() : m_Height.GetHighest();
 
-			GetReport().Set( "Initial", m_InitialHeight );
-			GetReport().Set( "JumpStartHeight", m_Height.GetLowest() );
-			GetReport().Set( "lo_height", lo_height );
-			GetReport().Set( "hi_height", hi_height );
+			GetReport().set( "Initial", m_InitialHeight );
+			GetReport().set( "JumpStartHeight", m_Height.GetLowest() );
+			GetReport().set( "lo_height", lo_height );
+			GetReport().set( "hi_height", hi_height );
 
 			// results are in cm to get nice scaling
 			double result = use_average_height ? 100 * m_Height.GetAverage() : 100 * ( hi_height - lo_height );
-			GetReport().Set( result );
+			GetReport().set( result );
 			return result;
 		}
 

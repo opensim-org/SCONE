@@ -93,8 +93,8 @@ namespace scone
 			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
 
 			// change model properties
-			if ( props.HasKey( "SimbodyParameters" ) )
-				SetOpenSimParameters( props.GetChild( "SimbodyParameters" ), par );
+			if ( props.has_child( "SimbodyParameters" ) )
+				SetOpenSimParameters( props.get_child( "SimbodyParameters" ), par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -185,8 +185,8 @@ namespace scone
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
 			// create and initialize controllers
-			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
-			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
+			const PropNode& cprops = props.get_child( "Controllers" ).touch();
+			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
 				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
@@ -702,15 +702,15 @@ namespace scone
 
 		void Model_Simbody::SetOpenSimParameters( const PropNode& props, opt::ParamSet& par )
 		{
-			auto forceIt = props.FindChild( "ForceSet" );
-			if ( forceIt != props.End() )
+			auto forceIt = props.find_child( "ForceSet" );
+			if ( forceIt != props.end() )
 			{
 				opt::ScopedParamSetPrefixer prefix1( par, "ForceSet." );
-				for ( auto musIt = forceIt->second->Begin(); musIt != forceIt->second->End(); ++musIt )
+				for ( auto musIt = forceIt->second->begin(); musIt != forceIt->second->end(); ++musIt )
 				{
 					opt::ScopedParamSetPrefixer prefix2( par, musIt->first + "." );
 					auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
-					for ( auto musPropIt = musIt->second->Begin(); musPropIt != musIt->second->End(); ++musPropIt )
+					for ( auto musPropIt = musIt->second->begin(); musPropIt != musIt->second->end(); ++musPropIt )
 					{
 						double value = par.Get( musPropIt->first, *musIt->second, musPropIt->first );
 						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;

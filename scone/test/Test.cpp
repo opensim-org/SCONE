@@ -62,8 +62,8 @@ namespace scone
 		for ( auto iter = models.begin(); iter != models.end(); ++iter )
 		{
 			opt::ParamSet par;
-			props.Set( "Model.model_file", *iter );
-			sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
+			props.set( "Model.model_file", *iter );
+			sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
 
 			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
@@ -100,7 +100,7 @@ namespace scone
 			bfs::current_path( config_path.parent_path() );
 
 		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
 		//objProp.Set( "max_duration", 1 );
@@ -124,11 +124,11 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.Clear();
-		stats.Set( "result", result );
-		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+		stats.clear();
+		stats.set( "result", result );
+		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
+		stats.set( "simulation time", so.GetModel().GetTime() );
+		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
@@ -189,16 +189,16 @@ namespace scone
 			bfs::current_path( config_path.parent_path() );
 
 		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
-		objProp.Set( "max_duration", 1 );
-		objProp.Set( "Model.integration_accuracy", 1e-3 );
+		objProp.set( "max_duration", 1 );
+		objProp.set( "Model.integration_accuracy", 1e-3 );
 		//objProp.Set( "Model.use_fixed_control_step_size", true );
 		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
 		//objProp.Set( "Model.max_step_size", 0.001 );
 		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
-		objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
+		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
@@ -213,11 +213,11 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.Clear();
-		stats.Set( "result", result );
-		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+		stats.clear();
+		stats.set( "result", result );
+		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
+		stats.set( "simulation time", so.GetModel().GetTime() );
+		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
@@ -238,7 +238,7 @@ namespace scone
 
 		opt::ParamSet par; // empty parameter set
 		PropNode configProp = ReadPropNodeFromXml( filename ) ;
-		PropNode objProp = configProp.GetChild( "Optimizer.Objective" );
+		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
@@ -255,11 +255,11 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.Clear();
-		stats.Set( "result", result );
-		stats.GetChild( "result" ).InsertChildren( so.GetMeasure().GetReport() );
-		stats.Set( "simulation time", so.GetModel().GetTime() );
-		stats.Set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+		stats.clear();
+		stats.set( "result", result );
+		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
+		stats.set( "simulation time", so.GetModel().GetTime() );
+		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
 
@@ -274,9 +274,9 @@ namespace scone
 	{
 		cs::RegisterFactoryTypes();
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.Set( "Model.model_file", "f2354.osim" );
+		props.set( "Model.model_file", "f2354.osim" );
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
+		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
@@ -301,9 +301,9 @@ namespace scone
 	{
 		cs::RegisterFactoryTypes();
 		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.Set( "Model.model_file", "f2354.osim" );
+		props.set( "Model.model_file", "f2354.osim" );
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.GetChild( "Model" ), par );
+		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
 
 		for ( sim::DofUP& dof : m->GetDofs() )
 			log::Info( dof->GetName() + ": " + to_str( dof->GetRotationAxis() ) );

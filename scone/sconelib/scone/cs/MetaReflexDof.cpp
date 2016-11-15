@@ -32,10 +32,10 @@ namespace scone
 			dof_pos.Init( props, par, model, "P" );
 			dof_neg.Init( props, par, model, "N" );
 
-			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
+			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_child( "Balance" ) )
 			{
 				opt::ScopedParamSetPrefixer pre2( par, "B." );
-				auto& balprops = props.GetChild( "Balance" );
+				auto& balprops = props.get_child( "Balance" );
 				auto& body = FindByName( model.GetBodies(), balprops.GetStr( "body" ) );
 
 				// create sensors

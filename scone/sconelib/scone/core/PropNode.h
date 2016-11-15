@@ -31,8 +31,8 @@ namespace scone
 		typedef String ValueType;
 		typedef std::pair< KeyType, PropNodePtr > KeyChildPair;
 		typedef std::vector< KeyChildPair > ChildContainer;
-		typedef ChildContainer::iterator ChildIter;
-		typedef ChildContainer::const_iterator ConstChildIter;
+		typedef ChildContainer::iterator iterator;
+		typedef ChildContainer::const_iterator const_iterator;
 
 		PropNode();
 		PropNode( const PropNode& other );
@@ -47,61 +47,61 @@ namespace scone
 		// comparison
 		bool operator==( const PropNode& other ) const;
 		bool operator!=( const PropNode& other ) const { return !(*this == other); }
-		explicit operator bool() const { return !IsEmpty();  }
+		explicit operator bool() const { return !empty();  }
 
 		// check if empty
-		bool IsEmpty() const { return m_Children.empty() && !HasValue(); }
+		bool empty() const { return m_Children.empty() && !HasValue(); }
 
 		// clear
-		void Clear() { m_Children.clear(); m_Value.clear(); }
+		void clear() { m_Children.clear(); m_Value.clear(); }
 
 		// check if child key exists
-		bool HasKey( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
+		bool has_child( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
 		bool HasValue() const {	return !m_Value.empty(); }
 
 		// get / set raw value
-		const ValueType& GetValueType() const { Touch(); return m_Value; }
+		const ValueType& GetValueType() const { touch(); return m_Value; }
 		void SetValueType( const ValueType& value ) { m_Value = value; }
 
 		// get value
 		template< typename T >
-		T GetValue( ) const
+		T get( ) const
 		{
-			Touch();
+			touch();
 			return GetInternalValue< T >();
 		}
 
 		/// Get value, throws exception if key doesn't exist
 		template< typename T >
-		T Get( const KeyType& key ) const
+		T get( const KeyType& key ) const
 		{
-			return GetChild( key ).GetValue< T >();
+			return get_child( key ).get< T >();
 		}
 
 		/// Get value, returns default if key doesn't exist
 		template< typename T >
-		T Get( const KeyType& key, const T& default_value ) const
+		T get( const KeyType& key, const T& default_value ) const
 		{
-			Touch();
+			touch();
 			const PropNode* p = GetChildPtr( key );
-			return p ? p->GetValue< T >() : default_value;
+			return p ? p->get< T >() : default_value;
 		}
 
 		// set value
 		template< typename T >
-		void Set( const T& value )
+		void set( const T& value )
 		{
 			SetInternalValue( value );
 		}
 
 		/// Set a value, overwriting existing (if any) or adding new key
 		template< typename T >
-		PropNode& Set( const KeyType& key, const T& value )
+		PropNode& set( const KeyType& key, const T& value )
 		{
 			PropNode* p = GetChildPtr( key );
 			if ( p == nullptr )
-				AddChild( key ).Set( value );
-			else p->Set( value );
+				add_child( key ).set( value );
+			else p->set( value );
 			return *this;
 		}
 
@@ -109,25 +109,25 @@ namespace scone
 		template< typename T >
 		PropNode& Add( const KeyType& key, const T& value )
 		{
-			AddChild( key ).Set( value );
+			add_child( key ).set( value );
 			return *this;
 		}
 
 		/// Get Child
-		const PropNode& GetChild( const KeyType& key ) const
+		const PropNode& get_child( const KeyType& key ) const
 		{
 			const PropNode* p = GetChildPtr( key );
 			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
-			Touch();
+			touch();
 			return *p;
 		}
 
 		/// Get Child
-		PropNode& GetChild( const KeyType& key )
+		PropNode& get_child( const KeyType& key )
 		{
 			PropNode* p = GetChildPtr( key );
 			SCONE_THROW_IF( p == nullptr, "Could not find key: \"" + key + "\"" );
-			Touch();
+			touch();
 			return *p;
 		}
 
@@ -137,30 +137,30 @@ namespace scone
 			PropNode* p = GetChildPtr( key );
 			if ( !p )
 				return EMPTY;
-			Touch();
+			touch();
 			return *p;
 		}
 
 		/// create child node
-		PropNode& AddChild( const KeyType& key );
-		PropNode& AddChild( const KeyType& key, const PropNode& other );
+		PropNode& add_child( const KeyType& key );
+		PropNode& add_child( const KeyType& key, const PropNode& other );
 
 		/// insert all children from other PropNode
-		ChildIter InsertChildren( const PropNode& other, ChildIter insert_point );
-		ChildIter InsertChildren( const PropNode& other ) { return InsertChildren( other, Begin() ); }
+		iterator insert_children( const PropNode& other, iterator insert_point );
+		iterator insert_children( const PropNode& other ) { return insert_children( other, begin() ); }
 
 		/// Merge existing properties
 		PropNode& Merge( const PropNode& props, bool overwrite = true );
 
 		/// Access to children for iteration
-		const ChildContainer& GetChildren() const { Touch(); return m_Children; }
-		ChildContainer& GetChildren() { Touch(); return m_Children; }
-		ConstChildIter Begin() const { Touch(); return m_Children.cbegin(); }
-		ConstChildIter End() const { Touch(); return m_Children.cend(); }
-		ChildIter Begin() { Touch(); return m_Children.begin(); }
-		ChildIter End() { Touch(); return m_Children.end(); }
-		ChildIter FindChild( const KeyType& key );
-		ConstChildIter FindChild( const KeyType& key ) const;
+		const ChildContainer& GetChildren() const { touch(); return m_Children; }
+		ChildContainer& GetChildren() { touch(); return m_Children; }
+		const_iterator begin() const { touch(); return m_Children.cbegin(); }
+		const_iterator end() const { touch(); return m_Children.cend(); }
+		iterator begin() { touch(); return m_Children.begin(); }
+		iterator end() { touch(); return m_Children.end(); }
+		iterator find_child( const KeyType& key );
+		const_iterator find_child( const KeyType& key ) const;
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const KeyType& rootname = "" ) const;
@@ -173,23 +173,23 @@ namespace scone
 		PropNode& FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
-		int GetInt( const KeyType& key ) const { return Get< int >( key ); }
-		bool GetBool( const KeyType& key ) const { return Get< bool >( key ); }
-		Real GetReal( const KeyType& key ) const { return Get< Real >( key ); }
-		String GetStr( const KeyType& key ) const { return Get< String >( key ); }
+		int GetInt( const KeyType& key ) const { return get< int >( key ); }
+		bool GetBool( const KeyType& key ) const { return get< bool >( key ); }
+		Real GetReal( const KeyType& key ) const { return get< Real >( key ); }
+		String GetStr( const KeyType& key ) const { return get< String >( key ); }
 
-		int GetInt( const KeyType& key, int def ) const { return Get< int >( key, def ); }
-		bool GetBool( const KeyType& key, bool def ) const { return Get< bool >( key, def ); }
-		Real GetReal( const KeyType& key, Real def ) const { return Get< Real >( key, def ); }
-		String GetStr( const KeyType& key, const String& def ) const { return Get< String >( key, def ); }
+		int GetInt( const KeyType& key, int def ) const { return get< int >( key, def ); }
+		bool GetBool( const KeyType& key, bool def ) const { return get< bool >( key, def ); }
+		Real GetReal( const KeyType& key, Real def ) const { return get< Real >( key, def ); }
+		String GetStr( const KeyType& key, const String& def ) const { return get< String >( key, def ); }
 
 		std::ostream& ToStream( std::ostream& str, const String& prefix = "  ", bool unflaggedOnly = false, int key_width = -1, int depth = 0 ) const;
 
 		// flagging (can be used to detect unused properties)
-		const PropNode& Touch() const { m_Touched = true; return *this; }
-		const PropNode& UnTouch() const { m_Touched = false; return *this; }
-		bool IsTouched() const { return m_Touched; }
-		size_t GetUntouchedCount() const;
+		const PropNode& touch() const { m_Touched = true; return *this; }
+		const PropNode& untouch() const { m_Touched = false; return *this; }
+		bool touched() const { return m_Touched; }
+		size_t count_untouched() const;
 
 		static const PropNode EMPTY;
 

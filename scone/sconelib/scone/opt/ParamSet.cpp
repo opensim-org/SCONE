@@ -49,17 +49,17 @@ namespace scone
 		double ParamSet::Get( const String& name, const PropNode& props, const String node_name )
 		{
 			// get par node (throws if not exists)
-			const PropNode& parNode = props.GetChild( node_name );
+			const PropNode& parNode = props.get_child( node_name );
 
 			// see if this is an actual parameter
 			if ( parNode.GetChildren().size() > 0 )
 				return Get( ParamInfo( GetNamePrefix() + name, parNode ) );
-			else return props.GetValue< double >(); // just return the value
+			else return props.get< double >(); // just return the value
 		}
 
 		double ParamSet::TryGet( const String& name, const PropNode& props, const String node_name, double default_value )
 		{
-			if ( props.HasKey( node_name ) )
+			if ( props.has_child( node_name ) )
 				return Get( name, props, node_name );
 			else return default_value;
 		}

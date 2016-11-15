@@ -18,8 +18,8 @@ namespace scone
 		void StateController::CreateConditionalControllers( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area )
 		{
 			// create instances for each controller
-			const PropNode& ccProps = props.GetChild( "ConditionalControllers" );
-			for ( PropNode::ConstChildIter ccIt = ccProps.Begin(); ccIt != ccProps.End(); ++ccIt )
+			const PropNode& ccProps = props.get_child( "ConditionalControllers" );
+			for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 			{
 				// get state masks
 				String state_masks = ccIt->second->GetStr( "states" );
@@ -48,7 +48,7 @@ namespace scone
 					SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" )
 
 					// create controller
-					const PropNode& cprops = ccIt->second->GetChild( "Controller" );
+					const PropNode& cprops = ccIt->second->get_child( "Controller" );
 					opt::ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
 					cc.second = sim::CreateController( cprops, par, model, area );
 				}

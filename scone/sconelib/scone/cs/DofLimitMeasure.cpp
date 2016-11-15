@@ -11,7 +11,7 @@ namespace scone
 		Measure( props, par, model, area )
 		{
 			const PropNode& lp = props.TryGetChild( "Limits" );
-			for ( auto it = lp.Begin(); it != lp.End(); ++it )
+			for ( auto it = lp.begin(); it != lp.end(); ++it )
 				m_Limits.push_back( Limit( *it->second, model ) );
 
 			// see if we have a limit defined internally
@@ -78,7 +78,7 @@ namespace scone
 			{
 				result += l.penalty.GetAverage();
 				if ( m_Limits.size() > 1 )
-					GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
+					GetReport().set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;

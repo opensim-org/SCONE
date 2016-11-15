@@ -99,11 +99,11 @@ namespace scone
 
 			// collect statistics
 			PropNode statistics;
-			statistics.Clear();
-			statistics.Set( "result", result );
-			statistics.GetChild( "result" ).InsertChildren( so->GetMeasure().GetReport() );
-			statistics.Set( "simulation time", so->GetModel().GetTime() );
-			statistics.Set( "performance (x real-time)", so->GetModel().GetTime() / duration );
+			statistics.clear();
+			statistics.set( "result", result );
+			statistics.get_child( "result" ).insert_children( so->GetMeasure().GetReport() );
+			statistics.set( "simulation time", so->GetModel().GetTime() );
+			statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
 	
 			// output profiler results (only if enabled)
 			std::cout << Profiler::GetGlobalInstance().GetReport();
@@ -124,7 +124,7 @@ namespace scone
 
 			// read properties
 			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
-			PropNode objProp = configProp.GetChild( "Optimizer" ).GetChild( "Objective" );
+			PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 			// create SimulationObjective object
 			cs::SimulationObjectiveUP so = dynamic_unique_cast< cs::SimulationObjective >( opt::CreateObjective( objProp, par ) );

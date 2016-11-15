@@ -28,13 +28,13 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 					if ( !exists( reportpath ) )
 					{
 						BOOST_ERROR( "Could not find simulation report: " + reportpath.string() );
-						result.GetChild( "report" ).ToXmlFile( reportpath.string(), "report" );
+						result.get_child( "report" ).ToXmlFile( reportpath.string(), "report" );
 					}
 					else
 					{
 						auto verify = scone::ReadPropNodeFromXml( reportpath.string() );
-						auto rep1 = result.GetChild( "report" );
-						auto rep2 = verify.GetChild( "report" );
+						auto rep1 = result.get_child( "report" );
+						auto rep2 = verify.get_child( "report" );
 						BOOST_CHECK( rep1 == rep2 );
 						if ( rep1 != rep2 )
 						{

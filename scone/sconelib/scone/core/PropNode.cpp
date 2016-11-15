@@ -34,7 +34,7 @@ namespace scone
 		{
 			size_t pos = iter->find_first_of('=');
 			if (pos != std::string::npos)
-				AddChild( trim_copy( iter->substr(0, pos) ) ).m_Value = trim_copy( iter->substr(pos + 1) );
+				add_child( trim_copy( iter->substr(0, pos) ) ).m_Value = trim_copy( iter->substr(pos + 1) );
 		}
 	}
 
@@ -55,7 +55,7 @@ namespace scone
 			m_Touched = other.m_Touched;
 			m_Value = other.m_Value;
 			m_Children.clear( );
-			for ( ConstChildIter iter = other.m_Children.begin( ); iter != other.m_Children.end( ); ++iter )
+			for ( const_iterator iter = other.m_Children.begin( ); iter != other.m_Children.end( ); ++iter )
 				m_Children.push_back( std::make_pair( iter->first, PropNodePtr( new PropNode( *iter->second ) ) ) );
 		}
 		return *this;
@@ -74,9 +74,9 @@ namespace scone
 		if ( overwrite )
 			m_Value = other.m_Value;
 
-		ChildIter insertion_point = Begin();
+		iterator insertion_point = begin();
 
-		for ( ConstChildIter other_it = other.m_Children.begin(); other_it != other.m_Children.end(); ++other_it )
+		for ( const_iterator other_it = other.m_Children.begin(); other_it != other.m_Children.end(); ++other_it )
 		{
 			// see if we already have the key
 			PropNode* child = nullptr;
@@ -102,7 +102,7 @@ namespace scone
 	{
 	}
 
-	PropNode& PropNode::AddChild( const String& key )
+	PropNode& PropNode::add_child( const String& key )
 	{
 		size_t ofs = key.find_first_of( '.' );
 		if ( ofs == String::npos )
@@ -120,20 +120,20 @@ namespace scone
 
 			PropNode* child = GetChildPtr( head_key );
 			if ( child )
-				return child->AddChild( tail_key );
+				return child->add_child( tail_key );
 			else 
-				return AddChild( head_key ).AddChild( tail_key );
+				return add_child( head_key ).add_child( tail_key );
 		}
 	}
 
-	PropNode& PropNode::AddChild( const String& key, const PropNode& other )
+	PropNode& PropNode::add_child( const String& key, const PropNode& other )
 	{
-		return ( AddChild( key ) = other );
+		return ( add_child( key ) = other );
 	}
 
-	PropNode::ChildIter PropNode::InsertChildren( const PropNode& other, ChildIter insertIt )
+	PropNode::iterator PropNode::insert_children( const PropNode& other, iterator insertIt )
 	{
-		for ( ConstChildIter otherIt = other.Begin(); otherIt != other.End(); ++otherIt )
+		for ( const_iterator otherIt = other.begin(); otherIt != other.end(); ++otherIt )
 		{
 			insertIt = m_Children.insert( insertIt, std::make_pair( otherIt->first, PropNodePtr( new PropNode( *otherIt->second ) ) ) );
 			++insertIt;
@@ -149,7 +149,7 @@ namespace scone
 		if ( ofs == String::npos )
 		{
 			// find first-level child
-			for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+			for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 			{
 				if ( iter->first == key )
 					return iter->second.get();
@@ -163,11 +163,11 @@ namespace scone
 			String head_key = key.substr( 0, ofs );
 			String tail_key = key.substr( ofs + 1 );
 
-			for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+			for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 			{
 				if ( iter->first == head_key )
 				{
-					iter->second->Touch();
+					iter->second->touch();
 					return iter->second->GetChildPtr( tail_key );
 				}
 			}
@@ -181,7 +181,7 @@ namespace scone
 		if ( ofs == String::npos )
 		{
 			// remove first matching child
-			for ( ChildIter child_iter = m_Children.begin(); child_iter != m_Children.end(); ++child_iter )
+			for ( iterator child_iter = m_Children.begin(); child_iter != m_Children.end(); ++child_iter )
 			{
 				if ( child_iter->first == key )
 				{
@@ -198,7 +198,7 @@ namespace scone
 			String tail_key = key.substr( ofs + 1 );
 			PropNode* head_child = GetChildPtr( head_key );
 			head_child->RemoveChild( tail_key );
-			if ( head_child->IsEmpty() )
+			if ( head_child->empty() )
 				RemoveChild( head_key );
 		}
 	}
@@ -209,7 +209,7 @@ namespace scone
 		if ( ofs == String::npos )
 		{
 			// remove all children
-			ChildIter child_iter = m_Children.begin();
+			iterator child_iter = m_Children.begin();
 			while ( child_iter != m_Children.end() )
 			{
 				if ( child_iter->first == key )
@@ -225,18 +225,18 @@ namespace scone
 			String tail_key = key.substr( ofs + 1 );
 			PropNode* head_child = GetChildPtr( head_key );
 			head_child->RemoveChildren( tail_key );
-			if ( head_child->IsEmpty() )
+			if ( head_child->empty() )
 				RemoveChild( head_key );
 		}
 	}
 
-	PropNode::ChildIter PropNode::FindChild( const String& key )
+	PropNode::iterator PropNode::find_child( const String& key )
 	{
 		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
 		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
 	}
 
-	PropNode::ConstChildIter PropNode::FindChild( const String& key ) const
+	PropNode::const_iterator PropNode::find_child( const String& key ) const
 	{
 		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
 		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
@@ -245,7 +245,7 @@ namespace scone
 	void ToPropertyTree( ptree& tree, const PropNode& props, const String& key )
 	{
 		ptree& child = key.empty() ? tree : tree.add( key, props.GetValueType() );
-		for ( PropNode::ConstChildIter iter = props.Begin(); iter != props.End(); ++iter )
+		for ( PropNode::const_iterator iter = props.begin(); iter != props.end(); ++iter )
 			ToPropertyTree( child, *iter->second, iter->first );
 	}
 
@@ -261,7 +261,7 @@ namespace scone
 			}
 			else if ( v.first != "<xmlcomment>" )
 			{
-				PropNode& child = props.AddChild( v.first );
+				PropNode& child = props.add_child( v.first );
 				FromPropertyTree( child, v.second );
 			}
 		}
@@ -328,9 +328,9 @@ namespace scone
 		if ( key_width == -1 )
 			key_width = GetMaximumKeyWidth( prefix );
 
-		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+		for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
-			if ( !unflaggedOnly || !iter->second->IsTouched() )
+			if ( !unflaggedOnly || !iter->second->touched() )
 			{
 				String full_key;
 				for ( int i = 0; i < depth; ++i )
@@ -352,7 +352,7 @@ namespace scone
 	int PropNode::GetMaximumKeyWidth( const String& prefix, int depth ) const
 	{
 		int kw = 0;
-		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+		for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
 			kw = std::max( kw, static_cast< int >( depth * prefix.size() + iter->first.size() ) );
 			kw = std::max( kw, iter->second->GetMaximumKeyWidth( prefix, depth + 1 ) );
@@ -360,11 +360,11 @@ namespace scone
 		return kw;
 	}
 
-	size_t PropNode::GetUntouchedCount() const
+	size_t PropNode::count_untouched() const
 	{
-		size_t count = IsTouched() ? 0 : 1;
-		for ( ConstChildIter iter = m_Children.begin(); iter != m_Children.end(); ++iter )
-			count += iter->second->GetUntouchedCount();
+		size_t count = touched() ? 0 : 1;
+		for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
+			count += iter->second->count_untouched();
 		return count;
 	}
 
@@ -391,7 +391,7 @@ namespace scone
 	{
 		SCONE_THROW_IF( level >= 100, "Exceeded maximum include level, check for loops in includes" );
 
-		for ( PropNode::ChildIter iter = props.Begin(); iter != props.End(); )
+		for ( PropNode::iterator iter = props.begin(); iter != props.end(); )
 		{
 			if ( iter->first == include_directive )
 			{
@@ -408,13 +408,13 @@ namespace scone
 				if ( merge_children )
 				{
 					SCONE_ASSERT( included_props.GetChildren().size() == 1 );
-					props.Merge( *included_props.Begin()->second, false );
-					iter = props.Begin(); // reset the iterator, which has become invalid after merge
+					props.Merge( *included_props.begin()->second, false );
+					iter = props.begin(); // reset the iterator, which has become invalid after merge
 				}
 				else
 				{
 					// insert the children at the INCLUDE spot
-					iter = props.InsertChildren( included_props, iter );
+					iter = props.insert_children( included_props, iter );
 				}
 			}
 			else
@@ -426,7 +426,7 @@ namespace scone
 		}
 
 		// untouch all after search
-		props.UnTouch();
+		props.untouch();
 	}
 
 	PropNode ReadPropNodeFromXml( const String& filename, const String& include_directive, int level )
@@ -477,7 +477,7 @@ namespace scone
 			{
 				String key = s.substr( 0, pos );
 				String value = s.substr( pos + 1 );
-				pn.Set( key, value );
+				pn.set( key, value );
 			}
 		}
 
