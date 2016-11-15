@@ -26,7 +26,7 @@ namespace scone
 			bool is_free_default = true;
 
 			// check if we have a value
-			if ( props.HasValue() )
+			if ( props.has_value() )
 			{
 				init_mean = props.get< Real >();
 				is_free_default = false;
@@ -39,7 +39,6 @@ namespace scone
 			INIT_PROPERTY( props, min, REAL_MIN );
 			INIT_PROPERTY( props, max, REAL_MAX );
 			INIT_PROPERTY( props, is_free, is_free_default ); /// TODO: some smarter default
-			props.touch();
 		}
 
 		double ParamInfo::GetInitialValue() const

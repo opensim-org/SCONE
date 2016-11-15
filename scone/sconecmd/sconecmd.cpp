@@ -37,14 +37,14 @@ int main(int argc, char* argv[])
 			auto scenario_file = optArg.getValue();
 
 			// load properties
-			PropNode props = ReadPropNode( scenario_file );
+			PropNode props = flut::read_xml( scenario_file );
 
 			// start optimization
 			PropNode cmd_props;
 			for ( auto kvstring : propArg )
 			{
 				auto kvp = flut::to_key_value( kvstring );
-				cmd_props.Add( kvp.first, kvp.second );
+				cmd_props.set( kvp.first, kvp.second );
 			}
 
 			// get command line settings (parameter 2 and further)

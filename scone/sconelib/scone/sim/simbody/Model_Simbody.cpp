@@ -158,15 +158,15 @@ namespace scone
 			else state = GetStateVariables();
 
 			// update state variables if they are being optimized
-			if ( auto& iso = props.try_get_child( "state_init_optimization" ) )
+			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
-				bool symmetric = iso.get< bool >( "symmetric", false );
+				bool symmetric = iso->get< bool >( "symmetric", false );
 				for ( auto& nvp : state )
 				{
-					if ( flut::matches_pattern( nvp.first, iso.get< String >( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.get< String >( "exclude_states" ) ) )
+					if ( flut::matches_pattern( nvp.first, iso->get< String >( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso->get< String >( "exclude_states" ) ) )
 					{
 						auto name = symmetric ? GetNameNoSide( nvp.first ) : nvp.first;
-						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso.get< Real >( "init_mean", 0.0 ), iso.get< Real >( "init_std" ), 0, 0, iso.get< Real >( "min", -1000 ), iso.get< Real >( "max", 1000 ) ) );
+						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
 					}
 				}
 			}
@@ -185,9 +185,9 @@ namespace scone
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
 			// create and initialize controllers
-			const PropNode& cprops = props.get_child( "Controllers" ).touch();
+			const PropNode& cprops = props.get_child( "Controllers" );
 			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
+				m_Controllers.push_back( CreateController( iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
 
@@ -706,13 +706,13 @@ namespace scone
 			if ( forceIt != props.end() )
 			{
 				opt::ScopedParamSetPrefixer prefix1( par, "ForceSet." );
-				for ( auto musIt = forceIt->second->begin(); musIt != forceIt->second->end(); ++musIt )
+				for ( auto musIt = forceIt->second.begin(); musIt != forceIt->second.end(); ++musIt )
 				{
 					opt::ScopedParamSetPrefixer prefix2( par, musIt->first + "." );
 					auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
-					for ( auto musPropIt = musIt->second->begin(); musPropIt != musIt->second->end(); ++musPropIt )
+					for ( auto musPropIt = musIt->second.begin(); musPropIt != musIt->second.end(); ++musPropIt )
 					{
-						double value = par.Get( musPropIt->first, *musIt->second, musPropIt->first );
+						double value = par.Get( musPropIt->first, musIt->second, musPropIt->first );
 						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
 					}
 				}

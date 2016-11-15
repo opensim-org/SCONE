@@ -52,7 +52,7 @@ namespace scone
 			const PropNode& parNode = props.get_child( node_name );
 
 			// see if this is an actual parameter
-			if ( parNode.GetChildren().size() > 0 )
+			if ( parNode.size() > 0 )
 				return Get( ParamInfo( GetNamePrefix() + name, parNode ) );
 			else return props.get< double >(); // just return the value
 		}

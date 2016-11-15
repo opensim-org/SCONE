@@ -34,6 +34,7 @@
 namespace bfs = boost::filesystem;
 
 #include <flut/timer.hpp>
+#include "flut/prop_node_tools.hpp"
 using flut::timer;
 
 namespace scone
@@ -122,7 +123,7 @@ namespace scone
 				bfs::current_path( config_path.parent_path() );
 
 			// read properties
-			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+			PropNode configProp = flut::load_xml( config_path.string() ) ;
 			PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 			// create SimulationObjective object

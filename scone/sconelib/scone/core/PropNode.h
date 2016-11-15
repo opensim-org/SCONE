@@ -52,14 +52,14 @@ namespace scone
 		explicit operator bool() const { return !empty();  }
 
 		// check if empty
-		bool empty() const { return m_Children.empty() && !HasValue(); }
+		bool empty() const { return m_Children.empty() && !has_value(); }
 
 		// clear
 		void clear() { m_Children.clear(); m_Value.clear(); }
 
 		// check if child key exists
 		bool has_child( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
-		bool HasValue() const {	return !m_Value.empty(); }
+		bool has_value() const {	return !m_Value.empty(); }
 
 		// get / set raw value
 		const ValueType& GetValueType() const { touch(); return m_Value; }

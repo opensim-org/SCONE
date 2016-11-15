@@ -340,7 +340,7 @@ namespace scone
 				full_key += iter->first;
 
 				str << std::left << std::setw( key_width ) << full_key;
-				if ( iter->second->HasValue() )
+				if ( iter->second->has_value() )
 					str << std::setw( 0 ) << " = " << iter->second->GetValueType();
 				str << std::endl;
 			}
