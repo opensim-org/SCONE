@@ -22,7 +22,7 @@ namespace scone
 		Model::Model( const PropNode& props, opt::ParamSet& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
-		custom_properties( props.TryGetChild( "custom_properties" ) ),
+		custom_properties( props.try_get_child( "custom_properties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
 		thread_safe_simulation( false )

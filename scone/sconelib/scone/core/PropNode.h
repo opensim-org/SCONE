@@ -1,5 +1,7 @@
 #pragma once
 
+#define  USE_FLUT_PROP_NODE 1
+
 #include "core.h"
 #include "String.h"
 
@@ -9,7 +11,7 @@
 
 #include "Exception.h"
 
-#if 0
+#if USE_FLUT_PROP_NODE
 
 #include "flut/prop_node.hpp"
 namespace scone
@@ -132,7 +134,7 @@ namespace scone
 		}
 
 		/// Try to get a child, return empty node on failure
-		const PropNode& TryGetChild( const KeyType& key ) const
+		const PropNode& try_get_child( const KeyType& key ) const
 		{
 			PropNode* p = GetChildPtr( key );
 			if ( !p )
@@ -173,15 +175,15 @@ namespace scone
 		PropNode& FromInfoFile( const String& filename );
 
 		/// Shortcut 'Get' functions for lazy people
-		int GetInt( const KeyType& key ) const { return get< int >( key ); }
-		bool GetBool( const KeyType& key ) const { return get< bool >( key ); }
-		Real GetReal( const KeyType& key ) const { return get< Real >( key ); }
-		String GetStr( const KeyType& key ) const { return get< String >( key ); }
+		int get< int >( const KeyType& key ) const { return get< int >( key ); }
+		bool get< bool >( const KeyType& key ) const { return get< bool >( key ); }
+		Real get< Real >( const KeyType& key ) const { return get< Real >( key ); }
+		String get< String >( const KeyType& key ) const { return get< String >( key ); }
 
-		int GetInt( const KeyType& key, int def ) const { return get< int >( key, def ); }
-		bool GetBool( const KeyType& key, bool def ) const { return get< bool >( key, def ); }
-		Real GetReal( const KeyType& key, Real def ) const { return get< Real >( key, def ); }
-		String GetStr( const KeyType& key, const String& def ) const { return get< String >( key, def ); }
+		int get< int >( const KeyType& key, int def ) const { return get< int >( key, def ); }
+		bool get< bool >( const KeyType& key, bool def ) const { return get< bool >( key, def ); }
+		Real get< Real >( const KeyType& key, Real def ) const { return get< Real >( key, def ); }
+		String get< String >( const KeyType& key, const String& def ) const { return get< String >( key, def ); }
 
 		std::ostream& ToStream( std::ostream& str, const String& prefix = "  ", bool unflaggedOnly = false, int key_width = -1, int depth = 0 ) const;
 

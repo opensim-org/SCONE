@@ -1,5 +1,7 @@
 #include "PropNode.h"
 
+#if !USE_FLUT_PROP_NODE
+
 #include <set>
 
 #include <boost/property_tree/ptree.hpp>
@@ -396,8 +398,8 @@ namespace scone
 			if ( iter->first == include_directive )
 			{
 				// load included file using filename path
-				String include_filename = iter->second->GetStr( "file" );
-				bool merge_children = iter->second->GetBool( "merge_children", false );
+				String include_filename = iter->second->get< String >( "file" );
+				bool merge_children = iter->second->get< bool >( "merge_children", false );
 				boost::filesystem::path include_path = boost::filesystem::path( filename ).parent_path() / include_filename;
 				PropNode included_props = ReadPropNode( include_path.string(), include_directive, level + 1 );
 				
@@ -484,3 +486,5 @@ namespace scone
 		return pn;
 	}
 }
+
+#endif

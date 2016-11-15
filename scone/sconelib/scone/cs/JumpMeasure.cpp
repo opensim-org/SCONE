@@ -20,7 +20,7 @@ namespace scone
 			INIT_PROPERTY( props, jump_type, int( HighJump ) );
 
 			if ( props.has_child( "target_body" ) )
-				target_body = FindByName( model.GetBodies(), props.GetStr( "target_body" ) ).get();
+				target_body = FindByName( model.GetBodies(), props.get< String >( "target_body" ) ).get();
 
 			prepare_com = init_com = model.GetComPos();
 

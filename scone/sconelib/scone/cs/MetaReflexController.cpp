@@ -19,36 +19,36 @@ namespace scone
 		MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
 		{
-			bool symmetric = props.GetBool( "use_symmetric_actuators", true );
+			bool symmetric = props.get< bool >( "use_symmetric_actuators", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
 			// create Meta Reflexes
 			const PropNode& reflexes = props.get_child( "Reflexes" );
-			for ( const PropNode::KeyChildPair& item: reflexes.GetChildren() )
+			for ( const auto& item : reflexes )
 			{
-				if ( item.second->GetStr( "type" ) == "MetaReflex" )
+				if ( item.second.get< String >( "type" ) == "MetaReflex" )
 				{
 					// check if the target dof is sided
 					// TODO: see if we can come up with something nicer here...
-					const String& target_dof = item.second->GetStr( "target" );
+					const String& target_dof = item.second.get< String >( "target" );
 					SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
 					if ( HasElementWithName( model.GetDofs(), target_dof ) )
 					{
 						// this is a dof with no sides: only create one controller
-						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, sim::Area::WHOLE_BODY ) ) );
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, sim::Area::WHOLE_BODY ) ) );
 					}
 					else
 					{
 						// this is a dof that has sides (probably), create a controller that matches the Area side
 						SCONE_ASSERT( area.side != NoSide );
-						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( *item.second, par, model, area ) ) );
+						m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, area ) ) );
 					}
 				}
-				else if ( item.second->GetStr( "type" ) == "VirtualMuscleReflex" )
+				else if ( item.second.get< String >( "type" ) == "VirtualMuscleReflex" )
 				{
-					m_VirtualMuscles.push_back( MetaReflexVirtualMuscleUP( new MetaReflexVirtualMuscle( *item.second, par, model, area ) ) );
+					m_VirtualMuscles.push_back( MetaReflexVirtualMuscleUP( new MetaReflexVirtualMuscle( item.second, par, model, area ) ) );
 				}
-				else SCONE_THROW( "Invalid MetaReflex type: " + item.second->GetStr( "type " ) );
+				else SCONE_THROW( "Invalid MetaReflex type: " + item.second.get< String >( "type " ) );
 			}
 
 			// backup the current state

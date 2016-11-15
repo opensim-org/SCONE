@@ -60,7 +60,7 @@ namespace scone
 			for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 			{
 				// get state masks
-				String state_masks = ccIt->second->GetStr( "states" );
+				String state_masks = ccIt->second.get< String >( "states" );
 				auto state_tokens = flut::split_str( state_masks, ";," );
 				for ( const String& instance_states: state_tokens )
 				{
@@ -84,7 +84,7 @@ namespace scone
 
 						// create controller
 						log::Trace( "Creating controllers for " + GetConditionName( cc ) );
-						const PropNode& cprops = ccIt->second->get_child( "Controller" );
+						const PropNode& cprops = ccIt->second.get_child( "Controller" );
 						opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 						cc.controller = sim::CreateController( cprops, par, model, a );
 					}

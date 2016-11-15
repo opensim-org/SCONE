@@ -18,7 +18,7 @@ namespace scone
 		Measure( props, par, model, area ),
 		m_Energy( Statistic<>::LinearInterpolation )
 		{
-			measure_type = m_MeasureNames.GetValue( props.GetStr( "measure_type" ) );
+			measure_type = m_MeasureNames.GetValue( props.get< String >( "measure_type" ) );
 			INIT_PROPERTY( props, use_cost_of_transport, false );
             INIT_PROPERTY( props, specific_tension, 0.25e6 );
             INIT_PROPERTY( props, muscle_density, 1059.7 );
@@ -35,9 +35,9 @@ namespace scone
 		}
 
         EffortMeasure::MuscleProperties::MuscleProperties( const PropNode& props ) :
-            muscle( props.GetStr("muscle") )
+            muscle( props.get< String >("muscle") )
         {
-            Real ratio = props.GetReal( "slow_twitch_ratio" );
+            Real ratio = props.get< Real >( "slow_twitch_ratio" );
             SCONE_ASSERT_MSG( (ratio >= 0.0 && ratio <= 1.0), "slow_twitch_ratios must be between 0.0 and 1.0" );
             slow_twitch_ratio = ratio;
         }
@@ -66,12 +66,12 @@ namespace scone
 			double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 			double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
-			GetReport().Add( "cost_of_transport", cot );
-			GetReport().Add( "average", m_Energy.GetAverage() );
-			GetReport().Add( "total", m_Energy.GetTotal() );
-			GetReport().Add( "distance", distance );
-			GetReport().Add( "speed", distance / model.GetTime() );
-			GetReport().Add( "probe_total", model.GetTotalEnergyConsumption() );
+			GetReport().set( "cost_of_transport", cot );
+			GetReport().set( "average", m_Energy.GetAverage() );
+			GetReport().set( "total", m_Energy.GetTotal() );
+			GetReport().set( "distance", distance );
+			GetReport().set( "speed", distance / model.GetTime() );
+			GetReport().set( "probe_total", model.GetTotalEnergyConsumption() );
 
 			if ( use_cost_of_transport )
 				return cot;
@@ -224,11 +224,11 @@ namespace scone
             // read in fiber ratios. throw exception if out of [0,1] range
             //std::map< String, Real > fiberRatioMap;
             std::vector< MuscleProperties > muscPropsInput;
-            const PropNode& muscleProperties = props.TryGetChild( "MuscleProperties" );
-            for ( auto it = muscleProperties.begin(); it != muscleProperties.end(); ++ it )
-            {
-                muscPropsInput.emplace_back( MuscleProperties( *it->second ) );
-            }
+            if ( const PropNode* muscleProperties = props.try_get_child( "MuscleProperties" ) )
+			{
+				for ( auto it = muscleProperties->begin(); it != muscleProperties->end(); ++it )
+					muscPropsInput.emplace_back( MuscleProperties( it->second ) );
+			}
 
             // update muscle if its name is in the map
             for ( Index i = 0; i < model.GetMuscles().size(); ++i ) 

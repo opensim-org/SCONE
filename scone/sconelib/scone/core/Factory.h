@@ -40,7 +40,7 @@ namespace scone
 		// TODO: use variadic functions for neater factories
 		F& Create( const PropNode& props )
 		{
-			F& f = Create( props.GetStr( "type" ) );
+			F& f = Create( props.get< String >( "type" ) );
 			props.touch();
 			props.get_child( "type" ).touch();
 			return f;

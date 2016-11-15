@@ -19,6 +19,8 @@
 #endif
 #include "flut/system/path.hpp"
 #include "Log.h"
+#include "flut/prop_node_tools.hpp"
+#include "string"
 
 #define SCONE_SETTINGS_PATH ( flut::get_config_folder() / "SCONE/settings.ini" )
 
@@ -49,7 +51,7 @@ namespace scone
 		if ( g_GlobalSettings.empty() )
 		{
 			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
-			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
+			g_GlobalSettings = flut::load_ini( SCONE_SETTINGS_PATH );
 		}
 
 		return g_GlobalSettings;
@@ -60,15 +62,15 @@ namespace scone
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
 		g_GlobalSettings = newSettings;
 		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH.str() ).parent_path() );
-		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH.str() );
+		save_prop( g_GlobalSettings, SCONE_SETTINGS_PATH.replace_extension( "props" ), true );
 		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
 	}
 
 	SCONE_API path GetFolder( const String& folder, const String& default_path )
 	{
-		auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).GetStr( folder, "" ) );
+		auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
 		if ( path_to_folder.empty() )
-			path_to_folder = path( GetSconeSettings().get_child( "folders" ).GetStr( "root" ) ) / default_path;
+			path_to_folder = path( GetSconeSettings().get_child( "folders" ).get< String >( "root" ) ) / default_path;
 		return path_to_folder;
 	}
 

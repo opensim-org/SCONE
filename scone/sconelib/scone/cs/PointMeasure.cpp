@@ -28,12 +28,12 @@ namespace scone
 			else SCONE_THROW("cannot find body name '" + body + "'");
 
 			// initialize range
-			range.min = Real( props.GetReal( "pos_min", 0.0 ) );
-			range.max = Real( props.GetReal( "pos_max", 0.0 ) );
-			vel_range.min = Real( props.GetReal( "vel_min", 0.0 ) );
-			vel_range.max = Real( props.GetReal( "vel_max", 0.0 ) );
-            acc_range.min = Real( props.GetReal( "acc_min", 0.0 ) );
-            acc_range.max = Real( props.GetReal( "acc_max", 0.0 ) );
+			range.min = Real( props.get< Real >( "pos_min", 0.0 ) );
+			range.max = Real( props.get< Real >( "pos_max", 0.0 ) );
+			vel_range.min = Real( props.get< Real >( "vel_min", 0.0 ) );
+			vel_range.max = Real( props.get< Real >( "vel_max", 0.0 ) );
+            acc_range.min = Real( props.get< Real >( "acc_min", 0.0 ) );
+            acc_range.max = Real( props.get< Real >( "acc_max", 0.0 ) );
 
 			// make axes_to_measure all 1's and 0's
 			for ( int i = 0; i < 2; ++i ) {

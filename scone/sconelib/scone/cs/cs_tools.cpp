@@ -99,7 +99,6 @@ namespace scone
 
 			// collect statistics
 			PropNode statistics;
-			statistics.clear();
 			statistics.set( "result", result );
 			statistics.get_child( "result" ).insert_children( so->GetMeasure().GetReport() );
 			statistics.set( "simulation time", so->GetModel().GetTime() );

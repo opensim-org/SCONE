@@ -8,7 +8,7 @@ namespace scone
 	{
 		JointLoadMeasure::JointLoadMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
-		joint( *FindByName( model.GetJoints(), props.GetStr( "joint" ) ) ),
+		joint( *FindByName( model.GetJoints(), props.get< String >( "joint" ) ) ),
 		load_penalty( props )
 		{
 			INIT_PROPERTY( props, method, 1 );

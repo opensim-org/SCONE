@@ -22,7 +22,7 @@ namespace scone
 			for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 			{
 				// get state masks
-				String state_masks = ccIt->second->GetStr( "states" );
+				String state_masks = ccIt->second.get< String >( "states" );
 				auto state_tokens = flut::split_str( state_masks, ";," );
 				for ( const String& instance_states : state_tokens )
 				{
@@ -48,7 +48,7 @@ namespace scone
 					SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" )
 
 					// create controller
-					const PropNode& cprops = ccIt->second->get_child( "Controller" );
+					const PropNode& cprops = ccIt->second.get_child( "Controller" );
 					opt::ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
 					cc.second = sim::CreateController( cprops, par, model, area );
 				}

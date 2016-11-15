@@ -33,26 +33,30 @@ namespace scone
 		Measure( props, par, model, area )
 		{
 			// get Terms (obsolete)
-			const PropNode& termNode = props.TryGetChild( "Terms" );
-			for ( auto it = termNode.begin(); it != termNode.end(); ++it )
+			if ( const PropNode* termNode = props.try_get_child( "Terms" ) )
 			{
-				Term t( *it->second );
+				for ( auto it = termNode->begin(); it != termNode->end(); ++it )
+				{
+					Term t( it->second );
 
-				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast< Measure* >( sim::CreateController( it->second->get_child( "Measure" ), par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				t.measure = MeasureUP( m );
-				m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
+					// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+					Measure* m = dynamic_cast<Measure*>( sim::CreateController( it->second.get_child( "Measure" ), par, model, area ).release() );
+					SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
+					t.measure = MeasureUP( m );
+					m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
+				}
 			}
 
 			// get Measures
-			const PropNode& mprops = props.TryGetChild( "Measures" );
-			for ( auto it = mprops.begin(); it != mprops.end(); ++it )
+			if ( const PropNode* mprops = props.try_get_child( "Measures" ) )
 			{
-				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast< Measure* >( sim::CreateController( *it->second, par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				m_Measures.push_back( MeasureUP( m ) );
+				for ( auto it = mprops->begin(); it != mprops->end(); ++it )
+				{
+					// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+					Measure* m = dynamic_cast<Measure*>( sim::CreateController( it->second, par, model, area ).release() );
+					SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
+					m_Measures.push_back( MeasureUP( m ) );
+				}
 			}
 		}
 
