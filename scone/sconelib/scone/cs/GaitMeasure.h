@@ -15,7 +15,7 @@ namespace scone
 			virtual ~GaitMeasure();
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-			void UpdateMinVelocityMeasure( const sim::Model &model, double timestamp );
+			void UpdateVelocityMeasures( const sim::Model &model, double timestamp );
 
 			virtual double GetResult( sim::Model& model ) override;
 
@@ -23,6 +23,8 @@ namespace scone
 			Real termination_height;
 			Real min_velocity;
 			Real load_threshold;
+			Real target_velocity;
+			Real target_velocity_threshold;
 
 		protected:
 			virtual String GetClassSignature() const override;
@@ -44,7 +46,9 @@ namespace scone
 
 			PropNode m_Report;
 
+			Range< Real > vel_range;
 			Statistic<> m_MinVelocityMeasure;
+			Statistic<> m_TargetVelocityMeasure;
 			int m_nSteps;
 			double m_TotStepSize;
 		};
