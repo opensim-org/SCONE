@@ -14,12 +14,15 @@ namespace scone
 		GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation ),
+		m_TargetVelocityMeasure( Statistic<>::NoInterpolation ),
 		m_nSteps( 0 ),
 		m_TotStepSize( 0.0 )
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, min_velocity, 0.5 );
 			INIT_PROPERTY( props, load_threshold, 0.1 );
+			INIT_PROPERTY( props, target_velocity, -1.0 );
+			INIT_PROPERTY( props, target_velocity_threshold, 0.05 );
 
 			// get string of gait bodies
 			String gait_bodies;
@@ -38,6 +41,10 @@ namespace scone
 
 			// add an initial sample to m_MinVelocityMeasure because the first sample is ignored with NoInterpolation
 			m_MinVelocityMeasure.AddSample( 0.0, 0.0 );
+			m_TargetVelocityMeasure.AddSample( 0.0, 0.0 );
+
+			// initialize vel_range
+			vel_range = Range< Real >( -target_velocity_threshold, target_velocity_threshold );
 		}
 
 		GaitMeasure::~GaitMeasure()
@@ -62,7 +69,7 @@ namespace scone
 			{
 				m_nSteps++;
 				m_TotStepSize = model.GetComPos().x - m_InitialComPos.x;
-				UpdateMinVelocityMeasure( model, timestamp );
+				UpdateVelocityMeasures( model, timestamp );
 			}
 
 			// handle termination
@@ -82,31 +89,44 @@ namespace scone
 			double duration = model.GetSimulationEndTime();
 
 			// add final step and penalty to min_velocity measure
-			UpdateMinVelocityMeasure( model, model.GetTime() );
+			UpdateVelocityMeasures( model, model.GetTime() );
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
+				m_TargetVelocityMeasure.AddSample( duration, 0 );
+
+			double min_vel_measure = 1.0 - m_MinVelocityMeasure.GetAverage();
+			double target_vel_measure = m_TargetVelocityMeasure.GetAverage();
 
 			GetReport().Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
-			GetReport().Set( "min_velocity", 1.0 - m_MinVelocityMeasure.GetAverage() );
+			GetReport().Set( "min_velocity", min_vel_measure );
+			GetReport().Set( "target_velocity", target_vel_measure );
 			GetReport().Set( "distance", distance );
 			GetReport().Set( "speed", speed );
 			GetReport().Set( "steps", m_nSteps );
 			GetReport().Set( "stepsize", m_TotStepSize / m_nSteps );
 
-			return 1.0 - m_MinVelocityMeasure.GetAverage();
+			return min_vel_measure + target_vel_measure;
 		}
 
-		void GaitMeasure::UpdateMinVelocityMeasure( const sim::Model &model, double timestamp )
+		void GaitMeasure::UpdateVelocityMeasures( const sim::Model &model, double timestamp )
 		{
 			double gait_dist = GetGaitDist( model );
 			double step_size = gait_dist - m_PrevGaitDist;
 			double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
 			if ( dt > 0 )
 			{
-				double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
+				double step_vel = step_size / dt;
+				double norm_vel = GetRestrained( step_vel / min_velocity, 0.0, 1.0 );
 				log::trace( "Adding sample to GaitMeasure at time: ", timestamp );
 				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
-				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+				log::TraceF( "%.3f: UpdateVelocityMeasures step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+
+				if ( target_velocity > 0 )
+				{
+					double target_vel_measure = GetSquared( vel_range.GetRangeViolation( target_velocity - step_vel ) );
+					m_TargetVelocityMeasure.AddSample( timestamp, target_vel_measure );
+				}
+
 			}
 			m_PrevGaitDist = gait_dist;
 		}
