@@ -4,12 +4,13 @@
 1b: Added control for rect_fem
 1c: Added retraction for rect_fem
 1d: Changed measure to include GRF
+1e: Changed rect_fem control to constant gain
 -->
 
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHX1d</signature_postfix>
+		<signature_postfix>GHX1e</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020m.osim</model_file>
@@ -118,8 +119,7 @@
 										<L0 init_mean="0.65" init_std="0.065" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="rect_fem" delay="0.005">
-										<KL	init_mean="0.1" init_std="0.01" min="0.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.9" init_std="0.09" min="0" max="2" is_free="1"/>
+										<C0	init_mean="0.05" init_std="0.005" min="0.0" max="1.0" is_free="1"/>
 									</Reflex>
 									<!-- Balance correction for hip flexion -->
 									<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
