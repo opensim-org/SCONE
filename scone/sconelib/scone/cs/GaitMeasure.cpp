@@ -108,10 +108,8 @@ namespace scone
 			double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
 			if ( dt > 0 )
 			{
-				std::ofstream outfile("blah.txt", std::ios_base::app);
 				double step_vel = step_size / dt;
 				double min_vel_measure = 1.0 - GetRestrained( step_vel / min_velocity, 0.0, 1.0 );
-				outfile << min_vel_measure << "\n";
 				double max_vel_measure = GetRestrained( (step_vel - max_velocity) / min_velocity, 0.0, REAL_MAX );
 				log::trace( "Adding sample to GaitMeasure at time: ", timestamp );
 				m_MinVelocityMeasure.AddSample( timestamp, min_vel_measure );
