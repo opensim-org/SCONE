@@ -49,6 +49,7 @@ namespace scone
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
 		{
+
 			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
 			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
 		}
@@ -87,8 +88,13 @@ namespace scone
 
 	SCONE_API path GetFolder( const String& folder, const path& default_path )
 	{
-		auto path_to_folder = flut::path( GetSconeSettings().GetChild( "folders" ).GetStr( folder, "" ) );
-		return !path_to_folder.empty() ? path_to_folder : default_path;
+		if ( GetSconeSettings().HasKey( "folders" ) )
+		{
+			auto path_to_folder = flut::path( GetSconeSettings().GetChild( "folders" ).GetStr( folder, "" ) );
+			if ( !path_to_folder.empty() )
+				return path_to_folder;
+		}
+		return default_path;
 	}
 
 	SCONE_API path GetFolder( SconeFolder folder )
@@ -96,7 +102,7 @@ namespace scone
 		switch ( folder )
 		{
 		case scone::SCONE_ROOT_FOLDER: return GetRootFolder();
-		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output" );
+		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output", GetDataFolder() / "models" );
 		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDataFolder() / "models" );
 		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDataFolder() / "scenarios" );
 		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetRootFolder() / "resources/geometry" );
