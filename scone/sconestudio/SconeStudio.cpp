@@ -50,7 +50,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
 	ui.resultsBrowser->setModel( resultsFileModel );
-	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( scone::GetFolder( SCONE_OUTPUT_FOLDER ) ) ) );
+	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) ) ) );
 	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),

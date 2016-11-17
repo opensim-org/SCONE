@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 		scone::cs::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 
-		QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/ui/scone_splash.png" ) );
+		QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
 

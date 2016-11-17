@@ -49,15 +49,22 @@ namespace scone
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
 		{
-
-			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
-			g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
+			if ( flut::exists( SCONE_SETTINGS_PATH ) )
+			{
+				log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
+				g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
+			}
+			else
+			{
+				// add default settings here?
+				g_GlobalSettings.AddChild( "folders" );
+			}
 		}
 
 		return g_GlobalSettings;
 	}
 
-	SCONE_API void SaveSconeSettings( const PropNode& newSettings )
+	void SaveSconeSettings( const PropNode& newSettings )
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
 		g_GlobalSettings = newSettings;
@@ -66,7 +73,7 @@ namespace scone
 		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
 	}
 
-	SCONE_API path GetRootFolder()
+	path GetRootFolder()
 	{
 		if ( g_RootFolder.empty() )
 		{
@@ -81,12 +88,12 @@ namespace scone
 		return g_RootFolder;
 	}
 
-	SCONE_API path GetDataFolder()
+	path GetDataFolder()
 	{
 		return flut::get_documents_folder() / "SCONE";
 	}
 
-	SCONE_API path GetFolder( const String& folder, const path& default_path )
+	path GetFolder( const String& folder, const path& default_path )
 	{
 		if ( GetSconeSettings().HasKey( "folders" ) )
 		{
@@ -97,21 +104,21 @@ namespace scone
 		return default_path;
 	}
 
-	SCONE_API path GetFolder( SconeFolder folder )
+	path GetFolder( SconeFolder folder )
 	{
 		switch ( folder )
 		{
 		case scone::SCONE_ROOT_FOLDER: return GetRootFolder();
-		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output", GetDataFolder() / "models" );
+		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDataFolder() / "results" );
 		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDataFolder() / "models" );
 		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDataFolder() / "scenarios" );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetRootFolder() / "resources/geometry" );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetDataFolder() / "models" / "geometry" );
 		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetRootFolder()/ "resources/ui" );
 		default: SCONE_THROW( "Unknown folder type" );
 		}
 	}
 
-	SCONE_API flut::version GetSconeVersion()
+	flut::version GetSconeVersion()
 	{
 		auto build = GetSconeBuildNumber();
 		int build_nr = 0;
@@ -121,7 +128,7 @@ namespace scone
 
 	}
 
-	SCONE_API String GetSconeBuildNumber()
+	String GetSconeBuildNumber()
 	{
 		if ( g_Version.empty() )
 		{
