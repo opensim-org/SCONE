@@ -87,10 +87,15 @@ namespace scone
 			// add final step and penalty to min_velocity measure
 			UpdateVelocityMeasures( model, model.GetTime() );
 			if ( model.GetTime() < duration )
+            {
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 				m_MaxVelocityMeasure.AddSample( duration, 0 );
+            }
 
-			GetReport().Set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
+            // balance measure
+            double balance_measure = 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) );
+
+			GetReport().Set( "balance", balance_measure );
 			GetReport().Set( "min_velocity", m_MinVelocityMeasure.GetAverage() );
 			GetReport().Set( "max_velocity", m_MaxVelocityMeasure.GetAverage() );
 			GetReport().Set( "distance", distance );
@@ -98,7 +103,7 @@ namespace scone
 			GetReport().Set( "steps", m_nSteps );
 			GetReport().Set( "stepsize", m_TotStepSize / m_nSteps );
 
-			return m_MinVelocityMeasure.GetAverage() + m_MaxVelocityMeasure.GetAverage();
+			return balance_measure + m_MinVelocityMeasure.GetAverage() + m_MaxVelocityMeasure.GetAverage();
 		}
 
 		void GaitMeasure::UpdateVelocityMeasures( const sim::Model &model, double timestamp )
