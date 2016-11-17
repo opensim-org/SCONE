@@ -87,13 +87,13 @@ namespace scone
 			// add final step and penalty to min_velocity measure
 			UpdateVelocityMeasures( model, model.GetTime() );
 			if ( model.GetTime() < duration )
-            {
+			{
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 				m_MaxVelocityMeasure.AddSample( duration, 0 );
-            }
+			}
 
-            // balance measure
-            double balance_measure = 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) );
+			// balance measure
+			double balance_measure = 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) );
 
 			GetReport().Set( "balance", balance_measure );
 			GetReport().Set( "min_velocity", m_MinVelocityMeasure.GetAverage() );
