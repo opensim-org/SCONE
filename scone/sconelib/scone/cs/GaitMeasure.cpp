@@ -110,7 +110,8 @@ namespace scone
 				double norm_vel = std::max( 0.0, 1.0 - ( fabs( penalty ) / min_velocity ) );
 
 				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
-				log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) penalty=%.3f norm_vel=%.3f", timestamp, step_vel, step_size, dt, norm_vel );
+				log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) penalty=%.3f norm_vel=%.3f",
+					timestamp, step_vel, step_size, dt, penalty, norm_vel );
 			}
 			m_PrevGaitDist = gait_dist;
 		}
