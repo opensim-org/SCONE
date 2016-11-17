@@ -133,11 +133,12 @@ if(${Qt5Widgets_FOUND})
 		endforeach()
 	
 		# Copy all OpenSim DLLs
-		FILE(GLOB OPENSIM_DLLS ${OPENSIM_INSTALL_DIR}/bin/*.dll)
+		SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon SimTKsimbody SimTKmath SimTKcommon)
 		foreach(opensimdll ${OPENSIM_DLLS})
 			add_custom_command(TARGET sconestudio POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${opensimdll} ${DLL_TARGET_DIR}
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}$<$<CONFIG:debug>:_d>.dll ${DLL_TARGET_DIR}
 			)
 		endforeach()
+		
 	endif()
 endif()
