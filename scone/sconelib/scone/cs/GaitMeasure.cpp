@@ -6,6 +6,7 @@
 #include "scone/core/Log.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/Profiler.h"
+#include "../core/Range.h"
 
 namespace scone
 {
@@ -19,6 +20,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, min_velocity, 0.5 );
+			INIT_PROPERTY( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
 			INIT_PROPERTY( props, load_threshold, 0.1 );
 
 			// get string of gait bodies
@@ -103,10 +105,13 @@ namespace scone
 			double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
 			if ( dt > 0 )
 			{
-				double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
-				log::trace( "Adding sample to GaitMeasure at time: ", timestamp );
+				double step_vel = step_size / dt;
+				double penalty = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
+				double norm_vel = std::max( 0.0, 1.0 - ( fabs( penalty ) / min_velocity ) );
+				double norm_vel2 = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
+
 				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
-				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f norm_vel2=%.3f", timestamp, step_size, dt, norm_vel, norm_vel2 );
 			}
 			m_PrevGaitDist = gait_dist;
 		}

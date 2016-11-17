@@ -22,6 +22,7 @@ namespace scone
 			// parameters
 			Real termination_height;
 			Real min_velocity;
+			Real max_velocity;
 			Real load_threshold;
 
 		protected:
