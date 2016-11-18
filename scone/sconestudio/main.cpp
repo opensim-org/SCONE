@@ -20,8 +20,10 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 
 	// init logging
-	QDir().mkdir( scone::GetSettingsFolder().str().c_str() );
-	flut::path log_file = scone::GetSettingsFolder() / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".log" );
+	QDir().mkdir( make_qt( scone::GetSettingsFolder() ) );
+	QDir().mkdir( make_qt( scone::GetSettingsFolder() / "log" ) );
+
+	flut::path log_file = scone::GetSettingsFolder() / "log" / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".txt" );
 	flut::log::file_sink file_sink( flut::log::debug_level, log_file );
 
 	if ( !file_sink.good() )
