@@ -68,9 +68,9 @@ int main(int argc, char *argv[])
 #endif
 	
 		w.init(threadingModel);
+		w.show();
 		scone::log::info( "SCONE version ", scone::GetSconeVersion() );
 
-		w.show();
 		splash.close();
 		
 		return a.exec();
