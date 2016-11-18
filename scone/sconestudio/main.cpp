@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
 	// init logging
 	QDir().mkdir( scone::GetSettingsFolder().str().c_str() );
-	flut::path log_file = scone::GetSettingsFolder() / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H-%M-%S" ) + ".log" );
+	flut::path log_file = scone::GetSettingsFolder() / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".log" );
 	flut::log::file_sink file_sink( flut::log::debug_level, log_file );
 
 	if ( !file_sink.good() )
