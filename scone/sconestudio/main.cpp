@@ -39,18 +39,18 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		// initialize logging
+		// init scone
 		scone::cs::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 
+		// init plash screen
 		QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
-
 		//splash.showMessage( QString( "Initiating SCONE version " ) + scone::GetSconeVersion().to_str().c_str(), Qt::AlignLeft | Qt::AlignBaseline, Qt::black);
 		a.processEvents();
 
-		// init logging
+		// init main window
 		SconeStudio w;
 
 		// sleep a while so people can enjoy the splash screen :-)
