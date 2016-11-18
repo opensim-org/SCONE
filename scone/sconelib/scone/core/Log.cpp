@@ -3,18 +3,19 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/lock_guard.hpp>
 #include <stdarg.h>
+#include "flut/system/log_sink.hpp"
 
 #ifdef WIN32
 #	pragma warning( disable: 4996 ) // we don't need to push/pop because it's not a header
 #endif
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
-if ( LEVEL >= g_LogLevel ) \
+if ( flut::log::test_log_level( static_cast< flut::log::level >( LEVEL ) ) ) \
 { \
 	va_list args; va_start( args, FORMAT ); \
 		char _buf_[ g_MaxLogMessageSize ]; \
 		vsnprintf( _buf_, sizeof( _buf_ ), FORMAT, args ); \
-		LogMessageNoCheck( LEVEL, _buf_ ); \
+		LogMessageCheck( LEVEL, _buf_ ); \
 		va_end( args ); \
 }
 
@@ -25,38 +26,21 @@ namespace scone
 		// TODO: replace g_LogLevel with atomic variable
 		// Even though simple read / write operations are atomic on WIN32
 		// (see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684122(v=vs.85).aspx)
-		Level g_LogLevel = InfoLevel;
 		boost::mutex g_LogMutex;
 		const int g_MaxLogMessageSize = 1000;
 
 		std::ostream& LogStream() { return std::cout; }
 
-		void LogMessageNoCheck( Level level, const char* message )
-		{
-			boost::lock_guard< boost::mutex > lock( g_LogMutex );
-			flut::log::get_log_output_func()( static_cast< flut::log::level >( level ), std::string( message ) );
-		}
+		std::unique_ptr< flut::log::stream_sink > g_DefaultSink;
 
 		void LogMessageCheck( Level level, const char* message )
 		{
-			if ( level >= g_LogLevel )
-				LogMessageNoCheck( level, message );
+			flut::log::message( static_cast< flut::log::level >( level ), message );
 		}
 
 		void SCONE_API LogMessage( Level level, const String& msg )
 		{
 			LogMessageCheck( level, msg.c_str() );
-		}
-
-		void SCONE_API SetLevel( Level level )
-		{
-			g_LogLevel = level;	
-			flut::log::set_level( level );
-		}
-
-		Level SCONE_API GetLevel()
-		{
-			return g_LogLevel;
 		}
 
 		void SCONE_API Trace( const String& msg )

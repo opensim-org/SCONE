@@ -30,9 +30,13 @@ com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
-captureProcess( nullptr )
+captureProcess( nullptr ),
+enableLogging( false ),
+flut::log::sink( flut::log::trace_level )
 {
+	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
+
 	//setDockNestingEnabled( true );
 
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
@@ -46,6 +50,8 @@ captureProcess( nullptr )
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
+	flut::log::debug( "Initializing results window" );
+
 	// init file model and browser widget
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
@@ -56,9 +62,11 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
+	flut::log::debug( "Initializing viewer window" );
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
+	flut::log::debug( "Initializing play control widget" );
 	ui.playControl->setRange( 0, 10000 );
 	connect( ui.playControl, SIGNAL( play() ), this, SLOT( start() ) );
 	connect( ui.playControl, SIGNAL( stop() ), this, SLOT( stop() ) );
@@ -68,18 +76,22 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( ui.playControl, SIGNAL( slowMotionChanged(int) ), this, SLOT( slomo(int) ) );
 
 	// start timer for viewer
+	flut::log::debug( "Creating background timers" );
 	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 1000 );
 
+	// only do this after the ui has been initialized
+	flut::log::debug( "Enabling messages window" );
+	enableLogging = true; 
+
 	return true;
 }
 
-void SconeStudio::add_log_entry( flut::log::level l, const std::string& msg )
+void SconeStudio::send_log_message( flut::log::level l, const string& msg )
 {
-#ifdef DEBUG
-	cout << msg << endl;
-#endif // DEBUG
+	if ( !enableLogging )
+		return; // we are not ready to start logging
 
 	// remove newlines
 	string trimmed_msg = flut::trim_str( msg );

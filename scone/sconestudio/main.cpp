@@ -11,15 +11,33 @@
 #include "scone/sim/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
 #include "qt_tools.h"
+#include "flut/system/log_sink.hpp"
+#include "flut/system_tools.hpp"
+#include "scone/core/string_tools.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 
+	// init logging
+	QDir().mkdir( scone::GetSettingsFolder().str().c_str() );
+	flut::path log_file = scone::GetSettingsFolder() / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H-%M-%S" ) + ".log" );
+	flut::log::file_sink file_sink( flut::log::debug_level, log_file );
+
+	if ( !file_sink.good() )
+	{
+		QMessageBox::critical( 0, "Error creating log file", "Could not create file " + make_qt( log_file.str() ) );
+		return -1;
+	}
+	else flut::log::debug( "Created log file ", log_file );
+
+#ifdef _DEBUG
+	flut::log::stream_sink console_log_sink( flut::log::trace_level, std::cout );
+#endif
+
 	try
 	{
-		// initialize scone
-		scone::log::SetLevel( scone::log::TraceLevel );
+		// initialize logging
 		scone::cs::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 
@@ -32,9 +50,6 @@ int main(int argc, char *argv[])
 
 		// init logging
 		SconeStudio w;
-		flut::log::log_output_func f = std::bind( &SconeStudio::add_log_entry, &w, std::placeholders::_1, std::placeholders::_2 );
-		flut::log::set_log_output_func( f );
-		scone::log::info( "SCONE version ", scone::GetSconeVersion() );
 
 		// sleep a while so people can enjoy the splash screen :-)
 		QThread::sleep( 1 );
@@ -53,6 +68,8 @@ int main(int argc, char *argv[])
 #endif
 	
 		w.init(threadingModel);
+		scone::log::info( "SCONE version ", scone::GetSconeVersion() );
+
 		w.show();
 		splash.close();
 		

@@ -6,12 +6,15 @@
 #include <boost/filesystem.hpp>
 #include <tclap/CmdLine.h>
 #include <thread>
+#include "flut/system/log_sink.hpp"
 
 using namespace scone;
 using namespace std;
 
 int main(int argc, char* argv[])
 {
+	flut::log::stream_sink console_sink( flut::log::info_level, std::cout );
+
 	try
 	{
 		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', "0.1", true );
@@ -22,7 +25,6 @@ int main(int argc, char* argv[])
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
 		cmd.xorAdd( optArg, resArg );
-
 		cmd.parse( argc, argv );
 
 		// register all types
@@ -33,7 +35,7 @@ int main(int argc, char* argv[])
 		if ( optArg.isSet() )
 		{
 			// set log level
-			log::SetLevel( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel );
+			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel ) );
 			auto scenario_file = optArg.getValue();
 
 			// load properties
@@ -63,7 +65,7 @@ int main(int argc, char* argv[])
 		else if ( resArg.isSet() )
 		{
 			// set log level
-			log::SetLevel( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel );
+			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
 			opt::SimulateObjective( resArg.getValue() );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen

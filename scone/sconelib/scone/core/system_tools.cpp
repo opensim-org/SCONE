@@ -1,9 +1,6 @@
 #include "system_tools.h"
 
-#define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 9
-#define SCONE_VERSION_PATCH 1
-#define SCONE_VERSION_POSTFIX "ALPHA"
+#include "scone/cs/version.h"
 
 #include <fstream>
 
@@ -19,8 +16,6 @@
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
-
-#define SCONE_SETTINGS_PATH ( flut::get_config_folder() / "SCONE/settings.ini" )
 
 namespace scone
 {
@@ -45,14 +40,15 @@ namespace scone
 	const PropNode& GetSconeSettings()
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		auto settings_file = GetSettingsFolder() / "settings.ini";
 
 		// lazy initialization
 		if ( g_GlobalSettings.IsEmpty() )
 		{
-			if ( flut::exists( SCONE_SETTINGS_PATH ) )
+			if ( flut::exists( settings_file ) )
 			{
-				log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
-				g_GlobalSettings.FromIniFile( SCONE_SETTINGS_PATH.str() );
+				log::debug( "Loaded settings from ", settings_file );
+				g_GlobalSettings.FromIniFile( settings_file.str() );
 			}
 			else
 			{
@@ -67,10 +63,12 @@ namespace scone
 	void SaveSconeSettings( const PropNode& newSettings )
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		auto settings_file = GetSettingsFolder() / "settings.ini";
+
 		g_GlobalSettings = newSettings;
-		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH.str() ).parent_path() );
-		g_GlobalSettings.ToIniFile( SCONE_SETTINGS_PATH.str() );
-		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
+		boost::filesystem::create_directories( boost::filesystem::path( settings_file.str() ).parent_path() );
+		g_GlobalSettings.ToIniFile( settings_file.str() );
+		log::debug( "Saved settings to ", settings_file );
 	}
 
 	path GetRootFolder()
@@ -86,6 +84,11 @@ namespace scone
 			log::debug( "SCONE root folder: ", g_RootFolder );
 		}
 		return g_RootFolder;
+	}
+
+	path GetSettingsFolder()
+	{
+		return flut::get_config_folder() / "SCONE";
 	}
 
 	path GetDataFolder()
