@@ -18,6 +18,7 @@
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
+	QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
 
 	// init logging
 	QDir().mkdir( make_qt( scone::GetSettingsFolder() ) );
