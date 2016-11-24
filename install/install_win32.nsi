@@ -9,7 +9,6 @@
 
 ;--------------------------------
 ;Include Modern UI
-
 !include "MUI2.nsh"
 
 ;--------------------------------
@@ -18,6 +17,7 @@
 ;Name and file
 Name "SCONE"
 OutFile "Install SCONE ${SCONE_VERSION}.exe"
+SetCompressor /SOLID lzma
 
 ;Default installation folder
 InstallDir "$PROGRAMFILES\SCONE"
