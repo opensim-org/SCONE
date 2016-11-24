@@ -53,10 +53,12 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	flut::log::debug( "Initializing results window" );
 
 	// init file model and browser widget
+	path results_folder = scone::GetFolder( SCONE_RESULTS_FOLDER );
+	QDir().mkdir( make_qt( results_folder ) );
 	resultsFileModel = new QFileSystemModel( this );
 	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
 	ui.resultsBrowser->setModel( resultsFileModel );
-	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) ) ) );
+	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( results_folder ) ) );
 	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),

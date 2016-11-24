@@ -52,8 +52,12 @@ namespace scone
 			}
 			else
 			{
-				// add default settings here?
-				g_GlobalSettings.AddChild( "folders" );
+				// add default settings here
+				auto& fn = g_GlobalSettings.AddChild( "folders" );
+				fn.Add( "results", GetDefaultDataFolder() / "results" );
+				fn.Add( "models", GetDefaultDataFolder() / "models" );
+				fn.Add( "scenarios", GetDefaultDataFolder() / "scenarios" );
+				fn.Add( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
 			}
 		}
 
@@ -71,7 +75,7 @@ namespace scone
 		log::debug( "Saved settings to ", settings_file );
 	}
 
-	path GetRootFolder()
+	path GetInstallFolder()
 	{
 		if ( g_RootFolder.empty() )
 		{
@@ -91,7 +95,7 @@ namespace scone
 		return flut::get_config_folder() / "SCONE";
 	}
 
-	path GetDataFolder()
+	path GetDefaultDataFolder()
 	{
 		return flut::get_documents_folder() / "SCONE";
 	}
@@ -111,12 +115,12 @@ namespace scone
 	{
 		switch ( folder )
 		{
-		case scone::SCONE_ROOT_FOLDER: return GetRootFolder();
-		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDataFolder() / "results" );
-		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDataFolder() / "models" );
-		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDataFolder() / "scenarios" );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetDataFolder() / "models" / "geometry" );
-		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetRootFolder()/ "resources/ui" );
+		case scone::SCONE_ROOT_FOLDER: return GetInstallFolder();
+		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDefaultDataFolder() / "results" );
+		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDefaultDataFolder() / "models" );
+		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDefaultDataFolder() / "scenarios" );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
+		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetInstallFolder()/ "resources/ui" );
 		default: SCONE_THROW( "Unknown folder type" );
 		}
 	}
