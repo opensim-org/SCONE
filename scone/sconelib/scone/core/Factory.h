@@ -41,8 +41,6 @@ namespace scone
 		F& Create( const PropNode& props )
 		{
 			F& f = Create( props.get< String >( "type" ) );
-			props.touch();
-			props.get_child( "type" ).touch();
 			return f;
 		}
 

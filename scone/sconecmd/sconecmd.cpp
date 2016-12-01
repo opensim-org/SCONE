@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <tclap/CmdLine.h>
 #include <thread>
+#include "flut/prop_node_tools.hpp"
 
 using namespace scone;
 using namespace std;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
 			auto scenario_file = optArg.getValue();
 
 			// load properties
-			PropNode props = flut::read_xml( scenario_file );
+			PropNode props = flut::load_xml( scenario_file );
 
 			// start optimization
 			PropNode cmd_props;
@@ -49,7 +50,7 @@ int main(int argc, char* argv[])
 
 			// get command line settings (parameter 2 and further)
 			if ( !cmd_props.empty() )
-				props.Merge( cmd_props, true );
+				flut::merge_prop_nodes( props, cmd_props, true );
 
 			// create optimizer
 			opt::OptimizerUP o = opt::PrepareOptimization( props, scenario_file );

@@ -100,8 +100,8 @@ namespace scone
 
 			// collect statistics
 			PropNode statistics;
+			statistics.add_child( "result", so->GetMeasure().GetReport() );
 			statistics.set( "result", result );
-			statistics.get_child( "result" ).insert_children( so->GetMeasure().GetReport() );
 			statistics.set( "simulation time", so->GetModel().GetTime() );
 			statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
 	

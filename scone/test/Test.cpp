@@ -45,7 +45,7 @@ namespace scone
 		const double simulation_time = 0.2;
 
 		cs::RegisterFactoryTypes();
-		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
+		PropNode props = load_xml( "simulation_test.xml" );
 
 		std::vector< String > models;
 		models.push_back( "../models/f1024.osim" );
@@ -99,7 +99,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+		PropNode configProp = load_xml( config_path.string() ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
@@ -125,8 +125,8 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
+		stats.add_child( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
-		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 
@@ -167,14 +167,6 @@ namespace scone
 		}
 	}
 
-	void XmlParseTest()
-	{
-		PropNode prop;
-		prop.FromXmlFile( "config/optimization_test.xml" );
-		prop.ToInfoFile( "config/optimization_test.info" );
-		std::cout << prop;
-	}
-
 	void PerformanceTest( const String& filename )
 	{
 		log::SetLevel( log::InfoLevel );
@@ -188,7 +180,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+		PropNode configProp = load_xml( config_path.string() ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
@@ -214,8 +206,8 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
+		stats.add_child( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
-		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
@@ -237,7 +229,7 @@ namespace scone
 		cs::RegisterFactoryTypes();
 
 		opt::ParamSet par; // empty parameter set
-		PropNode configProp = ReadPropNodeFromXml( filename ) ;
+		PropNode configProp = load_xml( filename ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// create objective
@@ -256,8 +248,8 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
+		stats.add_child( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
-		stats.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
@@ -273,8 +265,8 @@ namespace scone
 	void MuscleLengthTest()
 	{
 		cs::RegisterFactoryTypes();
-		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.set( "Model.model_file", "f2354.osim" );
+		PropNode props = load_xml( "simulation_test.xml" );
+		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
 
@@ -300,8 +292,9 @@ namespace scone
 	void DofAxisTest()
 	{
 		cs::RegisterFactoryTypes();
-		PropNode props = ReadPropNodeFromXml( "simulation_test.xml" );
-		props.set( "Model.model_file", "f2354.osim" );
+		PropNode props = load_xml( "simulation_test.xml" );
+		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
+
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
 

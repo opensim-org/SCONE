@@ -11,7 +11,9 @@
 using namespace boost::filesystem;
 using namespace std;
 
-#include <flut/timer.hpp>
+#include "flut/timer.hpp"
+#include "flut/prop_node_tools.hpp"
+
 using flut::timer;
 
 namespace scone
@@ -37,7 +39,7 @@ namespace scone
 			// copy original and write resolved config files
 			path outdir( o->AcquireOutputFolder() );
 			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
-			props.ToXmlFile( ( outdir / "config.xml" ).string() );
+			flut::save_xml( props, ( outdir / "config.xml" ).string() );
 
 			// return created optimizer
 			return std::move( o );
@@ -53,7 +55,7 @@ namespace scone
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 	
-			PropNode configProp = ReadPropNodeFromXml( config_path.string() ) ;
+			PropNode configProp = load_xml( config_path.string() ) ;
 			const PropNode& objProp = configProp.get_child( "Optimizer.Objective" );
 			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
@@ -74,8 +76,8 @@ namespace scone
 	
 			// collect statistics
 			statistics.clear();
+			statistics.add_child( "result", so.GetMeasure().GetReport() );
 			statistics.set( "result", result );
-			statistics.get_child( "result" ).insert_children( so.GetMeasure().GetReport() );
 			statistics.set( "simulation time", so.GetModel().GetTime() );
 			statistics.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 	

@@ -184,7 +184,7 @@ namespace scone
 			std::vector< std::unique_ptr< Sensor > > m_Sensors;
 
 			std::array< SensorDelayAdapter*, 3 > m_OriSensors;
-			const PropNode& custom_properties;
+			const PropNode custom_properties;
 
 			// storage for HasData classes
 			Storage< Real, TimeInSeconds > m_Data;

@@ -14,9 +14,13 @@
 #if USE_FLUT_PROP_NODE
 
 #include "flut/prop_node.hpp"
+#include "flut/prop_node_tools.hpp"
+
 namespace scone
 {
 	using PropNode = flut::prop_node;
+	using flut::load_xml;
+	using flut::save_xml;
 }
 
 #else
