@@ -18,8 +18,6 @@ namespace scone
 			IgnoreAllLevel = 7
 		};
 
-		void SCONE_API SetLevel( Level level );
-		Level SCONE_API GetLevel();
 		void SCONE_API LogMessage( Level level, const String& msg );
 
 		// string style logging

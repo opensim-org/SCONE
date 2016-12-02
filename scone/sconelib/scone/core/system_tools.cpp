@@ -1,9 +1,6 @@
 #include "system_tools.h"
 
-#define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 9
-#define SCONE_VERSION_PATCH 0
-#define SCONE_VERSION_POSTFIX "ALPHA"
+#include "scone/cs/version.h"
 
 #include <fstream>
 
@@ -13,22 +10,22 @@
 #include <boost/filesystem/operations.hpp>
 
 #include "flut/system_tools.hpp"
+#include "flut/system/path.hpp"
+#include "Log.h"
 
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
-#include "flut/system/path.hpp"
-#include "Log.h"
 #include "flut/prop_node_tools.hpp"
 #include "string"
-
-#define SCONE_SETTINGS_PATH ( flut::get_config_folder() / "SCONE/settings.ini" )
+#include "flut/system/types.hpp"
 
 namespace scone
 {
 	boost::mutex g_SystemMutex;
 	PropNode g_GlobalSettings;
 	String g_Version;
+	path g_RootFolder;
 
 	SCONE_API String GetApplicationFolder()
 	{
@@ -46,48 +43,92 @@ namespace scone
 	const PropNode& GetSconeSettings()
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
-
 		// lazy initialization
 		if ( g_GlobalSettings.empty() )
 		{
-			log::debug( "Loaded settings from ", SCONE_SETTINGS_PATH );
-			g_GlobalSettings = flut::load_ini( SCONE_SETTINGS_PATH );
+			auto settings_file = GetSettingsFolder() / "settings.ini";
+			if ( flut::exists( settings_file ) )
+			{
+				log::debug( "Loaded settings from ", settings_file );
+				g_GlobalSettings = flut::load_ini( settings_file.str() );
+			}
+			else
+			{
+				// add default settings here
+				auto& fn = g_GlobalSettings.add_child( "folders" );
+				fn.set( "results", GetDefaultDataFolder() / "results" );
+				fn.set( "models", GetDefaultDataFolder() / "models" );
+				fn.set( "scenarios", GetDefaultDataFolder() / "scenarios" );
+				fn.set( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
+			}
 		}
 
 		return g_GlobalSettings;
 	}
 
-	SCONE_API void SaveSconeSettings( const PropNode& newSettings )
+	void SaveSconeSettings( const PropNode& newSettings )
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		auto settings_file = GetSettingsFolder() / "settings.ini";
+
 		g_GlobalSettings = newSettings;
-		boost::filesystem::create_directories( boost::filesystem::path( SCONE_SETTINGS_PATH.str() ).parent_path() );
-		save_prop( g_GlobalSettings, SCONE_SETTINGS_PATH.replace_extension( "props" ), true );
-		log::debug( "Saved settings to ", SCONE_SETTINGS_PATH );
+		boost::filesystem::create_directories( boost::filesystem::path( settings_file.str() ).parent_path() );
+
+		flut::save_ini( g_GlobalSettings, settings_file );
+		log::debug( "Saved settings to ", settings_file );
 	}
 
-	SCONE_API path GetFolder( const String& folder, const String& default_path )
+	path GetInstallFolder()
 	{
-		auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
-		if ( path_to_folder.empty() )
-			path_to_folder = path( GetSconeSettings().get_child( "folders" ).get< String >( "root" ) ) / default_path;
-		return path_to_folder;
+		if ( g_RootFolder.empty() )
+		{
+			for ( g_RootFolder = flut::get_application_folder(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
+			{
+				if ( boost::filesystem::exists( boost::filesystem::path( g_RootFolder.str() ) / ".version" ) )
+					break;
+			}
+			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder" );
+			log::debug( "SCONE root folder: ", g_RootFolder );
+		}
+		return g_RootFolder;
 	}
 
-	SCONE_API path GetFolder( SconeFolder folder )
+	path GetSettingsFolder()
+	{
+		return flut::get_config_folder() / "SCONE";
+	}
+
+	path GetDefaultDataFolder()
+	{
+		return flut::get_documents_folder() / "SCONE";
+	}
+
+	path GetFolder( const String& folder, const path& default_path )
+	{
+		if ( GetSconeSettings().has_child( "folders" ) )
+		{
+			auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
+			if ( !path_to_folder.empty() )
+				return path_to_folder;
+		}
+		return default_path;
+	}
+
+	path GetFolder( SconeFolder folder )
 	{
 		switch ( folder )
 		{
-		case scone::SCONE_ROOT_FOLDER: return GetFolder( "root" );
-		case scone::SCONE_OUTPUT_FOLDER: return GetFolder( "output" );
-		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", "models" );
-		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios" );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", "resources/geometry" );
+		case scone::SCONE_ROOT_FOLDER: return GetInstallFolder();
+		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDefaultDataFolder() / "results" );
+		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDefaultDataFolder() / "models" );
+		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDefaultDataFolder() / "scenarios" );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
+		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetInstallFolder()/ "resources/ui" );
 		default: SCONE_THROW( "Unknown folder type" );
 		}
 	}
 
-	SCONE_API flut::version GetSconeVersion()
+	flut::version GetSconeVersion()
 	{
 		auto build = GetSconeBuildNumber();
 		int build_nr = 0;
@@ -97,7 +138,7 @@ namespace scone
 
 	}
 
-	SCONE_API String GetSconeBuildNumber()
+	String GetSconeBuildNumber()
 	{
 		if ( g_Version.empty() )
 		{

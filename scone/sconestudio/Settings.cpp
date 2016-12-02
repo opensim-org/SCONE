@@ -18,9 +18,9 @@ namespace scone
 		// init settings
 		PropNode pn = GetSconeSettings();
 		settings.scenariosFolder->setText( make_qt( flut::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
-		settings.modelsFolder->setText( make_qt( flut::path(GetFolder( SCONE_MODEL_FOLDER ) ).make_preferred() ) );
-		settings.resultsFolder->setText( make_qt( flut::path(GetFolder( SCONE_OUTPUT_FOLDER ) ).make_preferred() ) );
-		settings.geometryFolder->setText( make_qt( flut::path(GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
+		settings.modelsFolder->setText( make_qt( flut::path( GetFolder( SCONE_MODEL_FOLDER ) ).make_preferred() ) );
+		settings.resultsFolder->setText( make_qt( flut::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
+		settings.geometryFolder->setText( make_qt( flut::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
 
 		int ret = dlg->exec();
 		if ( ret == QDialog::Accepted )

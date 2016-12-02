@@ -35,6 +35,14 @@ state( StartingState )
 
 	ui.setupUi( this );
 
+	ui.plot->xAxis->setLabel( "Generation" );
+	ui.plot->xAxis->setLabelPadding( 1 );
+	ui.plot->xAxis->setTickLabelPadding( 3 );
+	ui.plot->yAxis->setLabel( "Fitness" );
+	ui.plot->yAxis->setLabelPadding( 1 );
+	ui.plot->yAxis->setTickLabelPadding( 3 );
+	ui.plot->setContentsMargins( 2, 2, 2, 2 );
+
 	ui.plot->addGraph();
 	ui.plot->graph(0)->setPen(QPen(QColor(0, 100, 255)));
 	ui.plot->graph(0)->setLineStyle(QCPGraph::lsLine);
@@ -47,7 +55,8 @@ state( StartingState )
 	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 	ui.plot->graph(1)->setName("Average fitness");
 
-	ui.plot->xAxis->setAutoTickCount( 6 );
+	ui.plot->xAxis->setRange( 0, 8 );
+	ui.plot->xAxis->setAutoTickCount( 7 );
 	ui.plot->yAxis->setAutoTickCount( 3 );
 	ui.plot->replot();
 	ui.plot->hide();
@@ -116,7 +125,9 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 			updateText();
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
 			ui.plot->graph( 1 )->setData( genvec, avgvec );
-			ui.plot->xAxis->setRange( 0, generation );
+			ui.plot->xAxis->setRange( 0, std::max( 8, generation ) );
+			ui.plot->xAxis->setAutoTickCount( 7 );
+
 			ui.plot->yAxis->setRange( lowest, highest );
 			ui.plot->replot();
 		}

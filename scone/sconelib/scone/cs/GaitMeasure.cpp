@@ -6,6 +6,7 @@
 #include "scone/core/Log.h"
 #include "scone/sim/Muscle.h"
 #include "scone/core/Profiler.h"
+#include "../core/Range.h"
 
 namespace scone
 {
@@ -19,6 +20,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, termination_height, 0.5 );
 			INIT_PROPERTY( props, min_velocity, 0.5 );
+			INIT_PROPERTY( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
 			INIT_PROPERTY( props, load_threshold, 0.1 );
 
 			// get string of gait bodies
@@ -62,7 +64,7 @@ namespace scone
 			{
 				m_nSteps++;
 				m_TotStepSize = model.GetComPos().x - m_InitialComPos.x;
-				UpdateMinVelocityMeasure( model, timestamp );
+				UpdateVelocityMeasure( model, timestamp );
 			}
 
 			// handle termination
@@ -82,7 +84,7 @@ namespace scone
 			double duration = model.GetSimulationEndTime();
 
 			// add final step and penalty to min_velocity measure
-			UpdateMinVelocityMeasure( model, model.GetTime() );
+			UpdateVelocityMeasure( model, model.GetTime() );
 			if ( model.GetTime() < duration )
 				m_MinVelocityMeasure.AddSample( duration, 0 );
 
@@ -96,17 +98,20 @@ namespace scone
 			return 1.0 - m_MinVelocityMeasure.GetAverage();
 		}
 
-		void GaitMeasure::UpdateMinVelocityMeasure( const sim::Model &model, double timestamp )
+		void GaitMeasure::UpdateVelocityMeasure( const sim::Model &model, double timestamp )
 		{
 			double gait_dist = GetGaitDist( model );
 			double step_size = gait_dist - m_PrevGaitDist;
 			double dt = model.GetTime() - m_MinVelocityMeasure.GetPrevTime();
 			if ( dt > 0 )
 			{
-				double norm_vel = GetRestrained( ( step_size / dt ) / min_velocity, 0.0, 1.0 );
-				log::trace( "Adding sample to GaitMeasure at time: ", timestamp );
+				double step_vel = step_size / dt;
+				double penalty = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
+				double norm_vel = std::max( 0.0, 1.0 - ( fabs( penalty ) / min_velocity ) );
+
 				m_MinVelocityMeasure.AddSample( timestamp, norm_vel );
-				log::TraceF( "%.3f: UpdateMinVelocityMeasure step_size=%.3f dt=%.3f norm_vel=%.3f", timestamp, step_size, dt, norm_vel );
+				log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) penalty=%.3f norm_vel=%.3f",
+					timestamp, step_vel, step_size, dt, penalty, norm_vel );
 			}
 			m_PrevGaitDist = gait_dist;
 		}

@@ -26,6 +26,8 @@ using std::cout;
 using std::endl;
 
 #include <flut/timer.hpp>
+#include "flut/system/log_sink.hpp"
+#include "flut/system/log.hpp"
 using flut::timer;
 
 namespace scone
@@ -87,7 +89,7 @@ namespace scone
 
 	void PlaybackTest( const String& filename )
 	{
-		log::SetLevel( log::TraceLevel );
+		flut::log::stream_sink cout_log( flut::log::trace_level );
 
 		// register scone types
 		opt::RegisterFactoryTypes();
@@ -169,7 +171,7 @@ namespace scone
 
 	void PerformanceTest( const String& filename )
 	{
-		log::SetLevel( log::InfoLevel );
+		flut::log::stream_sink cout_log( flut::log::trace_level );
 
 		// register scone types
 		opt::RegisterFactoryTypes();
@@ -222,7 +224,7 @@ namespace scone
 
 	void SimulationObjectiveTest( const String& filename )
 	{
-		log::SetLevel( log::TraceLevel );
+		flut::log::stream_sink cout_log( flut::log::trace_level );
 
 		// register scone types
 		opt::RegisterFactoryTypes();

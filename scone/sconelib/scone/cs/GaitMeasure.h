@@ -15,13 +15,14 @@ namespace scone
 			virtual ~GaitMeasure();
 
 			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-			void UpdateMinVelocityMeasure( const sim::Model &model, double timestamp );
+			void UpdateVelocityMeasure( const sim::Model &model, double timestamp );
 
 			virtual double GetResult( sim::Model& model ) override;
 
 			// parameters
 			Real termination_height;
 			Real min_velocity;
+			Real max_velocity;
 			Real load_threshold;
 
 		protected:

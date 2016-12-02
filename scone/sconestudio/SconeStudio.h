@@ -24,12 +24,13 @@
 #include "ProgressDockWidget.h"
 #include "EditorWidget.h"
 #include "Settings.h"
+#include "flut/system/log_sink.hpp"
 
 class QFileSystemModel;
 
 using scone::TimeInSeconds;
 
-class SconeStudio : public QMainWindow
+class SconeStudio : public QMainWindow, public flut::log::sink
 {
 	Q_OBJECT
 
@@ -38,7 +39,7 @@ public:
 	~SconeStudio();
 
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
-	void add_log_entry( flut::log::level l, const std::string& msg );
+	virtual void send_log_message( flut::log::level l, const std::string& msg ) override;
 
 	public slots:
 
@@ -110,6 +111,7 @@ private:
 	void finalizeCapture();
 
 	scone::Settings settings;
+	bool enableLogging;
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

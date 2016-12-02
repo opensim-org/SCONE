@@ -2,14 +2,13 @@
 ;Start Menu Folder Selection Example Script
 ;Written by Joost Verburg
 
-!define SCONE_VERSION "0.9.0 ALPHA"
+!define SCONE_VERSION "0.9.3 ALPHA"
 !define BIN_FOLDER "..\bin\msvc2013\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
 
 ;--------------------------------
 ;Include Modern UI
-
 !include "MUI2.nsh"
 
 ;--------------------------------
@@ -18,6 +17,7 @@
 ;Name and file
 Name "SCONE"
 OutFile "Install SCONE ${SCONE_VERSION}.exe"
+SetCompressor /SOLID lzma
 
 ;Default installation folder
 InstallDir "$PROGRAMFILES\SCONE"
@@ -35,6 +35,8 @@ Var StartMenuFolder
 ;--------------------------------
 ;Interface Settings
 
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_BITMAP "install_header.bmp" ; optional
 !define MUI_ABORTWARNING
 
 ;--------------------------------
@@ -56,7 +58,7 @@ Var StartMenuFolder
 
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
-;!insertmacro MUI_PAGE_FINISH
+!insertmacro MUI_PAGE_FINISH
 
 ;--------------------------------
 ;Languages
@@ -84,8 +86,8 @@ Section "Program Files" SecMain
 	File "${BIN_FOLDER}\platforms\*.dll"
 	
 	; resource files
-	SetOutPath "$INSTDIR\resources"
-	File /r "..\resources"
+	SetOutPath "$INSTDIR\resources\ui"
+	File "..\resources\ui\*.*"
 
 	;Store installation folder
 	WriteRegStr HKCU "Software\SCONE\INSTDIR" "" $INSTDIR
@@ -111,6 +113,8 @@ Section "Example Models" SecModels
 	; models
 	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models"
 	File "..\models\*.osim"
+	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models\geometry"
+	File "..\models\geometry\*.*"
 SectionEnd
 
 Section "Tutorials" SecTutorials

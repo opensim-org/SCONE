@@ -136,7 +136,7 @@ namespace scone
 
 		void Optimizer::InitOutputFolder()
 		{
-			auto output_base = ( GetFolder( "output" ) / GetSignature() ).str();
+			auto output_base = ( GetFolder( SCONE_RESULTS_FOLDER ) / GetSignature() ).str();
 			m_OutputFolder = output_base;
 
 			for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder ) ); ++i )

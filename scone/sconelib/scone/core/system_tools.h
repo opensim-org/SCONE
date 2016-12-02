@@ -14,7 +14,10 @@ namespace scone
 	SCONE_API const PropNode& GetSconeSettings();
 	SCONE_API void SaveSconeSettings( const PropNode& newSettings );
 
-	enum SconeFolder { SCONE_ROOT_FOLDER, SCONE_OUTPUT_FOLDER, SCONE_MODEL_FOLDER, SCONE_SCENARIO_FOLDER, SCONE_GEOMETRY_FOLDER };
-	SCONE_API path GetFolder( const String& folder_name, const String& default_path = "" );
+	enum SconeFolder { SCONE_ROOT_FOLDER, SCONE_RESULTS_FOLDER, SCONE_MODEL_FOLDER, SCONE_SCENARIO_FOLDER, SCONE_GEOMETRY_FOLDER, SCONE_UI_RESOURCE_FOLDER };
+	SCONE_API path GetSettingsFolder();
+	SCONE_API path GetInstallFolder();
+	SCONE_API path GetDefaultDataFolder();
+	SCONE_API path GetFolder( const String& folder_name, const path& default_path = "" );
 	SCONE_API path GetFolder( SconeFolder folder );
 }

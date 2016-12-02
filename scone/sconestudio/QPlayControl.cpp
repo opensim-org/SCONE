@@ -32,10 +32,10 @@ QPlayControl::QPlayControl( QWidget *parent /*= 0 */ )
 	connect( slider, SIGNAL( valueChanged( int ) ), this, SLOT( updateSlider( int ) ) );
 
 	slowMotionBox = new QComboBox( this );
-	slowMotionBox->addItem( "1x", QVariant( 1 ) );
-	slowMotionBox->addItem( "2x", QVariant( 2 ) );
-	slowMotionBox->addItem( "4x", QVariant( 4 ) );
-	slowMotionBox->addItem( "8x", QVariant( 8 ) );
+	slowMotionBox->addItem( "1 x", QVariant( 1 ) );
+	slowMotionBox->addItem( "1/2 x", QVariant( 2 ) );
+	slowMotionBox->addItem( "1/4 x", QVariant( 4 ) );
+	slowMotionBox->addItem( "1/8 x", QVariant( 8 ) );
 	slowMotionBox->setCurrentIndex( 0 );
 	connect( slowMotionBox, SIGNAL( activated( int ) ), SLOT( updateSlowMotion( int ) ) );
 
