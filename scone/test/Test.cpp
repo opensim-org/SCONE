@@ -127,7 +127,7 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
-		stats.add_child( "result", so.GetMeasure().GetReport() );
+		stats.push_back( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
@@ -208,7 +208,7 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
-		stats.add_child( "result", so.GetMeasure().GetReport() );
+		stats.push_back( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
@@ -250,7 +250,7 @@ namespace scone
 		// collect statistics
 		PropNode stats;
 		stats.clear();
-		stats.add_child( "result", so.GetMeasure().GetReport() );
+		stats.push_back( "result", so.GetMeasure().GetReport() );
 		stats.set( "result", result );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );

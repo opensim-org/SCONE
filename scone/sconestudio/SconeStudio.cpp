@@ -96,7 +96,7 @@ void SconeStudio::send_log_message( flut::log::level l, const string& msg )
 		return; // we are not ready to start logging
 
 	// remove newlines
-	string trimmed_msg = flut::trim_str( msg );
+	string trimmed_msg = flut::trim_right_str( msg );
 
 	ui.outputText->moveCursor( QTextCursor::End );
 	QTextCursor cursor( ui.outputText->textCursor() );

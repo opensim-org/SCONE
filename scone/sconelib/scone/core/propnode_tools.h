@@ -43,7 +43,7 @@ namespace scone
 	template< typename T >
 	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name, const T& default_value )
 	{
-		if ( prop.has_child( name ) )
+		if ( prop.has_key( name ) )
 			InitFromPropNode( prop.get_child( name ), var );
 		else var = T( default_value );
 	}

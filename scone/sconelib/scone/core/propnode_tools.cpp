@@ -11,7 +11,7 @@ namespace scone
 	{
 		if ( depth == 0 )
 		{
-			size_t unused = p.count_untouched();
+			size_t unused = p.count_unaccessed();
 			if ( unused > 0 )
 			{
 				log::WarningF( "Warning, %d unused parameters found:", unused );
@@ -23,12 +23,12 @@ namespace scone
 		for ( PropNode::const_iterator iter = p.begin(); iter != p.end(); ++iter )
 		{
 			// find if any child is touched (err...)
-			if ( iter->second.count_untouched() > 0 )
+			if ( iter->second.count_unaccessed() > 0 )
 			{
 				std::stringstream str;
 				str << String( depth * 2, ' ' ) << iter->first;
 
-				if ( !iter->second.touched() )
+				if ( !iter->second.is_accessed() )
 				{
 					if ( iter->second.has_value() )
 						str << " = " << iter->second.get_value();

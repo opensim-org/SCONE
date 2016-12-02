@@ -62,7 +62,7 @@ namespace scone
 		void clear() { m_Children.clear(); m_Value.clear(); }
 
 		// check if child key exists
-		bool has_child( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
+		bool has_key( const KeyType& key ) const { return GetChildPtr( key ) != nullptr; }
 		bool has_value() const {	return !m_Value.empty(); }
 
 		// get / set raw value
@@ -106,7 +106,7 @@ namespace scone
 		{
 			PropNode* p = GetChildPtr( key );
 			if ( p == nullptr )
-				add_child( key ).set( value );
+				push_back( key ).set( value );
 			else p->set( value );
 			return *this;
 		}
@@ -115,7 +115,7 @@ namespace scone
 		template< typename T >
 		PropNode& Add( const KeyType& key, const T& value )
 		{
-			add_child( key ).set( value );
+			push_back( key ).set( value );
 			return *this;
 		}
 
@@ -138,7 +138,7 @@ namespace scone
 		}
 
 		/// Try to get a child, return empty node on failure
-		const PropNode& try_get_child( const KeyType& key ) const
+		const PropNode& try_get( const KeyType& key ) const
 		{
 			PropNode* p = GetChildPtr( key );
 			if ( !p )
@@ -148,8 +148,8 @@ namespace scone
 		}
 
 		/// create child node
-		PropNode& add_child( const KeyType& key );
-		PropNode& add_child( const KeyType& key, const PropNode& other );
+		PropNode& push_back( const KeyType& key );
+		PropNode& push_back( const KeyType& key, const PropNode& other );
 
 		/// insert all children from other PropNode
 		iterator insert_children( const PropNode& other, iterator insert_point );
@@ -165,8 +165,8 @@ namespace scone
 		const_iterator end() const { touch(); return m_Children.cend(); }
 		iterator begin() { touch(); return m_Children.begin(); }
 		iterator end() { touch(); return m_Children.end(); }
-		iterator find_child( const KeyType& key );
-		const_iterator find_child( const KeyType& key ) const;
+		iterator find( const KeyType& key );
+		const_iterator find( const KeyType& key ) const;
 
 		/// XML I/O, with optional root name in case there is more than one child
 		void ToXmlFile( const String& filename, const KeyType& rootname = "" ) const;

@@ -55,7 +55,7 @@ namespace scone
 			else
 			{
 				// add default settings here
-				auto& fn = g_GlobalSettings.add_child( "folders" );
+				auto& fn = g_GlobalSettings.push_back( "folders" );
 				fn.set( "results", GetDefaultDataFolder() / "results" );
 				fn.set( "models", GetDefaultDataFolder() / "models" );
 				fn.set( "scenarios", GetDefaultDataFolder() / "scenarios" );
@@ -105,7 +105,7 @@ namespace scone
 
 	path GetFolder( const String& folder, const path& default_path )
 	{
-		if ( GetSconeSettings().has_child( "folders" ) )
+		if ( GetSconeSettings().has_key( "folders" ) )
 		{
 			auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
 			if ( !path_to_folder.empty() )

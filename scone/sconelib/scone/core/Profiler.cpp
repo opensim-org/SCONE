@@ -115,7 +115,7 @@ namespace scone
 
 		// TODO: sort children first
 		for ( auto it = children.begin(); it != children.end(); ++it )
-			children_time += it->second->GetReport( pn.add_child( it->first ) );
+			children_time += it->second->GetReport( pn.push_back( it->first ) );
 
 		pn.set_value( stringf( "%6.2f (%5.2f exclusive)", 100.0 * inclusive_time / topnode_time, 100.0 * ( inclusive_time - children_time ) / topnode_time ) );
 

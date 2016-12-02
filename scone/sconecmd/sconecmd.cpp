@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 			PropNode cmd_props;
 			for ( auto kvstring : propArg )
 			{
-				auto kvp = flut::to_key_value( kvstring );
+				auto kvp = flut::key_value_str( kvstring );
 				cmd_props.set( kvp.first, kvp.second );
 			}
 

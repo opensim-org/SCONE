@@ -60,7 +60,7 @@ namespace scone
 		DofSensor::DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 			Sensor( pn, par, model, target_area ),
 			m_Dof( *FindByName( model.GetDofs(), pn.get< String >( "dof" ) ) ),
-			m_pRootDof( pn.has_child( "root_dof" ) ? FindByName( model.GetDofs(), pn.get< String >( "root_dof" ) ).get() : nullptr )
+			m_pRootDof( pn.has_key( "root_dof" ) ? FindByName( model.GetDofs(), pn.get< String >( "root_dof" ) ).get() : nullptr )
 		{}
 
 		scone::Real DofPositionSensor::GetValue() const

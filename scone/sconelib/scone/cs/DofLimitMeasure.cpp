@@ -10,14 +10,14 @@ namespace scone
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			if ( const PropNode* lp = props.try_get_child( "Limits" ) )
+			if ( const PropNode* lp = props.try_get( "Limits" ) )
 			{
 				for ( auto it = lp->begin(); it != lp->end(); ++it )
 					m_Limits.push_back( Limit( it->second, model ) );
 			}
 
 			// see if we have a limit defined internally
-			if ( props.try_get_child( "dof" ) )
+			if ( props.try_get( "dof" ) )
 				m_Limits.push_back( Limit( props, model ) );
 		}
 

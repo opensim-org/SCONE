@@ -36,7 +36,7 @@ namespace scone
 		{
 			size_t pos = iter->find_first_of('=');
 			if (pos != std::string::npos)
-				add_child( trim_copy( iter->substr(0, pos) ) ).m_Value = trim_copy( iter->substr(pos + 1) );
+				push_back( trim_copy( iter->substr(0, pos) ) ).m_Value = trim_copy( iter->substr(pos + 1) );
 		}
 	}
 
@@ -104,7 +104,7 @@ namespace scone
 	{
 	}
 
-	PropNode& PropNode::add_child( const String& key )
+	PropNode& PropNode::push_back( const String& key )
 	{
 		size_t ofs = key.find_first_of( '.' );
 		if ( ofs == String::npos )
@@ -122,15 +122,15 @@ namespace scone
 
 			PropNode* child = GetChildPtr( head_key );
 			if ( child )
-				return child->add_child( tail_key );
+				return child->push_back( tail_key );
 			else 
-				return add_child( head_key ).add_child( tail_key );
+				return push_back( head_key ).push_back( tail_key );
 		}
 	}
 
-	PropNode& PropNode::add_child( const String& key, const PropNode& other )
+	PropNode& PropNode::push_back( const String& key, const PropNode& other )
 	{
-		return ( add_child( key ) = other );
+		return ( push_back( key ) = other );
 	}
 
 	PropNode::iterator PropNode::insert_children( const PropNode& other, iterator insertIt )
@@ -232,13 +232,13 @@ namespace scone
 		}
 	}
 
-	PropNode::iterator PropNode::find_child( const String& key )
+	PropNode::iterator PropNode::find( const String& key )
 	{
 		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
 		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
 	}
 
-	PropNode::const_iterator PropNode::find_child( const String& key ) const
+	PropNode::const_iterator PropNode::find( const String& key ) const
 	{
 		auto lambda = [&]( const KeyChildPair& kcp ) { return kcp.first == key; };
 		return std::find_if( m_Children.begin(), m_Children.end(), lambda );
@@ -263,7 +263,7 @@ namespace scone
 			}
 			else if ( v.first != "<xmlcomment>" )
 			{
-				PropNode& child = props.add_child( v.first );
+				PropNode& child = props.push_back( v.first );
 				FromPropertyTree( child, v.second );
 			}
 		}
@@ -332,7 +332,7 @@ namespace scone
 
 		for ( const_iterator iter = m_Children.begin(); iter != m_Children.end(); ++iter )
 		{
-			if ( !unflaggedOnly || !iter->second->touched() )
+			if ( !unflaggedOnly || !iter->second->is_touched() )
 			{
 				String full_key;
 				for ( int i = 0; i < depth; ++i )

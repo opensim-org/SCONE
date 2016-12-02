@@ -33,7 +33,7 @@ namespace scone
 		Measure( props, par, model, area )
 		{
 			// get Terms (obsolete)
-			if ( const PropNode* termNode = props.try_get_child( "Terms" ) )
+			if ( const PropNode* termNode = props.try_get( "Terms" ) )
 			{
 				for ( auto it = termNode->begin(); it != termNode->end(); ++it )
 				{
@@ -48,7 +48,7 @@ namespace scone
 			}
 
 			// get Measures
-			if ( const PropNode* mprops = props.try_get_child( "Measures" ) )
+			if ( const PropNode* mprops = props.try_get( "Measures" ) )
 			{
 				for ( auto it = mprops->begin(); it != mprops->end(); ++it )
 				{
@@ -103,7 +103,7 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().add_child( t.name, t.measure->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
+				GetReport().push_back( t.name, t.measure->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
 			}
 
 			for ( MeasureUP& m: m_Measures )
@@ -115,7 +115,7 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().add_child( m->GetName(), m->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
+				GetReport().push_back( m->GetName(), m->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
 			}
 
 			GetReport().set( total );

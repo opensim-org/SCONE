@@ -59,7 +59,7 @@ namespace scone
 
 		double ParamSet::TryGet( const String& name, const PropNode& props, const String node_name, double default_value )
 		{
-			if ( props.has_child( node_name ) )
+			if ( props.has_key( node_name ) )
 				return Get( name, props, node_name );
 			else return default_value;
 		}

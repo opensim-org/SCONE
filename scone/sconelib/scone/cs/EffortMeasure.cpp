@@ -224,7 +224,7 @@ namespace scone
             // read in fiber ratios. throw exception if out of [0,1] range
             //std::map< String, Real > fiberRatioMap;
             std::vector< MuscleProperties > muscPropsInput;
-            if ( const PropNode* muscleProperties = props.try_get_child( "MuscleProperties" ) )
+            if ( const PropNode* muscleProperties = props.try_get( "MuscleProperties" ) )
 			{
 				for ( auto it = muscleProperties->begin(); it != muscleProperties->end(); ++it )
 					muscPropsInput.emplace_back( MuscleProperties( it->second ) );
