@@ -10,25 +10,27 @@ namespace scone
 		DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Measure( props, par, model, area )
 		{
-			const PropNode& lp = props.TryGetChild( "Limits" );
-			for ( auto it = lp.Begin(); it != lp.End(); ++it )
-				m_Limits.push_back( Limit( *it->second, model ) );
+			if ( const PropNode* lp = props.try_get( "Limits" ) )
+			{
+				for ( auto it = lp->begin(); it != lp->end(); ++it )
+					m_Limits.push_back( Limit( it->second, model ) );
+			}
 
 			// see if we have a limit defined internally
-			if ( props.TryGetChild( "dof" ) )
+			if ( props.try_get( "dof" ) )
 				m_Limits.push_back( Limit( props, model ) );
 		}
 
 		DofLimitMeasure::~DofLimitMeasure() {}
 
 		DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
-		dof( *FindByName( model.GetDofs(), props.GetStr( "dof" ) ) ),
+		dof( *FindByName( model.GetDofs(), props.get< String >( "dof" ) ) ),
 		penalty( Statistic<>::LinearInterpolation )
 		{
-			range.min = Degree( props.GetReal( "min_deg", 0.0 ) );
-			range.max = Degree( props.GetReal( "max_deg", 0.0 ) );
-			velocity_range.min = Degree( props.GetReal( "min_deg_s", 0.0 ) );
-			velocity_range.max = Degree( props.GetReal( "max_deg_s", 0.0 ) );
+			range.min = Degree( props.get< Real >( "min_deg", 0.0 ) );
+			range.max = Degree( props.get< Real >( "max_deg", 0.0 ) );
+			velocity_range.min = Degree( props.get< Real >( "min_deg_s", 0.0 ) );
+			velocity_range.max = Degree( props.get< Real >( "max_deg_s", 0.0 ) );
 			INIT_PROPERTY( props, squared_range_penalty, 0.0 );
 			INIT_PROPERTY( props, abs_range_penalty, 0.0 );
 			INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
@@ -78,7 +80,7 @@ namespace scone
 			{
 				result += l.penalty.GetAverage();
 				if ( m_Limits.size() > 1 )
-					GetReport().Set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
+					GetReport().set( l.dof.GetName(), stringf( "%g", l.penalty.GetAverage() ) );
 			}
 
 			return result;

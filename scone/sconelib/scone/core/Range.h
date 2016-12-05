@@ -9,7 +9,7 @@ namespace scone
 	class Range
 	{
 	public:
-		Range( const PropNode& props ) { min = props.Get< T >( "min", std::numeric_limits< T >::min() ); max = props.Get< T >( "max", std::numeric_limits< T >::max() ); }
+		Range( const PropNode& props ) { min = props.get< T >( "min", std::numeric_limits< T >::min() ); max = props.get< T >( "max", std::numeric_limits< T >::max() ); }
 		Range( const T& i_min = T(), const T& i_max = T() ) : min( i_min ), max( i_max ) { };
 
 		// test if a value is inside the range

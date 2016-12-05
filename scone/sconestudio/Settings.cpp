@@ -26,10 +26,11 @@ namespace scone
 		if ( ret == QDialog::Accepted )
 		{
 			// update settings
-			pn.Set( "folders.scenarios", settings.scenariosFolder->text().toStdString() );
-			pn.Set( "folders.models", settings.modelsFolder->text().toStdString() );
-			pn.Set( "folders.results", settings.resultsFolder->text().toStdString() );
-			pn.Set( "folders.geometry", settings.geometryFolder->text().toStdString() );
+			auto& pf = pn.get_or_add( "folders" );
+			pf.set( "scenarios", settings.scenariosFolder->text().toStdString() );
+			pf.set( "models", settings.modelsFolder->text().toStdString() );
+			pf.set( "results", settings.resultsFolder->text().toStdString() );
+			pf.set( "geometry", settings.geometryFolder->text().toStdString() );
 
 			SaveSconeSettings( pn );
 		}

@@ -16,7 +16,7 @@ namespace scone
 		m_pLengthSensor( nullptr ),
 		m_pVelocitySensor( nullptr )
 		{
-			sim::Muscle& source = *FindByName( model.GetMuscles(), props.GetStr( "source", props.GetStr( "target" ) ) + GetSideName( area.side ) );
+			sim::Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
 
 			// init names
 			String reflexname = GetReflexName( m_Target.GetName(), source.GetName() );

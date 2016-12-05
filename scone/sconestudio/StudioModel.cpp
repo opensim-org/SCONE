@@ -180,7 +180,7 @@ namespace scone
 		so->Evaluate();
 
 		PropNode results;
-		results.AddChild( "result", so->GetMeasure().GetReport() );
+		results.push_back( "result", so->GetMeasure().GetReport() );
 		log::info( results );
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
 
@@ -201,7 +201,7 @@ namespace scone
 		{
 			so->GetMeasure().GetResult( so->GetModel() );
 			PropNode results;
-			results.AddChild( "result", so->GetMeasure().GetReport( ) );
+			results.push_back( "result", so->GetMeasure().GetReport( ) );
 			so->WriteResults( flut::get_filename_without_ext( filename ) );
 
 			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );

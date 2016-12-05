@@ -8,7 +8,7 @@ namespace scone
 	namespace cs
 	{
 		Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		m_Target( *FindByName( model.GetActuators(), props.GetStr( "target" ) + GetSideName( area.side ) ) )
+		m_Target( *FindByName( model.GetActuators(), props.get< String >( "target" ) + GetSideName( area.side ) ) )
 		{
 			INIT_PROPERTY_REQUIRED( props, delay );
 			INIT_PROPERTY( props, min_control_value, REAL_LOWEST );

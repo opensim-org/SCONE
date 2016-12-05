@@ -9,9 +9,9 @@ namespace scone
 		StateController( props, par, model, area )
 		{
 			// create states
-			const PropNode& states_pn = props.GetChild( "TimeStates" );
-			for ( auto it = states_pn.Begin(); it != states_pn.End(); ++it )
-				m_States.push_back( TimeState( *it->second, par ) );
+			const PropNode& states_pn = props.get_child( "TimeStates" );
+			for ( auto it = states_pn.begin(); it != states_pn.end(); ++it )
+				m_States.push_back( TimeState( it->second, par ) );
 
 			std::sort( m_States.begin(), m_States.end() );
 			SCONE_ASSERT( m_States.size() >= 1 );

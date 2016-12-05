@@ -33,26 +33,30 @@ namespace scone
 		Measure( props, par, model, area )
 		{
 			// get Terms (obsolete)
-			const PropNode& termNode = props.TryGetChild( "Terms" );
-			for ( auto it = termNode.Begin(); it != termNode.End(); ++it )
+			if ( const PropNode* termNode = props.try_get( "Terms" ) )
 			{
-				Term t( *it->second );
+				for ( auto it = termNode->begin(); it != termNode->end(); ++it )
+				{
+					Term t( it->second );
 
-				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast< Measure* >( sim::CreateController( it->second->GetChild( "Measure" ), par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				t.measure = MeasureUP( m );
-				m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
+					// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+					Measure* m = dynamic_cast<Measure*>( sim::CreateController( it->second.get_child( "Measure" ), par, model, area ).release() );
+					SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
+					t.measure = MeasureUP( m );
+					m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
+				}
 			}
 
 			// get Measures
-			const PropNode& mprops = props.TryGetChild( "Measures" );
-			for ( auto it = mprops.Begin(); it != mprops.End(); ++it )
+			if ( const PropNode* mprops = props.try_get( "Measures" ) )
 			{
-				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast< Measure* >( sim::CreateController( *it->second, par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				m_Measures.push_back( MeasureUP( m ) );
+				for ( auto it = mprops->begin(); it != mprops->end(); ++it )
+				{
+					// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
+					Measure* m = dynamic_cast<Measure*>( sim::CreateController( it->second, par, model, area ).release() );
+					SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
+					m_Measures.push_back( MeasureUP( m ) );
+				}
 			}
 		}
 
@@ -99,7 +103,7 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().AddChild( t.name, t.measure->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
+				GetReport().push_back( t.name, t.measure->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
 			}
 
 			for ( MeasureUP& m: m_Measures )
@@ -111,10 +115,10 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().AddChild( m->GetName(), m->GetReport() ).Set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
+				GetReport().push_back( m->GetName(), m->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
 			}
 
-			GetReport().Set( total );
+			GetReport().set( total );
 
 			return total;
 		}

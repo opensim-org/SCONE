@@ -13,7 +13,7 @@ namespace scone
 	{
 		MuscleSensor::MuscleSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 			Sensor( pn, par, model, target_area ),
-			m_Muscle( *FindByName( model.GetMuscles(), pn.GetStr( "muscle" ) ) )
+			m_Muscle( *FindByName( model.GetMuscles(), pn.get< String >( "muscle" ) ) )
 		{}
 
 		scone::Real MuscleForceSensor::GetValue() const
@@ -59,8 +59,8 @@ namespace scone
 
 		DofSensor::DofSensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 			Sensor( pn, par, model, target_area ),
-			m_Dof( *FindByName( model.GetDofs(), pn.GetStr( "dof" ) ) ),
-			m_pRootDof( pn.HasKey( "root_dof" ) ? FindByName( model.GetDofs(), pn.GetStr( "root_dof" ) ).get() : nullptr )
+			m_Dof( *FindByName( model.GetDofs(), pn.get< String >( "dof" ) ) ),
+			m_pRootDof( pn.has_key( "root_dof" ) ? FindByName( model.GetDofs(), pn.get< String >( "root_dof" ) ).get() : nullptr )
 		{}
 
 		scone::Real DofPositionSensor::GetValue() const
@@ -116,15 +116,15 @@ namespace scone
 		m_Lumbar( nullptr )
 		{
 			// init plane
-			m_Plane = (Plane)pn.GetInt( "plane", -1 );
+			m_Plane = (Plane)pn.get< int >( "plane", -1 );
 			if ( m_Plane == -1 )
 			{
 				// try name (TODO: lower case comparison)
 				for ( int i = 0; i < 3; ++i )
-					if ( pn.GetStr( "plane" ) == g_PlaneNames[ i ] )
+					if ( pn.get< String >( "plane" ) == g_PlaneNames[ i ] )
 						m_Plane = Plane( i );
 			}
-			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + quoted( pn.GetStr( "plane" ) ) );
+			SCONE_ASSERT_MSG( m_Plane >= 0 && m_Plane < 3, "Invalid plane: " + quoted( pn.get< String >( "plane" ) ) );
 
 			// init Dofs (if they exist)
             // first check if pelvis exists, if not don't add a sensor. then add lumbar if it exists.
@@ -176,7 +176,7 @@ namespace scone
 
 		BodySensor::BodySensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area ) :
 		Sensor( pn, par, model, target_area ),
-		m_Body( *FindByName( model.GetBodies(), pn.GetStr( "body" ) ) )
+		m_Body( *FindByName( model.GetBodies(), pn.get< String >( "body" ) ) )
 		{}
 
 		const char* g_BodyChannelNames[] = { "X", "Y", "Z" };

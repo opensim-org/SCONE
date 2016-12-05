@@ -93,8 +93,8 @@ namespace scone
 			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
 
 			// change model properties
-			if ( props.HasKey( "SimbodyParameters" ) )
-				SetOpenSimParameters( props.GetChild( "SimbodyParameters" ), par );
+			if ( props.has_key( "SimbodyParameters" ) )
+				SetOpenSimParameters( props.get_child( "SimbodyParameters" ), par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -158,15 +158,15 @@ namespace scone
 			else state = GetStateVariables();
 
 			// update state variables if they are being optimized
-			if ( auto& iso = props.TryGetChild( "state_init_optimization" ) )
+			if ( auto iso = props.try_get( "state_init_optimization" ) )
 			{
-				bool symmetric = iso.GetBool( "symmetric", false );
+				bool symmetric = iso->get< bool >( "symmetric", false );
 				for ( auto& nvp : state )
 				{
-					if ( flut::matches_pattern( nvp.first, iso.GetStr( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso.GetStr( "exclude_states" ) ) )
+					if ( flut::matches_pattern( nvp.first, iso->get< String >( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso->get< String >( "exclude_states" ) ) )
 					{
 						auto name = symmetric ? GetNameNoSide( nvp.first ) : nvp.first;
-						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso.GetReal( "init_mean", 0.0 ), iso.GetReal( "init_std" ), 0, 0, iso.GetReal( "min", -1000 ), iso.GetReal( "max", 1000 ) ) );
+						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
 					}
 				}
 			}
@@ -185,9 +185,9 @@ namespace scone
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 
 			// create and initialize controllers
-			const PropNode& cprops = props.GetChild( "Controllers" ).Touch();
-			for ( auto iter = cprops.Begin(); iter != cprops.End(); ++iter )
-				m_Controllers.push_back( CreateController( *iter->second, par, *this, sim::Area::WHOLE_BODY ) );
+			const PropNode& cprops = props.get_child( "Controllers" );
+			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
+				m_Controllers.push_back( CreateController( iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
 			// Initialize muscle dynamics
 
@@ -702,17 +702,17 @@ namespace scone
 
 		void Model_Simbody::SetOpenSimParameters( const PropNode& props, opt::ParamSet& par )
 		{
-			auto forceIt = props.FindChild( "ForceSet" );
-			if ( forceIt != props.End() )
+			auto forceIt = props.find( "ForceSet" );
+			if ( forceIt != props.end() )
 			{
 				opt::ScopedParamSetPrefixer prefix1( par, "ForceSet." );
-				for ( auto musIt = forceIt->second->Begin(); musIt != forceIt->second->End(); ++musIt )
+				for ( auto musIt = forceIt->second.begin(); musIt != forceIt->second.end(); ++musIt )
 				{
 					opt::ScopedParamSetPrefixer prefix2( par, musIt->first + "." );
 					auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
-					for ( auto musPropIt = musIt->second->Begin(); musPropIt != musIt->second->End(); ++musPropIt )
+					for ( auto musPropIt = musIt->second.begin(); musPropIt != musIt->second.end(); ++musPropIt )
 					{
-						double value = par.Get( musPropIt->first, *musIt->second, musPropIt->first );
+						double value = par.Get( musPropIt->first, musIt->second, musPropIt->first );
 						osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
 					}
 				}

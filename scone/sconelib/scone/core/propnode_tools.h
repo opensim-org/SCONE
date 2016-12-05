@@ -17,7 +17,7 @@ namespace scone
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, T& var )
 	{
-		var = prop.GetValue< T >();
+		var = prop.get< T >();
 	}
 
 	// process vector< > type (NOT TESTED)
@@ -25,7 +25,7 @@ namespace scone
 	void InitFromPropNode( const PropNode& prop, std::vector< T >& vec )
 	{ 
 		vec.clear();
-		for ( auto iter = prop.Begin(); iter != prop.End(); ++iter )
+		for ( auto iter = prop.begin(); iter != prop.end(); ++iter )
 		{
 			vec.push_back( T() );
 			InitFromPropNode( iter->second, vec.back() );
@@ -36,15 +36,15 @@ namespace scone
 	template< typename T >
 	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name )
 	{
-		InitFromPropNode< T >( prop.GetChild( name ), var );
+		InitFromPropNode< T >( prop.get_child( name ), var );
 	}
 
 	// process named property type with default argument
 	template< typename T >
 	void InitFromPropNodeChild( const PropNode& prop, T& var, const String& name, const T& default_value )
 	{
-		if ( prop.HasKey( name ) )
-			InitFromPropNode( prop.GetChild( name ), var );
+		if ( prop.has_key( name ) )
+			InitFromPropNode( prop.get_child( name ), var );
 		else var = T( default_value );
 	}
 

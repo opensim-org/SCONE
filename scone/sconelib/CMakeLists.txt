@@ -40,7 +40,6 @@ set(CORE_TOOLS_FILES
 	scone/core/memory_tools.h
 	scone/core/propnode_tools.h
 	scone/core/propnode_tools.cpp
-	scone/core/PropNode.cpp
 	scone/core/PropNode.h
 )
 set(CS_CONTROLLERS_FEEDFORWARD_FILES

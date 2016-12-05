@@ -12,11 +12,11 @@ namespace scone
 		m_pConditionalDofPos( nullptr ),
 		m_pConditionalDofVel( nullptr )
 		{
-			const PropNode& cp = props.GetChild( "Condition" );
-			sim::Dof& dof = *FindByName( model.GetDofs(), cp.GetStr( "dof" ) + GetSideName( area.side ) );
+			const PropNode& cp = props.get_child( "Condition" );
+			sim::Dof& dof = *FindByName( model.GetDofs(), cp.get< String >( "dof" ) + GetSideName( area.side ) );
 			m_pConditionalDofPos = &model.AcquireDelayedSensor< sim::DofPositionSensor >( dof );
 			m_pConditionalDofVel = &model.AcquireDelayedSensor< sim::DofVelocitySensor >( dof );
-			m_ConditionalPosRange = Range< Degree >( cp.GetChild( "pos_range" ) );
+			m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
 		}
 
 		ConditionalMuscleReflex::~ConditionalMuscleReflex()

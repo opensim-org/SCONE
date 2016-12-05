@@ -7,6 +7,7 @@
 #include <tclap/CmdLine.h>
 #include <thread>
 #include "flut/system/log_sink.hpp"
+#include "flut/prop_node_tools.hpp"
 
 using namespace scone;
 using namespace std;
@@ -39,19 +40,19 @@ int main(int argc, char* argv[])
 			auto scenario_file = optArg.getValue();
 
 			// load properties
-			PropNode props = ReadPropNode( scenario_file );
+			PropNode props = flut::load_xml( scenario_file );
 
 			// start optimization
 			PropNode cmd_props;
 			for ( auto kvstring : propArg )
 			{
 				auto kvp = flut::key_value_str( kvstring );
-				cmd_props.Add( kvp.first, kvp.second );
+				cmd_props.set( kvp.first, kvp.second );
 			}
 
 			// get command line settings (parameter 2 and further)
-			if ( !cmd_props.IsEmpty() )
-				props.Merge( cmd_props, true );
+			if ( !cmd_props.empty() )
+				flut::merge_prop_nodes( props, cmd_props, true );
 
 			// create optimizer
 			opt::OptimizerUP o = opt::PrepareOptimization( props, scenario_file );

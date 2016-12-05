@@ -18,10 +18,10 @@ namespace scone
 		average_moment_axis( Vec3::zero() )
 		{
 			// TODO: remove once a proper factory is used
-			SCONE_ASSERT( props.GetStr( "type" ) == "VirtualMuscleReflex" );
+			SCONE_ASSERT( props.get< String >( "type" ) == "VirtualMuscleReflex" );
 
 			// parse target
-			std::stringstream str( props.GetStr( "target" ) );
+			std::stringstream str( props.get< String >( "target" ) );
 			while ( str.good() )
 			{
 				String dofname;
@@ -52,11 +52,11 @@ namespace scone
 			mrp.Init( props, par, model );
 
 			// init balance parameters
-			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.HasKey( "Balance" ) )
+			if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 			{
 				opt::ScopedParamSetPrefixer pre2( par, "B." );
-				auto& balprops = props.GetChild( "Balance" );
-				auto& body = FindByName( model.GetBodies(), balprops.GetStr( "body" ) );
+				auto& balprops = props.get_child( "Balance" );
+				auto& body = FindByName( model.GetBodies(), balprops.get< String >( "body" ) );
 
 				// create sensors
 				body_ori_sensor = &model.AcquireDelayedSensor< sim::BodyOriSensor >( *body );

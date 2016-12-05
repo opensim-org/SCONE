@@ -16,6 +16,9 @@
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
+#include "flut/prop_node_tools.hpp"
+#include "string"
+#include "flut/system/types.hpp"
 
 namespace scone
 {
@@ -40,24 +43,23 @@ namespace scone
 	const PropNode& GetSconeSettings()
 	{
 		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
-		auto settings_file = GetSettingsFolder() / "settings.ini";
-
 		// lazy initialization
-		if ( g_GlobalSettings.IsEmpty() )
+		if ( g_GlobalSettings.empty() )
 		{
+			auto settings_file = GetSettingsFolder() / "settings.ini";
 			if ( flut::exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
-				g_GlobalSettings.FromIniFile( settings_file.str() );
+				g_GlobalSettings = flut::load_ini( settings_file.str() );
 			}
 			else
 			{
 				// add default settings here
-				auto& fn = g_GlobalSettings.AddChild( "folders" );
-				fn.Add( "results", GetDefaultDataFolder() / "results" );
-				fn.Add( "models", GetDefaultDataFolder() / "models" );
-				fn.Add( "scenarios", GetDefaultDataFolder() / "scenarios" );
-				fn.Add( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
+				auto& fn = g_GlobalSettings.push_back( "folders" );
+				fn.set( "results", GetDefaultDataFolder() / "results" );
+				fn.set( "models", GetDefaultDataFolder() / "models" );
+				fn.set( "scenarios", GetDefaultDataFolder() / "scenarios" );
+				fn.set( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
 			}
 		}
 
@@ -71,7 +73,8 @@ namespace scone
 
 		g_GlobalSettings = newSettings;
 		boost::filesystem::create_directories( boost::filesystem::path( settings_file.str() ).parent_path() );
-		g_GlobalSettings.ToIniFile( settings_file.str() );
+
+		flut::save_ini( g_GlobalSettings, settings_file );
 		log::debug( "Saved settings to ", settings_file );
 	}
 
@@ -102,9 +105,9 @@ namespace scone
 
 	path GetFolder( const String& folder, const path& default_path )
 	{
-		if ( GetSconeSettings().HasKey( "folders" ) )
+		if ( GetSconeSettings().has_key( "folders" ) )
 		{
-			auto path_to_folder = flut::path( GetSconeSettings().GetChild( "folders" ).GetStr( folder, "" ) );
+			auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
 			if ( !path_to_folder.empty() )
 				return path_to_folder;
 		}
