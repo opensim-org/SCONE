@@ -100,12 +100,7 @@ osgQt::GraphicsWindowQt* QOsgViewer::createGraphicsWindow( int x, int y, int w, 
 void QOsgViewer::paintEvent( QPaintEvent* event )
 {
 	++frame_count;
-
-	// #HACK We skip the first 10 frames because this seems to give issues with Qt5.5
-	// Error message: "QOpenGLContext::swapBuffers() called with non-exposed window, behavior is undefined"
-	// #TODO fix this after updating to Qt5.6
-	if ( frame_count > 10 )
-		frame();
+	frame();
 }
 
 void QOsgViewer::setScene( osg::Node* s )
