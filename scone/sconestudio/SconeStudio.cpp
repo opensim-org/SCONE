@@ -87,6 +87,11 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	flut::log::debug( "Enabling messages window" );
 	enableLogging = true; 
 
+	flut::log::debug( "Loading GUI settings" );
+	QSettings cfg( "SCONE", "SconeStudio" );
+	restoreGeometry( cfg.value( "geometry" ).toByteArray() );
+	restoreState( cfg.value( "windowState" ).toByteArray() );
+
 	return true;
 }
 
@@ -488,7 +493,16 @@ void SconeStudio::finalizeCapture()
 void SconeStudio::closeEvent( QCloseEvent *e )
 {
 	abortOptimizations();
-	if ( optimizations.empty() )
-		e->accept();
-	else e->ignore();
+	if ( !optimizations.empty() )
+	{
+		e->ignore();
+		return;
+	}
+
+	flut::log::debug( "Saving GUI settings" );
+	QSettings cfg( "SCONE", "SconeStudio" );
+	cfg.setValue( "geometry", saveGeometry() );
+	cfg.setValue( "windowState", saveState() );
+
+	QMainWindow::closeEvent( e );
 }
