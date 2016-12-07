@@ -5,12 +5,13 @@
 1c: Added retraction for rect_fem
 1d: Changed measure to include GRF
 1e: Changed rect_fem control to constant gain
+1f: Removed GRF from measure
 -->
 
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHX1e</signature_postfix>
+		<signature_postfix>GHX1f</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f1020m.osim</model_file>
@@ -147,7 +148,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG10_CoT_GRF.xml"/>
+				<INCLUDE file="measures/M_CG10_CoT.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>
