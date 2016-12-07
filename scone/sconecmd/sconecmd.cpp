@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 			auto scenario_file = optArg.getValue();
 
 			// load properties
-			PropNode props = flut::load_xml( scenario_file );
+			PropNode props = flut::load_file_with_include( scenario_file, "INCLUDE" );
 
 			// start optimization
 			PropNode cmd_props;

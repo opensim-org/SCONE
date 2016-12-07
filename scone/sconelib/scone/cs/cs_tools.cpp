@@ -106,7 +106,9 @@ namespace scone
 			statistics.set( "result", result );
 			statistics.set( "simulation time", so->GetModel().GetTime() );
 			statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
-	
+
+			std::cout << "\nREPORT:\n" << so->GetMeasure().GetReport() << "REPORT END\n";
+
 			// output profiler results (only if enabled)
 			std::cout << Profiler::GetGlobalInstance().GetReport();
 
@@ -125,7 +127,7 @@ namespace scone
 				bfs::current_path( config_path.parent_path() );
 
 			// read properties
-			PropNode configProp = flut::load_xml( config_path.string() ) ;
+			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;
 			PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 			// create SimulationObjective object

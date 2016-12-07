@@ -55,7 +55,7 @@ namespace scone
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 	
-			PropNode configProp = load_xml( config_path.string() ) ;
+			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;
 			const PropNode& objProp = configProp.get_child( "Optimizer.Objective" );
 			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
 			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );

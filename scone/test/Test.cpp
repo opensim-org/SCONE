@@ -47,7 +47,7 @@ namespace scone
 		const double simulation_time = 0.2;
 
 		cs::RegisterFactoryTypes();
-		PropNode props = load_xml( "simulation_test.xml" );
+		PropNode props = load_file_with_include( "simulation_test.xml" );
 
 		std::vector< String > models;
 		models.push_back( "../models/f1024.osim" );
@@ -101,7 +101,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = load_xml( config_path.string() ) ;
+		PropNode configProp = load_file_with_include( config_path.string() ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
@@ -182,7 +182,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = load_xml( config_path.string() ) ;
+		PropNode configProp = load_file_with_include( config_path.string() ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// override some variables
@@ -231,7 +231,7 @@ namespace scone
 		cs::RegisterFactoryTypes();
 
 		opt::ParamSet par; // empty parameter set
-		PropNode configProp = load_xml( filename ) ;
+		PropNode configProp = load_file_with_include( filename ) ;
 		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
 
 		// create objective
@@ -267,7 +267,7 @@ namespace scone
 	void MuscleLengthTest()
 	{
 		cs::RegisterFactoryTypes();
-		PropNode props = load_xml( "simulation_test.xml" );
+		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
 		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
@@ -294,7 +294,7 @@ namespace scone
 	void DofAxisTest()
 	{
 		cs::RegisterFactoryTypes();
-		PropNode props = load_xml( "simulation_test.xml" );
+		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 
 		opt::ParamSet par; // empty parameter set

@@ -10,7 +10,7 @@ using std::endl;
 
 BOOST_AUTO_TEST_CASE( simulation_test )
 {
-	path testpath = ( scone::GetFolder( "root" ) / "unittestdata/simulation_test" ).str();
+	path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test" ).str();
 
 	for ( directory_iterator dir_it( testpath ); dir_it != directory_iterator(); ++dir_it )
 	{
@@ -22,8 +22,10 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 				if ( fileit->path().extension() == ".par" )
 				{
 					path fp = fileit->path();
-					// cout << "Running simulation for " << fp << endl;
+					cout << "Running simulation for " << fp << endl;
 					auto result = scone::cs::RunSimulation( fp.string() );
+					cout << endl << result << endl;
+
 					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".xml" );
 					if ( !exists( reportpath ) )
 					{

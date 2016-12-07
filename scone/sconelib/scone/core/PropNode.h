@@ -16,6 +16,7 @@ namespace scone
 {
 	using PropNode = flut::prop_node;
 	using flut::load_xml;
+	using flut::load_file_with_include;
 	using flut::save_xml;
 	using flut::load_ini;
 	using flut::save_ini;
