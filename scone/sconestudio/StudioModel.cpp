@@ -180,7 +180,7 @@ namespace scone
 		so->Evaluate();
 
 		PropNode results;
-		results.push_back( "result", so->GetMeasure().GetReport() );
+		results.set( "result", so->GetMeasure().GetReport() );
 		log::info( results );
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
 

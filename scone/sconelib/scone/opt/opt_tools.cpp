@@ -68,16 +68,13 @@ namespace scone
 		
 			Profiler::GetGlobalInstance().Reset();
 
-			PropNode statistics;
-			statistics.clear();
 			timer tmr;
 			double result = obj->Evaluate();
 			auto duration = tmr.seconds();
 	
 			// collect statistics
-			statistics.clear();
-			statistics.push_back( "result", so.GetMeasure().GetReport() );
-			statistics.set( "result", result );
+			PropNode statistics;
+			statistics.set( "result", so.GetMeasure().GetReport() );
 			statistics.set( "simulation time", so.GetModel().GetTime() );
 			statistics.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 	

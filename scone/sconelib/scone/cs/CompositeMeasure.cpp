@@ -103,7 +103,7 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().push_back( t.name, t.measure->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
+				GetReport().push_back( t.name, t.measure->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, t.weight, org_result, t.offset, t.threshold ) );
 			}
 
 			for ( MeasureUP& m: m_Measures )
@@ -115,10 +115,10 @@ namespace scone
 
 				total += weighted_result;
 
-				GetReport().push_back( m->GetName(), m->GetReport() ).set( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
+				GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
 			}
 
-			GetReport().set( total );
+			GetReport().set_value( total );
 
 			return total;
 		}

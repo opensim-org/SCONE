@@ -126,9 +126,7 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.clear();
-		stats.push_back( "result", so.GetMeasure().GetReport() );
-		stats.set( "result", result );
+		stats.set( "result", so.GetMeasure().GetReport() );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 
@@ -207,9 +205,7 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.clear();
-		stats.push_back( "result", so.GetMeasure().GetReport() );
-		stats.set( "result", result );
+		stats.set( "result", so.GetMeasure().GetReport() ).set_value( result );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;
@@ -249,9 +245,7 @@ namespace scone
 
 		// collect statistics
 		PropNode stats;
-		stats.clear();
-		stats.push_back( "result", so.GetMeasure().GetReport() );
-		stats.set( "result", result );
+		stats.set( "result", so.GetMeasure().GetReport() ).set_value( result );
 		stats.set( "simulation time", so.GetModel().GetTime() );
 		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
 		cout << "--- Evaluation report ---" << endl;

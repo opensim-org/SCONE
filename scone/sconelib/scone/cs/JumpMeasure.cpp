@@ -151,7 +151,7 @@ namespace scone
 			if ( negate_result )
 				result = -result;
 
-			GetReport().set( result );
+			GetReport().set_value( result );
 			GetReport().set( "jump_height", jump_height );
 			GetReport().set( "early_jump_penalty", early_jump_penalty );
 
@@ -199,7 +199,7 @@ namespace scone
 
 			if ( negate_result ) result = -result;
 
-			GetReport().set( result );
+			GetReport().set_value( result );
 
 			return result;
 		}
