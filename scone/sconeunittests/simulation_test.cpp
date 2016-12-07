@@ -22,21 +22,19 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 				if ( fileit->path().extension() == ".par" )
 				{
 					path fp = fileit->path();
-					cout << "Running simulation for " << fp << endl;
-					auto result = scone::cs::RunSimulation( fp.string() );
-					cout << endl << result << endl;
+					flut::prop_node result = scone::cs::RunSimulation( fp.string() );
 
-					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".xml" );
+					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".prop" );
 					if ( !exists( reportpath ) )
 					{
 						BOOST_ERROR( "Could not find simulation report: " + reportpath.string() );
-						save_xml( result, reportpath.string() );
+						save_prop( result, reportpath.string() );
 					}
 					else
 					{
-						auto verify = scone::load_xml( reportpath.string() );
-						auto rep1 = result.get_child( "report" );
-						auto rep2 = verify.get_child( "report" );
+						auto verify = flut::load_prop( reportpath.string() );
+						auto rep1 = result.get_child( "result" );
+						auto rep2 = verify.get_child( "result" );
 						BOOST_CHECK( rep1 == rep2 );
 						if ( rep1 != rep2 )
 						{

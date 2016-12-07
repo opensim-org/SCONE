@@ -106,8 +106,6 @@ namespace scone
 			statistics.set( "simulation time", so->GetModel().GetTime() );
 			statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
 
-			std::cout << "\nREPORT:\n" << so->GetMeasure().GetReport() << "REPORT END\n";
-
 			// output profiler results (only if enabled)
 			std::cout << Profiler::GetGlobalInstance().GetReport();
 

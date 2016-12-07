@@ -5,8 +5,8 @@ using namespace boost::filesystem;
 
 BOOST_AUTO_TEST_CASE( propnode_stream_test )
 {
-	path rootpath = scone::GetFolder( "root" ).str();
-	path p1path = rootpath / "config/f1022_gait_GH.xml";
+	path rootpath = scone::GetFolder( scone::SCONE_ROOT_FOLDER ).str();
+	path p1path = rootpath / "scenarios/f1020_walk_GH.xml";
 	auto p1 = scone::load_file_with_include( p1path.string() );
 
 	auto p2path = temp_directory_path() / p1path.filename();
