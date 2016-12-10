@@ -1,6 +1,7 @@
 #include "scone/core/Log.h"
 #include "scone/opt/opt_tools.h"
 #include "scone/cs/cs_tools.h"
+#include "scone/cs/SimulationObjective.h"
 #include "scone/sim/simbody/sim_simbody.h"
 #include "flut/system_tools.hpp"
 #include <boost/filesystem.hpp>
@@ -67,7 +68,18 @@ int main(int argc, char* argv[])
 		{
 			// set log level
 			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
-			opt::SimulateObjective( resArg.getValue() );
+			cs::SimulationObjectiveUP so = cs::CreateSimulationObjective( resArg.getValue() );
+			so->GetModel().SetStoreData( true );
+			so->GetModel().SetSimulationEndTime( so->max_duration );
+			log::info( "Starting simulation" );
+			so->GetModel().SetStoreData( true );
+			so->GetModel().SetThreadSafeSimulation( true );
+			so->Evaluate();
+
+			PropNode results;
+			results.set( "result", so->GetMeasure().GetReport() );
+			log::info( results );
+			so->WriteResults( flut::get_filename_without_ext( resArg.getValue() ) );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen
 	}
