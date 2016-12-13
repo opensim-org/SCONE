@@ -101,8 +101,8 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = load_file_with_include( config_path.string() ) ;
-		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
+		const PropNode configProp = load_file_with_include( config_path.string() ) ;
+		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// override some variables
 		//objProp.Set( "max_duration", 1 );
@@ -180,8 +180,8 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		PropNode configProp = load_file_with_include( config_path.string() ) ;
-		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
+		const PropNode configProp = load_file_with_include( config_path.string() ) ;
+		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// override some variables
 		objProp.set( "max_duration", 1 );
@@ -227,8 +227,8 @@ namespace scone
 		cs::RegisterFactoryTypes();
 
 		opt::ParamSet par; // empty parameter set
-		PropNode configProp = load_file_with_include( filename ) ;
-		PropNode objProp = configProp.get_child( "Optimizer.Objective" );
+		const PropNode configProp = load_file_with_include( filename ) ;
+		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );

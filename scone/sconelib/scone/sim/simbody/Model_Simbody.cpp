@@ -158,7 +158,7 @@ namespace scone
 			else state = GetStateVariables();
 
 			// update state variables if they are being optimized
-			if ( auto iso = props.try_get( "state_init_optimization" ) )
+			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
 				for ( auto& nvp : state )

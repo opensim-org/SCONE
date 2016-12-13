@@ -42,17 +42,12 @@ int main(int argc, char* argv[])
 			// load properties
 			PropNode props = flut::load_file_with_include( scenario_file, "INCLUDE" );
 
-			// start optimization
-			PropNode cmd_props;
+			// apply command line settings (parameter 2 and further)
 			for ( auto kvstring : propArg )
 			{
 				auto kvp = flut::key_value_str( kvstring );
-				cmd_props.set( kvp.first, kvp.second );
+				props.set_delimited( kvp.first, kvp.second, '.' );
 			}
-
-			// get command line settings (parameter 2 and further)
-			if ( !cmd_props.empty() )
-				flut::merge_prop_nodes( props, cmd_props, true );
 
 			// create optimizer
 			opt::OptimizerUP o = opt::PrepareOptimization( props, scenario_file );

@@ -33,7 +33,7 @@ namespace scone
 		Measure( props, par, model, area )
 		{
 			// get Terms (obsolete)
-			if ( const PropNode* termNode = props.try_get( "Terms" ) )
+			if ( const PropNode* termNode = props.try_get_child( "Terms" ) )
 			{
 				for ( auto it = termNode->begin(); it != termNode->end(); ++it )
 				{
@@ -48,7 +48,7 @@ namespace scone
 			}
 
 			// get Measures
-			if ( const PropNode* mprops = props.try_get( "Measures" ) )
+			if ( const PropNode* mprops = props.try_get_child( "Measures" ) )
 			{
 				for ( auto it = mprops->begin(); it != mprops->end(); ++it )
 				{

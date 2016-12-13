@@ -26,7 +26,7 @@ namespace scone
 		if ( ret == QDialog::Accepted )
 		{
 			// update settings
-			auto& pf = pn.get_or_add( "folders" );
+			auto& pf = pn.get_or_add_child( "folders" );
 			pf.set( "scenarios", settings.scenariosFolder->text().toStdString() );
 			pf.set( "models", settings.modelsFolder->text().toStdString() );
 			pf.set( "results", settings.resultsFolder->text().toStdString() );
