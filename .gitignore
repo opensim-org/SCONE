@@ -3,3 +3,4 @@ build/msvc2013/
 models/test/
 ignore/
 models/pathological/f0914_ham90L.osim
+build/msvc2015_64/
