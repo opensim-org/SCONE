@@ -108,8 +108,11 @@ if(${Qt5Widgets_FOUND})
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
-
+	
 	if(WIN32)
+		# get the VS version, the shabby cmake way.
+		string(SUBSTRING ${CMAKE_VS_PLATFORM_TOOLSET} 1 3 VS_PLATFORM_TOOLSET_NUMBER)
+
 		# Set DLL target
 		SET(DLL_TARGET_DIR ${EXECUTABLE_OUTPUT_PATH}/$<CONFIGURATION>)
 		add_custom_command(TARGET sconestudio POST_BUILD
@@ -119,8 +122,10 @@ if(${Qt5Widgets_FOUND})
 		# Copy all Boost DLLs to the binary directory.
 		SET(BOOST_DLLS filesystem system thread date_time chrono serialization timer unit_test_framework)
 		foreach(boostdll ${BOOST_DLLS})
+			# copy depending on VC version. TODO: find out if CMake allows a better way to do this
+			SET( BOOST_DLL_FILENAME boost_${boostdll}-vc${VS_PLATFORM_TOOLSET_NUMBER}-mt-$<$<CONFIG:debug>:gd->${Boost_LIB_VERSION}.dll )
 			add_custom_command(TARGET sconestudio POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Boost_LIBRARY_DIRS}/boost_${boostdll}-vc120-mt-$<$<CONFIG:debug>:gd->${Boost_LIB_VERSION}.dll ${DLL_TARGET_DIR}
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Boost_LIBRARY_DIRS}/${BOOST_DLL_FILENAME} ${DLL_TARGET_DIR}
 			)
 		endforeach()
 
@@ -139,6 +144,14 @@ if(${Qt5Widgets_FOUND})
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}$<$<CONFIG:debug>:_d>.dll ${DLL_TARGET_DIR}
 			)
 		endforeach()
-		
+
+		# Copy OSG DLLs
+		SET(OSG_DLLS osg130-osg osg130-osgwidget osg130-osgqt osg130-osgga osg130-osgviewer osg130-osgutil osg130-osgtext osg130-osgdb osg130-osgshadow ot20-OpenThreads)
+		foreach(osgdll ${OSG_DLLS})
+			add_custom_command(TARGET sconestudio POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${osgdll}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
+			)
+		endforeach()
+
 	endif()
 endif()
