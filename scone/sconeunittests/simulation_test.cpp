@@ -38,10 +38,10 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 						BOOST_CHECK( rep1 == rep2 );
 						if ( rep1 != rep2 )
 						{
-							BOOST_MESSAGE( "rep1:" );
-							BOOST_MESSAGE( rep1 );
-							BOOST_MESSAGE( "rep2:" );
-							BOOST_MESSAGE( rep2 );
+							BOOST_TEST_MESSAGE( "rep1:" );
+							BOOST_TEST_MESSAGE( rep1 );
+							BOOST_TEST_MESSAGE( "rep2:" );
+							BOOST_TEST_MESSAGE( rep2 );
 						}
 					}
 				}

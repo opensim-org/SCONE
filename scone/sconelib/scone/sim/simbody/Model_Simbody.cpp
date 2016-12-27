@@ -145,7 +145,7 @@ namespace scone
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
 			else if ( integration_method == "SemiExplicitEuler2" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-			else SCONE_THROW( "Invalid integration method: " + quoted( integration_method ) );
+			else SCONE_THROW( "Invalid integration method: " + flut::quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
