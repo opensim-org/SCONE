@@ -87,7 +87,7 @@ namespace scone
 				if ( boost::filesystem::exists( boost::filesystem::path( g_RootFolder.str() ) / ".version" ) )
 					break;
 			}
-			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder" );
+			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat" );
 			log::debug( "SCONE root folder: ", g_RootFolder );
 		}
 		return g_RootFolder;
