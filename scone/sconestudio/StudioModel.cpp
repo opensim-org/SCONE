@@ -102,7 +102,7 @@ namespace scone
 
 		for ( Index i = 0; i < model.GetLegCount(); ++i )
 		{
-			forces.push_back( root.add_arrow( 0.01f, vis::make_yellow(), 0.3f ) );
+			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
 			forces.back().set_material( arrow_mat );
 		}
 	}
