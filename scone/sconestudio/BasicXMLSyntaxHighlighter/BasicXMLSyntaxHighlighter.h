@@ -11,6 +11,7 @@ public:
     BasicXMLSyntaxHighlighter(QObject * parent);
     BasicXMLSyntaxHighlighter(QTextDocument * parent);
     BasicXMLSyntaxHighlighter(QTextEdit * parent);
+	virtual ~BasicXMLSyntaxHighlighter();
 
 protected:
     virtual void highlightBlock(const QString & text);

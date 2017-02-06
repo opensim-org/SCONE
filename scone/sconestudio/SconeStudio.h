@@ -22,7 +22,7 @@
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"
 #include "ProgressDockWidget.h"
-#include "EditorWidget.h"
+#include "QCodeEditor.h"
 #include "Settings.h"
 #include "flut/system/log_sink.hpp"
 
@@ -80,8 +80,8 @@ public:
 
 private:
 	void setTime( TimeInSeconds t );
-	EditorWidget* getActiveScenario();
-	bool checkAndSaveScenario( EditorWidget* s );
+	QCodeEditor* getActiveScenario();
+	bool checkAndSaveScenario( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
 	void addRecentFile( QString& filename );
 	void updateRecentFilesMenu();
@@ -103,7 +103,7 @@ private:
 	flut::delta< scone::Vec3 > com_delta;
 
 	std::vector< ProgressDockWidget* > optimizations;
-	std::vector< EditorWidget* > scenarios;
+	std::vector< QCodeEditor* > scenarios;
 
 	QString captureFilename;
 	QProcess* captureProcess;

@@ -1,89 +1,97 @@
 #include "QCodeEditor.h"
+#include "SconeStudio.h"
+#include "qt_tools.h"
+#include "flut/system_tools.hpp"
+#include "flut/system/assert.hpp"
+#include "scone/core/Log.h"
+#include "flut/string_tools.hpp"
+#include "scone/core/system_tools.h"
 
-#include <QPainter>
-#include "QTextObject"
-
-class LineNumberArea : public QWidget
-{
-public:
-	LineNumberArea( QCodeEditor *editor ) : QWidget( editor ) { codeEditor = editor; }
-	QSize sizeHint() const Q_DECL_OVERRIDE { return QSize( codeEditor->lineNumberAreaWidth(), 0 ); }
-protected:
-	void paintEvent( QPaintEvent *event ) Q_DECL_OVERRIDE{ codeEditor->lineNumberAreaPaintEvent( event ); }
-private:
-	QCodeEditor *codeEditor;
-};
+using namespace scone;
 
 QCodeEditor::QCodeEditor( QWidget* parent ) :
-QPlainTextEdit( parent )
+QWidget( parent )
 {
-	lineNumberArea = new LineNumberArea( this );
+	QVBoxLayout* verticalLayout = new QVBoxLayout( this );
+	setLayout( verticalLayout );
+	textEdit = new QCodeTextEdit( this );
 
-	connect( this, SIGNAL( blockCountChanged( int ) ), this, SLOT( updateLineNumberAreaWidth( int ) ) );
-	connect( this, SIGNAL( updateRequest( QRect, int ) ), this, SLOT( updateLineNumberArea( QRect, int ) ) );
+	QFont font;
+	font.setFamily( QStringLiteral( "Consolas" ) );
+	font.setPointSize( 9 );
+	textEdit->setFont( font );
+	textEdit->setLineWrapMode( QPlainTextEdit::NoWrap );
+	textEdit->setTabStopWidth( 16 );
+	textEdit->setWordWrapMode( QTextOption::NoWrap );
+	verticalLayout->addWidget( textEdit );
 
-	updateLineNumberAreaWidth( 0 );
+	connect( textEdit, SIGNAL( textChanged() ), this, SLOT( textEditChanged() ) );
 }
 
-void QCodeEditor::lineNumberAreaPaintEvent( QPaintEvent *event )
+QCodeEditor::~QCodeEditor()
+{}
+
+void QCodeEditor::open( const QString& filename )
 {
-	QPainter painter( lineNumberArea );
-	painter.fillRect( event->rect(), Qt::lightGray );
-
-	QTextBlock block = firstVisibleBlock();
-	int blockNumber = block.blockNumber();
-	int top = (int)blockBoundingGeometry( block ).translated( contentOffset() ).top();
-	int bottom = top + (int)blockBoundingRect( block ).height();
-
-	while ( block.isValid() && top <= event->rect().bottom() ) {
-		if ( block.isVisible() && bottom >= event->rect().top() ) {
-			QString number = QString::number( blockNumber + 1 );
-			painter.setPen( Qt::black );
-			painter.drawText( 0, top, lineNumberArea->width() - 2, fontMetrics().height(),
-				Qt::AlignRight, number );
-		}
-
-		block = block.next();
-		top = bottom;
-		bottom = top + (int)blockBoundingRect( block ).height();
-		++blockNumber;
+	QFile f( filename );
+	if ( f.open( QFile::ReadOnly | QFile::Text ) )
+	{
+		QTextStream str( &f );
+		data = str.readAll();
+		textEdit->setPlainText( data );
+		fileName = filename;
 	}
+	else return;
+
+	// TODO: create appropriate highlighter
+	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter = new BasicXMLSyntaxHighlighter( textEdit->document() );
 }
 
-int QCodeEditor::lineNumberAreaWidth()
+void QCodeEditor::openDialog( const QString& folder, const QString& fileTypes )
 {
-	int digits = 1;
-	int max = qMax( 1, blockCount() );
-	while ( max >= 10 ) {
-		max /= 10;
-		++digits;
+	auto fn = QFileDialog::getOpenFileName( this, "Open File", folder, fileTypes );
+	if ( !fn.isEmpty() )
+		open( fn );
+}
+
+void QCodeEditor::save()
+{
+	QFile file( fileName );
+	if ( !file.open( QIODevice::WriteOnly ) )
+	{
+		QMessageBox::critical( this, "Error writing file", "Could not open file " + fileName );
+		return;
 	}
-
-	int space = 4 + fontMetrics().width(QLatin1Char('9')) * digits;
-
-	return space;
-}
-
-void QCodeEditor::resizeEvent( QResizeEvent *event )
-{
-	QPlainTextEdit::resizeEvent( event );
-
-	QRect cr = contentsRect();
-	lineNumberArea->setGeometry( QRect( cr.left(), cr.top(), lineNumberAreaWidth(), cr.height() ) );
-}
-
-void QCodeEditor::updateLineNumberAreaWidth( int newBlockCount )
-{
-	setViewportMargins( lineNumberAreaWidth(), 0, 0, 0 );
-}
-
-void QCodeEditor::updateLineNumberArea( const QRect &rect, int dy )
-{
-	if ( dy )
-		lineNumberArea->scroll( 0, dy );
 	else
-		lineNumberArea->update( 0, rect.y(), lineNumberArea->width(), rect.height() );
+	{
+		QTextStream stream( &file );
+		stream << textEdit->toPlainText();
+		stream.flush();
+		file.close();
+		textChangedFlag = false;
+	}
+}
 
-	if ( rect.contains( viewport()->rect() ) )
-		updateLineNumberAreaWidth( 0 );
+void QCodeEditor::saveAsDialog( const QString& folder, const QString& fileTypes )
+{
+	QString fn = QFileDialog::getSaveFileName( this, "Save File As", folder, fileTypes );
+	if ( !fn.isEmpty() )
+	{
+		fileName = fn;
+		save();
+	}
+}
+
+QString QCodeEditor::getTitle()
+{
+	return QFileInfo( fileName ).fileName() + ( hasTextChanged() ? "*" : "" );
+}
+
+void QCodeEditor::textEditChanged()
+{
+	if ( !textChangedFlag )
+	{
+		textChangedFlag = true;
+		emit textChanged();
+	}
 }

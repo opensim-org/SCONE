@@ -21,6 +21,9 @@ BasicXMLSyntaxHighlighter::BasicXMLSyntaxHighlighter(QTextEdit * parent) :
     setFormats();
 }
 
+BasicXMLSyntaxHighlighter::~BasicXMLSyntaxHighlighter()
+{}
+
 void BasicXMLSyntaxHighlighter::highlightBlock(const QString & text)
 {
     // Special treatment for xml element regex as we use captured text to emulate lookbehind

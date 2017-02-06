@@ -28,10 +28,10 @@ if(${Qt5Widgets_FOUND})
 		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
 		QOsgViewer.h
 		QOsgViewer.cpp
-		EditorWidget.h
-		EditorWidget.cpp
 		QCodeEditor.h
 		QCodeEditor.cpp
+		QCodeTextEdit.h
+		QCodeTextEdit.cpp
 		QPlayControl.h
 		QPlayControl.cpp
 		../../contrib/qcustomplot/qcustomplot.h

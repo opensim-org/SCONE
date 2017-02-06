@@ -259,7 +259,8 @@ void SconeStudio::fileOpen()
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
 	{
-		EditorWidget* edw = new EditorWidget( this, filename );
+		QCodeEditor* edw = new QCodeEditor( this );
+		edw->open( filename );
 		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 		ui.tabWidget->setCurrentIndex( idx );
 		scenarios.push_back( edw );
@@ -285,7 +286,7 @@ void SconeStudio::fileSave()
 void SconeStudio::fileSaveAs()
 {
 	if ( getActiveScenario() )
-		getActiveScenario()->saveAs();
+		getActiveScenario()->saveAsDialog( make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
 }
 
 void SconeStudio::fileExit()
@@ -323,7 +324,7 @@ void SconeStudio::updateRecentFilesMenu()
 	SCONE_THROW_NOT_IMPLEMENTED;
 }
 
-bool SconeStudio::checkAndSaveScenario( EditorWidget* s )
+bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
 {
 	if ( s == nullptr )
 	{
@@ -451,7 +452,7 @@ void SconeStudio::updateViewSettings()
 	manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 }
 
-EditorWidget* SconeStudio::getActiveScenario()
+QCodeEditor* SconeStudio::getActiveScenario()
 {
 	for ( auto edw : scenarios )
 	{

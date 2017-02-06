@@ -1,25 +1,44 @@
 #pragma once
 
-#include <QTextEdit>
-#include <QPlainTextEdit>
+#include "scone/core/core.h"
+#include "scone/core/String.h"
+#include "BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h"
+#include <QWidget>
+#include <QFileInfo>
+#include "QCodeTextEdit.h"
 
-class QCodeEditor : public QPlainTextEdit
+using scone::String;
+class SconeStudio;
+
+class QCodeEditor : public QWidget
 {
 	Q_OBJECT
 
 public:
 	QCodeEditor( QWidget* parent = 0 );
-
-	void lineNumberAreaPaintEvent( QPaintEvent *event );
-	int lineNumberAreaWidth();
+	virtual ~QCodeEditor();
+	bool hasTextChanged() { return textChangedFlag; }
 
 public slots:
-	void updateLineNumberAreaWidth( int newBlockCount );
-	void updateLineNumberArea( const QRect& rect, int dy );
+	void open( const QString& filename );
+	void openDialog( const QString& folder, const QString& fileTypes );
+	void save();
+	void saveAsDialog( const QString& folder, const QString& fileTypes );
 
-protected:
-	void resizeEvent( QResizeEvent *event ) Q_DECL_OVERRIDE;
+	QString getTitle();
+	void textEditChanged();
+
+signals:
+	void textChanged();
+
+public:
+	QString defaultFolder;
+	QString fileTypes;
+	QString fileName;
+	QString data;
+	bool textChangedFlag = false;
+	BasicXMLSyntaxHighlighter* xmlSyntaxHighlighter;
 
 private:
-	QWidget *lineNumberArea;
+    QCodeTextEdit *textEdit;
 };
