@@ -88,8 +88,6 @@ private:
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
-	QFileSystemModel* resultsFileModel;
-	QFileSystemModel* scenarioFileModel;
 	QTimer qtimer;
 	QTimer backgroundUpdateTimer;
 	bool fileChanged = false;

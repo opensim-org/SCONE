@@ -53,13 +53,10 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	flut::log::debug( "Initializing results window" );
 
 	// init file model and browser widget
-	path results_folder = scone::GetFolder( SCONE_RESULTS_FOLDER );
-	QDir().mkdir( make_qt( results_folder ) );
-	resultsFileModel = new QFileSystemModel( this );
-	resultsFileModel->setNameFilters( QStringList( "*.par" ) );
-	ui.resultsBrowser->setModel( resultsFileModel );
-	ui.resultsBrowser->setRootIndex( resultsFileModel->setRootPath( make_qt( results_folder ) ) );
-	for ( int i = 1; i <= 3; ++i ) ui.resultsBrowser->hideColumn( i );
+	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
+	QDir().mkdir( results_folder );
+	ui.resultsBrowser->setFolder( results_folder, "*.par" );
+
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
@@ -146,7 +143,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	try
 	{
 		showViewer();
-		String filename = resultsFileModel->fileInfo( idx ).absoluteFilePath().toStdString();
+		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
 		ui.playControl->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
@@ -162,7 +159,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
 {
-	auto item = resultsFileModel->fileInfo( idx );
+	auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
 	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
 }
 

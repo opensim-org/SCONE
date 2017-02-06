@@ -35,6 +35,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QCodeTextEdit.cpp
 		${QTFX_PATH}/QPlayControl.h
 		${QTFX_PATH}/QPlayControl.cpp
+		${QTFX_PATH}/QFileBrowser.h
+		${QTFX_PATH}/QFileBrowser.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
