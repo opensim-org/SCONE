@@ -169,7 +169,7 @@ namespace scone
 			{
 				ParamSet par;
                 m_Objectives.push_back( CreateObjective( m_ObjectiveProps, par ) );
-				m_Objectives.back()->debug_idx = m_Objectives.size();
+				m_Objectives.back()->debug_idx = (int)m_Objectives.size();
 			}
 		}
 

@@ -72,8 +72,8 @@ namespace scone
 			SCONE_ASSERT( dim > 0 );
 
 			// init lambda and mu
-			if ( m_Lambda == 0 ) m_Lambda = shark::CMA::suggestLambda( dim );
-			if ( m_Mu == 0 ) m_Mu = shark::CMA::suggestMu( m_Lambda );
+			if ( m_Lambda == 0 ) m_Lambda = static_cast<int>( shark::CMA::suggestLambda( dim ) );
+			if ( m_Mu == 0 ) m_Mu = static_cast<int>( shark::CMA::suggestMu( m_Lambda ) );
 
 			// create m_Lambda objectives
 			CreateObjectives( m_Lambda );

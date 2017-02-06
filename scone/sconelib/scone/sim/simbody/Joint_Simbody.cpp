@@ -34,12 +34,12 @@ namespace scone
 
 		scone::Real Joint_Simbody::GetDof( size_t index /*= 0 */ ) const
 		{
-			return m_osJoint.getCoordinateSet().get( index ).getValue( m_Model.GetTkState() );
+			return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
 		}
 
 		const String& Joint_Simbody::GetDofName( size_t index /*= 0 */ ) const
 		{
-			return m_osJoint.getCoordinateSet().get( index ).getName();
+			return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getName();
 		}
 
 		scone::Vec3 Joint_Simbody::GetReactionForce() const

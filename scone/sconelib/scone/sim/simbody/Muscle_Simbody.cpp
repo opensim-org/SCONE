@@ -158,7 +158,7 @@ namespace scone
 			//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 			auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );
 			std::vector< Vec3 > points( pps.getSize() );
-			for ( Index i = 0; i < points.size(); ++i )
+			for ( int i = 0; i < points.size(); ++i )
 			{
 				const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[i]->getBody().getIndex() );
 				auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[i]->getLocation();

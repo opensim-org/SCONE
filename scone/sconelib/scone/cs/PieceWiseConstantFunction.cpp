@@ -27,9 +27,7 @@ namespace scone
 	}
 
 	PieceWiseConstantFunction::~PieceWiseConstantFunction()
-	{
-
-	}
+	{}
 
 	scone::Real PieceWiseConstantFunction::GetValue( Real x )
 	{
@@ -45,12 +43,12 @@ namespace scone
 
 	scone::Real PieceWiseConstantFunction::GetX( size_t index )
 	{
-		return m_osFunc.getX( index );
+		return m_osFunc.getX( static_cast<int>( index ) );
 	}
 
 	scone::Real PieceWiseConstantFunction::GetY( size_t index )
 	{
-		return m_osFunc.getY( index );
+		return m_osFunc.getY( static_cast<int>( index ) );
 	}
 
 }

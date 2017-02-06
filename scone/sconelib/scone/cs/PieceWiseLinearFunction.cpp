@@ -47,11 +47,11 @@ namespace scone
 
 	scone::Real PieceWiseLinearFunction::GetX( size_t index )
 	{
-		return m_osFunc.getX( index );
+		return m_osFunc.getX( static_cast<int>( index ) );
 	}
 
 	scone::Real PieceWiseLinearFunction::GetY( size_t index )
 	{
-		return m_osFunc.getY( index );
+		return m_osFunc.getY( static_cast<int>( index ) );
 	}
 }
