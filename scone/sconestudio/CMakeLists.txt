@@ -6,6 +6,7 @@ if(${Qt5Widgets_FOUND})
 
 	set(CMAKE_AUTOMOC ON)
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)
+	FIND_PATH(QTFX_PATH QOsgViewer.h "../../submodules/qtfx/qtfx")
 	
 	set(STUDIOFILES
 		main.cpp
@@ -24,16 +25,16 @@ if(${Qt5Widgets_FOUND})
 	
 	set(QTFILES
 		qt_tools.h
-		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
-		BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
-		QOsgViewer.h
-		QOsgViewer.cpp
-		QCodeEditor.h
-		QCodeEditor.cpp
-		QCodeTextEdit.h
-		QCodeTextEdit.cpp
-		QPlayControl.h
-		QPlayControl.cpp
+		${QTFX_PATH}/BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
+		${QTFX_PATH}/BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
+		${QTFX_PATH}/QOsgViewer.h
+		${QTFX_PATH}/QOsgViewer.cpp
+		${QTFX_PATH}/QCodeEditor.h
+		${QTFX_PATH}/QCodeEditor.cpp
+		${QTFX_PATH}/QCodeTextEdit.h
+		${QTFX_PATH}/QCodeTextEdit.cpp
+		${QTFX_PATH}/QPlayControl.h
+		${QTFX_PATH}/QPlayControl.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
@@ -47,6 +48,7 @@ if(${Qt5Widgets_FOUND})
 		)
 	
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
+	INCLUDE_DIRECTORIES( ${QTFX_PATH} )
 	
 	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui SconeSettings.ui)
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
