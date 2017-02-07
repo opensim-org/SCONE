@@ -119,6 +119,9 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
+    <addaction name="actionOptimization_Results"/>
+    <addaction name="action_Messages"/>
+    <addaction name="separator"/>
     <addaction name="actionShow_External_Forces"/>
     <addaction name="actionShow_Muscles"/>
     <addaction name="actionShow_Bone_Geometry"/>
@@ -278,7 +281,7 @@
   </action>
   <action name="action_Recent">
    <property name="text">
-    <string>Open &amp;Recent</string>
+    <string>&amp;Recent</string>
    </property>
   </action>
   <action name="action_Save">
@@ -315,21 +318,6 @@
   <action name="action3D_Viewer">
    <property name="text">
     <string>3D &amp;Viewer</string>
-   </property>
-  </action>
-  <action name="actionScenario_Editor">
-   <property name="text">
-    <string>Scenario &amp;Editor</string>
-   </property>
-  </action>
-  <action name="action_Scenario_Browser">
-   <property name="text">
-    <string>&amp;Scenario Browser</string>
-   </property>
-  </action>
-  <action name="action_Results_Browser">
-   <property name="text">
-    <string>&amp;Results Browser</string>
    </property>
   </action>
   <action name="action_Run_Optimization">
@@ -397,6 +385,28 @@
    </property>
    <property name="text">
     <string>Show &amp;Bone Geometry</string>
+   </property>
+  </action>
+  <action name="actionOptimization_Results">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Optimization &amp;Results</string>
+   </property>
+  </action>
+  <action name="action_Messages">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Messages</string>
    </property>
   </action>
  </widget>
@@ -664,6 +674,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Messages</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>viewMessages(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>672</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOptimization_Results</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>viewResults(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resultsDock</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fixViewCheckboxes()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>131</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>messagesDock</sender>
+   <signal>visibilityChanged(bool)</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>fixViewCheckboxes()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>538</x>
+     <y>673</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -687,5 +761,8 @@
   <slot>tabCloseRequested(int)</slot>
   <slot>updateViewSettings()</slot>
   <slot>showSettingsDialog()</slot>
+  <slot>viewResults(bool)</slot>
+  <slot>viewMessages(bool)</slot>
+  <slot>fixViewCheckboxes()</slot>
  </slots>
 </ui>

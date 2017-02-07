@@ -56,6 +56,7 @@ public:
 	void slomo( int v );
 	void updateTimer();
 	void fileOpen();
+	void fileOpen( const QString& filename );
 	void fileOpenRecent();
 	void fileSave();
 	void fileSaveAs();
@@ -71,6 +72,9 @@ public:
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
+	void viewResults( bool v ) { if ( v ) ui.resultsDock->show(); else ui.resultsDock->hide(); }
+	void viewMessages( bool v ) { if ( v ) ui.messagesDock->show(); else ui.messagesDock->hide(); }
+	void fixViewCheckboxes();
 
 public:
 	bool close_all;
@@ -83,8 +87,10 @@ private:
 	QCodeEditor* getActiveScenario();
 	bool checkAndSaveScenario( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
-	void addRecentFile( QString& filename );
+	void addRecentFile( const QString& filename );
 	void updateRecentFilesMenu();
+	QStringList recentFiles;
+
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 

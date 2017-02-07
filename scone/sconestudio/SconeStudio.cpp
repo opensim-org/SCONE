@@ -88,6 +88,14 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	QSettings cfg( "SCONE", "SconeStudio" );
 	restoreGeometry( cfg.value( "geometry" ).toByteArray() );
 	restoreState( cfg.value( "windowState" ).toByteArray() );
+	recentFiles = cfg.value( "recentFiles" ).toStringList();
+
+	// always show these, bug in Qt?
+	viewResults( true );
+	viewMessages( true );
+
+	fixViewCheckboxes();
+	updateRecentFilesMenu();
 
 	return true;
 }
@@ -255,20 +263,23 @@ void SconeStudio::fileOpen()
 {
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
 	if ( !filename.isEmpty() )
-	{
-		QCodeEditor* edw = new QCodeEditor( this );
-		edw->open( filename );
-		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
-		ui.tabWidget->setCurrentIndex( idx );
-		scenarios.push_back( edw );
-		//edw->show();
-		//edw->raise();
-	}
+		fileOpen( filename );
+}
+
+void SconeStudio::fileOpen( const QString& filename )
+{
+	QCodeEditor* edw = new QCodeEditor( this );
+	edw->open( filename );
+	int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
+	ui.tabWidget->setCurrentIndex( idx );
+	scenarios.push_back( edw );
+	addRecentFile( filename );
 }
 
 void SconeStudio::fileOpenRecent()
 {
-	SCONE_THROW_NOT_IMPLEMENTED;
+	auto act = qobject_cast<QAction*>( sender() );
+	fileOpen( act->text() );
 }
 
 void SconeStudio::fileSave()
@@ -311,14 +322,24 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	}
 }
 
-void SconeStudio::addRecentFile( QString& filename )
+void SconeStudio::addRecentFile( const QString& filename )
 {
-	SCONE_THROW_NOT_IMPLEMENTED;
+	recentFiles.push_front( filename );
+	recentFiles.removeDuplicates();
+	while ( recentFiles.size() > 10 ) recentFiles.removeLast();
+	updateRecentFilesMenu();
 }
 
 void SconeStudio::updateRecentFilesMenu()
 {
-	SCONE_THROW_NOT_IMPLEMENTED;
+	// init recent files menu
+	QMenu* recent_menu = new QMenu();
+	for ( int idx = 0; idx < recentFiles.size(); ++idx )
+	{
+		QAction* act = recent_menu->addAction( recentFiles[ idx ] );
+		connect( act, SIGNAL( triggered() ), this, SLOT( fileOpenRecent() ) );
+	}
+	ui.action_Recent->setMenu( recent_menu );
 }
 
 bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
@@ -449,6 +470,12 @@ void SconeStudio::updateViewSettings()
 	manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 }
 
+void SconeStudio::fixViewCheckboxes()
+{
+	ui.actionOptimization_Results->setChecked( ui.resultsDock->isVisible() );
+	ui.action_Messages->setChecked( ui.messagesDock->isVisible() );
+}
+
 QCodeEditor* SconeStudio::getActiveScenario()
 {
 	for ( auto edw : scenarios )
@@ -501,6 +528,7 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 	QSettings cfg( "SCONE", "SconeStudio" );
 	cfg.setValue( "geometry", saveGeometry() );
 	cfg.setValue( "windowState", saveState() );
+	cfg.setValue( "recentFiles", recentFiles );
 
 	QMainWindow::closeEvent( e );
 }
