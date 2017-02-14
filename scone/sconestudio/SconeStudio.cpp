@@ -37,7 +37,7 @@ flut::log::sink( flut::log::trace_level )
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 
-	//setDockNestingEnabled( true );
+	setDockNestingEnabled( true );
 
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
@@ -66,17 +66,13 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	flut::log::debug( "Initializing play control widget" );
-	ui.playControl->setRange( 0, 10000 );
-	connect( ui.playControl, SIGNAL( play() ), this, SLOT( start() ) );
-	connect( ui.playControl, SIGNAL( stop() ), this, SLOT( stop() ) );
-	connect( ui.playControl, SIGNAL( previous() ), this, SLOT( previous() ) );
-	connect( ui.playControl, SIGNAL( next() ), this, SLOT( next() ) );
-	connect( ui.playControl, SIGNAL( sliderChanged(int) ), this, SLOT( updateScrollbar(int) ) );
-	connect( ui.playControl, SIGNAL( slowMotionChanged(int) ), this, SLOT( slomo(int) ) );
+	ui.playControl->setRange( 0, 100 );
+	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
+	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
+	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setTime );
 
 	// start timer for viewer
 	flut::log::debug( "Creating background timers" );
-	connect( &qtimer, SIGNAL( timeout() ), this, SLOT( updateTimer() ) );
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 1000 );
 
@@ -153,11 +149,10 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		showViewer();
 		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
-		ui.playControl->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
+		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
-
-		setTime( 0 );
-		start();
+		ui.playControl->reset();
+		ui.playControl->play();
 	}
 	catch ( std::exception& e )
 	{
@@ -173,14 +168,7 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 
 void SconeStudio::start()
 {
-	if ( current_time >= manager.GetMaxTime() )
-		setTime( 0 );
-
 	ui.osgViewer->stopTimer();
-	qtimer.start( 10 );
-
-	timer.reset();
-	timer_delta.reset();
 
 	if ( !captureFilename.isEmpty() )
 	{
@@ -194,30 +182,7 @@ void SconeStudio::stop()
 	if ( !captureFilename.isEmpty() )
 		finalizeCapture();
 
-	if ( qtimer.isActive() )
-	{
-		qtimer.stop();
-		ui.osgViewer->startTimer();
-	}
-	else setTime( 0 );
-}
-
-void SconeStudio::slomo( int v )
-{
-	slomo_factor = 1.0 / v;
-}
-
-void SconeStudio::updateTimer()
-{
-	TimeInSeconds dt;
-	if ( isRecording() )
-		dt = slomo_factor / capture_frequency;
-	else if ( isEvalutating() )
-		dt = evaluation_time_step;
-	else
-		dt = slomo_factor * timer_delta( timer.seconds() );
-
-	setTime( current_time + dt );
+	ui.osgViewer->startTimer();
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
@@ -226,36 +191,23 @@ void SconeStudio::setTime( TimeInSeconds t )
 		return;
 
 	// update current time and stop when done
-	current_time = std::max( 0.0, t );
+	current_time = t;
 
 	// update ui and visualization
 	bool is_evaluating = manager.IsEvaluating();
 	manager.Update( t );
 
-	if ( current_time > manager.GetMaxTime() )
-	{
-		if ( !ui.playControl->getLoop() )
-		{
-			current_time = manager.GetMaxTime();
-			if ( qtimer.isActive() )
-				stop();
-		}
-		else current_time = 0.0; // just reset
-	}
-
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 	ui.osgViewer->repaint();
-
-	ui.playControl->setTime( current_time );
 
 	// check if the evaluation has just finished
 	if ( is_evaluating && !manager.IsEvaluating() )
 	{
 		ui.playControl->setEnabled( true );
-		ui.playControl->setRange( 0, int( 1000 * manager.GetMaxTime() ) );
-		setTime( 0 );
-		start();
+		ui.playControl->setRange( 0, manager.GetMaxTime() );
+		ui.playControl->reset();
+		ui.playControl->play();
 	}
 }
 

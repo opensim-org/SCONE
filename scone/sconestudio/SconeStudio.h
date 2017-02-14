@@ -51,10 +51,6 @@ public:
 	void updateSpinBox( double value ) { setTime( value ); }
 	void start();
 	void stop();
-	void next() { if ( !isPlaying() ) setTime( current_time + 0.01 ); }
-	void previous() { if ( !isPlaying() ) setTime( current_time - 0.01 ); }
-	void slomo( int v );
-	void updateTimer();
 	void fileOpen();
 	void fileOpen( const QString& filename );
 	void fileOpenRecent();
@@ -80,7 +76,6 @@ public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
 	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
-	bool isPlaying() { return qtimer.isActive(); }
 
 private:
 	void setTime( TimeInSeconds t );
@@ -94,7 +89,6 @@ private:
 	scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
-	QTimer qtimer;
 	QTimer backgroundUpdateTimer;
 	bool fileChanged = false;
 
@@ -102,8 +96,6 @@ private:
 	TimeInSeconds current_time;
 	TimeInSeconds capture_frequency;
 	TimeInSeconds evaluation_time_step;
-	flut::timer timer;
-	flut::delta< TimeInSeconds > timer_delta;
 	flut::delta< scone::Vec3 > com_delta;
 
 	std::vector< ProgressDockWidget* > optimizations;
