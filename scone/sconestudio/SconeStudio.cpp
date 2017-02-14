@@ -86,10 +86,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	restoreState( cfg.value( "windowState" ).toByteArray() );
 	recentFiles = cfg.value( "recentFiles" ).toStringList();
 
-	// always show these, bug in Qt?
-	viewResults( true );
-	viewMessages( true );
-
 	fixViewCheckboxes();
 	updateRecentFilesMenu();
 
@@ -424,8 +420,13 @@ void SconeStudio::updateViewSettings()
 
 void SconeStudio::fixViewCheckboxes()
 {
+	ui.actionOptimization_Results->blockSignals( true );
 	ui.actionOptimization_Results->setChecked( ui.resultsDock->isVisible() );
+	ui.actionOptimization_Results->blockSignals( false );
+
+	ui.action_Messages->blockSignals( true );
 	ui.action_Messages->setChecked( ui.messagesDock->isVisible() );
+	ui.action_Messages->blockSignals( false );
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()
