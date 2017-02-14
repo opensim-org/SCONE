@@ -25,14 +25,10 @@ if(${Qt5Widgets_FOUND})
 	
 	set(QTFILES
 		qt_tools.h
-		${QTFX_PATH}/BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.h
-		${QTFX_PATH}/BasicXMLSyntaxHighlighter/BasicXMLSyntaxHighlighter.cpp
 		${QTFX_PATH}/QOsgViewer.h
 		${QTFX_PATH}/QOsgViewer.cpp
 		${QTFX_PATH}/QCodeEditor.h
 		${QTFX_PATH}/QCodeEditor.cpp
-		${QTFX_PATH}/QCodeTextEdit.h
-		${QTFX_PATH}/QCodeTextEdit.cpp
 		${QTFX_PATH}/QPlayControl.h
 		${QTFX_PATH}/QPlayControl.cpp
 		${QTFX_PATH}/QFileBrowser.h
