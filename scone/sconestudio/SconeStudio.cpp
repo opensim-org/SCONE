@@ -30,9 +30,7 @@ com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
-captureProcess( nullptr ),
-enableLogging( false ),
-flut::log::sink( flut::log::trace_level )
+captureProcess( nullptr )
 {
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
@@ -77,8 +75,8 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	backgroundUpdateTimer.start( 1000 );
 
 	// only do this after the ui has been initialized
-	flut::log::debug( "Enabling messages window" );
-	enableLogging = true; 
+	flut::log::add_sink( ui.outputText );
+	ui.outputText->set_log_level( flut::log::trace_level );
 
 	flut::log::debug( "Loading GUI settings" );
 	QSettings cfg( "SCONE", "SconeStudio" );
@@ -90,48 +88,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	updateRecentFilesMenu();
 
 	return true;
-}
-
-void SconeStudio::send_log_message( flut::log::level l, const string& msg )
-{
-	if ( !enableLogging )
-		return; // we are not ready to start logging
-
-	// remove newlines
-	string trimmed_msg = flut::trim_right_str( msg );
-
-	ui.outputText->moveCursor( QTextCursor::End );
-	QTextCursor cursor( ui.outputText->textCursor() );
-	QTextCharFormat format;
-	format.setFontWeight( QFont::Normal );
-	format.setForeground( QBrush( Qt::black ) );
-
-	switch ( l )
-	{
-	case flut::log::trace_level:
-	case flut::log::debug_level:
-		format.setForeground( QBrush( Qt::gray ) );
-		break;
-	case flut::log::info_level:
-		format.setForeground( QBrush( Qt::darkBlue ) );
-		break;
-	case flut::log::warning_level:
-		format.setFontWeight( QFont::DemiBold );
-		format.setForeground( QBrush( Qt::darkYellow ) );
-		break;
-	case flut::log::error_level:
-	case flut::log::critical_level:
-		format.setFontWeight( QFont::DemiBold );
-		format.setForeground( QBrush( Qt::darkRed ) );
-		break;
-	default:
-		break;
-	}
-
-	cursor.setCharFormat( format );
-	cursor.insertText( make_qt( trimmed_msg ) + "\n" );
-
-	ui.outputText->verticalScrollBar()->setValue( ui.outputText->verticalScrollBar()->maximum() );
 }
 
 SconeStudio::~SconeStudio()

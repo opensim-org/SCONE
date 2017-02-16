@@ -30,7 +30,7 @@ class QFileSystemModel;
 
 using scone::TimeInSeconds;
 
-class SconeStudio : public QMainWindow, public flut::log::sink
+class SconeStudio : public QMainWindow
 {
 	Q_OBJECT
 
@@ -39,10 +39,8 @@ public:
 	~SconeStudio();
 
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
-	virtual void send_log_message( flut::log::level l, const std::string& msg ) override;
 
-	public slots:
-
+public slots:
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
 
@@ -107,7 +105,6 @@ private:
 	void finalizeCapture();
 
 	scone::Settings settings;
-	bool enableLogging;
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

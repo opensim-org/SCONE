@@ -245,7 +245,7 @@
       <number>4</number>
      </property>
      <item>
-      <widget class="QPlainTextEdit" name="outputText">
+      <widget class="QLogSink" name="outputText">
        <property name="font">
         <font>
          <family>Consolas</family>
@@ -428,6 +428,11 @@
    <class>QFileBrowser</class>
    <extends>QTreeView</extends>
    <header>QFileBrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QLogSink</class>
+   <extends>QPlainTextEdit</extends>
+   <header>qlogsink.h</header>
   </customwidget>
  </customwidgets>
  <resources>
@@ -681,8 +686,8 @@
    <slot>viewMessages(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>672</x>
-     <y>291</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>538</x>
