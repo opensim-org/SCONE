@@ -55,7 +55,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	// init file model and browser widget
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
-	ui.resultsBrowser->setFolder( results_folder, "*.par" );
+	ui.resultsBrowser->setRoot( results_folder, "*.par" );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),

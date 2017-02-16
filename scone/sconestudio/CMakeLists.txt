@@ -33,6 +33,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QPlayControl.cpp
 		${QTFX_PATH}/QFileBrowser.h
 		${QTFX_PATH}/QFileBrowser.cpp
+		${QTFX_PATH}/QLogSink.h
+		${QTFX_PATH}/QLogSink.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
