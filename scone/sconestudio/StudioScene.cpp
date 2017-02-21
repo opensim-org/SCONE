@@ -11,6 +11,7 @@ namespace scone
 	{
 		// init scene
 		scene.add_light( vec3f( -20, 80, 40 ), make_white( 1 ) );
+		scene.create_tile_floor( 64, 64, 1 );
 	}
 
 	StudioScene::~StudioScene() { }
