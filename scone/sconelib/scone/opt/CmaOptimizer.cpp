@@ -454,6 +454,7 @@ namespace scone
 
 				// sample parameter sets
 				auto& pop = cma.sample_population();
+
 				par.SetMode( ParamSet::UpdateMode );
 				std::vector< ParamSet > parsets( m_Lambda, par );
 				for ( size_t ind_idx = 0; ind_idx < m_Lambda; ++ind_idx )
@@ -517,6 +518,8 @@ namespace scone
 						printf( " T=%.1f", tmr.seconds() );
 					printf( new_best ? "\n" : "\r" ); // only start newline if there's been a new best
 				}
+
+				cma.update_distribution( results );
 			}
 			if ( console_output )
 				cout << "Optimization finished" << endl;
