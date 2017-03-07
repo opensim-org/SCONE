@@ -95,7 +95,7 @@ namespace scone
 			return vec;
 		}
 
-		void ParamSet::SetFreeParamValues( std::vector< double >& values )
+		void ParamSet::SetFreeParamValues( const std::vector< double >& values )
 		{
 			auto vecIter = values.begin();
 			for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )

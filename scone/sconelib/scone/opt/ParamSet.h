@@ -48,7 +48,7 @@ namespace scone
 
 			size_t GetFreeParamCount();
 			std::vector< double > GetFreeParamValues();
-			void SetFreeParamValues( std::vector< double >& values );
+			void SetFreeParamValues( const std::vector< double >& values );
 
 			template< typename Iter > bool CheckFreeParamValues( Iter b, Iter e ) {
 				for ( auto iter = m_Params.begin(); iter != m_Params.end() && b != e; ++iter ) {
