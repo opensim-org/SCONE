@@ -44,16 +44,16 @@ state( StartingState )
 	ui.plot->setContentsMargins( 2, 2, 2, 2 );
 
 	ui.plot->addGraph();
-	ui.plot->graph(0)->setPen(QPen(QColor(0, 100, 255)));
-	ui.plot->graph(0)->setLineStyle(QCPGraph::lsLine);
+	ui.plot->graph( 0 )->setPen( QPen( QColor( 0, 100, 255 ) ) );
+	ui.plot->graph( 0 )->setLineStyle( QCPGraph::lsLine );
 	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-	ui.plot->graph(0)->setName("Best fitness");
+	ui.plot->graph( 0 )->setName( "Best fitness" );
 
 	ui.plot->addGraph();
-	ui.plot->graph(1)->setPen(QPen(QColor(255, 100, 0), 1, Qt::DashLine ));
-	ui.plot->graph(1)->setLineStyle(QCPGraph::lsLine);
+	ui.plot->graph( 1 )->setPen( QPen( QColor( 255, 100, 0 ), 1, Qt::DashLine ) );
+	ui.plot->graph( 1 )->setLineStyle( QCPGraph::lsLine );
 	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-	ui.plot->graph(1)->setName("Average fitness");
+	ui.plot->graph( 1 )->setName( "Average fitness" );
 
 	ui.plot->xAxis->setRange( 0, 8 );
 	ui.plot->xAxis->setAutoTickCount( 7 );
