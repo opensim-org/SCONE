@@ -402,6 +402,8 @@ namespace scone
 			// generate random initial population
 			std::vector< double > initPoint( dim );
 			std::vector< double > initStd( dim );
+			std::vector< double > lowerBounds( dim );
+			std::vector< double > upperBounds( dim );
 			size_t free_idx = 0;
 			for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
 			{
@@ -410,6 +412,9 @@ namespace scone
 				{
 					SCONE_ASSERT( free_idx < dim );
 					initPoint[ free_idx ] = parinf.init_mean;
+					lowerBounds[ free_idx ] = parinf.min;
+					upperBounds[ free_idx ] = parinf.max;
+
 					double par_std = parinf.init_std;
 
 					// compute std using global std settings (if they are set)
@@ -422,7 +427,7 @@ namespace scone
 			}
 
 			// init CMA object
-			flut::cma_optimizer cma( (int)dim, initPoint, initStd, &flut::optimizer::no_objective_func , m_Lambda, random_seed );
+			flut::cma_optimizer cma( (int)dim, initPoint, initStd, lowerBounds, upperBounds, &flut::optimizer::no_objective_func , m_Lambda, random_seed );
 			cma.set_maximize( !IsMinimizing() );
 			m_Lambda = cma.lambda();
 			m_Mu = cma.mu();
