@@ -111,7 +111,7 @@
 									<!-- L- inhibion of HAM -> HFL -->
 									<Reflex type="MuscleReflex" target="iliopsoas" source="hamstrings" delay="0.005">
 										<KL	init_mean="-4.0" init_std="0.4" min="-10.0" max="10.0" is_free="1"/>
-										<L0 init_mean="0.85" init_std="0..085" min="0" max="2" is_free="1"/>
+										<L0 init_mean="0.85" init_std="0.085" min="0" max="2" is_free="1"/>
 									</Reflex>
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">

@@ -489,9 +489,8 @@ namespace scone
 					// copy best solution to par
 					par.SetFreeParamValues( pop[ current_best_idx ] );
 
-					// TODO: update mean / std
-					//std::vector< double > mean( cma.mean().begin(), cma.mean().end() );
-					//par.UpdateMeanStd( mean, cma.population_std() );
+					// update mean / std
+					par.UpdateMeanStd( cma.current_mean(), cma.current_std() );
 
 					// update best params after mean / std have been updated
 					if ( new_best)
