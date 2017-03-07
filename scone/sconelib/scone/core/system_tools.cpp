@@ -47,7 +47,7 @@ namespace scone
 		if ( g_GlobalSettings.empty() )
 		{
 			auto settings_file = GetSettingsFolder() / "settings.ini";
-			if ( flut::exists( settings_file ) )
+			if ( flut::file_exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
 				g_GlobalSettings = flut::load_ini( settings_file.str() );
