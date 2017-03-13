@@ -45,6 +45,8 @@ set(CORE_TOOLS_FILES
 set(CS_CONTROLLERS_FEEDFORWARD_FILES
 	scone/cs/FeedForwardController.cpp
 	scone/cs/FeedForwardController.h
+	scone/cs/PerturbationController.cpp
+	scone/cs/PerturbationController.h
 	)
 set(CS_CONTROLLERS_MRC_FILES
 	scone/cs/MetaReflexParams.cpp
