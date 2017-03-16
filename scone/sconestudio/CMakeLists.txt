@@ -21,6 +21,7 @@ if(${Qt5Widgets_FOUND})
 		ProgressDockWidget.cpp
 		Settings.h
 		Settings.cpp
+		QSconeStorageDataModel.h
 		)
 	
 	set(QTFILES
@@ -35,6 +36,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QFileBrowser.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
+		${QTFX_PATH}/QStorageView.h
+		${QTFX_PATH}/QStorageView.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
@@ -65,7 +68,7 @@ if(${Qt5Widgets_FOUND})
 
 	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 	
-	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
+	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport Charts )
 	
 	set_target_properties(sconestudio PROPERTIES
 		PROJECT_LABEL "sconestudio"
@@ -132,7 +135,7 @@ if(${Qt5Widgets_FOUND})
 		endforeach()
 
 		# Copy Qt DLLs to the binary directory.
-		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport)
+		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport Qt5Charts)
 		foreach(qt5lib ${QT5_LIBS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}

@@ -35,6 +35,8 @@ captureProcess( nullptr )
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 
+	storageChart = new QStorageView( &storageModel, this );
+	ui.tabWidget->addTab( storageChart, "Graph" );
 	setDockNestingEnabled( true );
 
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
@@ -101,6 +103,9 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		showViewer();
 		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
+		storageModel.setStorage( &manager.GetModel().GetData() );
+		storageChart->refresh();
+
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
 		ui.playControl->reset();

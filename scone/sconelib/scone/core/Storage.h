@@ -91,8 +91,8 @@ namespace scone
 		Frame& Back() { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
 		const Frame& Back() const { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
 
-		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return m_Data[ frame_idx ]; }
-		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return m_Data[ frame_idx ]; }
+		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
+		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 
 		size_t GetFrameCount() const { return m_Data.size(); }
 

@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 		if (threadingModel != osgViewer::ViewerBase::SingleThreaded)
 			QApplication::setAttribute(Qt::AA_X11InitThreads);
 #endif
-	
+
 		w.init(threadingModel);
 		w.show();
 		scone::log::info( "SCONE version ", scone::GetSconeVersion() );

@@ -12,6 +12,8 @@
 #include <mutex>
 #include <atomic>
 
+#include "QSconeStorageDataModel.h"
+
 namespace scone
 {
 	SCONE_DECLARE_CLASS_AND_PTR( StudioModel );
@@ -41,7 +43,6 @@ namespace scone
 
 	private:
 		void InitVis( vis::scene& s );
-		void SetModelStateFromDataFrame( const Storage< Real, TimeInSeconds >::Frame& f );
 
 		Storage<> data;
 		cs::SimulationObjectiveUP so;

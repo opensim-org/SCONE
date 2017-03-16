@@ -25,6 +25,7 @@
 #include "QCodeEditor.h"
 #include "Settings.h"
 #include "flut/system/log_sink.hpp"
+#include "QStorageView.h"
 
 class QFileSystemModel;
 
@@ -98,6 +99,9 @@ private:
 
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< QCodeEditor* > scenarios;
+
+	QSconeStorageDataModel storageModel;
+	QStorageView* storageChart;
 
 	QString captureFilename;
 	QProcess* captureProcess;
