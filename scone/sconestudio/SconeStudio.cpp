@@ -39,6 +39,11 @@ captureProcess( nullptr )
 	analysisView->setObjectName( "Analysis" );
 
 	// create window menu
+	auto* actionMenu = menuBar()->addMenu( "&Analyze" );
+	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8 );
+	addMenuAction( actionMenu, "&Toggle Play", ui.playControl, &QPlayControl::toggle, Qt::Key_Space, true );
+
 	createWindowMenu();
 	createHelpMenu();
 
