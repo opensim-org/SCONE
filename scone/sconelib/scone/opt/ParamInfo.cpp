@@ -18,7 +18,6 @@ namespace scone
 		init_min( i_init_min ),	init_max( i_init_max ),
 		min( i_min ), max( i_max ),	is_free( true )
 		{
-			flut_error_if( init_std <= 0, "Initial STD <= 0 for parameter " + name );
 		}
 
 		ParamInfo::ParamInfo( const String& i_name, const PropNode& props ) :
@@ -40,8 +39,6 @@ namespace scone
 			INIT_PROPERTY( props, min, REAL_MIN );
 			INIT_PROPERTY( props, max, REAL_MAX );
 			INIT_PROPERTY( props, is_free, is_free_default ); /// TODO: some smarter default
-
-			flut_error_if( init_std <= 0, "Initial STD <= 0 for parameter " + name );
 		}
 
 		double ParamInfo::GetInitialValue() const
