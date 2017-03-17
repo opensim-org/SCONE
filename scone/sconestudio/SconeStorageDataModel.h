@@ -3,11 +3,11 @@
 #include "QDataAnalysis.h"
 #include "scone/core/Storage.h"
 
-class QSconeStorageDataModel : public QDataAnalysisModel
+class SconeStorageDataModel : public QDataAnalysisModel
 {
 public:
-	QSconeStorageDataModel( const scone::Storage<>* s = nullptr );
-	virtual ~QSconeStorageDataModel() {}
+	SconeStorageDataModel( const scone::Storage<>* s = nullptr );
+	virtual ~SconeStorageDataModel() {}
 
 	void setStorage( const scone::Storage<>* s );
 	virtual size_t getVariableCount() const override;

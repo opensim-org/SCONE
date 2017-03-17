@@ -12,7 +12,7 @@
 #include <mutex>
 #include <atomic>
 
-#include "QSconeStorageDataModel.h"
+#include "SconeStorageDataModel.h"
 
 namespace scone
 {

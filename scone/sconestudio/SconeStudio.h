@@ -96,7 +96,7 @@ private:
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< QCodeEditor* > scenarios;
 
-	QSconeStorageDataModel storageModel;
+	SconeStorageDataModel storageModel;
 	QDataAnalysisView* analysisView;
 
 	QString captureFilename;

@@ -1,33 +1,33 @@
-#include "QSconeStorageDataModel.h"
+#include "SconeStorageDataModel.h"
 
-QSconeStorageDataModel::QSconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
+SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
 {
 
 }
 
-void QSconeStorageDataModel::setStorage( const scone::Storage<>* s )
+void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 {
 	storage = s;
 }
 
-size_t QSconeStorageDataModel::getVariableCount() const
+size_t SconeStorageDataModel::getVariableCount() const
 {
 	if ( storage ) return storage->GetChannelCount();
 	else return 0;
 }
 
-QString QSconeStorageDataModel::getLabel( int idx ) const
+QString SconeStorageDataModel::getLabel( int idx ) const
 {
 	SCONE_ASSERT( storage );
 	return QString( storage->GetLables()[ idx ].c_str() );
 }
 
-double QSconeStorageDataModel::getValue( int idx, double time ) const
+double SconeStorageDataModel::getValue( int idx, double time ) const
 {
 	SCONE_ASSERT( storage ); return storage->GetInterpolatedFrame( time ).value( idx );
 }
 
-std::vector< std::pair< float, float > > QSconeStorageDataModel::getSeries( int idx, double min_interval ) const
+std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int idx, double min_interval ) const
 {
 	SCONE_ASSERT( storage );
 	std::vector< std::pair< float, float > > series;
@@ -45,12 +45,12 @@ std::vector< std::pair< float, float > > QSconeStorageDataModel::getSeries( int 
 	return series;
 }
 
-double QSconeStorageDataModel::getTimeFinish() const
+double SconeStorageDataModel::getTimeFinish() const
 {
 	return storage ? storage->Back().GetTime() : 0.0;
 }
 
-double QSconeStorageDataModel::getTimeStart() const
+double SconeStorageDataModel::getTimeStart() const
 {
 	return 0.0;
 }

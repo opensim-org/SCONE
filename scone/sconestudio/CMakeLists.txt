@@ -21,7 +21,8 @@ if(${Qt5Widgets_FOUND})
 		ProgressDockWidget.cpp
 		Settings.h
 		Settings.cpp
-		QSconeStorageDataModel.h
+		SconeStorageDataModel.h
+		SconeStorageDataModel.cpp
 		)
 	
 	set(QTFILES
