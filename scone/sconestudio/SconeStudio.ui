@@ -119,9 +119,6 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionOptimization_Results"/>
-    <addaction name="action_Messages"/>
-    <addaction name="separator"/>
     <addaction name="actionShow_External_Forces"/>
     <addaction name="actionShow_Muscles"/>
     <addaction name="actionShow_Bone_Geometry"/>
@@ -143,17 +140,10 @@
     <addaction name="separator"/>
     <addaction name="action_Preferences"/>
    </widget>
-   <widget class="QMenu" name="menu_Help">
-    <property name="title">
-     <string>&amp;Help</string>
-    </property>
-    <addaction name="action_About"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Optimize"/>
    <addaction name="menu_Tools"/>
-   <addaction name="menu_Help"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="resultsDock">

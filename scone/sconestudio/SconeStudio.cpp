@@ -24,7 +24,7 @@ using namespace scone;
 using namespace std;
 
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
-QMainWindow( parent, flags ),
+QCompositeMainWindow( parent, flags ),
 slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
@@ -35,17 +35,25 @@ captureProcess( nullptr )
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 
-	storageChart = new QStorageView( &storageModel, this );
-	ui.tabWidget->addTab( storageChart, "Graph" );
-	setDockNestingEnabled( true );
+	analysisView = new QDataAnalysisView( &storageModel, this );
+	analysisView->setObjectName( "Analysis" );
 
+	// create window menu
+	createWindowMenu();
+	createHelpMenu();
+
+	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
 	setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
+	registerDockWidget( ui.resultsDock, "Optimization &Results" );
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
+	registerDockWidget( ui.messagesDock, "&Messages" );
+	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, adw );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -70,6 +78,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
 	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setTime );
+	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
+	connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
+	connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
 
 	// start timer for viewer
 	flut::log::debug( "Creating background timers" );
@@ -86,8 +97,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	restoreState( cfg.value( "windowState" ).toByteArray() );
 	recentFiles = cfg.value( "recentFiles" ).toStringList();
 
-	fixViewCheckboxes();
 	updateRecentFilesMenu();
+
+	ui.messagesDock->raise();
 
 	return true;
 }
@@ -104,7 +116,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
 		storageModel.setStorage( &manager.GetModel().GetData() );
-		storageChart->refresh();
+		analysisView->refresh( 0, true );
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
@@ -140,6 +152,12 @@ void SconeStudio::stop()
 		finalizeCapture();
 
 	ui.osgViewer->startTimer();
+	refreshAnalysis();
+}
+
+void SconeStudio::refreshAnalysis()
+{
+	analysisView->refresh( current_time );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
@@ -373,10 +391,12 @@ void SconeStudio::tabCloseRequested( int idx )
 
 void SconeStudio::updateViewSettings()
 {
-	scone::StudioModel::ViewFlags f;
-	manager.GetModel().SetViewSetting( scone::StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
-	manager.GetModel().SetViewSetting( scone::StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
-	manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+	if ( manager.HasModel() )
+	{
+		manager.GetModel().SetViewSetting( scone::StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
+		manager.GetModel().SetViewSetting( scone::StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
+		manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+	}
 }
 
 void SconeStudio::fixViewCheckboxes()

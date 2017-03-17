@@ -36,8 +36,10 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QFileBrowser.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
-		${QTFX_PATH}/QStorageView.h
-		${QTFX_PATH}/QStorageView.cpp
+		${QTFX_PATH}/QDataAnalysis.h
+		${QTFX_PATH}/QDataAnalysis.cpp
+		${QTFX_PATH}/QCompositeMainWindow.h
+		${QTFX_PATH}/QCompositeMainWindow.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)

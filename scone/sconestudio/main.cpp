@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
 	QApplication a(argc, argv);
 	QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
 
+	QApplication::style()->setProperty( "margin", 50 );
+
 	// init logging
 	QDir().mkdir( make_qt( scone::GetSettingsFolder() ) );
 	QDir().mkdir( make_qt( scone::GetSettingsFolder() / "log" ) );

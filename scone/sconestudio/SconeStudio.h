@@ -4,13 +4,7 @@
 #include <QtCore/QtGlobal>
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
-
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-    #include <QtWidgets/QMainWindow>
-#else
-    #include <QtGui/QMainWindow>
-    namespace Qt { typedef WFlags WindowFlags; }
-#endif
+#include <QtWidgets/QMainWindow>
 
 #include "ui_SconeStudio.h"
 
@@ -25,13 +19,14 @@
 #include "QCodeEditor.h"
 #include "Settings.h"
 #include "flut/system/log_sink.hpp"
-#include "QStorageView.h"
+#include "QDataAnalysis.h"
+#include "QCompositeMainWindow.h"
 
 class QFileSystemModel;
 
 using scone::TimeInSeconds;
 
-class SconeStudio : public QMainWindow
+class SconeStudio : public QCompositeMainWindow
 {
 	Q_OBJECT
 
@@ -50,6 +45,7 @@ public slots:
 	void updateSpinBox( double value ) { setTime( value ); }
 	void start();
 	void stop();
+	void refreshAnalysis();
 	void fileOpen();
 	void fileOpen( const QString& filename );
 	void fileOpenRecent();
@@ -101,7 +97,7 @@ private:
 	std::vector< QCodeEditor* > scenarios;
 
 	QSconeStorageDataModel storageModel;
-	QStorageView* storageChart;
+	QDataAnalysisView* analysisView;
 
 	QString captureFilename;
 	QProcess* captureProcess;
