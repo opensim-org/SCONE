@@ -155,12 +155,12 @@ namespace scone
 				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
 
 			// store all force data (measured in BW)
-			for ( auto& body : GetBodies() )
-			{
-				const auto& forces = body->GetContactForceValues();
-				for ( size_t i = 0; i < forces.size(); ++i )
-					frame[ body->GetName() + '.' + body->GetContactForceLabels()[ i ] ] = forces[ i ] / GetBW();
-			}
+			//for ( auto& body : GetBodies() )
+			//{
+			//	const auto& forces = body->GetContactForceValues();
+			//	for ( size_t i = 0; i < forces.size(); ++i )
+			//		frame[ body->GetName() + '.' + body->GetContactForceLabels()[ i ] ] = forces[ i ] / GetBW();
+			//}
 		}
 
 		void Model::StoreCurrentFrame()
