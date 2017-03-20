@@ -4,11 +4,9 @@
 
 #include <osgDB/ReadFile>
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
-#	include <QtWidgets/QFileSystemModel.h>
-#	include <QtWidgets/QMessageBox.h>
-#	include <QtWidgets/QFileDialog>
-#endif
+#include <QtWidgets/QFileSystemModel.h>
+#include <QtWidgets/QMessageBox.h>
+#include <QtWidgets/QFileDialog>
 #include <QTextStream>
 
 #include "simvis/osg_tools.h"
