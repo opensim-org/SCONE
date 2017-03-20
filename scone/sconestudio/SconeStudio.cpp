@@ -181,6 +181,10 @@ void SconeStudio::setTime( TimeInSeconds t )
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 	ui.osgViewer->repaint();
 
+	// update graph (if visible)
+	if ( analysisView->isVisible() )
+		analysisView->refresh( current_time, false );
+
 	// check if the evaluation has just finished
 	if ( is_evaluating && !manager.IsEvaluating() )
 	{

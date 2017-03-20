@@ -1,6 +1,6 @@
 #pragma once
 
-#include "QDataAnalysis.h"
+#include "QDataAnalysisView.h"
 #include "scone/core/Storage.h"
 
 class SconeStorageDataModel : public QDataAnalysisModel

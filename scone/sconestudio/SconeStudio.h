@@ -19,10 +19,8 @@
 #include "QCodeEditor.h"
 #include "Settings.h"
 #include "flut/system/log_sink.hpp"
-#include "QDataAnalysis.h"
 #include "QCompositeMainWindow.h"
-
-class QFileSystemModel;
+#include "QDataAnalysisView.h"
 
 using scone::TimeInSeconds;
 
