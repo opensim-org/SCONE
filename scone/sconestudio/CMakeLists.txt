@@ -61,18 +61,13 @@ if(${Qt5Widgets_FOUND})
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 	
 	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )
-	
-	#MESSAGE( "RESOURCES: " ${RESOURCES} )
-	#MESSAGE( "UI_HEADERS: " ${UI_HEADERS} )
-	#MESSAGE( "SOURCE_FILES: " ${SOURCE_FILES} )
-	#MESSAGE( "CMAKE_CURRENT_BINARY_DIR" ${CMAKE_CURRENT_BINARY_DIR} )
-	
 	include( PrecompiledHeaders )
 	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
-
-	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 	
-	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport Charts )
+	
+	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
+
+	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
 	set_target_properties(sconestudio PROPERTIES
 		PROJECT_LABEL "sconestudio"
