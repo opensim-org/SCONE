@@ -39,8 +39,6 @@ public slots:
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
 
 	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem ) {}
-	void updateScrollbar( int pos ) { setTime( double( pos ) / 1000 ); }
-	void updateSpinBox( double value ) { setTime( value ); }
 	void start();
 	void stop();
 	void refreshAnalysis();

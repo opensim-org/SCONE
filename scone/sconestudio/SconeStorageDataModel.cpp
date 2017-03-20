@@ -24,7 +24,10 @@ QString SconeStorageDataModel::getLabel( int idx ) const
 
 double SconeStorageDataModel::getValue( int idx, double time ) const
 {
-	SCONE_ASSERT( storage ); return storage->GetInterpolatedFrame( time ).value( idx );
+	SCONE_ASSERT( storage );
+	double reltime = time / storage->Back().GetTime();
+	int frame_idx = reltime * ( storage->GetFrameCount() - 1 );
+	return storage->GetFrame( frame_idx )[ idx ];
 }
 
 std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int idx, double min_interval ) const

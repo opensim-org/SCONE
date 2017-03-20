@@ -119,7 +119,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
 		storageModel.setStorage( &manager.GetModel().GetData() );
-		analysisView->refresh( 0, true );
+		analysisView->reset();
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
