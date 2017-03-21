@@ -19,7 +19,7 @@ namespace scone
 		MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
 		{
-			bool symmetric = props.get< bool >( "use_symmetric_actuators", true );
+			bool symmetric = props.get< bool >( "symmetric", true );
 			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
 
 			// create Meta Reflexes

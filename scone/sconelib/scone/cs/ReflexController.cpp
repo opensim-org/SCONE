@@ -18,9 +18,10 @@ namespace scone
 		ReflexController::ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
 		Controller( props, par, model, area )
 		{
-			bool symmetric = props.get< bool >( "use_symmetric_actuators", true );
-			SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
-			String sidename = GetSideName( area.side );
+			bool symmetric = props.get< bool >( "symmetric", true );
+			//SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
+			if ( !symmetric )
+				par.PushNamePrefix( GetSideName( area.side ) + "." );
 
 			// create normal reflexes
 			const PropNode& reflexvec = props.get_child( "Reflexes" );
@@ -29,6 +30,9 @@ namespace scone
 				// todo: handle "targets" tag? or create a new class for groups of monosynaptic muscles?
 				m_Reflexes.push_back( CreateReflex( item.second, par, model, area ) );
 			}
+
+			if ( !symmetric )
+				par.PopNamePrefix();
 		}
 
 		ReflexController::~ReflexController()
