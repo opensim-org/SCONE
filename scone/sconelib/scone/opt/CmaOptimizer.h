@@ -12,9 +12,9 @@ namespace scone
 			CmaOptimizer( const PropNode& props );
 			virtual ~CmaOptimizer();
 
-			virtual void Run() override;
+			virtual void Run() override { SCONE_THROW( "Please use a subclass of CmaOptimzer" ); }
 
-		private:
+		protected:
 			int m_Mu;
 			int m_Lambda;
 			double m_Sigma;

@@ -131,6 +131,12 @@ set(CS_TOOLS_FILES
 set(OPT_API_FILES
 	scone/opt/CmaOptimizer.cpp
 	scone/opt/CmaOptimizer.h
+	scone/opt/CmaOptimizerShark2.cpp
+	scone/opt/CmaOptimizerShark2.h
+	scone/opt/CmaOptimizerShark3.cpp
+	scone/opt/CmaOptimizerShark3.h
+	scone/opt/CmaOptimizerCCMAES.cpp
+	scone/opt/CmaOptimizerCCMAES.h
 	scone/opt/Objective.cpp
 	scone/opt/Objective.h
 	scone/opt/Optimizer.cpp

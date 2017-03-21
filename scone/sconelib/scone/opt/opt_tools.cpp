@@ -14,6 +14,9 @@ using namespace std;
 #include "flut/timer.hpp"
 #include "flut/prop_node_tools.hpp"
 
+#include "CmaOptimizerShark3.h"
+#include "CmaOptimizerCCMAES.h"
+
 using flut::timer;
 
 namespace scone
@@ -22,7 +25,9 @@ namespace scone
 	{
 		void RegisterFactoryTypes()
 		{
-			GetOptimizerFactory().Register< CmaOptimizer >();
+			GetOptimizerFactory().Register< CmaOptimizerCCMAES >( "CmaOptimizer" );
+			GetOptimizerFactory().Register< CmaOptimizerShark3 >();
+			GetOptimizerFactory().Register< CmaOptimizerCCMAES >();
 		}
 
 		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const String& scenario_file )
