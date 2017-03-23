@@ -37,7 +37,7 @@ namespace scone
 			INIT_PROPERTY( props, max_threads, size_t( 32 ) );
 			INIT_PROPERTY( props, thread_priority, -2 );
 			INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
-			INIT_PROPERTY_REQUIRED( props, maximize_objective );
+			INIT_PROPERTY( props, maximize_objective, false );
 			INIT_PROPERTY( props, show_optimization_time, false );
 			INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
 			INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );

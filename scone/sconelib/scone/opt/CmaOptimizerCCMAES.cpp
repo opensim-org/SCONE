@@ -63,6 +63,7 @@ namespace scone
 			cma.set_maximize( !IsMinimizing() );
 			m_Lambda = cma.lambda();
 			m_Mu = cma.mu();
+			m_Sigma = cma.sigma();
 
 			// create m_Lambda objectives
 			CreateObjectives( m_Lambda );
@@ -87,7 +88,7 @@ namespace scone
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
 				if ( GetProgressOutput() )
-					printf( "%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
+					printf( "%04d (S=%.3f):", int( gen ), cma.sigma() ); // MSVC2013 doesn't support %zu
 
 				// sample parameter sets
 				auto& pop = cma.sample_population();

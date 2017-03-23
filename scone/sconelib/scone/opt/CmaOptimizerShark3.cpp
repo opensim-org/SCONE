@@ -10,9 +10,7 @@ namespace scone
 	namespace opt
 	{
 		CmaOptimizerShark3::CmaOptimizerShark3( const PropNode& props ) : CmaOptimizer( props )
-		{
-
-		}
+		{ }
 
 		void CmaOptimizerShark3::Run()
 		{
@@ -53,6 +51,7 @@ namespace scone
 			shark::CMA::SearchPointType initPoint( dim );
 			shark::RealMatrix initCovar( dim, dim, 0.0 );
 			size_t free_idx = 0;
+			double avg_std = 0;
 			for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
 			{
 				auto& parinf = par.GetParamInfo( par_idx );
@@ -67,9 +66,15 @@ namespace scone
 						par_std = global_std_factor * fabs( parinf.init_mean ) + global_std_offset;
 
 					initCovar( free_idx, free_idx ) = par_std * par_std;
+					avg_std += par_std * par_std;
 					++free_idx;
 				}
 			}
+			avg_std = sqrt( avg_std / par.GetParamCount() );
+
+			// set default step size
+			if ( m_Sigma == 0.0 )
+				m_Sigma = avg_std; // this does not have the desired effect with Shark 3.0
 
 			// init CMA object
 			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
@@ -92,7 +97,7 @@ namespace scone
 			for ( size_t gen = 0; gen < max_generations; ++gen )
 			{
 				if ( GetProgressOutput() )
-					printf( "%04d:", int( gen ) ); // MSVC2013 doesn't support %zu
+					printf( "%04d (S=%.3f):", int( gen ), cma.sigma() ); // MSVC2013 doesn't support %zu
 
 				cma.step_mt();
 
