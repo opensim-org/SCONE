@@ -92,6 +92,13 @@ namespace scone
 			// create new OpenSim Model using resource cache
 			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
 
+			// create torque and point actuators
+			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
+			{
+				OpenSim::PointActuator pa( m_pOsimModel->getBodySet().get( idx ).getName() );
+				m_pOsimModel->updActuators().cloneAndAppend( pa );
+			}
+
 			// change model properties
 			if ( props.has_key( "SimbodyParameters" ) )
 				SetOpenSimParameters( props.get_child( "SimbodyParameters" ), par );
