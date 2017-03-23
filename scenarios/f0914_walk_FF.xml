@@ -23,8 +23,7 @@
 					
 						<!-- Feed forward components for three states -->
 						<ConditionalController states="EarlyStance LateStance, Liftoff, Swing Landing">
-							<Controller type="FeedForwardController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
+							<Controller type="FeedForwardController" symmetric="1">
 								<Function type="Polynomial">
 									<degree>0</degree>
 									<coefficient0 init_mean="0.3" init_std="0.1" min="0" max="1"/>

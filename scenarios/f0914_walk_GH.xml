@@ -14,7 +14,7 @@
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
 			<fixed_control_step_size>0.001</fixed_control_step_size>
-			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<sensor_delay_scaling_factor>2.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="GaitStateController">
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
@@ -26,8 +26,7 @@
 					
 						<!-- TA stretch reflexes [Geyer & Herr 2010] -->
 						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
+							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
 									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
@@ -43,8 +42,7 @@
 
 						<!-- GAS + SOL F+ reflexes [Geyer & Herr 2010] -->
 						<ConditionalController states="EarlyStance LateStance Liftoff">
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
+							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
@@ -60,8 +58,7 @@
 						
 						<!-- Stance reflexes, [Geyer & Herr 2010] -->
 						<ConditionalController states="EarlyStance LateStance">
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
+							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- F+ VAS -->
 									<Reflex type="ConditionalMuscleReflex" target="vasti" delay="0.010">
@@ -94,8 +91,7 @@
 						
 						<ConditionalController states="Liftoff Swing Landing">
 							<!-- Swing reflexes, [Geyer & Herr 2010] -->
-							<Controller type="ReflexController">
-								<use_symmetric_actuators>1</use_symmetric_actuators>
+							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- L+ reflex for hip flexion -->
 									<Reflex type="MuscleReflex" target="iliopsoas" delay="0.005">
