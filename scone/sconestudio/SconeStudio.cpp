@@ -118,8 +118,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
 
-		if ( manager.IsEvaluating() )
-			evaluate();
+		//if ( manager.IsEvaluating() )
+		//	evaluate();
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
