@@ -29,7 +29,7 @@ namespace scone
 
 		private:
 			Vec3 current_force;
-			const sim::Body& force_body;
+			sim::Body& force_body;
 		};
 	}
 }

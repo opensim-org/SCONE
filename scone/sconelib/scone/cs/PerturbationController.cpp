@@ -28,6 +28,7 @@ namespace scone
 			{
 				double dir = 2 * ( int( timestamp / interval ) % 2 ) - 1;
 				current_force = Vec3( dir * force, 0, 0 );
+				force_body.SetForce( current_force );
 			}
 
 			return sim::Controller::SuccessfulUpdate;

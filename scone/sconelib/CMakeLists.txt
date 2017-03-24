@@ -215,6 +215,8 @@ set(SIMBODY_MODELCOMPONENTS_FILES
     scone/sim/simbody/Muscle_Simbody.h
     scone/sim/simbody/Simulation_Simbody.cpp
     scone/sim/simbody/Simulation_Simbody.h
+    scone/sim/simbody/ConstantForce.cpp
+    scone/sim/simbody/ConstantForce.h
     )
 set(SIMBODY_SYSTEM_FILES
     scone/sim/simbody/sim_simbody.cpp
