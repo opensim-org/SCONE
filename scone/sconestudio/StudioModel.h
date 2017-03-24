@@ -13,6 +13,7 @@
 #include <atomic>
 
 #include "SconeStorageDataModel.h"
+#include "simvis/axes.h"
 
 namespace scone
 {
@@ -65,6 +66,7 @@ namespace scone
 		std::vector< vis::mesh > joints;
 		std::vector< std::pair< vis::trail, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
+		std::vector< vis::axes > body_centers;
 		vis::mesh com;
 		void InitStateDataIndices();
 	};

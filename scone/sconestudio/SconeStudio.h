@@ -69,6 +69,7 @@ public:
 	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
 
 private:
+	void evaluate();
 	void setTime( TimeInSeconds t );
 	QCodeEditor* getActiveScenario();
 	bool checkAndSaveScenario( QCodeEditor* s );

@@ -61,8 +61,6 @@ captureProcess( nullptr )
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
-	flut::log::debug( "Initializing results window" );
-
 	// init file model and browser widget
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
@@ -72,11 +70,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	flut::log::debug( "Initializing viewer window" );
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
-	flut::log::debug( "Initializing play control widget" );
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
@@ -88,7 +84,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( analysisView, &QDataAnalysisView::timeChanged, ui.playControl, &QPlayControl::setTime );
 
 	// start timer for viewer
-	flut::log::debug( "Creating background timers" );
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 1000 );
 
@@ -122,6 +117,9 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		manager.CreateModel( filename );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
+
+		if ( manager.IsEvaluating() )
+			evaluate();
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		ui.playControl->setDisabled( manager.IsEvaluating() );
@@ -163,6 +161,22 @@ void SconeStudio::stop()
 void SconeStudio::refreshAnalysis()
 {
 	analysisView->refresh( current_time );
+}
+
+void SconeStudio::evaluate()
+{
+	QProgressDialog progress( "Running Simulation", "Abort", 0, 100, this );
+	progress.setWindowModality( Qt::WindowModal );
+
+	for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
+	{
+		manager.Update( t );
+		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
+		if ( progress.wasCanceled() )
+			break;
+	}
+	manager.Update( manager.GetMaxTime() );
+	progress.setValue( 100 );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )

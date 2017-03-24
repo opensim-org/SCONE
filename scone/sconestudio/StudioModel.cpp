@@ -46,12 +46,11 @@ namespace scone
 		}
 		else
 		{
-			// start evaluation in separate thread
+			// start evaluation
 			is_evaluating = true;
 			so->GetModel().SetStoreData( true );
 			so->GetModel().SetSimulationEndTime( so->max_duration );
 			log::info( "Starting simulation" );
-			//eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
 		}
 	}
 
@@ -86,6 +85,7 @@ namespace scone
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ).str() ) );
 				body_meshes.back().back().set_material( bone_mat );
+				body_centers.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 			}
 		}
 		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
@@ -145,9 +145,13 @@ namespace scone
 		auto& model_bodies = model.GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
+			vis::transformf trans( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
+
 			auto bp = model_bodies[ i ]->GetOriginPos();
 			for ( auto& bm : body_meshes[ i ] )
-				bm.pos_ori( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
+				bm.transform( trans );
+
+			body_centers[ i ].transform( trans );
 		}
 
 		// update muscle paths
