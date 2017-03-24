@@ -21,6 +21,7 @@ namespace scone
 
 			virtual Vec3 GetOriginPos() const override;
 			virtual Vec3 GetComPos() const override;
+			virtual Vec3 GetLocalComPos() const override;
 			virtual Quat GetOrientation() const override;
 			virtual Vec3 GetPosOfPointFixedOnBody(Vec3 point) const override;
 
@@ -53,7 +54,12 @@ namespace scone
 			virtual const std::vector< Real >& GetContactForceValues() const override;
 			virtual const std::vector< String >& GetContactForceLabels() const override { return m_ContactForceLabels; }
 
+			virtual void SetForce( const Vec3& f ) override;
+			virtual void SetForceAtPoint( const Vec3& force, const Vec3& point ) override;
+			virtual void SetTorque( const Vec3& torque ) override;
+
 		private:
+			Vec3 m_LocalComPos;
 			int m_ForceIndex;
 			mutable int m_LastNumDynamicsRealizations;
 			mutable std::vector< Real > m_ContactForceValues;

@@ -8,6 +8,7 @@
 
 #include <memory>
 #include <map>
+#include "ConstantForce.h"
 
 namespace OpenSim
 {
@@ -15,6 +16,7 @@ namespace OpenSim
 	class Model;
 	class Manager;
 	class Probe;
+	class PointActuator;
 }
 
 namespace SimTK
@@ -84,6 +86,8 @@ namespace scone
 			void StoreCurrentFrame() override;
 			void UpdateOsimStorage();
 
+			OpenSim::ConstantForce& GetOsimBodyForce( int idx ) { return *m_BodyForces.at( idx ); }
+
 		protected:
 			virtual String GetClassSignature() const override;
 
@@ -115,6 +119,8 @@ namespace scone
 			std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 			SimTK::State* m_pTkState; // non-owning state reference
 			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
+
+			std::vector< OpenSim::ConstantForce* > m_BodyForces;
 
 			class ControllerDispatcher;
 			friend ControllerDispatcher;

@@ -95,8 +95,12 @@ namespace scone
 			// create torque and point actuators
 			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
-				OpenSim::PointActuator pa( m_pOsimModel->getBodySet().get( idx ).getName() );
-				m_pOsimModel->updActuators().cloneAndAppend( pa );
+				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
+				cf->set_point_is_global( false );
+				cf->set_force_is_global( true );
+				cf->set_torque_is_global( false );
+				m_BodyForces.push_back( cf );
+				m_pOsimModel->addForce( cf );
 			}
 
 			// change model properties
@@ -222,17 +226,15 @@ namespace scone
 			{
 				// OpenSim: Set<T>::get( idx ) is const but returns non-const reference, is this a bug?
 				OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
-
-				try // see if it's a muscle
+				if ( OpenSim::Muscle* osMus = dynamic_cast< OpenSim::Muscle* >( &osAct ) )
 				{
-					OpenSim::Muscle& osMus = dynamic_cast<OpenSim::Muscle&>( osAct );
-					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, osMus ) ) );
-					//m_ChannelSensors.push_back( m_Muscles.back().get() );
+					m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, *osMus ) ) );
 					m_Actuators.push_back( m_Muscles.back().get() );
 				}
-				catch ( std::bad_cast& )
+				else if ( OpenSim::PointActuator* osPa = dynamic_cast< OpenSim::PointActuator* >( &osAct ) )
 				{
-					SCONE_THROW( "Unsupported actuator type" );
+					// do something?
+
 				}
 			}
 
@@ -393,6 +395,13 @@ namespace scone
 						// TODO: fix this into a generic version (i.e. work with other actuators)
 						controls[ idx++ ] += mus->GetControlValue();
 					}
+
+					// set remaining control values to 1 for Body Actuators
+					// TODO: nicer
+					while ( idx < controls.size() )
+						controls[ idx++ ] = 1;
+
+					printf( "time=%f\n", s.getTime() );
 				}
 			}
 			catch ( std::exception& e )

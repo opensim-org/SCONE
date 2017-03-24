@@ -2,6 +2,7 @@
 #include "scone/core/Exception.h"
 
 #include <OpenSim/OpenSim.h>
+#include <OpenSim/Actuators/PointActuator.h>
 #include "Model_Simbody.h"
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
@@ -19,6 +20,9 @@ namespace scone
 		m_LastNumDynamicsRealizations( -1 )
 		{
 			ConnectContactForce( body.getName() );
+			SimTK::Vec3 com;
+			m_osBody.getMassCenter( com );
+			m_LocalComPos = ToVec3( com );
 		}
 
 		const String& Body_Simbody::GetName() const
@@ -46,7 +50,6 @@ namespace scone
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 			// TODO: OSIM: find what is the most efficient (compare to linvel)
-			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 			SimTK::Vec3 com;
 			SimTK::Vec3 point;
 
@@ -54,6 +57,11 @@ namespace scone
 			m_osBody.getMassCenter( com );
 			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
 			return ToVec3( point );
+		}
+
+		scone::Vec3 Body_Simbody::GetLocalComPos() const
+		{
+			return m_LocalComPos;
 		}
 
 		scone::Quat scone::sim::Body_Simbody::GetOrientation() const
@@ -253,6 +261,24 @@ namespace scone
 				}
 			}
 			return m_ContactForceValues;
+		}
+
+		void Body_Simbody::SetForce( const Vec3& f )
+		{
+			SetForceAtPoint( f, m_LocalComPos );
+		}
+
+		void Body_Simbody::SetForceAtPoint( const Vec3& force, const Vec3& point )
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			cf.set_point( make_osim( point ) );
+			cf.set_force( make_osim( force ) );
+		}
+
+		void Body_Simbody::SetTorque( const Vec3& torque )
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			cf.set_torque( make_osim( torque ) );
 		}
 	}
 }
