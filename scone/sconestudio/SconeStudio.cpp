@@ -17,6 +17,7 @@
 #include "qcustomplot.h"
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
+#include "scone/core/Profiler.h"
 
 using namespace scone;
 using namespace std;
@@ -115,8 +116,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 		showViewer();
 		ui.playControl->stop();
 		ui.playControl->reset();
-		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
-		manager.CreateModel( filename );
+		currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+		manager.CreateModel( currentParFile.toStdString() );
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
@@ -171,22 +172,25 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
-	QProgressDialog progress( "Running Simulation", "Abort", 0, 100, this );
+	QProgressDialog progress( "Evaluating " + currentParFile, "Abort", 0, 100, this );
 	progress.setWindowModality( Qt::WindowModal );
+
+	SCONE_PROFILE_RESET;
 
 	for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
 	{
-		setTime( t );
-		//manager.Update( t );
 		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
 		if ( progress.wasCanceled() )
 		{
 			manager.GetModel().FinishEvaluation( false );
 			return;
 		}
+		setTime( t );
 	}
-	manager.Update( manager.GetMaxTime() );
 	progress.setValue( 100 );
+	manager.Update( manager.GetMaxTime() );
+
+	log::info( SCONE_PROFILE_REPORT );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )

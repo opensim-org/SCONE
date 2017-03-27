@@ -6,13 +6,23 @@
 #include <flut/timer.hpp>
 
 #include <map>
+#include "flut/system/profiler.hpp"
 
-#ifdef SCONE_ENABLE_PROFILING
-	#define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
-	#define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg ) ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), scope_name_arg )
+#if defined SCONE_ENABLE_PROFILING
+#	define SCONE_PROFILE_SCOPE ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), __FUNCTION__ )
+#	define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg ) ScopedProfile unique_scoped_function_profile( Profiler::GetGlobalInstance(), scope_name_arg )
+#	define SCONE_PROFILE_RESET Profiler::GetGlobalInstance().Reset()
+#	define SCONE_PROFILE_REPORT Profiler::GetGlobalInstance().GetReport()
+#elif defined SCONE_ENABLE_FLUT_PROFILING
+#	define SCONE_PROFILE_SCOPE flut::profile_section unique_scoped_profile( __FUNCTION__ )
+#	define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg ) flut::profile_section( scope_name_arg )
+#	define SCONE_PROFILE_RESET flut::profiler::instance().reset()
+#	define SCONE_PROFILE_REPORT flut::profiler::instance().report()
 #else 
-	#define SCONE_PROFILE_SCOPE
-	#define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg )
+#	define SCONE_PROFILE_SCOPE
+#	define SCONE_PROFILE_SCOPE_NAMED( scope_name_arg )
+#	define SCONE_PROFILE_RESET
+#	define SCONE_PROFILE_REPORT PropNode()
 #endif
 
 namespace scone

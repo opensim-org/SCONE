@@ -90,6 +90,8 @@ private:
 	TimeInSeconds evaluation_time_step;
 	flut::delta< scone::Vec3 > com_delta;
 
+	QString currentParFile;
+
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< QCodeEditor* > scenarios;
 
