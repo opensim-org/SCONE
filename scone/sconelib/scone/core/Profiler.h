@@ -17,7 +17,7 @@
 
 namespace scone
 {
-	typedef flut::timer::clock_ticks_t HighResolutionTime;
+	typedef long long HighResolutionTime;
 
 	class SCONE_API ScopedProfile
 	{

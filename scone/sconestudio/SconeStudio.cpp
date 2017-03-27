@@ -113,16 +113,22 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	try
 	{
 		showViewer();
+		ui.playControl->stop();
+		ui.playControl->reset();
 		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
 		manager.CreateModel( filename );
+		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
 
-		//if ( manager.IsEvaluating() )
-		//	evaluate();
+		if ( manager.IsEvaluating() )
+		{
+			ui.playControl->setDisabled( true );
+			evaluate();
+		}
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->setDisabled( manager.IsEvaluating() );
+		ui.playControl->setDisabled( false );
 		ui.playControl->reset();
 		ui.playControl->play();
 	}
@@ -170,10 +176,14 @@ void SconeStudio::evaluate()
 
 	for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
 	{
-		manager.Update( t );
+		setTime( t );
+		//manager.Update( t );
 		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
 		if ( progress.wasCanceled() )
-			break;
+		{
+			manager.GetModel().FinishEvaluation( false );
+			return;
+		}
 	}
 	manager.Update( manager.GetMaxTime() );
 	progress.setValue( 100 );
@@ -188,7 +198,7 @@ void SconeStudio::setTime( TimeInSeconds t )
 	current_time = t;
 
 	// update ui and visualization
-	bool is_evaluating = manager.IsEvaluating();
+	//bool is_evaluating = manager.IsEvaluating();
 	manager.Update( t );
 
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
@@ -200,13 +210,13 @@ void SconeStudio::setTime( TimeInSeconds t )
 		analysisView->refresh( current_time, false );
 
 	// check if the evaluation has just finished
-	if ( is_evaluating && !manager.IsEvaluating() )
-	{
-		ui.playControl->setEnabled( true );
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->reset();
-		ui.playControl->play();
-	}
+	//if ( is_evaluating && !manager.IsEvaluating() )
+	//{
+	//	ui.playControl->setEnabled( true );
+	//	ui.playControl->setRange( 0, manager.GetMaxTime() );
+	//	ui.playControl->reset();
+	//	ui.playControl->play();
+	//}
 }
 
 void SconeStudio::fileOpen()

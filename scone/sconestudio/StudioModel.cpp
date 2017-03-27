@@ -202,23 +202,28 @@ namespace scone
 		so->GetModel().AdvanceSimulationTo( t );
 
 		if ( so->GetModel().GetTerminationRequest() || t >= so->GetModel().GetSimulationEndTime() )
+			FinishEvaluation( true );
+	}
+
+	void StudioModel::FinishEvaluation( bool output_results )
+	{
+		if ( output_results )
 		{
 			so->GetMeasure().GetResult( so->GetModel() );
 			PropNode results;
-			results.push_back( "result", so->GetMeasure().GetReport( ) );
+			results.push_back( "result", so->GetMeasure().GetReport() );
 			so->WriteResults( flut::get_filename_without_ext( filename ) );
-
 			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );
 			log::info( results );
-
-			// copy data and init data
-			std::lock_guard< std::mutex > lock( GetDataMutex() );
-			data = so->GetModel().GetData();
-			InitStateDataIndices();
-
-			// reset this stuff
-			is_evaluating = false;
 		}
+
+		// copy data and init data
+		std::lock_guard< std::mutex > lock( GetDataMutex() );
+		data = so->GetModel().GetData();
+		InitStateDataIndices();
+
+		// reset this stuff
+		is_evaluating = false;
 	}
 
 	void StudioModel::SetViewSetting( ViewSettings e, bool value )

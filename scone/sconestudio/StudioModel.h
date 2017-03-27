@@ -31,6 +31,7 @@ namespace scone
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
 		void EvaluateTo( TimeInSeconds t );
+		void FinishEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
