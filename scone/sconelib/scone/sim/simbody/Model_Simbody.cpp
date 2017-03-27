@@ -400,8 +400,6 @@ namespace scone
 					// TODO: nicer
 					while ( idx < controls.size() )
 						controls[ idx++ ] = 1;
-
-					printf( "time=%f\n", s.getTime() );
 				}
 			}
 			catch ( std::exception& e )

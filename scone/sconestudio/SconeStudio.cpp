@@ -176,19 +176,21 @@ void SconeStudio::evaluate()
 	progress.setWindowModality( Qt::WindowModal );
 
 	SCONE_PROFILE_RESET;
-
-	for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
 	{
-		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
-		if ( progress.wasCanceled() )
+		SCONE_PROFILE_SCOPE_NAMED( "evaluate" );
+		for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
 		{
-			manager.GetModel().FinishEvaluation( false );
-			return;
+			progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
+			if ( progress.wasCanceled() )
+			{
+				manager.GetModel().FinishEvaluation( false );
+				return;
+			}
+			setTime( t );
 		}
-		setTime( t );
+		progress.setValue( 100 );
+		manager.Update( manager.GetMaxTime() );
 	}
-	progress.setValue( 100 );
-	manager.Update( manager.GetMaxTime() );
 
 	log::info( SCONE_PROFILE_REPORT );
 }
@@ -212,15 +214,6 @@ void SconeStudio::setTime( TimeInSeconds t )
 	// update graph (if visible)
 	if ( analysisView->isVisible() )
 		analysisView->refresh( current_time, false );
-
-	// check if the evaluation has just finished
-	//if ( is_evaluating && !manager.IsEvaluating() )
-	//{
-	//	ui.playControl->setEnabled( true );
-	//	ui.playControl->setRange( 0, manager.GetMaxTime() );
-	//	ui.playControl->reset();
-	//	ui.playControl->play();
-	//}
 }
 
 void SconeStudio::fileOpen()
