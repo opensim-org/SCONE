@@ -463,8 +463,13 @@ namespace scone
 						m_PrevTime = GetTime();
 						m_PrevIntStep = GetIntegrationStep();
 						double target_time = GetTime() + fixed_control_step_size;
+						SimTK::Integrator::SuccessfulStepStatus status;
 
-						SimTK::Integrator::SuccessfulStepStatus status = m_pTkTimeStepper->stepTo( target_time );
+						{
+							SCONE_PROFILE_SCOPE_NAMED( "SimTK::TimeStepper::stepTo" );
+							status = m_pTkTimeStepper->stepTo( target_time );
+						}
+
 						SetTkState( m_pTkIntegrator->updAdvancedState() );
 
 						++current_step;
