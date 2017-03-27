@@ -14,7 +14,7 @@
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
-#define SCONE_ENABLE_FLUT_PROFILING
+//#define SCONE_ENABLE_FLUT_PROFILING
 
 #if defined(_MSC_VER)
 // TODO: do this in a nicer way (i.e. push/pop warnings)
