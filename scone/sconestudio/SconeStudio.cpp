@@ -33,6 +33,7 @@ captureProcess( nullptr )
 {
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
+	ui.stackedWidget->setCurrentIndex( 0 );
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
@@ -172,25 +173,28 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
-	QProgressDialog progress( "Evaluating " + currentParFile, "Abort", 0, 100, this );
-	progress.setWindowModality( Qt::WindowModal );
-	QApplication::processEvents();
-
+	ui.abortButton->setChecked( false );
+	ui.progressBar->setValue( 0 );
+	ui.stackedWidget->setCurrentIndex( 1 );
+	ui.progressBar->setTextVisible( true );
 
 	SCONE_PROFILE_RESET;
 	const double step_size = 0.2;
 	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
-		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
-		if ( progress.wasCanceled() )
+		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		QApplication::processEvents();
+		if ( ui.abortButton->isChecked() )
 		{
 			manager.GetModel().FinalizeEvaluation( false );
+			ui.stackedWidget->setCurrentIndex( 0 );
 			return;
 		}
 		setTime( t );
 	}
-	progress.setValue( 100 );
+	ui.progressBar->setValue( 100 );
 	manager.Update( manager.GetMaxTime() );
+	ui.stackedWidget->setCurrentIndex( 0 );
 
 	log::info( SCONE_PROFILE_REPORT );
 }
