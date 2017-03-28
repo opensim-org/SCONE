@@ -3,6 +3,7 @@
 #include "flut/optimizer/cma_optimizer.hpp"
 #include "flut/container_tools.hpp"
 #include <numeric>
+#include <random>
 #include "flut/string_tools.hpp"
 
 using std::cout;
@@ -24,6 +25,12 @@ namespace scone
 			size_t dim = par.GetFreeParamCount();
 
 			SCONE_ASSERT( dim > 0 );
+
+			// init random seed
+			if ( random_seed == 0 ) {
+				std::random_device rd;
+				random_seed = rd();
+			}
 
 			// initialize settings from file
 			if ( use_init_file && !init_file.empty() )
