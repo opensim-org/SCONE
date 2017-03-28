@@ -41,7 +41,7 @@ namespace scone
 
 	void ModelTest()
 	{
-		SCONE_PROFILE_SCOPE;
+		SCONE_PROFILE_FUNCTION;
 		const double simulation_time = 0.2;
 
 		cs::RegisterFactoryTypes();

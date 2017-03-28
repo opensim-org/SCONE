@@ -45,7 +45,7 @@ namespace scone
 		ResourceCache< OpenSim::Storage > g_StorageCache;
 
 		/// Simbody controller that calls scone controllers
-		class Model_Simbody::ControllerDispatcher : public OpenSim::Controller
+		class ControllerDispatcher : public OpenSim::Controller
 		{
 		public:
 			ControllerDispatcher( Model_Simbody& model ) : m_Model( model ) { };
@@ -69,7 +69,7 @@ namespace scone
 		m_Mass( 0.0 ),
 		m_BW( 0.0 )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			String model_file;
 			String state_init_file;
@@ -351,9 +351,9 @@ namespace scone
 			return link;
 		}
 
-		void Model_Simbody::ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
+		void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// see 'catch' statement below for explanation try {} catch {} is needed
 			try
@@ -385,7 +385,6 @@ namespace scone
 
 				// inject actuator values into controls
 				{
-					SCONE_PROFILE_SCOPE_NAMED( "addInControls" );
 					SimTK::Vector controlValue( 1 );
 					int idx = 0;
 					for ( MuscleUP& mus: m_Model.GetMuscles() )
@@ -415,7 +414,7 @@ namespace scone
 
 		void Model_Simbody::StoreCurrentFrame()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// store scone data
 			Model::StoreCurrentFrame();
@@ -423,7 +422,7 @@ namespace scone
 
 		bool Model_Simbody::AdvanceSimulationTo( double final_time )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			SCONE_ASSERT( m_pOsimManager );
 
 			try
@@ -464,7 +463,7 @@ namespace scone
 						SimTK::Integrator::SuccessfulStepStatus status;
 
 						{
-							SCONE_PROFILE_SCOPE_NAMED( "SimTK::TimeStepper::stepTo" );
+							SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
 							status = m_pTkTimeStepper->stepTo( target_time );
 						}
 

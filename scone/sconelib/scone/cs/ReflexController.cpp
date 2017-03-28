@@ -41,7 +41,7 @@ namespace scone
 
 		sim::Controller::UpdateResult ReflexController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 			for ( ReflexUP& r: m_Reflexes )

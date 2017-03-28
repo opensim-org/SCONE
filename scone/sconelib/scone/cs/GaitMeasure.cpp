@@ -48,7 +48,7 @@ namespace scone
 
 		sim::Controller::UpdateResult GaitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// make sure this is a new step
 			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );

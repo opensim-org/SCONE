@@ -1,6 +1,7 @@
 #include "StudioScene.h"
 #include "scone/core/system_tools.h"
 #include "flut/math/math.hpp"
+#include "scone/core/Profiler.h"
 
 using namespace vis;
 
@@ -25,6 +26,7 @@ namespace scone
 
 	void StudioScene::Update( TimeInSeconds t )
 	{
+		SCONE_PROFILE_FUNCTION;
 		if ( model )
 		{
 			if ( model->IsEvaluating() )
@@ -45,11 +47,7 @@ namespace scone
 		{
 			if ( model->IsEvaluating() )
 				return model->GetObjective().max_duration;
-			else
-			{
-				std::unique_lock< std::mutex > lock( model->GetDataMutex() );
-				return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
-			}
+			else return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
 		}
 		else return 0.0;
 	}

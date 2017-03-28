@@ -44,7 +44,7 @@ namespace scone
 
 		scone::Real Muscle_Simbody::GetForce() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			// OpenSim: why can't I just use getWorkingState()?
 			// OpenSim: why must I update to Dynamics for getForce()?
 			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
@@ -53,64 +53,64 @@ namespace scone
 
 		scone::Real Muscle_Simbody::GetNormalizedForce() const 
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return GetForce() / GetMaxIsometricForce();
 		}
 
 		scone::Real scone::sim::Muscle_Simbody::GetLength() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 			return m_osMus.getLength( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetVelocity() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 			return m_osMus.getLengtheningSpeed( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetFiberForce() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getFiberForce( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetNormalizedFiberForce() const 
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
 		}
 
         scone::Real Muscle_Simbody::GetActiveFiberForce() const
         {
-            SCONE_PROFILE_SCOPE;
+            SCONE_PROFILE_FUNCTION;
             return m_osMus.getActiveFiberForce( m_Model.GetTkState() );
         }
 
 		scone::Real scone::sim::Muscle_Simbody::GetFiberLength() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getFiberLength( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetNormalizedFiberLength() const 
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 			return m_osMus.getNormalizedFiberLength( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetFiberVelocity() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getFiberVelocity( m_Model.GetTkState() );
 		}
 
 		scone::Real Muscle_Simbody::GetNormalizedFiberVelocity() const 
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
 		}
 
@@ -169,7 +169,7 @@ namespace scone
 		
 		scone::Real scone::sim::Muscle_Simbody::GetActivation() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			return m_osMus.getActivation( m_Model.GetTkState() );
 		}
 		

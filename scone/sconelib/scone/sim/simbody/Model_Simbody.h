@@ -31,7 +31,8 @@ namespace scone
 	namespace sim
 	{
 		class Simulation_Simbody;
-
+		class ControllerDispatcher;
+		
 		class SCONE_API Model_Simbody : public Model
 		{
 		public:
@@ -122,7 +123,6 @@ namespace scone
 
 			std::vector< OpenSim::ConstantForce* > m_BodyForces;
 
-			class ControllerDispatcher;
 			friend ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model
 

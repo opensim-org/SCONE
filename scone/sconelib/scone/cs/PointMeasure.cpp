@@ -43,7 +43,7 @@ namespace scone
 
 		sim::Controller::UpdateResult PointMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			if ( squared_range_penalty > 0.0 || abs_range_penalty > 0.0)
 			{

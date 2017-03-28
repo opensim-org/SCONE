@@ -10,8 +10,7 @@
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
 
-#include <thread>
-#include <mutex>
+#include "scone/core/Profiler.h"
 
 namespace bfs = boost::filesystem;
 
@@ -31,9 +30,6 @@ namespace scone
 		// accept filename and clear data
 		filename = par_file;
 
-		// initialize visualization
-		InitVis( s );
-
 		// see if we can load a matching .sto file
 		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
 		if ( bfs::exists( sto_file ) )
@@ -51,16 +47,17 @@ namespace scone
 			so->GetModel().SetStoreData( true );
 			so->GetModel().SetSimulationEndTime( so->max_duration );
 			log::info( "Starting simulation" );
+			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
+
+		InitVis( s );
+		UpdateVis( 0 );
 	}
 
 	StudioModel::~StudioModel()
 	{
 		if ( is_evaluating )
 			log::warning( "Closing model while thread is still running" );
-
-		if ( eval_thread.joinable() )
-			eval_thread.join();
 	}
 
 
@@ -69,10 +66,6 @@ namespace scone
 		sim::Model& model = so->GetModel();
 
 		scone_scene.attach( root );
-
-		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
-		if ( is_evaluating ) lock.lock();
-		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
 		flut::timer t;
 		for ( auto& body : model.GetBodies() )
@@ -124,13 +117,15 @@ namespace scone
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
+		SCONE_PROFILE_FUNCTION;
+
+		// initialize visualization
 		sim::Model& model = so->GetModel();
 		std::unique_lock< std::mutex > simulation_lock( model.GetSimulationMutex(), std::defer_lock );
 
 		if ( !is_evaluating )
 		{
 			// update model state from data
-			std::unique_lock< std::mutex > data_lock( GetDataMutex() );
 			SCONE_ASSERT( !state_data_index.empty() );
 			std::vector< Real > state( state_data_index.size() );
 			for ( Index i = 0; i < state.size(); ++i )
@@ -189,7 +184,6 @@ namespace scone
 		so->WriteResults( flut::get_filename_without_ext( filename ) );
 
 		// copy data
-		std::lock_guard< std::mutex > lock( GetDataMutex() );
 		data = so->GetModel().GetData();
 		InitStateDataIndices();
 
@@ -199,14 +193,16 @@ namespace scone
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
+		SCONE_PROFILE_FUNCTION;
 		so->GetModel().AdvanceSimulationTo( t );
 
 		if ( so->GetModel().GetTerminationRequest() || t >= so->GetModel().GetSimulationEndTime() )
-			FinishEvaluation( true );
+			FinalizeEvaluation( true );
 	}
 
-	void StudioModel::FinishEvaluation( bool output_results )
+	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
+		SCONE_PROFILE_FUNCTION;
 		if ( output_results )
 		{
 			so->GetMeasure().GetResult( so->GetModel() );
@@ -218,7 +214,6 @@ namespace scone
 		}
 
 		// copy data and init data
-		std::lock_guard< std::mutex > lock( GetDataMutex() );
 		data = so->GetModel().GetData();
 		InitStateDataIndices();
 

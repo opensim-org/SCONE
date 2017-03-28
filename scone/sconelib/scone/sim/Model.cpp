@@ -90,7 +90,7 @@ namespace scone
 
 		void Model::UpdateSensorDelayAdapters()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			//SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
@@ -114,7 +114,7 @@ namespace scone
 
 		void Model::StoreData( Storage< Real >::Frame& frame )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// store states
 			auto state_values = GetStateValues();
@@ -171,7 +171,7 @@ namespace scone
 
 		void Model::UpdateControlValues()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// reset actuator values
 			// TODO: not only muscles!
@@ -191,7 +191,7 @@ namespace scone
 
 		void Model::UpdateAnalyses()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			bool terminate = false;
 			for ( ControllerUP& con: GetControllers() )

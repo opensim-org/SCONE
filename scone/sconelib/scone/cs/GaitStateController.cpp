@@ -99,7 +99,7 @@ namespace scone
 
 		sim::Controller::UpdateResult GaitStateController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 			{
@@ -122,7 +122,7 @@ namespace scone
 
 		void GaitStateController::UpdateLegStates( sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// update statuses
 			for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
@@ -215,7 +215,7 @@ namespace scone
 
 		void GaitStateController::UpdateControllerStates( sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// update controller states
 			for ( ConditionalControllerUP& cc: m_ConditionalControllers )

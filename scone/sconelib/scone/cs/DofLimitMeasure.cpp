@@ -40,7 +40,7 @@ namespace scone
 
 		sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			if ( !IsActive( model, timestamp ) )
 				return NoUpdate;

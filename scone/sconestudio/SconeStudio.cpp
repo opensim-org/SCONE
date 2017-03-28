@@ -174,29 +174,31 @@ void SconeStudio::evaluate()
 {
 	QProgressDialog progress( "Evaluating " + currentParFile, "Abort", 0, 100, this );
 	progress.setWindowModality( Qt::WindowModal );
+	QApplication::processEvents();
+
 
 	SCONE_PROFILE_RESET;
+	const double step_size = 0.2;
+	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
-		SCONE_PROFILE_SCOPE_NAMED( "evaluate" );
-		for ( double t = 0; t < manager.GetMaxTime(); t += 0.1 )
+		progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
+		if ( progress.wasCanceled() )
 		{
-			progress.setValue( int( t / manager.GetMaxTime() * 100 ) );
-			if ( progress.wasCanceled() )
-			{
-				manager.GetModel().FinishEvaluation( false );
-				return;
-			}
-			setTime( t );
+			manager.GetModel().FinalizeEvaluation( false );
+			return;
 		}
-		progress.setValue( 100 );
-		manager.Update( manager.GetMaxTime() );
+		setTime( t );
 	}
+	progress.setValue( 100 );
+	manager.Update( manager.GetMaxTime() );
 
 	log::info( SCONE_PROFILE_REPORT );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
 {
+	SCONE_PROFILE_FUNCTION;
+
 	if ( !manager.HasModel() )
 		return;
 

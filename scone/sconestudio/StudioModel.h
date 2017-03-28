@@ -8,10 +8,6 @@
 #include "flut/flag_set.hpp"
 #include "simvis/arrow.h"
 
-#include <thread>
-#include <mutex>
-#include <atomic>
-
 #include "SconeStorageDataModel.h"
 #include "simvis/axes.h"
 
@@ -31,14 +27,13 @@ namespace scone
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateObjective();
 		void EvaluateTo( TimeInSeconds t );
-		void FinishEvaluation( bool output_results );
+		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
 		cs::SimulationObjective& GetObjective() { return *so; }
 
-		bool IsEvaluating() { return is_evaluating.load(); }
-		std::mutex& GetDataMutex() { return data_mutex; }
+		bool IsEvaluating() { return is_evaluating; }
 
 		void SetViewFlags( const ViewFlags& f ) { view_flags = f; }
 		void SetViewSetting( ViewSettings e, bool value );
@@ -58,9 +53,7 @@ namespace scone
 		vis::material arrow_mat;
 		vis::material muscle_mat;
 
-		std::thread eval_thread;
-		std::mutex data_mutex;
-		std::atomic< bool > is_evaluating;
+		bool is_evaluating;
 
 		vis::group root;
 		std::vector< std::vector< vis::mesh > > body_meshes;

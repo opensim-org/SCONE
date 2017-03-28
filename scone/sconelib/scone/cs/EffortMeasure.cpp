@@ -48,7 +48,7 @@ namespace scone
 
 		sim::Controller::UpdateResult EffortMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// make sure this is a new step and the measure is active
 			SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
