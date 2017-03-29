@@ -35,9 +35,9 @@ public:
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
 
 public slots:
+	void runSimulation( const QString& filename );
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
-
 	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem ) {}
 	void start();
 	void stop();
@@ -50,6 +50,7 @@ public slots:
 	void fileExit();
 	void showViewer() { ui.tabWidget->setCurrentIndex( 0 ); }
 	void helpAbout() {}
+	void runScenario();
 	void optimizeScenario();
 	void optimizeScenarioMultiple();
 	void abortOptimizations();

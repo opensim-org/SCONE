@@ -36,6 +36,7 @@ namespace bfs = boost::filesystem;
 
 #include <flut/timer.hpp>
 #include "flut/prop_node_tools.hpp"
+#include "PerturbationController.h"
 using flut::timer;
 
 namespace scone
@@ -59,6 +60,7 @@ namespace scone
 			sim::GetControllerFactory().Register< ReflexController >();
 			sim::GetControllerFactory().Register< TimeStateController >();
 			sim::GetControllerFactory().Register< MetaReflexController >();
+			sim::GetControllerFactory().Register< PerturbationController >();
 
 			// register reflexes
 			// TODO: make this not separate but use controller factory instead?
@@ -116,12 +118,23 @@ namespace scone
 			return statistics;
 		}
 
-		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& par_file )
+		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& filename )
 		{
-			opt::ParamSet par( par_file );
-			bfs::path config_path = bfs::path( par_file ).parent_path() / "config.xml";
-			if ( config_path.has_parent_path() )
-				bfs::current_path( config_path.parent_path() );
+			auto ext = get_filename_ext( filename );
+			opt::ParamSet par;
+			bfs::path config_path;
+			if ( ext == "par" )
+			{
+				par.Read( filename );
+				config_path = bfs::path( filename ).parent_path() / "config.xml";
+				if ( config_path.has_parent_path() )
+					bfs::current_path( config_path.parent_path() );
+			}
+			else if ( ext == "xml" || ext == "scenario" )
+			{
+				// just run config default parameters
+				config_path = filename;
+			}
 
 			// read properties
 			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;

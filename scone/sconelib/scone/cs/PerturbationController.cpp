@@ -9,10 +9,10 @@ namespace scone
 		Controller( props, par, model, target_area ),
 		force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) )
 		{
-			INIT_PROP_REQUIRED( props, body );
 			INIT_PROP( props, force, 100.0 );
 			INIT_PROP( props, interval, 1.0 );
 			INIT_PROP( props, duration, 0.1 );
+			INIT_PROP( props, start, 1.0 );
 		}
 
 		void PerturbationController::StoreData( Storage<Real>::Frame& frame )
@@ -24,7 +24,7 @@ namespace scone
 
 		sim::Controller::UpdateResult PerturbationController::UpdateControls( sim::Model& model, double timestamp )
 		{
-			if ( fmod( timestamp, interval ) < duration )
+			if ( timestamp >= start && fmod( timestamp - start, interval ) < duration )
 			{
 				double dir = 2 * ( int( timestamp / interval ) % 2 ) - 1;
 				current_force = Vec3( dir * force, 0, 0 );

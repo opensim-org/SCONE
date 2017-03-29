@@ -16,10 +16,10 @@ namespace scone
 			PerturbationController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
 			virtual ~PerturbationController() {}
 
-			String body;
 			double force;
 			TimeInSeconds interval;
 			TimeInSeconds duration;
+			TimeInSeconds start;
 
 			virtual void StoreData( Storage<Real>::Frame& frame ) override;
 			virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;

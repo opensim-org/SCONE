@@ -12,7 +12,7 @@ namespace scone
 	namespace cs
 	{
 		void SCONE_API RegisterFactoryTypes();
-		PropNode SCONE_API RunSimulation( const String& par_file, bool write_results_file = false );
-		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& par_file );
+		PropNode SCONE_API RunSimulation( const String& filename, bool write_results_file = false );
+		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& filename );
 	}
 }

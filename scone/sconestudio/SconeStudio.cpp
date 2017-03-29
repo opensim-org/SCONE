@@ -39,10 +39,10 @@ captureProcess( nullptr )
 	analysisView->setObjectName( "Analysis" );
 
 	// create window menu
-	auto* actionMenu = menuBar()->addMenu( "&Analyze" );
-	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
-	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8 );
-	addMenuAction( actionMenu, "&Toggle Play", ui.playControl, &QPlayControl::toggle, Qt::Key_Space, true );
+	auto* actionMenu = menuBar()->addMenu( "&Action" );
+	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
+	addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario );
 
 	createWindowMenu();
 	createHelpMenu();
@@ -110,15 +110,14 @@ SconeStudio::~SconeStudio()
 {
 }
 
-void SconeStudio::activateBrowserItem( QModelIndex idx )
+void SconeStudio::runSimulation( const QString& filename )
 {
 	try
 	{
 		showViewer();
 		ui.playControl->stop();
 		ui.playControl->reset();
-		currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
-		manager.CreateModel( currentParFile.toStdString() );
+		manager.CreateModel( filename.toStdString() );
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
@@ -138,6 +137,13 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
+
+}
+
+void SconeStudio::activateBrowserItem( QModelIndex idx )
+{
+	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+	runSimulation( currentParFile );
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
@@ -331,6 +337,12 @@ void SconeStudio::optimizeScenario()
 		addProgressDock( pdw );
 		updateOptimizations();
 	}
+}
+
+void SconeStudio::runScenario()
+{
+	if ( checkAndSaveScenario( getActiveScenario() ) )
+		runSimulation( getActiveScenario()->fileName );
 }
 
 void SconeStudio::optimizeScenarioMultiple()
