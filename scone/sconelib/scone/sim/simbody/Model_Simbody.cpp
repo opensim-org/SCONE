@@ -208,6 +208,7 @@ namespace scone
 
 			// STEP 2: compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
+
 			InitializeOpenSimMuscleActivations();
 
 			log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
@@ -351,6 +352,12 @@ namespace scone
 			return link;
 		}
 
+		void Model_Simbody::ClearBodyForces()
+		{
+			for ( auto& bf : m_BodyForces )
+				bf->setNull();
+		}
+
 		void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 		{
 			SCONE_PROFILE_FUNCTION;
@@ -372,6 +379,7 @@ namespace scone
 					}
 
 					// update actuator values
+					m_Model.ClearBodyForces();
 					m_Model.UpdateControlValues();
 
 					// update previous integration step and time
@@ -385,7 +393,8 @@ namespace scone
 
 				// inject actuator values into controls
 				{
-					SimTK::Vector controlValue( 1 );
+					SCONE_ASSERT_MSG( controls.size() == m_Model.GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
+
 					int idx = 0;
 					for ( MuscleUP& mus: m_Model.GetMuscles() )
 					{
@@ -394,11 +403,6 @@ namespace scone
 						// TODO: fix this into a generic version (i.e. work with other actuators)
 						controls[ idx++ ] += mus->GetControlValue();
 					}
-
-					// set remaining control values to 1 for Body Actuators
-					// TODO: nicer
-					while ( idx < controls.size() )
-						controls[ idx++ ] = 1;
 				}
 			}
 			catch ( std::exception& e )
@@ -454,6 +458,7 @@ namespace scone
 					for ( int current_step = 0; current_step < number_of_steps; )
 					{
 						// update controls
+						ClearBodyForces();
 						UpdateControlValues();
 
 						// integrate

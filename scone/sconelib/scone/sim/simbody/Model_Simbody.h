@@ -96,6 +96,7 @@ namespace scone
 			void SetOpenSimParameters( const PropNode& name, opt::ParamSet& par );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
+			void ClearBodyForces();
 
 			std::map< String, Real > ReadState( const String& file );
 			std::map< String, Real > GetStateVariables();

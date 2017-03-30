@@ -1,5 +1,6 @@
 #pragma once
 
+#include "scone/core/system_tools.h"
 #include "scone/sim/Model.h"
 #include "simvis/scene.h"
 #include "scone/cs/SimulationObjective.h"
@@ -21,10 +22,13 @@ namespace scone
 		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows };
 		typedef flut::flag_set< ViewSettings > ViewFlags;
  
-		StudioModel( vis::scene &s, const String& par_file );
+		StudioModel( vis::scene &s, const path& filename );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
+
+		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
+
 		void EvaluateObjective();
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
@@ -43,7 +47,7 @@ namespace scone
 
 		Storage<> data;
 		cs::SimulationObjectiveUP so;
-		String filename;
+		path filename;
 
 		ViewFlags view_flags;
 

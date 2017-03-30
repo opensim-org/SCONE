@@ -263,22 +263,39 @@ namespace scone
 			return m_ContactForceValues;
 		}
 
-		void Body_Simbody::SetForce( const Vec3& f )
+		void Body_Simbody::SetExternalForce( const Vec3& f )
 		{
-			SetForceAtPoint( f, m_LocalComPos );
+			SetExternalForceAtPoint( f, m_LocalComPos );
 		}
 
-		void Body_Simbody::SetForceAtPoint( const Vec3& force, const Vec3& point )
+		void Body_Simbody::SetExternalForceAtPoint( const Vec3& force, const Vec3& point )
 		{
 			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
-			cf.set_point( make_osim( point ) );
-			cf.set_force( make_osim( force ) );
+			cf.setForceAtPoint( make_osim( force ),	make_osim( point ) );
 		}
 
-		void Body_Simbody::SetTorque( const Vec3& torque )
+		void Body_Simbody::SetExternalTorque( const Vec3& torque )
 		{
 			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
-			cf.set_torque( make_osim( torque ) );
+			cf.setTorque( make_osim( torque ) );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalForce() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getForce() );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalForcePoint() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getPoint() );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalTorque() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getTorque() );
 		}
 	}
 }

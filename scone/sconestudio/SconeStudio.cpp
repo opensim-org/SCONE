@@ -42,7 +42,7 @@ captureProcess( nullptr )
 	auto* actionMenu = menuBar()->addMenu( "&Action" );
 	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
-	addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario );
+	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
 	createHelpMenu();

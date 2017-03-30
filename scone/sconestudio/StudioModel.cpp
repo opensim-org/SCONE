@@ -16,7 +16,7 @@ namespace bfs = boost::filesystem;
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene &s, const String& par_file ) :
+	StudioModel::StudioModel( vis::scene &s, const path& file ) :
 	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
@@ -25,14 +25,14 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file
-		so = cs::CreateSimulationObjective( par_file );
+		so = cs::CreateSimulationObjective( file );
 
 		// accept filename and clear data
-		filename = par_file;
+		filename = file;
 
 		// see if we can load a matching .sto file
-		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
-		if ( bfs::exists( sto_file ) )
+		auto sto_file = bfs::path( file.str() ).replace_extension( "sto" );
+		if ( bfs::exists( sto_file ) && filename.extension() == "par" )
 		{
 			flut::timer t;
 			log::info( "Reading ", sto_file.string() );
@@ -91,12 +91,6 @@ namespace scone
 			auto vismat = muscle_mat.clone();
 			vispath.set_material( vismat );
 			muscles.push_back( std::make_pair( vispath, vismat ) );
-		}
-
-		for ( Index i = 0; i < model.GetLegCount(); ++i )
-		{
-			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
-			forces.back().set_material( arrow_mat );
 		}
 	}
 
@@ -161,15 +155,36 @@ namespace scone
 			muscles[ i ].second.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
 		}
 
-		// update GRF
+		// update forces
+		Index force_idx = 0;
 		for ( Index i = 0; i < model.GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
 			model.GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
-			forces[i].show( force.y > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() );
-			forces[i].pos( cop, cop + 0.001 * force );
+			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
+				UpdateForceVis( force_idx++, cop, force );
 		}
+
+		for ( auto& b : model.GetBodies() )
+		{
+			auto f = b->GetExternalForce();
+			if ( !f.is_null() )
+				UpdateForceVis( force_idx++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), b->GetOrientation() * f );
+		}
+
+		if ( force_idx < forces.size() )
+			forces.resize( force_idx );
+	}
+
+	void StudioModel::UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force )
+	{
+		while ( forces.size() <= force_idx )
+		{
+			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
+			forces.back().set_material( arrow_mat );
+		}
+		forces[ force_idx ].pos( cop, cop + 0.001 * force );
 	}
 
 	void StudioModel::EvaluateObjective()
@@ -181,7 +196,7 @@ namespace scone
 		PropNode results;
 		results.set( "result", so->GetMeasure().GetReport() );
 		log::info( results );
-		so->WriteResults( flut::get_filename_without_ext( filename ) );
+		so->WriteResults( path( filename ).replace_extension().str() );
 
 		// copy data
 		data = so->GetModel().GetData();
@@ -208,8 +223,8 @@ namespace scone
 			so->GetMeasure().GetResult( so->GetModel() );
 			PropNode results;
 			results.push_back( "result", so->GetMeasure().GetReport() );
-			so->WriteResults( flut::get_filename_without_ext( filename ) );
-			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );
+			so->WriteResults( path( filename ).replace_extension().str() );
+			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );
 		}
 

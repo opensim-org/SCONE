@@ -8,7 +8,7 @@
 
 #include <boost/filesystem.hpp>
 
-using namespace boost::filesystem;
+namespace bfs = boost::filesystem;
 using namespace std;
 
 #include "flut/timer.hpp"
@@ -30,33 +30,33 @@ namespace scone
 			GetOptimizerFactory().Register< CmaOptimizerCCMAES >();
 		}
 
-		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const String& scenario_file )
+		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
 		{
 			// create optimizer and report unused parameters
 			opt::OptimizerUP o = opt::CreateOptimizer( props.get_child( "Optimizer" ) );
 			LogUntouched( props );
 
 			// set current path to config file path
-			path config_path( scenario_file );
+			bfs::path config_path( scenario_file.str() );
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 
 			// copy original and write resolved config files
-			path outdir( o->AcquireOutputFolder() );
-			copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), copy_option::overwrite_if_exists );
+			bfs::path outdir( o->AcquireOutputFolder() );
+			bfs::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), bfs::copy_option::overwrite_if_exists );
 			flut::save_xml( props, ( outdir / "config.xml" ).string() );
 
 			// return created optimizer
 			return std::move( o );
 		}
 
-		PropNode SCONE_API SimulateObjective( const String& filename )
+		PropNode SCONE_API SimulateObjective( const path& filename )
 		{
 			cout << "--- Starting evaluation ---" << endl;
 	
 			opt::ParamSet par( filename );
 	
-			path config_path = path( filename ).parent_path() / "config.xml";
+			bfs::path config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
 			if ( config_path.has_parent_path() )
 				current_path( config_path.parent_path() );
 	
@@ -89,7 +89,7 @@ namespace scone
 			cout << Profiler::GetGlobalInstance().GetReport();
 
 			// write results
-			obj->WriteResults( path( filename ).replace_extension().string() );
+			obj->WriteResults( path( filename ).replace_extension().str() );
 
 			return statistics;
 		}
