@@ -154,24 +154,24 @@ namespace scone
 			for ( auto& joint : GetJoints() )
 				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
 
-			// store external forces
-			for ( auto& b : GetBodies() )
-			{
-				auto f = b->GetExternalForce();
-				frame[ b->GetName() + '.' + "force_x" ] = f.x;
-				frame[ b->GetName() + '.' + "force_y" ] = f.y;
-				frame[ b->GetName() + '.' + "force_z" ] = f.z;
+			// store external forces (should be part of state)
+			//for ( auto& b : GetBodies() )
+			//{
+			//	auto f = b->GetExternalForce();
+			//	frame[ b->GetName() + ".force_x" ] = f.x;
+			//	frame[ b->GetName() + ".force_y" ] = f.y;
+			//	frame[ b->GetName() + ".force_z" ] = f.z;
 
-				auto p = b->GetExternalForcePoint();
-				frame[ b->GetName() + '.' + "force_point_x" ] = p.x;
-				frame[ b->GetName() + '.' + "force_point_y" ] = p.y;
-				frame[ b->GetName() + '.' + "force_point_z" ] = p.z;
+			//	auto p = b->GetExternalForcePoint();
+			//	frame[ b->GetName() + ".force_point_x" ] = p.x;
+			//	frame[ b->GetName() + ".force_point_y" ] = p.y;
+			//	frame[ b->GetName() + ".force_point_z" ] = p.z;
 
-				auto t = b->GetExternalTorque();
-				frame[ b->GetName() + '.' + "torque_x" ] = t.x;
-				frame[ b->GetName() + '.' + "torque_y" ] = t.y;
-				frame[ b->GetName() + '.' + "torque_z" ] = t.z;
-			}
+			//	auto t = b->GetExternalTorque();
+			//	frame[ b->GetName() + ".torque_x" ] = t.x;
+			//	frame[ b->GetName() + ".torque_y" ] = t.y;
+			//	frame[ b->GetName() + ".torque_z" ] = t.z;
+			//}
 
 			// store all force data (measured in BW)
 			//for ( auto& body : GetBodies() )

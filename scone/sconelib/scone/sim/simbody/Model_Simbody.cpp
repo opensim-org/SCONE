@@ -687,11 +687,18 @@ namespace scone
 
 		std::vector< String > Model_Simbody::GetStateVariableNames() const
 		{
+			// store osim state
 			auto osnames = GetOsimModel().getStateVariableNames();
 			std::vector< String > state_names( osnames.size() );
-
 			for ( int i = 0; i < osnames.size(); ++i )
 				state_names[ i ] = osnames[ i ];
+
+			// store external force states
+			for ( auto& b : GetBodies() )
+			{
+				auto v = b->GetStateVariableNames();
+				// TODO
+			}
 
 			return state_names;
 		}
@@ -700,7 +707,6 @@ namespace scone
 		{
 			auto osvalues = GetOsimModel().getStateValues( GetTkState() );
 			std::vector< Real > state_values( osvalues.size() );
-
 			for ( int i = 0; i < osvalues.size(); ++i )
 				state_values[ i ] = osvalues[ i ];
 
@@ -711,16 +717,6 @@ namespace scone
 		{
 			std::vector< double > state_vars_d = state_vars;
 			GetOsimModel().setStateValues( GetTkState(), &state_vars_d[ 0 ] );
-		}
-
-		Real Model_Simbody::GetStateVariable( const String& name ) const
-		{
-			return GetOsimModel().getStateVariable( GetTkState(), name );
-		}
-
-		void Model_Simbody::SetStateVariable( const String& name, Real value )
-		{
-			GetOsimModel().setStateVariable( GetTkState(), name, value );
 		}
 
 		void Model_Simbody::SetOpenSimParameters( const PropNode& props, opt::ParamSet& par )

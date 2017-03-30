@@ -297,5 +297,21 @@ namespace scone
 			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
 			return ToVec3( cf.getTorque() );
 		}
+
+		std::vector<scone::String> Body_Simbody::GetStateVariableNames()
+		{
+			return m_Model.GetOsimBodyForce( m_osBody.getIndex() ).GetStateVariableNames();
+		}
+
+		std::vector<scone::Real> Body_Simbody::GetStateValues() const
+		{
+			throw std::logic_error( "The method or operation is not implemented." );
+		}
+
+		void Body_Simbody::SetStateValues( const std::vector<Real>& values )
+		{
+			throw std::logic_error( "The method or operation is not implemented." );
+		}
+
 	}
 }

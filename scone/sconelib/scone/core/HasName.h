@@ -15,6 +15,14 @@ namespace scone
 		inline virtual ~HasName() {}
 	};
 
+	class SCONE_API HasState
+	{
+	public:
+		virtual std::vector< String > GetStateVariableNames() = 0;
+		virtual std::vector< Real > GetStateValues() const = 0;
+		virtual void SetStateValues( const std::vector< Real >& values ) = 0;
+	};
+
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{

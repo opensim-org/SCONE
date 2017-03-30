@@ -68,8 +68,6 @@ namespace scone
 			virtual std::vector< Real > GetStateValues() const override;
 			virtual void SetStateValues( const std::vector< Real >& values ) override;
 			virtual std::vector< String > GetStateVariableNames() const override;
-			Real GetStateVariable( const String& name ) const override;
-			virtual void SetStateVariable( const String& name, Real value ) override;
 
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
@@ -121,7 +119,6 @@ namespace scone
 			std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 			SimTK::State* m_pTkState; // non-owning state reference
 			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
-
 			std::vector< OpenSim::ConstantForce* > m_BodyForces;
 
 			friend ControllerDispatcher;

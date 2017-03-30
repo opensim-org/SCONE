@@ -2,14 +2,12 @@
 
 #include "OpenSim/Simulation/Model/Force.h"
 #include "OpenSim/Common/Property.h"
-#include "OpenSim/Common/Object.h"
 
 namespace OpenSim
 {
 	class ConstantForce : public Force
 	{
 		OpenSim_DECLARE_CONCRETE_OBJECT( ConstantForce, Force );
-
 	public:
 		OpenSim_DECLARE_OPTIONAL_PROPERTY( body, std::string,
 			"Name of Body to which this actuator is applied." );
@@ -33,17 +31,11 @@ namespace OpenSim
 		void setForceAtPoint( const SimTK::Vec3& force, const SimTK::Vec3& point );
 		void setTorque( const SimTK::Vec3& torque );
 
-		const SimTK::Vec3 getForce();
-		const SimTK::Vec3 getPoint();
-		const SimTK::Vec3 getTorque();
+		SimTK::Vec3& getForce() { return force_; }
+		SimTK::Vec3& getPoint() { return point_; }
+		SimTK::Vec3& getTorque() { return torque_; }
 
-		virtual SimTK::Vector computeStateVariableDerivatives( const SimTK::State& s ) const override;
-
-	protected:
-		virtual void addToSystem( SimTK::MultibodySystem& system ) const override;
-		virtual void connectToModel( Model& model ) override;
-		virtual void initStateFromProperties( SimTK::State& state ) const override;
-		virtual void setPropertiesFromState( const SimTK::State& state ) override;
+		const std::vector< std::string >& GetStateVariableNames() { return state_variable_names_; }
 
 	private:
 		void constructProperties();
@@ -56,6 +48,11 @@ namespace OpenSim
 			SimTK::Vector& mobilityForces ) const OVERRIDE_11;
 
 		//--------------------------------------------------------------------------
+		// Implement ModelComponent interface
+		//--------------------------------------------------------------------------
+		// Setup method to initialize Body reference
+		void connectToModel( Model& model ) OVERRIDE_11;
+
 		//--------------------------------------------------------------------------
 		// Implement Object interface.
 		//--------------------------------------------------------------------------
@@ -66,8 +63,6 @@ namespace OpenSim
 		SimTK::Vec3 force_;
 		SimTK::Vec3 point_;
 		SimTK::Vec3 torque_;
-
 		std::vector< std::string > state_variable_names_;
-
 	};
 }

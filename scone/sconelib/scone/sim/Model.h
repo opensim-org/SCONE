@@ -76,8 +76,6 @@ namespace scone
 			virtual std::vector< Real > GetStateValues() const = 0;
 			virtual void SetStateValues( const std::vector< Real >& values ) = 0;
 			virtual std::vector< String > GetStateVariableNames() const = 0;
-			virtual Real GetStateVariable( const String& name ) const = 0;
-			virtual void SetStateVariable( const String& name, Real value ) = 0;
 
 			/// Simulate model
 			virtual bool AdvanceSimulationTo( double time ) = 0;

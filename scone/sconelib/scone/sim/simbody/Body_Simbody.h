@@ -62,6 +62,10 @@ namespace scone
 			virtual Vec3 GetExternalForcePoint() const override;
 			virtual Vec3 GetExternalTorque() const override;
 
+			virtual std::vector<String> GetStateVariableNames() override;
+			virtual std::vector<Real> GetStateValues() const override;
+			virtual void SetStateValues( const std::vector<Real>& values ) override;
+
 		private:
 			Vec3 m_LocalComPos;
 			int m_ForceIndex;
