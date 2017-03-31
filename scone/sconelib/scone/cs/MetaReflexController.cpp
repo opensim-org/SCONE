@@ -52,7 +52,7 @@ namespace scone
 			}
 
 			// backup the current state
-			auto org_state = model.GetStateValues();
+			State org_state = model.GetState();
 
 			// reset all dofs to ensure consistency when there are unspecified dofs
 			for ( sim::DofUP& dof: model.GetDofs() )
@@ -87,7 +87,7 @@ namespace scone
 				mrm->UpdateMuscleControlParameters( true );
 
 			// restore original state
-			model.SetStateValues( org_state );
+			model.SetState( org_state, 0 );
 		}
 
 		MetaReflexController::~MetaReflexController()

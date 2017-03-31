@@ -35,9 +35,9 @@ public:
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
 
 public slots:
+	void runSimulation( const QString& filename );
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
-
 	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem ) {}
 	void start();
 	void stop();
@@ -50,6 +50,7 @@ public slots:
 	void fileExit();
 	void showViewer() { ui.tabWidget->setCurrentIndex( 0 ); }
 	void helpAbout() {}
+	void runScenario();
 	void optimizeScenario();
 	void optimizeScenarioMultiple();
 	void abortOptimizations();
@@ -69,6 +70,7 @@ public:
 	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
 
 private:
+	void evaluate();
 	void setTime( TimeInSeconds t );
 	QCodeEditor* getActiveScenario();
 	bool checkAndSaveScenario( QCodeEditor* s );
@@ -88,6 +90,8 @@ private:
 	TimeInSeconds capture_frequency;
 	TimeInSeconds evaluation_time_step;
 	flut::delta< scone::Vec3 > com_delta;
+
+	QString currentParFile;
 
 	std::vector< ProgressDockWidget* > optimizations;
 	std::vector< QCodeEditor* > scenarios;

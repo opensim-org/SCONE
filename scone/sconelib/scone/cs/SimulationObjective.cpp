@@ -31,7 +31,7 @@ namespace scone
 
 		double SimulationObjective::Evaluate()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			SCONE_ASSERT( m_Model && m_Measure );
 
 			// run the simulation

@@ -36,6 +36,7 @@ namespace bfs = boost::filesystem;
 
 #include <flut/timer.hpp>
 #include "flut/prop_node_tools.hpp"
+#include "PerturbationController.h"
 using flut::timer;
 
 namespace scone
@@ -59,6 +60,7 @@ namespace scone
 			sim::GetControllerFactory().Register< ReflexController >();
 			sim::GetControllerFactory().Register< TimeStateController >();
 			sim::GetControllerFactory().Register< MetaReflexController >();
+			sim::GetControllerFactory().Register< PerturbationController >();
 
 			// register reflexes
 			// TODO: make this not separate but use controller factory instead?
@@ -84,7 +86,7 @@ namespace scone
 			GetFunctionFactory().Register< Polynomial >();
 		}
 
-		PropNode SCONE_API RunSimulation( const String& par_file, bool write_results )
+		PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
 		{
 			// create the simulation objective object
 			cs::SimulationObjectiveUP so = CreateSimulationObjective( par_file );
@@ -111,21 +113,35 @@ namespace scone
 
 			// write results
 			if ( write_results )
-				so->WriteResults( bfs::path( par_file ).replace_extension().string() );
+				so->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
 
 			return statistics;
 		}
 
-		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const String& par_file )
+		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename )
 		{
-			opt::ParamSet par( par_file );
-			bfs::path config_path = bfs::path( par_file ).parent_path() / "config.xml";
+			opt::ParamSet par;
+			bfs::path config_path;
+			if ( filename.extension() == "par" )
+			{
+				par.Read( filename );
+				config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
+			}
+			else config_path = filename.str();
 			if ( config_path.has_parent_path() )
 				bfs::current_path( config_path.parent_path() );
 
 			// read properties
-			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;
+			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
 			PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
+
+			// load init parameters if we just load a config file
+			if ( filename.extension() == "xml" || filename.extension() == "scenario" )
+			{
+				auto& optProp = configProp.get_child( "Optimizer" );
+				if ( optProp.get< bool >( "use_init_file" ) )
+					par.Read( optProp.get< path >( "init_file" ) );
+			}
 
 			// create SimulationObjective object
 			cs::SimulationObjectiveUP so = dynamic_unique_cast< cs::SimulationObjective >( opt::CreateObjective( objProp, par ) );

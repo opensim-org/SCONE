@@ -33,6 +33,8 @@ set(CORE_TOOLS_FILES
 	scone/core/StorageIo.h
 	scone/core/StorageIo.cpp
 	scone/core/StringMap.h
+	scone/core/State.cpp
+	scone/core/State.h
 	scone/core/system_tools.cpp
 	scone/core/system_tools.h
 	scone/core/string_tools.cpp
@@ -215,6 +217,8 @@ set(SIMBODY_MODELCOMPONENTS_FILES
     scone/sim/simbody/Muscle_Simbody.h
     scone/sim/simbody/Simulation_Simbody.cpp
     scone/sim/simbody/Simulation_Simbody.h
+    scone/sim/simbody/ConstantForce.cpp
+    scone/sim/simbody/ConstantForce.h
     )
 set(SIMBODY_SYSTEM_FILES
     scone/sim/simbody/sim_simbody.cpp

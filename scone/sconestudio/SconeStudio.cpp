@@ -17,6 +17,7 @@
 #include "qcustomplot.h"
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
+#include "scone/core/Profiler.h"
 
 using namespace scone;
 using namespace std;
@@ -32,15 +33,16 @@ captureProcess( nullptr )
 {
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
+	ui.stackedWidget->setCurrentIndex( 0 );
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
 
 	// create window menu
-	auto* actionMenu = menuBar()->addMenu( "&Analyze" );
-	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
-	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8 );
-	addMenuAction( actionMenu, "&Toggle Play", ui.playControl, &QPlayControl::toggle, Qt::Key_Space, true );
+	auto* actionMenu = menuBar()->addMenu( "&Action" );
+	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
+	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
 	createHelpMenu();
@@ -61,8 +63,6 @@ captureProcess( nullptr )
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
-	flut::log::debug( "Initializing results window" );
-
 	// init file model and browser widget
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
@@ -72,11 +72,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	flut::log::debug( "Initializing viewer window" );
 	ui.osgViewer->setScene( manager.GetOsgRoot() );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
-	flut::log::debug( "Initializing play control widget" );
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
@@ -88,7 +86,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( analysisView, &QDataAnalysisView::timeChanged, ui.playControl, &QPlayControl::setTime );
 
 	// start timer for viewer
-	flut::log::debug( "Creating background timers" );
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 1000 );
 
@@ -113,18 +110,26 @@ SconeStudio::~SconeStudio()
 {
 }
 
-void SconeStudio::activateBrowserItem( QModelIndex idx )
+void SconeStudio::runSimulation( const QString& filename )
 {
 	try
 	{
 		showViewer();
-		String filename = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath().toStdString();
-		manager.CreateModel( filename );
+		ui.playControl->stop();
+		ui.playControl->reset();
+		manager.CreateModel( filename.toStdString() );
+		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
 
+		if ( manager.IsEvaluating() )
+		{
+			ui.playControl->setDisabled( true );
+			evaluate();
+		}
+
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->setDisabled( manager.IsEvaluating() );
+		ui.playControl->setDisabled( false );
 		ui.playControl->reset();
 		ui.playControl->play();
 	}
@@ -132,6 +137,13 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
+
+}
+
+void SconeStudio::activateBrowserItem( QModelIndex idx )
+{
+	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+	runSimulation( currentParFile );
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
@@ -165,8 +177,38 @@ void SconeStudio::refreshAnalysis()
 	analysisView->refresh( current_time );
 }
 
+void SconeStudio::evaluate()
+{
+	ui.abortButton->setChecked( false );
+	ui.progressBar->setValue( 0 );
+	ui.stackedWidget->setCurrentIndex( 1 );
+	ui.progressBar->setTextVisible( true );
+
+	SCONE_PROFILE_RESET;
+	const double step_size = 0.2;
+	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
+	{
+		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		QApplication::processEvents();
+		if ( ui.abortButton->isChecked() )
+		{
+			manager.GetModel().FinalizeEvaluation( false );
+			ui.stackedWidget->setCurrentIndex( 0 );
+			return;
+		}
+		setTime( t );
+	}
+	ui.progressBar->setValue( 100 );
+	manager.Update( manager.GetMaxTime() );
+	ui.stackedWidget->setCurrentIndex( 0 );
+
+	log::info( SCONE_PROFILE_REPORT );
+}
+
 void SconeStudio::setTime( TimeInSeconds t )
 {
+	SCONE_PROFILE_FUNCTION;
+
 	if ( !manager.HasModel() )
 		return;
 
@@ -174,7 +216,6 @@ void SconeStudio::setTime( TimeInSeconds t )
 	current_time = t;
 
 	// update ui and visualization
-	bool is_evaluating = manager.IsEvaluating();
 	manager.Update( t );
 
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
@@ -184,15 +225,6 @@ void SconeStudio::setTime( TimeInSeconds t )
 	// update graph (if visible)
 	if ( analysisView->isVisible() )
 		analysisView->refresh( current_time, false );
-
-	// check if the evaluation has just finished
-	if ( is_evaluating && !manager.IsEvaluating() )
-	{
-		ui.playControl->setEnabled( true );
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->reset();
-		ui.playControl->play();
-	}
 }
 
 void SconeStudio::fileOpen()
@@ -304,6 +336,12 @@ void SconeStudio::optimizeScenario()
 		addProgressDock( pdw );
 		updateOptimizations();
 	}
+}
+
+void SconeStudio::runScenario()
+{
+	if ( checkAndSaveScenario( getActiveScenario() ) )
+		runSimulation( getActiveScenario()->fileName );
 }
 
 void SconeStudio::optimizeScenarioMultiple()

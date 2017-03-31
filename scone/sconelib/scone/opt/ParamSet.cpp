@@ -11,7 +11,7 @@ namespace scone
 {
 	namespace opt
 	{
-		ParamSet::ParamSet( const String& filename ) : m_Mode( ConstructionMode )
+		ParamSet::ParamSet( const path& filename ) : m_Mode( ConstructionMode )
 		{
 			Read( filename );
 		}
@@ -129,18 +129,18 @@ namespace scone
 			}
 		}
 
-		void ParamSet::Write( const String& filename ) const
+		void ParamSet::Write( const path& filename ) const
 		{
-			std::ofstream ofstr( filename );
-			SCONE_THROW_IF( !ofstr.good(), "Error opening file: " + filename );
+			std::ofstream ofstr( filename.str() );
+			SCONE_THROW_IF( !ofstr.good(), "Error opening file: " + filename.str() );
 			ToStream( ofstr );
 		}
 
-		void ParamSet::Read( const String& filename )
+		void ParamSet::Read( const path& filename )
 		{
-			log::Debug( "Reading " + quoted( filename ) );
-			std::ifstream ifstr( filename );
-			SCONE_THROW_IF( !ifstr.good(), "Error opening file: " + filename );
+			log::Debug( "Reading " + quoted( filename.str() ) );
+			std::ifstream ifstr( filename.str() );
+			SCONE_THROW_IF( !ifstr.good(), "Error opening file: " + filename.str() );
 			FromStream( ifstr, true );
 		}
 

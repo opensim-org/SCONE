@@ -10,14 +10,14 @@
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
 
-#include <thread>
-#include <mutex>
+#include "scone/core/Profiler.h"
+#include "boost/token_functions.hpp"
 
 namespace bfs = boost::filesystem;
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene &s, const String& par_file ) :
+	StudioModel::StudioModel( vis::scene &s, const path& file ) :
 	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
@@ -26,17 +26,14 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file
-		so = cs::CreateSimulationObjective( par_file );
+		so = cs::CreateSimulationObjective( file );
 
 		// accept filename and clear data
-		filename = par_file;
-
-		// initialize visualization
-		InitVis( s );
+		filename = file;
 
 		// see if we can load a matching .sto file
-		auto sto_file = bfs::path( filename ).replace_extension( "sto" );
-		if ( bfs::exists( sto_file ) )
+		auto sto_file = bfs::path( file.str() ).replace_extension( "sto" );
+		if ( bfs::exists( sto_file ) && filename.extension() == "par" )
 		{
 			flut::timer t;
 			log::info( "Reading ", sto_file.string() );
@@ -46,22 +43,22 @@ namespace scone
 		}
 		else
 		{
-			// start evaluation in separate thread
+			// start evaluation
 			is_evaluating = true;
 			so->GetModel().SetStoreData( true );
 			so->GetModel().SetSimulationEndTime( so->max_duration );
 			log::info( "Starting simulation" );
-			//eval_thread = std::thread( &StudioModel::EvaluateObjective, this );
+			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
+
+		InitVis( s );
+		UpdateVis( 0 );
 	}
 
 	StudioModel::~StudioModel()
 	{
 		if ( is_evaluating )
 			log::warning( "Closing model while thread is still running" );
-
-		if ( eval_thread.joinable() )
-			eval_thread.join();
 	}
 
 
@@ -70,10 +67,6 @@ namespace scone
 		sim::Model& model = so->GetModel();
 
 		scone_scene.attach( root );
-
-		std::unique_lock< std::mutex > lock( model.GetSimulationMutex(), std::defer_lock );
-		if ( is_evaluating ) lock.lock();
-		//com = s.add_sphere( 0.1f, vis::make_red(), 0.9f );
 
 		flut::timer t;
 		for ( auto& body : model.GetBodies() )
@@ -86,6 +79,7 @@ namespace scone
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ).str() ) );
 				body_meshes.back().back().set_material( bone_mat );
+				body_centers.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 			}
 		}
 		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
@@ -99,12 +93,6 @@ namespace scone
 			vispath.set_material( vismat );
 			muscles.push_back( std::make_pair( vispath, vismat ) );
 		}
-
-		for ( Index i = 0; i < model.GetLegCount(); ++i )
-		{
-			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
-			forces.back().set_material( arrow_mat );
-		}
 	}
 
 	void StudioModel::InitStateDataIndices()
@@ -112,30 +100,31 @@ namespace scone
 		// setup state_data_index (lazy init)
 		SCONE_ASSERT( state_data_index.empty() );
 
-		auto state_names = so->GetModel().GetStateVariableNames();
-		state_data_index.resize( state_names.size() );
+		model_state = so->GetModel().GetState();
+		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
-			auto data_idx = data.GetChannelIndex( state_names[state_idx] );
-			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[state_idx] );
-			state_data_index[state_idx] = data_idx;
+			auto data_idx = data.GetChannelIndex( model_state.GetName( state_idx ) );
+			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
+			state_data_index[ state_idx ] = data_idx;
 		}
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
+		SCONE_PROFILE_FUNCTION;
+
+		// initialize visualization
 		sim::Model& model = so->GetModel();
 		std::unique_lock< std::mutex > simulation_lock( model.GetSimulationMutex(), std::defer_lock );
 
 		if ( !is_evaluating )
 		{
 			// update model state from data
-			std::unique_lock< std::mutex > data_lock( GetDataMutex() );
 			SCONE_ASSERT( !state_data_index.empty() );
-			std::vector< Real > state( state_data_index.size() );
-			for ( Index i = 0; i < state.size(); ++i )
-				state[i] = data.GetInterpolatedValue( time, state_data_index[i] );
-			model.SetStateValues( state );
+			for ( Index i = 0; i < model_state.GetSize(); ++i )
+				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
+			model.SetState( model_state, time );
 		}
 
 		// update com
@@ -145,9 +134,13 @@ namespace scone
 		auto& model_bodies = model.GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
+			vis::transformf trans( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
+
 			auto bp = model_bodies[ i ]->GetOriginPos();
 			for ( auto& bm : body_meshes[ i ] )
-				bm.pos_ori( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
+				bm.transform( trans );
+
+			body_centers[ i ].transform( trans );
 		}
 
 		// update muscle paths
@@ -162,15 +155,36 @@ namespace scone
 			muscles[ i ].second.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
 		}
 
-		// update GRF
+		// update forces
+		Index force_idx = 0;
 		for ( Index i = 0; i < model.GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
 			model.GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
-			forces[i].show( force.y > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() );
-			forces[i].pos( cop, cop + 0.001 * force );
+			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
+				UpdateForceVis( force_idx++, cop, force );
 		}
+
+		for ( auto& b : model.GetBodies() )
+		{
+			auto f = b->GetExternalForce();
+			if ( !f.is_null() )
+				UpdateForceVis( force_idx++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), f );
+		}
+
+		if ( force_idx < forces.size() )
+			forces.resize( force_idx );
+	}
+
+	void StudioModel::UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force )
+	{
+		while ( forces.size() <= force_idx )
+		{
+			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
+			forces.back().set_material( arrow_mat );
+		}
+		forces[ force_idx ].pos( cop, cop + 0.001 * force );
 	}
 
 	void StudioModel::EvaluateObjective()
@@ -182,10 +196,9 @@ namespace scone
 		PropNode results;
 		results.set( "result", so->GetMeasure().GetReport() );
 		log::info( results );
-		so->WriteResults( flut::get_filename_without_ext( filename ) );
+		so->WriteResults( path( filename ).replace_extension().str() );
 
 		// copy data
-		std::lock_guard< std::mutex > lock( GetDataMutex() );
 		data = so->GetModel().GetData();
 		InitStateDataIndices();
 
@@ -195,26 +208,32 @@ namespace scone
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
+		SCONE_PROFILE_FUNCTION;
 		so->GetModel().AdvanceSimulationTo( t );
 
 		if ( so->GetModel().GetTerminationRequest() || t >= so->GetModel().GetSimulationEndTime() )
+			FinalizeEvaluation( true );
+	}
+
+	void StudioModel::FinalizeEvaluation( bool output_results )
+	{
+		SCONE_PROFILE_FUNCTION;
+		if ( output_results )
 		{
 			so->GetMeasure().GetResult( so->GetModel() );
 			PropNode results;
-			results.push_back( "result", so->GetMeasure().GetReport( ) );
-			so->WriteResults( flut::get_filename_without_ext( filename ) );
-
-			log::info( "Results written to ", flut::get_filename_without_ext( filename ) + ".sto" );
+			results.push_back( "result", so->GetMeasure().GetReport() );
+			so->WriteResults( path( filename ).replace_extension().str() );
+			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );
-
-			// copy data and init data
-			std::lock_guard< std::mutex > lock( GetDataMutex() );
-			data = so->GetModel().GetData();
-			InitStateDataIndices();
-
-			// reset this stuff
-			is_evaluating = false;
 		}
+
+		// copy data and init data
+		data = so->GetModel().GetData();
+		InitStateDataIndices();
+
+		// reset this stuff
+		is_evaluating = false;
 	}
 
 	void StudioModel::SetViewSetting( ViewSettings e, bool value )

@@ -79,7 +79,7 @@ namespace scone
 
 		sim::Controller::UpdateResult FeedForwardController::UpdateControls( sim::Model& model, double time )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// evaluate functions
 			std::vector< double > funcresults( m_Functions.size() );

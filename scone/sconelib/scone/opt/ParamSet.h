@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
+#include "scone/core/system_tools.h"
 #include "ParamInfo.h"
 #include <vector>
 #include <map>
@@ -26,7 +27,7 @@ namespace scone
 		public:
 			enum Mode { ConstructionMode, UpdateMode };
 			ParamSet( Mode m = ConstructionMode ) : m_Mode( m ) { };
-			ParamSet( const String& filename );
+			ParamSet( const path& filename );
 			virtual ~ParamSet() { };
 
 			double Get( const ParamInfo& info );
@@ -66,8 +67,8 @@ namespace scone
 			void SetMode( Mode m ) { m_Mode = m; }
 			bool IsInConstructionMode() { return m_Mode == ConstructionMode; }
 
-			void Write( const String& filename ) const;
-			void Read( const String& filename );
+			void Write( const path& filename ) const;
+			void Read( const path& filename );
 
 			std::ostream& ToStream( std::ostream& str ) const;
 			std::istream& FromStream( std::istream& str, bool log_results = false );

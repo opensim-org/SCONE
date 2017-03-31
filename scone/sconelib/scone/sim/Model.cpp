@@ -12,6 +12,8 @@
 
 #include "SensorDelayAdapter.h"
 #include "Factories.h"
+#include "../core/State.h"
+#include "../core/State.h"
 
 using std::endl;
 
@@ -90,7 +92,7 @@ namespace scone
 
 		void Model::UpdateSensorDelayAdapters()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			//SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 			SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
@@ -114,14 +116,11 @@ namespace scone
 
 		void Model::StoreData( Storage< Real >::Frame& frame )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// store states
-			auto state_values = GetStateValues();
-			auto state_names = GetStateVariableNames();
-
-			for ( size_t i = 0; i < state_values.size(); ++i )
-				frame[ state_names[ i ] ] = state_values[ i ];
+			for ( size_t i = 0; i < GetState().GetSize(); ++i )
+				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
 
 			// store muscle data
 			for ( MuscleUP& m : GetMuscles() )
@@ -154,6 +153,25 @@ namespace scone
 			for ( auto& joint : GetJoints() )
 				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
 
+			// store external forces (should be part of state)
+			//for ( auto& b : GetBodies() )
+			//{
+			//	auto f = b->GetExternalForce();
+			//	frame[ b->GetName() + ".force_x" ] = f.x;
+			//	frame[ b->GetName() + ".force_y" ] = f.y;
+			//	frame[ b->GetName() + ".force_z" ] = f.z;
+
+			//	auto p = b->GetExternalForcePoint();
+			//	frame[ b->GetName() + ".force_point_x" ] = p.x;
+			//	frame[ b->GetName() + ".force_point_y" ] = p.y;
+			//	frame[ b->GetName() + ".force_point_z" ] = p.z;
+
+			//	auto t = b->GetExternalTorque();
+			//	frame[ b->GetName() + ".torque_x" ] = t.x;
+			//	frame[ b->GetName() + ".torque_y" ] = t.y;
+			//	frame[ b->GetName() + ".torque_z" ] = t.z;
+			//}
+
 			// store all force data (measured in BW)
 			//for ( auto& body : GetBodies() )
 			//{
@@ -171,7 +189,7 @@ namespace scone
 
 		void Model::UpdateControlValues()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// reset actuator values
 			// TODO: not only muscles!
@@ -191,7 +209,7 @@ namespace scone
 
 		void Model::UpdateAnalyses()
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			bool terminate = false;
 			for ( ControllerUP& con: GetControllers() )

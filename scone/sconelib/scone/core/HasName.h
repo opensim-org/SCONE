@@ -5,6 +5,7 @@
 #include "Exception.h"
 #include <algorithm>
 #include <vector>
+#include "State.h"
 
 namespace scone
 {

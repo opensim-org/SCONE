@@ -64,8 +64,8 @@ if(${Qt5Widgets_FOUND})
 	include( PrecompiledHeaders )
 	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 	
-	
 	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
+	target_compile_definitions(sconestudio PRIVATE QTFX_USE_QCUSTOMPLOT)
 
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	

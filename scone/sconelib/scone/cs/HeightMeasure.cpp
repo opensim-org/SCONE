@@ -36,7 +36,7 @@ namespace scone
 
 		sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			double pos = m_pTargetBody ? m_pTargetBody->GetComPos()[1] : model.GetComPos()[1];
 			double vel = m_pTargetBody ? m_pTargetBody->GetComVel()[1] : model.GetComVel()[1];

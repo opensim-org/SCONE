@@ -2,6 +2,7 @@
 #include "scone/core/Exception.h"
 
 #include <OpenSim/OpenSim.h>
+#include <OpenSim/Actuators/PointActuator.h>
 #include "Model_Simbody.h"
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
@@ -19,6 +20,9 @@ namespace scone
 		m_LastNumDynamicsRealizations( -1 )
 		{
 			ConnectContactForce( body.getName() );
+			SimTK::Vec3 com;
+			m_osBody.getMassCenter( com );
+			m_LocalComPos = ToVec3( com );
 		}
 
 		const String& Body_Simbody::GetName() const
@@ -28,7 +32,7 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetOriginPos() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
@@ -41,12 +45,11 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetComPos() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 			// TODO: OSIM: find what is the most efficient (compare to linvel)
-			SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 			SimTK::Vec3 com;
 			SimTK::Vec3 point;
 
@@ -54,6 +57,11 @@ namespace scone
 			m_osBody.getMassCenter( com );
 			m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
 			return ToVec3( point );
+		}
+
+		scone::Vec3 Body_Simbody::GetLocalComPos() const
+		{
+			return m_LocalComPos;
 		}
 
 		scone::Quat scone::sim::Body_Simbody::GetOrientation() const
@@ -85,7 +93,7 @@ namespace scone
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetComVel() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
@@ -102,7 +110,7 @@ namespace scone
 
 		scone::Vec3 scone::sim::Body_Simbody::GetOriginVel() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
@@ -114,7 +122,7 @@ namespace scone
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetAngVel() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
@@ -136,7 +144,7 @@ namespace scone
 
         scone::Vec3 scone::sim::Body_Simbody::GetComAcc() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
@@ -153,7 +161,7 @@ namespace scone
 
         scone::Vec3 scone::sim::Body_Simbody::GetOriginAcc() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
@@ -165,7 +173,7 @@ namespace scone
 		
 		scone::Vec3 scone::sim::Body_Simbody::GetAngAcc() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 
 			// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
@@ -186,7 +194,7 @@ namespace scone
 
 		Vec3 Body_Simbody::GetContactForce() const
 		{
-			SCONE_PROFILE_SCOPE;
+			SCONE_PROFILE_FUNCTION;
 			if ( m_ForceIndex != -1 )
 			{
 				const auto& f = GetContactForceValues();
@@ -253,6 +261,41 @@ namespace scone
 				}
 			}
 			return m_ContactForceValues;
+		}
+
+		void Body_Simbody::SetExternalForce( const Vec3& f )
+		{
+			SetExternalForceAtPoint( f, m_LocalComPos );
+		}
+
+		void Body_Simbody::SetExternalForceAtPoint( const Vec3& force, const Vec3& point )
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			cf.setForceAtPoint( make_osim( force ),	make_osim( point ) );
+		}
+
+		void Body_Simbody::SetExternalTorque( const Vec3& torque )
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			cf.setTorque( make_osim( torque ) );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalForce() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getForce() );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalForcePoint() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getPoint() );
+		}
+
+		scone::Vec3 Body_Simbody::GetExternalTorque() const
+		{
+			auto& cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() );
+			return ToVec3( cf.getTorque() );
 		}
 	}
 }
