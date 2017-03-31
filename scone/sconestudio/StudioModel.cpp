@@ -79,7 +79,7 @@ namespace scone
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ).str() ) );
 				body_meshes.back().back().set_material( bone_mat );
-				body_centers.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+				body_axes.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 			}
 		}
 		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
@@ -93,6 +93,8 @@ namespace scone
 			vispath.set_material( vismat );
 			muscles.push_back( std::make_pair( vispath, vismat ) );
 		}
+
+		ApplyViewSettings( view_flags );
 	}
 
 	void StudioModel::InitStateDataIndices()
@@ -140,7 +142,7 @@ namespace scone
 			for ( auto& bm : body_meshes[ i ] )
 				bm.transform( trans );
 
-			body_centers[ i ].transform( trans );
+			body_axes[ i ].transform( trans );
 		}
 
 		// update muscle paths
@@ -183,6 +185,7 @@ namespace scone
 		{
 			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
 			forces.back().set_material( arrow_mat );
+			forces.back().show( view_flags.get< ShowForces >() );
 		}
 		forces[ force_idx ].pos( cop, cop + 0.001 * force );
 	}
@@ -243,18 +246,30 @@ namespace scone
 		switch ( e )
 		{
 		case scone::StudioModel::ShowForces:
-			for ( auto f : forces ) f.show( value );
+			for ( auto& f : forces ) f.show( value );
 			break;
 		case scone::StudioModel::ShowMuscles:
-			for ( auto m : muscles ) m.first.show( value );
+			for ( auto& m : muscles ) m.first.show( value );
 			break;
 		case scone::StudioModel::ShowGeometry:
-			for ( auto e : body_meshes ) for ( auto m : e ) m.show( value );
+			for ( auto& e : body_meshes ) for ( auto m : e ) m.show( value );
+			break;
+		case scone::StudioModel::ShowAxes:
+			for ( auto& e : body_axes ) e.show( value );
 			break;
 		case scone::StudioModel::EnableShadows:
 			break;
 		default:
 			break;
 		}
+	}
+
+	void StudioModel::ApplyViewSettings( const ViewFlags& flags )
+	{
+		view_flags = flags;
+		for ( auto& f : forces ) f.show( view_flags.get< ShowForces >() );
+		for ( auto& m : muscles ) m.first.show( view_flags.get< ShowMuscles >() );
+		for ( auto& e : body_meshes ) for ( auto m : e ) m.show( view_flags.get< ShowGeometry >() );
+		for ( auto& e : body_axes ) e.show( view_flags.get< ShowAxes >() );
 	}
 }

@@ -20,7 +20,7 @@ namespace scone
 	class StudioModel
 	{
 	public:
-		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows };
+		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows, ShowAxes };
 		typedef flut::flag_set< ViewSettings > ViewFlags;
  
 		StudioModel( vis::scene &s, const path& filename );
@@ -40,8 +40,8 @@ namespace scone
 
 		bool IsEvaluating() { return is_evaluating; }
 
-		void SetViewFlags( const ViewFlags& f ) { view_flags = f; }
 		void SetViewSetting( ViewSettings e, bool value );
+		void ApplyViewSettings( const ViewFlags& f );
 
 	private:
 		void InitVis( vis::scene& s );
@@ -66,7 +66,7 @@ namespace scone
 		std::vector< vis::mesh > joints;
 		std::vector< std::pair< vis::trail, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
-		std::vector< vis::axes > body_centers;
+		std::vector< vis::axes > body_axes;
 		vis::mesh com;
 		void InitStateDataIndices();
 	};

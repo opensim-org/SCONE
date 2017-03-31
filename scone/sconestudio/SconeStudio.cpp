@@ -118,6 +118,7 @@ void SconeStudio::runSimulation( const QString& filename )
 		ui.playControl->stop();
 		ui.playControl->reset();
 		manager.CreateModel( filename.toStdString() );
+		updateViewSettings();
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
@@ -440,9 +441,12 @@ void SconeStudio::updateViewSettings()
 {
 	if ( manager.HasModel() )
 	{
-		manager.GetModel().SetViewSetting( scone::StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
-		manager.GetModel().SetViewSetting( scone::StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
-		manager.GetModel().SetViewSetting( scone::StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+		StudioModel::ViewFlags f;
+		f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
+		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
+		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
+		manager.GetModel().ApplyViewSettings( f );
 	}
 }
 
