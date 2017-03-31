@@ -67,7 +67,6 @@ if(${Qt5Widgets_FOUND})
 	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 	target_compile_definitions(sconestudio PRIVATE QTFX_USE_QCUSTOMPLOT)
 
-
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
 	set_target_properties(sconestudio PROPERTIES
