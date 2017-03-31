@@ -170,7 +170,7 @@ namespace scone
 		{
 			auto f = b->GetExternalForce();
 			if ( !f.is_null() )
-				UpdateForceVis( force_idx++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), b->GetOrientation() * f );
+				UpdateForceVis( force_idx++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), f );
 		}
 
 		if ( force_idx < forces.size() )

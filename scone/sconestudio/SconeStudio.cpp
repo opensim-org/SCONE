@@ -216,7 +216,6 @@ void SconeStudio::setTime( TimeInSeconds t )
 	current_time = t;
 
 	// update ui and visualization
-	//bool is_evaluating = manager.IsEvaluating();
 	manager.Update( t );
 
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );

@@ -49,7 +49,7 @@ namespace OpenSim
 	{
 		constructProperty_body();
 		constructProperty_point_is_global( false );
-		constructProperty_force_is_global( false );
+		constructProperty_force_is_global( true );
 		constructProperty_torque_is_global( false );
 	}
 

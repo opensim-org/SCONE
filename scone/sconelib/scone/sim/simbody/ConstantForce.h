@@ -14,7 +14,7 @@ namespace OpenSim
 		OpenSim_DECLARE_PROPERTY( point_is_global, bool,
 			"Interpret point in Ground frame if true; otherwise, body frame (default=false)" );
 		OpenSim_DECLARE_PROPERTY( force_is_global, bool,
-			"Interpret direction in Ground frame if true; otherwise, body frame (default=false)" );
+			"Interpret direction in Ground frame if true; otherwise, body frame (default=true)" );
 		OpenSim_DECLARE_PROPERTY( torque_is_global, bool,
 			"Interpret direction in Ground frame if true; otherwise, body frame (default=false)" );
 
