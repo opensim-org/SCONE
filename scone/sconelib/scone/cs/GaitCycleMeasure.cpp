@@ -10,8 +10,7 @@ namespace scone
 		{
 			INIT_PROPERTY( props, use_half_cycle, false );
 
-			m_InitState = model.GetStateValues();
-			m_StateNames = model.GetStateVariableNames();
+			m_InitState = model.GetState();
 		}
 
 		GaitCycleMeasure::~GaitCycleMeasure()
@@ -20,15 +19,15 @@ namespace scone
 
 		double GaitCycleMeasure::GetResult( sim::Model& model )
 		{
-			return GetStateSimilarity( model.GetStateValues() );
+			return GetStateSimilarity( model.GetState() );
 		}
 
-		Real GaitCycleMeasure::GetStateSimilarity( const std::vector< Real >& state )
+		Real GaitCycleMeasure::GetStateSimilarity( const State& state )
 		{
 			Real total_diff = 0.0;
-			for ( size_t idx = 0; idx < m_InitState.size(); ++idx )
+			for ( size_t idx = 0; idx < m_InitState.GetSize(); ++idx )
 			{
-				String& name = m_StateNames[ idx ];
+				auto& name = m_InitState.GetName( idx );
 
 				// skip forward translation
 				if ( name.rfind( "_tx" ) == name.size() - 3 )
@@ -38,7 +37,7 @@ namespace scone
 				if ( use_half_cycle )
 				{
 					auto trg = GetMirroredStateNameAndSign( name );
-					Index trg_idx = FindIndex( m_StateNames, trg.first );
+					Index trg_idx = FindIndex( state.GetNames(), trg.first );
 					SCONE_ASSERT( trg_idx != NoIndex ); // make sure the target state name exists
 					diff = abs( m_InitState[ idx ] - trg.second * state[ trg_idx ] );
 				}

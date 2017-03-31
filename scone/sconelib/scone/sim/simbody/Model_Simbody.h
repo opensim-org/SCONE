@@ -64,11 +64,6 @@ namespace scone
 			virtual int GetIntegrationStep() const override;
 			virtual int GetPreviousIntegrationStep() const override;
 
-			/// State access
-			virtual std::vector< Real > GetStateValues() const override;
-			virtual void SetStateValues( const std::vector< Real >& values ) override;
-			virtual std::vector< String > GetStateVariableNames() const override;
-
 			/// Get the OpenSim model attached to this model
 			OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
 			const OpenSim::Model& GetOsimModel() const { return *m_pOsimModel; }
@@ -87,19 +82,25 @@ namespace scone
 
 			OpenSim::ConstantForce& GetOsimBodyForce( int idx ) { return *m_BodyForces.at( idx ); }
 
+			virtual const State& GetState() const override { return m_State; }
+			virtual State& GetState() override { return m_State; }
+			virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
+
 		protected:
 			virtual String GetClassSignature() const override;
 
 		private:
+			void SetTkState( const State& s );
+			void InitStateFromTk();
+			void CopyStateFromTk();
+			void CopyStateToTk();
+			void ReadState( const String& file );
+			void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
+
 			void SetOpenSimParameters( const PropNode& name, opt::ParamSet& par );
 			void CreateModelWrappers();
 			LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 			void ClearBodyForces();
-
-			std::map< String, Real > ReadState( const String& file );
-			std::map< String, Real > GetStateVariables();
-			void SetStateVariables( const std::map< String, Real >& state );
-			void FixState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
 			virtual void SetStoreData( bool store ) override;
 
@@ -120,6 +121,7 @@ namespace scone
 			SimTK::State* m_pTkState; // non-owning state reference
 			OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
 			std::vector< OpenSim::ConstantForce* > m_BodyForces;
+			State m_State; // model state
 
 			friend ControllerDispatcher;
 			ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model

@@ -12,6 +12,8 @@
 
 #include "SensorDelayAdapter.h"
 #include "Factories.h"
+#include "../core/State.h"
+#include "../core/State.h"
 
 using std::endl;
 
@@ -117,11 +119,8 @@ namespace scone
 			SCONE_PROFILE_FUNCTION;
 
 			// store states
-			auto state_values = GetStateValues();
-			auto state_names = GetStateVariableNames();
-
-			for ( size_t i = 0; i < state_values.size(); ++i )
-				frame[ state_names[ i ] ] = state_values[ i ];
+			for ( size_t i = 0; i < GetState().GetSize(); ++i )
+				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
 
 			// store muscle data
 			for ( MuscleUP& m : GetMuscles() )

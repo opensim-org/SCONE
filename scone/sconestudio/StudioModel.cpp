@@ -11,6 +11,7 @@
 #include "flut/timer.hpp"
 
 #include "scone/core/Profiler.h"
+#include "boost/token_functions.hpp"
 
 namespace bfs = boost::filesystem;
 
@@ -99,13 +100,13 @@ namespace scone
 		// setup state_data_index (lazy init)
 		SCONE_ASSERT( state_data_index.empty() );
 
-		auto state_names = so->GetModel().GetStateVariableNames();
-		state_data_index.resize( state_names.size() );
+		model_state = so->GetModel().GetState();
+		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
-			auto data_idx = data.GetChannelIndex( state_names[state_idx] );
-			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + state_names[state_idx] );
-			state_data_index[state_idx] = data_idx;
+			auto data_idx = data.GetChannelIndex( model_state.GetName( state_idx ) );
+			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
+			state_data_index[ state_idx ] = data_idx;
 		}
 	}
 
@@ -121,10 +122,9 @@ namespace scone
 		{
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
-			std::vector< Real > state( state_data_index.size() );
-			for ( Index i = 0; i < state.size(); ++i )
-				state[i] = data.GetInterpolatedValue( time, state_data_index[i] );
-			model.SetStateValues( state );
+			for ( Index i = 0; i < model_state.GetSize(); ++i )
+				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
+			model.SetState( model_state, time );
 		}
 
 		// update com

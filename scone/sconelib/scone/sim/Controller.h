@@ -4,6 +4,7 @@
 #include "scone/opt/opt_fwd.h"
 #include "scone/core/HasSignature.h"
 #include "scone/core/HasData.h"
+#include "scone/core/State.h"
 
 namespace scone
 {

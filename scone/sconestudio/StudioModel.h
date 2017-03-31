@@ -11,6 +11,7 @@
 
 #include "SconeStorageDataModel.h"
 #include "simvis/axes.h"
+#include "scone/core/State.h"
 
 namespace scone
 {
@@ -52,6 +53,7 @@ namespace scone
 		ViewFlags view_flags;
 
 		std::vector< size_t > state_data_index;
+		scone::State model_state;
 
 		vis::material bone_mat;
 		vis::material arrow_mat;

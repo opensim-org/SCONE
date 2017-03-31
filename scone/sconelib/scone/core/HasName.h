@@ -5,6 +5,7 @@
 #include "Exception.h"
 #include <algorithm>
 #include <vector>
+#include "State.h"
 
 namespace scone
 {
@@ -13,14 +14,6 @@ namespace scone
 	public:
 		virtual const String& GetName() const = 0;
 		inline virtual ~HasName() {}
-	};
-
-	class SCONE_API HasState
-	{
-	public:
-		virtual std::vector< String > GetStateVariableNames() = 0;
-		virtual std::vector< Real > GetStateValues() const = 0;
-		virtual void SetStateValues( const std::vector< Real >& values ) = 0;
 	};
 
 	template< typename T >

@@ -163,28 +163,29 @@ namespace scone
 			m_pTkIntegrator->resetAllStatistics();
 
 			// read initial state
-			std::map< String, Real > state;
+			InitStateFromTk();
 			if ( !state_init_file.empty() )
-				state = ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
-			else state = GetStateVariables();
+				ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
 
 			// update state variables if they are being optimized
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
-				for ( auto& nvp : state )
+				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
-					if ( flut::matches_pattern( nvp.first, iso->get< String >( "include_states" ) ) && !flut::matches_pattern( nvp.first, iso->get< String >( "exclude_states" ) ) )
+					const String& state_name = m_State.GetName( i );
+					if ( flut::matches_pattern( state_name , iso->get< String >( "include_states" ) ) && !flut::matches_pattern( state_name , iso->get< String >( "exclude_states" ) ) )
 					{
-						auto name = symmetric ? GetNameNoSide( nvp.first ) : nvp.first;
-						nvp.second += par.Get( opt::ParamInfo( name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
+						auto par_name = symmetric ? GetNameNoSide( state_name  ) : state_name;
+						m_State[ i ] += par.Get( opt::ParamInfo( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
 					}
 				}
 			}
 
 			// apply and fix state
-			SetStateVariables( state );
-			FixState( initial_leg_load * GetBW() );
+			CopyStateToTk();
+			FixTkState( initial_leg_load * GetBW() );
+			CopyStateFromTk();
 
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
@@ -200,15 +201,14 @@ namespace scone
 			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
 				m_Controllers.push_back( CreateController( iter->second, par, *this, sim::Area::WHOLE_BODY ) );
 
-			// Initialize muscle dynamics
-
-			// STEP 1: equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
+			// Initialize muscle dynamics STEP 1
+			// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
 			InitializeOpenSimMuscleActivations( 0.05 );
 			UpdateSensorDelayAdapters();
 
-			// STEP 2: compute actual initial control values and re-equilibrate muscles
+			// Initialize muscle dynamics STEP 2
+			// compute actual initial control values and re-equilibrate muscles
 			UpdateControlValues();
-
 			InitializeOpenSimMuscleActivations();
 
 			log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
@@ -235,7 +235,6 @@ namespace scone
 				else if ( OpenSim::PointActuator* osPa = dynamic_cast< OpenSim::PointActuator* >( &osAct ) )
 				{
 					// do something?
-
 				}
 			}
 
@@ -447,6 +446,7 @@ namespace scone
 						{
 							// store initial frame
 							m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+							CopyStateFromTk();
 							StoreCurrentFrame();
 						}
 					}
@@ -473,6 +473,7 @@ namespace scone
 						}
 
 						SetTkState( m_pTkIntegrator->updAdvancedState() );
+						CopyStateFromTk();
 
 						++current_step;
 
@@ -483,6 +484,7 @@ namespace scone
 						// update the sensor delays, analyses, and store data
 						UpdateSensorDelayAdapters();
 						UpdateAnalyses();
+
 						if ( GetStoreData() )
 							StoreCurrentFrame();
 
@@ -576,38 +578,6 @@ namespace scone
 			else return 0.0;
 		}
 
-		std::map< String, Real > Model_Simbody::ReadState( const String& file )
-		{
-			// OpenSim: why is there no normal way to get a value using a label???
-
-			// create a copy of the storage
-			auto store = g_StorageCache.CreateCopy( file );
-			OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
-			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
-			OpenSim::Array< std::string > stateNames = GetOsimModel().getStateVariableNames();
-
-			// run over all labels
-			std::map< String, Real > state;
-			for ( int i = 0; i < storeLabels.getSize(); i++ )
-			{
-				// check if the label is corresponds to a state
-				if ( stateNames.findIndex( storeLabels[ i ] ) != -1 )
-					state[ storeLabels[ i ] ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
-			}
-
-			return state;
-		}
-
-		std::map< String, scone::Real > Model_Simbody::GetStateVariables()
-		{
-			std::map< String, Real > variables;
-			auto names = GetStateVariableNames();
-			auto values = GetStateValues();
-			for ( size_t i = 0; i < names.size(); ++i )
-				variables[ names[ i ] ] = values[ i ];
-			return variables;
-		}
-
 		double Model_Simbody::GetSimulationEndTime() const
 		{
 			return m_pOsimManager->getFinalTime();
@@ -629,7 +599,23 @@ namespace scone
 			return GetOsimModel().getName();
 		}
 
-		void Model_Simbody::FixState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
+		void Model_Simbody::ReadState( const String& file )
+		{
+			// create a copy of the storage
+			auto store = g_StorageCache.CreateCopy( file );
+			OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
+			OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
+
+			// for all storage channels, check if there's a matching state
+			for ( int i = 0; i < storeLabels.getSize(); i++ )
+			{
+				Index idx = m_State.GetIndex( storeLabels[ i ] );
+				if ( idx != NoIndex )
+					m_State[ idx ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
+			}
+		}
+
+		void Model_Simbody::FixTkState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
 		{
 			const String state_name = "pelvis_ty";
 			const Real step_size = 0.1;
@@ -673,50 +659,47 @@ namespace scone
 				log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 		}
 
-		void Model_Simbody::SetStateVariables( const std::map< String, Real >& state )
-		{
-			for ( const auto& nvp : state )
-				GetOsimModel().setStateVariable( GetTkState(), nvp.first, nvp.second );
-		}
-
 		void Model_Simbody::SetStoreData( bool store )
 		{
 			Model::SetStoreData( store );
 			m_pOsimManager->setWriteToStorage( store );
 		}
 
-		std::vector< String > Model_Simbody::GetStateVariableNames() const
+		void Model_Simbody::SetTkState( const State& s )
 		{
-			// store osim state
+			for ( Index i = 0; i < s.GetSize(); ++i )
+				GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
+		}
+
+		void Model_Simbody::InitStateFromTk()
+		{
+			SCONE_ASSERT( GetState().GetSize() == 0 );
 			auto osnames = GetOsimModel().getStateVariableNames();
-			std::vector< String > state_names( osnames.size() );
-			for ( int i = 0; i < osnames.size(); ++i )
-				state_names[ i ] = osnames[ i ];
-
-			// store external force states
-			for ( auto& b : GetBodies() )
-			{
-				auto v = b->GetStateVariableNames();
-				// TODO
-			}
-
-			return state_names;
-		}
-
-		std::vector< Real > Model_Simbody::GetStateValues() const
-		{
 			auto osvalues = GetOsimModel().getStateValues( GetTkState() );
-			std::vector< Real > state_values( osvalues.size() );
-			for ( int i = 0; i < osvalues.size(); ++i )
-				state_values[ i ] = osvalues[ i ];
-
-			return state_values;
+			for ( int i = 0; i < osnames.size(); ++i )
+				GetState().AddVariable( osnames[ i ], osvalues[ i ] );
 		}
 
-		void Model_Simbody::SetStateValues( const std::vector< Real >& state_vars )
+		void Model_Simbody::CopyStateFromTk()
 		{
-			std::vector< double > state_vars_d = state_vars;
-			GetOsimModel().setStateValues( GetTkState(), &state_vars_d[ 0 ] );
+			SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
+			auto osvalues = GetOsimModel().getStateValues( GetTkState() );
+			for ( int i = 0; i < osvalues.size(); ++i )
+				m_State.SetValue( i, osvalues[ i ] );
+		}
+
+		void Model_Simbody::CopyStateToTk()
+		{
+			SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
+			GetOsimModel().setStateValues( GetTkState(), &m_State.GetValues()[ 0 ] );
+		}
+
+		void Model_Simbody::SetState( const State& state, TimeInSeconds timestamp )
+		{
+			m_State.SetValues( state.GetValues() );
+			CopyStateToTk();
+			for ( auto& c : GetControllers() )
+				c->UpdateControls( *this, timestamp );
 		}
 
 		void Model_Simbody::SetOpenSimParameters( const PropNode& props, opt::ParamSet& par )
@@ -774,5 +757,5 @@ namespace scone
 
 			m_pOsimModel->equilibrateMuscles( GetTkState() );
 		}
-	}
+}
 }

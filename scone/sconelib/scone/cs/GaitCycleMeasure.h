@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Measure.h"
+#include "scone/core/State.h"
 
 namespace scone
 {
@@ -17,11 +18,10 @@ namespace scone
 			bool use_half_cycle;
 
 		private:
-			Real GetStateSimilarity( const std::vector< Real >& state );
+			Real GetStateSimilarity( const State& state );
 			std::pair< String, int > GetMirroredStateNameAndSign( const String& str );
 
-			std::vector< Real > m_InitState;
-			std::vector< String > m_StateNames;
+			State m_InitState;
 		};
 	}
 }

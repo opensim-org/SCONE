@@ -16,7 +16,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="PerturbationController" start_time="0" body="torso" force="100" interval="1" duration="0.5"/>
+				<Controller type="PerturbationController" start_time="1" body="torso" force="200" interval="1" duration="0.1"/>
 				<Controller type="GaitStateController">
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<!--landing_threshold init_mean="0.1" init_std="0.01" min="-0.1" max="0.5" is_free="1"/-->
@@ -121,7 +121,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
+				<INCLUDE file="measures/M_CG10_CoT_GH_P.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

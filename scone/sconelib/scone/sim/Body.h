@@ -9,7 +9,7 @@ namespace scone
 {
 	namespace sim
 	{
-		class SCONE_API Body : public HasName, public HasState
+		class SCONE_API Body : public HasName
 		{
 		public:
 			Body();
