@@ -33,6 +33,8 @@ set(CORE_TOOLS_FILES
 	scone/core/StorageIo.h
 	scone/core/StorageIo.cpp
 	scone/core/StringMap.h
+	scone/core/State.cpp
+	scone/core/State.h
 	scone/core/system_tools.cpp
 	scone/core/system_tools.h
 	scone/core/string_tools.cpp

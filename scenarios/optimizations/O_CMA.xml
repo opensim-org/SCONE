@@ -5,7 +5,7 @@
 	<random_seed>123</random_seed>
 	<lambda>0</lambda>
 	<mu>0</mu>
-	<max_generations>5000</max_generations>
+	<max_generations>3000</max_generations>
 	<min_improvement_factor_for_file_output>1.05</min_improvement_factor_for_file_output>
 	<output_objective_result_files>0</output_objective_result_files>
 	<maximize_objective>0</maximize_objective>
