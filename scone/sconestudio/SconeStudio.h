@@ -74,6 +74,7 @@ private:
 	void setTime( TimeInSeconds t );
 	QCodeEditor* getActiveScenario();
 	bool checkAndSaveScenario( QCodeEditor* s );
+	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
 	void addRecentFile( const QString& filename );
 	void updateRecentFilesMenu();

@@ -260,8 +260,12 @@ void SconeStudio::fileSave()
 
 void SconeStudio::fileSaveAs()
 {
-	if ( getActiveScenario() )
-		getActiveScenario()->saveAsDialog( make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
+	if ( auto* s = getActiveScenario() )
+	{
+		s->saveAsDialog( make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
+		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+		addRecentFile( s->fileName );
+	}
 }
 
 void SconeStudio::fileExit()
@@ -325,6 +329,16 @@ bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
 	}
 
 	return true;
+}
+
+int SconeStudio::getTabIndex( QCodeEditor* s )
+{
+	for ( int idx = 0; idx < ui.tabWidget->count(); ++idx )
+	{
+		if ( ui.tabWidget->widget( idx ) == (QWidget*)s )
+			return idx;
+	}
+	return -1;
 }
 
 void SconeStudio::optimizeScenario()
