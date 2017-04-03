@@ -24,15 +24,15 @@ namespace scone
 
 			INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 			INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
-			INIT_PROPERTY_NAMED( props, length_allow_negative, "allow_negative_L", true );
+			INIT_PROPERTY_NAMED( props, length_allow_negative, "allow_neg_L", true );
 
 			INIT_PARAM_NAMED( props, par, velocity_gain, "KV", 0.0 );
 			INIT_PARAM_NAMED( props, par, velocity_ofs, "V0", 0.0 );
-			INIT_PROPERTY_NAMED( props, velocity_allow_negative, "allow_negative_V", false );
+			INIT_PROPERTY_NAMED( props, velocity_allow_negative, "allow_neg_V", false );
 
 			INIT_PARAM_NAMED( props, par, force_gain, "KF", 0.0 );
 			INIT_PARAM_NAMED( props, par, force_ofs, "F0", 0.0 );
-			INIT_PROPERTY_NAMED( props, force_allow_negative, "allow_negative_F", true );
+			INIT_PROPERTY_NAMED( props, force_allow_negative, "allow_neg_F", true );
 
 			INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
 
