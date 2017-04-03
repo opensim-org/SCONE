@@ -54,7 +54,10 @@ namespace scone
 			// see if this is an actual parameter
 			if ( parNode.size() > 0 )
 				return Get( ParamInfo( GetNamePrefix() + name, parNode ) );
-			else return props.get< double >(); // just return the value
+			else if ( parNode.has_value() )
+				return parNode.get< double >(); // just return the value
+
+			SCONE_THROW( "Could not read parameter " + node_name );
 		}
 
 		double ParamSet::TryGet( const String& name, const PropNode& props, const String node_name, double default_value )
