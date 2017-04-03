@@ -52,8 +52,7 @@ namespace scone
 		}
 
 		Optimizer::~Optimizer()
-		{
-		}
+		{}
 
 		// evaluate individuals
 		std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )

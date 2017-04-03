@@ -8,14 +8,10 @@ namespace scone
 		Objective::Objective( const PropNode& props, ParamSet& par ) :
 		HasSignature( props ),
 		debug_idx( -1 )
-		{
-
-		}
+		{}
 
 		Objective::~Objective()
-		{
-
-		}
+		{}
 
 		scone::opt::ParamSet Objective::MakeParamSet()
 		{

@@ -2,9 +2,7 @@
 #include "flut/math/math.hpp"
 
 SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
-{
-
-}
+{}
 
 void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 {
