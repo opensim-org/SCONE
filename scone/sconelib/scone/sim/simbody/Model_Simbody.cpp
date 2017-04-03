@@ -104,8 +104,8 @@ namespace scone
 			}
 
 			// change model properties
-			if ( props.has_key( "SimbodyParameters" ) )
-				SetOpenSimParameters( props.get_child( "SimbodyParameters" ), par );
+			if ( props.has_key( "OpenSimParameters" ) )
+				SetOpenSimParameters( props.get_child( "OpenSimParameters" ), par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
