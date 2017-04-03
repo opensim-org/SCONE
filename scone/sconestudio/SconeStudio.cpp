@@ -82,7 +82,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
-
 	connect( analysisView, &QDataAnalysisView::timeChanged, ui.playControl, &QPlayControl::setTime );
 
 	// start timer for viewer
@@ -138,7 +137,6 @@ void SconeStudio::runSimulation( const QString& filename )
 	{
 		QMessageBox::critical( this, "Exception", e.what() );
 	}
-
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
