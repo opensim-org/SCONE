@@ -1,6 +1,6 @@
 #include "system_tools.h"
 
-#include "scone/cs/version.h"
+#include "scone/core/version.h"
 
 #include <fstream>
 

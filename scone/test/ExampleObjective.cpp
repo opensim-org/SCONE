@@ -2,7 +2,7 @@
 #include "scone/core/Exception.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/propnode_tools.h"
-#include "scone/opt/ParamSet.h"
+#include "scone/optimization/ParamSet.h"
 #include "scone/core/string_tools.h"
 
 namespace scone

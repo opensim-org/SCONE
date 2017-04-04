@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scone/opt/Objective.h"
+#include "scone/optimization/Objective.h"
 
 namespace scone
 {

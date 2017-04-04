@@ -3,7 +3,7 @@
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/Storage.h"
-#include "scone/opt/opt_fwd.h"
+#include "scone/optimization/opt_fwd.h"
 
 namespace scone
 {

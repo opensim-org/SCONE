@@ -7,8 +7,8 @@
     #include <QtGui/QApplication>
 #endif
 
-#include "scone/cs/cs_tools.h"
-#include "scone/sim/simbody/sim_simbody.h"
+#include "scone/controllers/cs_tools.h"
+#include "scone/model/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
 #include "qt_tools.h"
 #include "flut/system/log_sink.hpp"

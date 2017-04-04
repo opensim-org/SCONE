@@ -2,9 +2,9 @@
 
 #include <boost/filesystem.hpp>
 
-#include "scone/opt/opt_tools.h"
-#include "scone/opt/Objective.h"
-#include "scone/opt/Factories.h"
+#include "scone/optimization/opt_tools.h"
+#include "scone/optimization/Objective.h"
+#include "scone/optimization/Factories.h"
 
 
 using namespace boost::filesystem;

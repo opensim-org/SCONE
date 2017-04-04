@@ -48,6 +48,7 @@ namespace scone
 	namespace log
 	{
 		// import flut logging
+		using flut::log::level;
 		using flut::log::trace;
 		using flut::log::debug;
 		using flut::log::info;

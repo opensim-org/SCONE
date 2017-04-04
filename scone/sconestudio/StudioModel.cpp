@@ -1,11 +1,11 @@
 #include "StudioModel.h"
 
-#include "scone/opt/Factories.h"
-#include "scone/opt/opt_tools.h"
+#include "scone/optimization/Factories.h"
+#include "scone/optimization/opt_tools.h"
 #include "scone/core/StorageIo.h"
-#include "scone/cs/cs_tools.h"
+#include "scone/controllers/cs_tools.h"
 #include "scone/core/system_tools.h"
-#include "scone/sim/Muscle.h"
+#include "scone/model/Muscle.h"
 
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
