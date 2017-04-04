@@ -41,19 +41,19 @@ using flut::timer;
 
 namespace scone
 {
-	void SCONE_API RegisterFactoryTypes()
-	{
-		// register opt factory types
-		//opt::RegisterFactoryTypes();
+	//void SCONE_API RegisterFactoryTypes()
+	//{
+	//	// register opt factory types
+	//	//opt::RegisterFactoryTypes();
 
-		// register objective
-		opt::GetObjectiveFactory().Register< SimulationObjective >();
+	//	// register objective
+	//	//opt::GetObjectiveFactory().Register< SimulationObjective >();
 
-		// register reflexes
-		// TODO: make this not separate but use controller factory instead?
+	//	// register reflexes
+	//	// TODO: make this not separate but use controller factory instead?
 
-		// register functions
-	}
+	//	// register functions
+	//}
 
 	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
 	{

@@ -51,7 +51,7 @@ namespace scone
 			g_ControllerFactory.register_class< ReactionForceMeasure >();
 			g_ControllerFactory.register_class< PointMeasure >();
 		}
-		return g_ControllerFactory[ props.get< String >( "type" ) ]( props, par, model, target_area );
+		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
 	SCONE_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area )
@@ -62,7 +62,7 @@ namespace scone
 			g_ReflexFactory.register_class< DofReflex >();
 			g_ReflexFactory.register_class< ConditionalMuscleReflex >();
 		}
-		return g_ReflexFactory[ props.get< String >( "type" ) ]( props, par, model, target_area );
+		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, opt::ParamSet& par )
@@ -73,6 +73,6 @@ namespace scone
 			g_FunctionFactory.register_class< PieceWiseLinearFunction >();
 			g_FunctionFactory.register_class< Polynomial >();
 		}
-		return g_FunctionFactory[ props.get< String >( "type" ) ]( props, par );
+		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 }

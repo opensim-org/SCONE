@@ -55,7 +55,7 @@ private:
 
 BOOST_AUTO_TEST_CASE( optimization_test )
 {
-	opt::GetObjectiveFactory().Register< TestObjective >();
+	opt::GetObjectiveFactory().register_class< TestObjective >();
 
 	const PropNode pn = load_xml( ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" ).str() );
 	opt::OptimizerUP o = opt::CreateOptimizer( pn.get_child( "Optimizer" ) );

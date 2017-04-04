@@ -34,8 +34,6 @@ namespace scone
 {
 	void OptimizationTest()
 	{
-		// register new objective
-		//opt::GetObjectiveFactory();
 		//PerformOptimization( "config/optimization_test.xml" );
 	}
 
@@ -43,8 +41,6 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 		const double simulation_time = 0.2;
-
-		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 
 		std::vector< String > models;
@@ -88,11 +84,6 @@ namespace scone
 	void PlaybackTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-
-		// register scone types
-		//opt::RegisterFactoryTypes();
-		RegisterFactoryTypes();
-
 		opt::ParamSet par( filename );
 
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
@@ -168,10 +159,6 @@ namespace scone
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
-		// register scone types
-		opt::RegisterFactoryTypes();
-		RegisterFactoryTypes();
-
 		opt::ParamSet par( filename );
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
@@ -216,11 +203,6 @@ namespace scone
 	void SimulationObjectiveTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-
-		// register scone types
-		opt::RegisterFactoryTypes();
-		RegisterFactoryTypes();
-
 		opt::ParamSet par; // empty parameter set
 		const PropNode configProp = load_file_with_include( filename ) ;
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
@@ -253,7 +235,6 @@ namespace scone
 
 	void MuscleLengthTest()
 	{
-		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
@@ -280,7 +261,6 @@ namespace scone
 
 	void DofAxisTest()
 	{
-		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 

@@ -2,13 +2,15 @@
 
 #include "scone/core/Factory.h"
 #include "Optimizer.h"
+#include "flut/factory.hpp"
 
 namespace scone
 {
 	namespace opt
 	{
-		//SCONE_AP OptimizerUP CreateOptimizer( const PropNode& );
-		DECLARE_FACTORY( SCONE_API, Optimizer, ( const PropNode& ) );
-		DECLARE_FACTORY( SCONE_API, Objective, ( const PropNode&, ParamSet& ) );
+		SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );
+		SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par );
+
+		SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory();
 	}
 }

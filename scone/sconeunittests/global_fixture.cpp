@@ -12,8 +12,8 @@ struct SconeGlobalFixture
 		std::cout << "Initializing SCONE" << std::endl;
 
 		//scone::opt::RegisterFactoryTypes();
-		scone::RegisterFactoryTypes();
-		scone::sim::RegisterSimbody();
+		//scone::RegisterFactoryTypes();
+		//scone::sim::RegisterSimbody();
 	}
 
     ~SconeGlobalFixture()
