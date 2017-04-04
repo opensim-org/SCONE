@@ -1,7 +1,7 @@
 #include "CompositeMeasure.h"
-#include "scone/model/Factories.h"
+#include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
-#include "../controllers/Factories.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {

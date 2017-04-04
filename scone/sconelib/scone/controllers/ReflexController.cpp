@@ -3,12 +3,12 @@
 #include "scone/core/propnode_tools.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/Factories.h"
 
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Area.h"
 
-#include "Factories.h"
 #include "MuscleReflex.h"
 
 namespace scone

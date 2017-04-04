@@ -1,60 +1,18 @@
 #include "cs_tools.h"
-#include "scone/core/memory_tools.h"
-#include "scone/core/PieceWiseConstantFunction.h"
-#include "scone/core/PieceWiseLinearFunction.h"
-#include "scone/core/Polynomial.h"
-#include "scone/core/Profiler.h"
-#include "scone/controllers/ConditionalMuscleReflex.h"
-#include "scone/controllers/DofReflex.h"
-#include "scone/controllers/Factories.h"
-#include "scone/controllers/FeedForwardController.h"
-#include "scone/controllers/GaitStateController.h"
-#include "scone/controllers/MetaReflexController.h"
-#include "scone/controllers/MuscleReflex.h"
-#include "scone/controllers/ReflexController.h"
-#include "scone/controllers/TimeStateController.h"
-#include "scone/objectives/CompositeMeasure.h"
-#include "scone/objectives/DofLimitMeasure.h"
-#include "scone/objectives/EffortMeasure.h"
-#include "scone/objectives/GaitCycleMeasure.h"
-#include "scone/objectives/GaitMeasure.h"
-#include "scone/objectives/HeightMeasure.h"
-#include "scone/objectives/JointLoadMeasure.h"
-#include "scone/objectives/JumpMeasure.h"
-#include "scone/objectives/PointMeasure.h"
-#include "scone/objectives/ReactionForceMeasure.h"
-#include "scone/objectives/SimulationObjective.h"
-#include "scone/optimization/Factories.h"
-#include "scone/optimization/Optimizer.h"
-#include "scone/optimization/opt_tools.h"
-#include "scone/model/Factories.h"
-#include "scone/model/sim_tools.h"
-#include "scone/model/simbody/sim_simbody.h"
 
 #include <boost/filesystem.hpp>
-namespace bfs = boost::filesystem;
-
 #include <flut/timer.hpp>
 #include "flut/prop_node_tools.hpp"
 #include "PerturbationController.h"
+#include "scone/objectives/SimulationObjective.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/Factories.h"
+
 using flut::timer;
+namespace bfs = boost::filesystem;
 
 namespace scone
 {
-	//void SCONE_API RegisterFactoryTypes()
-	//{
-	//	// register opt factory types
-	//	//opt::RegisterFactoryTypes();
-
-	//	// register objective
-	//	//opt::GetObjectiveFactory().Register< SimulationObjective >();
-
-	//	// register reflexes
-	//	// TODO: make this not separate but use controller factory instead?
-
-	//	// register functions
-	//}
-
 	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
 	{
 		// create the simulation objective object
@@ -113,7 +71,7 @@ namespace scone
 		}
 
 		// create SimulationObjective object
-		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( opt::CreateObjective( objProp, par ) );
+		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( CreateObjective( objProp, par ) );
 
 		// report unused parameters
 		LogUntouched( objProp );

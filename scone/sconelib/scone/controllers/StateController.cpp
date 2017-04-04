@@ -1,7 +1,7 @@
 #include "StateController.h"
 
-#include "scone/model/Factories.h"
-#include "Factories.h"
+#include "scone/core/Factories.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

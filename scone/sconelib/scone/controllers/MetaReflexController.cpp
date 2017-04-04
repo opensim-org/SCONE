@@ -5,8 +5,8 @@
 #include "scone/model/Dof.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/HasName.h"
+#include "scone/core/Factories.h"
 
-#include "Factories.h"
 #include "MetaReflexDof.h"
 #include "MetaReflexMuscle.h"
 #include "scone/core/propnode_tools.h"

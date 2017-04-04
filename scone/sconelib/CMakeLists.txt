@@ -27,14 +27,14 @@ set(CORE_MATH_FILES
 	scone/core/Polynomial.cpp
 )
 set(CORE_SYSTEM_FILES
-	scone/core/Factory.h
+	scone/core/Factories.h
+    scone/core/Factories.cpp
 	scone/core/memory_tools.h
     scone/core/ResourceCache.h
 	scone/core/Profiler.cpp
     scone/core/Profiler.h
 	scone/core/Exception.h
 	scone/core/core.h
-	scone/core/String.h
 	scone/core/Log.cpp
 	scone/core/Log.h
 	scone/core/version.h
@@ -60,8 +60,6 @@ set(CS_CONTROLLERS_FILES
 	)
 set(CS_SYSTEM_FILES
     scone/controllers/cs_fwd.h
-	scone/controllers/Factories.cpp
-	scone/controllers/Factories.h
 	scone/controllers/cs_tools.cpp
 	scone/controllers/cs_tools.h
 	)
@@ -147,8 +145,6 @@ set(OPT_API_FILES
     scone/optimization/opt_fwd.h
     )
 set(OPT_SYSTEM_FILES
-    scone/optimization/Factories.cpp
-    scone/optimization/Factories.h
 	scone/optimization/SharkHelperClasses.h
 	scone/optimization/opt_config.h
     )
@@ -184,12 +180,9 @@ set(SIM_SIMULATIONANDCONTROL_FILES
     scone/model/Simulation.h
     )
 set(SIM_SYSTEM_FILES
-    scone/model/Factories.cpp
-    scone/model/Factories.h
     scone/model/sim_tools.cpp
     scone/model/sim_tools.h
     scone/model/sim_fwd.h
-    scone/model/Types.h
     )
 set(SIM_TOPOLOGY_FILES
     scone/model/Area.cpp
@@ -275,18 +268,18 @@ source_group("core\\storage" FILES ${CORE_STORAGE_FILES})
 source_group("controllers" FILES ${CS_CONTROLLERS_FILES} )
 source_group("controllers" FILES ${CS_CONTROLLERS_STATE_FILES} )
 source_group("controllers" FILES ${CS_CONTROLLERS_REFLEX_FILES})
+source_group("controllers" FILES ${CS_SYSTEM_FILES})
 source_group("controllers\\Meta Reflex Control" FILES ${CS_CONTROLLERS_MRC_FILES})
-source_group("controllers\\system" FILES ${CS_SYSTEM_FILES})
 
 source_group("objectives" FILES ${OBJECTIVES_FILES})
 
 source_group("optimization" FILES ${OPT_API_FILES})
-source_group("optimization\\system" FILES ${OPT_SYSTEM_FILES})
+source_group("optimization" FILES ${OPT_SYSTEM_FILES})
 
 source_group("model" FILES ${SIM_MODELCOMPONENTS_FILES})
 source_group("model" FILES ${SIM_SENSORSANDACTUATORS_FILES})
 source_group("model" FILES ${SIM_SIMULATIONANDCONTROL_FILES})
-source_group("model\\system" FILES ${SIM_SYSTEM_FILES})
+source_group("model" FILES ${SIM_SYSTEM_FILES})
 source_group("model" FILES ${SIM_TOPOLOGY_FILES})
 
 source_group("model\\simbody" FILES ${SIMBODY_FILES})

@@ -1,6 +1,5 @@
 #include "sim_tools.h"
 #include "Sensors.h"
-#include "Factories.h"
 
 namespace scone
 {

@@ -1,6 +1,5 @@
 #include "sim_simbody.h"
 #include "Model_Simbody.h"
-#include "scone/model/Factories.h"
 
 namespace scone
 {

@@ -9,9 +9,9 @@
 #include "scone/core/Profiler.h"
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
+#include "scone/core/Factories.h"
 
 #include "SensorDelayAdapter.h"
-#include "Factories.h"
 #include "scone/model/State.h"
 
 using std::endl;
@@ -48,7 +48,7 @@ namespace scone
 		Sensor& Model::AcquireSensor( const PropNode& pn, opt::ParamSet& par, const sim::Area& area )
 		{
 			// create the sensor first, so we can use its name to find it
-			SensorUP sensor = sim::CreateSensor( pn, par, *this, area );
+			SensorUP sensor = CreateSensor( pn, par, *this, area );
 
 			// see if there's a sensor with the same name (should be unique)
 			auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(), [&]( SensorUP& s ) { return s->GetName() == sensor->GetName(); } );

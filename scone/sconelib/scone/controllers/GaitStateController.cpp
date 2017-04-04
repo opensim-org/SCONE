@@ -5,11 +5,10 @@
 #include "scone/core/propnode_tools.h"
 
 #include "scone/model/Body.h"
-#include "scone/model/Factories.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
 #include "scone/model/SensorDelayAdapter.h"
-#include "Factories.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {

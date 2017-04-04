@@ -1,15 +1,15 @@
 #define SCONE_ENABLE_PROFILING
-#include "scone/core/Profiler.h"
 
+#include <fstream>
+#include "scone/core/Profiler.h"
 #include "Test.h"
 #include "scone/controllers/cs_tools.h"
 #include "scone/optimization/ParamSet.h"
-#include "scone/model/Factories.h"
+#include "scone/core/Factories.h"
 #include "scone/core/string_tools.h"
-#include <fstream>
+#include "scone/core/Factories.h"
 
 #include <boost/filesystem.hpp>
-#include "scone/optimization/Factories.h"
 #include "scone/optimization/opt_tools.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/system_tools.h"
@@ -59,7 +59,7 @@ namespace scone
 		{
 			opt::ParamSet par;
 			props.set( "Model.model_file", *iter );
-			sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+			sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
@@ -103,7 +103,7 @@ namespace scone
 		//objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		SCONE_PROFILE_RESET;
@@ -177,7 +177,7 @@ namespace scone
 		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 		SCONE_PROFILE_RESET;
 		double result;
@@ -208,7 +208,7 @@ namespace scone
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		// reset profiler
@@ -238,7 +238,7 @@ namespace scone
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
@@ -265,7 +265,7 @@ namespace scone
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( sim::DofUP& dof : m->GetDofs() )
 			log::Info( dof->GetName() + ": " + to_str( dof->GetRotationAxis() ) );

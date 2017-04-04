@@ -1,7 +1,8 @@
 #include "opt_tools.h"
 #include "opt_fwd.h"
 #include "CmaOptimizer.h"
-#include "Factories.h"
+
+#include "scone/core/Factories.h"
 
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
@@ -26,7 +27,7 @@ namespace scone
 		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
 		{
 			// create optimizer and report unused parameters
-			opt::OptimizerUP o = opt::CreateOptimizer( props.get_child( "Optimizer" ) );
+			opt::OptimizerUP o = CreateOptimizer( props.get_child( "Optimizer" ) );
 			LogUntouched( props );
 
 			// set current path to config file path
@@ -55,7 +56,7 @@ namespace scone
 	
 			const PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;
 			const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
-			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
+			opt::ObjectiveUP obj = CreateObjective( objProp, par );
 			SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 			// report unused parameters

@@ -4,12 +4,13 @@
 #include <algorithm>
 
 #include "scone/model/Model.h"
-#include "scone/model/Factories.h"
 
-#include <boost/thread.hpp>
 #include "scone/core/version.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/Factories.h"
+
+#include <boost/thread.hpp>
 
 namespace scone
 {
@@ -41,7 +42,7 @@ namespace scone
 	void SimulationObjective::ProcessParameters( opt::ParamSet& par )
 	{
 		// (re)create new model using stored model props
-		m_Model = sim::CreateModel( m_ModelProps, par );
+		m_Model = CreateModel( m_ModelProps, par );
 
 		// find measure controller
 		auto& controllers = m_Model->GetControllers();

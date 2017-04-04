@@ -4,7 +4,7 @@
 
 #include "scone/optimization/opt_tools.h"
 #include "scone/optimization/Objective.h"
-#include "scone/optimization/Factories.h"
+#include "scone/core/Factories.h"
 
 
 using namespace boost::filesystem;
@@ -55,10 +55,10 @@ private:
 
 BOOST_AUTO_TEST_CASE( optimization_test )
 {
-	opt::GetObjectiveFactory().register_class< TestObjective >();
+	GetObjectiveFactory().register_class< TestObjective >();
 
 	const PropNode pn = load_xml( ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" ).str() );
-	opt::OptimizerUP o = opt::CreateOptimizer( pn.get_child( "Optimizer" ) );
+	opt::OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
 	LogUntouched( pn );
 	o->SetConsoleOutput( false );
 	o->Run();

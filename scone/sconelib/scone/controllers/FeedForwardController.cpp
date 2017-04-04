@@ -6,7 +6,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Area.h"
 
-#include "Factories.h"
+#include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
 
 namespace scone

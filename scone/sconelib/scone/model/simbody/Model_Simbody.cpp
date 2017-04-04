@@ -1,6 +1,7 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
+#include "scone/core/Factories.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
@@ -14,8 +15,6 @@
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
-#include "scone/model/Factories.h"
-
 #include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include "scone/core/system_tools.h"
@@ -26,7 +25,6 @@
 
 #include "scone/core/StorageIo.h"
 #include <thread>
-#include "scone/controllers/Factories.h"
 
 using std::cout;
 using std::endl;

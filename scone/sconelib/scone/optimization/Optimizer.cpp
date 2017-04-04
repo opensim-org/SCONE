@@ -7,11 +7,10 @@
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/string_tools.h"
+#include "scone/core/Factories.h"
 
-#include "Objective.h"
-#include "Factories.h"
-
-//#include <sstream>
+#include "scone/optimization/Objective.h"
 
 namespace bfs = boost::filesystem;
 

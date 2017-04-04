@@ -1,8 +1,8 @@
 #include "StudioModel.h"
 
-#include "scone/optimization/Factories.h"
 #include "scone/optimization/opt_tools.h"
 #include "scone/core/StorageIo.h"
+#include "scone/core/Factories.h"
 #include "scone/controllers/cs_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/model/Muscle.h"
