@@ -5,22 +5,19 @@
 
 namespace scone
 {
-	namespace cs
+	class ReactionForceMeasure : public Measure
 	{
-		class ReactionForceMeasure : public Measure
-		{
-		public:
-			ReactionForceMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
-			virtual ~ReactionForceMeasure() {}
+	public:
+		ReactionForceMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		virtual ~ReactionForceMeasure() {}
 
-			virtual double GetResult( sim::Model& model ) override;
-			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+		virtual double GetResult( sim::Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
 
-		protected:
-			virtual void StoreData( Storage< Real >::Frame& frame ) override;
+	protected:
+		virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
-		private:
-			RangePenalty< Real > load_penalty;
-		};
-	}
+	private:
+		RangePenalty< Real > load_penalty;
+	};
 }

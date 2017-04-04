@@ -12,7 +12,7 @@ struct SconeGlobalFixture
 		std::cout << "Initializing SCONE" << std::endl;
 
 		scone::opt::RegisterFactoryTypes();
-		scone::cs::RegisterFactoryTypes();
+		scone::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 	}
 

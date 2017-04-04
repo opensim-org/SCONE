@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 	try
 	{
 		// init scone
-		scone::cs::RegisterFactoryTypes();
+		scone::RegisterFactoryTypes();
 		scone::sim::RegisterSimbody();
 
 		// init plash screen

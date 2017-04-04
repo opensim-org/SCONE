@@ -37,7 +37,7 @@ namespace scone
 
 		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
-		cs::SimulationObjective& GetObjective() { return *so; }
+		SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating; }
 
@@ -48,7 +48,7 @@ namespace scone
 		void InitVis( vis::scene& s );
 
 		Storage<> data;
-		cs::SimulationObjectiveUP so;
+		SimulationObjectiveUP so;
 		path filename;
 
 		ViewFlags view_flags;

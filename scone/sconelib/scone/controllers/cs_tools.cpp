@@ -41,95 +41,92 @@ using flut::timer;
 
 namespace scone
 {
-	namespace cs
+	void SCONE_API RegisterFactoryTypes()
 	{
-		void SCONE_API RegisterFactoryTypes()
+		// register sim factory types
+		sim::RegisterFactoryTypes();
+
+		// register opt factory types
+		opt::RegisterFactoryTypes();
+
+		// register objective
+		opt::GetObjectiveFactory().Register< SimulationObjective >();
+
+		// register reflexes
+		// TODO: make this not separate but use controller factory instead?
+		GetReflexFactory().Register< MuscleReflex >();
+		GetReflexFactory().Register< DofReflex >();
+		GetReflexFactory().Register< ConditionalMuscleReflex >();
+
+		// register functions
+		GetFunctionFactory().Register< PieceWiseConstantFunction >();
+		GetFunctionFactory().Register< PieceWiseLinearFunction >();
+		GetFunctionFactory().Register< Polynomial >();
+	}
+
+	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
+	{
+		// create the simulation objective object
+		SimulationObjectiveUP so = CreateSimulationObjective( par_file );
+
+		timer t;
+		double result = so->Evaluate();
+		auto duration = t.seconds();
+
+		// set data storage
+		if ( write_results )
+			so->GetModel().SetStoreData( true );
+
+		// reset profiler (only if enabled)
+		Profiler::GetGlobalInstance().Reset();
+
+		// collect statistics
+		PropNode statistics;
+		statistics.set( "result", so->GetMeasure().GetReport() );
+		statistics.set( "simulation time", so->GetModel().GetTime() );
+		statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
+
+		// output profiler results (only if enabled)
+		std::cout << Profiler::GetGlobalInstance().GetReport();
+
+		// write results
+		if ( write_results )
+			so->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
+
+		return statistics;
+	}
+
+	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename )
+	{
+		opt::ParamSet par;
+		bfs::path config_path;
+		if ( filename.extension() == "par" )
 		{
-			// register sim factory types
-			sim::RegisterFactoryTypes();
+			par.Read( filename );
+			config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
+		}
+		else config_path = filename.str();
+		if ( config_path.has_parent_path() )
+			bfs::current_path( config_path.parent_path() );
 
-			// register opt factory types
-			opt::RegisterFactoryTypes();
+		// read properties
+		PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
+		PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
-			// register objective
-			opt::GetObjectiveFactory().Register< SimulationObjective >();
-
-			// register reflexes
-			// TODO: make this not separate but use controller factory instead?
-			GetReflexFactory().Register< MuscleReflex >();
-			GetReflexFactory().Register< DofReflex >();
-			GetReflexFactory().Register< ConditionalMuscleReflex >();
-
-			// register functions
-			GetFunctionFactory().Register< PieceWiseConstantFunction >();
-			GetFunctionFactory().Register< PieceWiseLinearFunction >();
-			GetFunctionFactory().Register< Polynomial >();
+		// load init parameters if we just load a config file
+		if ( filename.extension() == "xml" || filename.extension() == "scenario" )
+		{
+			auto& optProp = configProp.get_child( "Optimizer" );
+			if ( optProp.get< bool >( "use_init_file" ) )
+				par.Read( optProp.get< path >( "init_file" ) );
 		}
 
-		PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
-		{
-			// create the simulation objective object
-			cs::SimulationObjectiveUP so = CreateSimulationObjective( par_file );
+		// create SimulationObjective object
+		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( opt::CreateObjective( objProp, par ) );
 
-			timer t;
-			double result = so->Evaluate();
-			auto duration = t.seconds();
+		// report unused parameters
+		LogUntouched( objProp );
 
-			// set data storage
-			if ( write_results )
-				so->GetModel().SetStoreData( true );
-
-			// reset profiler (only if enabled)
-			Profiler::GetGlobalInstance().Reset();
-
-			// collect statistics
-			PropNode statistics;
-			statistics.set( "result", so->GetMeasure().GetReport() );
-			statistics.set( "simulation time", so->GetModel().GetTime() );
-			statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
-
-			// output profiler results (only if enabled)
-			std::cout << Profiler::GetGlobalInstance().GetReport();
-
-			// write results
-			if ( write_results )
-				so->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
-
-			return statistics;
-		}
-
-		SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename )
-		{
-			opt::ParamSet par;
-			bfs::path config_path;
-			if ( filename.extension() == "par" )
-			{
-				par.Read( filename );
-				config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
-			}
-			else config_path = filename.str();
-			if ( config_path.has_parent_path() )
-				bfs::current_path( config_path.parent_path() );
-
-			// read properties
-			PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
-			PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
-
-			// load init parameters if we just load a config file
-			if ( filename.extension() == "xml" || filename.extension() == "scenario" )
-			{
-				auto& optProp = configProp.get_child( "Optimizer" );
-				if ( optProp.get< bool >( "use_init_file" ) )
-					par.Read( optProp.get< path >( "init_file" ) );
-			}
-
-			// create SimulationObjective object
-			cs::SimulationObjectiveUP so = dynamic_unique_cast< cs::SimulationObjective >( opt::CreateObjective( objProp, par ) );
-
-			// report unused parameters
-			LogUntouched( objProp );
-
-			return so;
-		}
+		return so;
 	}
 }

@@ -36,7 +36,7 @@ namespace scone
 	{
 		// register new objective
 		//opt::GetObjectiveFactory();
-		//cs::PerformOptimization( "config/optimization_test.xml" );
+		//PerformOptimization( "config/optimization_test.xml" );
 	}
 
 	void ModelTest()
@@ -44,7 +44,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 		const double simulation_time = 0.2;
 
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 
 		std::vector< String > models;
@@ -91,7 +91,7 @@ namespace scone
 
 		// register scone types
 		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 
 		opt::ParamSet par( filename );
 
@@ -113,7 +113,7 @@ namespace scone
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		SCONE_PROFILE_RESET;
 		double result;
@@ -170,7 +170,7 @@ namespace scone
 
 		// register scone types
 		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 
 		opt::ParamSet par( filename );
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
@@ -191,7 +191,7 @@ namespace scone
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
@@ -219,7 +219,7 @@ namespace scone
 
 		// register scone types
 		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 
 		opt::ParamSet par; // empty parameter set
 		const PropNode configProp = load_file_with_include( filename ) ;
@@ -227,7 +227,7 @@ namespace scone
 
 		// create objective
 		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		// reset profiler
 		SCONE_PROFILE_RESET;
@@ -253,7 +253,7 @@ namespace scone
 
 	void MuscleLengthTest()
 	{
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
@@ -280,7 +280,7 @@ namespace scone
 
 	void DofAxisTest()
 	{
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 

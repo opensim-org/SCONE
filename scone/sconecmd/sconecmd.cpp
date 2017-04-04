@@ -30,7 +30,7 @@ int main(int argc, char* argv[])
 
 		// register all types
 		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
+		RegisterFactoryTypes();
 		sim::RegisterSimbody();
 
 		if ( optArg.isSet() )

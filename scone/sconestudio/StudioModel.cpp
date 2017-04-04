@@ -26,7 +26,7 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file
-		so = cs::CreateSimulationObjective( file );
+		so = CreateSimulationObjective( file );
 
 		// accept filename and clear data
 		filename = file;

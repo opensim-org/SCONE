@@ -6,50 +6,47 @@
 
 namespace scone
 {
-	namespace cs
+	class EffortMeasure : public Measure
 	{
-		class EffortMeasure : public Measure
-		{
-		public:
-			EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
-			virtual ~EffortMeasure();
+	public:
+		EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		virtual ~EffortMeasure();
 
-			enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
-			static StringMap< EnergyMeasureType > m_MeasureNames;
+		enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
+		static StringMap< EnergyMeasureType > m_MeasureNames;
 
-			virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-			virtual double GetResult( sim::Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+		virtual double GetResult( sim::Model& model ) override;
 
-			EnergyMeasureType measure_type;
-			bool use_cost_of_transport;
-            Real specific_tension;
-            Real muscle_density;
-            Real default_muscle_slow_twitch_ratio;
-            bool use_symmetric_fiber_ratios;
+		EnergyMeasureType measure_type;
+		bool use_cost_of_transport;
+		Real specific_tension;
+		Real muscle_density;
+		Real default_muscle_slow_twitch_ratio;
+		bool use_symmetric_fiber_ratios;
 
-		protected:
-			virtual String GetClassSignature() const override;
-            virtual void StoreData( Storage< Real >::Frame& frame ) override;
+	protected:
+		virtual String GetClassSignature() const override;
+		virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
-		private:
-			Real m_Wang2012BasalEnergy;
-            Real m_Uchida2016BasalEnergy;
-            Real m_AerobicFactor;
-			Statistic< double > m_Energy;
-			Vec3 m_InitComPos;
-			PropNode m_Report;
-            std::vector< Real > m_SlowTwitchFiberRatios;
-            struct MuscleProperties {
-                MuscleProperties( const PropNode& props );
-                String muscle;
-                Real slow_twitch_ratio;
-            };
-
-			double GetEnergy( const sim::Model& model ) const;
-			double GetWang2012( const sim::Model& model ) const;
-            double GetUchida2016( const sim::Model& model ) const;
-			double GetTotalForce( const sim::Model& model ) const;
-            void SetSlowTwitchRatios( const PropNode& props, const sim::Model& model );
+	private:
+		Real m_Wang2012BasalEnergy;
+		Real m_Uchida2016BasalEnergy;
+		Real m_AerobicFactor;
+		Statistic< double > m_Energy;
+		Vec3 m_InitComPos;
+		PropNode m_Report;
+		std::vector< Real > m_SlowTwitchFiberRatios;
+		struct MuscleProperties {
+			MuscleProperties( const PropNode& props );
+			String muscle;
+			Real slow_twitch_ratio;
 		};
-	}
+
+		double GetEnergy( const sim::Model& model ) const;
+		double GetWang2012( const sim::Model& model ) const;
+		double GetUchida2016( const sim::Model& model ) const;
+		double GetTotalForce( const sim::Model& model ) const;
+		void SetSlowTwitchRatios( const PropNode& props, const sim::Model& model );
+	};
 }

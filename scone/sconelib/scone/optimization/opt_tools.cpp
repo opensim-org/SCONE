@@ -63,7 +63,7 @@ namespace scone
 			const PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" ) ;
 			const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 			opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-			cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+			SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 			// report unused parameters
 			LogUntouched( objProp );
