@@ -1,10 +1,10 @@
 #pragma once
 
-#include "sim_fwd.h"
 #include "Model.h"
 #include <memory>
 
 #include "scone/core/PropNode.h"
+#include "scone/core/types.h"
 #include "scone/optimization/ParamSet.h"
 
 namespace scone

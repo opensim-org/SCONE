@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cs_fwd.h"
+#include "scone/core/types.h"
 #include "scone/model/Controller.h"
 #include "scone/model/Leg.h"
 #include <bitset>

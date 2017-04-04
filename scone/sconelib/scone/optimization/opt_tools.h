@@ -5,6 +5,7 @@
 #include "scone/core/string_tools.h"
 #include "scone/core/memory_tools.h"
 #include "scone/core/Log.h"
+#include "scone/core/types.h"
 #include "scone/optimization/Optimizer.h"
 
 namespace scone

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "scone/model/sim_fwd.h"
-#include "scone/optimization/opt_fwd.h"
+#include "scone/core/types.h"
 #include "scone/core/HasSignature.h"
 #include "scone/core/HasData.h"
 #include "scone/model/State.h"

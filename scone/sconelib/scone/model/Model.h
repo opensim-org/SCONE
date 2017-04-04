@@ -1,8 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
-#include "scone/optimization/opt_fwd.h"
-#include "scone/model/sim_fwd.h"
+#include "scone/core/types.h"
 
 #include "Controller.h"
 #include "Link.h"

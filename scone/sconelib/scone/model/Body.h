@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scone/model/sim_fwd.h"
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
 #include "scone/core/Quat.h"
@@ -45,8 +44,8 @@ namespace scone
 			virtual Vec3 GetExternalForcePoint() const = 0;
 			virtual Vec3 GetExternalTorque() const = 0;
 
-			virtual const Model& GetModel() const = 0;
-			virtual Model& GetModel() = 0;
+			virtual const class Model& GetModel() const = 0;
+			virtual class Model& GetModel() = 0;
 
 			virtual std::vector< String > GetDisplayGeomFileNames() const { return std::vector< String >(); }
 		};

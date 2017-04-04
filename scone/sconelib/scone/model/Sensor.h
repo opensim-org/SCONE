@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scone/model/sim_fwd.h"
 #include "scone/core/PropNode.h"
 #include "scone/optimization/ParamSet.h"
 
@@ -12,7 +11,7 @@ namespace scone
 		{
 		public:
 			Sensor();
-			Sensor( const PropNode& pn, opt::ParamSet& par, sim::Model& model, const Area& target_area );
+			Sensor( const PropNode& pn, opt::ParamSet& par, class Model& model, const class Area& target_area );
 			virtual ~Sensor();
 
 			virtual Real GetValue() const { SCONE_THROW_NOT_IMPLEMENTED; }

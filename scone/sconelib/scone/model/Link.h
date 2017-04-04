@@ -4,7 +4,7 @@
 
 #include "scone/core/core.h"
 #include "scone/core/Exception.h"
-#include "sim_fwd.h"
+#include "scone/core/types.h"
 #include "memory_tools.h"
 
 namespace scone

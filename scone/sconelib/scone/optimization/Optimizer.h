@@ -1,10 +1,9 @@
 #pragma once
 
 #include "opt_config.h"
-#include "opt_fwd.h"
 #include "Objective.h"
 #include "scone/core/HasSignature.h"
-#include "scone/core/memory_tools.h"
+#include "scone/core/types.h"
 #include "ParamSet.h"
 
 namespace scone

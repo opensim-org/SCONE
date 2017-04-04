@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sim_fwd.h"
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
 
@@ -11,7 +10,7 @@ namespace scone
 		class SCONE_API Joint : public HasName
 		{
 		public:
-			Joint( Body& body, Joint* parent = nullptr );
+			Joint( class Body& body, class Joint* parent = nullptr );
 			virtual ~Joint();
 
 			virtual Vec3 GetPos() const = 0;
@@ -23,12 +22,12 @@ namespace scone
 
 			bool HasDof( const String& dof_name ) const;
 			const Joint* GetParent() const { return m_pParent; }
-			const Body& GetBody() const { return m_Body; }
+			const class Body& GetBody() const { return m_Body; }
 
 
 		protected:
-			Body& m_Body;
-			Joint* m_pParent;
+			class Body& m_Body;
+			class Joint* m_pParent;
 		};
 	}
 }

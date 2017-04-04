@@ -2,7 +2,6 @@
 
 #include <bitset>
 #include "memory_tools.h"
-#include "sim_fwd.h"
 #include "Side.h"
 
 namespace scone

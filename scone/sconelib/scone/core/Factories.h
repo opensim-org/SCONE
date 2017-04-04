@@ -3,10 +3,9 @@
 #include "flut/factory.hpp"
 
 #include "scone/core/PropNode.h"
-#include "scone/core/Function.h"
-#include "scone/controllers/cs_fwd.h"
+#include "scone/core/types.h"
+
 #include "scone/optimization/ParamSet.h"
-#include "scone/model/sim_fwd.h"
 
 #include "scone/controllers/Reflex.h"
 #include "scone/model/Model.h"

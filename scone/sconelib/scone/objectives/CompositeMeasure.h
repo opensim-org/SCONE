@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Measure.h"
-#include "scone/controllers/cs_fwd.h"
-#include "scone/model/sim_fwd.h"
+#include "scone/core/types.h"
 
 namespace scone
 {

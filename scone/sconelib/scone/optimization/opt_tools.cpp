@@ -1,5 +1,5 @@
 #include "opt_tools.h"
-#include "opt_fwd.h"
+#include "scone/core/types.h"
 #include "CmaOptimizer.h"
 
 #include "scone/core/Factories.h"

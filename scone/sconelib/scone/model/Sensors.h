@@ -1,7 +1,7 @@
 #pragma once
 
-#include "sim_fwd.h"
 #include "Sensor.h"
+#include "scone/core/types.h"
 
 namespace scone
 {

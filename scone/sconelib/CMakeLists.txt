@@ -38,6 +38,7 @@ set(CORE_SYSTEM_FILES
 	scone/core/Log.cpp
 	scone/core/Log.h
 	scone/core/version.h
+	scone/core/types.h
 	scone/core/system_tools.cpp
 	scone/core/system_tools.h
 )
@@ -59,7 +60,6 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/PerturbationController.h
 	)
 set(CS_SYSTEM_FILES
-    scone/controllers/cs_fwd.h
 	scone/controllers/cs_tools.cpp
 	scone/controllers/cs_tools.h
 	)
@@ -142,7 +142,6 @@ set(OPT_API_FILES
 	scone/optimization/ParamSet.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h
-    scone/optimization/opt_fwd.h
     )
 set(OPT_SYSTEM_FILES
 	scone/optimization/SharkHelperClasses.h
@@ -182,7 +181,6 @@ set(SIM_SIMULATIONANDCONTROL_FILES
 set(SIM_SYSTEM_FILES
     scone/model/sim_tools.cpp
     scone/model/sim_tools.h
-    scone/model/sim_fwd.h
     )
 set(SIM_TOPOLOGY_FILES
     scone/model/Area.cpp

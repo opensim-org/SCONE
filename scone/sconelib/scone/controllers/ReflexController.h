@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cs_fwd.h"
+#include "scone/core/types.h"
 #include "scone/core/PropNode.h"
 #include "scone/optimization/ParamSet.h"
 #include "scone/model/Model.h"

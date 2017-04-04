@@ -12,7 +12,7 @@
 #include "SconeStorageDataModel.h"
 #include "simvis/axes.h"
 #include "scone/model/State.h"
-#include "scone/controllers/cs_fwd.h"
+#include "scone/core/types.h"
 
 namespace scone
 {

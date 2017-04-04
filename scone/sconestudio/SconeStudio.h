@@ -11,7 +11,6 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "SconeManager.h"
 #include "StudioScene.h"
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"

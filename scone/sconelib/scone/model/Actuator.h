@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sim_fwd.h"
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
 

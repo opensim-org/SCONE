@@ -1,8 +1,7 @@
 #pragma once
 
-#include "sim_fwd.h"
-
 #include "scone/core/core.h"
+#include "scone/core/types.h"
 #include "scone/core/HasData.h"
 #include "scone/core/Vec3.h"
 

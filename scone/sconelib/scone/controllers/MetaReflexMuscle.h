@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cs_fwd.h"
 #include "scone/core/core.h"
+#include "scone/core/types.h"
 #include "scone/model/Muscle.h"
 #include <vector>
 #include "MetaReflexParams.h"

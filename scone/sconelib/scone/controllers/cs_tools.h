@@ -3,7 +3,7 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/core.h"
 #include "scone/core/PropNode.h"
-#include "scone/controllers/cs_fwd.h"
+#include "scone/core/types.h"
 
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sim_fwd.h"
 #include "Sensor.h"
 
 namespace scone
