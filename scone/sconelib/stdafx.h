@@ -4,11 +4,15 @@
 #include <cstdint>
 #include <string>
 #include <vector>
-#include <map>
 #include <memory>
 
 // OpenSim
 #include <OpenSim/OpenSim.h>
+
+// boost
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+#include <boost/thread.hpp>
 
 // FLUT
 #include <flut/math/vec3.hpp>

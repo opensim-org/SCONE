@@ -2,16 +2,15 @@
 
 #include "scone/optimization/opt_tools.h"
 #include "scone/core/StorageIo.h"
+#include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
-#include "scone/controllers/cs_tools.h"
 #include "scone/core/system_tools.h"
+#include "scone/controllers/cs_tools.h"
 #include "scone/model/Muscle.h"
 
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
 
-#include "scone/core/Profiler.h"
-#include "boost/token_functions.hpp"
 
 namespace bfs = boost::filesystem;
 
