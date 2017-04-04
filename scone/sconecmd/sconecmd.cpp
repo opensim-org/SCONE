@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 		cmd.parse( argc, argv );
 
 		// register all types
-		opt::RegisterFactoryTypes();
+		//opt::RegisterFactoryTypes();
 		RegisterFactoryTypes();
 		sim::RegisterSimbody();
 

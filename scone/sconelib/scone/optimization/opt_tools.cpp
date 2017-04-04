@@ -23,13 +23,6 @@ namespace scone
 {
 	namespace opt
 	{
-		void RegisterFactoryTypes()
-		{
-			GetOptimizerFactory().Register< CmaOptimizerCCMAES >( "CmaOptimizer" );
-			GetOptimizerFactory().Register< CmaOptimizerShark3 >();
-			GetOptimizerFactory().Register< CmaOptimizerCCMAES >();
-		}
-
 		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
 		{
 			// create optimizer and report unused parameters

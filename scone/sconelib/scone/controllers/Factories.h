@@ -14,7 +14,6 @@
 namespace scone
 {
 	SCONE_API sim::ControllerUP CreateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
-
-	DECLARE_FACTORY( SCONE_API, Function, ( const PropNode&, opt::ParamSet& ) );
-	DECLARE_FACTORY( SCONE_API, Reflex, ( const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& ) );
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+	SCONE_API FunctionUP CreateFunction( const PropNode& props, opt::ParamSet& par );
 }

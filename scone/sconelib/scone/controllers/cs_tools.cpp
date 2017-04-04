@@ -43,25 +43,16 @@ namespace scone
 {
 	void SCONE_API RegisterFactoryTypes()
 	{
-		// register sim factory types
-		sim::RegisterFactoryTypes();
-
 		// register opt factory types
-		opt::RegisterFactoryTypes();
+		//opt::RegisterFactoryTypes();
 
 		// register objective
 		opt::GetObjectiveFactory().Register< SimulationObjective >();
 
 		// register reflexes
 		// TODO: make this not separate but use controller factory instead?
-		GetReflexFactory().Register< MuscleReflex >();
-		GetReflexFactory().Register< DofReflex >();
-		GetReflexFactory().Register< ConditionalMuscleReflex >();
 
 		// register functions
-		GetFunctionFactory().Register< PieceWiseConstantFunction >();
-		GetFunctionFactory().Register< PieceWiseLinearFunction >();
-		GetFunctionFactory().Register< Polynomial >();
 	}
 
 	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )

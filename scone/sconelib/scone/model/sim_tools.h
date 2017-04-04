@@ -8,7 +8,6 @@ namespace scone
 {
 	namespace sim
 	{
-		SCONE_API void RegisterFactoryTypes();
 		SCONE_API Vec3 GetGroundCop( const Vec3& force, const Vec3& moment, Real min_force = REAL_WIDE_EPSILON );
 	}
 }

@@ -90,7 +90,7 @@ namespace scone
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
 		// register scone types
-		opt::RegisterFactoryTypes();
+		//opt::RegisterFactoryTypes();
 		RegisterFactoryTypes();
 
 		opt::ParamSet par( filename );
