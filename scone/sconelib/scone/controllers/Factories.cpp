@@ -6,6 +6,14 @@
 #include "scone/controllers/FeedForwardController.h"
 #include "scone/controllers/ReflexController.h"
 #include "scone/controllers/MetaReflexController.h"
+#include "scone/objectives/GaitMeasure.h"
+#include "scone/objectives/GaitCycleMeasure.h"
+#include "scone/objectives/CompositeMeasure.h"
+#include "scone/objectives/JumpMeasure.h"
+#include "scone/objectives/JointLoadMeasure.h"
+#include "scone/objectives/ReactionForceMeasure.h"
+#include "scone/objectives/PointMeasure.h"
+#include "scone/objectives/HeightMeasure.h"
 
 namespace scone
 {
@@ -26,16 +34,27 @@ namespace scone
 		static flut::factory< sim::Controller, const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& > g_ControllerFactory;
 		if ( g_ControllerFactory.empty() )
 		{
+			// register controllers
 			g_ControllerFactory.register_class< FeedForwardController >();
 			g_ControllerFactory.register_class< GaitStateController >();
 			g_ControllerFactory.register_class< ReflexController >();
 			g_ControllerFactory.register_class< TimeStateController >();
 			g_ControllerFactory.register_class< MetaReflexController >();
 			g_ControllerFactory.register_class< PerturbationController >();
+
+			// register measures
+			g_ControllerFactory.register_class< HeightMeasure >();
+			g_ControllerFactory.register_class< GaitMeasure >();
+			g_ControllerFactory.register_class< GaitCycleMeasure >();
+			g_ControllerFactory.register_class< EffortMeasure >();
+			g_ControllerFactory.register_class< DofLimitMeasure >();
+			g_ControllerFactory.register_class< CompositeMeasure >();
+			g_ControllerFactory.register_class< JumpMeasure >();
+			g_ControllerFactory.register_class< JointLoadMeasure >();
+			g_ControllerFactory.register_class< ReactionForceMeasure >();
+			g_ControllerFactory.register_class< PointMeasure >();
 		}
 
 		return g_ControllerFactory[ props.get< String >( "type" ) ]( props, par, model, target_area );
 	}
-
-
 }
