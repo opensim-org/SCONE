@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core.h"
-#include "String.h"
 #include "Exception.h"
 #include <algorithm>
 #include <vector>

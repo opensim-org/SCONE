@@ -4,7 +4,6 @@
 #include <iosfwd>
 
 #include "flut/string_tools.hpp"
-#include "String.h"
 
 // need for demangling with GCC
 #ifndef _MSC_VER
