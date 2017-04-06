@@ -401,7 +401,7 @@ namespace scone
 						// This is an optimization that only works when there are only muscles
 						// OpenSim: addInControls is rather inefficient, that's why we don't use it
 						// TODO: fix this into a generic version (i.e. work with other actuators)
-						controls[ idx++ ] += mus->GetControlValue();
+						controls[ idx++ ] += mus->GetInput();
 					}
 				}
 			}
@@ -752,7 +752,7 @@ namespace scone
 			for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 			{
 				OpenSim::Muscle& osmus = dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle();
-				auto a = override_activation != 0.0 ? override_activation : ( *iter )->GetControlValue();
+				auto a = override_activation != 0.0 ? override_activation : ( *iter )->GetInput();
 				osmus.setActivation( GetOsimModel().updWorkingState(), a );
 			}
 

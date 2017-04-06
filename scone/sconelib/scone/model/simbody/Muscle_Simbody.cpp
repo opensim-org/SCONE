@@ -132,6 +132,11 @@ namespace scone
 			return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
 		}
 
+		void Muscle_Simbody::SetExcitationDelay( TimeInSeconds delay )
+		{
+
+		}
+
 		scone::Real scone::sim::Muscle_Simbody::GetTendonLength() const
 		{
 			return m_osMus.getTendonLength( m_Model.GetTkState() );
@@ -177,7 +182,7 @@ namespace scone
 		{
 			// use our own control value, as OpenSim calls getControls()
 			// this could lead to infinite recursion
-            double u = GetControlValue();
+            double u = GetInput();
             
             // since the control value is internal, the actual excitation may be
             // incorrect. make sure to clamp it for calls (important for metabolics)

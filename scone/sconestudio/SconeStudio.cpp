@@ -175,7 +175,7 @@ void SconeStudio::evaluate()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	SCONE_PROFILE_RESET;
-	const double step_size = 0.2;
+	const double step_size = 0.1;
 	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
 		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );

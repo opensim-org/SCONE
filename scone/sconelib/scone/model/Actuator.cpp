@@ -14,7 +14,7 @@ namespace scone
 
 		void Actuator::StoreData( Storage< Real >::Frame& frame )
 		{
-			frame[ GetName() + ".control" ] = GetControlValue();
+			frame[ GetName() + ".input" ] = GetInput();
 		}
 	}
 }

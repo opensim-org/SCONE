@@ -193,7 +193,7 @@ namespace scone
 
 		// compute total
 		Real total = ul + uc + uf;
-		muscle.AddControlValue( std::max( 0.0, total ) );
+		muscle.AddInput( std::max( 0.0, total ) );
 
 #ifdef DEBUG_MUSCLE
 		if ( muscle.GetName() == DEBUG_MUSCLE )

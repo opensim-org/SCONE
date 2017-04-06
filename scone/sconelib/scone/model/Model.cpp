@@ -193,7 +193,7 @@ namespace scone
 			// reset actuator values
 			// TODO: not only muscles!
 			for ( MuscleUP& mus: GetMuscles() )
-				mus->ResetControlValue();
+				mus->ClearInput();
 
 			// update all controllers
 			bool terminate = false;

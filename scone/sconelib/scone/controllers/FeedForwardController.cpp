@@ -94,12 +94,12 @@ namespace scone
 					val += ai.mode_weights[ mode ] * funcresults[ mode ];
 
 				// add control value
-				model.GetMuscles()[ ai.muscle_idx ]->AddControlValue( val );
+				model.GetMuscles()[ ai.muscle_idx ]->AddInput( val );
 			}
 			else
 			{
 				// apply results directly to control value
-				model.GetMuscles()[ ai.muscle_idx ]->AddControlValue( funcresults[ ai.function_idx ] );
+				model.GetMuscles()[ ai.muscle_idx ]->AddInput( funcresults[ ai.function_idx ] );
 			}
 		}
 
