@@ -171,6 +171,7 @@ void SconeStudio::evaluate()
 {
 	ui.abortButton->setChecked( false );
 	ui.progressBar->setValue( 0 );
+	ui.progressBar->setFormat( " Evaluating (%p%)" );
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	SCONE_PROFILE_RESET;
@@ -207,6 +208,7 @@ void SconeStudio::createVideo()
 	ui.osgViewer->stopTimer();
 	ui.abortButton->setChecked( false );
 	ui.progressBar->setValue( 0 );
+	ui.progressBar->setFormat( " Creating Video (%p%)" );
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
