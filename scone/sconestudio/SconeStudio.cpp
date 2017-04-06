@@ -154,19 +154,10 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 void SconeStudio::start()
 {
 	ui.osgViewer->stopTimer();
-
-	if ( !captureFilename.isEmpty() )
-	{
-		QDir().mkdir( captureFilename + ".images" );
-		ui.osgViewer->startCapture( captureFilename.toStdString() + ".images/image" );
-	}
 }
 
 void SconeStudio::stop()
 {
-	if ( !captureFilename.isEmpty() )
-		finalizeCapture();
-
 	ui.osgViewer->startTimer();
 	refreshAnalysis();
 }
@@ -181,7 +172,6 @@ void SconeStudio::evaluate()
 	ui.abortButton->setChecked( false );
 	ui.progressBar->setValue( 0 );
 	ui.stackedWidget->setCurrentIndex( 1 );
-	ui.progressBar->setTextVisible( true );
 
 	SCONE_PROFILE_RESET;
 	const double step_size = 0.2;
@@ -204,6 +194,40 @@ void SconeStudio::evaluate()
 	log::info( SCONE_PROFILE_REPORT );
 }
 
+void SconeStudio::createVideo()
+{
+	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
+	if ( captureFilename.isEmpty() )
+		return;
+
+	// start recording
+	QDir().mkdir( captureFilename + ".images" );
+	ui.osgViewer->startCapture( captureFilename.toStdString() + ".images/image" );
+
+	ui.osgViewer->stopTimer();
+	ui.abortButton->setChecked( false );
+	ui.progressBar->setValue( 0 );
+	ui.stackedWidget->setCurrentIndex( 1 );
+
+	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
+	for ( double t = 0.0; t <= manager.GetMaxTime(); t += step_size )
+	{
+		setTime( t );
+		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		QApplication::processEvents();
+		if ( ui.abortButton->isChecked() )
+			break;
+	}
+
+	// finalize recording
+	finalizeCapture();
+	ui.stackedWidget->setCurrentIndex( 0 );
+	ui.osgViewer->startTimer();
+
+	log::info( SCONE_PROFILE_REPORT );
+
+}
+
 void SconeStudio::setTime( TimeInSeconds t )
 {
 	SCONE_PROFILE_FUNCTION;
@@ -215,11 +239,10 @@ void SconeStudio::setTime( TimeInSeconds t )
 	current_time = t;
 
 	// update ui and visualization
-	manager.Update( t );
-
+	manager.Update( current_time );
 	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
 	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-	ui.osgViewer->repaint();
+	ui.osgViewer->setFrameTime( current_time );
 
 	// update graph (if visible)
 	if ( analysisView->isVisible() )
@@ -430,11 +453,6 @@ void SconeStudio::updateOptimizations()
 			return; // must return here because close invalidates the iterator
 		}
 	}
-}
-
-void SconeStudio::createVideo()
-{
-	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 }
 
 void SconeStudio::tabCloseRequested( int idx )

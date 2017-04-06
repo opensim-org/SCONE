@@ -421,7 +421,7 @@
   </action>
   <action name="action_Create_Video">
    <property name="text">
-    <string>Start Video &amp;Recording...</string>
+    <string>&amp;Create Video...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+R</string>
