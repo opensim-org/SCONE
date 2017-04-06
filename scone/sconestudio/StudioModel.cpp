@@ -1,17 +1,16 @@
 #include "StudioModel.h"
 
-#include "scone/opt/Factories.h"
-#include "scone/opt/opt_tools.h"
+#include "scone/optimization/opt_tools.h"
 #include "scone/core/StorageIo.h"
-#include "scone/cs/cs_tools.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/Factories.h"
 #include "scone/core/system_tools.h"
-#include "scone/sim/Muscle.h"
+#include "scone/controllers/cs_tools.h"
+#include "scone/model/Muscle.h"
 
 #include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
 
-#include "scone/core/Profiler.h"
-#include "boost/token_functions.hpp"
 
 namespace bfs = boost::filesystem;
 
@@ -26,7 +25,7 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file
-		so = cs::CreateSimulationObjective( file );
+		so = CreateSimulationObjective( file );
 
 		// accept filename and clear data
 		filename = file;

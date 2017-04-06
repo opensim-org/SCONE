@@ -11,6 +11,7 @@
 #endif
 
 #include <cstddef>
+#include <string>
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
@@ -33,6 +34,7 @@ namespace scone
 	// index type
 	typedef size_t Index;
 	typedef size_t Count;
+	typedef std::string String;
 	const Index NoIndex = size_t( -1 );
 	typedef double TimeInSeconds;
 }

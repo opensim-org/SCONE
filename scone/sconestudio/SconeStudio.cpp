@@ -10,7 +10,7 @@
 #include <QTextStream>
 
 #include "simvis/osg_tools.h"
-#include "scone/opt/opt_tools.h"
+#include "scone/optimization/opt_tools.h"
 #include "flut/system_tools.hpp"
 #include "qt_tools.h"
 #include "qevent.h"

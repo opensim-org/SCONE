@@ -1,17 +1,18 @@
 #pragma once
 
 #include "scone/core/system_tools.h"
-#include "scone/sim/Model.h"
+#include "scone/model/Model.h"
 #include "simvis/scene.h"
-#include "scone/cs/SimulationObjective.h"
-#include "scone/opt/Objective.h"
+#include "scone/objectives/SimulationObjective.h"
+#include "scone/optimization/Objective.h"
 
 #include "flut/flag_set.hpp"
 #include "simvis/arrow.h"
 
 #include "SconeStorageDataModel.h"
 #include "simvis/axes.h"
-#include "scone/core/State.h"
+#include "scone/model/State.h"
+#include "scone/core/types.h"
 
 namespace scone
 {
@@ -36,7 +37,7 @@ namespace scone
 
 		const Storage<>& GetData() { return data; }
 		sim::Model& GetSimModel() { return so->GetModel(); }
-		cs::SimulationObjective& GetObjective() { return *so; }
+		SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating; }
 
@@ -47,7 +48,7 @@ namespace scone
 		void InitVis( vis::scene& s );
 
 		Storage<> data;
-		cs::SimulationObjectiveUP so;
+		SimulationObjectiveUP so;
 		path filename;
 
 		ViewFlags view_flags;

@@ -1,7 +1,7 @@
 #include "scone/core/Log.h"
-#include "scone/opt/opt_tools.h"
-#include "scone/cs/cs_tools.h"
-#include "scone/sim/simbody/sim_simbody.h"
+#include "scone/optimization/opt_tools.h"
+#include "scone/controllers/cs_tools.h"
+#include "scone/model/simbody/sim_simbody.h"
 #include "flut/system_tools.hpp"
 #include <boost/filesystem.hpp>
 #include <tclap/CmdLine.h>
@@ -29,9 +29,8 @@ int main(int argc, char* argv[])
 		cmd.parse( argc, argv );
 
 		// register all types
-		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
-		sim::RegisterSimbody();
+		//opt::RegisterFactoryTypes();
+		//RegisterFactoryTypes();
 
 		if ( optArg.isSet() )
 		{

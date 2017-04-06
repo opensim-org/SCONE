@@ -1,8 +1,8 @@
 #include "common.h"
 
-#include "scone/opt/opt_tools.h"
-#include "scone/cs/cs_tools.h"
-#include "scone/sim/simbody/sim_simbody.h"
+#include "scone/optimization/opt_tools.h"
+#include "scone/controllers/cs_tools.h"
+#include "scone/model/simbody/sim_simbody.h"
 
 struct SconeGlobalFixture
 {
@@ -11,9 +11,9 @@ struct SconeGlobalFixture
 	{
 		std::cout << "Initializing SCONE" << std::endl;
 
-		scone::opt::RegisterFactoryTypes();
-		scone::cs::RegisterFactoryTypes();
-		scone::sim::RegisterSimbody();
+		//scone::opt::RegisterFactoryTypes();
+		//scone::RegisterFactoryTypes();
+		//scone::sim::RegisterSimbody();
 	}
 
     ~SconeGlobalFixture()

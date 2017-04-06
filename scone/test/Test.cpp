@@ -1,25 +1,25 @@
 #define SCONE_ENABLE_PROFILING
-#include "scone/core/Profiler.h"
 
-#include "Test.h"
-#include "scone/cs/cs_tools.h"
-#include "scone/opt/ParamSet.h"
-#include "scone/sim/Factories.h"
-#include "scone/core/string_tools.h"
 #include <fstream>
+#include "scone/core/Profiler.h"
+#include "Test.h"
+#include "scone/controllers/cs_tools.h"
+#include "scone/optimization/ParamSet.h"
+#include "scone/core/Factories.h"
+#include "scone/core/string_tools.h"
+#include "scone/core/Factories.h"
 
 #include <boost/filesystem.hpp>
-#include "scone/opt/Factories.h"
-#include "scone/opt/opt_tools.h"
-#include "scone/cs/SimulationObjective.h"
+#include "scone/optimization/opt_tools.h"
+#include "scone/objectives/SimulationObjective.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
-#include "scone/sim/sim_tools.h"
-#include "scone/sim/Muscle.h"
+#include "scone/model/sim_tools.h"
+#include "scone/model/Muscle.h"
 #include "boost/format.hpp"
-#include "scone/sim/Dof.h"
-#include "scone/sim/Side.h"
-#include "scone/sim/simbody/Model_Simbody.h"
+#include "scone/model/Dof.h"
+#include "scone/model/Side.h"
+#include "scone/model/simbody/Model_Simbody.h"
 
 namespace bfs = boost::filesystem;
 using std::cout;
@@ -34,17 +34,13 @@ namespace scone
 {
 	void OptimizationTest()
 	{
-		// register new objective
-		//opt::GetObjectiveFactory();
-		//cs::PerformOptimization( "config/optimization_test.xml" );
+		//PerformOptimization( "config/optimization_test.xml" );
 	}
 
 	void ModelTest()
 	{
 		SCONE_PROFILE_FUNCTION;
 		const double simulation_time = 0.2;
-
-		cs::RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 
 		std::vector< String > models;
@@ -63,7 +59,7 @@ namespace scone
 		{
 			opt::ParamSet par;
 			props.set( "Model.model_file", *iter );
-			sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+			sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
@@ -88,11 +84,6 @@ namespace scone
 	void PlaybackTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-
-		// register scone types
-		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
-
 		opt::ParamSet par( filename );
 
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
@@ -112,8 +103,8 @@ namespace scone
 		//objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		SCONE_PROFILE_RESET;
 		double result;
@@ -168,10 +159,6 @@ namespace scone
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
-		// register scone types
-		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
-
 		opt::ParamSet par( filename );
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
@@ -190,8 +177,8 @@ namespace scone
 		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
@@ -216,18 +203,13 @@ namespace scone
 	void SimulationObjectiveTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-
-		// register scone types
-		opt::RegisterFactoryTypes();
-		cs::RegisterFactoryTypes();
-
 		opt::ParamSet par; // empty parameter set
 		const PropNode configProp = load_file_with_include( filename ) ;
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective
-		opt::ObjectiveUP obj = opt::CreateObjective( objProp, par );
-		cs::SimulationObjective& so = dynamic_cast< cs::SimulationObjective& >( *obj );
+		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		// reset profiler
 		SCONE_PROFILE_RESET;
@@ -253,11 +235,10 @@ namespace scone
 
 	void MuscleLengthTest()
 	{
-		cs::RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
@@ -280,12 +261,11 @@ namespace scone
 
 	void DofAxisTest()
 	{
-		cs::RegisterFactoryTypes();
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 
 		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = sim::CreateModel( props.get_child( "Model" ), par );
+		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( sim::DofUP& dof : m->GetDofs() )
 			log::Info( dof->GetName() + ": " + to_str( dof->GetRotationAxis() ) );

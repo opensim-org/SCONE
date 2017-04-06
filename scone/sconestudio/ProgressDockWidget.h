@@ -3,7 +3,7 @@
 #include <QDockWidget>
 #include "ui_ProgressDockWidget.h"
 #include "scone/core/core.h"
-#include "scone/core/String.h"
+#include "scone/core/memory_tools.h"
 #include "scone/core/PropNode.h"
 
 using scone::String;

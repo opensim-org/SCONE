@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 				if ( fileit->path().extension() == ".par" )
 				{
 					path fp = fileit->path();
-					flut::prop_node result = scone::cs::RunSimulation( fp.string() );
+					flut::prop_node result = scone::RunSimulation( fp.string() );
 
 					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".prop" );
 					if ( !exists( reportpath ) )
