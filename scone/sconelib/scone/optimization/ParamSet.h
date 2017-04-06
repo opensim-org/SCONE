@@ -15,7 +15,7 @@
 #define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
 	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ) )
 
-#define INIT_PARAM_NAMED_REQUIRED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
+#define INIT_PARAM_NAMED_REQUIRED( PROP_, PAR_, VAR_, NAME_ ) \
 	VAR_ = PAR_.Get( NAME_, PROP_, NAME_ )
 
 namespace scone

@@ -9,10 +9,10 @@
 namespace scone
 {
 	MuscleReflex::MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		Reflex( props, par, model, area ),
-		m_pForceSensor( nullptr ),
-		m_pLengthSensor( nullptr ),
-		m_pVelocitySensor( nullptr )
+	Reflex( props, par, model, area ),
+	m_pForceSensor( nullptr ),
+	m_pLengthSensor( nullptr ),
+	m_pVelocitySensor( nullptr )
 	{
 		sim::Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
 
