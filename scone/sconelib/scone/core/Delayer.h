@@ -1,5 +1,7 @@
 #pragma once
+
 #include <deque>
+#include "core.h"
 
 namespace scone
 {
