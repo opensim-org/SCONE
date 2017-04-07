@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		local_balance( 0 ),
 		body_angvel_sensor_gain( model.balance_sensor_ori_vel_gain ),
 		body_sensor_delay( model.balance_sensor_delay ),
@@ -44,7 +44,7 @@ namespace scone
 		// make sure the first body has a parent
 		SCONE_ASSERT( dof_infos.front().dof.GetJoint().GetParent() );
 
-		opt::ScopedParamSetPrefixer prefixer( par, name + "." );
+		ScopedParamSetPrefixer prefixer( par, name + "." );
 
 		// init reflex parameters
 		mrp.Init( props, par, model );
@@ -52,13 +52,13 @@ namespace scone
 		// init balance parameters
 		if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 		{
-			opt::ScopedParamSetPrefixer pre2( par, "B." );
+			ScopedParamSetPrefixer pre2( par, "B." );
 			auto& balprops = props.get_child( "Balance" );
 			auto& body = FindByName( model.GetBodies(), balprops.get< String >( "body" ) );
 
 			// create sensors
-			body_ori_sensor = &model.AcquireDelayedSensor< sim::BodyOriSensor >( *body );
-			body_angvel_sensor = &model.AcquireDelayedSensor< sim::BodyAngVelSensor >( *body );
+			body_ori_sensor = &model.AcquireDelayedSensor< BodyOriSensor >( *body );
+			body_angvel_sensor = &model.AcquireDelayedSensor< BodyAngVelSensor >( *body );
 
 			bal_mrp.Init( balprops, par, model );
 
@@ -81,7 +81,7 @@ namespace scone
 		}
 	}
 
-	scone::Real MetaReflexVirtualMuscle::GetSimilarity( const sim::Muscle& mus, Real tot_abs_moment_arm )
+	scone::Real MetaReflexVirtualMuscle::GetSimilarity( const Muscle& mus, Real tot_abs_moment_arm )
 	{
 		//// make sure origin and insertion are the same
 		//auto& mus_ob = mus.GetOriginLink().GetBody();

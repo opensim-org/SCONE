@@ -29,11 +29,11 @@
 
 namespace scone
 {
-	static flut::factory< sim::Controller, const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& > g_ControllerFactory;
-	static flut::factory< Reflex, const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& > g_ReflexFactory;
-	static flut::factory< Function, const PropNode&, opt::ParamSet& > g_FunctionFactory;
+	static flut::factory< Controller, const PropNode&, ParamSet&, Model&, const Area& > g_ControllerFactory;
+	static flut::factory< Reflex, const PropNode&, ParamSet&, Model&, const Area& > g_ReflexFactory;
+	static flut::factory< Function, const PropNode&, ParamSet& > g_FunctionFactory;
 
-	SCONE_API sim::ControllerUP CreateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area )
+	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area )
 	{
 		if ( g_ControllerFactory.empty() )
 		{
@@ -60,7 +60,7 @@ namespace scone
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area )
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Area& target_area )
 	{
 		if ( g_ReflexFactory.empty() )
 		{
@@ -71,7 +71,7 @@ namespace scone
 		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API FunctionUP CreateFunction( const PropNode& props, opt::ParamSet& par )
+	SCONE_API FunctionUP CreateFunction( const PropNode& props, ParamSet& par )
 	{
 		if ( g_FunctionFactory.empty() )
 		{
@@ -82,45 +82,45 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	static flut::factory< sim::Model, const PropNode&, opt::ParamSet& > g_ModelFactory;
-	SCONE_API sim::ModelUP CreateModel( const PropNode& prop, opt::ParamSet& par )
+	static flut::factory< Model, const PropNode&, ParamSet& > g_ModelFactory;
+	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par )
 	{
 		if ( g_ModelFactory.empty() )
 		{
-			g_ModelFactory.register_class< sim::Model_Simbody >( "Simbody" );
+			g_ModelFactory.register_class< Model_Simbody >( "Simbody" );
 		}
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static flut::factory< sim::Sensor, const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& > g_SensorFactory;
-	SCONE_API sim::SensorUP CreateSensor( const PropNode& props, opt::ParamSet& par, sim::Model& m, const sim::Area& a )
+	static flut::factory< Sensor, const PropNode&, ParamSet&, Model&, const Area& > g_SensorFactory;
+	SCONE_API SensorUP CreateSensor( const PropNode& props, ParamSet& par, Model& m, const Area& a )
 	{
 		if ( g_SensorFactory.empty() )
 		{
-			g_SensorFactory.register_class< sim::MuscleForceSensor >();
-			g_SensorFactory.register_class< sim::MuscleLengthSensor >();
-			g_SensorFactory.register_class< sim::MuscleVelocitySensor >();
-			g_SensorFactory.register_class< sim::MuscleSpindleSensor >();
-			g_SensorFactory.register_class< sim::DofPositionSensor >();
-			g_SensorFactory.register_class< sim::DofVelocitySensor >();
+			g_SensorFactory.register_class< MuscleForceSensor >();
+			g_SensorFactory.register_class< MuscleLengthSensor >();
+			g_SensorFactory.register_class< MuscleVelocitySensor >();
+			g_SensorFactory.register_class< MuscleSpindleSensor >();
+			g_SensorFactory.register_class< DofPositionSensor >();
+			g_SensorFactory.register_class< DofVelocitySensor >();
 		}
 		return g_SensorFactory( props.get< String >( "type" ), props, par, m, a );
 	}
 
-	static flut::factory< opt::Optimizer, const PropNode& > g_OptimizerFactory;
-	SCONE_API opt::OptimizerUP CreateOptimizer( const PropNode& prop )
+	static flut::factory< Optimizer, const PropNode& > g_OptimizerFactory;
+	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
 	{
 		if ( g_OptimizerFactory.empty() )
 		{
-			g_OptimizerFactory.register_class< opt::CmaOptimizerCCMAES >( "CmaOptimizer" );
-			g_OptimizerFactory.register_class< opt::CmaOptimizerShark3 >();
-			g_OptimizerFactory.register_class< opt::CmaOptimizerCCMAES >();
+			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
+			g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
+			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	static flut::factory< opt::Objective, const PropNode&, opt::ParamSet& > g_ObjectiveFactory;
-	SCONE_API flut::factory< opt::Objective, const PropNode&, opt::ParamSet& >& GetObjectiveFactory()
+	static flut::factory< Objective, const PropNode&, ParamSet& > g_ObjectiveFactory;
+	SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory()
 	{
 		if ( g_ObjectiveFactory.empty() )
 		{
@@ -129,7 +129,7 @@ namespace scone
 		return g_ObjectiveFactory;
 	}
 
-	SCONE_API opt::ObjectiveUP CreateObjective( const PropNode& prop, opt::ParamSet& par )
+	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par )
 	{
 		return GetObjectiveFactory()( prop.get< String >( "type" ), prop, par );
 	}

@@ -11,23 +11,23 @@ namespace scone
 	class SCONE_API JumpMeasure : public Measure
 	{
 	public:
-		JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		JumpMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~JumpMeasure();
 
-		virtual double GetResult( sim::Model& model ) override;
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+		virtual double GetResult( Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
 	private:
 		enum State { Prepare, Takeoff, Flight, Landing, Recover };
 		enum JumpType { NoJumpType, HighJump, LongJump };
 
-		double GetHighJumpResult( const sim::Model& m );
-		double GetLongJumpResult( const sim::Model& m );
+		double GetHighJumpResult( const Model& m );
+		double GetLongJumpResult( const Model& m );
 		static double GetLandingDist( const Vec3& pos, const Vec3& vel, double floor_height = 0.0 );
 
 		State state;
-		sim::Body* target_body;
+		Body* target_body;
 		Real termination_height;
 		bool terminate_on_peak;
 		Vec3 init_com;

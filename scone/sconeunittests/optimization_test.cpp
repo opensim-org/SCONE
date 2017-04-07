@@ -10,16 +10,16 @@
 using namespace boost::filesystem;
 using namespace scone;
 
-class TestObjective : public scone::opt::Objective
+class TestObjective : public scone::Objective
 {
 public:
-	TestObjective( const PropNode& props, opt::ParamSet& par ) : Objective( props, par ), num_params( 0 ), is_evaluating( false )
+	TestObjective( const PropNode& props, ParamSet& par ) : Objective( props, par ), num_params( 0 ), is_evaluating( false )
 	{
 		INIT_PROPERTY( props, num_params, 0 );
 		params.resize( num_params );
 	}
 
-	virtual void ProcessParameters( opt::ParamSet& par ) override
+	virtual void ProcessParameters( ParamSet& par ) override
 	{
 		for ( size_t i = 0; i < params.size(); ++i )
 			params[ i ] = par.GetMeanStd( stringf( "par%d", i), 1.0, 0.1, -1000.0, 1000.0 );
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 	GetObjectiveFactory().register_class< TestObjective >();
 
 	const PropNode pn = load_xml( ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" ).str() );
-	opt::OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
+	OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
 	LogUntouched( pn );
 	o->SetConsoleOutput( false );
 	o->Run();

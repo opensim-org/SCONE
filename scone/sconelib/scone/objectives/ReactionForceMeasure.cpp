@@ -5,18 +5,18 @@
 
 namespace scone
 {
-	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		load_penalty( props )
 	{
 	}
 
-	double ReactionForceMeasure::GetResult( sim::Model& model )
+	double ReactionForceMeasure::GetResult( Model& model )
 	{
 		return load_penalty.GetAverage();
 	}
 
-	scone::sim::Controller::UpdateResult ReactionForceMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	scone::Controller::UpdateResult ReactionForceMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		Real leg_load = 0.0f;
 		for ( auto& leg : model.GetLegs() )

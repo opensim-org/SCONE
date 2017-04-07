@@ -3,11 +3,4 @@
 
 namespace scone
 {
-	namespace sim
-	{
-		//void RegisterSimbody()
-		//{
-		//	GetModelFactory().Register< sim::Model_Simbody >( "Simbody" );
-		//}
-	}
 }

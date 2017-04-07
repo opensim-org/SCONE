@@ -4,11 +4,11 @@
 
 namespace scone
 {
-	class ExampleObjective : public opt::Objective
+	class ExampleObjective : public Objective
 	{
 	public:
-		ExampleObjective( const PropNode& props, opt::ParamSet& par );
-		virtual void ProcessParameters( opt::ParamSet& par ) override;
+		ExampleObjective( const PropNode& props, ParamSet& par );
+		virtual void ProcessParameters( ParamSet& par ) override;
 		static double Rosenbrock( const std::vector< double >& v );
 
 	protected:

@@ -12,13 +12,13 @@ namespace scone
 	class SCONE_API MetaReflexMuscle
 	{
 	public:
-		MetaReflexMuscle( sim::Muscle& mus, sim::Model& model, const MetaReflexController& controller, const sim::Area& area );
+		MetaReflexMuscle( Muscle& mus, Model& model, const MetaReflexController& controller, const Area& area );
 		virtual ~MetaReflexMuscle();
 		void UpdateControls();
 		void UpdateMuscleControlParameters( bool debug = false );
-		sim::Muscle& muscle;
-		sim::SensorDelayAdapter& force_sensor;
-		sim::SensorDelayAdapter& length_sensor;
+		Muscle& muscle;
+		SensorDelayAdapter& force_sensor;
+		SensorDelayAdapter& length_sensor;
 
 		Real delay;
 		Real total_abs_moment_arm;

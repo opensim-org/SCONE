@@ -9,7 +9,7 @@ namespace scone
 
 	}
 
-	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, opt::ParamSet& par )
+	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, ParamSet& par )
 	{
 		size_t control_points;
 		INIT_PROPERTY( props, control_points, size_t( 0 ) );

@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	MetaReflexDof::MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	MetaReflexDof::MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		target_dof( *FindByName( model.GetDofs(), props.get< String >( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
@@ -24,7 +24,7 @@ namespace scone
 		// TODO: remove once a proper factory is used
 		SCONE_ASSERT( props.get< String >( "type" ) == "MetaReflex" );
 
-		opt::ScopedParamSetPrefixer prefixer( par, props.get< String >( "target" ) + "." );
+		ScopedParamSetPrefixer prefixer( par, props.get< String >( "target" ) + "." );
 
 		// init dof parameters
 		dof_pos.Init( props, par, model, "P" );
@@ -32,13 +32,13 @@ namespace scone
 
 		if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 		{
-			opt::ScopedParamSetPrefixer pre2( par, "B." );
+			ScopedParamSetPrefixer pre2( par, "B." );
 			auto& balprops = props.get_child( "Balance" );
 			auto& body = FindByName( model.GetBodies(), balprops.get< String >( "body" ) );
 
 			// create sensors
-			body_ori_sensor = &model.AcquireDelayedSensor< sim::BodyOriSensor >( *body );
-			body_angvel_sensor = &model.AcquireDelayedSensor< sim::BodyAngVelSensor >( *body );
+			body_ori_sensor = &model.AcquireDelayedSensor< BodyOriSensor >( *body );
+			body_angvel_sensor = &model.AcquireDelayedSensor< BodyAngVelSensor >( *body );
 
 			bal_pos.Init( balprops, par, model, "P" );
 			bal_neg.Init( balprops, par, model, "N" );

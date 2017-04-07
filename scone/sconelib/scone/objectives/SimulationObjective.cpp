@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	SimulationObjective::SimulationObjective( const PropNode& props, opt::ParamSet& par ) :
+	SimulationObjective::SimulationObjective( const PropNode& props, ParamSet& par ) :
 		Objective( props, par ),
 		m_ModelProps( props.get_child( "Model" ) )
 	{
@@ -39,14 +39,14 @@ namespace scone
 		return m_Measure->GetResult( *m_Model );
 	}
 
-	void SimulationObjective::ProcessParameters( opt::ParamSet& par )
+	void SimulationObjective::ProcessParameters( ParamSet& par )
 	{
 		// (re)create new model using stored model props
 		m_Model = CreateModel( m_ModelProps, par );
 
 		// find measure controller
 		auto& controllers = m_Model->GetControllers();
-		const auto& is_measure = [&]( sim::ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
+		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
 		auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );
 
 		if ( measureIter == controllers.end() )
@@ -68,7 +68,7 @@ namespace scone
 	{
 		String str = m_Model->GetSignature();
 
-		for ( sim::ControllerUP& c : m_Model->GetControllers() )
+		for ( ControllerUP& c : m_Model->GetControllers() )
 			str += "." + c->GetSignature();
 		str += stringf( ".D%.0f", max_duration );
 

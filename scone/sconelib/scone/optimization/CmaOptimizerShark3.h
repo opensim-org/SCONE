@@ -4,15 +4,12 @@
 
 namespace scone
 {
-	namespace opt
+	class SCONE_API CmaOptimizerShark3 : public CmaOptimizer
 	{
-		class SCONE_API CmaOptimizerShark3 : public CmaOptimizer
-		{
-		public:
-			CmaOptimizerShark3( const PropNode& props );
-			virtual ~CmaOptimizerShark3() {}
+	public:
+		CmaOptimizerShark3( const PropNode& props );
+		virtual ~CmaOptimizerShark3() {}
 
-			virtual void Run() override;
-		};
-	}
+		virtual void Run() override;
+	};
 }

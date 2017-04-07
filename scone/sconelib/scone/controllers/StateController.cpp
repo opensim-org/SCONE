@@ -5,8 +5,8 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
-		sim::Controller( props, par, model, area )
+	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+		Controller( props, par, model, area )
 	{
 	}
 
@@ -14,7 +14,7 @@ namespace scone
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area )
 	{
 		// create instances for each controller
 		const PropNode& ccProps = props.get_child( "ConditionalControllers" );
@@ -48,7 +48,7 @@ namespace scone
 
 					// create controller
 					const PropNode& cprops = ccIt->second.get_child( "Controller" );
-				opt::ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
+				ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
 				cc.second = CreateController( cprops, par, model, area );
 			}
 		}
@@ -73,7 +73,7 @@ namespace scone
 		}
 	}
 
-	StateController::UpdateResult StateController::UpdateControls( sim::Model& model, double timestamp )
+	StateController::UpdateResult StateController::UpdateControls( Model& model, double timestamp )
 	{
 		for ( ConditionalController& cc : m_ConditionalControllers )
 		{

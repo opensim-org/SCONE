@@ -57,9 +57,9 @@ namespace scone
 		// run all models
 		for ( auto iter = models.begin(); iter != models.end(); ++iter )
 		{
-			opt::ParamSet par;
+			ParamSet par;
 			props.set( "Model.model_file", *iter );
-			sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
+			ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 			log::DebugF( "Muscles=%d Bodies=%d Joints=%d Controllers=%d", m->GetMuscles().size(), m->GetBodies().size(), m->GetJoints().size(), m->GetControllers().size() );
 			log::Debug( "Starting simulation..." );
@@ -77,14 +77,14 @@ namespace scone
 			m->WriteData( get_filename_without_ext( *iter ) + "_simulation_test" );
 
 			//if ( par.IsInConstructionMode() )
-			//	par.SetMode( opt::ParamSet::UpdateMode );
+			//	par.SetMode( ParamSet::UpdateMode );
 		}
 	}
 
 	void PlaybackTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-		opt::ParamSet par( filename );
+		ParamSet par( filename );
 
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
@@ -103,7 +103,7 @@ namespace scone
 		//objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		SCONE_PROFILE_RESET;
@@ -159,7 +159,7 @@ namespace scone
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
-		opt::ParamSet par( filename );
+		ParamSet par( filename );
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
@@ -177,7 +177,7 @@ namespace scone
 		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 		SCONE_PROFILE_RESET;
 		double result;
@@ -203,12 +203,12 @@ namespace scone
 	void SimulationObjectiveTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-		opt::ParamSet par; // empty parameter set
+		ParamSet par; // empty parameter set
 		const PropNode configProp = load_file_with_include( filename ) ;
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective
-		opt::ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp, par );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		// reset profiler
@@ -237,20 +237,20 @@ namespace scone
 	{
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
-		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
+		ParamSet par; // empty parameter set
+		ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
 		{
-			for ( sim::DofUP& dof: m->GetDofs() )
+			for ( DofUP& dof: m->GetDofs() )
 				dof->SetPos( dof_val, true );
 
 			cout << "DOF offset = " << dof_val << endl;
-			for ( sim::MuscleUP& mus: m->GetMuscles() )
+			for ( MuscleUP& mus: m->GetMuscles() )
 			{
 				if ( GetSide( mus->GetName() ) == RightSide )
 				{
-					sim::Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
+					Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
 					cout << boost::format( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f" )
 						% mus->GetName() % mus->GetLength() % lmus.GetName() % lmus.GetLength()
 						% std::abs( mus->GetLength() - lmus.GetLength() ) << endl;
@@ -264,12 +264,12 @@ namespace scone
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 
-		opt::ParamSet par; // empty parameter set
-		sim::ModelUP m = CreateModel( props.get_child( "Model" ), par );
+		ParamSet par; // empty parameter set
+		ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
-		for ( sim::DofUP& dof : m->GetDofs() )
+		for ( DofUP& dof : m->GetDofs() )
 			log::Info( dof->GetName() + ": " + to_str( dof->GetRotationAxis() ) );
 
-		dynamic_cast<sim::Model_Simbody&>( *m ).ValidateDofAxes();
+		dynamic_cast<Model_Simbody&>( *m ).ValidateDofAxes();
 	}
 }

@@ -8,7 +8,7 @@ namespace scone
 
 	}
 
-	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, opt::ParamSet& par )
+	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, ParamSet& par )
 	{
 		size_t control_points;
 		INIT_PROPERTY( props, control_points, size_t( 0 ) );

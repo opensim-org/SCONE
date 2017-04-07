@@ -14,7 +14,7 @@ namespace scone
 	class SCONE_API MetaReflexDof : public HasData
 	{
 	public:
-		MetaReflexDof( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~MetaReflexDof() {}
 
 		void SetupUsingCurrentPose();
@@ -23,7 +23,7 @@ namespace scone
 
 		void UpdateLocalBalance( const Vec3& global_balance );
 
-		sim::Dof& target_dof;
+		Dof& target_dof;
 		typedef int TargetDir;
 
 		MetaReflexParams dof_pos;
@@ -46,12 +46,12 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
 	private:
-		bool MuscleCrossesDof( const sim::Muscle& mus );
+		bool MuscleCrossesDof( const Muscle& mus );
 
 		Real local_balance;
 		Real body_angvel_sensor_gain;
-		sim::SensorDelayAdapter* body_ori_sensor;
-		sim::SensorDelayAdapter* body_angvel_sensor;
+		SensorDelayAdapter* body_ori_sensor;
+		SensorDelayAdapter* body_angvel_sensor;
 		Real body_sensor_delay;
 	};
 }

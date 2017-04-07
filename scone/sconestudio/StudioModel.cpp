@@ -63,7 +63,7 @@ namespace scone
 
 	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
-		sim::Model& model = so->GetModel();
+		Model& model = so->GetModel();
 
 		scone_scene.attach( root );
 
@@ -116,7 +116,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// initialize visualization
-		sim::Model& model = so->GetModel();
+		Model& model = so->GetModel();
 		std::unique_lock< std::mutex > simulation_lock( model.GetSimulationMutex(), std::defer_lock );
 
 		if ( !is_evaluating )

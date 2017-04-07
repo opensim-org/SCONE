@@ -5,13 +5,13 @@
 
 namespace scone
 {
-	class SCONE_API MetaReflexController : public sim::Controller
+	class SCONE_API MetaReflexController : public Controller
 	{
 	public:
-		MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~MetaReflexController();
 
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 
 		const std::vector< MetaReflexDofUP >& GetReflexDofs() const { return m_ReflexDofs; }
 		const std::vector< MetaReflexVirtualMuscleUP >& GetVirtualMuscles() const { return m_VirtualMuscles; }

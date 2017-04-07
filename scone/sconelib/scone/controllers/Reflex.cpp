@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	Reflex::Reflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	Reflex::Reflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		m_Target( *FindByName( model.GetActuators(), props.get< String >( "target" ) + GetSideName( area.side ) ) )
 	{
 		INIT_PARAM_REQUIRED( props, par, delay );

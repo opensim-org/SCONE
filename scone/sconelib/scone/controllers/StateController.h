@@ -7,13 +7,13 @@
 
 namespace scone
 {
-	class SCONE_API StateController : public sim::Controller
+	class SCONE_API StateController : public Controller
 	{
 	public:
-		StateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~StateController();
 
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 
 	protected:
 		typedef size_t StateIndex;
@@ -28,10 +28,10 @@ namespace scone
 			TimeInSeconds is_active_since;
 		};
 
-		typedef std::pair< ConditionalControllerState, sim::ControllerUP > ConditionalController;
+		typedef std::pair< ConditionalControllerState, ControllerUP > ConditionalController;
 		std::vector< ConditionalController > m_ConditionalControllers;
 
-		void CreateConditionalControllers( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		void CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		void UpdateConditionalControllerStates( StateIndex current_state, TimeInSeconds timestamp );
 
 	private:

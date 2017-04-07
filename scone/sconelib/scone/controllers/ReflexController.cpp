@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	ReflexController::ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	ReflexController::ReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
@@ -37,7 +37,7 @@ namespace scone
 	{
 	}
 
-	sim::Controller::UpdateResult ReflexController::UpdateControls( sim::Model& model, double timestamp )
+	Controller::UpdateResult ReflexController::UpdateControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

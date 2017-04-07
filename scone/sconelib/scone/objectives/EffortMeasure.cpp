@@ -12,7 +12,7 @@ namespace scone
 		EffortMeasure::Uchida2016, "Uchida2016"
 		);
 
-	EffortMeasure::EffortMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	EffortMeasure::EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
@@ -44,7 +44,7 @@ namespace scone
 	{
 	}
 
-	sim::Controller::UpdateResult EffortMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult EffortMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -59,7 +59,7 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	double EffortMeasure::GetResult( sim::Model& model )
+	double EffortMeasure::GetResult( Model& model )
 	{
 		double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
@@ -76,7 +76,7 @@ namespace scone
 		else return m_Energy.GetAverage();
 	}
 
-	double EffortMeasure::GetEnergy( const sim::Model& model ) const
+	double EffortMeasure::GetEnergy( const Model& model ) const
 	{
 		switch ( measure_type )
 		{
@@ -88,21 +88,21 @@ namespace scone
 		}
 	}
 
-	double EffortMeasure::GetTotalForce( const sim::Model& model ) const
+	double EffortMeasure::GetTotalForce( const Model& model ) const
 	{
 		double f = 1.0; // base muscle force
-		for ( const sim::MuscleUP& mus : model.GetMuscles() )
+		for ( const MuscleUP& mus : model.GetMuscles() )
 			f += mus->GetForce();
 
 		return f;
 	}
 
-	double EffortMeasure::GetWang2012( const sim::Model& model ) const
+	double EffortMeasure::GetWang2012( const Model& model ) const
 	{
 		double e = m_Wang2012BasalEnergy;
 		for ( Index i = 0; i < model.GetMuscles().size(); ++i )
 		{
-			const sim::MuscleUP& mus = model.GetMuscles()[ i ];
+			const MuscleUP& mus = model.GetMuscles()[ i ];
 			double mass = mus->GetMass( specific_tension, muscle_density );
 			Real l = m_SlowTwitchFiberRatios[ i ];
 			Real fa = 40 * l * sin( REAL_HALF_PI * mus->GetExcitation() ) + 133 * ( 1 - l ) * ( 1 - cos( REAL_HALF_PI * mus->GetExcitation() ) );
@@ -131,12 +131,12 @@ namespace scone
 
 	// Implementation of Umberger (2003, 2010) metabolics model 
 	// with updates from Uchida 2016.
-	double EffortMeasure::GetUchida2016( const sim::Model& model ) const
+	double EffortMeasure::GetUchida2016( const Model& model ) const
 	{
 		double e = m_Uchida2016BasalEnergy;
 		for ( Index i = 0; i < model.GetMuscles().size(); ++i )
 		{
-			const sim::MuscleUP& mus = model.GetMuscles()[ i ];
+			const MuscleUP& mus = model.GetMuscles()[ i ];
 			double mass = mus->GetMass( specific_tension, muscle_density );
 
 			// calculate A parameter
@@ -213,7 +213,7 @@ namespace scone
 		return e;
 	}
 
-	void EffortMeasure::SetSlowTwitchRatios( const PropNode& props, const sim::Model& model )
+	void EffortMeasure::SetSlowTwitchRatios( const PropNode& props, const Model& model )
 	{
 		// initialize all muscles to default
 		std::vector< Real > init( model.GetMuscles().size(), default_muscle_slow_twitch_ratio );
@@ -231,7 +231,7 @@ namespace scone
 		// update muscle if its name is in the map
 		for ( Index i = 0; i < model.GetMuscles().size(); ++i )
 		{
-			const sim::MuscleUP& mus = model.GetMuscles()[ i ];
+			const MuscleUP& mus = model.GetMuscles()[ i ];
 
 			bool foundMuscle = false;
 			for ( auto it = muscPropsInput.begin(); it != muscPropsInput.end(); ++it )

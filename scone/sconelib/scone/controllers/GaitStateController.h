@@ -10,16 +10,16 @@
 
 namespace scone
 {
-	class SCONE_API GaitStateController : public sim::Controller
+	class SCONE_API GaitStateController : public Controller
 	{
 	public:
 		struct LegState
 		{
-			LegState( sim::Leg& l );
+			LegState( Leg& l );
 
 			// leg structure
-			const sim::Leg& leg;
-			sim::SensorDelayAdapter& load_sensor;
+			const Leg& leg;
+			SensorDelayAdapter& load_sensor;
 
 			// current state
 			enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
@@ -41,10 +41,10 @@ namespace scone
 			Real leg_length;
 		};
 
-		GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+		GaitStateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
 		virtual ~GaitStateController();
 
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 
 		virtual String GetClassSignature() const override;
 
@@ -52,8 +52,8 @@ namespace scone
 		Real stance_load_threshold;
 		Real swing_load_threshold;
 	protected:
-		virtual void UpdateLegStates( sim::Model& model, double timestamp );
-		void UpdateControllerStates( sim::Model& model, double timestamp );
+		virtual void UpdateLegStates( Model& model, double timestamp );
+		void UpdateControllerStates( Model& model, double timestamp );
 
 	private:
 		typedef std::unique_ptr< LegState > LegStateUP;
@@ -68,7 +68,7 @@ namespace scone
 			std::bitset< LegState::StateCount > state_mask;
 			bool active;
 			double active_since;
-			sim::ControllerUP controller;
+			ControllerUP controller;
 			String GetConditionName() const { return stringf( "L%dS%s", leg_index, state_mask.to_string().c_str() ); }
 			bool TestLegPhase( size_t leg_idx, LegState::GaitState state ) { return state_mask.test( size_t( state ) ); }
 		};

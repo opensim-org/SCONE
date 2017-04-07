@@ -5,17 +5,14 @@
 
 namespace scone
 {
-	namespace sim
-	{
-		Simulation_Simbody::Simulation_Simbody( const PropNode& props ) :
+	Simulation_Simbody::Simulation_Simbody( const PropNode& props ) :
 		Simulation( props )
-		{
-		}
+	{
+	}
 
-		void Simulation_Simbody::AdvanceSimulationTo( double time )
-		{
-			for ( auto iter = m_Models.begin(); iter != m_Models.end(); ++iter )
-				dynamic_cast< Model_Simbody& >( **iter ).AdvanceSimulationTo( time );
-		}
+	void Simulation_Simbody::AdvanceSimulationTo( double time )
+	{
+		for ( auto iter = m_Models.begin(); iter != m_Models.end(); ++iter )
+			dynamic_cast<Model_Simbody&>( **iter ).AdvanceSimulationTo( time );
 	}
 }

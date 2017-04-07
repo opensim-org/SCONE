@@ -10,10 +10,7 @@
 
 namespace scone
 {
-	namespace opt
-	{
-		// TODO: move this to sconeopt?
-		SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file );
-		SCONE_API PropNode SimulateObjective( const path& par_file );
-	}
+	// TODO: move this to sconeopt?
+	SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file );
+	SCONE_API PropNode SimulateObjective( const path& par_file );
 }

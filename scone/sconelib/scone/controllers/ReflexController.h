@@ -8,13 +8,13 @@
 
 namespace scone
 {
-	class SCONE_API ReflexController : public sim::Controller
+	class SCONE_API ReflexController : public Controller
 	{
 	public:
-		ReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+		ReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
 		virtual ~ReflexController();
 
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
 	private:

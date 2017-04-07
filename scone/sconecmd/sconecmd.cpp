@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 		cmd.parse( argc, argv );
 
 		// register all types
-		//opt::RegisterFactoryTypes();
+		//RegisterFactoryTypes();
 		//RegisterFactoryTypes();
 
 		if ( optArg.isSet() )
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 			}
 
 			// create optimizer
-			opt::OptimizerUP o = opt::PrepareOptimization( props, scenario_file );
+			OptimizerUP o = PrepareOptimization( props, scenario_file );
 			o->SetConsoleOutput( !quietOutput.getValue() );
 			o->SetStatusOutput( statusOutput.getValue() );
 			if ( o->GetStatusOutput() )
@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 		{
 			// set log level
 			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
-			opt::SimulateObjective( resArg.getValue() );
+			SimulateObjective( resArg.getValue() );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen
 	}

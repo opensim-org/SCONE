@@ -3,7 +3,7 @@
 
 namespace scone
 {
-	TimeStateController::TimeStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	TimeStateController::TimeStateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		StateController( props, par, model, area )
 	{
 		// create states
@@ -25,15 +25,15 @@ namespace scone
 	{
 	}
 
-	TimeStateController::TimeState::TimeState( const PropNode& pn, opt::ParamSet& par )
+	TimeStateController::TimeState::TimeState( const PropNode& pn, ParamSet& par )
 	{
 		INIT_PROPERTY_REQUIRED( pn, name );
-		opt::ScopedParamSetPrefixer prefixer( par, name + "." );
+		ScopedParamSetPrefixer prefixer( par, name + "." );
 
 		INIT_PARAM_REQUIRED( pn, par, start_time );
 	}
 
-	TimeStateController::UpdateResult TimeStateController::UpdateAnalysis( const sim::Model& model, double timestamp )
+	TimeStateController::UpdateResult TimeStateController::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		UpdateCurrentState( timestamp );
 

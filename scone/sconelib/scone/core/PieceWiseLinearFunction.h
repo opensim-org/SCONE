@@ -11,7 +11,7 @@ namespace scone
 	{
 	public:
 		PieceWiseLinearFunction( bool flatExtrapolation );
-		PieceWiseLinearFunction( const PropNode& props, opt::ParamSet& par );
+		PieceWiseLinearFunction( const PropNode& props, ParamSet& par );
 		virtual ~PieceWiseLinearFunction();
 
 		virtual Real GetValue( Real x ) override;

@@ -7,7 +7,7 @@ namespace scone
 	class SCONE_API DofReflex : public Reflex
 	{
 	public:
-		DofReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		DofReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~DofReflex();
 
 		virtual void ComputeControls( double timestamp );
@@ -20,10 +20,10 @@ namespace scone
 		Real constant_u;
 
 	private:
-		sim::SensorDelayAdapter& m_DelayedPos;
-		sim::SensorDelayAdapter& m_DelayedVel;
-		sim::SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
-		sim::SensorDelayAdapter& m_DelayedRootVel; // used for world coordinates, TODO: neater
+		SensorDelayAdapter& m_DelayedPos;
+		SensorDelayAdapter& m_DelayedVel;
+		SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
+		SensorDelayAdapter& m_DelayedRootVel; // used for world coordinates, TODO: neater
 		bool m_bUseRoot;
 	};
 }

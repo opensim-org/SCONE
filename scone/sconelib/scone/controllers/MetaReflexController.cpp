@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	MetaReflexController::MetaReflexController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	MetaReflexController::MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
@@ -33,7 +33,7 @@ namespace scone
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
-					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, sim::Area::WHOLE_BODY ) ) );
+					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, Area::WHOLE_BODY ) ) );
 				}
 				else
 				{
@@ -53,7 +53,7 @@ namespace scone
 		State org_state = model.GetState();
 
 		// reset all dofs to ensure consistency when there are unspecified dofs
-		for ( sim::DofUP& dof : model.GetDofs() )
+		for ( DofUP& dof : model.GetDofs() )
 		{
 			dof->SetPos( 0, false );
 			dof->SetVel( 0 );
@@ -70,7 +70,7 @@ namespace scone
 			mr->SetDofRotationAxis();
 
 		// Create meta reflex muscles
-		for ( sim::MuscleUP& mus : model.GetMuscles() )
+		for ( MuscleUP& mus : model.GetMuscles() )
 		{
 			if ( GetSide( mus->GetName() ) == area.side )
 			{
@@ -92,7 +92,7 @@ namespace scone
 	{
 	}
 
-	MetaReflexController::UpdateResult MetaReflexController::UpdateControls( sim::Model& model, double timestamp )
+	MetaReflexController::UpdateResult MetaReflexController::UpdateControls( Model& model, double timestamp )
 	{
 		// get balance
 		Vec3 global_balance = model.GetDelayedOrientation();

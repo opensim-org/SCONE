@@ -10,7 +10,7 @@
 
 namespace scone
 {
-	GaitMeasure::GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	GaitMeasure::GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation ),
 		m_nSteps( 0 ),
@@ -29,7 +29,7 @@ namespace scone
 		auto tokens = flut::split_str( gait_bodies, ", " );
 		for ( const String& t : tokens )
 		{
-			sim::Body& b = *FindByName( model.GetBodies(), t );
+			Body& b = *FindByName( model.GetBodies(), t );
 			m_GaitBodies.push_back( &b );
 		}
 
@@ -44,7 +44,7 @@ namespace scone
 	{
 	}
 
-	sim::Controller::UpdateResult GaitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult GaitMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -74,7 +74,7 @@ namespace scone
 		else return SuccessfulUpdate;
 	}
 
-	double GaitMeasure::GetResult( sim::Model& model )
+	double GaitMeasure::GetResult( Model& model )
 	{
 		// precompute some values
 		double distance = GetGaitDist( model ) - m_InitGaitDist;
@@ -96,7 +96,7 @@ namespace scone
 		return 1.0 - m_MinVelocityMeasure.GetAverage();
 	}
 
-	void GaitMeasure::UpdateVelocityMeasure( const sim::Model &model, double timestamp )
+	void GaitMeasure::UpdateVelocityMeasure( const Model &model, double timestamp )
 	{
 		double gait_dist = GetGaitDist( model );
 		double step_size = gait_dist - m_PrevGaitDist;
@@ -114,11 +114,11 @@ namespace scone
 		m_PrevGaitDist = gait_dist;
 	}
 
-	scone::Real GaitMeasure::GetGaitDist( const sim::Model &model )
+	scone::Real GaitMeasure::GetGaitDist( const Model &model )
 	{
 		// compute average of feet and Com (smallest 2 values)
 		std::set< double > distances;
-		for ( const sim::LegUP& leg : model.GetLegs() )
+		for ( const LegUP& leg : model.GetLegs() )
 			distances.insert( leg->GetFootLink().GetBody().GetComPos().x );
 		distances.insert( model.GetComPos().x );
 
@@ -132,12 +132,12 @@ namespace scone
 		return stringf( "S%02d", static_cast<int>( 10 * min_velocity ) );
 	}
 
-	bool GaitMeasure::HasNewFootContact( const sim::Model& model )
+	bool GaitMeasure::HasNewFootContact( const Model& model )
 	{
 		if ( m_PrevContactState.empty() )
 		{
 			// initialize
-			for ( const sim::LegUP& leg : model.GetLegs() )
+			for ( const LegUP& leg : model.GetLegs() )
 				m_PrevContactState.push_back( leg->GetLoad() >= load_threshold );
 			return false;
 		}

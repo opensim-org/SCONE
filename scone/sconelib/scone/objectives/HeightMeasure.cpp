@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	HeightMeasure::HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	HeightMeasure::HeightMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr ),
 		m_JumpState( InitialState )
@@ -32,7 +32,7 @@ namespace scone
 		m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetComPos()[ 1 ] : model.GetComPos()[ 1 ];
 	}
 
-	sim::Controller::UpdateResult HeightMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult HeightMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -75,7 +75,7 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	double HeightMeasure::GetResult( sim::Model& model )
+	double HeightMeasure::GetResult( Model& model )
 	{
 		if ( m_JumpState == InitialState )
 			return 100 * ( termination_height - 1 ) * m_InitialHeight; // same score as just falling

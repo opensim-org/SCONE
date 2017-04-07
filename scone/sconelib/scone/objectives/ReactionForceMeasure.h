@@ -8,11 +8,11 @@ namespace scone
 	class ReactionForceMeasure : public Measure
 	{
 	public:
-		ReactionForceMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		ReactionForceMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~ReactionForceMeasure() {}
 
-		virtual double GetResult( sim::Model& model ) override;
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
+		virtual double GetResult( Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
 
 	protected:
 		virtual void StoreData( Storage< Real >::Frame& frame ) override;

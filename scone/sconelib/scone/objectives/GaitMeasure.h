@@ -9,13 +9,13 @@ namespace scone
 	class GaitMeasure : public Measure
 	{
 	public:
-		GaitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~GaitMeasure();
 
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-		void UpdateVelocityMeasure( const sim::Model &model, double timestamp );
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		void UpdateVelocityMeasure( const Model &model, double timestamp );
 
-		virtual double GetResult( sim::Model& model ) override;
+		virtual double GetResult( Model& model ) override;
 
 		// parameters
 		Real termination_height;
@@ -30,10 +30,10 @@ namespace scone
 		Statistic< double > m_Energy;
 
 		// settings
-		std::vector< sim::Body* > m_GaitBodies;
-		Real GetGaitDist( const sim::Model &model );
+		std::vector< Body* > m_GaitBodies;
+		Real GetGaitDist( const Model &model );
 
-		bool HasNewFootContact( const sim::Model& model );
+		bool HasNewFootContact( const Model& model );
 
 		std::vector< bool > m_PrevContactState;
 

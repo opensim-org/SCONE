@@ -21,7 +21,7 @@ namespace scone
 		GaitStateController::LegState::LandingState, "Landing"
 		);
 
-	GaitStateController::LegState::LegState( sim::Leg& l ) :
+	GaitStateController::LegState::LegState( Leg& l ) :
 		leg( l ),
 		state( UnknownState ),
 		allow_stance_transition( false ),
@@ -29,10 +29,10 @@ namespace scone
 		sagittal_pos( 0.0 ),
 		coronal_pos( 0.0 ),
 		leg_length( l.GetLength() ),
-		load_sensor( l.GetModel().AcquireDelayedSensor< sim::LegLoadSensor >( l ) )
+		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) )
 	{ }
 
-	GaitStateController::GaitStateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+	GaitStateController::GaitStateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		// TODO: move contact_force_threshold to leg?
@@ -45,7 +45,7 @@ namespace scone
 		INIT_PROPERTY( props, override_leg_length, 0.0 );
 
 		// create leg states
-		for ( sim::LegUP& leg : model.GetLegs() )
+		for ( LegUP& leg : model.GetLegs() )
 		{
 			m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 			if ( override_leg_length != 0.0 )
@@ -78,12 +78,12 @@ namespace scone
 						cc.leg_index = legIdx;
 
 					// TODO: allow neater definition of target area instead of just taking the leg side
-					sim::Area a = model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? sim::Area::LEFT_SIDE : sim::Area::RIGHT_SIDE;
+					Area a = model.GetLeg( cc.leg_index ).GetSide() == LeftSide ? Area::LEFT_SIDE : Area::RIGHT_SIDE;
 
 					// create controller
 					log::trace( "Creating controllers for " + GetConditionName( cc ) );
 					const PropNode& cprops = ccIt->second.get_child( "Controller" );
-					opt::ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
+					ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 					cc.controller = CreateController( cprops, par, model, a );
 				}
 			}
@@ -95,7 +95,7 @@ namespace scone
 	{
 	}
 
-	sim::Controller::UpdateResult GaitStateController::UpdateControls( sim::Model& model, double timestamp )
+	Controller::UpdateResult GaitStateController::UpdateControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -118,7 +118,7 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	void GaitStateController::UpdateLegStates( sim::Model& model, double timestamp )
+	void GaitStateController::UpdateLegStates( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -211,7 +211,7 @@ namespace scone
 		}
 	}
 
-	void GaitStateController::UpdateControllerStates( sim::Model& model, double timestamp )
+	void GaitStateController::UpdateControllerStates( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

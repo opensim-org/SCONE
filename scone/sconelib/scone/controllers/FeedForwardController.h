@@ -14,13 +14,13 @@ namespace OpenSim
 
 namespace scone
 {
-	class SCONE_API FeedForwardController : public sim::Controller
+	class SCONE_API FeedForwardController : public Controller
 	{
 	public:
-		FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+		FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
 		virtual ~FeedForwardController() { };
 
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		bool UseModes() { return number_of_modes > 0; }
 
 		// a signature describing the controller

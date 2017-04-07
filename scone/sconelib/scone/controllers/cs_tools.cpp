@@ -47,7 +47,7 @@ namespace scone
 
 	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename )
 	{
-		opt::ParamSet par;
+		ParamSet par;
 		bfs::path config_path;
 		if ( filename.extension() == "par" )
 		{

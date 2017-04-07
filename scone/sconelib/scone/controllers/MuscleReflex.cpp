@@ -8,17 +8,17 @@
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr )
 	{
-		sim::Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
+		Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
 
 		// init names
 		String reflexname = GetReflexName( m_Target.GetName(), source.GetName() );
-		opt::ScopedParamSetPrefixer prefixer( par, reflexname + "." );
+		ScopedParamSetPrefixer prefixer( par, reflexname + "." );
 
 		INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 		INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
@@ -36,13 +36,13 @@ namespace scone
 
 		// create delayed sensors
 		if ( force_gain != 0.0 )
-			m_pForceSensor = &model.AcquireDelayedSensor< sim::MuscleForceSensor >( source );
+			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
 
 		if ( length_gain != 0.0 )
-			m_pLengthSensor = &model.AcquireDelayedSensor< sim::MuscleLengthSensor >( source );
+			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( source );
 
 		if ( velocity_gain != 0.0 )
-			m_pVelocitySensor = &model.AcquireDelayedSensor< sim::MuscleVelocitySensor >( source );
+			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
 	}
 
 	MuscleReflex::~MuscleReflex()

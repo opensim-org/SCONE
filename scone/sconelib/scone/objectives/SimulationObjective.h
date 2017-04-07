@@ -12,27 +12,27 @@
 
 namespace scone
 {
-	class SCONE_API SimulationObjective : public opt::Objective
+	class SCONE_API SimulationObjective : public Objective
 	{
 	public:
-		SimulationObjective( const PropNode& props, opt::ParamSet& par );
+		SimulationObjective( const PropNode& props, ParamSet& par );
 		virtual ~SimulationObjective();
 
 		virtual double Evaluate() override;
 
 		virtual std::vector< String > WriteResults( const String& file ) override;
 
-		sim::Model& GetModel() { return *m_Model; }
+		Model& GetModel() { return *m_Model; }
 		Measure& GetMeasure() { return *m_Measure; }
 
 		double max_duration;
 
 	protected:
 		virtual String GetClassSignature() const override;
-		virtual void ProcessParameters( opt::ParamSet& par ) override;
+		virtual void ProcessParameters( ParamSet& par ) override;
 
 	private:
-		sim::ModelUP m_Model;
+		ModelUP m_Model;
 		Measure* m_Measure;
 		const PropNode& m_ModelProps;
 	};

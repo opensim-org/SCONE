@@ -4,9 +4,6 @@
 
 namespace scone
 {
-	namespace sim
-	{
-		Dof::Dof( Joint& j ) : m_Joint( j ) {}
-		Dof::~Dof() {}
-	}
+	Dof::Dof( Joint& j ) : m_Joint( j ) {}
+	Dof::~Dof() {}
 }

@@ -6,16 +6,16 @@
 
 namespace scone
 {
-	class SCONE_API Measure : public sim::Controller, public HasName
+	class SCONE_API Measure : public Controller, public HasName
 	{
 	public:
-		Measure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		Measure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~Measure() { };
 
-		virtual double GetResult( sim::Model& model ) = 0;
+		virtual double GetResult( Model& model ) = 0;
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
-		virtual bool IsActive( const sim::Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
+		virtual bool IsActive( const Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
 
 		virtual const String& GetName() const override { return name; }
 		Real GetWeight() { return weight; }

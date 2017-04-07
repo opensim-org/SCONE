@@ -9,11 +9,11 @@ namespace scone
 	class HeightMeasure : public Measure
 	{
 	public:
-		HeightMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		HeightMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~HeightMeasure() { };
 
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-		virtual double GetResult( sim::Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual double GetResult( Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -29,7 +29,7 @@ namespace scone
 		double upward_velocity_threshold;
 		double downward_velocity_threshold;
 
-		sim::Body* m_pTargetBody; // non-owning pointer
+		Body* m_pTargetBody; // non-owning pointer
 		Statistic< double > m_Height;
 		bool m_Upward;
 		double m_InitialHeight;

@@ -9,7 +9,7 @@ namespace scone
 	{
 	public:
 		Polynomial( size_t degree );
-		Polynomial( const PropNode& props, opt::ParamSet& par );
+		Polynomial( const PropNode& props, ParamSet& par );
 		virtual ~Polynomial();
 
 		virtual Real GetValue( Real x ) override;

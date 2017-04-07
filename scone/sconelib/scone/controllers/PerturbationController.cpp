@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	PerturbationController::PerturbationController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+	PerturbationController::PerturbationController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area ) :
 		Controller( props, par, model, target_area ),
 		force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
 		current_force( 0 )
@@ -20,7 +20,7 @@ namespace scone
 	{
 	}
 
-	sim::Controller::UpdateResult PerturbationController::UpdateControls( sim::Model& model, double timestamp )
+	Controller::UpdateResult PerturbationController::UpdateControls( Model& model, double timestamp )
 	{
 		if ( timestamp >= start_time && fmod( timestamp - start_time, interval ) < duration )
 		{
@@ -31,7 +31,7 @@ namespace scone
 
 		force_body.SetExternalForce( current_force );
 
-		return sim::Controller::SuccessfulUpdate;
+		return Controller::SuccessfulUpdate;
 	}
 
 	String PerturbationController::GetClassSignature() const

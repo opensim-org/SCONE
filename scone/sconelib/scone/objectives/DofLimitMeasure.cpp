@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	DofLimitMeasure::DofLimitMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	DofLimitMeasure::DofLimitMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area )
 	{
 		if ( const PropNode* lp = props.try_get_child( "Limits" ) )
@@ -21,7 +21,7 @@ namespace scone
 
 	DofLimitMeasure::~DofLimitMeasure() {}
 
-	DofLimitMeasure::Limit::Limit( const PropNode& props, sim::Model& model ) :
+	DofLimitMeasure::Limit::Limit( const PropNode& props, Model& model ) :
 		dof( *FindByName( model.GetDofs(), props.get< String >( "dof" ) ) ),
 		penalty( Statistic<>::LinearInterpolation )
 	{
@@ -36,7 +36,7 @@ namespace scone
 		INIT_PROPERTY( props, squared_force_penalty, 0.0 );
 	}
 
-	sim::Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -71,7 +71,7 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	double DofLimitMeasure::GetResult( sim::Model& model )
+	double DofLimitMeasure::GetResult( Model& model )
 	{
 		double result = 0.0;
 		for ( Limit& l : m_Limits )

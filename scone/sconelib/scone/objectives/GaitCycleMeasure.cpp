@@ -3,7 +3,7 @@
 
 namespace scone
 {
-	GaitCycleMeasure::GaitCycleMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	GaitCycleMeasure::GaitCycleMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area )
 	{
 		INIT_PROPERTY( props, use_half_cycle, false );
@@ -15,7 +15,7 @@ namespace scone
 	{
 	}
 
-	double GaitCycleMeasure::GetResult( sim::Model& model )
+	double GaitCycleMeasure::GetResult( Model& model )
 	{
 		return GetStateSimilarity( model.GetState() );
 	}

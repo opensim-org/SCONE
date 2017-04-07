@@ -8,10 +8,10 @@
 
 namespace scone
 {
-	class SCONE_API PerturbationController : public sim::Controller
+	class SCONE_API PerturbationController : public Controller
 	{
 	public:
-		PerturbationController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
+		PerturbationController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
 		virtual ~PerturbationController() {}
 
 		String name;
@@ -21,7 +21,7 @@ namespace scone
 		TimeInSeconds start_time;
 
 		virtual void StoreData( Storage<Real>::Frame& frame ) override;
-		virtual UpdateResult UpdateControls( sim::Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -29,6 +29,6 @@ namespace scone
 	private:
 		Index state_idx;
 		Vec3 current_force;
-		sim::Body& force_body;
+		Body& force_body;
 	};
 }

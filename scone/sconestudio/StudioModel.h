@@ -36,7 +36,7 @@ namespace scone
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
-		sim::Model& GetSimModel() { return so->GetModel(); }
+		Model& GetSimModel() { return so->GetModel(); }
 		SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating; }

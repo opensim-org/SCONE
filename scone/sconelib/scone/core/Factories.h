@@ -13,14 +13,14 @@
 
 namespace scone
 {
-	SCONE_API sim::ControllerUP CreateController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area );
-	SCONE_API FunctionUP CreateFunction( const PropNode& props, opt::ParamSet& par );
+	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+	SCONE_API FunctionUP CreateFunction( const PropNode& props, ParamSet& par );
 
-	SCONE_API sim::SensorUP CreateSensor( const PropNode&, opt::ParamSet&, sim::Model&, const sim::Area& );
-	SCONE_API sim::ModelUP CreateModel( const PropNode& prop, opt::ParamSet& par );
+	SCONE_API SensorUP CreateSensor( const PropNode&, ParamSet&, Model&, const Area& );
+	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par );
 
-	SCONE_API opt::OptimizerUP CreateOptimizer( const PropNode& prop );
-	SCONE_API opt::ObjectiveUP CreateObjective( const PropNode& prop, opt::ParamSet& par );
-	SCONE_API flut::factory< opt::Objective, const PropNode&, opt::ParamSet& >& GetObjectiveFactory();
+	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );
+	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par );
+	SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory();
 }

@@ -3,7 +3,7 @@
 
 namespace scone
 {
-	JumpMeasure::JumpMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	JumpMeasure::JumpMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		target_body( nullptr ),
 		state( Prepare ),
@@ -28,7 +28,7 @@ namespace scone
 
 	JumpMeasure::~JumpMeasure() { }
 
-	double JumpMeasure::GetResult( sim::Model& model )
+	double JumpMeasure::GetResult( Model& model )
 	{
 		switch ( jump_type )
 		{
@@ -44,7 +44,7 @@ namespace scone
 		}
 	}
 
-	sim::Controller::UpdateResult JumpMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult JumpMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		if ( !IsActive( model, timestamp ) )
 			return NoUpdate;
@@ -124,7 +124,7 @@ namespace scone
 		}
 	}
 
-	double JumpMeasure::GetHighJumpResult( const sim::Model& model )
+	double JumpMeasure::GetHighJumpResult( const Model& model )
 	{
 		Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
 
@@ -156,7 +156,7 @@ namespace scone
 		return result;
 	}
 
-	double JumpMeasure::GetLongJumpResult( const sim::Model& model )
+	double JumpMeasure::GetLongJumpResult( const Model& model )
 	{
 		Vec3 com_pos = model.GetComPos();
 		Vec3 com_vel = model.GetComVel();

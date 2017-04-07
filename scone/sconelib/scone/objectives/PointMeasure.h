@@ -10,11 +10,11 @@ namespace scone
 	class PointMeasure : public Measure
 	{
 	public:
-		PointMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~PointMeasure() { };
 
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-		virtual double GetResult( sim::Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual double GetResult( Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -37,6 +37,6 @@ namespace scone
 		Real abs_acceleration_range_penalty;
 		Statistic<> penalty;
 
-		sim::Body* m_pTargetBody; // non-owning pointer
+		Body* m_pTargetBody; // non-owning pointer
 	};
 }

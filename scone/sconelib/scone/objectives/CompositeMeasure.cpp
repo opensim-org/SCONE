@@ -28,7 +28,7 @@ namespace scone
 	{
 	}
 
-	CompositeMeasure::CompositeMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	CompositeMeasure::CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area )
 	{
 		// get Terms (obsolete)
@@ -70,7 +70,7 @@ namespace scone
 
 	CompositeMeasure::~CompositeMeasure() { }
 
-	sim::Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -90,7 +90,7 @@ namespace scone
 		return terminate ? RequestTermination : SuccessfulUpdate;
 	}
 
-	double CompositeMeasure::GetResult( sim::Model& model )
+	double CompositeMeasure::GetResult( Model& model )
 	{
 		double total = 0.0;
 		for ( Term& t : m_Terms )

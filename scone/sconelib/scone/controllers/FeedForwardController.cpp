@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	FeedForwardController::FeedForwardController( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& target_area ) :
+	FeedForwardController::FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		DECLARE_AND_INIT( props, bool, symmetric, true );
@@ -37,7 +37,7 @@ namespace scone
 			// create mode functions
 			for ( size_t idx = 0; idx < number_of_modes; ++idx )
 			{
-				opt::ScopedParamSetPrefixer prefixer( par, stringf( "Mode%d.", idx ) );
+				ScopedParamSetPrefixer prefixer( par, stringf( "Mode%d.", idx ) );
 				m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
 			}
 		}
@@ -68,14 +68,14 @@ namespace scone
 			{
 				// create a new function
 				String prefix = symmetric ? ai.name : ai.full_name;
-				opt::ScopedParamSetPrefixer prefixer( par, prefix + "." );
+				ScopedParamSetPrefixer prefixer( par, prefix + "." );
 				m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
 				ai.function_idx = m_Functions.size() - 1;
 			}
 		}
 	}
 
-	sim::Controller::UpdateResult FeedForwardController::UpdateControls( sim::Model& model, double time )
+	Controller::UpdateResult FeedForwardController::UpdateControls( Model& model, double time )
 	{
 		SCONE_PROFILE_FUNCTION;
 

@@ -8,14 +8,14 @@ namespace scone
 	class ConditionalMuscleReflex : public MuscleReflex
 	{
 	public:
-		ConditionalMuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~ConditionalMuscleReflex();
 
 		virtual void ComputeControls( double timestamp ) override;
 
 	protected:
-		sim::SensorDelayAdapter* m_pConditionalDofPos;
-		sim::SensorDelayAdapter* m_pConditionalDofVel;
+		SensorDelayAdapter* m_pConditionalDofPos;
+		SensorDelayAdapter* m_pConditionalDofVel;
 		Range< Degree > m_ConditionalPosRange;
 	};
 }

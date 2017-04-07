@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	ExampleObjective::ExampleObjective( const PropNode& props, opt::ParamSet& par ) :
+	ExampleObjective::ExampleObjective( const PropNode& props, ParamSet& par ) :
 	Objective( props, par ),
 	num_params( 0 ),
 	is_evaluating( false )
@@ -27,7 +27,7 @@ namespace scone
 		return result;
 	}
 
-	void ExampleObjective::ProcessParameters( opt::ParamSet& par )
+	void ExampleObjective::ProcessParameters( ParamSet& par )
 	{
 		for ( size_t i = 0; i < params.size(); ++i )
 			params[ i ] = par.GetMeanStd( stringf( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );

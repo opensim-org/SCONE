@@ -5,15 +5,15 @@
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		MuscleReflex( props, par, model, area ),
 		m_pConditionalDofPos( nullptr ),
 		m_pConditionalDofVel( nullptr )
 	{
 		const PropNode& cp = props.get_child( "Condition" );
-		sim::Dof& dof = *FindByName( model.GetDofs(), cp.get< String >( "dof" ) + GetSideName( area.side ) );
-		m_pConditionalDofPos = &model.AcquireDelayedSensor< sim::DofPositionSensor >( dof );
-		m_pConditionalDofVel = &model.AcquireDelayedSensor< sim::DofVelocitySensor >( dof );
+		Dof& dof = *FindByName( model.GetDofs(), cp.get< String >( "dof" ) + GetSideName( area.side ) );
+		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
+		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 		m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
 	}
 

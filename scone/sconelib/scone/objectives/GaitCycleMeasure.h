@@ -8,10 +8,10 @@ namespace scone
 	class SCONE_API GaitCycleMeasure : public Measure
 	{
 	public:
-		GaitCycleMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		GaitCycleMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~GaitCycleMeasure();
 
-		virtual double GetResult( sim::Model& model ) override;
+		virtual double GetResult( Model& model ) override;
 
 		bool use_half_cycle;
 

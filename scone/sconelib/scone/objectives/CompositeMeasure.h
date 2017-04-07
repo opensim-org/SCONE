@@ -8,11 +8,11 @@ namespace scone
 	class SCONE_API CompositeMeasure : public Measure
 	{
 	public:
-		CompositeMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area );
+		CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		virtual ~CompositeMeasure();
 
-		virtual UpdateResult UpdateAnalysis( const sim::Model& model, double timestamp ) override;
-		virtual double GetResult( sim::Model& model ) override;
+		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual double GetResult( Model& model ) override;
 
 		struct Term
 		{

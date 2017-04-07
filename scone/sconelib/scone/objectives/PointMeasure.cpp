@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	PointMeasure::PointMeasure( const PropNode& props, opt::ParamSet& par, sim::Model& model, const sim::Area& area ) :
+	PointMeasure::PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 	{
@@ -39,7 +39,7 @@ namespace scone
 		}
 	}
 
-	sim::Controller::UpdateResult PointMeasure::UpdateAnalysis( const sim::Model& model, double timestamp )
+	Controller::UpdateResult PointMeasure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -91,7 +91,7 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	double PointMeasure::GetResult( sim::Model& model )
+	double PointMeasure::GetResult( Model& model )
 	{
 		return penalty.GetAverage();
 	}
