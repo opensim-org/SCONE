@@ -45,7 +45,7 @@ namespace scone
 		virtual String GetName() const override;
 	};
 
-	// Sensor that simulates (based on [Prochazka 1999])
+	// Sensor that simulates Ia muscle spindle (based on [Prochazka 1999], p.135)
 	class SCONE_API MuscleSpindleSensor : public MuscleSensor
 	{
 	public:

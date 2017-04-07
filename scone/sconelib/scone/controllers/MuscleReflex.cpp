@@ -12,7 +12,8 @@ namespace scone
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
-	m_pVelocitySensor( nullptr )
+	m_pVelocitySensor( nullptr ),
+	m_pSpindleSensor( nullptr )
 	{
 		Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
 
@@ -32,6 +33,8 @@ namespace scone
 		INIT_PARAM_NAMED( props, par, force_ofs, "F0", 0.0 );
 		INIT_PROPERTY_NAMED( props, force_allow_negative, "allow_neg_F", true );
 
+		INIT_PARAM_NAMED( props, par, spindle_gain, "KS", 0.0 );
+
 		INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
 
 		// create delayed sensors
@@ -43,6 +46,9 @@ namespace scone
 
 		if ( velocity_gain != 0.0 )
 			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
+
+		if ( spindle_gain!= 0.0 )
+			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
 	}
 
 	MuscleReflex::~MuscleReflex()
@@ -63,7 +69,11 @@ namespace scone
 		Real u_f = m_pForceSensor ? force_gain * ( m_pForceSensor->GetValue( delay ) - force_ofs ) : 0;
 		if ( !force_allow_negative && u_f < 0.0 ) u_f = 0.0;
 
-		Real u_total = u_l + u_v + u_f + u_constant;
+		// add spindle reflex
+		Real u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) ) : 0;
+
+		// sum it up
+		Real u_total = u_l + u_v + u_f + u_s + u_constant;
 
 		AddTargetControlValue( u_total );
 

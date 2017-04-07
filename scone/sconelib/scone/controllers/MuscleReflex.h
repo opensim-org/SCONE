@@ -27,11 +27,14 @@ namespace scone
 		Real force_ofs;
 		bool force_allow_negative;
 
+		Real spindle_gain;
+
 		Real u_constant;
 
 	private:
 		SensorDelayAdapter* m_pForceSensor;
 		SensorDelayAdapter* m_pLengthSensor;
 		SensorDelayAdapter* m_pVelocitySensor;
+		SensorDelayAdapter* m_pSpindleSensor;
 	};
 }

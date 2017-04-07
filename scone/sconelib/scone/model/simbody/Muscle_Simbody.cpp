@@ -109,7 +109,7 @@ namespace scone
 	scone::Real Muscle_Simbody::GetNormalizedFiberVelocity() const
 	{
 		SCONE_PROFILE_FUNCTION;
-		return m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
+		return m_osMus.getFiberVelocity( m_Model.GetTkState() ) / m_osMus.getOptimalFiberLength();
 	}
 
 	const Link& Muscle_Simbody::GetOriginLink() const
