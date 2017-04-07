@@ -7,3 +7,4 @@ build/msvc2015_64/
 _output/
 build/
 .version
+*.log
