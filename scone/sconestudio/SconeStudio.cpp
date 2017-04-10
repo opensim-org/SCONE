@@ -39,9 +39,11 @@ captureProcess( nullptr )
 	analysisView->setObjectName( "Analysis" );
 
 	// create window menu
-	auto* actionMenu = menuBar()->addMenu( "&Action" );
+	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
+	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Up" ) );
+	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Down" ), true );
 	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
