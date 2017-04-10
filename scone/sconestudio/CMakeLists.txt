@@ -27,6 +27,11 @@ if(${Qt5Widgets_FOUND})
 	
 	set(QTFILES
 		qt_tools.h
+		${QTFX_PATH}/qtfx.h
+		${QTFX_PATH}/qtfx.cpp
+		${QTFX_PATH}/QGroup.h
+		${QTFX_PATH}/QGroup.cpp
+		${QTFX_PATH}/QOsgViewer.cpp
 		${QTFX_PATH}/QOsgViewer.h
 		${QTFX_PATH}/QOsgViewer.cpp
 		${QTFX_PATH}/QCodeEditor.h

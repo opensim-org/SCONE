@@ -58,6 +58,8 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/FeedForwardController.h
 	scone/controllers/PerturbationController.cpp
 	scone/controllers/PerturbationController.h
+	scone/controllers/ExternalBalanceController.cpp
+	scone/controllers/ExternalBalanceController.h
 	)
 set(CS_SYSTEM_FILES
 	scone/controllers/cs_tools.cpp
