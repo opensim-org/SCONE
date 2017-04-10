@@ -13,6 +13,8 @@
 
 namespace scone
 {
+	SCONE_API String GetCleanVarName( const String& str );
+
 	// process fundamental types and String
 	template< typename T >
 	void InitFromPropNode( const PropNode& prop, T& var )
@@ -50,5 +52,4 @@ namespace scone
 
 	// log unused parameters
 	SCONE_API void LogUntouched( const PropNode& p, log::Level level = log::WarningLevel, size_t depth = 0 );
-	SCONE_API String GetCleanVarName( const String& str );
 }

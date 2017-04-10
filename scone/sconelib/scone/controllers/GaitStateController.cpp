@@ -244,6 +244,15 @@ namespace scone
 		return s;
 	}
 
+	void GaitStateController::StoreData( Storage<Real>::Frame& frame )
+	{
+		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
+		{
+			if ( cc->active )
+				cc->controller->StoreData( frame );
+		}
+	}
+
 	scone::String GaitStateController::GetConditionName( const ConditionalController& cc ) const
 	{
 		String s = m_LegStates[ cc.leg_index ]->leg.GetName();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "QString"
+#include <QString>
 #include <string>
 #include "flut/system/path.hpp"
 

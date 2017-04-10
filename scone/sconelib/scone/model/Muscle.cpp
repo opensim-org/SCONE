@@ -44,8 +44,8 @@ namespace scone
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame )
 	{
-		//frame[ GetName() + ".length" ] = GetLength();
-		//frame[ GetName() + ".activation" ] = GetActivation();
-		//frame[ GetName() + ".force" ] = GetFiberForce();
+		frame[ GetName() + ".fiber_length" ] = GetNormalizedFiberLength();
+		frame[ GetName() + ".fiber_velocity" ] = GetNormalizedFiberVelocity();
+		frame[ GetName() + ".fiber_force" ] = GetNormalizedFiberForce();
 	}
 }

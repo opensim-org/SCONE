@@ -6,7 +6,7 @@
 
 namespace scone
 {
-	class SCONE_API Reflex
+	class SCONE_API Reflex : public HasData
 	{
 	public:
 		Reflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
@@ -14,6 +14,8 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp );
 		TimeInSeconds delay;
+
+		virtual void StoreData( Storage<Real>::Frame& frame ) override {}
 
 	protected:
 		/// clamp control value between min_control_value and max_control_value and add to target actuator

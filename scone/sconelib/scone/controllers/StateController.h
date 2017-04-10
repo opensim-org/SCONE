@@ -14,6 +14,7 @@ namespace scone
 		virtual ~StateController();
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
+		virtual void StoreData( Storage<Real>::Frame& frame ) override;
 
 	protected:
 		typedef size_t StateIndex;

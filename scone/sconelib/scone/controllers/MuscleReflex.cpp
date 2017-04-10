@@ -18,8 +18,9 @@ namespace scone
 		Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
 
 		// init names
-		String reflexname = GetReflexName( m_Target.GetName(), source.GetName() );
-		ScopedParamSetPrefixer prefixer( par, reflexname + "." );
+		String reflex_name = GetReflexName( m_Target.GetName(), source.GetName() );
+		name = reflex_name + GetSideName( area.side );
+		ScopedParamSetPrefixer prefixer( par, reflex_name + "." );
 
 		INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 		INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
@@ -48,7 +49,7 @@ namespace scone
 			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
 
 		if ( spindle_gain!= 0.0 )
-			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
+			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
 	}
 
 	MuscleReflex::~MuscleReflex()
@@ -58,28 +59,34 @@ namespace scone
 	void MuscleReflex::ComputeControls( double timestamp )
 	{
 		// add stretch reflex
-		Real u_l = m_pLengthSensor ? length_gain * ( m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
+		u_l = m_pLengthSensor ? length_gain * ( m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
 		if ( !length_allow_negative && u_l < 0.0 ) u_l = 0.0;
 
 		// add velocity reflex
-		Real u_v = m_pVelocitySensor ? velocity_gain * ( m_pVelocitySensor->GetValue( delay ) - velocity_ofs ) : 0;
+		u_v = m_pVelocitySensor ? velocity_gain * ( m_pVelocitySensor->GetValue( delay ) - velocity_ofs ) : 0;
 		if ( !velocity_allow_negative && u_v < 0.0 ) u_v = 0.0;
 
 		// add force reflex
-		Real u_f = m_pForceSensor ? force_gain * ( m_pForceSensor->GetValue( delay ) - force_ofs ) : 0;
+		u_f = m_pForceSensor ? force_gain * ( m_pForceSensor->GetValue( delay ) - force_ofs ) : 0;
 		if ( !force_allow_negative && u_f < 0.0 ) u_f = 0.0;
 
 		// add spindle reflex
-		Real u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) ) : 0;
+		u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) ) : 0;
 
 		// sum it up
-		Real u_total = u_l + u_v + u_f + u_s + u_constant;
-
+		u_total = u_l + u_v + u_f + u_s + u_constant;
 		AddTargetControlValue( u_total );
 
 #ifdef DEBUG_MUSCLE
 		if ( m_Target.GetName() == DEBUG_MUSCLE )
 			log::TraceF( "u_l=%.3f u_v=%.3f u_f=%.3f", u_l, u_v, u_f );
 #endif
+	}
+
+	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
+	{
+		frame[ name + ".length_feedback" ] = u_l;
+		frame[ name + ".force_feedback" ] = u_f;
+		frame[ name + ".spindle_feedback" ] = u_s;
 	}
 }

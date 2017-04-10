@@ -123,10 +123,6 @@ namespace scone
 		for ( MuscleUP& m : GetMuscles() )
 			m->StoreData( frame );
 
-		// store controller data
-		for ( ControllerUP& c : GetControllers() )
-			c->StoreData( frame );
-
 		// store COP data
 		auto com = GetComPos();
 		auto com_u = GetComVel();
@@ -149,6 +145,10 @@ namespace scone
 		// store joint reaction force magnitude
 		for ( auto& joint : GetJoints() )
 			frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+
+		// store controller data
+		for ( ControllerUP& c : GetControllers() )
+			c->StoreData( frame );
 
 		// store external forces (should be part of state)
 		//for ( auto& b : GetBodies() )

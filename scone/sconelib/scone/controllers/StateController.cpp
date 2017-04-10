@@ -84,6 +84,15 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
+	void StateController::StoreData( Storage<Real>::Frame& frame )
+	{
+		for ( ConditionalController& cc : m_ConditionalControllers )
+		{
+			if ( cc.first.is_active )
+				cc.second->StoreData( frame );
+		}
+	}
+
 	scone::String StateController::GetClassSignature() const
 	{
 		String s = "S";

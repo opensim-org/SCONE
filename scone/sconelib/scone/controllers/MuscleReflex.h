@@ -14,6 +14,8 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp ) override;
 
+		String name;
+
 		// Reflex parameters
 		Real length_gain;
 		Real length_ofs;
@@ -30,6 +32,14 @@ namespace scone
 		Real spindle_gain;
 
 		Real u_constant;
+
+		Real u_l = 0;
+		Real u_v = 0;
+		Real u_f = 0;
+		Real u_s = 0;
+		Real u_total = 0;
+
+		virtual void StoreData( Storage<Real>::Frame& frame ) override;
 
 	private:
 		SensorDelayAdapter* m_pForceSensor;

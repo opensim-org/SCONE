@@ -51,6 +51,9 @@ namespace scone
 		// public parameters
 		Real stance_load_threshold;
 		Real swing_load_threshold;
+
+		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+
 	protected:
 		virtual void UpdateLegStates( Model& model, double timestamp );
 		void UpdateControllerStates( Model& model, double timestamp );

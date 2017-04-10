@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
+#include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
 #include "ParamInfo.h"
 #include <vector>

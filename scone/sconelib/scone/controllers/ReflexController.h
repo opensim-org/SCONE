@@ -16,6 +16,7 @@ namespace scone
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
+		virtual void StoreData( Storage<Real>::Frame& frame ) override;
 
 	private:
 		std::vector< ReflexUP > m_Reflexes;
