@@ -86,6 +86,7 @@ namespace scone
 	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
 	{
 		frame[ name + ".length_feedback" ] = u_l;
+		frame[ name + ".velocity_feedback" ] = u_v;
 		frame[ name + ".force_feedback" ] = u_f;
 		frame[ name + ".spindle_feedback" ] = u_s;
 	}
