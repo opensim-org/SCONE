@@ -35,6 +35,8 @@ namespace scone
 		INIT_PROPERTY_NAMED( props, force_allow_negative, "allow_neg_F", true );
 
 		INIT_PARAM_NAMED( props, par, spindle_gain, "KS", 0.0 );
+		INIT_PARAM_NAMED( props, par, spindle_ofs, "S0", 0.0 );
+		INIT_PROPERTY_NAMED( props, spinde_allow_negative, "allow_neg_S", false );
 
 		INIT_PARAM_NAMED( props, par, u_constant, "C0", 0.0 );
 
@@ -71,7 +73,8 @@ namespace scone
 		if ( !force_allow_negative && u_f < 0.0 ) u_f = 0.0;
 
 		// add spindle reflex
-		u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) ) : 0;
+		u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) - spindle_ofs ) : 0;
+		if ( !spinde_allow_negative && u_s < 0.0 ) u_s = 0.0;
 
 		// sum it up
 		u_total = u_l + u_v + u_f + u_s + u_constant;

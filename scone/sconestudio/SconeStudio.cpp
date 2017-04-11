@@ -37,6 +37,7 @@ captureProcess( nullptr )
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
+	analysisView->setMinSeriesInterval( 0 );
 
 	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );

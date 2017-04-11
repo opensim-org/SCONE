@@ -30,6 +30,8 @@ namespace scone
 		bool force_allow_negative;
 
 		Real spindle_gain;
+		Real spindle_ofs;
+		bool spinde_allow_negative;
 
 		Real u_constant;
 
