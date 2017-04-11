@@ -10780,7 +10780,7 @@ void QCustomPlot::mouseReleaseEvent(QMouseEvent *event)
   
   if ((mMousePressPos-event->pos()).manhattanLength() < 5) // determine whether it was a click operation
   {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::RightButton)
     {
       // handle selection mechanism:
       QVariant details;
@@ -12478,7 +12478,7 @@ int QCPAxisRect::calculateAutoMargin(QCP::MarginSide side)
 void QCPAxisRect::mousePressEvent(QMouseEvent *event)
 {
   mDragStart = event->pos(); // need this even when not LeftButton is pressed, to determine in releaseEvent whether it was a full click (no position change between press and release)
-  if (event->buttons() & Qt::LeftButton)
+  if (event->buttons() & Qt::RightButton)
   {
     mDragging = true;
     // initialize antialiasing backup in case we start dragging:
