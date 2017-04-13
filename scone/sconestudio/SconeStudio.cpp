@@ -37,6 +37,7 @@ captureProcess( nullptr )
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
+	analysisView->setMinSeriesInterval( 0 );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::captureVideo );

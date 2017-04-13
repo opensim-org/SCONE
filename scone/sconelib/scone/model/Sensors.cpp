@@ -47,7 +47,7 @@ namespace scone
 	scone::Real MuscleSpindleSensor::GetValue() const
 	{
 		// derived from [Prochazka1999], normalized to unit length
-		return 0.325 * flut::math::signed_sqrt( m_Muscle.GetNormalizedFiberVelocity() ) + ( m_Muscle.GetNormalizedFiberLength() - 1.0 );
+		return 0.325 * flut::math::signed_sqrt( m_Muscle.GetNormalizedFiberVelocity() ) + m_Muscle.GetNormalizedFiberLength();
 	}
 
 	scone::String MuscleSpindleSensor::GetName() const
