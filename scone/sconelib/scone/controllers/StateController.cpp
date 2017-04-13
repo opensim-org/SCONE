@@ -6,11 +6,8 @@
 namespace scone
 {
 	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
-		Controller( props, par, model, area )
-	{
-	}
-
-	StateController::~StateController()
+	Controller( props, par, model, area ),
+	m_CurrentState( NoIndex )
 	{
 	}
 
@@ -54,27 +51,37 @@ namespace scone
 		}
 	}
 
-	void StateController::UpdateConditionalControllerStates( StateIndex current_state, TimeInSeconds timestamp )
+	void StateController::UpdateCurrentState( Model& model, TimeInSeconds timestamp )
 	{
-		SCONE_ASSERT( current_state < GetStateCount() );
-
-		// update controller states
-		for ( ConditionalController& cc : m_ConditionalControllers )
+		auto current_state = GetCurrentState( model, timestamp );
+		if ( current_state != m_CurrentState )
 		{
-			ConditionalControllerState& ccs = cc.first;
-			bool activate = ccs.state_mask[ current_state ];
+			SCONE_ASSERT( current_state < GetStateCount() );
 
-			// activate or deactivate controller
-			if ( activate != ccs.is_active )
+			m_CurrentState = current_state;
+
+			// update controller states
+			for ( ConditionalController& cc : m_ConditionalControllers )
 			{
-				ccs.is_active = activate;
-				ccs.is_active_since = timestamp;
+				ConditionalControllerState& ccs = cc.first;
+				bool activate = ccs.state_mask[ m_CurrentState ];
+
+				// activate or deactivate controller
+				if ( activate != ccs.is_active )
+				{
+					ccs.is_active = activate;
+					ccs.is_active_since = timestamp;
+				}
 			}
 		}
 	}
 
 	StateController::UpdateResult StateController::UpdateControls( Model& model, double timestamp )
 	{
+		// adjust current state if needed
+		UpdateCurrentState( model, timestamp );
+
+		// process active controllers
 		for ( ConditionalController& cc : m_ConditionalControllers )
 		{
 			if ( cc.first.is_active )

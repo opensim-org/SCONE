@@ -94,6 +94,8 @@ set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/GaitStateController.h
 	scone/controllers/StateController.cpp
 	scone/controllers/StateController.h
+	scone/controllers/SensorStateController.cpp
+	scone/controllers/SensorStateController.h
 	scone/controllers/TimeStateController.cpp
 	scone/controllers/TimeStateController.h
 	)

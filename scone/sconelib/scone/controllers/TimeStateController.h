@@ -8,16 +8,13 @@ namespace scone
 	{
 	public:
 		TimeStateController( const PropNode& props, ParamSet& par, Model& model, const Area& area );
-		virtual ~TimeStateController();
 
-		virtual size_t GetStateCount() override { return m_States.size(); }
-		virtual const String& GetStateName( StateIndex i ) override { return m_States[ i ].name; }
-
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual size_t GetStateCount() const override { return m_States.size(); }
+		virtual const String& GetStateName( StateIndex i ) const override { return m_States[ i ].name; }
 
 	protected:
-		void UpdateCurrentState( double timestamp );
 		virtual String GetClassSignature() const override;
+		virtual StateIndex GetCurrentState( Model& model, double timestamp ) override;
 
 		struct TimeState
 		{
@@ -28,6 +25,5 @@ namespace scone
 		};
 
 		std::vector< TimeState > m_States;
-		StateIndex m_CurrentState;
 	};
 }

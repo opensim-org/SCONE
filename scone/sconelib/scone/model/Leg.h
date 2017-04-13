@@ -40,4 +40,6 @@ namespace scone
 		Link& m_Upper;
 		String m_Name;
 	};
+
+	inline Index GetLegIndex( Index idx, bool mirrored ) { return mirrored ? ( idx ^ 1 ) : idx; }
 }

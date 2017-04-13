@@ -11,15 +11,18 @@ namespace scone
 	{
 	public:
 		StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area );
-		virtual ~StateController();
+		StateController( const StateController& other ) = delete;
+		StateController& operator=( const StateController& other ) = delete;
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame ) override;
 
 	protected:
 		typedef size_t StateIndex;
-		virtual size_t GetStateCount() = 0;
-		virtual const String& GetStateName( StateIndex i ) = 0;
+		virtual size_t GetStateCount() const = 0;
+		virtual const String& GetStateName( StateIndex i ) const = 0;
+		virtual StateIndex GetCurrentState( Model& model, double timestamp ) = 0;
+
 		virtual String GetClassSignature() const override;
 
 		struct ConditionalControllerState
@@ -33,10 +36,9 @@ namespace scone
 		std::vector< ConditionalController > m_ConditionalControllers;
 
 		void CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area );
-		void UpdateConditionalControllerStates( StateIndex current_state, TimeInSeconds timestamp );
+		void UpdateCurrentState( Model& model, TimeInSeconds timestamp );
 
 	private:
-		StateController( const StateController& other );
-		StateController& operator=( const StateController& other );
+		StateIndex m_CurrentState;
 	};
 }
