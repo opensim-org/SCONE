@@ -229,18 +229,9 @@
     <addaction name="separator"/>
     <addaction name="actionTerminate_Running_Optimizations"/>
    </widget>
-   <widget class="QMenu" name="menu_Tools">
-    <property name="title">
-     <string>&amp;Tools</string>
-    </property>
-    <addaction name="action_Create_Video"/>
-    <addaction name="separator"/>
-    <addaction name="action_Preferences"/>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
    <addaction name="menu_Optimize"/>
-   <addaction name="menu_Tools"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="resultsDock">

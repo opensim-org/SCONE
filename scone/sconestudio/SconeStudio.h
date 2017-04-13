@@ -55,7 +55,8 @@ public slots:
 	void abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();
-	void createVideo();
+	void captureVideo();
+	void captureImage();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }

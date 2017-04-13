@@ -38,6 +38,11 @@ captureProcess( nullptr )
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
 
+	auto toolsMenu = menuBar()->addMenu( "&Tools" );
+	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::captureVideo );
+	addMenuAction( toolsMenu, "Capture &Image", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
+	addMenuAction( toolsMenu, "&Preferences", this, &SconeStudio::showSettingsDialog );
+
 	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
@@ -197,7 +202,7 @@ void SconeStudio::evaluate()
 	log::info( SCONE_PROFILE_REPORT );
 }
 
-void SconeStudio::createVideo()
+void SconeStudio::captureVideo()
 {
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 	if ( captureFilename.isEmpty() )
@@ -229,7 +234,13 @@ void SconeStudio::createVideo()
 	ui.osgViewer->startTimer();
 
 	log::info( SCONE_PROFILE_REPORT );
+}
 
+void SconeStudio::captureImage()
+{
+	QString filename = QFileDialog::getSaveFileName( this, "Image Filename", QString(), "png files (*.png)" );
+	if ( !filename.isEmpty() )
+		ui.osgViewer->captureCurrentFrame( filename.toStdString() );
 }
 
 void SconeStudio::setTime( TimeInSeconds t )
