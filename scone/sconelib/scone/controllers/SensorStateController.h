@@ -19,7 +19,7 @@ namespace scone
 		struct SensorState
 		{
 			SensorState( const PropNode& pn, ParamSet& par );
-			double GetDistance( Model& model, double timestamp );
+			double GetDistance( Model& model, double timestamp ) const;
 			String name;
 			bool mirrored;
 			double leg_load[ 2 ];

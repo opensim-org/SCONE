@@ -31,7 +31,7 @@ namespace scone
 		INIT_PARAM_NAMED( pn, par, sag_pos[ 1 ], "sag_pos1", 0.0 );
 	}
 
-	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp )
+	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp ) const
 	{
 		double dist = 0;
 		for ( Index idx = 0; idx < model.GetLegCount(); ++idx )
