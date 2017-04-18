@@ -62,6 +62,7 @@ public slots:
 	void viewResults( bool v ) { if ( v ) ui.resultsDock->show(); else ui.resultsDock->hide(); }
 	void viewMessages( bool v ) { if ( v ) ui.messagesDock->show(); else ui.messagesDock->hide(); }
 	void fixViewCheckboxes();
+	void updateTabTitles();
 
 public:
 	bool close_all;
@@ -83,7 +84,6 @@ private:
 	Ui::SconeStudioClass ui;
 
 	QTimer backgroundUpdateTimer;
-	bool fileChanged = false;
 
 	double slomo_factor;
 	TimeInSeconds current_time;

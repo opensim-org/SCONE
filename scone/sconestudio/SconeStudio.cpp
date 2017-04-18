@@ -239,6 +239,7 @@ void SconeStudio::fileOpen( const QString& filename )
 	edw->open( filename );
 	int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 	ui.tabWidget->setCurrentIndex( idx );
+	connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
 	scenarios.push_back( edw );
 	addRecentFile( filename );
 }
@@ -251,10 +252,11 @@ void SconeStudio::fileOpenRecent()
 
 void SconeStudio::fileSave()
 {
-	if ( getActiveScenario() )
+	if ( auto* s = getActiveScenario() )
 	{
 		//log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
-		getActiveScenario()->save();
+		s->save();
+		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 	}
 }
 
@@ -327,6 +329,8 @@ bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
 		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
 			s->save();
 	}
+
+	ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 
 	return true;
 }
@@ -471,6 +475,12 @@ void SconeStudio::fixViewCheckboxes()
 	ui.action_Messages->blockSignals( true );
 	ui.action_Messages->setChecked( ui.messagesDock->isVisible() );
 	ui.action_Messages->blockSignals( false );
+}
+
+void SconeStudio::updateTabTitles()
+{
+	for ( auto s : scenarios )
+		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()
