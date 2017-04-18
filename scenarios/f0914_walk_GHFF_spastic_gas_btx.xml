@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHFF1_ham_L60</signature_postfix>
+		<signature_postfix>GHFF1_spastic_gas_btx</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -18,8 +18,10 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<OpenSimParameters>
 				<ForceSet>
-					<hamstrings_l optimal_fiber_length="0.0654"/>
-					<hamstrings_r optimal_fiber_length="0.0654"/>
+					<gastroc_l max_isometric_force="1250"/>
+					<gastroc_r max_isometric_force="1250"/>
+					<soleus_l max_isometric_force="2568"/>
+					<soleus_r max_isometric_force="2568"/>
 				</ForceSet>
 			</OpenSimParameters>
 			<Controllers>
@@ -30,6 +32,15 @@
 					<!--late_stance_threshold init_mean="0.0" init_std="0.01" min="-0.5" max="0.1" is_free="1"/-->
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
+						<!-- Spastic reflexes -->
+						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
+							<Controller type="ReflexController" symmetric="1">
+								<Reflexes>
+									<Reflex type="MuscleReflex" target="soleus" delay="0.020" KL="2.0" L0="0.75" allow_neg_L="0"/>
+									<Reflex type="MuscleReflex" target="gastroc" delay="0.020" KL="2.0" L0="0.75" allow_neg_L="0"/>
+								</Reflexes>
+							</Controller>
+						</ConditionalController>
 					
 						<!-- TA stretch reflexes [Geyer & Herr 2010] -->
 						<ConditionalController states="EarlyStance LateStance Liftoff Swing Landing">
@@ -138,7 +149,7 @@
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG05_CoT_GH.xml"/>
+				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

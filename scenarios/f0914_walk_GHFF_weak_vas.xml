@@ -5,7 +5,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHFF1_ham_L60</signature_postfix>
+		<signature_postfix>GHFF1_vas_F50</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -18,8 +18,8 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<OpenSimParameters>
 				<ForceSet>
-					<hamstrings_l optimal_fiber_length="0.0654"/>
-					<hamstrings_r optimal_fiber_length="0.0654"/>
+					<vasti_l max_isometric_force="2500"/>
+					<vasti_r max_isometric_force="2500"/>
 				</ForceSet>
 			</OpenSimParameters>
 			<Controllers>
