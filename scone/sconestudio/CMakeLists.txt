@@ -37,6 +37,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QFileBrowser.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
+		${QTFX_PATH}/QGroup.h
+		${QTFX_PATH}/QGroup.cpp
 		${QTFX_PATH}/QDataAnalysisView.h
 		${QTFX_PATH}/QDataAnalysisView.cpp
 		${QTFX_PATH}/QDataAnalysisModel.h
