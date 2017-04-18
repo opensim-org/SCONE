@@ -18,10 +18,12 @@ namespace scone
 		m_TotStepSize( 0.0 )
 	{
 		INIT_PROPERTY( props, termination_height, 0.5 );
+		INIT_PROPERTY( props, min_max_velocity_weight, 1.0 );
 		INIT_PROPERTY( props, min_velocity, 0.5 );
 		INIT_PROPERTY( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
 		INIT_PROPERTY( props, load_threshold, 0.1 );
 		INIT_PROPERTY( props, max_velocity_range, 299792458.0 ); // default max velocity = speed of light
+		INIT_PROPERTY( props, max_velocity_range_weight, 1.0 );
 
 		// get string of gait bodies
 		String gait_bodies;
@@ -83,24 +85,33 @@ namespace scone
 		double speed = distance / model.GetTime();
 		double duration = model.GetSimulationEndTime();
 
-		// calculate range velocity penalty
-		double range_vel = m_VelocityRangeMeasure.GetHighest() - m_VelocityRangeMeasure.GetLowest();
-		double penalty_range_vel = Range< double >( 0.0, max_velocity_range).GetRangeViolation( range_vel ) / max_velocity_range;
-
-		// add final step and penalty to min_velocity measure
+		// add final step and penalty to min_velocity measure, and calcualte range velocity penalty if final time is duration
 		UpdateVelocityMeasure( model, model.GetTime() );
-		if ( model.GetTime() < duration )
+		std::cout << model.GetTime() << std::endl;
+		double penalty_range_vel = 0;
+		double tol = 1e-6; // tolerance for the end time of simulation and duration
+		if ( fabs( model.GetTime() - duration ) > tol )
+		{
 			m_MinMaxVelocityMeasure.AddSample( duration, 0 );
+		}
+		else
+		{
+			double range_vel = m_VelocityRangeMeasure.GetHighest() - m_VelocityRangeMeasure.GetLowest();
+			double range_violation = Range< double >( 0.0, max_velocity_range ).GetRangeViolation( range_vel );
+			penalty_range_vel = max_velocity_range_weight * ( range_violation /  max_velocity_range );
+		}
+
+		double penalty_min_max_velocity = min_max_velocity_weight * ( 1.0 - m_MinMaxVelocityMeasure.GetAverage() );
 
 		GetReport().set( "balance", 1.0 - ( model.GetTime() / std::max( duration, model.GetTime() ) ) );
-		GetReport().set( "min_max_velocity", 1.0 - m_MinMaxVelocityMeasure.GetAverage() );
+		GetReport().set( "min_max_velocity", penalty_min_max_velocity );
 		GetReport().set( "range_velocity", penalty_range_vel );
 		GetReport().set( "distance", distance );
 		GetReport().set( "speed", speed );
 		GetReport().set( "steps", m_nSteps );
 		GetReport().set( "stepsize", m_TotStepSize / m_nSteps );
 
-		return (1.0 - m_MinMaxVelocityMeasure.GetAverage()) + penalty_range_vel; // (max-min velocity) + (range velocity)
+		return penalty_min_max_velocity + penalty_range_vel;
 	}
 
 	void GaitMeasure::UpdateVelocityMeasure( const Model &model, double timestamp )

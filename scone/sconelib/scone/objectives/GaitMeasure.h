@@ -19,10 +19,12 @@ namespace scone
 
 		// parameters
 		Real termination_height;
+		Real min_max_velocity_weight;
 		Real min_velocity;
 		Real max_velocity;
 		Real load_threshold;
 		Real max_velocity_range;
+		Real max_velocity_range_weight;
 
 	protected:
 		virtual String GetClassSignature() const override;
