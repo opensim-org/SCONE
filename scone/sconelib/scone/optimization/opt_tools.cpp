@@ -38,6 +38,10 @@ namespace scone
 		bfs::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), bfs::copy_option::overwrite_if_exists );
 		flut::save_xml( props, ( outdir / "config.xml" ).string() );
 
+		// copy model to output folder
+		bfs::path modelfile = props.get_delimited< string >( "Optimizer.Objective.Model.model_file" );
+		bfs::copy_file( bfs::path( GetFolder( SCONE_MODEL_FOLDER ).str() ) / modelfile, outdir / modelfile, bfs::copy_option::overwrite_if_exists );
+
 		// return created optimizer
 		return std::move( o );
 	}
