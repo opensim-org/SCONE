@@ -64,7 +64,7 @@ namespace scone
 		}
 
 		// init CMA object
-		flut::cma_optimizer cma( (int)dim, initPoint, initStd, lowerBounds, upperBounds, &flut::optimizer::no_objective_func, m_Lambda, random_seed );
+		flut::cma_optimizer cma( (int)dim, flut::optimizer::no_objective_func, initPoint, initStd, lowerBounds, upperBounds, m_Lambda, random_seed );
 		cma.set_maximize( !IsMinimizing() );
 		m_Lambda = cma.lambda();
 		m_Mu = cma.mu();
