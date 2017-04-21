@@ -9,13 +9,10 @@ namespace scone
 	const Area Area::RIGHT_LEG = MakeLegArea( RightSide );
 	const Area Area::ROOT = Area( NoSide, RootLink );
 
-	Area::Area( Side i_side, unsigned long long i_mask ) :
-		side( i_side ),
-		link_mask( i_mask )
-	{
-	}
-
-	Area::~Area()
+	Area::Area( Side i_side, unsigned long long i_mask, bool m ) :
+	side( i_side ),
+	link_mask( i_mask ),
+	mirrored( m )
 	{
 	}
 
@@ -27,5 +24,11 @@ namespace scone
 		sec.link_mask.set( FootLink );
 
 		return sec;
+	}
+
+	scone::Area MakeMirrored( Area a )
+	{
+		a.mirrored = !a.mirrored;
+		return a;
 	}
 }

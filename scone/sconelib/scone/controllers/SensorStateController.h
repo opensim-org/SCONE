@@ -11,6 +11,7 @@ namespace scone
 
 		virtual size_t GetStateCount() const override { return m_States.size(); }
 		virtual const String& GetStateName( StateIndex i ) const override { return m_States[ i ].name; }
+		virtual void StoreData( Storage<Real>::Frame& frame ) override;
 
 	protected:
 		virtual StateIndex GetCurrentState( Model& model, double timestamp ) override;
@@ -18,7 +19,7 @@ namespace scone
 
 		struct SensorState
 		{
-			SensorState( const PropNode& pn, ParamSet& par );
+			SensorState( const PropNode& pn, ParamSet& par, const Area& a );
 			double GetDistance( Model& model, double timestamp ) const;
 			String name;
 			bool mirrored;
@@ -27,6 +28,6 @@ namespace scone
 		};
 
 		std::vector< SensorState > m_States;
-		StateIndex m_CurrentState;
+		std::vector< double > m_StateDist;
 	};
 }

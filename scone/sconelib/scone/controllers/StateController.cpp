@@ -20,8 +20,12 @@ namespace scone
 			// get state masks
 			String state_masks = ccIt->second.get< String >( "states" );
 			auto state_tokens = flut::split_str( state_masks, ";," );
-			for ( const String& instance_states : state_tokens )
+			for ( String controller_state_name : state_tokens )
 			{
+				// fix name for mirrored case -- yes, this is pretty nasty
+				if ( area.mirrored )
+					controller_state_name += "_mirrored";
+
 				// create new conditional controller
 				m_ConditionalControllers.push_back( ConditionalController() );
 				ConditionalController& cc = m_ConditionalControllers.back();
@@ -35,16 +39,16 @@ namespace scone
 				bool has_any_state = false;
 				for ( size_t i = 0; i < GetStateCount(); ++i )
 				{
-					if ( instance_states.find( GetStateName( i ) ) != String::npos )
+					if ( controller_state_name.find( GetStateName( i ) ) != String::npos )
 					{
 						ccs.state_mask[ i ] = has_any_state = true;
 						bit_string[ GetStateCount() - 1 - i ] = '1';
 					}
 				}
-				SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" )
+				SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" );
 
-					// create controller
-					const PropNode& cprops = ccIt->second.get_child( "Controller" );
+				// create controller
+				const PropNode& cprops = ccIt->second.get_child( "Controller" );
 				ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
 				cc.second = CreateController( cprops, par, model, area );
 			}
@@ -59,6 +63,7 @@ namespace scone
 			SCONE_ASSERT( current_state < GetStateCount() );
 
 			m_CurrentState = current_state;
+			log::info( "Current State = ", m_CurrentState );
 
 			// update controller states
 			for ( ConditionalController& cc : m_ConditionalControllers )

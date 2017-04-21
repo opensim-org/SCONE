@@ -38,7 +38,6 @@ namespace scone
 		void CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area );
 		void UpdateCurrentState( Model& model, TimeInSeconds timestamp );
 
-	private:
 		StateIndex m_CurrentState;
 	};
 }

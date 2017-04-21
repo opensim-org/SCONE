@@ -26,6 +26,7 @@
 #include "scone/optimization/CmaOptimizerShark3.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
 #include "scone/objectives/SimulationObjective.h"
+#include "scone/controllers/SensorStateController.h"
 
 namespace scone
 {
@@ -44,6 +45,7 @@ namespace scone
 			g_ControllerFactory.register_class< TimeStateController >();
 			g_ControllerFactory.register_class< MetaReflexController >();
 			g_ControllerFactory.register_class< PerturbationController >();
+			g_ControllerFactory.register_class< SensorStateController>();
 
 			// register measures
 			g_ControllerFactory.register_class< HeightMeasure >();

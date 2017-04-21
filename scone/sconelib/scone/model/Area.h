@@ -9,11 +9,11 @@ namespace scone
 	class SCONE_API Area
 	{
 	public:
-		Area( Side = NoSide, unsigned long long mask = 0 );
-		~Area();
+		Area( Side = NoSide, unsigned long long mask = 0, bool mirrored = false );
 
 		std::bitset< LinkTypeCount > link_mask;
 		Side side;
+		bool mirrored;
 
 		static const Area WHOLE_BODY;
 		static const Area LEFT_SIDE;
@@ -24,4 +24,5 @@ namespace scone
 	};
 
 	Area MakeLegArea( Side side );
+	Area MakeMirrored( Area a );
 }

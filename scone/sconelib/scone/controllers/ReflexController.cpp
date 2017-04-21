@@ -14,7 +14,7 @@
 namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
-		Controller( props, par, model, area )
+	Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
 		//SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
