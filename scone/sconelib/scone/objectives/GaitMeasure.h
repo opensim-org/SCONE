@@ -19,9 +19,12 @@ namespace scone
 
 		// parameters
 		Real termination_height;
+		Real min_max_velocity_weight;
 		Real min_velocity;
 		Real max_velocity;
 		Real load_threshold;
+		Real max_velocity_range;
+		Real max_velocity_range_weight;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -43,7 +46,8 @@ namespace scone
 
 		PropNode m_Report;
 
-		Statistic<> m_MinVelocityMeasure;
+		Statistic<> m_MinMaxVelocityMeasure;
+		Statistic<> m_VelocityRangeMeasure;
 		int m_nSteps;
 		double m_TotStepSize;
 	};
