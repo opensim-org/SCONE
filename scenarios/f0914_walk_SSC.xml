@@ -20,9 +20,9 @@
 					<SensorStates>
 						<State name="LeftSwing">
 							<leg_load0 init_mean="0" init_std="0.1" is_free="1"/>
-							<leg_load1 init_mean="1" init_std="0.1" is_free="1"/>
-							<sag_pos0 init_mean="-0.3" init_std="0.1" is_free="1"/>
-							<sag_pos1 init_mean="0.3" init_std="0.1" is_free="1"/>
+							<leg_load1 init_mean="0.1" init_std="0.1" is_free="1"/>
+							<sag_pos0 init_mean="0.0" init_std="0.1" is_free="1"/>
+							<sag_pos1 init_mean="0.1" init_std="0.1" is_free="1"/>
 						</State>
 					</SensorStates>
 					

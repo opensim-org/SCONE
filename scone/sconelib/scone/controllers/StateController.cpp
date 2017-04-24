@@ -39,7 +39,7 @@ namespace scone
 				bool has_any_state = false;
 				for ( size_t i = 0; i < GetStateCount(); ++i )
 				{
-					if ( controller_state_name.find( GetStateName( i ) ) != String::npos )
+					if ( controller_state_name == GetStateName( i ) )
 					{
 						ccs.state_mask[ i ] = has_any_state = true;
 						bit_string[ GetStateCount() - 1 - i ] = '1';
@@ -63,7 +63,6 @@ namespace scone
 			SCONE_ASSERT( current_state < GetStateCount() );
 
 			m_CurrentState = current_state;
-			log::info( "Current State = ", m_CurrentState );
 
 			// update controller states
 			for ( ConditionalController& cc : m_ConditionalControllers )
@@ -78,6 +77,9 @@ namespace scone
 					ccs.is_active_since = timestamp;
 				}
 			}
+
+			//for ( int i = 0; i < m_ConditionalControllers.size(); ++i )
+			//	log::info( "Controller ", i, " active=", m_ConditionalControllers[ i ].first.is_active );
 		}
 	}
 
