@@ -246,6 +246,10 @@ namespace scone
 
 	void GaitStateController::StoreData( Storage<Real>::Frame& frame )
 	{
+		// store states
+		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
+			frame[ m_LegStates[ idx ]->leg.GetName() + ".state" ] = m_LegStates[ idx ]->state;
+
 		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
 		{
 			if ( cc->active )

@@ -14,7 +14,7 @@ namespace scone
 		m_Side( side ),
 		m_Index( index ),
 		m_Rank( rank ),
-		m_Name( stringf( "Leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
+		m_Name( stringf( "leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) )
 	{
 		// measure length during construction, as it could be pose-dependent
 		m_LegLength = MeasureLength();
