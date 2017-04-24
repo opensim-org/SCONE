@@ -58,8 +58,8 @@ namespace scone
 		for ( size_t idx = 0; idx < parsets.size(); ++idx )
 		{
 			std::stringstream str;
-			str << parsets[ idx ];
-			str >> parsets[ idx ];
+			parsets[ idx ].ToStream( str );
+			parsets[ idx ].FromStream( str, true );
 		}
 
 		// make sure there are enough objectives

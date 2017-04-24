@@ -11,7 +11,7 @@ namespace scone
 {
 	ParamSet::ParamSet( const path& filename ) : m_Mode( ConstructionMode )
 	{
-		Read( filename );
+		Read( filename, true );
 	}
 
 	double ParamSet::Get( const ParamInfo& info )
@@ -137,12 +137,12 @@ namespace scone
 		ToStream( ofstr );
 	}
 
-	void ParamSet::Read( const path& filename )
+	void ParamSet::Read( const path& filename, bool read_std )
 	{
 		log::debug( "Reading " + quoted( filename.str() ) );
 		std::ifstream ifstr( filename.str() );
 		SCONE_THROW_IF( !ifstr.good(), "Error opening file: " + filename.str() );
-		FromStream( ifstr, true );
+		FromStream( ifstr, read_std );
 	}
 
 	void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
@@ -202,6 +202,12 @@ namespace scone
 		return full_prefix;
 	}
 
+	void ParamSet::SetGlobalStd( double factor, double offset )
+	{
+		for ( auto& p : m_Params )
+			p.first.init_std = factor * fabs( p.first.init_mean ) + offset;
+	}
+
 	std::ostream& ParamSet::ToStream( std::ostream& str ) const
 	{
 		for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
@@ -213,7 +219,7 @@ namespace scone
 		return str;
 	}
 
-	std::istream& ParamSet::FromStream( std::istream& str, bool log_results )
+	std::istream& ParamSet::FromStream( std::istream& str, bool load_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;
@@ -233,7 +239,8 @@ namespace scone
 				// read existing parameter, updating mean / std
 				iter->second = value;
 				iter->first.init_mean = mean;
-				iter->first.init_std = std;
+				if ( load_std )
+					iter->first.init_std = std;
 				++params_set;
 			}
 			else
@@ -250,8 +257,7 @@ namespace scone
 			}
 		}
 
-		if ( log_results )
-			log::InfoF( "Parameters read: %d, new parameters: %d", params_set, params_not_found );
+		log::info( "Parameters read=", params_set, " new parameters=", params_not_found );
 
 		return str;
 	}

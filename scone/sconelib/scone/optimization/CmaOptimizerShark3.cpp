@@ -41,7 +41,10 @@ namespace scone
 
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
-			par.Read( init_file );
+			par.Read( init_file, use_init_file_std );
+
+		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
+			par.SetGlobalStd( global_std_factor, global_std_offset );
 
 		par.SetMode( ParamSet::UpdateMode );
 
@@ -58,11 +61,6 @@ namespace scone
 				SCONE_ASSERT( free_idx < dim );
 				initPoint[ free_idx ] = parinf.init_mean;
 				double par_std = parinf.init_std;
-
-				// compute std using global std settings (if they are set)
-				if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
-					par_std = global_std_factor * fabs( parinf.init_mean ) + global_std_offset;
-
 				initCovar( free_idx, free_idx ) = par_std * par_std;
 				avg_std += par_std * par_std;
 				++free_idx;

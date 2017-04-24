@@ -32,7 +32,10 @@ namespace scone
 
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
-			par.Read( init_file );
+			par.Read( init_file, use_init_file_std );
+
+		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
+			par.SetGlobalStd( global_std_factor, global_std_offset );
 
 		par.SetMode( ParamSet::UpdateMode );
 
@@ -51,14 +54,7 @@ namespace scone
 				initPoint[ free_idx ] = parinf.init_mean;
 				lowerBounds[ free_idx ] = parinf.min;
 				upperBounds[ free_idx ] = parinf.max;
-
-				double par_std = parinf.init_std;
-
-				// compute std using global std settings (if they are set)
-				if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
-					par_std = global_std_factor * fabs( parinf.init_mean ) + global_std_offset;
-
-				initStd[ free_idx ] = par_std;
+				initStd[ free_idx ] = parinf.init_std;
 				++free_idx;
 			}
 		}

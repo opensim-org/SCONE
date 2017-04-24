@@ -51,7 +51,7 @@ namespace scone
 		bfs::path config_path;
 		if ( filename.extension() == "par" )
 		{
-			par.Read( filename );
+			par.Read( filename, true );
 			config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
 		}
 		else config_path = filename.str();
@@ -67,7 +67,7 @@ namespace scone
 		{
 			auto& optProp = configProp.get_child( "Optimizer" );
 			if ( optProp.get< bool >( "use_init_file" ) )
-				par.Read( optProp.get< path >( "init_file" ) );
+				par.Read( optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
 		}
 
 		// create SimulationObjective object

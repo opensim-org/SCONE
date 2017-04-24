@@ -22,6 +22,8 @@ namespace scone
 		double global_std_factor;
 		double global_std_offset;
 
+		bool use_init_file_std;
+
 		size_t num_elitists;
 		int max_attempts;
 		long random_seed;
