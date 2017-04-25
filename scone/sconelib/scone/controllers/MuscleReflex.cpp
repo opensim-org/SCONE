@@ -15,7 +15,8 @@ namespace scone
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr )
 	{
-		Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
+		auto source_name = area.GetLocalName( props.get< String >( "source", props.get< String >( "target" ) ) );
+		Muscle& source = *FindByName( model.GetMuscles(), source_name );
 
 		// init names
 		String reflex_name = GetReflexName( m_Target.GetName(), source.GetName() );

@@ -10,6 +10,7 @@ namespace scone
 	{
 	public:
 		Locality( Side s = NoSide, bool m = false ) : side( s ), mirrored( m ) {}
+		const String GetLocalName( const String& name ) const;
 
 		Side side;
 		bool mirrored;

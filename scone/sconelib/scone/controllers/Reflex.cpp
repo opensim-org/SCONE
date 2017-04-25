@@ -6,7 +6,7 @@
 namespace scone
 {
 	Reflex::Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
-	m_Target( *FindByName( model.GetActuators(), props.get< String >( "target" ) + GetSideName( area.side ) ) )
+	m_Target( *FindByName( model.GetActuators(), area.GetLocalName( props.get< String >( "target" ) ) ) )
 	{
 		INIT_PARAM_REQUIRED( props, par, delay );
 		INIT_PROPERTY( props, min_control_value, REAL_LOWEST );
