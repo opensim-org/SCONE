@@ -10,7 +10,7 @@ namespace scone
 	class SCONE_API JointLoadMeasure : public Measure
 	{
 	public:
-		JointLoadMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		JointLoadMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~JointLoadMeasure() {}
 
 		enum Method { NoMethod, JointReactionForce };

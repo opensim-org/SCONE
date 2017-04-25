@@ -4,7 +4,7 @@
 #include "memory_tools.h"
 #include "scone/core/HasName.h"
 #include "Body.h"
-#include "Area.h"
+#include "Locality.h"
 
 namespace scone
 {
@@ -19,7 +19,7 @@ namespace scone
 		const Link& GetBaseLink() const { return m_Upper.GetParent(); }
 		Model& GetModel() const;
 		Side GetSide() const { return m_Side; }
-		const Area& GetArea() const { return m_Side == LeftSide ? Area::LEFT_LEG : Area::RIGHT_LEG; }
+		//Locality GetArea() const { return Locality( m_Side ); }
 		size_t GetIndex() const { return m_Index; }
 		size_t GetRank() const { return m_Rank; }
 		const String& GetName() const override { return m_Name; }

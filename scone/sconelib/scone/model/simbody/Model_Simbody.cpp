@@ -203,7 +203,7 @@ namespace scone
 		// create and initialize controllers
 		const PropNode& cprops = props.get_child( "Controllers" );
 		for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-			m_Controllers.push_back( CreateController( iter->second, par, *this, Area::WHOLE_BODY ) );
+			m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
 
 		// Initialize muscle dynamics STEP 1
 		// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)

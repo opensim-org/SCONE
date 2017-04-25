@@ -9,7 +9,7 @@ namespace scone
 	class EffortMeasure : public Measure
 	{
 	public:
-		EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~EffortMeasure();
 
 		enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };

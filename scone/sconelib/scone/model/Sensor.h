@@ -9,7 +9,7 @@ namespace scone
 	{
 	public:
 		Sensor();
-		Sensor( const PropNode& pn, ParamSet& par, class Model& model, const class Area& target_area );
+		Sensor( const PropNode& pn, ParamSet& par, class Model& model, const class Locality& target_area );
 		virtual ~Sensor();
 
 		virtual Real GetValue() const { SCONE_THROW_NOT_IMPLEMENTED; }

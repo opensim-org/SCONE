@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API Reflex : public HasData
 	{
 	public:
-		Reflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~Reflex();
 
 		virtual void ComputeControls( double timestamp );

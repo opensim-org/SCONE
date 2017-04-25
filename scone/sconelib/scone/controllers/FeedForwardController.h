@@ -17,7 +17,7 @@ namespace scone
 	class SCONE_API FeedForwardController : public Controller
 	{
 	public:
-		FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+		FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 		virtual ~FeedForwardController() { };
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;

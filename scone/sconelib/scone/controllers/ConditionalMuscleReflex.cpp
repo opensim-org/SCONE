@@ -1,11 +1,11 @@
 #include "ConditionalMuscleReflex.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/Dof.h"
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		MuscleReflex( props, par, model, area ),
 		m_pConditionalDofPos( nullptr ),
 		m_pConditionalDofVel( nullptr )

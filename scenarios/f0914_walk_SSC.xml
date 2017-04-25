@@ -26,7 +26,7 @@
 
 					<ConditionalControllers>
 						<ConditionalController states="LeftSwing">
-							<Controller type="ReflexController" symmetric="0">
+							<Controller type="ReflexController">
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
 									<Reflex type="MuscleReflex" target="tib_ant_l" delay="0.020">

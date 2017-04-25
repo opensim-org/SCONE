@@ -14,7 +14,7 @@ namespace scone
 	class SCONE_API MetaReflexDof : public HasData
 	{
 	public:
-		MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~MetaReflexDof() {}
 
 		void SetupUsingCurrentPose();

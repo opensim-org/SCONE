@@ -1,5 +1,5 @@
 #include "MetaReflexDof.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Dof.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/model/Muscle.h"
@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	MetaReflexDof::MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	MetaReflexDof::MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		target_dof( *FindByName( model.GetDofs(), props.get< String >( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),

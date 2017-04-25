@@ -10,7 +10,7 @@ namespace scone
 	class SCONE_API Controller : public HasSignature, public HasData
 	{
 	public:
-		Controller( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+		Controller( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 		virtual ~Controller();
 
 		enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };

@@ -5,13 +5,13 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area ),
 	m_CurrentState( NoIndex )
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area )
 	{
 		// create instances for each controller
 		const PropNode& ccProps = props.get_child( "ConditionalControllers" );

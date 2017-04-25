@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API MuscleReflex : public Reflex
 	{
 	public:
-		MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~MuscleReflex();
 
 		virtual void ComputeControls( double timestamp ) override;

@@ -43,7 +43,7 @@ namespace scone
 		return str;
 	}
 
-	Sensor& Model::AcquireSensor( const PropNode& pn, ParamSet& par, const Area& area )
+	Sensor& Model::AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area )
 	{
 		// create the sensor first, so we can use its name to find it
 		SensorUP sensor = CreateSensor( pn, par, *this, area );
@@ -73,7 +73,7 @@ namespace scone
 		else return **it;
 	}
 
-	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Area& area )
+	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area )
 	{
 		// acquire sensor first
 		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );

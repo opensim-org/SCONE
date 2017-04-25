@@ -128,8 +128,8 @@ namespace scone
 		}
 
 		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Area& area );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Area& area );
+		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area );
+		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area );
 
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );

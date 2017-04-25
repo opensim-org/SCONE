@@ -4,14 +4,14 @@
 
 #include "scone/model/Controller.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
 
 namespace scone
 {
-	FeedForwardController::FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area ) :
+	FeedForwardController::FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		DECLARE_AND_INIT( props, bool, symmetric, true );

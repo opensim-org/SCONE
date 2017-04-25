@@ -1,6 +1,6 @@
 #include "MuscleReflex.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Dof.h"
 #include "scone/core/propnode_tools.h"
 
@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),

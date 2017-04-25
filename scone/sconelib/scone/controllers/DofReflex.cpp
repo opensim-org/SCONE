@@ -9,15 +9,16 @@
 
 namespace scone
 {
-	DofReflex::DofReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
-		Reflex( props, par, model, area ),
-		m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
-		m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
-		m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
-		m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
-		m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
+	DofReflex::DofReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	Reflex( props, par, model, area ),
+	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
+	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
+	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
+	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
+	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
 	{
-		String reflexname = GetReflexName( m_Target.GetName(), FindByName( model.GetDofs(), props.get< String >( "source" ) )->GetName() );
+		auto source = props.get< String >( "source" );
+		String reflexname = GetReflexName( m_Target.GetName(), FindByName( model.GetDofs(), source )->GetName() );
 		ScopedParamSetPrefixer prefixer( par, reflexname + "." );
 
 		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
