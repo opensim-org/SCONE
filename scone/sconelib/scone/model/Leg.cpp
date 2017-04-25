@@ -35,6 +35,11 @@ namespace scone
 		return GetGroundCop( m_Foot.GetBody().GetContactForce(), m_Foot.GetBody().GetContactMoment() );
 	}
 
+	Vec3 Leg::GetRelFootPos() const
+	{
+		return GetFootLink().GetBody().GetComPos() - GetBaseLink().GetBody().GetComPos();
+	}
+
 	void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
 	{
 		SCONE_PROFILE_FUNCTION;

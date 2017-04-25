@@ -18,8 +18,8 @@ namespace scone
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
 		//SCONE_ASSERT( symmetric == true ); // only symmetric controllers work for now
-		if ( !symmetric )
-			par.PushNamePrefix( GetSideName( area.side ) + "." );
+		//if ( !symmetric )
+		//	par.PushNamePrefix( GetSideName( area.side ) + "." );
 
 		// create normal reflexes
 		const PropNode& reflexvec = props.get_child( "Reflexes" );
@@ -29,8 +29,8 @@ namespace scone
 			m_Reflexes.push_back( CreateReflex( item.second, par, model, area ) );
 		}
 
-		if ( !symmetric )
-			par.PopNamePrefix();
+		//if ( !symmetric )
+		//	par.PopNamePrefix();
 	}
 
 	ReflexController::~ReflexController()

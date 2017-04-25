@@ -32,32 +32,39 @@ namespace scone
 		StateController::StoreData( frame );
 		frame[ "ssc_current_state" ] = (double)m_CurrentState;
 		for ( size_t idx = 0; idx < m_States.size(); ++idx )
+		{
 			frame[ "ssc_dist_" + flut::to_str( idx ) ] = m_StateDist[ idx ];
+			frame[ "ssc_ld_" + flut::to_str( idx ) ] = m_States[ idx ].ld;
+			frame[ "ssc_sd_" + flut::to_str( idx ) ] = m_States[ idx ].sd;
+		}
 	}
 
 	SensorStateController::SensorState::SensorState( const PropNode& pn, ParamSet& par, const Area& a )
 	{
 		INIT_PROP_REQUIRED( pn, name );
+
+		ScopedParamSetPrefixer pfx( par, name + "." );
+		INIT_PARAM( pn, par, load_delta, 0.0 );
+		INIT_PARAM( pn, par, sag_delta, 0.0 );
+
 		if ( a.mirrored ) name += "_mirrored";
 		mirrored = a.mirrored;
-		INIT_PARAM_NAMED( pn, par, leg_load[ 0 ], "leg_load0", 0.0 );
-		INIT_PARAM_NAMED( pn, par, leg_load[ 1 ], "leg_load1", 0.0 );
-		INIT_PARAM_NAMED( pn, par, sag_pos[ 0 ], "sag_pos0", 0.0 );
-		INIT_PARAM_NAMED( pn, par, sag_pos[ 1 ], "sag_pos1", 0.0 );
+
+		//INIT_PARAM_NAMED( pn, par, leg_load[ 0 ], "leg_load0", 0.0 );
+		//INIT_PARAM_NAMED( pn, par, leg_load[ 1 ], "leg_load1", 0.0 );
+		//INIT_PARAM_NAMED( pn, par, sag_pos[ 0 ], "sag_pos0", 0.0 );
+		//INIT_PARAM_NAMED( pn, par, sag_pos[ 1 ], "sag_pos1", 0.0 );
 	}
 
-	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp ) const
+	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp )
 	{
-		double dist = 0;
-		for ( Index idx = 0; idx < model.GetLegCount(); ++idx )
-		{
-			auto& leg = model.GetLeg( GetLegIndex( idx, mirrored ) );
+		auto& leg = model.GetLeg( GetLegIndex( 0, mirrored ) );
+		auto& other_leg = model.GetLeg( GetLegIndex( 1, mirrored ) );
 
-			dist += flut::math::squared( leg.GetLoad() - leg_load[ idx ] );
+		ld = leg.GetLoad() - other_leg.GetLoad();
+		sd = leg.GetRelFootPos().x - other_leg.GetRelFootPos().x;
 
-			double sp = leg.GetFootLink().GetBody().GetComPos().x - leg.GetBaseLink().GetBody().GetComPos().x;
-			dist += flut::math::squared( sp - sag_pos[ idx ] );
-		}
+		double dist = abs( load_delta - ld ) + abs( sag_delta - sd );
 		return dist;
 	}
 

@@ -25,8 +25,8 @@ namespace scone
 		INIT_PROPERTY( props, init_max, 0.0 );
 		INIT_PROPERTY( props, init_mean, props.has_value() ? props.get<double>() : 0.0 );
 		INIT_PROPERTY( props, init_std, 0.0 );
-		INIT_PROPERTY( props, min, REAL_MIN );
-		INIT_PROPERTY( props, max, REAL_MAX );
+		INIT_PROPERTY( props, min, -1e9 ); // don't use REAL_MIN to prevent boundary issues
+		INIT_PROPERTY( props, max, 1e9 ); // don't use REAL_MAX to prevent boundary issues
 		INIT_PROPERTY( props, is_free, props.has_value() ? false : true );
 	}
 

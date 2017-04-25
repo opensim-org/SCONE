@@ -257,7 +257,7 @@ namespace scone
 			}
 		}
 
-		log::info( "Parameters read=", params_set, " new parameters=", params_not_found );
+		log::debug( "Parameters read=", params_set, " new parameters=", params_not_found );
 
 		return str;
 	}

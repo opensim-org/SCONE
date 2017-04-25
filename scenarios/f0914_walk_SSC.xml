@@ -19,13 +19,11 @@
 				<Controller type="SensorStateController">
 					<SensorStates>
 						<State name="LeftSwing">
-							<leg_load0 init_mean="0" init_std="0.1" is_free="1"/>
-							<leg_load1 init_mean="0.1" init_std="0.1" is_free="1"/>
-							<sag_pos0 init_mean="0.0" init_std="0.1" is_free="1"/>
-							<sag_pos1 init_mean="0.1" init_std="0.1" is_free="1"/>
+							<load_delta init_mean="-1" init_std="0.1" is_free="1"/>
+							<sag_delta init_mean="-0.5" init_std="0.1" is_free="1"/>
 						</State>
 					</SensorStates>
-					
+
 					<ConditionalControllers>
 						<ConditionalController states="LeftSwing">
 							<Controller type="ReflexController" symmetric="0">

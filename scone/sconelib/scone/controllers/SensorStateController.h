@@ -20,11 +20,14 @@ namespace scone
 		struct SensorState
 		{
 			SensorState( const PropNode& pn, ParamSet& par, const Area& a );
-			double GetDistance( Model& model, double timestamp ) const;
+			double GetDistance( Model& model, double timestamp );
 			String name;
 			bool mirrored;
 			double leg_load[ 2 ];
 			double sag_pos[ 2 ];
+			double load_delta;
+			double sag_delta;
+			double ld = 0, sd = 0;
 		};
 
 		std::vector< SensorState > m_States;

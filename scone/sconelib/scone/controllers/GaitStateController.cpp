@@ -250,6 +250,10 @@ namespace scone
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			frame[ m_LegStates[ idx ]->leg.GetName() + ".state" ] = m_LegStates[ idx ]->state;
 
+		// store sagittal pos
+		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
+			frame[ m_LegStates[ idx ]->leg.GetName() + ".sag_pos" ] = m_LegStates[ idx ]->sagittal_pos;
+
 		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
 		{
 			if ( cc->active )
