@@ -14,6 +14,7 @@ namespace scone
 	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area )
 	{
 		// create instances for each controller
+		log::trace( "Creating Conditional Controllers for " + area.GetName() );
 		const PropNode& ccProps = props.get_child( "ConditionalControllers" );
 		for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 		{

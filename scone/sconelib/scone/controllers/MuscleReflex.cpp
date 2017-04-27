@@ -15,13 +15,15 @@ namespace scone
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr )
 	{
-		auto source_name = area.GetLocalName( props.get< String >( "source", props.get< String >( "target" ) ) );
-		Muscle& source = *FindByName( model.GetMuscles(), source_name );
+		auto trg_name = props.get< String >( "target" );
+		auto src_name = props.get< String >( "source", trg_name );
+		auto muscle_name = area.ConvertName( src_name );
+		Muscle& source = *FindByName( model.GetMuscles(), muscle_name );
 
 		// init names
-		String reflex_name = GetReflexName( m_Target.GetName(), source.GetName() );
-		name = reflex_name + GetSideName( area.side );
-		ScopedParamSetPrefixer prefixer( par, reflex_name + "." );
+		String par_name = GetParName( props );
+		name = par_name + GetSideName( area.side );
+		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 		INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
@@ -53,6 +55,8 @@ namespace scone
 
 		if ( spindle_gain!= 0.0 )
 			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
+
+		log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}
 
 	MuscleReflex::~MuscleReflex()

@@ -2,7 +2,7 @@
 
 namespace scone
 {
-	const String Locality::GetLocalName( const String& name ) const
+	String Locality::ConvertName( const String& name ) const
 	{
 		auto org_side = GetSide( name );
 		auto noside_name = GetNameNoSide( name );
@@ -13,5 +13,11 @@ namespace scone
 			else return name;
 		}
 		else return GetSidedName( noside_name, side );
+	}
+
+	String Locality::GetName() const
+	{
+		return GetFullSideName( side ) + ( mirrored ? "Mirrored" : "" );
+		
 	}
 }

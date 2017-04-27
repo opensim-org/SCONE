@@ -11,10 +11,11 @@ namespace scone
 		m_pConditionalDofVel( nullptr )
 	{
 		const PropNode& cp = props.get_child( "Condition" );
-		Dof& dof = *FindByName( model.GetDofs(), cp.get< String >( "dof" ) + GetSideName( area.side ) );
+		Dof& dof = *FindByName( model.GetDofs(), area.ConvertName( cp.get< String >( "dof" ) ) );
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 		m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
+		log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );
 	}
 
 	ConditionalMuscleReflex::~ConditionalMuscleReflex()

@@ -6,7 +6,7 @@
 namespace scone
 {
 	Reflex::Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
-	m_Target( *FindByName( model.GetActuators(), area.GetLocalName( props.get< String >( "target" ) ) ) )
+	m_Target( *FindByName( model.GetActuators(), area.ConvertName( props.get< String >( "target" ) ) ) )
 	{
 		INIT_PARAM_REQUIRED( props, par, delay );
 		INIT_PROPERTY( props, min_control_value, REAL_LOWEST );
@@ -31,4 +31,12 @@ namespace scone
 	{
 		return ( target == source ) ? target : target + "-" + source;
 	}
+
+	String Reflex::GetParName( const PropNode& props )
+	{
+		auto trg_name = props.get< String >( "target" );
+		auto src_name = props.get< String >( "source", trg_name );
+		return ( trg_name == src_name ) ? trg_name : trg_name + "-" + src_name;
+	}
+
 }

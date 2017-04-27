@@ -22,6 +22,7 @@ namespace scone
 		Real AddTargetControlValue( Real u );
 		Actuator& m_Target;
 		static String GetReflexName( const String& target, const String& source );
+		static String GetParName( const PropNode& props );
 
 	private:
 		Real min_control_value;
