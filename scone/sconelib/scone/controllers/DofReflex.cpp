@@ -28,7 +28,7 @@ namespace scone
 		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
 
-		log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
+		//log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
 	}
 
 	DofReflex::~DofReflex()

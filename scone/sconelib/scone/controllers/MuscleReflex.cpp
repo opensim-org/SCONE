@@ -56,7 +56,7 @@ namespace scone
 		if ( spindle_gain!= 0.0 )
 			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
 
-		log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
+		//log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}
 
 	MuscleReflex::~MuscleReflex()

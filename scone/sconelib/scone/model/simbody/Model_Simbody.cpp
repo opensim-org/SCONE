@@ -286,6 +286,7 @@ namespace scone
 		{
 			for ( auto& mp : *model_props )
 			{
+				int usage = 0;
 				if ( mp.first == "Actuator" )
 				{
 					for ( auto& act : m_Actuators )
@@ -294,9 +295,13 @@ namespace scone
 						{
 							SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
 							act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
+							++usage;
 						}
 					}
 				}
+
+				if ( usage == 0 )
+					log::warning( "Unused model property: ", mp.second.get< String >( "name" ) );
 			}
 		}
 	}
