@@ -23,6 +23,8 @@ if(${Qt5Widgets_FOUND})
 		Settings.cpp
 		SconeStorageDataModel.h
 		SconeStorageDataModel.cpp
+		ResultsFileSystemModel.h
+		ResultsFileSystemModel.cpp
 		)
 	
 	set(QTFILES
