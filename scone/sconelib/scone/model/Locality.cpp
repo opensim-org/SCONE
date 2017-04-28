@@ -18,6 +18,5 @@ namespace scone
 	String Locality::GetName() const
 	{
 		return GetFullSideName( side ) + ( mirrored ? "Mirrored" : "" );
-		
 	}
 }

@@ -58,7 +58,6 @@ namespace scone
 
 		virtual std::vector< Vec3 > GetMusclePath() const override;
 		virtual void SetExcitation( Real u ) override;
-		virtual void SetExcitationDelay( TimeInSeconds delay ) override;
 
 		OpenSim::Muscle& GetOsMuscle() { return m_osMus; }
 
@@ -66,7 +65,6 @@ namespace scone
 		virtual Real GetMomentArm( const Dof& dof ) const override;
 
 	private:
-		flut::circular_deque< double > m_DelayBuffer;
 		OpenSim::Muscle& m_osMus;
 		Model_Simbody& m_Model;
 	};

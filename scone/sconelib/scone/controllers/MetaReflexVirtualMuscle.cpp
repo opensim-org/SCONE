@@ -50,7 +50,7 @@ namespace scone
 		mrp.Init( props, par, model );
 
 		// init balance parameters
-		if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
+		if ( model.GetCustomProps().get( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 		{
 			ScopedParamSetPrefixer pre2( par, "B." );
 			auto& balprops = props.get_child( "Balance" );

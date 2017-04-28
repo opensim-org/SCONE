@@ -22,7 +22,7 @@ namespace scone
 
 		// init names
 		String par_name = GetParName( props );
-		name = par_name + GetSideName( area.side );
+		name = GetReflexName( m_Target.GetName(), source.GetName() );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
@@ -93,9 +93,16 @@ namespace scone
 
 	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
 	{
-		frame[ name + ".length_feedback" ] = u_l;
-		frame[ name + ".velocity_feedback" ] = u_v;
-		frame[ name + ".force_feedback" ] = u_f;
-		frame[ name + ".spindle_feedback" ] = u_s;
+		if ( m_pLengthSensor )
+			frame[ name + ".length_feedback" ] = u_l;
+
+		if ( m_pVelocitySensor )
+			frame[ name + ".velocity_feedback" ] = u_v;
+
+		if ( m_pForceSensor )
+			frame[ name + ".force_feedback" ] = u_f;
+
+		if ( m_pSpindleSensor )
+			frame[ name + ".spindle_feedback" ] = u_s;
 	}
 }

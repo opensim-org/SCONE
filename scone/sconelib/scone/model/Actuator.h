@@ -2,6 +2,7 @@
 
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
+#include "flut/circular_deque.hpp"
 
 namespace scone
 {
@@ -12,11 +13,17 @@ namespace scone
 		virtual ~Actuator();
 
 		virtual void AddInput( double v ) { m_ActuatorControlValue += v; }
-		virtual void ClearInput() { m_ActuatorControlValue = 0.0; }
-		virtual double GetInput() const { return m_ActuatorControlValue; }
+		virtual void ClearInput();
+		virtual double GetInput() const;
 		virtual void StoreData( Storage< Real >::Frame& frame ) override;
 
+		virtual void SetDelay( TimeInSeconds d, TimeInSeconds control_step_size );
+		virtual TimeInSeconds GetDelay( TimeInSeconds control_step_size );
+
 	protected:
+		size_t m_DelaySamples;
+		flut::circular_deque< double > m_DelayBuffer;
+
 		double m_ActuatorControlValue;
 	};
 }

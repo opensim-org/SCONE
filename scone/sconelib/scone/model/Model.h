@@ -96,9 +96,8 @@ namespace scone
 		virtual Real GetBW() const;
 
 		// custom model properties
-		template< typename T >
-		T GetCustomProp( const String& key, const T& default_value ) const { return custom_properties.get( key, default_value ); }
-		const PropNode& GetCustomProps() { return custom_properties; }
+		const PropNode& GetCustomProps() { return m_CustomProps; }
+		const PropNode& GetModelProps() { return m_ModelProps; }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -177,9 +176,10 @@ namespace scone
 		Storage< Real > m_SensorDelayStorage;
 		std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		std::vector< std::unique_ptr< Sensor > > m_Sensors;
-
 		std::array< SensorDelayAdapter*, 3 > m_OriSensors;
-		const PropNode custom_properties;
+
+		const PropNode m_ModelProps;
+		const PropNode m_CustomProps;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;

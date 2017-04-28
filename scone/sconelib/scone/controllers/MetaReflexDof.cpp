@@ -30,7 +30,7 @@ namespace scone
 		dof_pos.Init( props, par, model, "P" );
 		dof_neg.Init( props, par, model, "N" );
 
-		if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
+		if ( model.GetCustomProps().get( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 		{
 			ScopedParamSetPrefixer pre2( par, "B." );
 			auto& balprops = props.get_child( "Balance" );
