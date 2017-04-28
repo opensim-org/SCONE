@@ -19,6 +19,10 @@
 				<Actuator name="tib_ant*" delay="0.02"/>
 				<Actuator name="gastroc*" delay="0.02"/>
 				<Actuator name="soleus*" delay="0.02"/>
+				<Actuator name="vasti*" delay="0.01"/>
+				<Actuator name="hamstrings*" delay="0.005"/>
+				<Actuator name="iliopsoas*" delay="0.005"/>
+				<Actuator name="glut_max*" delay="0.005"/>
 			</ModelProperties>
 			<Controllers>
 				<Controller type="SensorStateController">
@@ -33,45 +37,45 @@
 							<Controller type="ReflexController">
 								<Reflexes>
 									<!-- Swing TA -->
-									<Reflex type="MuscleReflex" target="tib_ant_l" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant_l" delay="0.02">
 										<KL init_mean="3.0" init_std="0.3" min="0" max="10.0" is_free="1"/>
 										<L0 init_mean="0.7" init_std="0.07" min="0" max="2" is_free="1"/>
 									</Reflex>
-									<Reflex type="MuscleReflex" target="tib_ant_l" source="soleus_l" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant_l" source="soleus_l" delay="0.02">
 										<KF init_mean="-0.4" init_std="0.04" min="-10" max="10" is_free="1"/>
 									</Reflex>
 
 									<!-- Stance TA -->
-									<Reflex type="MuscleReflex" target="tib_ant_r" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant_r" delay="0.02">
 										<KL init_mean="3.0" init_std="0.3" min="0" max="10.0" is_free="1"/>
 										<L0 init_mean="0.7" init_std="0.07" min="0" max="2" is_free="1"/>
 									</Reflex>
-									<Reflex type="MuscleReflex" target="tib_ant_r" source="soleus_r" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant_r" source="soleus_r" delay="0.02">
 										<KF init_mean="-0.4" init_std="0.04" min="-10" max="10" is_free="1"/>
 									</Reflex>
 
 									<!-- Stance SOL/GAS -->
-									<Reflex type="MuscleReflex" target="soleus_r" delay="0.020">
+									<Reflex type="MuscleReflex" target="soleus_r" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<KL init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
-									<Reflex type="MuscleReflex" target="gastroc_r" delay="0.020">
+									<Reflex type="MuscleReflex" target="gastroc_r" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<KL init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 
 									<!-- Swing SOL/GAS -->
-									<Reflex type="MuscleReflex" target="soleus_l" delay="0.020">
+									<Reflex type="MuscleReflex" target="soleus_l" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<KL init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
-									<Reflex type="MuscleReflex" target="gastroc_l" delay="0.020">
+									<Reflex type="MuscleReflex" target="gastroc_l" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<KL init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 
 									<!-- Stance VAS -->
-									<Reflex type="ConditionalMuscleReflex" target="vasti_r" delay="0.010">
+									<Reflex type="ConditionalMuscleReflex" target="vasti_r" delay="0.01">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<C0 init_mean="0.05" init_std="0.005" min="-1.0" max="1.0" is_free="1"/>
 										<Condition dof="knee_angle_r">

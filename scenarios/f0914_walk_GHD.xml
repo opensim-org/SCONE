@@ -19,6 +19,10 @@
 				<Actuator name="tib_ant*" delay="0.02"/>
 				<Actuator name="gastroc*" delay="0.02"/>
 				<Actuator name="soleus*" delay="0.02"/>
+				<Actuator name="vasti*" delay="0.01"/>
+				<Actuator name="hamstrings*" delay="0.005"/>
+				<Actuator name="iliopsoas*" delay="0.005"/>
+				<Actuator name="glut_max*" delay="0.005"/>
 			</ModelProperties>
 			<Controllers>
 				<Controller type="GaitStateController">
@@ -32,11 +36,11 @@
 							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- TA =L+(TA) + F-(SOL) -->
-									<Reflex type="MuscleReflex" target="tib_ant" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant" delay="0.02">
 										<KL init_mean="3.0" init_std="0.3" min="0" max="10.0" is_free="1"/>
 										<L0 init_mean="0.7" init_std="0.07" min="0" max="2" is_free="1"/>
 									</Reflex>
-									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.020">
+									<Reflex type="MuscleReflex" target="tib_ant" source="soleus" delay="0.02">
 										<KF init_mean="-0.4" init_std="0.04" min="-10" max="10" is_free="1"/>
 									</Reflex>
 								</Reflexes>
@@ -48,11 +52,11 @@
 							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- F+ SOL -->
-									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
+									<Reflex type="MuscleReflex" target="soleus" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 									<!-- F+ GAS -->
-									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
+									<Reflex type="MuscleReflex" target="gastroc" delay="0.02">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
@@ -64,7 +68,7 @@
 							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- F+ VAS -->
-									<Reflex type="ConditionalMuscleReflex" target="vasti" delay="0.010">
+									<Reflex type="ConditionalMuscleReflex" target="vasti" delay="0.01">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<C0 init_mean="0.05" init_std="0.005" min="-1.0" max="1.0" is_free="1"/>
 										<Condition dof="knee_angle">
