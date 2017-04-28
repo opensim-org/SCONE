@@ -74,6 +74,12 @@ ProgressDockWidget::~ProgressDockWidget()
 	}
 }
 
+void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
+{
+	ui.plot->yAxis->setScaleType( Linear ? QCPAxis::stLinear : QCPAxis::stLogarithmic );
+	ui.plot->yAxis->setScaleLogBase( log_base );
+}
+
 ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 {
 	SCONE_ASSERT( process );
