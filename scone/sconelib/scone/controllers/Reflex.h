@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API Reflex : public HasData
 	{
 	public:
-		Reflex( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~Reflex();
 
 		virtual void ComputeControls( double timestamp );
@@ -22,6 +22,7 @@ namespace scone
 		Real AddTargetControlValue( Real u );
 		Actuator& m_Target;
 		static String GetReflexName( const String& target, const String& source );
+		static String GetParName( const PropNode& props );
 
 	private:
 		Real min_control_value;

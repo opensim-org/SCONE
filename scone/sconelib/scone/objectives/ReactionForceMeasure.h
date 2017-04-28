@@ -8,7 +8,7 @@ namespace scone
 	class ReactionForceMeasure : public Measure
 	{
 	public:
-		ReactionForceMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		ReactionForceMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~ReactionForceMeasure() {}
 
 		virtual double GetResult( Model& model ) override;

@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		local_balance( 0 ),
 		body_angvel_sensor_gain( model.balance_sensor_ori_vel_gain ),
 		body_sensor_delay( model.balance_sensor_delay ),
@@ -50,7 +50,7 @@ namespace scone
 		mrp.Init( props, par, model );
 
 		// init balance parameters
-		if ( model.GetCustomProp( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
+		if ( model.GetCustomProps().get( "meta_reflex_control.use_balance", true ) && props.has_key( "Balance" ) )
 		{
 			ScopedParamSetPrefixer pre2( par, "B." );
 			auto& balprops = props.get_child( "Balance" );

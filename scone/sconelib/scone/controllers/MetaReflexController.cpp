@@ -1,6 +1,6 @@
 #include "MetaReflexController.h"
 
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Model.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Muscle.h"
@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	MetaReflexController::MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	MetaReflexController::MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
@@ -33,7 +33,7 @@ namespace scone
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
-					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, Area::WHOLE_BODY ) ) );
+					m_ReflexDofs.push_back( MetaReflexDofUP( new MetaReflexDof( item.second, par, model, Locality( NoSide ) ) ) );
 				}
 				else
 				{

@@ -30,11 +30,11 @@
 
 namespace scone
 {
-	static flut::factory< Controller, const PropNode&, ParamSet&, Model&, const Area& > g_ControllerFactory;
-	static flut::factory< Reflex, const PropNode&, ParamSet&, Model&, const Area& > g_ReflexFactory;
+	static flut::factory< Controller, const PropNode&, ParamSet&, Model&, const Locality& > g_ControllerFactory;
+	static flut::factory< Reflex, const PropNode&, ParamSet&, Model&, const Locality& > g_ReflexFactory;
 	static flut::factory< Function, const PropNode&, ParamSet& > g_FunctionFactory;
 
-	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area )
+	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ControllerFactory.empty() )
 		{
@@ -62,7 +62,7 @@ namespace scone
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Area& target_area )
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ReflexFactory.empty() )
 		{
@@ -94,8 +94,8 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static flut::factory< Sensor, const PropNode&, ParamSet&, Model&, const Area& > g_SensorFactory;
-	SCONE_API SensorUP CreateSensor( const PropNode& props, ParamSet& par, Model& m, const Area& a )
+	static flut::factory< Sensor, const PropNode&, ParamSet&, Model&, const Locality& > g_SensorFactory;
+	SCONE_API SensorUP CreateSensor( const PropNode& props, ParamSet& par, Model& m, const Locality& a )
 	{
 		if ( g_SensorFactory.empty() )
 		{

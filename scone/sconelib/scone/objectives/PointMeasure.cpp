@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	PointMeasure::PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	PointMeasure::PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 	{

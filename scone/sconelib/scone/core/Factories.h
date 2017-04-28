@@ -9,15 +9,15 @@
 
 #include "scone/controllers/Reflex.h"
 #include "scone/model/Model.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 namespace scone
 {
-	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, ParamSet& par );
 
-	SCONE_API SensorUP CreateSensor( const PropNode&, ParamSet&, Model&, const Area& );
+	SCONE_API SensorUP CreateSensor( const PropNode&, ParamSet&, Model&, const Locality& );
 	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par );
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );

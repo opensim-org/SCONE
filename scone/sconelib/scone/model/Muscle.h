@@ -53,7 +53,6 @@ namespace scone
 		virtual Real GetActivation() const = 0;
 		virtual Real GetExcitation() const = 0;
 		virtual void SetExcitation( Real u ) = 0;
-		virtual void SetExcitationDelay( TimeInSeconds delay ) = 0;
 
 		// checks if a muscle crosses a Dof. Default implementation
 		virtual bool HasMomentArm( const Dof& dof ) const;

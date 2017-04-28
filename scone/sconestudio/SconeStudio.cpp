@@ -48,8 +48,8 @@ captureProcess( nullptr )
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
-	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Up" ) );
-	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Down" ), true );
+	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ), true );
+	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
 	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
@@ -59,7 +59,7 @@ captureProcess( nullptr )
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
-	setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
+	setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
 	registerDockWidget( ui.resultsDock, "Optimization &Results" );
@@ -72,9 +72,10 @@ captureProcess( nullptr )
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
+	resultsModel = new ResultsFileSystemModel( nullptr );
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
-	ui.resultsBrowser->setRoot( results_folder, "*.par" );
+	ui.resultsBrowser->init( results_folder, "*.par", 1, resultsModel );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),

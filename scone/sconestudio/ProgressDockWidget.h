@@ -16,8 +16,11 @@ public:
 	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
 	virtual ~ProgressDockWidget();
 
-	QString& getIdentifier() { return name.isEmpty() ? fileName : name; } 
-	
+	QString& getIdentifier() { return name.isEmpty() ? fileName : name; }
+
+	enum AxisScaleType { Linear, Logarithmic };
+	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
+
 	SconeStudio* studio;
 	QString name;
 	QString fileName;

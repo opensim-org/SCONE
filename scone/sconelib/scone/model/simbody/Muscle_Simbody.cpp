@@ -130,11 +130,6 @@ namespace scone
 		return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
 	}
 
-	void Muscle_Simbody::SetExcitationDelay( TimeInSeconds delay )
-	{
-
-	}
-
 	scone::Real scone::Muscle_Simbody::GetTendonLength() const
 	{
 		return m_osMus.getTendonLength( m_Model.GetTkState() );

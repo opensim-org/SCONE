@@ -45,6 +45,13 @@ namespace scone
 		else return "";
 	}
 
+	inline String GetFullSideName( const Side& side )
+	{
+		if ( side == LeftSide ) return "Left";
+		else if ( side == RightSide ) return "Right";
+		else return "NoSide";
+	}
+
 	inline String GetSidedName( const String& str, const Side& side )
 	{
 		return GetNameNoSide( str ) + GetSideName( side );

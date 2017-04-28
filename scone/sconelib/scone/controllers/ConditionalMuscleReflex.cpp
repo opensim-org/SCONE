@@ -1,20 +1,21 @@
 #include "ConditionalMuscleReflex.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/Dof.h"
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		MuscleReflex( props, par, model, area ),
 		m_pConditionalDofPos( nullptr ),
 		m_pConditionalDofVel( nullptr )
 	{
 		const PropNode& cp = props.get_child( "Condition" );
-		Dof& dof = *FindByName( model.GetDofs(), cp.get< String >( "dof" ) + GetSideName( area.side ) );
+		Dof& dof = *FindByName( model.GetDofs(), area.ConvertName( cp.get< String >( "dof" ) ) );
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 		m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
+		log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );
 	}
 
 	ConditionalMuscleReflex::~ConditionalMuscleReflex()

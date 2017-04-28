@@ -7,13 +7,13 @@
 
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 #include "MuscleReflex.h"
 
 namespace scone
 {
-	ReflexController::ReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	ReflexController::ReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );

@@ -9,22 +9,26 @@
 
 namespace scone
 {
-	DofReflex::DofReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
-		Reflex( props, par, model, area ),
-		m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
-		m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
-		m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
-		m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
-		m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
+	DofReflex::DofReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	Reflex( props, par, model, area ),
+	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
+	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
+	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
+	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
+	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
 	{
-		String reflexname = GetReflexName( m_Target.GetName(), FindByName( model.GetDofs(), props.get< String >( "source" ) )->GetName() );
-		ScopedParamSetPrefixer prefixer( par, reflexname + "." );
+		auto src_name = props.get< String >( "source" );
+
+		String par_name = GetParName( props );
+		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
 		INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
 		INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
 		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
+
+		log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
 	}
 
 	DofReflex::~DofReflex()

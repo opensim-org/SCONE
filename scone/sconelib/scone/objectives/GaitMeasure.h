@@ -9,7 +9,7 @@ namespace scone
 	class GaitMeasure : public Measure
 	{
 	public:
-		GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~GaitMeasure();
 
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;

@@ -3,7 +3,7 @@
 
 namespace scone
 {
-	TimeStateController::TimeStateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	TimeStateController::TimeStateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		StateController( props, par, model, area )
 	{
 		// create states

@@ -11,7 +11,7 @@ namespace scone
 	class SCONE_API ExternalBalanceController : public Controller
 	{
 	public:
-		ExternalBalanceController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+		ExternalBalanceController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 
 		String name;
 		double angular_velocity_gain;

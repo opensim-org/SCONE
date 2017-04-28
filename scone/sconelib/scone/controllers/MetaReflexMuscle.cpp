@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	MetaReflexMuscle::MetaReflexMuscle( Muscle& mus, Model& model, const MetaReflexController& controller, const Area& area ) :
+	MetaReflexMuscle::MetaReflexMuscle( Muscle& mus, Model& model, const MetaReflexController& controller, const Locality& area ) :
 		muscle( mus ),
 		force_sensor( model.AcquireDelayedSensor< MuscleForceSensor >( mus ) ),
 		length_sensor( model.AcquireDelayedSensor< MuscleLengthSensor >( mus ) ),

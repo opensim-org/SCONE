@@ -96,9 +96,8 @@ namespace scone
 		virtual Real GetBW() const;
 
 		// custom model properties
-		template< typename T >
-		T GetCustomProp( const String& key, const T& default_value ) const { return custom_properties.get( key, default_value ); }
-		const PropNode& GetCustomProps() { return custom_properties; }
+		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : flut::empty_prop_node(); }
+		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : flut::empty_prop_node(); }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -128,8 +127,8 @@ namespace scone
 		}
 
 		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Area& area );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Area& area );
+		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area );
+		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area );
 
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
@@ -177,9 +176,10 @@ namespace scone
 		Storage< Real > m_SensorDelayStorage;
 		std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		std::vector< std::unique_ptr< Sensor > > m_Sensors;
-
 		std::array< SensorDelayAdapter*, 3 > m_OriSensors;
-		const PropNode custom_properties;
+
+		const PropNode* m_pModelProps;
+		const PropNode* m_pCustomProps;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;

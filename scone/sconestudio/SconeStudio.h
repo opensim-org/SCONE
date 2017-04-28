@@ -20,6 +20,7 @@
 #include "flut/system/log_sink.hpp"
 #include "QCompositeMainWindow.h"
 #include "QDataAnalysisView.h"
+#include "ResultsFileSystemModel.h"
 
 using scone::TimeInSeconds;
 
@@ -100,6 +101,7 @@ private:
 	SconeStorageDataModel storageModel;
 	QDataAnalysisView* analysisView;
 
+	ResultsFileSystemModel* resultsModel;
 	QString captureFilename;
 	QProcess* captureProcess;
 	QDir captureImageDir;

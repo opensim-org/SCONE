@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API Measure : public Controller, public HasName
 	{
 	public:
-		Measure( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		Measure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~Measure() { };
 
 		virtual double GetResult( Model& model ) = 0;

@@ -1,6 +1,6 @@
 #include "MuscleReflex.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/Dof.h"
 #include "scone/core/propnode_tools.h"
 
@@ -8,19 +8,22 @@
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr )
 	{
-		Muscle& source = *FindByName( model.GetMuscles(), props.get< String >( "source", props.get< String >( "target" ) ) + GetSideName( area.side ) );
+		auto trg_name = props.get< String >( "target" );
+		auto src_name = props.get< String >( "source", trg_name );
+		auto muscle_name = area.ConvertName( src_name );
+		Muscle& source = *FindByName( model.GetMuscles(), muscle_name );
 
 		// init names
-		String reflex_name = GetReflexName( m_Target.GetName(), source.GetName() );
-		name = reflex_name + GetSideName( area.side );
-		ScopedParamSetPrefixer prefixer( par, reflex_name + "." );
+		String par_name = GetParName( props );
+		name = GetReflexName( m_Target.GetName(), source.GetName() );
+		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, length_gain, "KL", 0.0 );
 		INIT_PARAM_NAMED( props, par, length_ofs, "L0", 1.0 );
@@ -52,6 +55,8 @@ namespace scone
 
 		if ( spindle_gain!= 0.0 )
 			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
+
+		log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}
 
 	MuscleReflex::~MuscleReflex()
@@ -88,9 +93,16 @@ namespace scone
 
 	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
 	{
-		frame[ name + ".length_feedback" ] = u_l;
-		frame[ name + ".velocity_feedback" ] = u_v;
-		frame[ name + ".force_feedback" ] = u_f;
-		frame[ name + ".spindle_feedback" ] = u_s;
+		if ( m_pLengthSensor )
+			frame[ name + ".length_feedback" ] = u_l;
+
+		if ( m_pVelocitySensor )
+			frame[ name + ".velocity_feedback" ] = u_v;
+
+		if ( m_pForceSensor )
+			frame[ name + ".force_feedback" ] = u_f;
+
+		if ( m_pSpindleSensor )
+			frame[ name + ".spindle_feedback" ] = u_s;
 	}
 }

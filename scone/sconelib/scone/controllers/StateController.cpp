@@ -5,15 +5,16 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area ),
 	m_CurrentState( NoIndex )
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Area& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area )
 	{
 		// create instances for each controller
+		log::trace( "Creating Conditional Controllers for " + area.GetName() );
 		const PropNode& ccProps = props.get_child( "ConditionalControllers" );
 		for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 		{
@@ -42,7 +43,8 @@ namespace scone
 					if ( controller_state_name == GetStateName( i ) )
 					{
 						ccs.state_mask[ i ] = has_any_state = true;
-						bit_string[ GetStateCount() - 1 - i ] = '1';
+						size_t bit_string_idx = area.mirrored ? GetStateCount() - i : GetStateCount() - 1 - i; // HACK, rewrite all this crap
+						bit_string[ bit_string_idx ] = '1';
 					}
 				}
 				SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" );

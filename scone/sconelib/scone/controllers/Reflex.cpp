@@ -1,12 +1,12 @@
 #include "Reflex.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/model/Actuator.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 namespace scone
 {
-	Reflex::Reflex( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
-		m_Target( *FindByName( model.GetActuators(), props.get< String >( "target" ) + GetSideName( area.side ) ) )
+	Reflex::Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	m_Target( *FindByName( model.GetActuators(), area.ConvertName( props.get< String >( "target" ) ) ) )
 	{
 		INIT_PARAM_REQUIRED( props, par, delay );
 		INIT_PROPERTY( props, min_control_value, REAL_LOWEST );
@@ -29,6 +29,14 @@ namespace scone
 
 	scone::String Reflex::GetReflexName( const String& target, const String& source )
 	{
-		return ( target == source ) ? GetNameNoSide( target ) : GetNameNoSide( target ) + "-" + GetNameNoSide( source );
+		return ( target == source ) ? target : target + "-" + source;
 	}
+
+	String Reflex::GetParName( const PropNode& props )
+	{
+		auto trg_name = props.get< String >( "target" );
+		auto src_name = props.get< String >( "source", trg_name );
+		return ( trg_name == src_name ) ? trg_name : trg_name + "-" + src_name;
+	}
+
 }

@@ -4,14 +4,14 @@
 #include "scone/core/PropNode.h"
 #include "scone/optimization/ParamSet.h"
 #include "scone/model/Model.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 namespace scone
 {
 	class SCONE_API ReflexController : public Controller
 	{
 	public:
-		ReflexController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+		ReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 		virtual ~ReflexController();
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;

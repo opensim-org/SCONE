@@ -12,7 +12,7 @@ namespace scone
 	class SCONE_API MetaReflexMuscle
 	{
 	public:
-		MetaReflexMuscle( Muscle& mus, Model& model, const MetaReflexController& controller, const Area& area );
+		MetaReflexMuscle( Muscle& mus, Model& model, const MetaReflexController& controller, const Locality& area );
 		virtual ~MetaReflexMuscle();
 		void UpdateControls();
 		void UpdateMuscleControlParameters( bool debug = false );

@@ -1,9 +1,9 @@
 #include "JumpMeasure.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 
 namespace scone
 {
-	JumpMeasure::JumpMeasure( const PropNode& props, ParamSet& par, Model& model, const Area& area ) :
+	JumpMeasure::JumpMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		target_body( nullptr ),
 		state( Prepare ),

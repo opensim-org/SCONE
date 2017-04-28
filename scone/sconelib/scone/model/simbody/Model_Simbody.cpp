@@ -138,7 +138,7 @@ namespace scone
 		g_SimBodyMutex.unlock();
 
 		// create model component wrappers and sensors
-		CreateModelWrappers();
+		CreateModelWrappers( props, par );
 		CreateBalanceSensors( props, par );
 
 		// initialize cached variables to save computation time
@@ -203,7 +203,7 @@ namespace scone
 		// create and initialize controllers
 		const PropNode& cprops = props.get_child( "Controllers" );
 		for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-			m_Controllers.push_back( CreateController( iter->second, par, *this, Area::WHOLE_BODY ) );
+			m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
 
 		// Initialize muscle dynamics STEP 1
 		// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
@@ -220,7 +220,7 @@ namespace scone
 
 	Model_Simbody::~Model_Simbody() {}
 
-	void Model_Simbody::CreateModelWrappers()
+	void Model_Simbody::CreateModelWrappers( const PropNode& pn, ParamSet& par )
 	{
 		SCONE_ASSERT( m_pOsimModel );
 		SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
@@ -279,6 +279,25 @@ namespace scone
 			Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
 			m_Legs.push_back( LegUP( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
 			dynamic_cast<Body_Simbody&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
+		}
+
+		// set model properties
+		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
+		{
+			for ( auto& mp : *model_props )
+			{
+				if ( mp.first == "Actuator" )
+				{
+					for ( auto& act : m_Actuators )
+					{
+						if ( flut::matches_pattern( act->GetName(), mp.second.get< String >( "name" ) ) )
+						{
+							SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
+							act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
+						}
+					}
+				}
+			}
 		}
 	}
 

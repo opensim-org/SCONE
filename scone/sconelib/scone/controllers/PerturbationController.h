@@ -11,7 +11,7 @@ namespace scone
 	class SCONE_API PerturbationController : public Controller
 	{
 	public:
-		PerturbationController( const PropNode& props, ParamSet& par, Model& model, const Area& target_area );
+		PerturbationController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
 		String name;

@@ -21,7 +21,8 @@ namespace scone
 	Model::Model( const PropNode& props, ParamSet& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
-		custom_properties( props.has_key( "custom_properties" ) ? props.get_child( "custom_properties" ) : PropNode() ),
+		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
+		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
 		thread_safe_simulation( false )
@@ -43,7 +44,7 @@ namespace scone
 		return str;
 	}
 
-	Sensor& Model::AcquireSensor( const PropNode& pn, ParamSet& par, const Area& area )
+	Sensor& Model::AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area )
 	{
 		// create the sensor first, so we can use its name to find it
 		SensorUP sensor = CreateSensor( pn, par, *this, area );
@@ -73,7 +74,7 @@ namespace scone
 		else return **it;
 	}
 
-	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Area& area )
+	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area )
 	{
 		// acquire sensor first
 		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );

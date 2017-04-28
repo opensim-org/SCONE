@@ -3,7 +3,7 @@
 #include "scone/core/PropNode.h"
 #include "scone/optimization/ParamSet.h"
 #include "scone/model/Model.h"
-#include "scone/model/Area.h"
+#include "scone/model/Locality.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/model/Dof.h"
 #include "MetaReflexParams.h"
@@ -14,7 +14,7 @@ namespace scone
 	class MetaReflexVirtualMuscle
 	{
 	public:
-		MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Area& area );
+		MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
 		virtual ~MetaReflexVirtualMuscle() {}
 
 		Real GetLocalBalance() { return local_balance; }
