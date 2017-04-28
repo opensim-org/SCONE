@@ -293,7 +293,7 @@ namespace scone
 						if ( flut::matches_pattern( act->GetName(), mp.second.get< String >( "name" ) ) )
 						{
 							SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
-							act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ), fixed_control_step_size );
+							act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
 						}
 					}
 				}

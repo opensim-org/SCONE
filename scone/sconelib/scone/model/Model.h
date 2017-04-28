@@ -96,8 +96,8 @@ namespace scone
 		virtual Real GetBW() const;
 
 		// custom model properties
-		const PropNode& GetCustomProps() { return m_CustomProps; }
-		const PropNode& GetModelProps() { return m_ModelProps; }
+		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : flut::empty_prop_node(); }
+		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : flut::empty_prop_node(); }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -178,8 +178,8 @@ namespace scone
 		std::vector< std::unique_ptr< Sensor > > m_Sensors;
 		std::array< SensorDelayAdapter*, 3 > m_OriSensors;
 
-		const PropNode m_ModelProps;
-		const PropNode m_CustomProps;
+		const PropNode* m_pModelProps;
+		const PropNode* m_pCustomProps;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;

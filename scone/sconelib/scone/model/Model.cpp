@@ -21,8 +21,8 @@ namespace scone
 	Model::Model( const PropNode& props, ParamSet& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
-		m_CustomProps( props.try_get_child( "CustomProperties" ) ),
-		m_ModelProps( props.try_get_child( "ModelProperties" ) ),
+		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
+		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
 		thread_safe_simulation( false )
