@@ -11,6 +11,7 @@ namespace scone
 	{
 	public:
 		virtual const String& GetName() const = 0;
+		explicit operator const String&() const { return GetName(); }
 		inline virtual ~HasName() {}
 	};
 

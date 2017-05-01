@@ -17,10 +17,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<OpenSimParameters>
-				<ForceSet>
-					<vasti_l max_isometric_force="1000"/>
-					<vasti_r max_isometric_force="1000"/>
-				</ForceSet>
+				<Force name="vasti*" property="max_isometric_force" value="0.2" scale="1"/>
 			</OpenSimParameters>
 			<Controllers>
 				<Controller type="GaitStateController">

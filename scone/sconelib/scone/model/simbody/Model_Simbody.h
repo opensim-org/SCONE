@@ -95,8 +95,10 @@ namespace scone
 		void ReadState( const String& file );
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
-		void SetOpenSimParameters( const PropNode& pn, ParamSet& par );
 		void CreateModelWrappers( const PropNode& pn, ParamSet& par );
+		void SetModelProperties( const PropNode &pn, ParamSet& par );
+		void SetOpenSimParameters( const PropNode& pn, ParamSet& par );
+
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 		void ClearBodyForces();
 

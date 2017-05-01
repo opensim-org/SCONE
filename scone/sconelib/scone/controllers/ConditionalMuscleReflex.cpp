@@ -20,9 +20,7 @@ namespace scone
 	}
 
 	ConditionalMuscleReflex::~ConditionalMuscleReflex()
-	{
-
-	}
+	{}
 
 	void ConditionalMuscleReflex::ComputeControls( double timestamp )
 	{

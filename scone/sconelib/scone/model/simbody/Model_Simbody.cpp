@@ -25,6 +25,8 @@
 
 #include "scone/core/StorageIo.h"
 #include <thread>
+#include "flut/pattern_matcher.hpp"
+#include "flut/container_tools.hpp"
 
 using std::cout;
 using std::endl;
@@ -106,8 +108,7 @@ namespace scone
 		}
 
 		// change model properties
-		if ( props.has_key( "OpenSimParameters" ) )
-			SetOpenSimParameters( props.get_child( "OpenSimParameters" ), par );
+		SetOpenSimParameters( props, par );
 
 		// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 		m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -139,6 +140,7 @@ namespace scone
 
 		// create model component wrappers and sensors
 		CreateModelWrappers( props, par );
+		SetModelProperties( props, par );
 		CreateBalanceSensors( props, par );
 
 		// initialize cached variables to save computation time
@@ -173,12 +175,12 @@ namespace scone
 		if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 		{
 			bool symmetric = iso->get< bool >( "symmetric", false );
-			auto inc_pat = iso->get< String >( "include_states" );
-			auto ex_pat = iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length";
+			auto inc_pat = flut::pattern_matcher( iso->get< String >( "include_states" ), ";" );
+			auto ex_pat = flut::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
 			for ( Index i = 0; i < m_State.GetSize(); ++i )
 			{
 				const String& state_name = m_State.GetName( i );
-				if ( flut::matches_pattern( state_name, inc_pat ) && !flut::matches_pattern( state_name, ex_pat ) )
+				if ( inc_pat( state_name ) && !ex_pat( state_name ) )
 				{
 					auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
 					m_State[ i ] += par.Get( ParamInfo( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
@@ -280,8 +282,10 @@ namespace scone
 			m_Legs.push_back( LegUP( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
 			dynamic_cast<Body_Simbody&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
 		}
+	}
 
-		// set model properties
+	void Model_Simbody::SetModelProperties( const PropNode &pn, ParamSet& par )
+	{
 		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
 		{
 			for ( auto& mp : *model_props )
@@ -289,19 +293,46 @@ namespace scone
 				int usage = 0;
 				if ( mp.first == "Actuator" )
 				{
-					for ( auto& act : m_Actuators )
+					for ( auto act : flut::make_view_if( m_Actuators, flut::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
 					{
-						if ( flut::matches_pattern( act->GetName(), mp.second.get< String >( "name" ) ) )
-						{
-							SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
-							act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
-							++usage;
-						}
+						SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
+						act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
+						++usage;
 					}
 				}
 
 				if ( usage == 0 )
 					log::warning( "Unused model property: ", mp.second.get< String >( "name" ) );
+			}
+		}
+	}
+
+	void Model_Simbody::SetOpenSimParameters( const PropNode& props, ParamSet& par )
+	{
+		if ( auto* osim_pars = props.try_get_child( "OpenSimParameters" ) )
+		{
+			for ( auto param_it = osim_pars->begin(); param_it != osim_pars->end(); ++param_it )
+			{
+				flut::pattern_matcher pm( param_it->second.get< String >( "name" ) );
+				if ( param_it->first == "Force" )
+				{
+					for ( int i = 0; i < m_pOsimModel->updForceSet().getSize(); ++i )
+					{
+						auto& osForce = m_pOsimModel->updForceSet().get( i );
+						if ( pm.match( osForce.getName() ) )
+						{
+							// we have a match!
+							String prop_str = param_it->second.get< String >( "property" );
+							ScopedParamSetPrefixer prefix( par, param_it->second.get< String >( "name" ) + "." );
+							double value = par.Get( prop_str, param_it->second, "value" );
+							if ( osForce.hasProperty( prop_str ) )
+							{
+								auto& prop = osForce.updPropertyByName( prop_str ).updValue< double >();
+								prop = param_it->second.get( "scale", false ) ? prop * value : value;
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -729,25 +760,6 @@ namespace scone
 		CopyStateToTk();
 		for ( auto& c : GetControllers() )
 			c->UpdateControls( *this, timestamp );
-	}
-
-	void Model_Simbody::SetOpenSimParameters( const PropNode& props, ParamSet& par )
-	{
-		auto forceIt = props.find( "ForceSet" );
-		if ( forceIt != props.end() )
-		{
-			ScopedParamSetPrefixer prefix1( par, "ForceSet." );
-			for ( auto musIt = forceIt->second.begin(); musIt != forceIt->second.end(); ++musIt )
-			{
-				ScopedParamSetPrefixer prefix2( par, musIt->first + "." );
-				auto& osForce = m_pOsimModel->updForceSet().get( musIt->first );
-				for ( auto musPropIt = musIt->second.begin(); musPropIt != musIt->second.end(); ++musPropIt )
-				{
-					double value = par.Get( musPropIt->first, musIt->second, musPropIt->first );
-					osForce.updPropertyByName( musPropIt->first ).updValue< double >() = value;
-				}
-			}
-		}
 	}
 
 	void Model_Simbody::ValidateDofAxes()
