@@ -307,6 +307,7 @@ namespace scone
 		}
 	}
 
+
 	void Model_Simbody::SetOpenSimParameters( const PropNode& props, ParamSet& par )
 	{
 		if ( auto* osim_pars = props.try_get_child( "OpenSimParameters" ) )
@@ -316,24 +317,27 @@ namespace scone
 				flut::pattern_matcher pm( param_it->second.get< String >( "name" ) );
 				if ( param_it->first == "Force" )
 				{
-					for ( int i = 0; i < m_pOsimModel->updForceSet().getSize(); ++i )
+					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )
 					{
-						auto& osForce = m_pOsimModel->updForceSet().get( i );
-						if ( pm.match( osForce.getName() ) )
-						{
-							// we have a match!
-							String prop_str = param_it->second.get< String >( "property" );
-							ScopedParamSetPrefixer prefix( par, param_it->second.get< String >( "name" ) + "." );
-							double value = par.Get( prop_str, param_it->second, "value" );
-							if ( osForce.hasProperty( prop_str ) )
-							{
-								auto& prop = osForce.updPropertyByName( prop_str ).updValue< double >();
-								prop = param_it->second.get( "scale", false ) ? prop * value : value;
-							}
-						}
+						auto& osMus = m_pOsimModel->updMuscles().get( i );
+						if ( pm.match( osMus.getName() ) )
+							SetOpenSimParameter( osMus, param_it->second, par );
 					}
 				}
 			}
+		}
+	}
+
+	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, ParamSet& par )
+	{
+		// we have a match!
+		String prop_str = pn.get< String >( "property" );
+		ScopedParamSetPrefixer prefix( par, pn.get< String >( "name" ) + "." );
+		double value = par.Get( prop_str, pn, "value" );
+		if ( os.hasProperty( prop_str ) )
+		{
+			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();
+			prop = pn.get( "scale", false ) ? prop * value : value;
 		}
 	}
 
