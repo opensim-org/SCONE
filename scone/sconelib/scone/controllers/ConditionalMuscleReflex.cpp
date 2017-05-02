@@ -6,15 +6,27 @@
 namespace scone
 {
 	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
-		MuscleReflex( props, par, model, area ),
-		m_pConditionalDofPos( nullptr ),
-		m_pConditionalDofVel( nullptr )
+	MuscleReflex( props, par, model, area ),
+	m_pConditionalDofPos( nullptr ),
+	m_pConditionalDofVel( nullptr )
 	{
 		const PropNode& cp = props.get_child( "Condition" );
 		Dof& dof = *FindByName( model.GetDofs(), area.ConvertName( cp.get< String >( "dof" ) ) );
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
-		m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
+
+		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "-" + cp.get< String >( "dof" ) + "." );
+
+		if ( cp.has_key( "pos_range" ) )
+		{
+			// the 'old' non-parameterizable way (for backwards compatibility)
+			m_ConditionalPosRange = Range< Degree >( cp.get_child( "pos_range" ) );
+		}
+		else
+		{
+			m_ConditionalPosRange.max = Degree( par.Get( "pos_max", cp, "pos_max", 180.0 ) );
+			m_ConditionalPosRange.min = Degree( par.Get( "pos_min", cp, "pos_min", -180.0 ) );
+		}
 
 		//log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );
 	}

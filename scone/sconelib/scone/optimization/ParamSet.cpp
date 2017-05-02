@@ -44,7 +44,7 @@ namespace scone
 		SCONE_THROW( "Invalid mode: " + to_str( m_Mode ) );
 	}
 
-	double ParamSet::Get( const String& name, const PropNode& props, const String node_name )
+	double ParamSet::Get( const String& name, const PropNode& props, const String& node_name )
 	{
 		// get par node (throws if not exists)
 		const PropNode& parNode = props.get_child( node_name );
@@ -58,7 +58,7 @@ namespace scone
 		SCONE_THROW( "Could not read parameter " + node_name );
 	}
 
-	double ParamSet::TryGet( const String& name, const PropNode& props, const String node_name, double default_value )
+	double ParamSet::Get( const String& name, const PropNode& props, const String& node_name, double default_value )
 	{
 		if ( props.has_key( node_name ) )
 			return Get( name, props, node_name );

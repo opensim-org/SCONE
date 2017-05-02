@@ -8,10 +8,10 @@
 #include <map>
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
-	VAR_ = PAR_.TryGet( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )
+	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )
 
 #define INIT_PARAM_NAMED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
-	VAR_ = PAR_.TryGet( NAME_, PROP_, NAME_, DEFAULT_ )
+	VAR_ = PAR_.Get( NAME_, PROP_, NAME_, DEFAULT_ )
 
 #define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
 	VAR_ = PAR_.Get( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ) )
@@ -30,8 +30,8 @@ namespace scone
 		virtual ~ParamSet() { };
 
 		double Get( const ParamInfo& info );
-		double Get( const String& name, const PropNode& props, const String node_name );
-		double TryGet( const String& name, const PropNode& props, const String node_name, double default_value );
+		double Get( const String& name, const PropNode& props, const String& node_name );
+		double Get( const String& name, const PropNode& props, const String& node_name, double default_value );
 		double GetMeanStd( const String& name, double init_mean, double init_std, double min, double max );
 		double GetMinMax( const String& name, double init_min, double init_max, double min, double max );
 
