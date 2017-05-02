@@ -17,7 +17,6 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="PerturbationController" start_time="2" body="pelvis" force="200" interval="2" duration="0.2"/>
 				<Controller type="GaitStateController">
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 					<swing_load_threshold init_mean="0.01" init_std="0.001" min="0.001" max="1.0" is_free="1"/>
@@ -134,6 +133,7 @@
 					</ConditionalControllers>
 				</Controller>
 				<INCLUDE file="measures/M_CG05_CoT_GH.xml"/>
+				<Controller type="PerturbationController" start_time="2" body="pelvis" force="200" interval="2" duration="0.2"/>
 			</Controllers>
 		</Model>
 	</Objective>
