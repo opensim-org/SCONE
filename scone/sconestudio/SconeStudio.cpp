@@ -184,7 +184,7 @@ void SconeStudio::evaluate()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	SCONE_PROFILE_RESET;
-	const double step_size = 0.1;
+	const double step_size = 0.05;
 	int vis_step = 0;
 	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
