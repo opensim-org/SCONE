@@ -73,7 +73,7 @@
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 										<C0 init_mean="0.05" init_std="0.005" min="-1.0" max="1.0" is_free="1"/>
 										<Condition dof="knee_angle">
-											<pos_range min="-180" max="-10"/>
+											<pos_max init_mean="-10" init_std="1" min="-20" max="10.0" is_free="1"/>
 										</Condition>
 									</Reflex>
 								</Reflexes>
