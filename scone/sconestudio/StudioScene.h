@@ -15,7 +15,7 @@ namespace scone
 		StudioModel& CreateModel( const String& par_file );
 		StudioModel& GetModel() { return *model; }
 
-		void Update( TimeInSeconds t );
+		void Update( TimeInSeconds t, bool update_vis );
 
 		osg::Group* GetOsgRoot() { return &scene.osg_group(); }
 

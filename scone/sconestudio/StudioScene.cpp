@@ -24,7 +24,7 @@ namespace scone
 		return *model;
 	}
 
-	void StudioScene::Update( TimeInSeconds t )
+	void StudioScene::Update( TimeInSeconds t, bool update_vis )
 	{
 		SCONE_PROFILE_FUNCTION;
 		if ( model )
@@ -32,7 +32,8 @@ namespace scone
 			if ( model->IsEvaluating() )
 				model->EvaluateTo( t );
 
-			model->UpdateVis( t );
+			if ( update_vis )
+				model->UpdateVis( t );
 		}
 	}
 

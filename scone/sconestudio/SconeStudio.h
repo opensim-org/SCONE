@@ -61,6 +61,7 @@ public slots:
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
+	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void viewResults( bool v ) { if ( v ) ui.resultsDock->show(); else ui.resultsDock->hide(); }
 	void viewMessages( bool v ) { if ( v ) ui.messagesDock->show(); else ui.messagesDock->hide(); }
 	void fixViewCheckboxes();
@@ -73,7 +74,7 @@ public:
 
 private:
 	void evaluate();
-	void setTime( TimeInSeconds t );
+	void setTime( TimeInSeconds t, bool update_vis );
 	QCodeEditor* getActiveScenario();
 	bool checkAndSaveScenario( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );

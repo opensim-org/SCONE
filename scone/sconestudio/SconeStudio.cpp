@@ -87,7 +87,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
-	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setTime );
+	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setPlaybackTime );
 	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
@@ -185,6 +185,7 @@ void SconeStudio::evaluate()
 
 	SCONE_PROFILE_RESET;
 	const double step_size = 0.1;
+	int vis_step = 0;
 	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
 		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
@@ -195,10 +196,10 @@ void SconeStudio::evaluate()
 			ui.stackedWidget->setCurrentIndex( 0 );
 			return;
 		}
-		setTime( t );
+		setTime( t, vis_step++ % 5 == 0 );
 	}
 	ui.progressBar->setValue( 100 );
-	manager.Update( manager.GetMaxTime() );
+	manager.Update( manager.GetMaxTime(), true );
 	ui.stackedWidget->setCurrentIndex( 0 );
 
 	log::info( SCONE_PROFILE_REPORT );
@@ -223,7 +224,7 @@ void SconeStudio::captureVideo()
 	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
 	for ( double t = 0.0; t <= manager.GetMaxTime(); t += step_size )
 	{
-		setTime( t );
+		setTime( t, true );
 		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
@@ -245,7 +246,7 @@ void SconeStudio::captureImage()
 		ui.osgViewer->captureCurrentFrame( filename.toStdString() );
 }
 
-void SconeStudio::setTime( TimeInSeconds t )
+void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
 	SCONE_PROFILE_FUNCTION;
 
@@ -256,14 +257,15 @@ void SconeStudio::setTime( TimeInSeconds t )
 	current_time = t;
 
 	// update ui and visualization
-	manager.Update( current_time );
-	auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
-	ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-	ui.osgViewer->setFrameTime( current_time );
-
-	// update graph (if visible)
-	if ( analysisView->isVisible() )
-		analysisView->refresh( current_time, false );
+	manager.Update( current_time, update_vis );
+	if ( update_vis )
+	{
+		auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
+		ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+		ui.osgViewer->setFrameTime( current_time );
+		if ( analysisView->isVisible() )
+			analysisView->refresh( current_time, false );
+	}
 }
 
 void SconeStudio::fileOpen()
