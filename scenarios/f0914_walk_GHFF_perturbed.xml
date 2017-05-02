@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_GH.par</init_file>
-	<use_init_file>1</use_init_file>
+	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
+	<init_file></init_file>
+	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GH2</signature_postfix>
-		<max_duration>20</max_duration>
+		<signature_postfix>GHFF1</signature_postfix>
+		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
@@ -16,12 +17,12 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="PerturbationController" start_time="1" body="pelvis" force="200" interval="1" duration="0.2"/>
+				<Controller type="PerturbationController" start_time="2" body="pelvis" force="200" interval="2" duration="0.2"/>
 				<Controller type="GaitStateController">
 					<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
+					<swing_load_threshold init_mean="0.01" init_std="0.001" min="0.001" max="1.0" is_free="1"/>
 					<!--landing_threshold init_mean="0.1" init_std="0.01" min="-0.1" max="0.5" is_free="1"/-->
 					<!--late_stance_threshold init_mean="0.0" init_std="0.01" min="-0.5" max="0.1" is_free="1"/-->
-					<!--swing_load_threshold init_mean="0.001" init_std="0.05" min="0.001" max="1.0" is_free="0"/-->
 					<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 					<ConditionalControllers>
 					
@@ -42,20 +43,23 @@
 						</ConditionalController>
 
 						<!-- GAS + SOL F+ reflexes [Geyer & Herr 2010] -->
-						<ConditionalController states="EarlyStance LateStance Liftoff">
+						<ConditionalController states="EarlyStance LateStance, Liftoff">
 							<Controller type="ReflexController" symmetric="1">
 								<Reflexes>
 									<!-- F+ SOL -->
 									<Reflex type="MuscleReflex" target="soleus" delay="0.020">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<C0 init_mean="0.01" init_std="0.001" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 									<!-- F+ GAS -->
 									<Reflex type="MuscleReflex" target="gastroc" delay="0.020">
 										<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
+										<C0 init_mean="0.01" init_std="0.001" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>
 						</ConditionalController>
+						
 						
 						<!-- Stance reflexes, [Geyer & Herr 2010] -->
 						<ConditionalController states="EarlyStance LateStance">
@@ -69,8 +73,14 @@
 											<pos_range min="-180" max="-10"/>
 										</Condition>
 									</Reflex>
+								</Reflexes>
+							</Controller>						
+						</ConditionalController>
 									
-									<!-- Root stability -->
+						<!-- Root stability -->
+						<ConditionalController states="EarlyStance LateStance, Liftoff">
+							<Controller type="ReflexController" symmetric="1">
+								<Reflexes>
 									<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
 										<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
 										<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
@@ -112,16 +122,18 @@
 									<!-- F+ retraction reflex for end of swing -->
 									<Reflex type="MuscleReflex" target="hamstrings" delay="0.005">
 										<KF init_mean="0.65" init_std="0.065" min="0.0" max="10.0" is_free="1"/>
+										<C0 init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 									<Reflex type="MuscleReflex" target="glut_max" delay="0.005">
 										<KF init_mean="0.5" init_std="0.05" min="0.0" max="10.0" is_free="1"/>
+										<C0 init_mean="0.0" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 									</Reflex>
 								</Reflexes>
 							</Controller>						
 						</ConditionalController>
 					</ConditionalControllers>
 				</Controller>
-				<INCLUDE file="measures/M_CG05_CoT_GH_P.xml"/>
+				<INCLUDE file="measures/M_CG05_CoT_GH.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>
