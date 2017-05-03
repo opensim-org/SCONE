@@ -205,7 +205,7 @@ namespace scone
 
 			if ( new_state != ls.state )
 			{
-				log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), LegState::m_StateNames.GetString( new_state ).c_str() );
+				//log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), LegState::m_StateNames.GetString( new_state ).c_str() );
 				ls.state = new_state;
 			}
 		}
