@@ -34,6 +34,7 @@ namespace scone
 		INIT_PROPERTY( props, squared_velocity_range_penalty, 0 );
 		INIT_PROPERTY( props, abs_velocity_range_penalty, 0 );
 		INIT_PROPERTY( props, squared_force_penalty, 0 );
+		INIT_PROPERTY( props, abs_force_penalty, 0 );
 	}
 
 	Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const Model& model, double timestamp )
