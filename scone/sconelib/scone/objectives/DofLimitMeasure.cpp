@@ -29,11 +29,11 @@ namespace scone
 		range.max = Degree( props.get< Real >( "max_deg", 0.0 ) );
 		velocity_range.min = Degree( props.get< Real >( "min_deg_s", 0.0 ) );
 		velocity_range.max = Degree( props.get< Real >( "max_deg_s", 0.0 ) );
-		INIT_PROPERTY( props, squared_range_penalty, 0.0 );
-		INIT_PROPERTY( props, abs_range_penalty, 0.0 );
-		INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
-		INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
-		INIT_PROPERTY( props, squared_force_penalty, 0.0 );
+		INIT_PROPERTY( props, squared_range_penalty, 0 );
+		INIT_PROPERTY( props, abs_range_penalty, 0 );
+		INIT_PROPERTY( props, squared_velocity_range_penalty, 0 );
+		INIT_PROPERTY( props, abs_velocity_range_penalty, 0 );
+		INIT_PROPERTY( props, squared_force_penalty, 0 );
 	}
 
 	Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const Model& model, double timestamp )
@@ -45,7 +45,7 @@ namespace scone
 
 		for ( Limit& l : m_Limits )
 		{
-			if ( l.squared_range_penalty > 0.0 || l.abs_range_penalty > 0.0 )
+			if ( l.squared_range_penalty > 0 || l.abs_range_penalty > 0 )
 			{
 				double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ).value;
 				double rps = l.squared_range_penalty * GetSquared( range_violation );
@@ -61,10 +61,12 @@ namespace scone
 				l.penalty.AddSample( timestamp, vrps + vrpa );
 			}
 
-			if ( l.squared_force_penalty > 0.0 )
+			if ( l.squared_force_penalty > 0 || l.abs_force_penalty > 0 )
 			{
-				double fp = l.squared_force_penalty * GetSquared( l.dof.GetLimitForce() );
-				l.penalty.AddSample( timestamp, fp );
+				double lf = l.dof.GetLimitForce();
+				double fps = l.squared_force_penalty * GetSquared( lf );
+				double fpa = l.abs_force_penalty * abs( lf );
+				l.penalty.AddSample( timestamp, fps + fpa );
 			}
 		}
 

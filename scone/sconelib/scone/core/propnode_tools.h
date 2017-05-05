@@ -4,12 +4,12 @@
 #include "Log.h"
 
 // convenience macro that automatically derives name from variable name
-#define INIT_PROPERTY( _prop_, _var_, _default_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
-#define INIT_PROPERTY_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ) )
-#define INIT_PROPERTY_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild( _prop_, _var_, _name_, _default_ )
+#define INIT_PROPERTY( _prop_, _var_, _default_ ) InitFromPropNodeChild<decltype( _var_ )>( _prop_, _var_, GetCleanVarName( #_var_ ), _default_ )
+#define INIT_PROPERTY_REQUIRED( _prop_, _var_ ) InitFromPropNodeChild<decltype( _var_ )>( _prop_, _var_, GetCleanVarName( #_var_ ) )
+#define INIT_PROPERTY_NAMED( _prop_, _var_, _name_, _default_ ) InitFromPropNodeChild<decltype( _var_ )>( _prop_, _var_, _name_, _default_ )
 
 // define a variable and init from props
-#define DECLARE_AND_INIT( _prop_, _type_, _var_, _default_ ) _type_ _var_; InitFromPropNodeChild( _prop_, _var_, GetCleanVarName( #_var_ ), (_type_) _default_ )
+#define DECLARE_AND_INIT( _prop_, _type_, _var_, _default_ ) _type_ _var_; InitFromPropNodeChild<decltype( _var_ )>( _prop_, _var_, GetCleanVarName( #_var_ ), (_type_) _default_ )
 
 namespace scone
 {

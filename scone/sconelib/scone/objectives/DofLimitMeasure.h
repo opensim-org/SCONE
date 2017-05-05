@@ -35,6 +35,7 @@ namespace scone
 			Real squared_velocity_range_penalty;
 			Real abs_velocity_range_penalty;
 			Real squared_force_penalty;
+			Real abs_force_penalty;
 			Statistic<> penalty;
 		};
 
