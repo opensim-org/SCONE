@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Measure type="CompositeMeasure">
-	<signature_postfix></signature_postfix>
+	<signature_postfix>KL5</signature_postfix>
 	<Measures>
 		<Measure type="GaitMeasure" name="Gait" weight="100" threshold="0.05" termination_height="0.85" min_velocity="1.0"/>
 		<Measure type="EffortMeasure" name="Effort" weight="0.1" measure_type="Wang2012" use_cost_of_transport="1"/>
