@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file></init_file>
+	<init_file>initializations/f0914_walk_GHFF_short_ham.par</init_file>
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
