@@ -15,13 +15,21 @@
 namespace scone
 {
 	SimulationObjective::SimulationObjective( const PropNode& props, ParamSet& par ) :
-		Objective( props, par ),
-		m_ModelProps( props.get_child( "Model" ) )
+	Objective( props, par ),
+	m_ModelProps( props.get_child( "Model" ) )
 	{
 		INIT_PROPERTY( props, max_duration, 6000.0 );
 
 		// process parameters to flag unused model props
 		ProcessParameters( par );
+
+		// populate par_info_
+		for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
+		{
+			auto& parinf = par.GetParamInfo( par_idx );
+			if ( parinf.is_free )
+				param_info_.add( parinf.name, parinf.init_mean, parinf.init_std, parinf.min, parinf.max );
+		}
 	}
 
 	SimulationObjective::~SimulationObjective()

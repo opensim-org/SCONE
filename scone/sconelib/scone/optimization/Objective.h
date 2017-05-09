@@ -3,10 +3,11 @@
 #include "ParamSet.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
+#include "flut/optimization/objective.hpp"
 
 namespace scone
 {
-	class SCONE_API Objective : public HasSignature
+	class SCONE_API Objective : public HasSignature, public flut::objective
 	{
 	public:
 		Objective( const PropNode& props, ParamSet& par );
@@ -26,8 +27,16 @@ namespace scone
 
 		int debug_idx;
 
+		virtual bool minimize() const override { return minimize_; }
+		void set_minimize( bool m ) { minimize_ = m; }
+
+		virtual flut::fitness_t evaluate( const flut::param_vec_t& point ) const override;
+
 	protected:
 		// process parameters
 		virtual void ProcessParameters( ParamSet& par ) = 0;
+
+	private:
+		bool minimize_;
 	};
 }

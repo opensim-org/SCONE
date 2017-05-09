@@ -4,8 +4,9 @@
 namespace scone
 {
 	Objective::Objective( const PropNode& props, ParamSet& par ) :
-		HasSignature( props ),
-		debug_idx( -1 )
+	HasSignature( props ),
+	debug_idx( -1 ),
+	minimize_( true )
 	{}
 
 	Objective::~Objective()
@@ -24,5 +25,10 @@ namespace scone
 		ProcessParameters( par );
 
 		return Evaluate();
+	}
+
+	flut::fitness_t Objective::evaluate( const flut::param_vec_t& point ) const
+	{
+		throw std::logic_error( "The method or operation is not implemented." );
 	}
 }

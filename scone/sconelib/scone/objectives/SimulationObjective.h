@@ -7,7 +7,6 @@
 #include "scone/core/PropNode.h"
 
 #include "Measure.h"
-
 #include <vector>
 
 namespace scone

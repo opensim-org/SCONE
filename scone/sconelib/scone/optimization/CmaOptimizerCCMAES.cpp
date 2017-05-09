@@ -32,35 +32,24 @@ namespace scone
 
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
+		{
 			par.Read( init_file, use_init_file_std );
+			GetObjective().info().import( init_file, use_init_file_std );
+		}
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
+		{
 			par.SetGlobalStd( global_std_factor, global_std_offset );
+			GetObjective().info().set_global_std( global_std_factor, global_std_offset );
+		}
 
 		par.SetMode( ParamSet::UpdateMode );
 
-		// generate random initial population
-		flut::function_objective obj( dim, []( const flut::param_vec_t& p ) -> flut::fitness_t { flut_error( "No objective defined" ); return 0.0; } );
-		size_t free_idx = 0;
-		obj.upper_bounds_.resize( dim );
-		obj.lower_bounds_.resize( dim );
-		for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
-		{
-			auto& parinf = par.GetParamInfo( par_idx );
-			if ( parinf.is_free )
-			{
-				SCONE_ASSERT( free_idx < dim );
-				obj.starting_point_[ free_idx ] = parinf.init_mean;
-				obj.starting_point_std_[ free_idx ] = parinf.init_std;
-				obj.lower_bounds_[ free_idx ] = parinf.min;
-				obj.upper_bounds_[ free_idx ] = parinf.max;
-				++free_idx;
-			}
-		}
-		obj.minimize_ = IsMinimizing();
+		//flut::function_objective obj( dim, []( const flut::param_vec_t& p ) -> flut::fitness_t { flut_error( "No objective defined" ); return 0.0; } );
+		GetObjective().set_minimize( IsMinimizing() );
 
 		// init CMA object
-		flut::cma_optimizer cma( obj, m_Lambda, random_seed );
+		flut::cma_optimizer cma( GetObjective(), m_Lambda, random_seed );
 		m_Lambda = cma.lambda();
 		m_Mu = cma.mu();
 		m_Sigma = cma.sigma();
@@ -99,7 +88,7 @@ namespace scone
 				parsets[ ind_idx ].SetFreeParamValues( pop[ ind_idx ] );
 
 			auto results = Evaluate( parsets );
-			auto current_best_it = obj.maximize() ? flut::max_element( results ) : flut::min_element( results );
+			auto current_best_it = GetObjective().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;
 			auto current_avg_fitness = std::accumulate( results.begin(), results.end(), 0.0 ) / results.size();
