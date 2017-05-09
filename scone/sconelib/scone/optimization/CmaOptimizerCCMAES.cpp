@@ -1,11 +1,10 @@
 #include "CmaOptimizerCCMAES.h"
 #include "flut/timer.hpp"
-#include "flut/optimizer/cma_optimizer.hpp"
+#include "flut/optimization/cma_optimizer.hpp"
 #include "flut/container_tools.hpp"
 #include <numeric>
 #include <random>
 #include "flut/string_tools.hpp"
-#include "flut/optimizer/objective.hpp"
 
 using std::cout;
 using std::endl;
