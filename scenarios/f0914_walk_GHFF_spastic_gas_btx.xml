@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<INCLUDE file="optimizations/O_CMA.xml" merge_children="1"/>
-	<init_file></init_file>
-	<use_init_file>0</use_init_file>
+	<init_file>initializations/f0914_walk_GHFF_spastic_gas.par</init_file>
+	<use_init_file>1</use_init_file>
+	<use_init_file_std>1</use_init_file_std>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
 		<signature_postfix>GHFF2_spastic_gas_F20</signature_postfix>
