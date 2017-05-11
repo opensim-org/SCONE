@@ -27,7 +27,7 @@ namespace scone
 		return Evaluate();
 	}
 
-	flut::fitness_t Objective::evaluate( const flut::param_vec_t& point ) const
+	flut::fitness_t Objective::evaluate( const flut::par_vec& point ) const
 	{
 		throw std::logic_error( "The method or operation is not implemented." );
 	}

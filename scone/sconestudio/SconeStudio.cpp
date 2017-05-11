@@ -40,7 +40,7 @@ captureProcess( nullptr )
 	analysisView->setMinSeriesInterval( 0 );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
-	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::captureVideo );
+	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Capture &Image", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
 	addMenuAction( toolsMenu, "&Preferences", this, &SconeStudio::showSettingsDialog );
 
@@ -75,7 +75,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	resultsModel = new ResultsFileSystemModel( nullptr );
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
-	ui.resultsBrowser->init( results_folder, "*.par", 1, resultsModel );
+	ui.resultsBrowser->setModel( resultsModel );
+	ui.resultsBrowser->setNumColumns( 1 );
+	ui.resultsBrowser->setRoot( results_folder, "*.par" );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -205,7 +207,7 @@ void SconeStudio::evaluate()
 	log::info( SCONE_PROFILE_REPORT );
 }
 
-void SconeStudio::captureVideo()
+void SconeStudio::createVideo()
 {
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 	if ( captureFilename.isEmpty() )

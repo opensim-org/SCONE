@@ -30,7 +30,7 @@ namespace scone
 		virtual bool minimize() const override { return minimize_; }
 		void set_minimize( bool m ) { minimize_ = m; }
 
-		virtual flut::fitness_t evaluate( const flut::param_vec_t& point ) const override;
+		virtual flut::fitness_t evaluate( const flut::par_vec& point ) const override;
 
 	protected:
 		// process parameters

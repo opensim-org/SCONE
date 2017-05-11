@@ -56,7 +56,7 @@ public slots:
 	void abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();
-	void captureVideo();
+	void createVideo();
 	void captureImage();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
