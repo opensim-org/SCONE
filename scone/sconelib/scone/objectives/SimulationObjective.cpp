@@ -28,7 +28,7 @@ namespace scone
 		{
 			auto& parinf = par.GetParamInfo( par_idx );
 			if ( parinf.is_free )
-				param_info_.add( parinf.name, parinf.init_mean, parinf.init_std, parinf.min, parinf.max );
+				par_info_.push_back( parinf.name, parinf.init_mean, parinf.init_std, parinf.min, parinf.max );
 		}
 	}
 
