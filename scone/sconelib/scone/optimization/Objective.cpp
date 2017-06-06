@@ -12,7 +12,7 @@ namespace scone
 	Objective::~Objective()
 	{}
 
-	scone::ParamSet Objective::MakeParamSet()
+	scone::ParamSet Objective::GetParamInfo()
 	{
 		ParamSet par( ParamSet::ConstructionMode );
 		ProcessParameters( par );
@@ -29,27 +29,6 @@ namespace scone
 
 	flut::fitness_t Objective::evaluate( const flut::par_vec& point ) const
 	{
-		throw std::logic_error( "The method or operation is not implemented." );
-	}
 
-	size_t Objective::dim() const
-	{
-		throw std::logic_error( "The method or operation is not implemented." );
 	}
-
-	const vector<flut::par_bounds>& Objective::parameter_bounds() const
-	{
-		throw std::logic_error( "The method or operation is not implemented." );
-	}
-
-	const vector<flut::par_mean_std>& Objective::parameter_init() const
-	{
-		throw std::logic_error( "The method or operation is not implemented." );
-	}
-
-	const vector<flut::string>& Objective::parameter_names() const
-	{
-		throw std::logic_error( "The method or operation is not implemented." );
-	}
-
 }

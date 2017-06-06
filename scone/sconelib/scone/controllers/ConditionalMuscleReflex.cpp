@@ -24,8 +24,8 @@ namespace scone
 		}
 		else
 		{
-			m_ConditionalPosRange.max = Degree( par.Get( "pos_max", cp, "pos_max", 180.0 ) );
-			m_ConditionalPosRange.min = Degree( par.Get( "pos_min", cp, "pos_min", -180.0 ) );
+			m_ConditionalPosRange.max = Degree( par.get_or( "pos_max", cp.try_get_child( "pos_max" ), 180.0 ) );
+			m_ConditionalPosRange.min = Degree( par.get_or( "pos_min", cp.try_get_child( "pos_min" ), -180.0 ) );
 		}
 
 		//log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );

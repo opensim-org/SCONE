@@ -140,9 +140,9 @@ set(OPT_API_FILES
 	scone/optimization/Objective.h
 	scone/optimization/Optimizer.cpp
 	scone/optimization/Optimizer.h
-	scone/optimization/ParamInfo.cpp
+#	scone/optimization/ParamInfo.cpp
 	scone/optimization/ParamInfo.h
-	scone/optimization/ParamSet.cpp
+#	scone/optimization/ParamSet.cpp
 	scone/optimization/ParamSet.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h

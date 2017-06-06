@@ -14,7 +14,7 @@ namespace scone
 	{
 		// make sure there is at least 1 objective and get info
 		CreateObjectives( 1 );
-		ParamSet par = GetObjective().MakeParamSet();
+		ParamSet par = GetObjective().GetParamInfo();
 		size_t dim = par.GetFreeParamCount();
 
 		SCONE_ASSERT( dim > 0 );

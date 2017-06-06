@@ -62,7 +62,7 @@ namespace scone
 				ai.mode_weights.resize( number_of_modes );
 				String prefix = symmetric ? ai.name : ai.full_name;
 				for ( size_t mode = 0; mode < number_of_modes; ++mode )
-					ai.mode_weights[ mode ] = par.Get( prefix + stringf( ".Mode%d", mode ), props, "mode_weight" );
+					ai.mode_weights[ mode ] = par.get( prefix + stringf( ".Mode%d", mode ), props[ "mode_weight" ] );
 			}
 			else
 			{

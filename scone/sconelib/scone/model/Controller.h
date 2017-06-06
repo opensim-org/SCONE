@@ -4,6 +4,7 @@
 #include "scone/core/HasSignature.h"
 #include "scone/core/HasData.h"
 #include "scone/model/State.h"
+#include "scone/optimization/ParamSet.h"
 
 namespace scone
 {

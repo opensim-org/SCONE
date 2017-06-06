@@ -7,8 +7,6 @@
 
 namespace scone
 {
-	using flut::par_bounds;
-	using flut::par_mean_std;
 	using flut::fitness_t;
 	using std::vector;
 	using std::string;
@@ -20,7 +18,7 @@ namespace scone
 		virtual ~Objective();
 
 		// get all parameters in this objective
-		ParamSet MakeParamSet();
+		const flut::par_info& GetParamInfo() { return info(); }
 
 		// update all parameters and call Evaluate
 		double Evaluate( ParamSet& par );
@@ -39,9 +37,6 @@ namespace scone
 		virtual flut::fitness_t evaluate( const flut::par_vec& point ) const override;
 
 		virtual size_t dim() const override;
-		virtual const vector< par_bounds >& parameter_bounds() const override;
-		virtual const vector< par_mean_std >& parameter_init() const override;
-		virtual const vector< string >& parameter_names() const override;
 
 	protected:
 		// process parameters

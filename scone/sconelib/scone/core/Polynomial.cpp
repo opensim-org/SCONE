@@ -15,7 +15,7 @@ namespace scone
 		INIT_PROPERTY( props, degree, size_t( 0 ) );
 		m_Coeffs.resize( degree + 1 );
 		for ( size_t i = 0; i < m_Coeffs.size(); ++i )
-			SetCoefficient( i, par.Get( stringf( "C%d", i ), props, stringf( "coefficient%d", i ) ) );
+			SetCoefficient( i, par.get( stringf( "C%d", i ), props.get_child( stringf( "coefficient%d", i ) ) ) );
 	}
 
 	Polynomial::~Polynomial()

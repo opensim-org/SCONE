@@ -21,11 +21,11 @@ namespace scone
 	{
 	public:
 		SconeSingleObjectiveFunction( Objective& o, bool minimize ) : m_Objective( o ), m_Minimize( minimize ) {}
-		virtual std::size_t numberOfVariables() const override { return m_Objective.MakeParamSet().GetFreeParamCount(); }
+		virtual std::size_t numberOfVariables() const override { return m_Objective.GetParamInfo()().GetFreeParamCount(); }
 		virtual ResultType eval( const SearchPointType& input ) const override
 		{
 			std::vector< double > v( input.begin(), input.end() );
-			auto par = m_Objective.MakeParamSet();
+			auto par = m_Objective.GetParamInfo();
 			par.SetFreeParamValues( v );
 			auto result = m_Objective.Evaluate( par );
 			return m_Minimize ? result : -result;
@@ -39,7 +39,7 @@ namespace scone
 	void EvaluateSharkIndividuals( Optimizer& opt, std::vector< shark::Individual<shark::RealVector, double, shark::RealVector> >& individuals )
 	{
 		// setup parameter sets
-		auto par = opt.GetObjective().MakeParamSet();
+		auto par = opt.GetObjective().GetParamInfo();
 		par.SetMode( ParamSet::UpdateMode );
 		std::vector< ParamSet > parsets( individuals.size(), par );
 		for ( size_t ind_idx = 0; ind_idx < individuals.size(); ++ind_idx )
@@ -73,7 +73,7 @@ namespace scone
 		{
 			// get ParamSet instance for checking and clamping parameter boundaries.
 			m_Offspring.resize( lambda() );
-			auto par = m_Optimizer.GetObjective().MakeParamSet();
+			auto par = m_Optimizer.GetObjective().GetParamInfo();
 			par.SetMode( ParamSet::UpdateMode );
 			SCONE_ASSERT( par.GetFreeParamCount() == m_numberOfVariables );
 
