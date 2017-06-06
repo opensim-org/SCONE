@@ -21,15 +21,7 @@ namespace scone
 		INIT_PROPERTY( props, max_duration, 6000.0 );
 
 		// process parameters to flag unused model props
-		ProcessParameters( par );
-
-		// populate par_info_
-		for ( size_t par_idx = 0; par_idx < par.GetParamCount(); ++par_idx )
-		{
-			auto& parinf = par.GetParamInfo( par_idx );
-			if ( parinf.is_free )
-				par_info_.push_back( parinf.name, parinf.init_mean, parinf.init_std, parinf.min, parinf.max );
-		}
+		ProcessParameters( par_info_ );
 	}
 
 	SimulationObjective::~SimulationObjective()

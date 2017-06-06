@@ -21,7 +21,7 @@ namespace scone
 	{
 	public:
 		SconeSingleObjectiveFunction( Objective& o, bool minimize ) : m_Objective( o ), m_Minimize( minimize ) {}
-		virtual std::size_t numberOfVariables() const override { return m_Objective.GetParamInfo()().GetFreeParamCount(); }
+		virtual std::size_t numberOfVariables() const override { return m_Objective.GetParamInfo().dim(); }
 		virtual ResultType eval( const SearchPointType& input ) const override
 		{
 			std::vector< double > v( input.begin(), input.end() );
