@@ -28,7 +28,7 @@ namespace scone
 	{
 	}
 
-	void SimulationObjective::CreateModelFromParameters( ParamSet& par )
+	void SimulationObjective::CreateModelFromParameters( Params& par )
 	{
 		// (re)create new model using stored model props
 		m_Model = CreateModel( m_ModelProps, par );

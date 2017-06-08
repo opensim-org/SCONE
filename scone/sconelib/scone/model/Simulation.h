@@ -5,7 +5,7 @@
 
 #include "scone/core/PropNode.h"
 #include "scone/core/types.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {

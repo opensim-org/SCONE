@@ -28,7 +28,7 @@ namespace scone
 	{
 	}
 
-	CompositeMeasure::CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area )
 	{
 		// get Terms (obsolete)

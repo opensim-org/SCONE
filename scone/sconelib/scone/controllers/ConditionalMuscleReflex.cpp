@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	MuscleReflex( props, par, model, area ),
 	m_pConditionalDofPos( nullptr ),
 	m_pConditionalDofVel( nullptr )

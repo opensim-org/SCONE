@@ -2,7 +2,7 @@
 
 namespace scone
 {
-	Measure::Measure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) : Controller( props, par, model, area )
+	Measure::Measure( const PropNode& props, Params& par, Model& model, const Locality& area ) : Controller( props, par, model, area )
 	{
 		INIT_PROPERTY( props, start_time, 0.0 );
 		INIT_PROPERTY( props, name, String( "" ) );

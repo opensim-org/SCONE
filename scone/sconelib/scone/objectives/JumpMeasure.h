@@ -3,7 +3,7 @@
 #include "Measure.h"
 
 #include "scone/core/PropNode.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
 
 namespace scone
@@ -11,7 +11,7 @@ namespace scone
 	class SCONE_API JumpMeasure : public Measure
 	{
 	public:
-		JumpMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		JumpMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~JumpMeasure();
 
 		virtual double GetResult( Model& model ) override;

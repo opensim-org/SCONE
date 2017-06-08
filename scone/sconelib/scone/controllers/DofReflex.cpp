@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	DofReflex::DofReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	DofReflex::DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
 	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),

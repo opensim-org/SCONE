@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 #include "flut/optimization/par_interface.hpp"
-#include "flut/optimization/par_set.hpp"
+#include "flut/optimization/par_instance.hpp"
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PAR_.get_or( GetCleanVarName( #VAR_ ), PROP_.try_get_child( GetCleanVarName( #VAR_ ) ), DEFAULT_ )
@@ -23,8 +23,9 @@
 
 namespace scone
 {
-	using ParamSet = flut::par_interface;
-	using ParamInstance = flut::par_set;
+	using Params = flut::par_interface;
+	using ParamInstance = flut::par_instance;
+	using ParamInfo = flut::par_info;
 
 	//class SCONE_API ParamSet
 	//{
@@ -98,10 +99,10 @@ namespace scone
 	class SCONE_API ScopedParamSetPrefixer
 	{
 	public:
-		ScopedParamSetPrefixer( ParamSet& par, const String& prefix ) : m_ParamSet( par ) { m_ParamSet.push_prefix( prefix ); }
+		ScopedParamSetPrefixer( Params& par, const String& prefix ) : m_ParamSet( par ) { m_ParamSet.push_prefix( prefix ); }
 		~ScopedParamSetPrefixer() { m_ParamSet.pop_prefix(); }
 	private:
-		ParamSet& m_ParamSet;
+		Params& m_ParamSet;
 	};
 
 	//class SCONE_API Parameterizable

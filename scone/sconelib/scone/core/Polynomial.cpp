@@ -9,7 +9,7 @@ namespace scone
 		m_Coeffs.resize( degree + 1 );
 	}
 
-	Polynomial::Polynomial( const PropNode& props, ParamSet& par )
+	Polynomial::Polynomial( const PropNode& props, Params& par )
 	{
 		size_t degree;
 		INIT_PROPERTY( props, degree, size_t( 0 ) );

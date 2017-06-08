@@ -3,7 +3,7 @@
 #include "scone/core/types.h"
 #include "scone/model/Controller.h"
 #include "scone/core/PropNode.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/core/Vec3.h"
 
 namespace scone
@@ -11,7 +11,7 @@ namespace scone
 	class SCONE_API PerturbationController : public Controller
 	{
 	public:
-		PerturbationController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
 		String name;

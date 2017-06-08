@@ -13,7 +13,7 @@ namespace scone
 		EffortMeasure::Uchida2016, "Uchida2016"
 		);
 
-	EffortMeasure::EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{

@@ -5,13 +5,13 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	StateController::StateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area ),
 	m_CurrentState( NoIndex )
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Locality& area )
 	{
 		// create instances for each controller
 		log::trace( "Creating Conditional Controllers for " + area.GetName() );

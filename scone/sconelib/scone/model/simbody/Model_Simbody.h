@@ -34,7 +34,7 @@ namespace scone
 	class SCONE_API Model_Simbody : public Model
 	{
 	public:
-		Model_Simbody( const PropNode& props, ParamSet& par );
+		Model_Simbody( const PropNode& props, Params& par );
 
 		void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
 
@@ -95,10 +95,10 @@ namespace scone
 		void ReadState( const String& file );
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
-		void CreateModelWrappers( const PropNode& pn, ParamSet& par );
-		void SetModelProperties( const PropNode &pn, ParamSet& par );
-		void SetOpenSimParameters( const PropNode& pn, ParamSet& par );
-		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, ParamSet& par );
+		void CreateModelWrappers( const PropNode& pn, Params& par );
+		void SetModelProperties( const PropNode &pn, Params& par );
+		void SetOpenSimParameters( const PropNode& pn, Params& par );
+		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 		void ClearBodyForces();

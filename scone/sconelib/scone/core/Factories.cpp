@@ -29,11 +29,11 @@
 
 namespace scone
 {
-	static flut::factory< Controller, const PropNode&, ParamSet&, Model&, const Locality& > g_ControllerFactory;
-	static flut::factory< Reflex, const PropNode&, ParamSet&, Model&, const Locality& > g_ReflexFactory;
-	static flut::factory< Function, const PropNode&, ParamSet& > g_FunctionFactory;
+	static flut::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
+	static flut::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
+	static flut::factory< Function, const PropNode&, Params& > g_FunctionFactory;
 
-	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
+	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ControllerFactory.empty() )
 		{
@@ -61,7 +61,7 @@ namespace scone
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ReflexFactory.empty() )
 		{
@@ -72,7 +72,7 @@ namespace scone
 		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API FunctionUP CreateFunction( const PropNode& props, ParamSet& par )
+	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par )
 	{
 		if ( g_FunctionFactory.empty() )
 		{
@@ -83,8 +83,8 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	static flut::factory< Model, const PropNode&, ParamSet& > g_ModelFactory;
-	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par )
+	static flut::factory< Model, const PropNode&, Params& > g_ModelFactory;
+	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
 	{
 		if ( g_ModelFactory.empty() )
 		{
@@ -93,8 +93,8 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static flut::factory< Sensor, const PropNode&, ParamSet&, Model&, const Locality& > g_SensorFactory;
-	SCONE_API SensorUP CreateSensor( const PropNode& props, ParamSet& par, Model& m, const Locality& a )
+	static flut::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
+	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Locality& a )
 	{
 		if ( g_SensorFactory.empty() )
 		{

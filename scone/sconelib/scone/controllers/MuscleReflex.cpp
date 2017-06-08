@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),

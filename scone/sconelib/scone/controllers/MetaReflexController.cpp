@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	MetaReflexController::MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	MetaReflexController::MetaReflexController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );

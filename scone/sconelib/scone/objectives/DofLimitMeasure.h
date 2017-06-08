@@ -13,7 +13,7 @@ namespace scone
 	class DofLimitMeasure : public Measure
 	{
 	public:
-		DofLimitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~DofLimitMeasure();
 
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;

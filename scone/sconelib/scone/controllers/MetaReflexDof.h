@@ -2,7 +2,7 @@
 
 #include "scone/core/PropNode.h"
 #include "scone/model/Model.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "MetaReflexParams.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/core/HasData.h"
@@ -14,7 +14,7 @@ namespace scone
 	class SCONE_API MetaReflexDof : public HasData
 	{
 	public:
-		MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		MetaReflexDof( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MetaReflexDof() {}
 
 		void SetupUsingCurrentPose();

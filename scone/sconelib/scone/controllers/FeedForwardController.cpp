@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	FeedForwardController::FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area ) :
+	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		DECLARE_AND_INIT( props, bool, symmetric, true );

@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	DofLimitMeasure::DofLimitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	DofLimitMeasure::DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area )
 	{
 		if ( const PropNode* lp = props.try_get_child( "Limits" ) )

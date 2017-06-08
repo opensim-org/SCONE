@@ -41,7 +41,7 @@ namespace scone
 			Real leg_length;
 		};
 
-		GaitStateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~GaitStateController();
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;

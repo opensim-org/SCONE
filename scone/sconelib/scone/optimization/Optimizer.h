@@ -4,7 +4,7 @@
 #include "Objective.h"
 #include "scone/core/HasSignature.h"
 #include "scone/core/types.h"
-#include "ParamSet.h"
+#include "Params.h"
 
 namespace scone
 {
@@ -24,7 +24,7 @@ namespace scone
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		bool IsMinimizing() { return !maximize_objective; }
 
-		std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
+		std::vector< double > Evaluate( std::vector< Params >& parsets );
 
 		double GetBestFitness() { return m_BestFitness; }
 

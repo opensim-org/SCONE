@@ -10,7 +10,7 @@ namespace scone
 	class PointMeasure : public Measure
 	{
 	public:
-		PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		PointMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~PointMeasure() { };
 
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;

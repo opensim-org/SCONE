@@ -1,12 +1,12 @@
 #include "ExternalBalanceController.h"
 
 #include "scone/model/Model.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {
 
-	ExternalBalanceController::ExternalBalanceController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area ) :
+	ExternalBalanceController::ExternalBalanceController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 	Controller( props, par, model, target_area ),
 	force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) )
 	{

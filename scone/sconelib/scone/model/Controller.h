@@ -4,14 +4,14 @@
 #include "scone/core/HasSignature.h"
 #include "scone/core/HasData.h"
 #include "scone/model/State.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {
 	class SCONE_API Controller : public HasSignature, public HasData
 	{
 	public:
-		Controller( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+		Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~Controller();
 
 		enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };

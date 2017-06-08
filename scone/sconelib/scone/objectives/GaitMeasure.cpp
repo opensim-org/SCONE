@@ -10,7 +10,7 @@
 
 namespace scone
 {
-	GaitMeasure::GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation ),
 		m_nSteps( 0 ),

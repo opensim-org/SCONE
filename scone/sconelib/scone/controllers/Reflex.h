@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/model/Model.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/core/PropNode.h"
 
 namespace scone
@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API Reflex : public HasData
 	{
 	public:
-		Reflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		Reflex( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~Reflex();
 
 		virtual void ComputeControls( double timestamp );

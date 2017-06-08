@@ -2,7 +2,7 @@
 
 //#include "cs_fwd.h"
 #include "scone/optimization/Objective.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/model/Simulation.h"
 #include "scone/core/PropNode.h"
 
@@ -26,7 +26,7 @@ namespace scone
 
 		virtual fitness_t evaluate( const flut::par_vec& point ) const override;
 
-		void CreateModelFromParameters( ParamSet& par );
+		void CreateModelFromParameters( Params& par );
 
 	protected:
 		virtual String GetClassSignature() const override;

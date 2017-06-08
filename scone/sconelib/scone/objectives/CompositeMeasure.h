@@ -8,7 +8,7 @@ namespace scone
 	class SCONE_API CompositeMeasure : public Measure
 	{
 	public:
-		CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~CompositeMeasure();
 
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;

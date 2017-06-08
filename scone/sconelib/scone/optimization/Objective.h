@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ParamSet.h"
+#include "Params.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
 #include "flut/optimization/objective.hpp"

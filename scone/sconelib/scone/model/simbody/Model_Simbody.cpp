@@ -62,7 +62,7 @@ namespace scone
 	};
 
 	/// Constructor
-	Model_Simbody::Model_Simbody( const PropNode& props, ParamSet& par ) :
+	Model_Simbody::Model_Simbody( const PropNode& props, Params& par ) :
 		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
@@ -222,7 +222,7 @@ namespace scone
 
 	Model_Simbody::~Model_Simbody() {}
 
-	void Model_Simbody::CreateModelWrappers( const PropNode& pn, ParamSet& par )
+	void Model_Simbody::CreateModelWrappers( const PropNode& pn, Params& par )
 	{
 		SCONE_ASSERT( m_pOsimModel );
 		SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
@@ -284,7 +284,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetModelProperties( const PropNode &pn, ParamSet& par )
+	void Model_Simbody::SetModelProperties( const PropNode &pn, Params& par )
 	{
 		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
 		{
@@ -308,7 +308,7 @@ namespace scone
 	}
 
 
-	void Model_Simbody::SetOpenSimParameters( const PropNode& props, ParamSet& par )
+	void Model_Simbody::SetOpenSimParameters( const PropNode& props, Params& par )
 	{
 		if ( auto* osim_pars = props.try_get_child( "OpenSimParameters" ) )
 		{
@@ -328,7 +328,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, ParamSet& par )
+	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par )
 	{
 		// we have a match!
 		String prop_str = pn.get< String >( "property" );

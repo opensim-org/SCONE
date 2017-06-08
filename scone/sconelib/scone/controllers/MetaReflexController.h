@@ -8,7 +8,7 @@ namespace scone
 	class SCONE_API MetaReflexController : public Controller
 	{
 	public:
-		MetaReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		MetaReflexController( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MetaReflexController();
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;

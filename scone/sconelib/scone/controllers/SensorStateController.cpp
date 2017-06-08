@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	SensorStateController::SensorStateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	SensorStateController::SensorStateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	StateController( props, par, model, area )
 	{
 		// create states
@@ -39,7 +39,7 @@ namespace scone
 		}
 	}
 
-	SensorStateController::SensorState::SensorState( const PropNode& pn, ParamSet& par, const Locality& a )
+	SensorStateController::SensorState::SensorState( const PropNode& pn, Params& par, const Locality& a )
 	{
 		INIT_PROP_REQUIRED( pn, name );
 

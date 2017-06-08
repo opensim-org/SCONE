@@ -40,8 +40,8 @@ namespace scone
 	{
 		// setup parameter sets
 		auto par = opt.GetObjective().GetParamInfo();
-		par.SetMode( ParamSet::UpdateMode );
-		std::vector< ParamSet > parsets( individuals.size(), par );
+		par.SetMode( Params::UpdateMode );
+		std::vector< Params > parsets( individuals.size(), par );
 		for ( size_t ind_idx = 0; ind_idx < individuals.size(); ++ind_idx )
 		{
 			std::vector< double > v( individuals[ ind_idx ].searchPoint().begin(), individuals[ ind_idx ].searchPoint().end() );
@@ -74,7 +74,7 @@ namespace scone
 			// get ParamSet instance for checking and clamping parameter boundaries.
 			m_Offspring.resize( lambda() );
 			auto par = m_Optimizer.GetObjective().GetParamInfo();
-			par.SetMode( ParamSet::UpdateMode );
+			par.SetMode( Params::UpdateMode );
 			SCONE_ASSERT( par.GetFreeParamCount() == m_numberOfVariables );
 
 			for ( std::size_t i = 0; i < m_Offspring.size(); i++ )

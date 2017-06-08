@@ -22,7 +22,7 @@ namespace scone
 	class SCONE_API Model : public HasName, public HasSignature, public HasData
 	{
 	public:
-		Model( const PropNode& props, ParamSet& par );
+		Model( const PropNode& props, Params& par );
 		virtual ~Model();
 
 		/// muscle access
@@ -127,8 +127,8 @@ namespace scone
 		}
 
 		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area );
+		Sensor& AcquireSensor( const PropNode& pn, Params& par, const Locality& area );
+		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, Params& par, const Locality& area );
 
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
@@ -156,7 +156,7 @@ namespace scone
 	protected:
 		virtual String GetClassSignature() const override { return GetName(); }
 		void UpdateSensorDelayAdapters();
-		void CreateBalanceSensors( const PropNode& props, ParamSet& par );
+		void CreateBalanceSensors( const PropNode& props, Params& par );
 
 		virtual void StoreData( Storage< Real >::Frame& frame ) override;
 		virtual void StoreCurrentFrame();

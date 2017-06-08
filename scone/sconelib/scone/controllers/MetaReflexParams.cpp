@@ -2,12 +2,12 @@
 
 namespace scone
 {
-	MetaReflexParams::MetaReflexParams( const PropNode& props, ParamSet& par, Model& model, const String& pnp )
+	MetaReflexParams::MetaReflexParams( const PropNode& props, Params& par, Model& model, const String& pnp )
 	{
 		Init( props, par, model, pnp );
 	}
 
-	void MetaReflexParams::Init( const PropNode& props, ParamSet& par, Model& model, const String& pnp )
+	void MetaReflexParams::Init( const PropNode& props, Params& par, Model& model, const String& pnp )
 	{
 		if ( const PropNode* mrcprops = model.GetCustomProps().try_get_child( "meta_reflex_control" ) )
 		{

@@ -4,7 +4,7 @@
 #include "scone/core/Profiler.h"
 #include "Test.h"
 #include "scone/controllers/cs_tools.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/core/Factories.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"

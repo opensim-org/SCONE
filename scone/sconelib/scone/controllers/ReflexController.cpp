@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	ReflexController::ReflexController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area )
 	{
 		bool symmetric = props.get< bool >( "symmetric", true );
