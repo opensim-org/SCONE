@@ -11,5 +11,5 @@
 namespace scone
 {
 	PropNode SCONE_API RunSimulation( const path& filename, bool write_results_file = false );
-	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename );
+	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& config_file );
 }

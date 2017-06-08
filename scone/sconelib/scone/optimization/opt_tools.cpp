@@ -1,6 +1,5 @@
 #include "opt_tools.h"
 #include "scone/core/types.h"
-#include "CmaOptimizer.h"
 
 #include "scone/core/Factories.h"
 
@@ -14,9 +13,6 @@ using namespace std;
 
 #include "flut/timer.hpp"
 #include "flut/prop_node_tools.hpp"
-
-#include "CmaOptimizerShark3.h"
-#include "CmaOptimizerCCMAES.h"
 
 using flut::timer;
 
@@ -50,15 +46,13 @@ namespace scone
 	{
 		cout << "--- Starting evaluation ---" << endl;
 
-		ParamSet par( filename );
-
 		bfs::path config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 
 		const PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
-		ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
 		// report unused parameters
@@ -66,11 +60,12 @@ namespace scone
 
 		// set data storage
 		so.GetModel().SetStoreData( true );
-
 		Profiler::GetGlobalInstance().Reset();
 
+		ParamInstance par( so.info(), filename );
+
 		timer tmr;
-		double result = obj->Evaluate();
+		double result = obj->evaluate( par.values() );
 		auto duration = tmr.seconds();
 
 		// collect statistics

@@ -14,10 +14,8 @@ namespace scone
 	class SCONE_API SimulationObjective : public Objective
 	{
 	public:
-		SimulationObjective( const PropNode& props, ParamSet& par );
+		SimulationObjective( const PropNode& props );
 		virtual ~SimulationObjective();
-
-		virtual double Evaluate() override;
 
 		virtual std::vector< String > WriteResults( const String& file ) override;
 
@@ -26,13 +24,16 @@ namespace scone
 
 		double max_duration;
 
+		virtual fitness_t evaluate( const flut::par_vec& point ) const override;
+
+		void CreateModelFromParameters( ParamSet& par );
+
 	protected:
 		virtual String GetClassSignature() const override;
-		virtual void ProcessParameters( ParamSet& par ) override;
 
 	private:
 		ModelUP m_Model;
 		Measure* m_Measure;
-		const PropNode& m_ModelProps;
+		PropNode m_ModelProps;
 	};
 }

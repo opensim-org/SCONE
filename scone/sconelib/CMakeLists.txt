@@ -130,10 +130,10 @@ set(OBJECTIVES_FILES
 set(OPT_API_FILES
 	scone/optimization/CmaOptimizer.cpp
 	scone/optimization/CmaOptimizer.h
-	scone/optimization/CmaOptimizerShark2.cpp
-	scone/optimization/CmaOptimizerShark2.h
-	scone/optimization/CmaOptimizerShark3.cpp
-	scone/optimization/CmaOptimizerShark3.h
+#	scone/optimization/CmaOptimizerShark2.cpp
+#	scone/optimization/CmaOptimizerShark2.h
+#	scone/optimization/CmaOptimizerShark3.cpp
+#	scone/optimization/CmaOptimizerShark3.h
 	scone/optimization/CmaOptimizerCCMAES.cpp
 	scone/optimization/CmaOptimizerCCMAES.h
 	scone/optimization/Objective.cpp

@@ -24,8 +24,17 @@ namespace scone
 	{
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
-		// create the objective form par file
-		so = CreateSimulationObjective( file );
+		// create the objective form par file or config file
+		if ( file.extension() == "par" )
+		{
+			so = CreateSimulationObjective( file.parent_path() / "config.xml" );
+			so->CreateModelFromParameters( ParamInstance( so->info(), file ) );
+		}
+		else
+		{
+			so = CreateSimulationObjective( file );
+			so->CreateModelFromParameters( ParamInstance( so->info() ) );
+		}
 
 		// accept filename and clear data
 		filename = file;
@@ -193,7 +202,7 @@ namespace scone
 	{
 		so->GetModel().SetStoreData( true );
 		so->GetModel().SetThreadSafeSimulation( true );
-		so->Evaluate();
+		so->evaluate( ParamInstance( so->info() ).values() );
 
 		PropNode results;
 		results.set( "result", so->GetMeasure().GetReport() );

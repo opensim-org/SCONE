@@ -51,6 +51,7 @@ namespace scone
 	Optimizer::~Optimizer()
 	{}
 
+#if 0
 	// evaluate individuals
 	std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
 	{
@@ -129,6 +130,7 @@ namespace scone
 		Optimizer::SetThreadPriority( priority );
 		*fitness = obj->Evaluate( par );
 	}
+#endif
 
 	void Optimizer::InitOutputFolder()
 	{
@@ -163,9 +165,9 @@ namespace scone
 		// create at least one objective instance (required for finding number of parameters)
 		while ( m_Objectives.size() < count )
 		{
-			ParamSet par;
-			m_Objectives.push_back( CreateObjective( m_ObjectiveProps, par ) );
-			m_Objectives.back()->debug_idx = (int)m_Objectives.size();
+			ParamInfo par;
+			m_Objectives.push_back( CreateObjective( m_ObjectiveProps ) );
+			//m_Objectives.back()->debug_idx = (int)m_Objectives.size();
 		}
 	}
 

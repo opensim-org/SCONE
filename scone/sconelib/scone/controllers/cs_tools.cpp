@@ -16,10 +16,10 @@ namespace scone
 	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
 	{
 		// create the simulation objective object
-		SimulationObjectiveUP so = CreateSimulationObjective( par_file );
+		SimulationObjectiveUP so = CreateSimulationObjective( par_file.parent_path() / "config.xml" );
 
 		timer t;
-		double result = so->Evaluate();
+		//double result = so->Evaluate();
 		auto duration = t.seconds();
 
 		// set data storage
@@ -45,33 +45,22 @@ namespace scone
 		return statistics;
 	}
 
-	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& filename )
+	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& config_file )
 	{
-		ParamSet par;
-		bfs::path config_path;
-		if ( filename.extension() == "par" )
-		{
-			par.Read( filename, true );
-			config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
-		}
-		else config_path = filename.str();
-		if ( config_path.has_parent_path() )
-			bfs::current_path( config_path.parent_path() );
+		bfs::path config_path = config_file.str();
+		if ( config_path.has_parent_path() ) bfs::current_path( config_path.parent_path() );
 
 		// read properties
 		PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
-		PropNode objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
-
-		// load init parameters if we just load a config file
-		if ( filename.extension() == "xml" || filename.extension() == "scenario" )
-		{
-			auto& optProp = configProp.get_child( "Optimizer" );
-			if ( optProp.get< bool >( "use_init_file" ) )
-				par.Read( optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
-		}
+		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 		// create SimulationObjective object
-		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( CreateObjective( objProp, par ) );
+		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( CreateObjective( objProp ) );
+
+		// read mean / std from init file
+		auto& optProp = configProp.get_child( "Optimizer" );
+		if ( optProp.get< bool >( "use_init_file" ) )
+			so->info().import_mean_std( optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
 
 		// report unused parameters
 		LogUntouched( objProp );

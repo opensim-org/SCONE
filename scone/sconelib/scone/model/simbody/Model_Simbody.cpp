@@ -183,7 +183,7 @@ namespace scone
 				if ( inc_pat( state_name ) && !ex_pat( state_name ) )
 				{
 					auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-					m_State[ i ] += par.Get( ParamInfo( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
+					m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
 				}
 			}
 		}
@@ -333,7 +333,7 @@ namespace scone
 		// we have a match!
 		String prop_str = pn.get< String >( "property" );
 		ScopedParamSetPrefixer prefix( par, pn.get< String >( "name" ) + "." );
-		double value = par.Get( prop_str, pn, "value" );
+		double value = par.get( prop_str, pn.get_child( "value" ) );
 		if ( os.hasProperty( prop_str ) )
 		{
 			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();

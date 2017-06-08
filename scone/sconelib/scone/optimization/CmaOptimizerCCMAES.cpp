@@ -19,8 +19,7 @@ namespace scone
 	{
 		// make sure there is at least 1 objective and get info
 		CreateObjectives( 1 );
-		ParamSet par = GetObjective().GetParamInfo();
-		size_t dim = par.GetFreeParamCount();
+		size_t dim = GetObjective().dim();
 
 		SCONE_ASSERT( dim > 0 );
 
@@ -33,17 +32,13 @@ namespace scone
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
 		{
-			par.Read( init_file, use_init_file_std );
-			GetObjective().info().import( init_file, use_init_file_std );
+			GetObjective().info().import_mean_std( init_file, use_init_file_std );
 		}
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
 		{
-			par.SetGlobalStd( global_std_factor, global_std_offset );
 			GetObjective().info().set_global_std( global_std_factor, global_std_offset );
 		}
-
-		par.SetMode( ParamSet::UpdateMode );
 
 		//flut::function_objective obj( dim, []( const flut::param_vec_t& p ) -> flut::fitness_t { flut_error( "No objective defined" ); return 0.0; } );
 		GetObjective().set_minimize( IsMinimizing() );
@@ -53,9 +48,10 @@ namespace scone
 		m_Lambda = cma.lambda();
 		m_Mu = cma.mu();
 		m_Sigma = cma.sigma();
+		cma.set_max_threads( (int)max_threads );
 
 		// create m_Lambda objectives
-		CreateObjectives( m_Lambda );
+		//CreateObjectives( m_Lambda );
 		GetObjective().GetSignature();
 
 		log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
@@ -82,12 +78,13 @@ namespace scone
 			// sample parameter sets
 			auto& pop = cma.sample_population();
 
-			par.SetMode( ParamSet::UpdateMode );
-			std::vector< ParamSet > parsets( m_Lambda, par );
-			for ( size_t ind_idx = 0; ind_idx < m_Lambda; ++ind_idx )
-				parsets[ ind_idx ].SetFreeParamValues( pop[ ind_idx ] );
+			auto results = cma.evaluate( pop );
 
-			auto results = Evaluate( parsets );
+			//std::vector< ParamSet > parsets( m_Lambda, par );
+			//for ( size_t ind_idx = 0; ind_idx < m_Lambda; ++ind_idx )
+			//	parsets[ ind_idx ].SetFreeParamValues( pop[ ind_idx ] );
+			//auto results = Evaluate( parsets );
+
 			auto current_best_it = GetObjective().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;
@@ -114,14 +111,9 @@ namespace scone
 			if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output ) )
 			{
 				// copy best solution to par
-				par.SetFreeParamValues( pop[ current_best_idx ] );
-
-				// update mean / std
-				par.UpdateMeanStd( cma.current_mean(), cma.current_std() );
-
-				// update best params after mean / std have been updated
-				if ( new_best )
-					m_BestParams = par;
+				ParamInfo parinf( GetObjective().info() );
+				parinf.set_mean_std( cma.current_mean(), cma.current_std() );
+				ParamInstance par( parinf, pop[ current_best_idx ] );
 
 				m_LastFileOutputGen = gen;
 
@@ -129,7 +121,8 @@ namespace scone
 				String ind_name = flut::stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, current_best );
 				String file_base = AcquireOutputFolder() + ind_name;
 				std::vector< String > outputFiles;
-				par.Write( file_base + ".par" );
+				std::ofstream( file_base + ".par" ) << par;
+				//par.write( file_base + ".par" );
 				outputFiles.push_back( file_base + ".par" );
 
 				// cleanup superfluous output files

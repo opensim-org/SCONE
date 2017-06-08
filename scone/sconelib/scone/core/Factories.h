@@ -21,6 +21,6 @@ namespace scone
 	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par );
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );
-	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par );
-	SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory();
+	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop );
+	SCONE_API flut::factory< Objective, const PropNode& >& GetObjectiveFactory();
 }

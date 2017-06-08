@@ -26,7 +26,6 @@ namespace scone
 
 		std::vector< double > Evaluate( std::vector< ParamSet >& parsets );
 
-		const ParamSet& GetBestParamSet() { return m_BestParams; }
 		double GetBestFitness() { return m_BestFitness; }
 
 		void SetConsoleOutput( bool output ) { console_output = output; }
@@ -46,7 +45,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 		// current status
-		ParamInstance m_BestParams;
 		double m_BestFitness;
 		bool console_output;
 		bool status_output;
@@ -64,9 +62,11 @@ namespace scone
 		bool output_objective_result_files;
 
 	private:
+#if 0
 		std::vector< double > EvaluateSingleThreaded( std::vector< ParamInstance >& parsets );
 		std::vector< double > EvaluateMultiThreaded( std::vector< ParamInstance >& parsets );
 		static void EvaluateFunc( Objective* obj, ParamInstance& par, double* fitness, int priority );
+#endif
 		void InitOutputFolder();
 		static void SetThreadPriority( int priority );
 

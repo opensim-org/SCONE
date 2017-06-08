@@ -57,7 +57,7 @@ namespace scone
 		// run all models
 		for ( auto iter = models.begin(); iter != models.end(); ++iter )
 		{
-			ParamSet par;
+			ParamInfo par;
 			props.set( "Model.model_file", *iter );
 			ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
@@ -84,7 +84,6 @@ namespace scone
 	void PlaybackTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-		ParamSet par( filename );
 
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
@@ -103,13 +102,16 @@ namespace scone
 		//objProp.Set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
+
+		ParamInfo par;
+		par.import_fixed( filename );
 
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->Evaluate();
+		result = obj->evaluate( par.make_mean_instance().values() );
 		auto duration = t.seconds();
 
 		// collect statistics
@@ -159,7 +161,6 @@ namespace scone
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
-		ParamSet par( filename );
 		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
@@ -177,12 +178,15 @@ namespace scone
 		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
 
 		// create objective
-		ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
+
+		ParamInstance par( so.info(), filename );
+
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->Evaluate();
+		result = obj->evaluate( par.values() );
 		auto duration = t.seconds();
 
 		// collect statistics
@@ -203,19 +207,18 @@ namespace scone
 	void SimulationObjectiveTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-		ParamSet par; // empty parameter set
 		const PropNode configProp = load_file_with_include( filename ) ;
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective
-		ObjectiveUP obj = CreateObjective( objProp, par );
+		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		// reset profiler
 		SCONE_PROFILE_RESET;
 
 		timer t;
-		double result = obj->Evaluate();
+		double result = obj->evaluate( ParamInstance( so.info() ).values() );
 		auto duration = t.seconds();
 
 		// collect statistics
@@ -237,7 +240,7 @@ namespace scone
 	{
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
-		ParamSet par; // empty parameter set
+		ParamInfo par; // empty parameter set
 		ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( int dof_val = -30; dof_val <= 30; dof_val += 5 )
@@ -264,7 +267,7 @@ namespace scone
 		PropNode props = load_file_with_include( "simulation_test.xml" );
 		props[ "Model" ].set( "Model.model_file", String( "f2354.osim" ) );
 
-		ParamSet par; // empty parameter set
+		ParamInfo par; // empty parameter set
 		ModelUP m = CreateModel( props.get_child( "Model" ), par );
 
 		for ( DofUP& dof : m->GetDofs() )

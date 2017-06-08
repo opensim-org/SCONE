@@ -13,16 +13,11 @@ using namespace scone;
 class TestObjective : public scone::Objective
 {
 public:
-	TestObjective( const PropNode& props, ParamSet& par ) : Objective( props, par ), num_params( 0 ), is_evaluating( false )
+	TestObjective( const PropNode& props ) : Objective( props ), num_params( 0 ), is_evaluating( false )
 	{
 		INIT_PROPERTY( props, num_params, 0 );
-		params.resize( num_params );
-	}
-
-	virtual void ProcessParameters( ParamSet& par ) override
-	{
-		for ( size_t i = 0; i < params.size(); ++i )
-			params[ i ] = par.GetMeanStd( stringf( "par%d", i), 1.0, 0.1, -1000.0, 1000.0 );
+		for ( size_t i = 0; i < num_params; ++i )
+			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
 	static double Rosenbrock( const std::vector< double >& v )
@@ -36,12 +31,14 @@ public:
 	}
 
 protected:
-	virtual double Evaluate() override
+	virtual double evaluate( const flut::par_vec& values ) const override
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
-		is_evaluating = true; 
-		double result = Rosenbrock( params );
+
+		is_evaluating = true;
+		double result = Rosenbrock( values );
 		is_evaluating = false;
+
 		return result;
 	}
 
@@ -50,7 +47,7 @@ protected:
 private:
 	int num_params;
 	std::vector< double > params;
-	bool is_evaluating;
+	mutable bool is_evaluating;
 };
 
 BOOST_AUTO_TEST_CASE( optimization_test )

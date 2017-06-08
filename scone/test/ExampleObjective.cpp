@@ -7,30 +7,25 @@
 
 namespace scone
 {
-	ExampleObjective::ExampleObjective( const PropNode& props, ParamSet& par ) :
-	Objective( props, par ),
+	ExampleObjective::ExampleObjective( const PropNode& props ) :
+	Objective( props ),
 	num_params( 0 ),
 	is_evaluating( false )
 	{
 		INIT_PROPERTY( props, num_params, 0 );
-		params.resize( num_params );
+		for ( size_t i = 0; i < num_params; ++i )
+			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
-	double ExampleObjective::Evaluate()
+	double ExampleObjective::evaluate( const flut::par_vec& values ) const
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
 
-		is_evaluating = true; 
-		double result = Rosenbrock( params );
+		is_evaluating = true;
+		double result = Rosenbrock( values );
 		is_evaluating = false;
 
 		return result;
-	}
-
-	void ExampleObjective::ProcessParameters( ParamSet& par )
-	{
-		for ( size_t i = 0; i < params.size(); ++i )
-			params[ i ] = par.GetMeanStd( stringf( "Param%d", i), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
 	double ExampleObjective::Rosenbrock( const std::vector< double >& v )

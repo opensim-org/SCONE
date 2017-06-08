@@ -7,16 +7,14 @@ namespace scone
 	class ExampleObjective : public Objective
 	{
 	public:
-		ExampleObjective( const PropNode& props, ParamSet& par );
-		virtual void ProcessParameters( ParamSet& par ) override;
+		ExampleObjective( const PropNode& props );
 		static double Rosenbrock( const std::vector< double >& v );
 
 	protected:
-		virtual double Evaluate() override;
+		virtual double evaluate( const flut::par_vec& values ) const override;
 
 	private:
 		int num_params;
-		std::vector< double > params;
-		bool is_evaluating;
+		mutable bool is_evaluating;
 	};
 }

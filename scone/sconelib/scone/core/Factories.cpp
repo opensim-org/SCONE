@@ -23,8 +23,7 @@
 #include "scone/core/Polynomial.h"
 #include "scone/model/simbody/Model_Simbody.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
-#include "scone/optimization/CmaOptimizerShark3.h"
-#include "scone/optimization/CmaOptimizerCCMAES.h"
+//#include "scone/optimization/CmaOptimizerShark3.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
 
@@ -115,14 +114,14 @@ namespace scone
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
-			g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
+			//g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	static flut::factory< Objective, const PropNode&, ParamSet& > g_ObjectiveFactory;
-	SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory()
+	static flut::factory< Objective, const PropNode& > g_ObjectiveFactory;
+	SCONE_API flut::factory< Objective, const PropNode& >& GetObjectiveFactory()
 	{
 		if ( g_ObjectiveFactory.empty() )
 		{
@@ -131,8 +130,8 @@ namespace scone
 		return g_ObjectiveFactory;
 	}
 
-	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par )
+	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop )
 	{
-		return GetObjectiveFactory()( prop.get< String >( "type" ), prop, par );
+		return GetObjectiveFactory()( prop.get< String >( "type" ), prop );
 	}
 }
