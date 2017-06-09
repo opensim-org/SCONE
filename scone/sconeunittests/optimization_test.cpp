@@ -4,8 +4,9 @@
 
 #include "scone/optimization/opt_tools.h"
 #include "scone/optimization/Objective.h"
-#include "scone/core/Factories.h"
 
+#include "scone/core/Factories.h"
+#include "scone/core/math.h"
 
 using namespace boost::filesystem;
 using namespace scone;

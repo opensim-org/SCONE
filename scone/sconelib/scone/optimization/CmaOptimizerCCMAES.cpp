@@ -5,6 +5,7 @@
 #include <numeric>
 #include <random>
 #include "flut/string_tools.hpp"
+#include "../core/math.h"
 
 using std::cout;
 using std::endl;
@@ -41,7 +42,7 @@ namespace scone
 		}
 
 		//flut::function_objective obj( dim, []( const flut::param_vec_t& p ) -> flut::fitness_t { flut_error( "No objective defined" ); return 0.0; } );
-		GetObjective().set_minimize( IsMinimizing() );
+		GetObjective().info().set_minimize( IsMinimizing() );
 
 		// init CMA object
 		flut::cma_optimizer cma( GetObjective(), m_Lambda, random_seed );
@@ -85,7 +86,7 @@ namespace scone
 			//	parsets[ ind_idx ].SetFreeParamValues( pop[ ind_idx ] );
 			//auto results = Evaluate( parsets );
 
-			auto current_best_it = GetObjective().maximize() ? flut::max_element( results ) : flut::min_element( results );
+			auto current_best_it = GetObjective().info().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;
 			auto current_avg_fitness = std::accumulate( results.begin(), results.end(), 0.0 ) / results.size();

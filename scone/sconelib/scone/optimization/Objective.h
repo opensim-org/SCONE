@@ -19,11 +19,5 @@ namespace scone
 
 		// write results and return all files written
 		virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
-
-		virtual bool minimize() const override { return minimize_; }
-		void set_minimize( bool m ) { minimize_ = m; }
-
-	private:
-		bool minimize_;
 	};
 }

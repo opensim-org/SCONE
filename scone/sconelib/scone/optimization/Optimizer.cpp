@@ -9,6 +9,7 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"
+#include "scone/core/math.h"
 
 #include "scone/optimization/Objective.h"
 

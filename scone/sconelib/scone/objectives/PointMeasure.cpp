@@ -2,6 +2,7 @@
 #include "scone/model/Model.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/math.h"
 
 namespace scone
 {

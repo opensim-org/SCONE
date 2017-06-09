@@ -2,6 +2,7 @@
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/math.h"
 #include "flut/pattern_matcher.hpp"
 
 namespace scone

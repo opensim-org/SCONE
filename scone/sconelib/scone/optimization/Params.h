@@ -3,11 +3,10 @@
 #include "scone/core/core.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
-#include "ParamInfo.h"
 #include <vector>
 #include <map>
-#include "flut/optimization/par_interface.hpp"
-#include "flut/optimization/par_instance.hpp"
+#include "flut/optimization/search_point.hpp"
+#include "flut/optimization/objective_info.hpp"
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PAR_.get_or( GetCleanVarName( #VAR_ ), PROP_.try_get_child( GetCleanVarName( #VAR_ ) ), DEFAULT_ )
@@ -23,9 +22,9 @@
 
 namespace scone
 {
-	using Params = flut::par_interface;
-	using ParamInstance = flut::par_instance;
-	using ParamInfo = flut::par_info;
+	using Params = flut::par_io;
+	using ParamInstance = flut::search_point;
+	using ParamInfo = flut::objective_info;
 
 	//class SCONE_API ParamSet
 	//{

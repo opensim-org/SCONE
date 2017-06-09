@@ -1,22 +1,26 @@
 #define SCONE_ENABLE_PROFILING
 
-#include <fstream>
-#include "scone/core/Profiler.h"
 #include "Test.h"
+
+#include <fstream>
+
+#include "scone/core/Profiler.h"
 #include "scone/controllers/cs_tools.h"
 #include "scone/optimization/Params.h"
 #include "scone/core/Factories.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"
-
-#include <boost/filesystem.hpp>
-#include "scone/optimization/opt_tools.h"
-#include "scone/objectives/SimulationObjective.h"
+#include "scone/core/math.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
+
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+
+#include "scone/optimization/opt_tools.h"
+#include "scone/objectives/SimulationObjective.h"
 #include "scone/model/sim_tools.h"
 #include "scone/model/Muscle.h"
-#include "boost/format.hpp"
 #include "scone/model/Dof.h"
 #include "scone/model/Side.h"
 #include "scone/model/simbody/Model_Simbody.h"
@@ -111,7 +115,7 @@ namespace scone
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->evaluate( par.make_mean_instance().values() );
+		result = obj->evaluate( ParamInstance( par ).values() );
 		auto duration = t.seconds();
 
 		// collect statistics

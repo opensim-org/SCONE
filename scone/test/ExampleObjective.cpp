@@ -1,9 +1,12 @@
 #include "ExampleObjective.h"
+
 #include "scone/core/Exception.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/propnode_tools.h"
-#include "scone/optimization/Params.h"
 #include "scone/core/string_tools.h"
+#include "scone/core/math.h"
+
+#include "scone/optimization/Params.h"
 
 namespace scone
 {

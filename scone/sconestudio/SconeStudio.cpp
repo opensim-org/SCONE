@@ -117,8 +117,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 }
 
 SconeStudio::~SconeStudio()
-{
-}
+{}
 
 void SconeStudio::runSimulation( const QString& filename )
 {

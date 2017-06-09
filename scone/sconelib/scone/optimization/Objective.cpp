@@ -4,8 +4,7 @@
 namespace scone
 {
 	Objective::Objective( const PropNode& props ) :
-	HasSignature( props ),
-	minimize_( true )
+	HasSignature( props )
 	{}
 
 	Objective::~Objective()

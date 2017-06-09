@@ -6,7 +6,7 @@
 	<use_init_file_std>1</use_init_file_std>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>GHFF2_spastic_gas_F20</signature_postfix>
+		<signature_postfix>GHFF2_spastic_gas_F30</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -18,8 +18,8 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<OpenSimParameters>
-				<Force name="gastroc*" property="max_isometric_force" value="0.2" scale="1"/>
-				<Force name="soleus*" property="max_isometric_force" value="0.2" scale="1"/>
+				<Force name="gastroc*" property="max_isometric_force" value="0.3" scale="1"/>
+				<Force name="soleus*" property="max_isometric_force" value="0.3" scale="1"/>
 			</OpenSimParameters>
 			<Controllers>
 				<Controller type="GaitStateController">

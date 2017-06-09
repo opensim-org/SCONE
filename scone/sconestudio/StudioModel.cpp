@@ -5,6 +5,7 @@
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/math.h"
 #include "scone/controllers/cs_tools.h"
 #include "scone/model/Muscle.h"
 
@@ -25,16 +26,7 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file or config file
-		if ( file.extension() == "par" )
-		{
-			so = CreateSimulationObjective( file.parent_path() / "config.xml" );
-			so->CreateModelFromParameters( ParamInstance( so->info(), file ) );
-		}
-		else
-		{
-			so = CreateSimulationObjective( file );
-			so->CreateModelFromParameters( ParamInstance( so->info() ) );
-		}
+		so = CreateSimulationObjective( file );
 
 		// accept filename and clear data
 		filename = file;

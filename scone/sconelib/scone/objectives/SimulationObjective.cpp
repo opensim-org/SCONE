@@ -21,12 +21,11 @@ namespace scone
 		INIT_PROPERTY( props, max_duration, 6000.0 );
 
 		// create model to flag unused model props and create par_info_
-		CreateModelFromParameters( par_info_ );
+		CreateModelFromParameters( info_ );
 	}
 
 	SimulationObjective::~SimulationObjective()
-	{
-	}
+	{}
 
 	void SimulationObjective::CreateModelFromParameters( Params& par )
 	{

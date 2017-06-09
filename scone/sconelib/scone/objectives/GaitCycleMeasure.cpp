@@ -1,5 +1,7 @@
 #include "GaitCycleMeasure.h"
+
 #include "scone/model/Model.h"
+#include "scone/core/math.h"
 
 namespace scone
 {

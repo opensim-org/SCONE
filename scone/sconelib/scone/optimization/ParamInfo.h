@@ -3,11 +3,11 @@
 #include "scone/core/core.h"
 #include "scone/core/math.h"
 #include "scone/core/PropNode.h"
-#include "flut/optimization/par_info.hpp"
+#include "flut/optimization/objective_info.hpp"
 
 namespace scone
 {
-	using ParamInfo = flut::par_info;
+	using ParamInfo = flut::objective_info;
 
 	//// TODO: rename to Param and store value as well. Why not?
 	//// One possible reason: we only need these for optimization, but not for the end result
