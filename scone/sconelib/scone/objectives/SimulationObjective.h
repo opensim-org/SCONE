@@ -24,7 +24,7 @@ namespace scone
 
 		double max_duration;
 
-		virtual fitness_t evaluate( const flut::par_vec& point ) const override;
+		virtual fitness_t evaluate( const ParamInstance& point ) const override;
 
 		void CreateModelFromParameters( Params& par );
 

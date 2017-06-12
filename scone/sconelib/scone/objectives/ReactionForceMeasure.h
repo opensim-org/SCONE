@@ -15,7 +15,7 @@ namespace scone
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
 
 	protected:
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 
 	private:
 		RangePenalty< Real > load_penalty;

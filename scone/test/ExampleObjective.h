@@ -11,7 +11,7 @@ namespace scone
 		static double Rosenbrock( const std::vector< double >& v );
 
 	protected:
-		virtual double evaluate( const flut::par_vec& values ) const override;
+		virtual double evaluate( const ParamInstance& values ) const override;
 
 	private:
 		int num_params;

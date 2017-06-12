@@ -42,10 +42,19 @@ namespace scone
 		return joint_count;
 	}
 
-	void Muscle::StoreData( Storage< Real >::Frame& frame )
+	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
-		frame[ GetName() + ".fiber_length" ] = GetNormalizedFiberLength();
-		frame[ GetName() + ".fiber_velocity" ] = GetNormalizedFiberVelocity();
-		frame[ GetName() + ".fiber_force" ] = GetNormalizedFiberForce();
+		if ( flags( StoreDataTypes::MuscleExcitation ) )
+			frame[ GetName() + ".excitation" ] = GetInput();
+
+		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
+			frame[ GetName() + ".activation" ] = GetActivation();
+
+		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
+		{
+			frame[ GetName() + ".fiber_length" ] = GetNormalizedFiberLength();
+			frame[ GetName() + ".fiber_velocity" ] = GetNormalizedFiberVelocity();
+			frame[ GetName() + ".fiber_force" ] = GetNormalizedFiberForce();
+		}
 	}
 }

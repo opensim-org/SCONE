@@ -65,7 +65,7 @@ namespace scone
 		ParamInstance par( so.info(), filename );
 
 		timer tmr;
-		double result = obj->evaluate( par.values() );
+		double result = obj->evaluate( par );
 		auto duration = tmr.seconds();
 
 		// collect statistics

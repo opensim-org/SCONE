@@ -20,12 +20,12 @@ namespace scone
 			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
-	double ExampleObjective::evaluate( const flut::par_vec& values ) const
+	double ExampleObjective::evaluate( const ParamInstance& values ) const
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
 
 		is_evaluating = true;
-		double result = Rosenbrock( values );
+		double result = Rosenbrock( values.values() );
 		is_evaluating = false;
 
 		return result;

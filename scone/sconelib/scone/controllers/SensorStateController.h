@@ -11,7 +11,7 @@ namespace scone
 
 		virtual size_t GetStateCount() const override { return m_States.size(); }
 		virtual const String& GetStateName( StateIndex i ) const override { return m_States[ i ].name; }
-		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 
 	protected:
 		virtual StateIndex GetCurrentState( Model& model, double timestamp ) override;

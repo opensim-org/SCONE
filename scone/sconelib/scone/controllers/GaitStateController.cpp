@@ -244,7 +244,7 @@ namespace scone
 		return s;
 	}
 
-	void GaitStateController::StoreData( Storage<Real>::Frame& frame )
+	void GaitStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		// store states
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
@@ -257,7 +257,7 @@ namespace scone
 		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
 		{
 			if ( cc->active )
-				cc->controller->StoreData( frame );
+				cc->controller->StoreData( frame, flags );
 		}
 	}
 

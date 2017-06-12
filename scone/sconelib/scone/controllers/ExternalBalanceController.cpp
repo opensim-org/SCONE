@@ -17,7 +17,7 @@ namespace scone
 		INIT_PARAM( props, par, angular_position_target, 0.0 );
 	}
 
-	void ExternalBalanceController::StoreData( Storage<Real>::Frame& frame )
+	void ExternalBalanceController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		double pitch_pos = flut::math::pitch( force_body.GetOrientation() ).rad_value();
 		double pitch_vel = force_body.GetAngVel().z;

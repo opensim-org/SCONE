@@ -24,7 +24,7 @@ namespace scone
 		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows, ShowAxes };
 		typedef flut::flag_set< ViewSettings > ViewFlags;
  
-		StudioModel( vis::scene &s, const path& filename );
+		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );

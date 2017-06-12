@@ -16,7 +16,7 @@ namespace scone
 		INIT_PROP( props, start_time, 0.0 );
 	}
 
-	void PerturbationController::StoreData( Storage<Real>::Frame& frame )
+	void PerturbationController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 	}
 

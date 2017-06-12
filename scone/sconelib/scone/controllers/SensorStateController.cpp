@@ -28,9 +28,9 @@ namespace scone
 		UpdateCurrentState( model, 0.0 );
 	}
 
-	void SensorStateController::StoreData( Storage<Real>::Frame& frame )
+	void SensorStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
-		StateController::StoreData( frame );
+		StateController::StoreData( frame, flags );
 		frame[ "ssc_current_state" ] = (double)m_CurrentState;
 		for ( size_t idx = 0; idx < m_States.size(); ++idx )
 		{

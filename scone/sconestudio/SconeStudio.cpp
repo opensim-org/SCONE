@@ -123,25 +123,16 @@ void SconeStudio::runSimulation( const QString& filename )
 {
 	try
 	{
-		showViewer();
-		ui.playControl->stop();
-		ui.playControl->reset();
 		manager.CreateModel( filename.toStdString() );
 		updateViewSettings();
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
+
 		storageModel.setStorage( &manager.GetModel().GetData() );
 		analysisView->reset();
 
 		if ( manager.IsEvaluating() )
-		{
-			ui.playControl->setDisabled( true );
 			evaluate();
-		}
 
 		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->setDisabled( false );
-		ui.playControl->reset();
-		ui.playControl->play();
 	}
 	catch ( std::exception& e )
 	{
@@ -152,7 +143,10 @@ void SconeStudio::runSimulation( const QString& filename )
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+	showViewer();
+	ui.playControl->reset();
 	runSimulation( currentParFile );
+	ui.playControl->play();
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )

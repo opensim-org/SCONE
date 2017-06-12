@@ -17,7 +17,7 @@ namespace bfs = boost::filesystem;
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene &s, const path& file ) :
+	StudioModel::StudioModel( vis::scene &s, const path& file, bool force_evaluation ) :
 	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
@@ -33,7 +33,7 @@ namespace scone
 
 		// see if we can load a matching .sto file
 		auto sto_file = bfs::path( file.str() ).replace_extension( "sto" );
-		if ( bfs::exists( sto_file ) && filename.extension() == "par" )
+		if ( !force_evaluation && bfs::exists( sto_file ) && filename.extension() == "par" )
 		{
 			flut::timer t;
 			log::info( "Reading ", sto_file.string() );
@@ -194,7 +194,7 @@ namespace scone
 	{
 		so->GetModel().SetStoreData( true );
 		so->GetModel().SetThreadSafeSimulation( true );
-		so->evaluate( ParamInstance( so->info() ).values() );
+		so->evaluate( ParamInstance( so->info() ) );
 
 		PropNode results;
 		results.set( "result", so->GetMeasure().GetReport() );

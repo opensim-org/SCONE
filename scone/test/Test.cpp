@@ -115,7 +115,7 @@ namespace scone
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->evaluate( ParamInstance( par ).values() );
+		result = obj->evaluate( ParamInstance( par ) );
 		auto duration = t.seconds();
 
 		// collect statistics
@@ -190,7 +190,7 @@ namespace scone
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->evaluate( par.values() );
+		result = obj->evaluate( par );
 		auto duration = t.seconds();
 
 		// collect statistics
@@ -222,7 +222,7 @@ namespace scone
 		SCONE_PROFILE_RESET;
 
 		timer t;
-		double result = obj->evaluate( ParamInstance( so.info() ).values() );
+		double result = obj->evaluate( ParamInstance( so.info() ) );
 		auto duration = t.seconds();
 
 		// collect statistics

@@ -18,7 +18,7 @@ namespace scone
 
 	protected:
 		virtual String GetClassSignature() const override;
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 
 	private:
 		String body;

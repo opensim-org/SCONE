@@ -91,7 +91,7 @@ namespace scone
 #endif
 	}
 
-	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
+	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		if ( m_pLengthSensor )
 			frame[ name + ".length_feedback" ] = u_l;

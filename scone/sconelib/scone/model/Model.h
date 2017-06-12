@@ -42,7 +42,6 @@ namespace scone
 		const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 		/// Sensor access
-		//std::vector< ChannelSensor* >& GetChannelSensors() { return m_ChannelSensors; }
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 		/// link access
@@ -147,6 +146,7 @@ namespace scone
 
 		virtual void SetStoreData( bool store ) { m_StoreData = store; }
 		virtual bool GetStoreData() { return m_StoreData; }
+		void SetStoreDataFlag( StoreDataTypes flag, bool value = true ) { m_StoreDataFlags.set( flag, value ); }
 
 		void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
 		bool GetThreadSafeSimulation() { return thread_safe_simulation; }
@@ -158,7 +158,7 @@ namespace scone
 		void UpdateSensorDelayAdapters();
 		void CreateBalanceSensors( const PropNode& props, Params& par );
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 		virtual void StoreCurrentFrame();
 
 	protected:
@@ -184,6 +184,7 @@ namespace scone
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;
 		bool m_StoreData;
+		StoreDataFlags m_StoreDataFlags;
 
 		// thread safety stuff
 		bool thread_safe_simulation;

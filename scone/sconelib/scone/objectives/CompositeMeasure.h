@@ -35,7 +35,7 @@ namespace scone
 		CompositeMeasure( CompositeMeasure& other );
 		CompositeMeasure& operator=( CompositeMeasure& other );
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 
 		std::vector< Term > m_Terms;
 		std::vector< MeasureUP > m_Measures;

@@ -52,10 +52,10 @@ namespace scone
 		return files;
 	}
 
-	scone::fitness_t SimulationObjective::evaluate( const flut::par_vec& point ) const
+	scone::fitness_t SimulationObjective::evaluate( const ParamInstance& point ) const
 	{
 		// WARNING: this function is thread-safe and should only access local variables
-		auto model = CreateModel( m_ModelProps, ParamInstance( info(), point ) );
+		auto model = CreateModel( m_ModelProps, ParamInstance( point ) );
 		auto& controllers = model->GetControllers();
 		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
 		auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );

@@ -25,6 +25,7 @@ namespace scone
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass, StoreDataTypes::ControllerData } ),
 		thread_safe_simulation( false )
 	{
 		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
@@ -112,77 +113,66 @@ namespace scone
 		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
-	void Model::StoreData( Storage< Real >::Frame& frame )
+	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// store states
-		for ( size_t i = 0; i < GetState().GetSize(); ++i )
-			frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
+		if ( flags( StoreDataTypes::State ) )
+		{
+			for ( size_t i = 0; i < GetState().GetSize(); ++i )
+				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
+		}
 
 		// store muscle data
 		for ( MuscleUP& m : GetMuscles() )
-			m->StoreData( frame );
+			m->StoreData( frame, flags );
 
 		// store COP data
-		auto com = GetComPos();
-		auto com_u = GetComVel();
-		frame[ "com_x" ] = com.x;
-		frame[ "com_y" ] = com.y;
-		frame[ "com_z" ] = com.z;
-		frame[ "com_x_u" ] = com_u.x;
-		frame[ "com_y_u" ] = com_u.y;
-		frame[ "com_z_u" ] = com_u.z;
+		if ( flags( StoreDataTypes::CenterOfMass ) )
+		{
+			auto com = GetComPos();
+			auto com_u = GetComVel();
+			frame[ "com_x" ] = com.x;
+			frame[ "com_y" ] = com.y;
+			frame[ "com_z" ] = com.z;
+			frame[ "com_x_u" ] = com_u.x;
+			frame[ "com_y_u" ] = com_u.y;
+			frame[ "com_z_u" ] = com_u.z;
+		}
 
 		// store GRF data (measured in BW)
-		for ( auto& leg : GetLegs() )
+		if ( flags( StoreDataTypes::GroundReactionForce ) )
 		{
-			auto grf = leg->GetContactForce() / GetBW();
-			frame[ leg->GetName() + ".grf_x" ] = grf.x;
-			frame[ leg->GetName() + ".grf_y" ] = grf.y;
-			frame[ leg->GetName() + ".grf_z" ] = grf.z;
+			for ( auto& leg : GetLegs() )
+			{
+				auto grf = leg->GetContactForce() / GetBW();
+				frame[ leg->GetName() + ".grf_x" ] = grf.x;
+				frame[ leg->GetName() + ".grf_y" ] = grf.y;
+				frame[ leg->GetName() + ".grf_z" ] = grf.z;
+			}
+
 		}
 
 		// store joint reaction force magnitude
-		for ( auto& joint : GetJoints() )
-			frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+		if ( flags( StoreDataTypes::JointReactionForce ) )
+		{
+			for ( auto& joint : GetJoints() )
+				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+		}
 
 		// store controller data
-		for ( ControllerUP& c : GetControllers() )
-			c->StoreData( frame );
-
-		// store external forces (should be part of state)
-		//for ( auto& b : GetBodies() )
-		//{
-		//	auto f = b->GetExternalForce();
-		//	frame[ b->GetName() + ".force_x" ] = f.x;
-		//	frame[ b->GetName() + ".force_y" ] = f.y;
-		//	frame[ b->GetName() + ".force_z" ] = f.z;
-
-		//	auto p = b->GetExternalForcePoint();
-		//	frame[ b->GetName() + ".force_point_x" ] = p.x;
-		//	frame[ b->GetName() + ".force_point_y" ] = p.y;
-		//	frame[ b->GetName() + ".force_point_z" ] = p.z;
-
-		//	auto t = b->GetExternalTorque();
-		//	frame[ b->GetName() + ".torque_x" ] = t.x;
-		//	frame[ b->GetName() + ".torque_y" ] = t.y;
-		//	frame[ b->GetName() + ".torque_z" ] = t.z;
-		//}
-
-		// store all force data (measured in BW)
-		//for ( auto& body : GetBodies() )
-		//{
-		//	const auto& forces = body->GetContactForceValues();
-		//	for ( size_t i = 0; i < forces.size(); ++i )
-		//		frame[ body->GetName() + '.' + body->GetContactForceLabels()[ i ] ] = forces[ i ] / GetBW();
-		//}
+		if ( flags( StoreDataTypes::ControllerData ) )
+		{
+			for ( ControllerUP& c : GetControllers() )
+				c->StoreData( frame, flags );
+		}
 	}
 
 	void Model::StoreCurrentFrame()
 	{
 		m_Data.AddFrame( GetTime() );
-		StoreData( m_Data.Back() );
+		StoreData( m_Data.Back(), m_StoreDataFlags );
 	}
 
 	void Model::UpdateControlValues()

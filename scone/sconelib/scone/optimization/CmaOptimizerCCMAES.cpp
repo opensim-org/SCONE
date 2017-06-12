@@ -78,7 +78,6 @@ namespace scone
 
 			// sample parameter sets
 			auto& pop = cma.sample_population();
-
 			auto results = cma.evaluate( pop );
 
 			//std::vector< ParamSet > parsets( m_Lambda, par );
@@ -114,7 +113,7 @@ namespace scone
 				// copy best solution to par
 				ParamInfo parinf( GetObjective().info() );
 				parinf.set_mean_std( cma.current_mean(), cma.current_std() );
-				ParamInstance par( parinf, pop[ current_best_idx ] );
+				ParamInstance par( parinf, pop[ current_best_idx ].values() );
 
 				m_LastFileOutputGen = gen;
 

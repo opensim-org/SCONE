@@ -20,7 +20,7 @@ namespace scone
 		double angular_position_target;
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
-		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

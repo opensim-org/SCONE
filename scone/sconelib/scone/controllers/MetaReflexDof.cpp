@@ -78,7 +78,7 @@ namespace scone
 		return local_balance;
 	}
 
-	void MetaReflexDof::StoreData( Storage< Real >::Frame& frame )
+	void MetaReflexDof::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 	}
 

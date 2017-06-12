@@ -62,8 +62,6 @@ public slots:
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
-	void viewResults( bool v ) { if ( v ) ui.resultsDock->show(); else ui.resultsDock->hide(); }
-	void viewMessages( bool v ) { if ( v ) ui.messagesDock->show(); else ui.messagesDock->hide(); }
 	void fixViewCheckboxes();
 	void updateTabTitles();
 

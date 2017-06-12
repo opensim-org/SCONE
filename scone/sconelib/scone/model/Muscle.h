@@ -60,6 +60,6 @@ namespace scone
 		// count the number of joints this muscle crosses
 		virtual Count GetJointCount() const;
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
 	};
 }

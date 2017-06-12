@@ -32,12 +32,12 @@ public:
 	}
 
 protected:
-	virtual double evaluate( const flut::par_vec& values ) const override
+	virtual double evaluate( const ParamInstance& values ) const override
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
 
 		is_evaluating = true;
-		double result = Rosenbrock( values );
+		double result = Rosenbrock( values.values() );
 		is_evaluating = false;
 
 		return result;
