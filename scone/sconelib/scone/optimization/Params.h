@@ -5,8 +5,8 @@
 #include "scone/core/system_tools.h"
 #include <vector>
 #include <map>
-#include "flut/optimization/search_point.hpp"
-#include "flut/optimization/objective_info.hpp"
+#include "spot/search_point.h"
+#include "spot/objective_info.h"
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
 	VAR_ = PAR_.get_or( GetCleanVarName( #VAR_ ), PROP_.try_get_child( GetCleanVarName( #VAR_ ) ), DEFAULT_ )
@@ -22,9 +22,9 @@
 
 namespace scone
 {
-	using Params = flut::par_io;
-	using ParamInstance = flut::search_point;
-	using ParamInfo = flut::objective_info;
+	using Params = spot::par_io;
+	using ParamInstance = spot::search_point;
+	using ParamInfo = spot::objective_info;
 
 	//class SCONE_API ParamSet
 	//{

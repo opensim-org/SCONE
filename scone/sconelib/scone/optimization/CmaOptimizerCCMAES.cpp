@@ -1,6 +1,6 @@
 #include "CmaOptimizerCCMAES.h"
 #include "flut/timer.hpp"
-#include "flut/optimization/cma_optimizer.hpp"
+#include "spot/cma_optimizer.h"
 #include "flut/container_tools.hpp"
 #include <numeric>
 #include <random>
@@ -45,7 +45,7 @@ namespace scone
 		GetObjective().info().set_minimize( IsMinimizing() );
 
 		// init CMA object
-		flut::cma_optimizer cma( GetObjective(), m_Lambda, random_seed );
+		spot::cma_optimizer cma( GetObjective(), m_Lambda, random_seed );
 		m_Lambda = cma.lambda();
 		m_Mu = cma.mu();
 		m_Sigma = cma.sigma();

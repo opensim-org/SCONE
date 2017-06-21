@@ -3,15 +3,13 @@
 #include "Params.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
-#include "flut/optimization/objective.hpp"
+#include "spot/objective.h"
 
 namespace scone
 {
-	using flut::fitness_t;
-	using std::vector;
-	using std::string;
+	using spot::fitness_t;
 
-	class SCONE_API Objective : public HasSignature, public flut::objective
+	class SCONE_API Objective : public HasSignature, public spot::objective
 	{
 	public:
 		Objective( const PropNode& props );
