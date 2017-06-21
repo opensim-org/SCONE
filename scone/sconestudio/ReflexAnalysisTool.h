@@ -1,11 +1,11 @@
 #pragma once
 
 #include "scone/core/Storage.h"
-#include "flut/optimization/objective.hpp"
+#include "spot/objective.h"
 
 namespace scone
 {
-	class ReflexAnalysisTool : public flut::objective
+	class ReflexAnalysisTool : public spot::objective
 	{
 	public:
 		ReflexAnalysisTool( const Storage< Real >& data ) {}

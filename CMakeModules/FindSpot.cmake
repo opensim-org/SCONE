@@ -7,8 +7,8 @@ find_path(SPOT_INCLUDE_DIR
 
 # This CMake-supplied script provides standard error handling.
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(FLUT
-    FAIL_MESSAGE "Could NOT find FLUT. Set FLUT_INCLUDE_DIR to the FLUT directory."
+find_package_handle_standard_args(SPOT
+    FAIL_MESSAGE "Could NOT find SPOT. Set SPOT_INCLUDE_DIR manually."
     REQUIRED_VARS SPOT_INCLUDE_DIR
     )
     
