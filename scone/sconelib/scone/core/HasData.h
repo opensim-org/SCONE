@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Storage.h"
+#include "flut/flag_set.hpp"
 
 namespace scone
 {

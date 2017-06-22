@@ -2,6 +2,7 @@
 
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
+#include "scone/core/Storage.h"
 #include "flut/circular_deque.hpp"
 
 namespace scone
