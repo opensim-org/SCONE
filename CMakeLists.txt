@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # find flut include path
 find_package(Flut REQUIRED)
+find_package(Spot REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
 find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
