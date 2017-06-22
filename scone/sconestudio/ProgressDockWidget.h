@@ -34,10 +34,12 @@ public:
 	float lowest;
 	float cur_best;
 	float cur_avg;
+	float cur_med;
 	int generation;
 	int max_generations;
 	QVector< double > bestvec;
 	QVector< double > avgvec;
+	QVector< double > medvec;
 	QVector< double > genvec;
 
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };

@@ -46,14 +46,20 @@ state( StartingState )
 	ui.plot->addGraph();
 	ui.plot->graph( 0 )->setPen( QPen( QColor( 0, 100, 255 ) ) );
 	ui.plot->graph( 0 )->setLineStyle( QCPGraph::lsLine );
-	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 	ui.plot->graph( 0 )->setName( "Best fitness" );
+	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
 	ui.plot->addGraph();
-	ui.plot->graph( 1 )->setPen( QPen( QColor( 255, 100, 0 ), 1, Qt::DashLine ) );
+	ui.plot->graph( 1 )->setPen( QPen( QColor( 50, 192, 0 ), 1, Qt::DashLine ) );
 	ui.plot->graph( 1 )->setLineStyle( QCPGraph::lsLine );
+	ui.plot->graph( 1 )->setName( "Median fitness" );
 	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-	ui.plot->graph( 1 )->setName( "Average fitness" );
+
+	ui.plot->addGraph();
+	ui.plot->graph( 2 )->setPen( QPen( QColor( 255, 100, 0 ), 1, Qt::DashLine ) );
+	ui.plot->graph( 2 )->setLineStyle( QCPGraph::lsLine );
+	ui.plot->graph( 2 )->setName( "Average fitness" );
+	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
 	ui.plot->xAxis->setRange( 0, 8 );
 	ui.plot->xAxis->setAutoTickCount( 7 );
@@ -122,15 +128,18 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		}
 		else if ( kvp.first == "generation" )
 		{
-			flut::scan_str( kvp.second, generation, cur_avg, cur_best );
+			flut::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg );
 			avgvec.push_back( cur_avg );
 			bestvec.push_back( cur_best );
+			medvec.push_back( cur_med );
 			genvec.push_back( generation );
 			highest = std::max( highest, std::max( cur_best, cur_avg ) );
 			lowest = std::min( lowest, std::min( cur_best, cur_avg ) );
 			updateText();
+
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
-			ui.plot->graph( 1 )->setData( genvec, avgvec );
+			ui.plot->graph( 1 )->setData( genvec, medvec );
+			ui.plot->graph( 2 )->setData( genvec, avgvec );
 			ui.plot->xAxis->setRange( 0, std::max( 8, generation ) );
 			ui.plot->xAxis->setAutoTickCount( 7 );
 

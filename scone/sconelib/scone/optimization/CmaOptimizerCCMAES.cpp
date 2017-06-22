@@ -88,14 +88,15 @@ namespace scone
 			auto current_best_it = GetObjective().info().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;
-			auto current_avg_fitness = std::accumulate( results.begin(), results.end(), 0.0 ) / results.size();
+			auto current_avg_fitness = flut::average( results );
+			auto current_med_fitness = flut::median( results );
 
 			// report results
 			if ( GetProgressOutput() )
 				printf( " A=%.3f", current_avg_fitness );
 
 			if ( GetStatusOutput() )
-				OutputStatus( "generation", flut::stringf( "%d %f %f", gen, current_avg_fitness, current_best ) );
+				OutputStatus( "generation", flut::stringf( "%d %f %f %f", gen, current_best, current_med_fitness, current_avg_fitness ) );
 
 			bool new_best = IsBetterThan( current_best, m_BestFitness );
 			if ( new_best )
