@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 			// apply command line settings (parameter 2 and further)
 			for ( auto kvstring : propArg )
 			{
-				auto kvp = flut::key_value_str( kvstring );
+				auto kvp = flut::make_key_value_str( kvstring );
 				props.set_delimited( kvp.first, kvp.second, '.' );
 			}
 

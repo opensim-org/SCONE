@@ -133,20 +133,18 @@ namespace scone
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 		Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
 
-
-		template< typename SensorT, typename... Args >
-		SensorDelayAdapter& AcquireDelayedSensor( Args&&... args ) {
-			return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) );
-		}
+		template< typename SensorT, typename... Args > SensorDelayAdapter& AcquireDelayedSensor( Args&&... args )
+		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
 		Real sensor_delay_scaling_factor;
 		Real balance_sensor_ori_vel_gain;
 		Real balance_sensor_delay;
 		Vec3 GetDelayedOrientation();
 
-		virtual void SetStoreData( bool store ) { m_StoreData = store; }
-		virtual bool GetStoreData() { return m_StoreData; }
-		void SetStoreDataFlag( StoreDataTypes flag, bool value = true ) { m_StoreDataFlags.set( flag, value ); }
+		void SetStoreData( bool store ) { m_StoreData = store; }
+		bool GetStoreData() const { return m_StoreData; }
+		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
+		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
 		void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
 		bool GetThreadSafeSimulation() { return thread_safe_simulation; }

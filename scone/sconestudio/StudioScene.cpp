@@ -17,10 +17,10 @@ namespace scone
 
 	StudioScene::~StudioScene() { }
 
-	scone::StudioModel& StudioScene::CreateModel( const String& par_file )
+	scone::StudioModel& StudioScene::CreateModel( const String& par_file, bool force_evaluation )
 	{
 		model.reset();
-		model = StudioModelUP( new StudioModel( scene, par_file ) );
+		model = StudioModelUP( new StudioModel( scene, par_file, force_evaluation ) );
 		return *model;
 	}
 

@@ -9,7 +9,7 @@ namespace scone
 	{
 		// write data
 		str << "time";
-		for ( const String& label : storage.GetLables() )
+		for ( const String& label : storage.GetLabels() )
 			str << "\t" << label;
 		str << std::endl;
 

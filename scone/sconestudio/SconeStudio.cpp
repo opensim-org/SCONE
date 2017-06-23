@@ -18,6 +18,8 @@
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
 #include "scone/core/Profiler.h"
+#include "ReflexAnalysisObjective.h"
+#include "spot/cma_optimizer.h"
 
 using namespace scone;
 using namespace std;
@@ -42,6 +44,7 @@ captureProcess( nullptr )
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Capture &Image", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
+	addMenuAction( toolsMenu, "Perform &Reflex Analysis", this, &SconeStudio::performReflexAnalysis, QKeySequence(), true );
 	addMenuAction( toolsMenu, "&Preferences", this, &SconeStudio::showSettingsDialog );
 
 	// create window menu
@@ -181,6 +184,7 @@ void SconeStudio::evaluate()
 	SCONE_PROFILE_RESET;
 	const double step_size = 0.05;
 	int vis_step = 0;
+	flut::timer real_time;
 	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
 	{
 		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
@@ -195,6 +199,12 @@ void SconeStudio::evaluate()
 	}
 	ui.progressBar->setValue( 100 );
 	manager.Update( manager.GetMaxTime(), true );
+
+	// report duration
+	auto real_dur = real_time.seconds();
+	auto sim_time = manager.GetModel().GetTime();
+	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+
 	ui.stackedWidget->setCurrentIndex( 0 );
 
 	log::info( SCONE_PROFILE_REPORT );
@@ -513,6 +523,34 @@ void SconeStudio::updateTabTitles()
 {
 	for ( auto s : scenarios )
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+}
+
+void SconeStudio::performReflexAnalysis()
+{
+	if ( currentParFile.isEmpty() )
+	{
+		QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
+		return;
+	}
+
+	manager.CreateModel( currentParFile.toStdString(), true );
+	updateViewSettings();
+
+	manager.GetModel().GetSimModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
+	storageModel.setStorage( &manager.GetModel().GetData() );
+
+	evaluate();
+	ui.playControl->setRange( 0, manager.GetMaxTime() );
+
+	ReflexAnalysisObjective reflex_analysis( manager.GetModel().GetData() );
+	spot::cma_optimizer cma( reflex_analysis );
+
+	log::info( "Starting optimization" );
+	for ( int i = 0; i < 500; ++i )
+	{
+		cma.step();
+		printf( "fitness=%.3f\n", cma.current_best_fitness() );
+	}
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()

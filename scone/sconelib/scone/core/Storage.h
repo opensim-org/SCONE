@@ -93,6 +93,13 @@ namespace scone
 		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 
+		std::vector< ValueT > GetChannelData( Index idx ) const {
+			std::vector< ValueT > result( GetFrameCount() );
+			for ( Index f = 0; f < GetFrameCount(); ++f )
+				result[ f ] = GetFrame( f )[ idx ];
+			return result;
+		}
+
 		size_t GetFrameCount() const { return m_Data.size(); }
 
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
@@ -112,7 +119,7 @@ namespace scone
 		}
 
 		size_t GetChannelCount() const { return m_Labels.size(); }
-		const std::vector< String >& GetLables() const { return m_Labels; }
+		const std::vector< String >& GetLabels() const { return m_Labels; }
 		const std::vector< FrameUP >& GetData() const { return m_Data; }
 
 		ValueT GetInterpolatedValue( TimeT time, Index idx ) const {

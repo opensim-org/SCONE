@@ -40,6 +40,7 @@ namespace scone
 		SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating; }
+		TimeInSeconds GetTime() const { return so->GetModel().GetTime(); }
 
 		void SetViewSetting( ViewSettings e, bool value );
 		void ApplyViewSettings( const ViewFlags& f );

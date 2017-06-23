@@ -64,6 +64,7 @@ public slots:
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void fixViewCheckboxes();
 	void updateTabTitles();
+	void performReflexAnalysis();
 
 public:
 	bool close_all;

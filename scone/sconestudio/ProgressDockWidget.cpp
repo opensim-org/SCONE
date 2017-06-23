@@ -112,7 +112,7 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
 
-		auto kvp = flut::key_value_str( s.substr( 1 ) );
+		auto kvp = flut::make_key_value_str( s.substr( 1 ) );
 		if ( kvp.first == "folder" )
 		{
 			name = make_qt( flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) ) );

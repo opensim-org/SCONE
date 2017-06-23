@@ -12,7 +12,7 @@ namespace scone
 		StudioScene();
 		virtual ~StudioScene();
 
-		StudioModel& CreateModel( const String& par_file );
+		StudioModel& CreateModel( const String& par_file, bool force_evaluation = false );
 		StudioModel& GetModel() { return *model; }
 
 		void Update( TimeInSeconds t, bool update_vis );

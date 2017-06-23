@@ -103,8 +103,6 @@ namespace scone
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 		void ClearBodyForces();
 
-		virtual void SetStoreData( bool store ) override;
-
 		String integration_method;
 		double integration_accuracy;
 		double max_step_size;

@@ -148,7 +148,7 @@ set(OPT_API_FILES
     scone/optimization/opt_tools.h
     )
 set(OPT_SYSTEM_FILES
-	scone/optimization/SharkHelperClasses.h
+#	scone/optimization/SharkHelperClasses.h
 	scone/optimization/opt_config.h
     )
 	

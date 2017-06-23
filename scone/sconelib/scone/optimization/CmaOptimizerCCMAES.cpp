@@ -32,14 +32,10 @@ namespace scone
 
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
-		{
 			GetObjective().info().import_mean_std( init_file, use_init_file_std );
-		}
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
-		{
 			GetObjective().info().set_global_std( global_std_factor, global_std_offset );
-		}
 
 		//flut::function_objective obj( dim, []( const flut::param_vec_t& p ) -> flut::fitness_t { flut_error( "No objective defined" ); return 0.0; } );
 		GetObjective().info().set_minimize( IsMinimizing() );
@@ -80,11 +76,7 @@ namespace scone
 			auto& pop = cma.sample_population();
 			auto results = cma.evaluate( pop );
 
-			//std::vector< ParamSet > parsets( m_Lambda, par );
-			//for ( size_t ind_idx = 0; ind_idx < m_Lambda; ++ind_idx )
-			//	parsets[ ind_idx ].SetFreeParamValues( pop[ ind_idx ] );
-			//auto results = Evaluate( parsets );
-
+			// analyze results
 			auto current_best_it = GetObjective().info().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;

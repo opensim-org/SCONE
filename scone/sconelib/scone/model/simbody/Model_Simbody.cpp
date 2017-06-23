@@ -195,7 +195,7 @@ namespace scone
 
 		// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 		m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
-		m_pOsimManager->setWriteToStorage( GetStoreData() );
+		m_pOsimManager->setWriteToStorage( false );
 		m_pOsimManager->setPerformAnalyses( false );
 		m_pOsimManager->setInitialTime( 0.0 );
 
@@ -721,12 +721,6 @@ namespace scone
 			log::WarningF( "Could not fix initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 		else
 			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
-	}
-
-	void Model_Simbody::SetStoreData( bool store )
-	{
-		Model::SetStoreData( store );
-		m_pOsimManager->setWriteToStorage( store );
 	}
 
 	void Model_Simbody::SetTkState( const State& s )
