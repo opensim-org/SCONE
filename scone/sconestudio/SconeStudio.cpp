@@ -21,6 +21,7 @@
 #include "ReflexAnalysisObjective.h"
 #include "spot/cma_optimizer.h"
 #include "spot/console_reporter.h"
+#include "spot/file_reporter.h"
 
 using namespace scone;
 using namespace std;
@@ -527,29 +528,6 @@ void SconeStudio::updateTabTitles()
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 }
 
-void SconeStudio::performReflexAnalysis()
-{
-	if ( currentParFile.isEmpty() )
-		return (void)QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
-
-	path par_file( currentParFile.toStdString() );
-
-	manager.CreateModel( par_file.str(), true );
-	updateViewSettings();
-	manager.GetModel().GetSimModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
-	storageModel.setStorage( &manager.GetModel().GetData() );
-	evaluate();
-	ui.playControl->setRange( 0, manager.GetMaxTime() );
-
-	ReflexAnalysisObjective reflex_analysis( manager.GetModel().GetData() );
-	spot::console_reporter rep( 0, 2 );
-	spot::cma_optimizer cma( reflex_analysis );
-	cma.set_max_threads( 32 );
-	cma.add_reporter( &rep );
-	cma.run( 5000 );
-	reflex_analysis.save_report( par_file.replace_extension( "reflex_analysis" ), cma.current_best() );
-}
-
 QCodeEditor* SconeStudio::getActiveScenario()
 {
 	for ( auto edw : scenarios )
@@ -605,4 +583,34 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 	cfg.setValue( "recentFiles", recentFiles );
 
 	QMainWindow::closeEvent( e );
+}
+
+void SconeStudio::performReflexAnalysis()
+{
+	if ( currentParFile.isEmpty() )
+		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
+
+	path par_file( currentParFile.toStdString() );
+
+	manager.CreateModel( par_file.str() );
+	updateViewSettings();
+	if ( manager.IsEvaluating() )
+	{
+		manager.GetModel().GetSimModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
+		storageModel.setStorage( &manager.GetModel().GetData() );
+		analysisView->reset();
+
+		evaluate();
+	}
+	ui.playControl->setRange( 0, manager.GetMaxTime() );
+
+	ReflexAnalysisObjective reflex_objective( manager.GetModel().GetData(), "use_force=1;use_length=1;use_velocity=0" );
+	spot::console_reporter crep( 0, 2 );
+	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
+	spot::cma_optimizer cma( reflex_objective );
+	cma.set_max_threads( 32 );
+	cma.add_reporter( &crep );
+	cma.add_reporter( &frep );
+	cma.run( 3000 );
+	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best() );
 }

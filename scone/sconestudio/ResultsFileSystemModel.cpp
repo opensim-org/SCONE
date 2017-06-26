@@ -4,7 +4,7 @@
 #include "QDirIterator"
 #include <iostream>
 #include "flut/prop_node_tools.hpp"
-#include "flut/error_code.h"
+#include "flut/system/error_code.hpp"
 #include "scone/core/Log.h"
 
 ResultsFileSystemModel::ResultsFileSystemModel( QObject* parent ) : QFileSystemModel( parent )

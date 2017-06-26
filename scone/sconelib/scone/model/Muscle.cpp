@@ -3,6 +3,7 @@
 #include "Link.h"
 #include "Joint.h"
 #include "Dof.h"
+#include "flut/math/math.hpp"
 
 #pragma warning( disable: 4355 )
 
@@ -45,7 +46,7 @@ namespace scone
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		if ( flags( StoreDataTypes::MuscleExcitation ) )
-			frame[ GetName() + ".excitation" ] = GetInput();
+			frame[ GetName() + ".excitation" ] = flut::math::clamped( GetInput(), 0.0, 1.0 );
 
 		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
 			frame[ GetName() + ".activation" ] = GetActivation();
