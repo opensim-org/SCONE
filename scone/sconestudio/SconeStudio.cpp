@@ -20,6 +20,7 @@
 #include "scone/core/Profiler.h"
 #include "ReflexAnalysisObjective.h"
 #include "spot/cma_optimizer.h"
+#include "spot/console_reporter.h"
 
 using namespace scone;
 using namespace std;
@@ -176,6 +177,7 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
+	ui.playControl->reset();
 	ui.abortButton->setChecked( false );
 	ui.progressBar->setValue( 0 );
 	ui.progressBar->setFormat( " Evaluating (%p%)" );
@@ -528,29 +530,24 @@ void SconeStudio::updateTabTitles()
 void SconeStudio::performReflexAnalysis()
 {
 	if ( currentParFile.isEmpty() )
-	{
-		QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
-		return;
-	}
+		return (void)QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
 
-	manager.CreateModel( currentParFile.toStdString(), true );
+	path par_file( currentParFile.toStdString() );
+
+	manager.CreateModel( par_file.str(), true );
 	updateViewSettings();
-
 	manager.GetModel().GetSimModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
 	storageModel.setStorage( &manager.GetModel().GetData() );
-
 	evaluate();
 	ui.playControl->setRange( 0, manager.GetMaxTime() );
 
 	ReflexAnalysisObjective reflex_analysis( manager.GetModel().GetData() );
+	spot::console_reporter rep( 0, 2 );
 	spot::cma_optimizer cma( reflex_analysis );
-
-	log::info( "Starting optimization" );
-	for ( int i = 0; i < 500; ++i )
-	{
-		cma.step();
-		printf( "fitness=%.3f\n", cma.current_best_fitness() );
-	}
+	cma.set_max_threads( 32 );
+	cma.add_reporter( &rep );
+	cma.run( 5000 );
+	reflex_analysis.save_report( par_file.replace_extension( "reflex_analysis" ), cma.current_best() );
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()

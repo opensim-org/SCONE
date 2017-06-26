@@ -4,6 +4,7 @@
 #include "scone/core/types.h"
 #include "spot/objective.h"
 #include "flut/storage.hpp"
+#include "flut/system/path.hpp"
 
 namespace scone
 {
@@ -13,8 +14,13 @@ namespace scone
 		ReflexAnalysisObjective( const Storage< Real >& data );
 		virtual spot::fitness_t evaluate( const spot::search_point& point ) const override;
 
+		void save_report( const flut::path& filename, const spot::search_point& point );
+
+		size_t muscle_count() const { return excitations_.channel_size(); }
+		size_t sensor_count() const { return sensors_.channel_size(); }
+
 	private:
 		flut::storage< double > excitations_;
-		flut::storage< double > signals_;
+		flut::storage< double > sensors_;
 	};
 }
