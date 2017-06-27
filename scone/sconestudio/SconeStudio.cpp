@@ -587,24 +587,13 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 
 void SconeStudio::performReflexAnalysis()
 {
-	if ( currentParFile.isEmpty() )
-		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No par file has been selected" );
+	if ( !manager.HasModel() || manager.IsEvaluating() )
+		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No model evaluated" );
 
 	path par_file( currentParFile.toStdString() );
 
-	manager.CreateModel( par_file.str() );
-	updateViewSettings();
-	if ( manager.IsEvaluating() )
-	{
-		manager.GetModel().GetSimModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
-		storageModel.setStorage( &manager.GetModel().GetData() );
-		analysisView->reset();
-
-		evaluate();
-	}
-	ui.playControl->setRange( 0, manager.GetMaxTime() );
-
 	ReflexAnalysisObjective reflex_objective( manager.GetModel().GetData(), "use_force=1;use_length=1;use_velocity=0" );
+	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
 	spot::console_reporter crep( 0, 2 );
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
 	spot::cma_optimizer cma( reflex_objective );

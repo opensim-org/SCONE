@@ -28,7 +28,6 @@ namespace scone
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
-
 		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
 
 		void EvaluateObjective();

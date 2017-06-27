@@ -12,8 +12,9 @@ namespace scone
 	{
 	public:
 		ReflexAnalysisObjective( const Storage< Real >& data, const flut::prop_node& pn = flut::prop_node() );
-		virtual spot::fitness_t evaluate( const spot::search_point& point ) const override;
+		void set_delays( const flut::prop_node& pn );
 
+		virtual spot::fitness_t evaluate( const spot::search_point& point ) const override;
 		void save_report( const flut::path& filename, const spot::search_point& point );
 
 		size_t muscle_count() const { return excitations_.channel_size(); }
@@ -26,5 +27,9 @@ namespace scone
 	private:
 		flut::storage< double > excitations_;
 		flut::storage< double > sensors_;
+		std::vector< double > muscle_delay;
+		std::vector< double > sensor_delay;
+		double frame_rate;
+		double delay_multiplier;
 	};
 }

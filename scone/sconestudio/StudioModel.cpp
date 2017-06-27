@@ -46,6 +46,7 @@ namespace scone
 			// start evaluation
 			is_evaluating = true;
 			so->GetModel().SetStoreData( true );
+			so->GetModel().GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
 			so->GetModel().SetSimulationEndTime( so->max_duration );
 			log::info( "Starting simulation" );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis

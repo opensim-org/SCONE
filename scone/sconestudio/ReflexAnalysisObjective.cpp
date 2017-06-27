@@ -4,6 +4,9 @@
 #include <fstream>
 #include "flut/prop_node_tools.hpp"
 #include "scone/model/Side.h"
+#include "flut/math/irange.hpp"
+
+using namespace flut;
 
 namespace scone
 {
@@ -12,6 +15,8 @@ namespace scone
 		INIT_PROP( pn, use_velocity, false );
 		INIT_PROP( pn, use_length, true );
 		INIT_PROP( pn, use_force, true );
+		INIT_PROP( pn, frame_rate, 1000 );
+		INIT_PROP( pn, delay_multiplier, 2.0 );
 
 		for ( Side s : { LeftSide, RightSide } )
 		{
@@ -45,29 +50,51 @@ namespace scone
 		}
 	}
 
+	void ReflexAnalysisObjective::set_delays( const flut::prop_node& pn )
+	{
+		muscle_delay.resize( muscle_count() );
+		sensor_delay.resize( sensor_count() );
+
+		for ( auto& p : pn )
+		{
+			for ( Index idx : flut::make_irange( excitations_.channel_size() ) )
+			{
+				if ( str_begins_with( excitations_.get_label( idx ), p.first ) )
+					muscle_delay[ idx ] = p.second.get< double >();
+			}
+			for ( Index idx : flut::make_irange( sensors_.channel_size() ) )
+			{
+				if ( str_begins_with( sensors_.get_label( idx ), p.first ) )
+					sensor_delay[ idx ] = p.second.get< double >();
+			}
+		}
+	}
+
 	spot::fitness_t ReflexAnalysisObjective::evaluate( const spot::search_point& point ) const
 	{
 		double value = 0.0;
 		auto sym_mus_count = muscle_count() / 2;
 		size_t frame_count = excitations_.frame_size();
-		for ( Index fi = 0; fi < frame_count; ++fi )
+		for ( Index fi = frame_rate; fi < frame_count; ++fi ) // skip first second
 		{
 			for ( Index mi = 0; mi < sym_mus_count; ++mi )
 			{
 				double feedback = point[ mi ];
+				int delay = static_cast< int >( frame_rate * delay_multiplier * muscle_delay[ mi ] );
 
-				// non-mirrored feedback
+				// feedback for left muscles
 				for ( Index si = 0; si < sensor_count(); ++si )
-					feedback += point[ sym_mus_count + si * sym_mus_count + mi ] * sensors_( fi, si );
+					feedback += point[ sym_mus_count + si * sym_mus_count + mi ] * sensors_( fi - delay, si );
 				value += flut::math::squared( excitations_( fi, mi ) - feedback );
 
-				// mirrored feedback
+				// mirrored feedback for right muscles
+				double mir_feedback = point[ mi ];
 				for ( Index si = 0; si < sensor_count(); ++si )
 				{
 					auto inv_si = ( si + sensor_count() / 2 ) % sensor_count();
-					feedback += point[ sym_mus_count + inv_si * sym_mus_count + mi ] * sensors_( fi, si );
+					mir_feedback += point[ sym_mus_count + inv_si * sym_mus_count + mi ] * sensors_( fi - delay, si );
 				}
-				value += flut::math::squared( excitations_( fi, sym_mus_count + mi ) - feedback );
+				value += flut::math::squared( excitations_( fi, sym_mus_count + mi ) - mir_feedback );
 
 			}
 		}
