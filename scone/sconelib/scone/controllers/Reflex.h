@@ -3,6 +3,7 @@
 #include "scone/model/Model.h"
 #include "scone/optimization/Params.h"
 #include "scone/core/PropNode.h"
+#include "scone/core/math.h"
 
 namespace scone
 {
@@ -10,6 +11,7 @@ namespace scone
 	{
 	public:
 		Reflex( const PropNode& props, Params& par, Model& model, const Locality& area );
+		Reflex( Actuator& target, TimeInSeconds d, Real min_val = REAL_LOWEST, Real max_val = REAL_MAX );
 		virtual ~Reflex();
 
 		virtual void ComputeControls( double timestamp );

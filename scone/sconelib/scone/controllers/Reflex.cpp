@@ -14,6 +14,13 @@ namespace scone
 		INIT_PROPERTY( props, max_control_value, REAL_MAX );
 	}
 
+	Reflex::Reflex( Actuator& target, TimeInSeconds d, Real min_val, Real max_val ) :
+	m_Target( target ),
+	delay( d ),
+	min_control_value( min_val ),
+	max_control_value( max_val )
+	{}
+
 	Reflex::~Reflex() {}
 
 	void Reflex::ComputeControls( double timestamp )
