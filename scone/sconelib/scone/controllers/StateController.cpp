@@ -42,8 +42,9 @@ namespace scone
 				{
 					if ( controller_state_name == GetStateName( i ) )
 					{
+						// This may not work for the original SSC examples
 						ccs.state_mask[ i ] = has_any_state = true;
-						size_t bit_string_idx = area.mirrored ? GetStateCount() - i : GetStateCount() - 1 - i; // HACK, rewrite all this crap
+						size_t bit_string_idx = GetStateCount() - 1 - i;
 						bit_string[ bit_string_idx ] = '1';
 					}
 				}

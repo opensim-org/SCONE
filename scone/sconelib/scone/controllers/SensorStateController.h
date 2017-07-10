@@ -23,13 +23,13 @@ namespace scone
 			double GetDistance( Model& model, double timestamp );
 			String name;
 			bool mirrored;
-			double leg_load[ 2 ];
-			double sag_pos[ 2 ];
 			double load_delta;
 			double sag_delta;
 			double ld = 0, sd = 0;
 		};
 
+		bool create_mirrored_state;
+		bool mirrored;
 		std::vector< SensorState > m_States;
 		std::vector< double > m_StateDist;
 	};

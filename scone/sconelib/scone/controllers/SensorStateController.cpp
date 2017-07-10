@@ -9,12 +9,16 @@ namespace scone
 	SensorStateController::SensorStateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	StateController( props, par, model, area )
 	{
+		INIT_PROP( props, create_mirrored_state, true );
+		mirrored = area.mirrored;
+
 		// create states
 		const PropNode& states_pn = props.get_child( "SensorStates" );
 		for ( auto it = states_pn.begin(); it != states_pn.end(); ++it )
 		{
 			m_States.push_back( SensorState( it->second, par, area ) );
-			m_States.push_back( SensorState( it->second, par, MakeMirrored( area ) ) );
+			if ( create_mirrored_state )
+				m_States.push_back( SensorState( it->second, par, MakeMirrored( area ) ) );
 		}
 
 		SCONE_ASSERT( m_States.size() >= 1 );
@@ -22,7 +26,8 @@ namespace scone
 
 		// create conditional controllers
 		CreateConditionalControllers( props, par, model, area );
-		CreateConditionalControllers( props, par, model, MakeMirrored( area ) );
+		if ( create_mirrored_state )
+			CreateConditionalControllers( props, par, model, MakeMirrored( area ) );
 
 		// init initial state
 		UpdateCurrentState( model, 0.0 );
@@ -31,12 +36,15 @@ namespace scone
 	void SensorStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		StateController::StoreData( frame, flags );
-		frame[ "ssc_current_state" ] = (double)m_CurrentState;
+
+		string prefix = create_mirrored_state ? "ssc" : "ssc" + flut::to_str( mirrored );
+		frame[ prefix + "_state" ] = (double)m_CurrentState;
 		for ( size_t idx = 0; idx < m_States.size(); ++idx )
 		{
-			frame[ "ssc_dist_" + flut::to_str( idx ) ] = m_StateDist[ idx ];
-			frame[ "ssc_ld_" + flut::to_str( idx ) ] = m_States[ idx ].ld;
-			frame[ "ssc_sd_" + flut::to_str( idx ) ] = m_States[ idx ].sd;
+			string postfix = flut::to_str( idx );
+			frame[ prefix + "_d" + postfix ] = m_StateDist[ idx ];
+			frame[ prefix + "_ld" + postfix ] = m_States[ idx ].ld;
+			frame[ prefix + "_sd" + postfix ] = m_States[ idx ].sd;
 		}
 	}
 
@@ -50,11 +58,6 @@ namespace scone
 
 		if ( a.mirrored ) name += "_mirrored";
 		mirrored = a.mirrored;
-
-		//INIT_PARAM_NAMED( pn, par, leg_load[ 0 ], "leg_load0", 0.0 );
-		//INIT_PARAM_NAMED( pn, par, leg_load[ 1 ], "leg_load1", 0.0 );
-		//INIT_PARAM_NAMED( pn, par, sag_pos[ 0 ], "sag_pos0", 0.0 );
-		//INIT_PARAM_NAMED( pn, par, sag_pos[ 1 ], "sag_pos1", 0.0 );
 	}
 
 	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp )
