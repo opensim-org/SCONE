@@ -34,12 +34,12 @@ namespace scone
 		}
 
 		// load reflexes from file
-		path reflex_file = scone::GetFolder( SCONE_SCENARIO_FOLDER ) / props.get< path >( "reflex_file", "" );
-		path delay_file = scone::GetFolder( SCONE_SCENARIO_FOLDER ) / props.get< path >( "delay_file", "" );
+		path reflex_file = props.get< path >( "reflex_file", "" );
+		path delay_file = props.get< path >( "delay_file", "" );
 		if ( !reflex_file.empty() && !delay_file.empty() )
 		{
-			auto str = flut::char_stream( reflex_file );
-			auto delay_pn = load_prop( delay_file );
+			auto str = flut::char_stream( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / reflex_file );
+			auto delay_pn = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / delay_file );
 			while ( str.good() )
 			{
 				String name;
