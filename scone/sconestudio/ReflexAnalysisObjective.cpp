@@ -42,19 +42,18 @@ namespace scone
 		auto sym_mus = muscle_count() / 2;
 		for ( Index i = 0; i < sym_mus; ++i )
 			info().add( excitations_.get_label( i ), 0.05, 0.01 );
-
 		for ( Index si = 0; si < sensors_.channel_size(); ++si )
 		{
 			for ( Index mi = 0; mi < sym_mus; ++mi )
 				info().add( excitations_.get_label( mi ) + "-" + sensors_.get_label( si ), 0.0, 0.01 );
 		}
+
+		muscle_delay.resize( muscle_count() );
+		sensor_delay.resize( sensor_count() );
 	}
 
 	void ReflexAnalysisObjective::set_delays( const flut::prop_node& pn )
 	{
-		muscle_delay.resize( muscle_count() );
-		sensor_delay.resize( sensor_count() );
-
 		for ( auto& p : pn )
 		{
 			for ( Index idx : flut::make_irange( excitations_.channel_size() ) )
