@@ -766,38 +766,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>action_Messages</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>SconeStudioClass</receiver>
-   <slot>viewMessages(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>538</x>
-     <y>400</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionOptimization_Results</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>SconeStudioClass</receiver>
-   <slot>viewResults(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>538</x>
-     <y>400</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>resultsDock</sender>
    <signal>visibilityChanged(bool)</signal>
    <receiver>SconeStudioClass</receiver>
