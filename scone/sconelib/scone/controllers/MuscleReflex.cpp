@@ -94,15 +94,15 @@ namespace scone
 	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
 	{
 		if ( m_pLengthSensor )
-			frame[ name + ".length_feedback" ] = u_l;
+			frame[ name + ".L_feedback" ] = u_l;
 
 		if ( m_pVelocitySensor )
-			frame[ name + ".velocity_feedback" ] = u_v;
+			frame[ name + ".V_feedback" ] = u_v;
 
 		if ( m_pForceSensor )
-			frame[ name + ".force_feedback" ] = u_f;
+			frame[ name + ".F_feedback" ] = u_f;
 
 		if ( m_pSpindleSensor )
-			frame[ name + ".spindle_feedback" ] = u_s;
+			frame[ name + ".S_feedback" ] = u_s;
 	}
 }
