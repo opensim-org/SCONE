@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< string > resArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Result file" );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
 		TCLAP::ValueArg< int > multiArg( "p", "pool", "The number of optimizations to run in parallel", false, 1, "1-99", cmd );
-		TCLAP::ValueArg< int > promiseWindowArg( "pw", "promisewindow", "Window size to determine most promising optimization of pool", false, 400, "2-...", cmd );
+		TCLAP::ValueArg< int > promiseWindowArg( "w", "window", "Window size to determine most promising optimization of pool", false, 400, "2-...", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
