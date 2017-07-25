@@ -19,7 +19,7 @@ namespace scone
 		virtual void Run() = 0;
 
 		/// get the results output folder (creates it if it doesn't exist)
-		const String& AcquireOutputFolder();
+		const path& AcquireOutputFolder();
 
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		bool IsMinimizing() { return !maximize_objective; }
@@ -37,11 +37,13 @@ namespace scone
 				std::cout << std::endl << "*" << key << "=" << value << std::endl;
 		}
 
+		path output_root;
+
 	protected:
 		void CreateObjectives( size_t count );
 		const PropNode& m_ObjectiveProps;
 		std::vector< ObjectiveUP > m_Objectives;
-		void ManageFileOutput( double fitness, const std::vector< String >& files );
+		void ManageFileOutput( double fitness, const std::vector< path >& files );
 		virtual String GetClassSignature() const override;
 
 		// current status
@@ -71,8 +73,8 @@ namespace scone
 		static void SetThreadPriority( int priority );
 
 		String m_Name;
-		String m_OutputFolder;
-		std::vector< std::pair< double, std::vector< String > > > m_OutputFiles;
+		path m_OutputFolder;
+		std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
 
 	private: // non-copyable and non-assignable
 		Optimizer( const Optimizer& );

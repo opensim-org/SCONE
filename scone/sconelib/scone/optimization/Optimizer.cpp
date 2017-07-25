@@ -24,13 +24,14 @@ namespace bfs = boost::filesystem;
 namespace scone
 {
 	Optimizer::Optimizer( const PropNode& props ) :
-		HasSignature( props ),
-		max_threads( 1 ),
-		thread_priority( 0 ),
-		m_ObjectiveProps( props.get_child( "Objective" ) ),
-		console_output( true ),
-		status_output( false ),
-		m_LastFileOutputGen( 0 )
+	HasSignature( props ),
+	max_threads( 1 ),
+	thread_priority( 0 ),
+	m_ObjectiveProps( props.get_child( "Objective" ) ),
+	console_output( true ),
+	status_output( false ),
+	m_LastFileOutputGen( 0 ),
+	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
 		INIT_PROPERTY( props, max_threads, size_t( 32 ) );
 		INIT_PROPERTY( props, thread_priority, -2 );
@@ -135,17 +136,17 @@ namespace scone
 
 	void Optimizer::InitOutputFolder()
 	{
-		auto output_base = ( GetFolder( SCONE_RESULTS_FOLDER ) / GetSignature() ).str();
+		auto output_base = output_root / GetSignature();
 		m_OutputFolder = output_base;
 
-		for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder ) ); ++i )
+		for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder.str() ) ); ++i )
 			m_OutputFolder = output_base + stringf( " (%d)", i );
 
-		create_directories( bfs::path( m_OutputFolder ) );
-		m_OutputFolder += "/";
+		create_directories( bfs::path( m_OutputFolder.str() ) );
+		m_OutputFolder;
 	}
 
-	const String& Optimizer::AcquireOutputFolder()
+	const path& Optimizer::AcquireOutputFolder()
 	{
 		if ( m_OutputFolder.empty() )
 			InitOutputFolder();
@@ -172,7 +173,7 @@ namespace scone
 		}
 	}
 
-	void Optimizer::ManageFileOutput( double fitness, const std::vector< String >& files )
+	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files )
 	{
 		m_OutputFiles.push_back( std::make_pair( fitness, files ) );
 		if ( m_OutputFiles.size() >= 3 )
@@ -186,8 +187,8 @@ namespace scone
 			if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
 			{
 				// delete the file(s)
-				for ( String& file : testIt->second )
-					bfs::remove( bfs::path( file ) );
+				for ( auto& file : testIt->second )
+					bfs::remove( bfs::path( file.str() ) );
 
 				m_OutputFiles.erase( testIt );
 			}

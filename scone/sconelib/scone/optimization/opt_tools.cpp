@@ -30,7 +30,7 @@ namespace scone
 			current_path( config_path.parent_path() );
 
 		// copy original and write resolved config files
-		bfs::path outdir( o->AcquireOutputFolder() );
+		bfs::path outdir( o->AcquireOutputFolder().str() );
 		bfs::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), bfs::copy_option::overwrite_if_exists );
 		flut::save_xml( props, ( outdir / "config.xml" ).string() );
 

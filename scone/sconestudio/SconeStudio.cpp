@@ -594,12 +594,12 @@ void SconeStudio::performReflexAnalysis()
 
 	ReflexAnalysisObjective reflex_objective( manager.GetModel().GetData(), "use_force=1;use_length=0;use_velocity=0" );
 	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
-	spot::console_reporter crep( 0, 2 );
+	
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
 	spot::cma_optimizer cma( reflex_objective );
 	cma.set_max_threads( 32 );
-	cma.add_reporter( &crep );
-	cma.add_reporter( &frep );
+	cma.add_reporter( std::make_shared< spot::console_reporter >( 0, 2 ) );
+	cma.add_reporter( std::make_shared< spot::file_reporter >( par_file.replace_extension( "analysis" ) ) );
 	cma.run( 1000 );
-	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best() );
+	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best_point() );
 }

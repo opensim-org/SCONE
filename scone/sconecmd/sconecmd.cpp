@@ -8,6 +8,8 @@
 #include <thread>
 #include "flut/system/log_sink.hpp"
 #include "flut/prop_node_tools.hpp"
+#include "spot/optimization_pool.h"
+#include <xutility>
 
 using namespace scone;
 using namespace std;
@@ -22,6 +24,8 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< string > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
 		TCLAP::ValueArg< string > resArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Result file" );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
+		TCLAP::ValueArg< int > multiArg( "p", "pool", "The number of optimizations to run in parallel", false, 1, "1-99", cmd );
+		TCLAP::ValueArg< int > promiseWindowArg( "pw", "promisewindow", "Window size to determine most promising optimization of pool", false, 400, "2-...", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
@@ -45,13 +49,28 @@ int main(int argc, char* argv[])
 			}
 
 			// create optimizer
-			OptimizerUP o = PrepareOptimization( props, scenario_file );
-			o->SetConsoleOutput( !quietOutput.getValue() );
-			o->SetStatusOutput( statusOutput.getValue() );
-			if ( o->GetStatusOutput() )
-				o->OutputStatus( "scenario", optArg.getValue() );
-
-			o->Run();
+			if ( multiArg.isSet() )
+			{
+				FLUT_NOT_IMPLEMENTED;
+				//spot::optimization_pool op( promiseWindowArg.getValue() );
+				//for ( int i = 0; i < multiArg.getValue(); ++i )
+				//{
+				//	OptimizerUP o = PrepareOptimization( props, scenario_file );
+				//	o->SetConsoleOutput( !quietOutput.getValue() );
+				//	o->SetStatusOutput( statusOutput.getValue() );
+				//	if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+				//	op.push_back( std::move( o ) );
+				//}
+				//op.run();
+			}
+			else
+			{
+				OptimizerUP o = PrepareOptimization( props, scenario_file );
+				o->SetConsoleOutput( !quietOutput.getValue() );
+				o->SetStatusOutput( statusOutput.getValue() );
+				if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+				o->Run();
+			}
 		}
 		else if ( resArg.isSet() )
 		{

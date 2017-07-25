@@ -112,10 +112,9 @@ namespace scone
 
 				// write .par file
 				String ind_name = flut::stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, current_best );
-				String file_base = AcquireOutputFolder() + ind_name;
-				std::vector< String > outputFiles;
-				std::ofstream( file_base + ".par" ) << par;
-				//par.write( file_base + ".par" );
+				auto file_base = AcquireOutputFolder() + ind_name;
+				std::vector< path > outputFiles;
+				std::ofstream( ( file_base + ".par" ).str() ) << par;
 				outputFiles.push_back( file_base + ".par" );
 
 				// cleanup superfluous output files
