@@ -15,10 +15,10 @@
 #include "flut/system_tools.hpp"
 #include "scone/core/string_tools.h"
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[] )
 {
-	QApplication a(argc, argv);
-	QCoreApplication::setAttribute(Qt::AA_UseDesktopOpenGL);
+	QApplication a( argc, argv );
+	QCoreApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
 
 	QApplication::style()->setProperty( "margin", 50 );
 

@@ -4,7 +4,7 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<signature_postfix>SSCL2</signature_postfix>
+		<signature_postfix>SSCL3</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -99,7 +99,7 @@
 										<Reflex type="ConditionalMuscleReflex" target="vasti_l" delay="0.010">
 											<KF init_mean="1.0" init_std="0.1" min="0.0" max="10.0" is_free="1"/>
 											<C0 init_mean="0.05" init_std="0.005" min="-1.0" max="1.0" is_free="1"/>
-											<Condition dof="knee_angle_r">
+											<Condition dof="knee_angle_l">
 												<pos_range min="-180" max="-10"/>
 											</Condition>
 										</Reflex>
