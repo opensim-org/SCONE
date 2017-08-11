@@ -22,6 +22,7 @@
 #include "spot/cma_optimizer.h"
 #include "spot/console_reporter.h"
 #include "spot/file_reporter.h"
+#include "flut/filesystem.hpp"
 
 using namespace scone;
 using namespace std;

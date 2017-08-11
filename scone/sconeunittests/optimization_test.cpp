@@ -7,6 +7,7 @@
 
 #include "scone/core/Factories.h"
 #include "scone/core/math.h"
+#include "flut/system/path.hpp"
 
 using namespace boost::filesystem;
 using namespace scone;
@@ -55,7 +56,7 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 {
 	GetObjectiveFactory().register_class< TestObjective >();
 
-	const PropNode pn = load_xml( ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" ).str() );
+	const PropNode pn = load_xml( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" );
 	OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
 	LogUntouched( pn );
 	o->SetConsoleOutput( false );

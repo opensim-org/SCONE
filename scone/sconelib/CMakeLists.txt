@@ -60,6 +60,7 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/PerturbationController.h
 	scone/controllers/ExternalBalanceController.cpp
 	scone/controllers/ExternalBalanceController.h
+	scone/controllers/MirrorController.h
 	)
 set(CS_SYSTEM_FILES
 	scone/controllers/cs_tools.cpp

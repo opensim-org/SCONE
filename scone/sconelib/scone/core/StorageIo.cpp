@@ -1,6 +1,7 @@
 #include "StorageIo.h"
 
 #include <flut/string_tools.hpp>
+#include "../../../../submodules/flut/flut/system/path.hpp"
 
 namespace scone
 {
@@ -52,7 +53,7 @@ namespace scone
 
 	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		flut::char_stream str = flut::load_char_stream( file );
+		flut::char_stream str = flut::load_char_stream( flut::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageSto( storage, str );
 	}
@@ -70,7 +71,7 @@ namespace scone
 
 	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		flut::char_stream str = flut::load_char_stream( file );
+		flut::char_stream str = flut::load_char_stream( flut::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageTxt( storage, str );
 	}

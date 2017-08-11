@@ -51,7 +51,7 @@ namespace scone
 		path config_file = is_par_file ? file.parent_path() / "config.xml" : file;
 
 		// read properties
-		PropNode configProp = flut::load_file_with_include( config_file.str(), "INCLUDE" );
+		PropNode configProp = flut::load_file_with_include( config_file, "INCLUDE" );
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 		// create SimulationObjective object

@@ -6,6 +6,7 @@
 #include "scone/core/Log.h"
 #include "flut/string_tools.hpp"
 #include "studio_config.h"
+#include "flut/filesystem.hpp"
 
 using namespace scone;
 

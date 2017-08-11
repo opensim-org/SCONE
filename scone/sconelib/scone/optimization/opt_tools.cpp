@@ -32,7 +32,7 @@ namespace scone
 		// copy original and write resolved config files
 		bfs::path outdir( o->AcquireOutputFolder().str() );
 		bfs::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), bfs::copy_option::overwrite_if_exists );
-		flut::save_xml( props, ( outdir / "config.xml" ).string() );
+		flut::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
 		// copy model to output folder
 		bfs::path modelfile = props.get_delimited< string >( "Optimizer.Objective.Model.model_file" );
@@ -50,7 +50,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 
-		const PropNode configProp = flut::load_file_with_include( config_path.string(), "INCLUDE" );
+		const PropNode configProp = flut::load_file_with_include( path( config_path.string() ), "INCLUDE" );
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );

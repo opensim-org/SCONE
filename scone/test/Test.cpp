@@ -93,7 +93,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		const PropNode configProp = load_file_with_include( config_path.string() ) ;
+		const PropNode configProp = load_file_with_include( path( config_path.string() ) ) ;
 		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// override some variables
@@ -110,7 +110,7 @@ namespace scone
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
 		ParamInfo par;
-		par.import_fixed( filename );
+		par.import_fixed( path( filename ) );
 
 		SCONE_PROFILE_RESET;
 		double result;
@@ -169,7 +169,7 @@ namespace scone
 		if ( config_path.has_parent_path() )
 			bfs::current_path( config_path.parent_path() );
 
-		const PropNode configProp = load_file_with_include( config_path.string() ) ;
+		const PropNode configProp = load_file_with_include( flut::path( config_path.string() ) );
 		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// override some variables
@@ -185,7 +185,7 @@ namespace scone
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
 
-		ParamInstance par( so.info(), filename );
+		ParamInstance par( so.info(), path( filename ) );
 
 		SCONE_PROFILE_RESET;
 		double result;
@@ -211,7 +211,7 @@ namespace scone
 	void SimulationObjectiveTest( const String& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
-		const PropNode configProp = load_file_with_include( filename ) ;
+		const PropNode configProp = load_file_with_include( path( filename ) );
 		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// create objective

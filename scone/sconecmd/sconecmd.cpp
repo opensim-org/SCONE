@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 		{
 			// set log level
 			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel ) );
-			auto scenario_file = optArg.getValue();
+			auto scenario_file = path( optArg.getValue() );
 
 			// load properties
 			PropNode props = flut::load_file_with_include( scenario_file, "INCLUDE" );
@@ -51,17 +51,18 @@ int main(int argc, char* argv[])
 			// create optimizer
 			if ( multiArg.isSet() )
 			{
+				// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
 				FLUT_NOT_IMPLEMENTED;
-				//spot::optimization_pool op( promiseWindowArg.getValue() );
-				//for ( int i = 0; i < multiArg.getValue(); ++i )
-				//{
-				//	OptimizerUP o = PrepareOptimization( props, scenario_file );
-				//	o->SetConsoleOutput( !quietOutput.getValue() );
-				//	o->SetStatusOutput( statusOutput.getValue() );
-				//	if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
-				//	op.push_back( std::move( o ) );
-				//}
-				//op.run();
+				spot::optimization_pool op( promiseWindowArg.getValue() );
+				for ( int i = 0; i < multiArg.getValue(); ++i )
+				{
+					OptimizerUP o = PrepareOptimization( props, scenario_file );
+					o->SetConsoleOutput( !quietOutput.getValue() );
+					o->SetStatusOutput( statusOutput.getValue() );
+					if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+					// TODO: op.push_back( std::move( o ) );
+				}
+				op.run();
 			}
 			else
 			{
@@ -76,7 +77,7 @@ int main(int argc, char* argv[])
 		{
 			// set log level
 			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
-			SimulateObjective( resArg.getValue() );
+			SimulateObjective( path( resArg.getValue() ) );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen
 	}

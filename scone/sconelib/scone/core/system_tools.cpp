@@ -18,6 +18,7 @@
 #include "flut/prop_node_tools.hpp"
 #include "string"
 #include "flut/system/types.hpp"
+#include "flut/filesystem.hpp"
 
 namespace scone
 {
@@ -49,7 +50,7 @@ namespace scone
 			if ( flut::file_exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
-				g_GlobalSettings = flut::load_ini( settings_file.str() );
+				g_GlobalSettings = flut::load_ini( settings_file );
 			}
 			else
 			{

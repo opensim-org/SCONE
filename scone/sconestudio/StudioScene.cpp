@@ -20,7 +20,7 @@ namespace scone
 	scone::StudioModel& StudioScene::CreateModel( const String& par_file, bool force_evaluation )
 	{
 		model.reset();
-		model = StudioModelUP( new StudioModel( scene, par_file, force_evaluation ) );
+		model = StudioModelUP( new StudioModel( scene, path( par_file ), force_evaluation ) );
 		return *model;
 	}
 
