@@ -17,8 +17,7 @@ namespace scone
 	Neuron::Neuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& loc ) :
 	Neuron_( loc.ConvertName( pn.get< string >( "name", "NoName" ) ) )
 	{
-		ScopedParamSetPrefixer sp( par, GetNameNoSide( name_ ) );
-
+		ScopedParamSetPrefixer sp( par, GetNameNoSide( name_ ) + '.' );
 		INIT_PAR( pn, par, offset_, 0 );
 
 		for ( auto& input_pn : pn )
@@ -26,7 +25,7 @@ namespace scone
 			if ( input_pn.first == "Input" )
 			{
 				Neuron_* input = controller.AcquireNeuron( input_pn.second, par, model, loc );
-				double gain = par.get( "gain", input_pn.second[ "gain" ] );
+				double gain = par.get( GetNameNoSide( input->GetName() ), input_pn.second[ "gain" ] );
 				inputs_.push_back( std::make_pair( gain, input ) );
 			}
 		}
