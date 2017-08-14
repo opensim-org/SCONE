@@ -24,7 +24,7 @@ namespace scone
 			{
 				auto label = data.GetLabels()[ idx ];
 				auto mus_label = flut::left_of_str( label, "." );
-				if ( GetSide( mus_label ) == s )
+				if ( GetSideFromName( mus_label ) == s )
 				{
 					if ( flut::str_ends_with( label, ".excitation" ) )
 						excitations_.add_channel( mus_label, data.GetChannelData( idx ) );

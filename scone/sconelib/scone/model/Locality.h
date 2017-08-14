@@ -12,6 +12,7 @@ namespace scone
 		Locality( Side s = NoSide, bool m = false ) : side( s ), mirrored( m ) {}
 		String ConvertName( const String& name ) const;
 		String GetName() const;
+		Side GetSide() const;
 
 		Side side;
 		bool mirrored;

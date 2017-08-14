@@ -88,12 +88,12 @@ namespace scone
 	class SCONE_API LegLoadSensor : public Sensor
 	{
 	public:
-		LegLoadSensor( Leg& leg ) : m_Leg( leg ) {}
+		LegLoadSensor( const Leg& leg ) : m_Leg( leg ) {}
 		LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	protected:
-		Leg& m_Leg;
+		const Leg& m_Leg;
 	};
 
 	// Base class for body sensors

@@ -58,6 +58,7 @@ namespace scone
 		/// leg access
 		size_t GetLegCount() const { return m_Legs.size(); }
 		const Leg& GetLeg( size_t idx ) const { return *m_Legs[ idx ]; }
+		const Leg& GetLeg( const Locality& loc ) const { for ( auto& l : m_Legs ) if ( l->GetSide() == loc.GetSide() ) return *l; flut_error( "Could not find leg" ); }
 		std::vector< LegUP >& GetLegs() { return m_Legs; }
 		const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 

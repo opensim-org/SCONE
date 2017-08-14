@@ -23,7 +23,7 @@ namespace scone
 			ActInfo ai;
 			ai.full_name = model.GetMuscles()[ idx ]->GetName();
 			ai.name = GetNameNoSide( ai.full_name );
-			ai.side = GetSide( ai.full_name );
+			ai.side = GetSideFromName( ai.full_name );
 			ai.muscle_idx = idx;
 
 			// see if this muscle is on the right side

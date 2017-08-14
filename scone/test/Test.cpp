@@ -255,7 +255,7 @@ namespace scone
 			cout << "DOF offset = " << dof_val << endl;
 			for ( MuscleUP& mus: m->GetMuscles() )
 			{
-				if ( GetSide( mus->GetName() ) == RightSide )
+				if ( GetSideFromName( mus->GetName() ) == RightSide )
 				{
 					Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
 					cout << boost::format( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f" )

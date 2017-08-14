@@ -29,7 +29,7 @@ namespace scone
 				// check if the target dof is sided
 				// TODO: see if we can come up with something nicer here...
 				const String& target_dof = item.second.get< String >( "target" );
-				SCONE_ASSERT( GetSide( target_dof ) == NoSide ); // must be symmetric
+				SCONE_ASSERT( GetSideFromName( target_dof ) == NoSide ); // must be symmetric
 				if ( HasElementWithName( model.GetDofs(), target_dof ) )
 				{
 					// this is a dof with no sides: only create one controller
@@ -72,7 +72,7 @@ namespace scone
 		// Create meta reflex muscles
 		for ( MuscleUP& mus : model.GetMuscles() )
 		{
-			if ( GetSide( mus->GetName() ) == area.side )
+			if ( GetSideFromName( mus->GetName() ) == area.side )
 			{
 				MetaReflexMuscleUP mrm = MetaReflexMuscleUP( new MetaReflexMuscle( *mus, model, *this, area ) );
 				if ( mrm->dof_infos.size() > 0 || mrm->vm_infos.size() > 0 ) // only keep reflex if it crosses any of the relevant dofs
