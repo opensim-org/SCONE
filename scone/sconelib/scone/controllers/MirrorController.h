@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/model/Controller.h"
-#include "../core/Factories.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {

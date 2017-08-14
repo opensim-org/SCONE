@@ -1,10 +1,10 @@
 #include "SimpleMuscleReflex.h"
 
 #include "scone/core/HasName.h"
-#include "../model/Model.h"
-#include "../model/Actuator.h"
-#include "../model/Sensors.h"
-#include "../model/Muscle.h"
+#include "scone/model/Model.h"
+#include "scone/model/Actuator.h"
+#include "scone/model/Sensors.h"
+#include "scone/model/Muscle.h"
 
 using namespace flut;
 

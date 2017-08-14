@@ -5,7 +5,7 @@
 #include <numeric>
 #include <random>
 #include "flut/string_tools.hpp"
-#include "../core/math.h"
+#include "scone/core/math.h"
 
 using std::cout;
 using std::endl;

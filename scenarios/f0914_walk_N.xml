@@ -6,7 +6,7 @@
 	<global_std_factor>0.01</global_std_factor>
 	<global_std_offset>0.001</global_std_offset>
 	<Objective type="SimulationObjective">
-		<signature_postfix>R_STD001</signature_postfix>
+		<signature_postfix>N1</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -21,20 +21,20 @@
 				<Controller type="NeuralController" symmetric="1">
 					<Neurons>
 						<!-- TA -->
-						<Neuron name="TA" target="tib_ant_l" offset="0.1~0.01">
-							<Input type="MuscleLength" source="tib_ant_l" delay="0.02" gain="3~0.3"/>
-							<Input type="MuscleForce" source="soleus_l" delay="0.02" gain="-0.4~0.04"/>
+						<Neuron name="TA" target="tib_ant" offset="0.1~0.01">
+							<Input type="MuscleLength" source="tib_ant" delay="0.02" gain="3~0.3"/>
+							<Input type="MuscleForce" source="soleus" delay="0.02" gain="-0.4~0.04"/>
 						</Neuron>
 						
 						<!-- SOL/GAS -->
-						<Neuron name="SOL" target="soleus_l" offset="0.1~0.01">
-							<Input type="MuscleForce" source="soleus_l" delay="0.02" gain="1~0.1"/>
-							<Input type="MuscleLength" source="soleus_l" delay="0.02" gain="1~0.1"/>
+						<Neuron name="SOL" target="soleus" offset="0.1~0.01">
+							<Input type="MuscleForce" source="soleus" delay="0.02" gain="1~0.1"/>
+							<Input type="MuscleLength" source="soleus" delay="0.02" gain="1~0.1"/>
 							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
 						</Neuron>
-						<Neuron name="GAS" target="gastroc_l" offset="0.1~0.01">
-							<Input type="MuscleForce" source="gastroc_l" delay="0.02" gain="1 ~0.1"/>
-							<Input type="MuscleLength" source="gastroc_l" delay="0.02" gain="1 ~0.1"/>
+						<Neuron name="GAS" target="gastroc" offset="0.1~0.01">
+							<Input type="MuscleForce" source="gastroc" delay="0.02" gain="1 ~0.1"/>
+							<Input type="MuscleLength" source="gastroc" delay="0.02" gain="1 ~0.1"/>
 							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
 						</Neuron>
 						

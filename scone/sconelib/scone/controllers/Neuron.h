@@ -3,6 +3,7 @@
 #include "scone/core/types.h"
 #include "scone/core/PropNode.h"
 #include "scone/optimization/Params.h"
+#include "../core/HasData.h"
 
 namespace scone
 {
@@ -21,25 +22,19 @@ namespace scone
 		std::vector< std::pair< double, activation_t* > > inputs_;
 		std::vector< double > weights_;
 		double offset_;
+		Actuator* actuator_;
 	};
 
 	struct SensorNeuron
 	{
 		SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality locality );
 		void UpdateOutput();
+		const string& GetName() const { return name_; }
 
+		string name_;
 		activation_t output_;
+		double offset_;
 		SensorDelayAdapter* input_;
 		TimeInSeconds delay_;
-	};
-
-	struct MotorNeuron
-	{
-	public:
-		MotorNeuron( const PropNode& pn, Params& par, Model& model, const Locality& locality );
-		void UpdateActuator();
-
-		activation_t* input_;
-		Actuator* output_;
 	};
 }

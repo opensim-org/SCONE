@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Reflex.h"
-#include "../model/SensorDelayAdapter.h"
+#include "scone/model/SensorDelayAdapter.h"
 
 namespace scone
 {

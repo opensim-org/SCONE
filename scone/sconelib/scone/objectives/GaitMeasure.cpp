@@ -6,7 +6,7 @@
 #include "scone/core/Log.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
-#include "../core/Range.h"
+#include "scone/core/Range.h"
 
 namespace scone
 {

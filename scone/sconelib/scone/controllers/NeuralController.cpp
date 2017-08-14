@@ -2,7 +2,7 @@
 
 #include "flut/string_tools.hpp"
 #include "scone/model/Locality.h"
-#include "../core/HasName.h"
+#include "scone/core/HasName.h"
 
 namespace scone
 {
@@ -27,18 +27,19 @@ namespace scone
 		for ( auto& n : m_Neurons )
 			n->UpdateOutput();
 
-		for ( auto& n : m_MotorNeurons )
-			n->UpdateActuator();
-
 		return Controller::SuccessfulUpdate;
 	}
 
-	scone::activation_t* NeuralController::AcquireInput( const PropNode& pn, Params& par, Model& model, const Locality& loc )
+	scone::activation_t* NeuralController::AcquireInput( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
 		string type = pn.get< string >( "type" );
+		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
+			loc = MakeMirrored( loc );
+		auto source = loc.ConvertName( pn.get< string >( "source" ) );
+
 		if ( type == "Neuron" )
 		{
-			auto& n = FindByName( m_Neurons, pn.get< string >( "source" ) );
+			auto& n = FindByName( m_Neurons, source );
 			return &n->output_;
 		}
 		else
@@ -46,6 +47,14 @@ namespace scone
 			m_SensorNeurons.push_back( std::make_unique< SensorNeuron >( pn, par, model, loc ) );
 			return &m_SensorNeurons.back()->output_;
 		}
+	}
+
+	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
+	{
+		for ( auto& n : m_Neurons )
+			frame[ "neuron." + n->GetName() ] = n->output_;
+		for ( auto& n : m_SensorNeurons )
+			frame[ "neuron." + n->GetName() ] = n->output_;
 	}
 
 	String NeuralController::GetClassSignature() const

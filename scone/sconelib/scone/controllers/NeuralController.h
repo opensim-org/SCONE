@@ -10,7 +10,6 @@ namespace scone
 {
 	SCONE_DECLARE_STRUCT_AND_PTR( Neuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( SensorNeuron );
-	SCONE_DECLARE_STRUCT_AND_PTR( MotorNeuron );
 
 	class NeuralController : public Controller
 	{
@@ -20,7 +19,9 @@ namespace scone
 
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
-		activation_t* AcquireInput( const PropNode& pn, Params& par, Model& model, const Locality& loc );
+		activation_t* AcquireInput( const PropNode& pn, Params& par, Model& model, Locality loc );
+
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -28,6 +29,5 @@ namespace scone
 	private:
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< NeuronUP > m_Neurons;
-		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};
 }
