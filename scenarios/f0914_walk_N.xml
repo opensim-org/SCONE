@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<init_file></init_file>
+	<use_init_file>0</use_init_file>
+	<random_seed>123</random_seed>
+	<global_std_factor>0.01</global_std_factor>
+	<global_std_offset>0.001</global_std_offset>
+	<Objective type="SimulationObjective">
+		<signature_postfix>R_STD001</signature_postfix>
+		<max_duration>10</max_duration>
+		<Model type="Simbody">
+			<model_file>f0914.osim</model_file>
+			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<Controllers>
+				<Controller type="NeuralController" symmetric="1">
+					<Neurons>
+						<!-- TA -->
+						<Neuron name="TA" target="tib_ant_l" offset="0.1~0.01">
+							<Input type="MuscleLength" source="tib_ant_l" delay="0.02" gain="3~0.3"/>
+							<Input type="MuscleForce" source="soleus_l" delay="0.02" gain="-0.4~0.04"/>
+						</Neuron>
+						
+						<!-- SOL/GAS -->
+						<Neuron name="SOL" target="soleus_l" offset="0.1~0.01">
+							<Input type="MuscleForce" source="soleus_l" delay="0.02" gain="1~0.1"/>
+							<Input type="MuscleLength" source="soleus_l" delay="0.02" gain="1~0.1"/>
+							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
+						</Neuron>
+						<Neuron name="GAS" target="gastroc_l" offset="0.1~0.01">
+							<Input type="MuscleForce" source="gastroc_l" delay="0.02" gain="1 ~0.1"/>
+							<Input type="MuscleLength" source="gastroc_l" delay="0.02" gain="1 ~0.1"/>
+							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
+						</Neuron>
+						
+						<!-- Static balance neurons -->
+						<Neuron name="FWD-BAL" offset="0.1~0.01">
+							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="-1~0.1"/>
+							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="-0.2~0.02"/>
+							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
+						</Neuron>
+						<Neuron name="BKW-BAL" offset="0.1~0.01">
+							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="1~0.1"/>
+							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="0.2~0.02"/>
+							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
+						</Neuron>
+
+						<!-- HFL -->
+						<Neuron name="HFL-SW" offset="0.1~0.01">
+							<Input type="MuscleLength" source="iliopsoas" delay="0.005" gain="0.5~0.05"/>
+							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="1~0.1"/>
+							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="0.5~0.05"/>
+							<Input type="MuscleLength" source="hamstrings" delay="0.005" gain="-4~0.4"/>
+						</Neuron>
+						<Neuron name="HFL" target="iliopsoas" offset="0">
+							<Input type="Neuron" source="HFL-SW" gain="1"/>
+							<Input type="Neuron" source="FWD-BAL" gain="1"/>
+						</Neuron>
+
+						<!-- HAM / GLU -->
+						<Neuron name="HAM-RT" offset="0">
+							<Input type="MuscleForce" source="hamstrings" delay="0.005" gain="0.65~0.065"/>
+							<input type="LegLoad" delay="0.005" gain="1~0.1"/>
+						</Neuron>
+						<Neuron name="GLU-RT" offset="0">
+							<Input type="MuscleForce" source="glut_max" delay="0.005" gain="0.5~0.05"/>
+							<input type="LegLoad" delay="0.005" gain="1~0.1"/>
+						</Neuron>
+						<Neuron name="HAM" target="hamstrings" offset="0">
+							<Input type="Neuron" source="BKW-BAL" gain="1~0.1"/>
+							<Input type="Neuron" source="HAM-RT" gain="1"/>
+						</Neuron>
+						<Neuron name="GLU" target="glut_max" offset="0">
+							<Input type="Neuron" source="BKW-BAL" gain="1~0.1"/>
+							<Input type="Neuron" source="GLU-RT" gain="1"/>
+						</Neuron>
+						
+						<!-- Stance VAS -->
+						<Neuron name="VAS" target="vasti" offset="0.05~0.005">
+							<Input type="MuscleForce" source="vasti" delay="0.01" gain="1~0.1"/>
+							<Input type="MuscleLength" source="vasti" delay="0.01" gain="1~0.1"/>
+							<input type="LegLoad" opposite="1" delay="0.01" gain="-3~0.3"/>
+						</Neuron>
+					</Neurons>
+				</Controller>
+				
+				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>
