@@ -91,6 +91,10 @@ set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/Reflex.h
 	scone/controllers/ReflexController.cpp
 	scone/controllers/ReflexController.h
+	scone/controllers/Neuron.cpp
+	scone/controllers/Neuron.h
+	scone/controllers/NeuralController.cpp
+	scone/controllers/NeuralController.h
 	)
 set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/GaitStateController.cpp
