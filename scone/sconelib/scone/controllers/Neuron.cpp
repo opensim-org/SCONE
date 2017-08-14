@@ -10,14 +10,13 @@
 #include "scone/model/Sensors.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
-#include "../optimization/Params.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {
 	Neuron::Neuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& loc ) :
-	actuator_()
+	Neuron_( loc.ConvertName( pn.get< string >( "name", "NoName" ) ) )
 	{
-		name_ = loc.ConvertName( pn.get< string >( "name", "NoName" ) );
 		ScopedParamSetPrefixer sp( par, GetNameNoSide( name_ ) );
 
 		INIT_PAR( pn, par, offset_, 0 );
@@ -26,29 +25,27 @@ namespace scone
 		{
 			if ( input_pn.first == "Input" )
 			{
-				activation_t* input = controller.AcquireInput( input_pn.second, par, model, loc );
+				Neuron_* input = controller.AcquireNeuron( input_pn.second, par, model, loc );
 				double gain = par.get( "gain", input_pn.second[ "gain" ] );
 				inputs_.push_back( std::make_pair( gain, input ) );
 			}
 		}
 
 		// set target actuator (if any)
-		auto target = pn.get< string >( "target", "" );
-		actuator_ = !target.empty() ? FindByName( model.GetActuators(), loc.ConvertName( target ) ) : nullptr;
+		if ( pn.has_key( "target" ) )
+			controller.AddMotorNeuron( this, FindByName( model.GetActuators(), loc.ConvertName( pn.get< string >( "target" ) ) ) );
 	}
 
-	void Neuron::UpdateOutput()
+	double Neuron::GetOutput() const
 	{
 		activation_t value = offset_;
 		for ( auto& i : inputs_ )
-			value += i.first * *i.second;
-		output_ = std::max( 0.0, value );
-		if ( actuator_ )
-			actuator_->AddInput( output_ );
+			value += i.first * i.second->GetOutput();
+		return output_ = std::max( 0.0, value );
 	}
 
 	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc ) :
-	output_(),
+	Neuron_( "" ),
 	input_(),
 	offset_()
 	{
@@ -75,8 +72,14 @@ namespace scone
 		name_ = input_->GetName();
 	}
 
-	void SensorNeuron::UpdateOutput()
+	double SensorNeuron::GetOutput() const
 	{
-		output_ = input_->GetValue( delay_ ) + offset_;
+		return output_ = input_->GetValue( delay_ ) + offset_;
 	}
+
+	void MotorNeuron::UpdateActuator()
+	{
+		output_->AddInput( input_->GetOutput() );
+	}
+
 }

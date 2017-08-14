@@ -40,13 +40,13 @@
 						
 						<!-- Static balance neurons -->
 						<Neuron name="FWD-BAL" offset="0.1~0.01">
-							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="-1~0.1"/>
-							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="-0.2~0.02"/>
+							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="1~0.1"/>
+							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="0.2~0.02"/>
 							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
 						</Neuron>
 						<Neuron name="BKW-BAL" offset="0.1~0.01">
-							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="1~0.1"/>
-							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="0.2~0.02"/>
+							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="-1~0.1"/>
+							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="-0.2~0.02"/>
 							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
 						</Neuron>
 

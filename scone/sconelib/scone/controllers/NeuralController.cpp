@@ -21,16 +21,13 @@ namespace scone
 
 	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
 	{
-		for ( auto& n : m_SensorNeurons )
-			n->UpdateOutput();
-
-		for ( auto& n : m_Neurons )
-			n->UpdateOutput();
+		for ( auto& n : m_MotorNeurons )
+			n.UpdateActuator();
 
 		return Controller::SuccessfulUpdate;
 	}
 
-	scone::activation_t* NeuralController::AcquireInput( const PropNode& pn, Params& par, Model& model, Locality loc )
+	Neuron_* NeuralController::AcquireNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
 		string type = pn.get< string >( "type" );
 		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
@@ -39,13 +36,12 @@ namespace scone
 
 		if ( type == "Neuron" )
 		{
-			auto& n = FindByName( m_Neurons, source );
-			return &n->output_;
+			return FindByName( m_Neurons, source ).get();
 		}
 		else
 		{
 			m_SensorNeurons.push_back( std::make_unique< SensorNeuron >( pn, par, model, loc ) );
-			return &m_SensorNeurons.back()->output_;
+			return m_SensorNeurons.back().get();
 		}
 	}
 
@@ -55,6 +51,11 @@ namespace scone
 			frame[ "neuron." + n->GetName() ] = n->output_;
 		for ( auto& n : m_SensorNeurons )
 			frame[ "neuron." + n->GetName() ] = n->output_;
+	}
+
+	void NeuralController::AddMotorNeuron( Neuron_* neuron, Actuator* act )
+	{
+		m_MotorNeurons.emplace_back( neuron, act );
 	}
 
 	String NeuralController::GetClassSignature() const

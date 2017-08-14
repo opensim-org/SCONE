@@ -19,15 +19,17 @@ namespace scone
 
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
-		activation_t* AcquireInput( const PropNode& pn, Params& par, Model& model, Locality loc );
+		Neuron_* AcquireNeuron( const PropNode& pn, Params& par, Model& model, Locality loc );
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
 
+		void AddMotorNeuron( Neuron_* neuron, Actuator* act );
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< NeuronUP > m_Neurons;
+		std::vector< MotorNeuron > m_MotorNeurons;
 	};
 }
