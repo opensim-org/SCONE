@@ -25,7 +25,7 @@ namespace scone
 			if ( input_pn.first == "Input" )
 			{
 				Neuron_* input = controller.AcquireNeuron( input_pn.second, par, model, loc );
-				double gain = par.get( GetNameNoSide( input->GetName() ), input_pn.second[ "gain" ] );
+				double gain = par.get( input_pn.second.get< string >( "source" ) + input_pn.second.get< string >( "type" ), input_pn.second[ "gain" ] );
 				inputs_.push_back( std::make_pair( gain, input ) );
 			}
 		}
@@ -80,5 +80,4 @@ namespace scone
 	{
 		output_->AddInput( input_->GetOutput() );
 	}
-
 }

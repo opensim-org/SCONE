@@ -81,10 +81,10 @@
 						</Neuron>
 						
 						<!-- Stance VAS -->
-						<Neuron name="VAS" target="vasti" offset="0.05~0.005">
+						<Neuron name="VAS" target="vasti" offset="0.2~0.02">
 							<Input type="MuscleForce" source="vasti" delay="0.01" gain="1~0.1"/>
 							<Input type="MuscleLength" source="vasti" delay="0.01" gain="1~0.1"/>
-							<input type="LegLoad" opposite="1" delay="0.01" gain="-3~0.3"/>
+							<input type="LegLoad" opposite="1" delay="0.01" gain="-1~0.1"/>
 						</Neuron>
 					</Neurons>
 				</Controller>
