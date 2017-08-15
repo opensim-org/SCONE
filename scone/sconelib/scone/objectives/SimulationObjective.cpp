@@ -16,70 +16,46 @@ namespace scone
 {
 	SimulationObjective::SimulationObjective( const PropNode& props ) :
 	Objective( props ),
-	m_ModelProps( props.get_child( "Model" ) )
+	m_ModelPropsCopy( props.get_child( "Model" ) )
 	{
 		INIT_PROPERTY( props, max_duration, 6000.0 );
 
 		// create model to flag unused model props and create par_info_
-		CreateModelFromParameters( info_ );
+		auto model = CreateModel( props.get_child( "Model" ), info_ );
+		m_Signature = model->GetSignature() + stringf( ".D%.0f", max_duration );
 	}
 
 	SimulationObjective::~SimulationObjective()
 	{}
 
-	void SimulationObjective::CreateModelFromParameters( Params& par )
+	ModelUP SimulationObjective::CreateModelFromParameters( Params& par ) const
 	{
-		// (re)create new model using stored model props
-		m_Model = CreateModel( m_ModelProps, par );
-
-		// find measure controller
-		auto& controllers = m_Model->GetControllers();
-		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
-		auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );
-
-		if ( measureIter == controllers.end() )
-			SCONE_THROW( "Could not find a measure" );
-		else if ( controllers.end() != std::find_if( measureIter + 1, controllers.end(), is_measure ) )
-			SCONE_THROW( "More than one measure was found" );
-
-		m_Measure = dynamic_cast< Measure* >( measureIter->get() );
+		return CreateModel( m_ModelPropsCopy, par );
 	}
 
-	std::vector< String > SimulationObjective::WriteResults( const String& file )
+	scone::ModelUP SimulationObjective::CreateModelFromParFile( const path& parfile ) const
 	{
-		std::vector< String > files;
-		files.push_back( m_Model->WriteData( file ) );
-		return files;
+		return CreateModel( m_ModelPropsCopy, ParamInstance( info_, parfile ) );
 	}
 
 	scone::fitness_t SimulationObjective::evaluate( const ParamInstance& point ) const
 	{
-		// WARNING: this function is thread-safe and should only access local variables
-		auto model = CreateModel( m_ModelProps, ParamInstance( point ) );
-		auto& controllers = model->GetControllers();
-		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast<Measure*>( c.get() ) != nullptr; };
-		auto measureIter = std::find_if( controllers.begin(), controllers.end(), is_measure );
-
-		if ( measureIter == controllers.end() )
-			SCONE_THROW( "Could not find a measure" );
-		else if ( controllers.end() != std::find_if( measureIter + 1, controllers.end(), is_measure ) )
-			SCONE_THROW( "More than one measure was found" );
-		auto measue = dynamic_cast<Measure*>( measureIter->get() );
+		// WARNING: this function is thread-safe and should only access local or const variables
+		auto model = CreateModel( m_ModelPropsCopy, ParamInstance( point ) );
 
 		// run the simulation
-		model->SetSimulationEndTime( max_duration );
-		model->AdvanceSimulationTo( max_duration );
-		return measue->GetResult( *model );
+		return EvaluateModel( *model );
+	}
+
+	scone::fitness_t SimulationObjective::EvaluateModel( Model& model ) const
+	{
+		model.SetSimulationEndTime( max_duration );
+		model.AdvanceSimulationTo( max_duration );
+		return model.GetMeasure()->GetResult( model );
 	}
 
 	String SimulationObjective::GetClassSignature() const
 	{
-		String str = m_Model->GetSignature();
-
-		for ( ControllerUP& c : m_Model->GetControllers() )
-			str += "." + c->GetSignature();
-		str += stringf( ".D%.0f", max_duration );
-
-		return str;
+		return m_Signature;
 	}
 }

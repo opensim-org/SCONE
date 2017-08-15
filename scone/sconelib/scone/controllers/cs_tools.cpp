@@ -17,23 +17,24 @@ namespace scone
 	{
 		// create the simulation objective object
 		SimulationObjectiveUP so = CreateSimulationObjective( par_file );
-
-		timer t;
-		//double result = so->Evaluate();
-		auto duration = t.seconds();
+		auto model = so->CreateModelFromParFile( par_file );
 
 		// set data storage
 		if ( write_results )
-			so->GetModel().SetStoreData( true );
+			model->SetStoreData( true );
+
+		timer t;
+		double result = so->EvaluateModel( *model );
+		auto duration = t.seconds();
 
 		// reset profiler (only if enabled)
 		Profiler::GetGlobalInstance().Reset();
 
 		// collect statistics
 		PropNode statistics;
-		statistics.set( "result", so->GetMeasure().GetReport() );
-		statistics.set( "simulation time", so->GetModel().GetTime() );
-		statistics.set( "performance (x real-time)", so->GetModel().GetTime() / duration );
+		statistics.set( "result", model->GetMeasure()->GetReport() );
+		statistics.set( "simulation time", model->GetTime() );
+		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
 		// output profiler results (only if enabled)
 		std::cout << Profiler::GetGlobalInstance().GetReport();
@@ -64,9 +65,6 @@ namespace scone
 			if ( optProp.get< bool >( "use_init_file" ) )
 				so->info().import_mean_std( optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
 		}
-
-		if ( is_par_file )
-			so->CreateModelFromParameters( ParamInstance( so->info(), file ) );
 
 		// report unused parameters
 		LogUntouched( objProp );

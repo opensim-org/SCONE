@@ -59,20 +59,19 @@ namespace scone
 		LogUntouched( objProp );
 
 		// set data storage
-		so.GetModel().SetStoreData( true );
+		auto model = so.CreateModelFromParFile( filename );
+		model->SetStoreData( true );
 		Profiler::GetGlobalInstance().Reset();
 
-		ParamInstance par( so.info(), filename );
-
 		timer tmr;
-		double result = obj->evaluate( par );
+		double result = so.EvaluateModel( *model );
 		auto duration = tmr.seconds();
 
 		// collect statistics
 		PropNode statistics;
-		statistics.set( "result", so.GetMeasure().GetReport() );
-		statistics.set( "simulation time", so.GetModel().GetTime() );
-		statistics.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+		statistics.set( "result", model->GetMeasure()->GetReport() );
+		statistics.set( "simulation time", model->GetTime() );
+		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
 		cout << "--- Evaluation report ---" << endl;
 		cout << statistics << endl;

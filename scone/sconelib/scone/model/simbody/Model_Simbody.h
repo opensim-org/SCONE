@@ -84,9 +84,6 @@ namespace scone
 		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
 
-	protected:
-		virtual String GetClassSignature() const override;
-
 	private:
 		void SetTkState( const State& s );
 		void InitStateFromTk();

@@ -99,7 +99,7 @@ namespace scone
 
 	scone::String LegLoadSensor::GetName() const
 	{
-		return m_Leg.GetName() + ".L";
+		return m_Leg.GetName() + ".LD";
 	}
 
 	static const char* g_PelvisNames[] = { "pelvis_tilt", "pelvis_list", "pelvis_rotation" };

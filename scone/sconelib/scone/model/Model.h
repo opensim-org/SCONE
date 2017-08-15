@@ -152,8 +152,10 @@ namespace scone
 		std::mutex& GetSimulationMutex() { return simulation_mutex; }
 		std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
 
+		Measure* GetMeasure();
+
 	protected:
-		virtual String GetClassSignature() const override { return GetName(); }
+		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
 		void CreateBalanceSensors( const PropNode& props, Params& par );
 

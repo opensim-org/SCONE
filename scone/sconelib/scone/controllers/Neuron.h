@@ -11,44 +11,39 @@ namespace scone
 	class SensorDelayAdapter;
 	using activation_t = double;
 
-	class Neuron_
+	struct Neuron
 	{
-	public:
-		Neuron_( const string& name = "" ) : name_( name ) {}
-		virtual ~Neuron_() {}
-		const String& GetName() const { return name_; }
+		Neuron( const string& name = "" ) : name_( name ), output_(), offset_() {}
+		virtual ~Neuron() {}
 		virtual activation_t GetOutput() const = 0;
 
-	protected:
+		const String& GetName() { return name_; }
 		String name_;
-	};
-
-	struct Neuron : public Neuron_
-	{
-		Neuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& locality );
-		double GetOutput() const override;
-
-		std::vector< std::pair< double, Neuron_* > > inputs_;
+		String par_name_;
 		mutable double output_;
 		double offset_;
 	};
 
-	struct SensorNeuron : public Neuron_
+	struct InterNeuron : public Neuron
+	{
+		InterNeuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& locality );
+		double GetOutput() const override;
+		std::vector< std::pair< double, Neuron* > > inputs_;
+	};
+
+	struct SensorNeuron : public Neuron
 	{
 		SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality locality );
 		double GetOutput() const override;
-
-		mutable double output_;
-		double offset_;
 		SensorDelayAdapter* input_;
 		TimeInSeconds delay_;
 	};
 
 	struct MotorNeuron
 	{
-		MotorNeuron( Neuron_* neuron, Actuator* act ) : input_( neuron ), output_( act ) {}
+		MotorNeuron( Neuron* neuron, Actuator* act ) : input_( neuron ), output_( act ) {}
 		void UpdateActuator();
-		Neuron_* input_;
+		Neuron* input_;
 		Actuator* output_;
 	};
 }

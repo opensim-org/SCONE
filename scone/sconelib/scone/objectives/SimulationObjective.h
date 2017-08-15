@@ -8,6 +8,7 @@
 
 #include "Measure.h"
 #include <vector>
+#include "flut/system/path.hpp"
 
 namespace scone
 {
@@ -17,23 +18,18 @@ namespace scone
 		SimulationObjective( const PropNode& props );
 		virtual ~SimulationObjective();
 
-		virtual std::vector< String > WriteResults( const String& file ) override;
-
-		Model& GetModel() { return *m_Model; }
-		Measure& GetMeasure() { return *m_Measure; }
-
 		double max_duration;
 
 		virtual fitness_t evaluate( const ParamInstance& point ) const override;
-
-		void CreateModelFromParameters( Params& par );
+		fitness_t EvaluateModel( Model& m ) const;
+		ModelUP CreateModelFromParameters( Params& par ) const;
+		ModelUP CreateModelFromParFile( const path& parfile ) const;
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
-		ModelUP m_Model;
-		Measure* m_Measure;
-		PropNode m_ModelProps;
+		PropNode m_ModelPropsCopy;
+		String m_Signature;
 	};
 }

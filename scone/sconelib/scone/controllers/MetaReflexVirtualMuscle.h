@@ -28,7 +28,6 @@ namespace scone
 
 		Real GetSimilarity( const Muscle& mus, Real tot_abs_moment_arm );
 		size_t GetDofCount() { return dof_infos.size(); }
-		void SetDofRotationAxis();
 		Vec3 average_moment_axis;
 
 	private:

@@ -3,6 +3,7 @@
 #include "flut/string_tools.hpp"
 #include "scone/model/Locality.h"
 #include "scone/core/HasName.h"
+#include "flut/container_tools.hpp"
 
 namespace scone
 {
@@ -13,8 +14,8 @@ namespace scone
 		{
 			for ( auto& neuron : *neurons )
 			{
-				m_Neurons.push_back( std::make_unique< Neuron >( neuron.second, par, model, *this, Locality( LeftSide ) ) );
-				m_Neurons.push_back( std::make_unique< Neuron >( neuron.second, par, model, *this, Locality( RightSide ) ) );
+				m_Neurons.push_back( std::make_unique< InterNeuron >( neuron.second, par, model, *this, Locality( LeftSide ) ) );
+				m_Neurons.push_back( std::make_unique< InterNeuron >( neuron.second, par, model, *this, Locality( RightSide ) ) );
 			}
 		}
 	}
@@ -27,35 +28,33 @@ namespace scone
 		return Controller::SuccessfulUpdate;
 	}
 
-	Neuron_* NeuralController::AcquireNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
+	Neuron* NeuralController::FindInput( const PropNode& pn, Locality loc )
 	{
-		string type = pn.get< string >( "type" );
 		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
 			loc = MakeMirrored( loc );
-		auto source = loc.ConvertName( pn.get< string >( "source" ) );
+		auto name = loc.ConvertName( pn.get< string >( "source", "leg0" ) );
+		if ( pn.get< string >( "type" ) != "Neuron" )
+			name += '.' + pn.get< string >( "type" );
 
-		if ( type == "Neuron" )
-		{
-			return FindByName( m_Neurons, source ).get();
-		}
-		else
-		{
-			m_SensorNeurons.push_back( std::make_unique< SensorNeuron >( pn, par, model, loc ) );
-			return m_SensorNeurons.back().get();
-		}
+		auto iter = flut::find_if( m_Neurons, [&]( const NeuronUP& n ) { return n->name_ == name; } );
+		return iter != m_Neurons.end() ? iter->get() : nullptr;
 	}
 
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
 	{
 		for ( auto& n : m_Neurons )
-			frame[ "neuron." + n->GetName() ] = n->output_;
-		for ( auto& n : m_SensorNeurons )
-			frame[ "neuron." + n->GetName() ] = n->output_;
+			frame[ "neuron." + n->name_ ] = n->output_;
 	}
 
-	void NeuralController::AddMotorNeuron( Neuron_* neuron, Actuator* act )
+	void NeuralController::AddMotorNeuron( Neuron* neuron, Actuator* act )
 	{
 		m_MotorNeurons.emplace_back( neuron, act );
+	}
+
+	Neuron* NeuralController::AddSensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
+	{
+		m_Neurons.push_back( std::make_unique< SensorNeuron >( pn, par, model, loc ) );
+		return m_Neurons.back().get();
 	}
 
 	String NeuralController::GetClassSignature() const

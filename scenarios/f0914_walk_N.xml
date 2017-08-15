@@ -18,7 +18,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" symmetric="1">
+				<Controller type="NeuralController">
 					<Neurons>
 						<!-- TA -->
 						<Neuron name="TA" target="tib_ant" offset="0.1~0.01">
@@ -30,24 +30,24 @@
 						<Neuron name="SOL" target="soleus" offset="0.1~0.01">
 							<Input type="MuscleForce" source="soleus" delay="0.02" gain="1~0.1"/>
 							<Input type="MuscleLength" source="soleus" delay="0.02" gain="1~0.1"/>
-							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
+							<Input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
 						</Neuron>
 						<Neuron name="GAS" target="gastroc" offset="0.1~0.01">
 							<Input type="MuscleForce" source="gastroc" delay="0.02" gain="1 ~0.1"/>
 							<Input type="MuscleLength" source="gastroc" delay="0.02" gain="1 ~0.1"/>
-							<input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
+							<Input type="LegLoad" opposite="1" delay="0.02" gain="-3~0.3"/>
 						</Neuron>
 						
 						<!-- Static balance neurons -->
 						<Neuron name="FWD-BAL" offset="0.1~0.01">
 							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="1~0.1"/>
 							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="0.2~0.02"/>
-							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
+							<Input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
 						</Neuron>
 						<Neuron name="BKW-BAL" offset="0.1~0.01">
 							<Input type="DofPos" source="pelvis_tilt" delay="0.005" gain="-1~0.1"/>
 							<Input type="DofVel" source="pelvis_tilt" delay="0.005" gain="-0.2~0.02"/>
-							<input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
+							<Input type="LegLoad" opposite="1" delay="0.005" gain="-1~0.1"/>
 						</Neuron>
 
 						<!-- HFL -->
@@ -65,11 +65,9 @@
 						<!-- HAM / GLU -->
 						<Neuron name="HAM-RT" offset="0">
 							<Input type="MuscleForce" source="hamstrings" delay="0.005" gain="0.65~0.065"/>
-							<input type="LegLoad" delay="0.005" gain="1~0.1"/>
 						</Neuron>
 						<Neuron name="GLU-RT" offset="0">
 							<Input type="MuscleForce" source="glut_max" delay="0.005" gain="0.5~0.05"/>
-							<input type="LegLoad" delay="0.005" gain="1~0.1"/>
 						</Neuron>
 						<Neuron name="HAM" target="hamstrings" offset="0">
 							<Input type="Neuron" source="BKW-BAL" gain="1~0.1"/>
@@ -82,9 +80,9 @@
 						
 						<!-- Stance VAS -->
 						<Neuron name="VAS" target="vasti" offset="0.2~0.02">
-							<Input type="MuscleForce" source="vasti" delay="0.01" gain="1~0.1"/>
-							<Input type="MuscleLength" source="vasti" delay="0.01" gain="1~0.1"/>
-							<input type="LegLoad" opposite="1" delay="0.01" gain="-1~0.1"/>
+							<Input type="MuscleForce" source="vasti" delay="0.01" gain="0.5~0.05"/>
+							<Input type="MuscleLength" source="vasti" delay="0.01" gain="0.5~0.05"/>
+							<Input type="LegLoad" opposite="1" delay="0.01" gain="-2~0.2"/>
 						</Neuron>
 					</Neurons>
 				</Controller>

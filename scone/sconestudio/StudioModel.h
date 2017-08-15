@@ -35,11 +35,11 @@ namespace scone
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
-		Model& GetSimModel() { return so->GetModel(); }
+		Model& GetSimModel() { return *model; }
 		SimulationObjective& GetObjective() { return *so; }
 
 		bool IsEvaluating() { return is_evaluating; }
-		TimeInSeconds GetTime() const { return so->GetModel().GetTime(); }
+		TimeInSeconds GetTime() const { return model->GetTime(); }
 
 		void SetViewSetting( ViewSettings e, bool value );
 		void ApplyViewSettings( const ViewFlags& f );
@@ -49,6 +49,7 @@ namespace scone
 
 		Storage<> data;
 		SimulationObjectiveUP so;
+		ModelUP model;
 		path filename;
 
 		ViewFlags view_flags;

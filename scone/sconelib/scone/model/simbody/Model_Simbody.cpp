@@ -652,11 +652,6 @@ namespace scone
 		m_pTkIntegrator->setFinalTime( t );
 	}
 
-	scone::String Model_Simbody::GetClassSignature() const
-	{
-		return GetOsimModel().getName();
-	}
-
 	const String& Model_Simbody::GetName() const
 	{
 		return GetOsimModel().getName();

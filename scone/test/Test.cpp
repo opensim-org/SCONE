@@ -32,6 +32,7 @@ using std::endl;
 #include <flut/timer.hpp>
 #include "flut/system/log_sink.hpp"
 #include "flut/system/log.hpp"
+#include "flut/filesystem.hpp"
 using flut::timer;
 
 namespace scone
@@ -85,15 +86,15 @@ namespace scone
 		}
 	}
 
-	void PlaybackTest( const String& filename )
+	void PlaybackTest( const path& filename )
 	{
 		flut::log::stream_sink cout_log( flut::log::trace_level );
 
-		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
+		auto config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
-			bfs::current_path( config_path.parent_path() );
+			flut::current_path( config_path.parent_path() );
 
-		const PropNode configProp = load_file_with_include( path( config_path.string() ) ) ;
+		const PropNode configProp = load_file_with_include( config_path ) ;
 		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
 
 		// override some variables
@@ -108,21 +109,19 @@ namespace scone
 		// create objective
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
-
-		ParamInfo par;
-		par.import_fixed( path( filename ) );
+		auto model = so.CreateModelFromParFile( filename );
 
 		SCONE_PROFILE_RESET;
 		double result;
 		timer t;
-		result = obj->evaluate( ParamInstance( par ) );
+		result = so.EvaluateModel( *model );
 		auto duration = t.seconds();
 
 		// collect statistics
 		PropNode stats;
-		stats.set( "result", so.GetMeasure().GetReport() );
-		stats.set( "simulation time", so.GetModel().GetTime() );
-		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
+		stats.set( "result", model->GetMeasure()->GetReport() );
+		stats.set( "simulation time", model->GetTime() );
+		stats.set( "performance (x real-time)", model->GetTime() / duration );
 
 		cout << "--- Evaluation report ---" << endl;
 		cout << stats << endl;
@@ -159,85 +158,6 @@ namespace scone
 			}
 			str << std::endl;
 		}
-	}
-
-	void PerformanceTest( const String& filename )
-	{
-		flut::log::stream_sink cout_log( flut::log::trace_level );
-
-		bfs::path config_path = bfs::path( filename ).parent_path() / "config.xml";
-		if ( config_path.has_parent_path() )
-			bfs::current_path( config_path.parent_path() );
-
-		const PropNode configProp = load_file_with_include( flut::path( config_path.string() ) );
-		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];
-
-		// override some variables
-		objProp.set( "max_duration", 1 );
-		objProp.set( "Model.integration_accuracy", 1e-3 );
-		//objProp.Set( "Model.use_fixed_control_step_size", true );
-		//objProp.Set( "Model.fixed_control_step_size", 0.01 );
-		//objProp.Set( "Model.max_step_size", 0.001 );
-		//objProp.Set( "Model.integration_method", String("SemiExplicitEuler2") );
-		objProp.set("Model.integration_method", String("RungeKuttaMerson"));
-
-		// create objective
-		ObjectiveUP obj = CreateObjective( objProp );
-		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
-
-		ParamInstance par( so.info(), path( filename ) );
-
-		SCONE_PROFILE_RESET;
-		double result;
-		timer t;
-		result = obj->evaluate( par );
-		auto duration = t.seconds();
-
-		// collect statistics
-		PropNode stats;
-		stats.set( "result", so.GetMeasure().GetReport() ).set_value( result );
-		stats.set( "simulation time", so.GetModel().GetTime() );
-		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
-		cout << "--- Evaluation report ---" << endl;
-		cout << stats << endl;
-
-#ifdef SCONE_ENABLE_PROFILING
-		cout << "Profile report:" << endl;
-		cout << Profiler::GetGlobalInstance().GetReport();
-#endif
-		cout << "All done!" << endl;
-	}
-
-	void SimulationObjectiveTest( const String& filename )
-	{
-		flut::log::stream_sink cout_log( flut::log::trace_level );
-		const PropNode configProp = load_file_with_include( path( filename ) );
-		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
-
-		// create objective
-		ObjectiveUP obj = CreateObjective( objProp );
-		SimulationObjective& so = dynamic_cast< SimulationObjective& >( *obj );
-
-		// reset profiler
-		SCONE_PROFILE_RESET;
-
-		timer t;
-		double result = obj->evaluate( ParamInstance( so.info() ) );
-		auto duration = t.seconds();
-
-		// collect statistics
-		PropNode stats;
-		stats.set( "result", so.GetMeasure().GetReport() ).set_value( result );
-		stats.set( "simulation time", so.GetModel().GetTime() );
-		stats.set( "performance (x real-time)", so.GetModel().GetTime() / duration );
-		cout << "--- Evaluation report ---" << endl;
-		cout << stats << endl;
-
-#ifdef SCONE_ENABLE_PROFILING
-		cout << "Profile report:" << endl;
-		cout << SCONE_PROFILE_REPORT;
-#endif
-		cout << "All done!" << endl;
 	}
 
 	void MuscleLengthTest()

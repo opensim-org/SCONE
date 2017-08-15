@@ -13,6 +13,8 @@
 
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
+#include "flut/container_tools.hpp"
+#include "../objectives/Measure.h"
 
 using std::endl;
 
@@ -87,6 +89,26 @@ namespace scone
 		return Vec3( m_OriSensors[ 0 ]->GetValue( balance_sensor_delay ),
 			m_OriSensors[ 1 ]->GetValue( balance_sensor_delay ),
 			m_OriSensors[ 2 ]->GetValue( balance_sensor_delay ) );
+	}
+
+	Measure* Model::GetMeasure()
+	{
+		// find measure controller
+		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast< Measure* >( c.get() ) != nullptr; };
+		auto measureIter = flut::find_if( GetControllers(), is_measure );
+
+		SCONE_THROW_IF( measureIter == GetControllers().end(), "Could not find a measure" );
+		SCONE_THROW_IF( std::find_if( measureIter + 1, GetControllers().end(), is_measure ) != GetControllers().end(), "More than one measure was found" );
+
+		return dynamic_cast< Measure* >( measureIter->get() );
+	}
+
+	String Model::GetClassSignature() const
+	{
+		auto str = GetName();
+		for ( auto& c : GetControllers() )
+			str += "." + c->GetSignature();
+		return str;
 	}
 
 	void Model::UpdateSensorDelayAdapters()
