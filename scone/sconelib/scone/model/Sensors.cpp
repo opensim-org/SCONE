@@ -71,7 +71,7 @@ namespace scone
 
 	scone::String DofPositionSensor::GetName() const
 	{
-		return m_Dof.GetName() + ".P";
+		return m_Dof.GetName() + ".DP";
 	}
 
 	scone::Real DofVelocitySensor::GetValue() const
@@ -84,7 +84,7 @@ namespace scone
 
 	scone::String DofVelocitySensor::GetName() const
 	{
-		return m_Dof.GetName() + ".V";
+		return m_Dof.GetName() + ".DV";
 	}
 
 	LegLoadSensor::LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :

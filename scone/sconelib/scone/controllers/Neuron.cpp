@@ -56,35 +56,35 @@ namespace scone
 		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
 			loc = MakeMirrored( loc );
 		const auto type = pn.get< string >( "type" );
-		par_name_ = pn.get< string >( "source", "leg0" ) + '.' + type;
+		par_name_ = pn.get< string >( "source", "leg" ) + '.' + type;
 
-		if ( type == "MuscleForce" )
+		if ( type == "F" )
 		{
 			const auto sided_source_name = loc.ConvertName( pn.get< string >( "source" ) );
 			input_ = &model.AcquireDelayedSensor< MuscleForceSensor >( *FindByName( model.GetMuscles(), sided_source_name ) );
 		}
-		else if ( type == "MuscleLength" )
+		else if ( type == "L" )
 		{
 			const auto sided_source_name = loc.ConvertName( pn.get< string >( "source" ) );
 			input_ = &model.AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), sided_source_name ) );
 			offset_ = -1;
 		}
-		else if ( type == "DofPos" )
+		else if ( type == "DP" )
 		{
 			const auto source_name = pn.get< string >( "source" );
 			input_ = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), source_name ) );
 		}
-		else if ( type == "DofVel" )
+		else if ( type == "DV" )
 		{
 			const auto source_name = pn.get< string >( "source" );
 			input_ = &model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), source_name ) );
 		}
-		else if ( type == "LegLoad" )
+		else if ( type == "LD" )
 		{
 			input_ = &model.AcquireDelayedSensor< LegLoadSensor >( model.GetLeg( loc ) );
 		}
 
-		flut_assert( input_ );
+		flut_assert_msg( input_, "Unknown type " + type );
 		name_ = input_->GetName();
 	}
 
