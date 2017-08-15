@@ -33,7 +33,7 @@ namespace scone
 
 				double gain = par.get( input->par_name_, input_pn.second[ "gain" ] );
 				inputs_.push_back( std::make_pair( gain, input ) );
-				log::info( name_, " <-- ", gain, " * ", input->name_ );
+				//log::info( name_, " <-- ", gain, " * ", input->name_ );
 			}
 		}
 
