@@ -11,6 +11,8 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
 #include "scone/optimization/Params.h"
+#include "flut/string_tools.hpp"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {
@@ -53,30 +55,31 @@ namespace scone
 	input_()
 	{
 		INIT_PROP( pn, delay_, 999 );
-		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
-			loc = MakeMirrored( loc );
 		const auto type = pn.get< string >( "type" );
-		par_name_ = pn.get< string >( "source", "leg" ) + '.' + type;
+		const auto source_name = pn.get< string >( "source", "leg" );
+		bool opposite = pn.get_any< bool >( { "mirrored", "opposite" }, false );
+		par_name_ = source_name + ( opposite ? "_o." : "." ) + type;
+
+		if ( opposite )
+			loc = MakeMirrored( loc );
 
 		if ( type == "F" )
 		{
-			const auto sided_source_name = loc.ConvertName( pn.get< string >( "source" ) );
+			const auto sided_source_name = loc.ConvertName( source_name );
 			input_ = &model.AcquireDelayedSensor< MuscleForceSensor >( *FindByName( model.GetMuscles(), sided_source_name ) );
 		}
 		else if ( type == "L" )
 		{
-			const auto sided_source_name = loc.ConvertName( pn.get< string >( "source" ) );
+			const auto sided_source_name = loc.ConvertName( source_name );
 			input_ = &model.AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), sided_source_name ) );
 			offset_ = -1;
 		}
 		else if ( type == "DP" )
 		{
-			const auto source_name = pn.get< string >( "source" );
 			input_ = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), source_name ) );
 		}
 		else if ( type == "DV" )
 		{
-			const auto source_name = pn.get< string >( "source" );
 			input_ = &model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), source_name ) );
 		}
 		else if ( type == "LD" )
@@ -85,7 +88,7 @@ namespace scone
 		}
 
 		flut_assert_msg( input_, "Unknown type " + type );
-		name_ = input_->GetName();
+		name_ = input_->GetName() + stringf( "+%.0f", delay_ * 1000 );
 	}
 
 	double SensorNeuron::GetOutput() const

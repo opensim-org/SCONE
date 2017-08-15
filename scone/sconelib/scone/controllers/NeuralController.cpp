@@ -33,6 +33,8 @@ namespace scone
 		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
 			loc = MakeMirrored( loc );
 		auto name = loc.ConvertName( pn.get< string >( "source", "leg0" ) );
+
+
 		if ( pn.get< string >( "type" ) != "Neuron" )
 			name += '.' + pn.get< string >( "type" );
 
