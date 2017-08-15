@@ -341,15 +341,15 @@ namespace scone
 		}
 	}
 
-	String Model_Simbody::WriteData( const String& file ) const
+	String Model_Simbody::WriteData( const path& file ) const
 	{
-		boost::filesystem::path path( file + ".sto" );
-		auto name = ( path.parent_path().filename() / path.stem() ).string();
+		path p( file + ".sto" );
+		auto name = ( p.parent_path().filename() / p.stem() ).str();
 
 		// write scone data
-		WriteStorageSto( m_Data, path.string(), name );
+		WriteStorageSto( m_Data, p.str(), name );
 
-		return path.string();
+		return p.str();
 	}
 
 	Vec3 Model_Simbody::GetComPos() const
