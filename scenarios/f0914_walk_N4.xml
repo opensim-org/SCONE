@@ -6,7 +6,7 @@
 	<global_std_factor>0.1</global_std_factor>
 	<global_std_offset>0.001</global_std_offset>
 	<Objective type="SimulationObjective">
-		<signature_postfix>N3</signature_postfix>
+		<signature_postfix>N4</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -32,22 +32,34 @@
 							<Input type="L" source="soleus" delay="0.02" gain="~1"/>
 							<Input type="LD" opposite="1" delay="0.02" gain="~-3"/>
 						</Neuron>
-						<Neuron name="GAS" target="gastroc" offset="0.1~0.01">
+						<Neuron name="GAS" target="gastroc" offset="~0.1">
 							<Input type="F" source="gastroc" delay="0.02" gain="~1"/>
 							<Input type="L" source="gastroc" delay="0.02" gain="~1"/>
 							<Input type="LD" opposite="1" delay="0.02" gain="~-3"/>
 						</Neuron>
+
+						<!-- Stance VAS -->
+						<Neuron name="VAS" target="vasti" offset="~0.5">
+							<Input type="F" source="vasti" delay="0.01" gain="~0.5"/>
+							<Input type="L" source="vasti" delay="0.01" gain="~1"/>
+							<Input type="LD" opposite="1" delay="0.01" gain="~-0.5"/>
+							<Input type="F" source="iliopsoas" delay="0.01" gain="~-1"/>
+							<Input type="F" source="hamstrings" delay="0.01" gain="~-0.2"/>
+						</Neuron>
 						
 						<!-- Static balance neurons -->
+						<Neuron name="INV-LD" offset="1">
+							<Input type="LD" delay="0.005" gain="-1"/>
+						</Neuron>
 						<Neuron name="FWD-BAL" offset="~0.1">
 							<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
 							<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/>
-							<Input type="LD" opposite="1" delay="0.005" gain="~-1"/>
+							<Input type="Neuron" source="INV-LD" gain="~-1"/>
 						</Neuron>
 						<Neuron name="BKW-BAL" offset="0~0.1">
 							<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~-1"/>
 							<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/>
-							<Input type="LD" opposite="1" delay="0.005" gain="~-1"/>
+							<Input type="Neuron" source="INV-LD" gain="~-1"/>
 						</Neuron>
 
 						<!-- HFL -->
@@ -79,14 +91,6 @@
 						<Neuron name="GLU" target="glut_max" offset="0">
 							<Input type="Neuron" source="BKW-BAL" gain="~1"/>
 							<Input type="Neuron" source="GLU-RT" gain="1"/>
-						</Neuron>
-						
-						<!-- Stance VAS -->
-						<Neuron name="VAS" target="vasti" offset="~0.5">
-							<Input type="F" source="vasti" delay="0.01" gain="~0.5"/>
-							<Input type="L" source="vasti" delay="0.01" gain="~1"/>
-							<Input type="LD" opposite="1" delay="0.01" gain="~-0.5"/>
-							<Input type="F" source="iliopsoas" delay="0.01" gain="~-1"/>
 						</Neuron>
 					</Neurons>
 				</Controller>
