@@ -17,7 +17,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<INCLUDE file="controllers/f0914_GH.xml"/>
+				<INCLUDE file="controllers/f0914_N4.xml"/>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
 		</Model>
