@@ -18,9 +18,9 @@ namespace scone
 	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
 	{
 		auto src_name = props.get< String >( "source" );
-
 		String par_name = GetParName( props );
-		ScopedParamSetPrefixer prefixer( par, par_name + "." );
+		name = GetReflexName( m_Target.GetName(), src_name );
+		ScopedParamSetPrefixer prefixer( par, name + "." );
 
 		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
 		INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
@@ -49,8 +49,8 @@ namespace scone
 			vel += root_vel;
 		}
 
-		Real u_p = pos_gain * ( target_pos - pos );
-		Real u_d = vel_gain * ( target_vel - vel );
+		u_p = pos_gain * ( target_pos - pos );
+		u_d = vel_gain * ( target_vel - vel );
 
 		AddTargetControlValue( constant_u + u_p + u_d );
 
@@ -58,5 +58,11 @@ namespace scone
 		if ( m_Target.GetName() == DEBUG_MUSCLE )
 			log::TraceF( "pos=%.3f vel=%.3f root_pos=%.3f root_vel=%.3f u_p=%.3f u_d=%.3f", pos, vel, root_pos, root_vel, u_p, u_d );
 #endif
+	}
+
+	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
+	{
+		frame[ name + ".RP" ] = u_p;
+		frame[ name + ".RD" ] = u_d;
 	}
 }

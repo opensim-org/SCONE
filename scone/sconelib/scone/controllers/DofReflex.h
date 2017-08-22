@@ -19,7 +19,13 @@ namespace scone
 		Real vel_gain;
 		Real constant_u;
 
+
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
+
 	private:
+		String name;
+		Real u_p;
+		Real u_d;
 		SensorDelayAdapter& m_DelayedPos;
 		SensorDelayAdapter& m_DelayedVel;
 		SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
