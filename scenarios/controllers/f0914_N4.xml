@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N4</signature_prefix>
+	<signature_prefix>N4c</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="~0.5">
@@ -35,12 +35,12 @@
 		</Neuron>
 		<Neuron name="FWD-BAL" offset="~0.1">
 			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
-			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/>
+			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/-->
 			<Input type="Neuron" source="INV-LD" gain="~-1"/>
 		</Neuron>
 		<Neuron name="BKW-BAL" offset="0~0.1">
 			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~-1"/>
-			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/>
+			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/-->
 			<Input type="Neuron" source="INV-LD" gain="~-1"/>
 		</Neuron>
 
@@ -48,7 +48,7 @@
 		<Neuron name="HFL-SW" offset="~0.05">
 			<Input type="L" source="iliopsoas" delay="0.005" gain="~1"/>
 			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
-			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.5"/>
+			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.5"/-->
 			<Input type="L" source="hamstrings" delay="0.005" gain="-4"/>
 			<Input type="LD" delay="0.005" gain="~-1"/>
 		</Neuron>
