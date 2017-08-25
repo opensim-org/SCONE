@@ -22,16 +22,16 @@ namespace scone
 	offset_(),
 	sensor_gain_( 1.0 )
 	{
-		INIT_PROP( pn, delay_, 999 );
-
 		const auto type = pn.get< string >( "type" );
 		bool opposite = pn.get_any< bool >( { "mirrored", "opposite" }, false );
 		bool inverted = pn.get< bool >( "inverted", false );
-		INIT_PROP( pn, offset_, type == "L" ? -1 : ( inverted ? 1 : 0 ) );
-		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
-
 		const auto source_name = pn.get< string >( "source", "leg" );
 		par_name_ = source_name + ( opposite ? "_o." : "." ) + type;
+		ScopedParamSetPrefixer sp( par, par_name_ );
+
+		INIT_PROP( pn, delay_, 999 );
+		INIT_PAR( pn, par, offset_, type == "L" ? 1 : ( inverted ? 1 : 0 ) );
+		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
 
 		if ( opposite )
 			loc = MakeMirrored( loc );
@@ -65,7 +65,7 @@ namespace scone
 
 	double SensorNeuron::GetOutput() const
 	{
-		return output_ = ActivationFunction( sensor_gain_ * input_->GetValue( delay_ ) + offset_ );
+		return output_ = ActivationFunction( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
 
 	InterNeuron::InterNeuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& loc ) :
