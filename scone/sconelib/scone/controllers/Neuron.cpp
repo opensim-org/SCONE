@@ -29,7 +29,7 @@ namespace scone
 		par_name_ = source_name + ( opposite ? "_o." : "." ) + type;
 		ScopedParamSetPrefixer sp( par, par_name_ );
 
-		INIT_PROP( pn, delay_, 999 );
+		INIT_PROP_REQUIRED( pn, delay_ );
 		INIT_PAR( pn, par, offset_, type == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
 
