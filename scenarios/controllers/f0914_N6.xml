@@ -33,13 +33,13 @@
 		<Neuron name="FWD-BAL" offset="~0.1">
 			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/-->
-			<Input type="LD" inverted="1" offset="1" gain="~-1"/>
+			<Input type="LD" inverted="1" delay="0.005" offset="1" gain="~-1"/>
 		</Neuron>
 
 		<Neuron name="BKW-BAL" offset="0~0.1">
 			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~-1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/-->
-			<Input type="LD" inverted="1" offset="1" gain="~-1"/>
+			<Input type="LD" inverted="1" delay="0.005" offset="1" gain="~-1"/>
 		</Neuron>
 
 		<!-- HFL -->
