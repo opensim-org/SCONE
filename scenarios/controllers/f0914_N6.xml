@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N6c</signature_prefix>
+	<signature_prefix>N6d</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="0">
@@ -33,14 +33,14 @@
 		</Neuron>
 		
 		<!-- Static balance neurons -->
-		<Neuron name="FWD-BAL" offset="~0.1">
-			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
+		<Neuron name="FWD-BAL" offset="0">
+			<Input type="DP" source="pelvis_tilt" delay="0.005" offset="~-0.1" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/-->
 			<Input type="LD" inverted="1" delay="0.005" offset="1" gain="~-1"/>
 		</Neuron>
 
-		<Neuron name="BKW-BAL" offset="0~0.1">
-			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~-1"/>
+		<Neuron name="BKW-BAL" offset="0">
+			<Input type="DP" source="pelvis_tilt" inverted="1" offset="~-0.1" delay="0.005" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/-->
 			<Input type="LD" inverted="1" delay="0.005" offset="1" gain="~-1"/>
 		</Neuron>
