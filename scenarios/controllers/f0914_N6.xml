@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N6a</signature_prefix>
+	<signature_prefix>N6c</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="0">
@@ -9,22 +9,25 @@
 		</Neuron>
 		
 		<!-- SOL/GAS -->
-		<Neuron name="SOL" target="soleus" offset="~0.1">
+		<Neuron name="SOL" target="soleus" offset="~0">
 			<Input type="F" source="soleus" delay="0.02" gain="~0.5"/>
-			<!--Input type="L" source="soleus" delay="0.02" gain="~1"/-->
+			<Input type="L" source="soleus" delay="0.02" offset="~0.9" gain="~1"/>
+			<Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/>
 			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
 		</Neuron>
-		<Neuron name="GAS" target="gastroc" offset="~0.1">
+		<Neuron name="GAS" target="gastroc" offset="~0">
 			<Input type="F" source="gastroc" delay="0.02" gain="~0.5"/>
+			<Input type="L" source="gastroc" delay="0.02" offset="~0.9" gain="~1"/>
+			<Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/>
 			<!--Input type="L" source="gastroc" delay="0.02" gain="~1"/-->
 			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
 		</Neuron>
 
 		<!-- Stance VAS -->
-		<Neuron name="VAS" target="vasti" offset="0">
+		<Neuron name="VAS" target="vasti" offset="~0.2">
 			<Input type="F" source="vasti" delay="0.01" gain="~1"/>
 			<Input type="L" source="vasti" delay="0.01" offset="~0.8" gain="~1"/>
-			<!--Input type="LD" inverted="1" delay="0.01" offset="1" gain="~-1"/-->
+			<Input type="LD" opposite="1" delay="0.01" gain="~-0.5"/>
 			<Input type="F" source="iliopsoas" delay="0.01" gain="~-1"/>
 			<Input type="F" source="hamstrings" delay="0.01" gain="~-0.1"/>
 		</Neuron>
