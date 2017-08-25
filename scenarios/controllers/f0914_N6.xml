@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N6d</signature_prefix>
+	<signature_prefix>N6e</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="0">
@@ -9,16 +9,16 @@
 		</Neuron>
 		
 		<!-- SOL/GAS -->
-		<Neuron name="SOL" target="soleus" offset="~0">
+		<Neuron name="SOL" target="soleus" offset="0">
 			<Input type="F" source="soleus" delay="0.02" gain="~0.5"/>
-			<Input type="L" source="soleus" delay="0.02" offset="~0.9" gain="~1"/>
-			<Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/>
+			<Input type="L" source="soleus" delay="0.02" offset="~0.9" gain="~0.5"/>
+			<!--Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/-->
 			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
 		</Neuron>
-		<Neuron name="GAS" target="gastroc" offset="~0">
+		<Neuron name="GAS" target="gastroc" offset="0">
 			<Input type="F" source="gastroc" delay="0.02" gain="~0.5"/>
-			<Input type="L" source="gastroc" delay="0.02" offset="~0.9" gain="~1"/>
-			<Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/>
+			<Input type="L" source="gastroc" delay="0.02" offset="~0.9" gain="~0.5"/>
+			<!--Input type="F" source="tib_ant" delay="0.02" gain="~-0.4"/-->
 			<!--Input type="L" source="gastroc" delay="0.02" gain="~1"/-->
 			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
 		</Neuron>
