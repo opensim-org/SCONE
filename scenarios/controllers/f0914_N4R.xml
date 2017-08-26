@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N4Rc</signature_prefix>
+	<signature_prefix>N4Re</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="0">
@@ -31,15 +31,15 @@
 		
 		<!-- Static balance neurons -->
 		<Neuron name="INV-LD" offset="0">
-			<Input type="LD" delay="0.005" offset="1" gain="-1"/>
+			<Input type="LD" delay="0.005" inverted="1" offset="1" gain="1"/>
 		</Neuron>
 		<Neuron name="FWD-BAL" offset="0">
-			<Input type="DP" source="pelvis_tilt" offset="~0.1" delay="0.005" gain="~1"/>
+			<Input type="DP" source="pelvis_tilt" offset="~-0.1" delay="0.005" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/-->
 			<Input type="Neuron" source="INV-LD" gain="~-1"/>
 		</Neuron>
 		<Neuron name="BKW-BAL" offset="0">
-			<Input type="DP" source="pelvis_tilt" delay="0.005" offset="0~0.1" gain="~-1"/>
+			<Input type="DP" source="pelvis_tilt" inverted="1" delay="0.005" offset="~-0.1" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/-->
 			<Input type="Neuron" source="INV-LD" gain="~-1"/>
 		</Neuron>
