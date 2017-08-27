@@ -47,7 +47,7 @@
 		<!-- HFL -->
 		<Neuron name="HFL-SW" offset="0">
 			<Input type="L" source="iliopsoas" delay="0.005" offset="~1" gain="~1"/>
-			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
+			<Input type="DP" source="pelvis_tilt" delay="0.005" offset="~-0.2" gain="~1"/>
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.5"/-->
 			<Input type="L" source="hamstrings" delay="0.005" offset="~1" gain="-4"/>
 			<Input type="LD" delay="0.005" gain="~-1"/>
