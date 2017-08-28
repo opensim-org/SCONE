@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="GaitStateController">
-	<signature_prefix>GH15</signature_prefix>
+	<signature_prefix>GH3</signature_prefix>
 	<stance_load_threshold init_mean="0.1" init_std="0.01" min="0.001" max="1.0" is_free="1"/>
 	<leg_load_sensor_delay>0.02</leg_load_sensor_delay>
 	<ConditionalControllers>
@@ -53,17 +53,17 @@
 					<!-- Root stability -->
 					<Reflex type="DofReflex" target="hamstrings" source="pelvis_tilt" delay="0.005">
 						<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-						<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+						<!--KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/-->
 						<C0 init_mean="0.1" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 					</Reflex>
 					<Reflex type="DofReflex" target="glut_max" source="pelvis_tilt" delay="0.005">
 						<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-						<KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/>
+						<!--KV init_mean="0.2" init_std="0.02" min="-10" max="10" is_free="1"/-->
 						<C0 init_mean="0.1" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 					</Reflex>
 					<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
 						<KP init_mean="-3.0" init_std="0.3" min="-10" max="10" is_free="1"/>
-						<KV init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
+						<!--KV init_mean="-0.5" init_std="0.05" min="-10" max="10" is_free="1"/-->
 						<C0 init_mean="0.1" init_std="0.01" min="-1.0" max="1.0" is_free="1"/>
 					</Reflex>
 				</Reflexes>
@@ -82,7 +82,7 @@
 					<!-- Balance correction for hip flexion -->
 					<Reflex type="DofReflex" target="iliopsoas" source="pelvis_tilt" delay="0.005">
 						<KP init_mean="1.0" init_std="0.1" min="-10" max="10" is_free="1"/>
-						<KV init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/>
+						<!--KV init_mean="0.5" init_std="0.05" min="-10" max="10" is_free="1"/-->
 					</Reflex>
 					<!-- L- inhibion of HAM -> HFL -->
 					<Reflex type="MuscleReflex" target="iliopsoas" source="hamstrings" delay="0.005">
