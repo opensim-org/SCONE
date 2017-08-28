@@ -20,7 +20,7 @@ namespace scone
 		auto src_name = props.get< String >( "source" );
 		String par_name = GetParName( props );
 		name = GetReflexName( m_Target.GetName(), src_name );
-		ScopedParamSetPrefixer prefixer( par, name + "." );
+		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
 		INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
