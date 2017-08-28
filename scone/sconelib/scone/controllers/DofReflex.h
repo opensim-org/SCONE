@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Reflex.h"
+#include "flut/filter.hpp"
 
 namespace scone
 {
@@ -18,6 +19,7 @@ namespace scone
 		Real pos_gain;
 		Real vel_gain;
 		Real constant_u;
+		Real filter_cutoff_frequency;
 
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
@@ -31,5 +33,6 @@ namespace scone
 		SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
 		SensorDelayAdapter& m_DelayedRootVel; // used for world coordinates, TODO: neater
 		bool m_bUseRoot;
+		flut::iir_filter< double, 2 > m_Filter;
 	};
 }
