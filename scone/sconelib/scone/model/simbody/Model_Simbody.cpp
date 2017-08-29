@@ -320,7 +320,7 @@ namespace scone
 					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )
 					{
 						auto& osMus = m_pOsimModel->updMuscles().get( i );
-						if ( pm.match( osMus.getName() ) )
+						if ( pm( osMus.getName() ) )
 							SetOpenSimParameter( osMus, param_it->second, par );
 					}
 				}

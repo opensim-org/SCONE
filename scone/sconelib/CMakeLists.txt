@@ -83,6 +83,12 @@ set(CS_CONTROLLERS_NC_FILES
 	scone/controllers/NeuralController.h
 	scone/controllers/Neuron.cpp
 	scone/controllers/Neuron.h
+	scone/controllers/SensorNeuron.cpp
+	scone/controllers/SensorNeuron.h
+	scone/controllers/InterNeuron.cpp
+	scone/controllers/InterNeuron.h
+	scone/controllers/MotorNeuron.cpp
+	scone/controllers/MotorNeuron.h
 	)
 set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/ConditionalMuscleReflex.cpp
