@@ -5,7 +5,7 @@ namespace scone
 {
 	struct SensorNeuron : public Neuron
 	{
-		SensorNeuron( SensorDelayAdapter* input, double delay, double offset = 0.0, bool inverted = false );
+		SensorNeuron( Model& model, const Locality& loc, const string& type, const string& source, double delay, double offset = 0.0, bool inverted = false );
 		SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality locality );
 		double GetOutput() const override;
 

@@ -22,7 +22,6 @@ namespace scone
 		const auto source_name = pn.get< string >( "source", "leg" );
 		par_name_ = source_name + ( opposite ? "_o." : "." ) + type;
 		ScopedParamSetPrefixer sp( par, par_name_ );
-
 		INIT_PROP_REQUIRED( pn, delay_ );
 		INIT_PAR( pn, par, offset_, type == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
@@ -33,18 +32,12 @@ namespace scone
 		SetInputSensor( model, type, source_name, loc );
 	}
 
-	SensorNeuron::SensorNeuron( SensorDelayAdapter* input, double delay, double offset, bool inverted ) :
-		delay_( delay ),
-		input_( input ),
-		offset_( offset ),
-		sensor_gain_( inverted ? -1 : 1 )
+	SensorNeuron::SensorNeuron( Model& model, const Locality& loc, const string& type, const string& source, double delay, double offset, bool inverted ) :
+	offset_( offset ),
+	delay_( delay ),
+	sensor_gain_( inverted ? -1 : 1 )
 	{
-		name_ = input_->GetName() + stringf( "+%.0f", delay_ * 1000 );
-	}
-
-	double SensorNeuron::GetOutput() const
-	{
-		return output_ = ActivationFunction( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
+		SetInputSensor( model, type, source, loc );
 	}
 
 	void SensorNeuron::SetInputSensor( Model& model, const string& type, const string& name, const Locality& loc )
@@ -72,5 +65,10 @@ namespace scone
 
 		flut_assert_msg( input_, "Unknown type " + type );
 		name_ = input_->GetName() + stringf( "+%.0f", delay_ * 1000 );
+	}
+
+	double SensorNeuron::GetOutput() const
+	{
+		return output_ = ActivationFunction( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
 }

@@ -35,7 +35,10 @@ namespace scone
 			}
 
 			if ( auto* n = pn.try_get_child( "InterNeurons" ) )
-				AddInterNeurons( *n, par, model, locality );
+			{
+				AddInterNeurons( *n, par, model, Locality( NoSide, false ) );
+				AddInterNeurons( *n, par, model, Locality( NoSide, true ) );
+			}
 
 			if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
 				AddMotorNeurons( *n, par, model, locality );
@@ -68,8 +71,10 @@ namespace scone
 		else if ( type == "DP" || type == "DV" )
 			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
 
-		//for ( auto& name : sources )
-		//	m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( type, name ) );
+		double delay = 0.01;
+		double offset = 0.0;
+		for ( auto& name : sources )
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( model, loc, type, name, delay, offset ) );
 	}
 
 	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
@@ -77,23 +82,34 @@ namespace scone
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
+			auto neuron = std::make_unique< InterNeuron >( stringf( "I%d", i ) + ( loc.mirrored ? "_m" : "" ) );
 			ScopedParamSetPrefixer ps( par, stringf( "N%d", i ) );
-			auto neuron = std::make_unique< InterNeuron >();
+
 			for ( auto& s : m_SensorNeurons )
 			{
-				auto w = par.get( s->name_ + ".W", 0.0, 0.1 );
+				auto w = par.get( loc.ConvertName( s->name_ ) + ".W", 0.0, 0.1 );
 				neuron->AddInput( w, s.get() );
 			}
+			m_InterNeurons.push_back( std::move( neuron ) );
 		}
 	}
 
 	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
-		auto muscles = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
+		size_t inter_count = m_InterNeurons.size();
+
+		auto muscles = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscles )
 		{
+			auto neuron = std::make_unique< InterNeuron >( name );
 			ScopedParamSetPrefixer ps( par, name );
-
+			for ( Index idx = 0; idx < inter_count; ++idx )
+			{
+				auto w = par.get( loc.ConvertName( m_InterNeurons[ idx ]->name_ ) + ".W", 0.0, 0.1 );
+				neuron->AddInput( w, m_InterNeurons[ idx ].get() );
+			}
+			m_InterNeurons.push_back( std::move( neuron ) );
+			m_MotorNeurons.emplace_back( m_InterNeurons.back().get(), FindByName( model.GetMuscles(), name ).get() );
 		}
 	}
 
