@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Controller type="NeuralController">
+	<signature_prefix>N5</signature_prefix>
+	<Neurons>
+		<!-- TA -->
+		<Neuron name="TA" target="tib_ant" offset="~0.5">
+			<Input type="L" source="tib_ant" delay="0.02" gain="~2"/>
+			<Input type="F" source="soleus" delay="0.02" gain="~-0.4"/>
+		</Neuron>
+		
+		<!-- SOL/GAS -->
+		<Neuron name="SOL" target="soleus" offset="~0.1">
+			<Input type="F" source="soleus" delay="0.02" gain="~1"/>
+			<Input type="L" source="soleus" delay="0.02" gain="~1"/>
+			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
+		</Neuron>
+		<Neuron name="GAS" target="gastroc" offset="~0.1">
+			<Input type="F" source="gastroc" delay="0.02" gain="~1"/>
+			<Input type="L" source="gastroc" delay="0.02" gain="~1"/>
+			<!--Input type="LD" opposite="1" delay="0.02" gain="~-3"/-->
+		</Neuron>
+
+		<!-- Stance VAS -->
+		<Neuron name="VAS" target="vasti" offset="~0.5">
+			<Input type="F" source="vasti" delay="0.01" gain="~0.5"/>
+			<Input type="L" source="vasti" delay="0.01" gain="~1"/>
+			<!--Input type="LD" opposite="1" delay="0.01" gain="~-0.5"/-->
+			<Input type="F" source="iliopsoas" delay="0.01" gain="~-1"/>
+			<Input type="F" source="hamstrings" delay="0.01" gain="~-0.2"/>
+		</Neuron>
+		
+		<!-- Static balance neurons -->
+		<Neuron name="INV-LD" offset="1">
+			<Input type="LD" delay="0.005" gain="-1"/>
+		</Neuron>
+		<Neuron name="FWD-BAL" offset="~0.1">
+			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="1"/>
+			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.2"/>
+			<Input type="Neuron" source="INV-LD" gain="~-1"/>
+		</Neuron>
+		<Neuron name="BKW-BAL" offset="~-0.1">
+			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="-1"/>
+			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~-0.2"/>
+			<Input type="Neuron" source="INV-LD" gain="~-1"/>
+		</Neuron>
+
+		<!-- HFL -->
+		<Neuron name="HFL-SW" offset="~-0.1">
+			<Input type="L" source="iliopsoas" delay="0.005" gain="~1"/>
+			<Input type="DP" source="pelvis_tilt" delay="0.005" gain="~1"/>
+			<Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.5"/>
+			<!--Input type="LD" opposite="1" delay="0.01" gain="~-0.5"/-->
+			<Input type="L" source="hamstrings" delay="0.005" gain="-4"/>
+			<Input type="F" source="hamstrings" opposite="1" delay="0.005" gain="~1"/>
+			<Input type="F" source="glut_max" opposite="1" delay="0.005" gain="~1"/>
+		</Neuron>
+		<Neuron name="HFL" target="iliopsoas" offset="0">
+			<Input type="Neuron" source="HFL-SW" gain="1"/>
+			<Input type="Neuron" source="FWD-BAL" gain="~1"/>
+		</Neuron>
+
+		<!-- HAM / GLU -->
+		<Neuron name="HAM-RT" offset="0">
+			<Input type="F" source="hamstrings" delay="0.005" gain="~0.65"/>
+			<!--Input type="LD" delay="0.005" gain="~-0.5"/-->
+		</Neuron>
+		<Neuron name="GLU-RT" offset="0">
+			<Input type="F" source="glut_max" delay="0.005" gain="~0.5"/>
+			<!--Input type="LD" delay="0.005" gain="~-0.5"/--->
+		</Neuron>
+		<Neuron name="HAM" target="hamstrings" offset="0">
+			<Input type="Neuron" source="BKW-BAL" gain="~1"/>
+			<Input type="Neuron" source="HAM-RT" gain="1"/>
+		</Neuron>
+		<Neuron name="GLU" target="glut_max" offset="0">
+			<Input type="Neuron" source="BKW-BAL" gain="~1"/>
+			<Input type="Neuron" source="GLU-RT" gain="1"/>
+		</Neuron>
+	</Neurons>
+</Controller>

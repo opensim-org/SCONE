@@ -20,13 +20,17 @@ namespace scone
 		auto src_name = props.get< String >( "source" );
 		String par_name = GetParName( props );
 		name = GetReflexName( m_Target.GetName(), src_name );
-		ScopedParamSetPrefixer prefixer( par, name + "." );
+		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
 		INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
 		INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
 		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
+
+		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
+		if ( filter_cutoff_frequency != 0.0 )
+			m_Filter = flut::make_lowpass_butterworth_2nd_order( filter_cutoff_frequency / 1000.0 ); // TODO: use actual update frequency
 
 		//log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
 	}
@@ -47,6 +51,12 @@ namespace scone
 		{
 			pos += root_pos;
 			vel += root_vel;
+		}
+
+		if ( filter_cutoff_frequency != 0.0 )
+		{
+			pos = m_Filter( pos );
+			vel = m_Filter.velocity() * 1000;
 		}
 
 		u_p = pos_gain * ( target_pos - pos );

@@ -115,7 +115,7 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		auto kvp = flut::make_key_value_str( s.substr( 1 ) );
 		if ( kvp.first == "folder" )
 		{
-			name = make_qt( flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) ) );
+			name = make_qt( path( kvp.second ).filename() );
 			state = RunningState;
 			ui.plot->show();
 			setWindowTitle( name );
