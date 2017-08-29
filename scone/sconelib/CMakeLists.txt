@@ -78,6 +78,12 @@ set(CS_CONTROLLERS_MRC_FILES
     scone/controllers/MetaReflexVirtualMuscle.cpp
     scone/controllers/MetaReflexVirtualMuscle.h
 	)
+set(CS_CONTROLLERS_NC_FILES
+	scone/controllers/NeuralController.cpp
+	scone/controllers/NeuralController.h
+	scone/controllers/Neuron.cpp
+	scone/controllers/Neuron.h
+	)
 set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/ConditionalMuscleReflex.cpp
 	scone/controllers/ConditionalMuscleReflex.h
@@ -91,10 +97,6 @@ set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/Reflex.h
 	scone/controllers/ReflexController.cpp
 	scone/controllers/ReflexController.h
-	scone/controllers/Neuron.cpp
-	scone/controllers/Neuron.h
-	scone/controllers/NeuralController.cpp
-	scone/controllers/NeuralController.h
 	)
 set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/GaitStateController.cpp
@@ -232,6 +234,7 @@ set (SCONELIB_FILES
 	
 	${CS_CONTROLLERS_FILES}
 	${CS_CONTROLLERS_MRC_FILES}
+	${CS_CONTROLLERS_NC_FILES}
 	${CS_CONTROLLERS_REFLEX_FILES}
 	${CS_CONTROLLERS_STATE_FILES}
     ${CS_FUNCTIONS_FILES}
@@ -275,8 +278,9 @@ source_group("core\\properties" FILES ${CORE_PROPNODE_FILES})
 source_group("core\\storage" FILES ${CORE_STORAGE_FILES})
 
 source_group("controllers" FILES ${CS_CONTROLLERS_FILES} )
-source_group("controllers" FILES ${CS_CONTROLLERS_STATE_FILES} )
-source_group("controllers" FILES ${CS_CONTROLLERS_REFLEX_FILES})
+source_group("controllers\\State Control" FILES ${CS_CONTROLLERS_STATE_FILES} )
+source_group("controllers\\Reflex Control" FILES ${CS_CONTROLLERS_REFLEX_FILES})
+source_group("controllers\\Neural Control" FILES ${CS_CONTROLLERS_NC_FILES})
 source_group("controllers" FILES ${CS_SYSTEM_FILES})
 source_group("controllers\\Meta Reflex Control" FILES ${CS_CONTROLLERS_MRC_FILES})
 

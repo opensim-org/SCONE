@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Controller type="NeuralController">
-	<signature_prefix>N4Rg</signature_prefix>
+	<signature_prefix>N4Rf</signature_prefix>
 	<Neurons>
 		<!-- TA -->
 		<Neuron name="TA" target="tib_ant" offset="0">
@@ -51,7 +51,6 @@
 			<!--Input type="DV" source="pelvis_tilt" delay="0.005" gain="~0.5"/-->
 			<Input type="L" source="hamstrings" delay="0.005" offset="~1" gain="-4"/>
 			<Input type="LD" delay="0.005" gain="~-1"/>
-			<Input type="LD" delay="0.005" opposite="1" inverted="1" offset="1" gain="~1"/>
 		</Neuron>
 		<Neuron name="HFL" target="iliopsoas" offset="0">
 			<Input type="Neuron" source="HFL-SW" gain="1"/>

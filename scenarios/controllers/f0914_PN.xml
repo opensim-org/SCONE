@@ -2,11 +2,11 @@
 <Controller type="NeuralController">
 	<signature_prefix>PN</signature_prefix>
 	<SensorNeurons>
-		<Sensor type="L" include="*">
-		<Sensor type="F" include="*">
-		<Sensor type="DP" include="pelvis_tilt">
-		<Sensor type="DV" include="pelvis_tilt">
-	</Sensors>
+		<Sensor type="L" include="*"/>
+		<Sensor type="F" include="*"/>
+		<Sensor type="DP" include="pelvis_tilt"/>
+		<Sensor type="DV" include="pelvis_tilt"/>
+	</SensorNeurons>
 	<InterNeurons amount="5"/>
 	<MotorNeurons monosynaptic="1" antagonistic="1"/>
 </Controller>
