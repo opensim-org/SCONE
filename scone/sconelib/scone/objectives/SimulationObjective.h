@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "cs_fwd.h"
 #include "scone/optimization/Objective.h"
 #include "scone/optimization/Params.h"
 #include "scone/model/Simulation.h"

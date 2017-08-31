@@ -718,11 +718,11 @@ namespace scone
 			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
 
-	void Model_Simbody::SetTkState( const State& s )
-	{
-		for ( Index i = 0; i < s.GetSize(); ++i )
-			GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
-	}
+	//void Model_Simbody::SetTkState( const State& s )
+	//{
+	//	for ( Index i = 0; i < s.GetSize(); ++i )
+	//		GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
+	//}
 
 	void Model_Simbody::InitStateFromTk()
 	{
@@ -753,6 +753,11 @@ namespace scone
 		CopyStateToTk();
 		for ( auto& c : GetControllers() )
 			c->UpdateControls( *this, timestamp );
+	}
+
+	void Model_Simbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
+	{
+		m_State.SetValues( state );
 	}
 
 	void Model_Simbody::ValidateDofAxes()

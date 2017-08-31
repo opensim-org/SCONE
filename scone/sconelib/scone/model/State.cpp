@@ -14,8 +14,8 @@ namespace scone
 
 	void State::SetValues( const std::vector< Real >& v )
 	{
-		SCONE_ASSERT( values_.size() == v.size() );
-		copy( v.begin(), v.end(), values_.begin() );
+		SCONE_ASSERT( values_.size() <= v.size() );
+		copy( v.begin(), v.begin() + values_.size(), values_.begin() );
 	}
 
 	void State::AddChildState( State& other )

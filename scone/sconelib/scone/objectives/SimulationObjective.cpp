@@ -1,16 +1,12 @@
 #include "SimulationObjective.h"
+
 #include "scone/core/Exception.h"
-
-#include <algorithm>
-
 #include "scone/model/Model.h"
 
 #include "scone/core/version.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/string_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Factories.h"
-
-#include <boost/thread.hpp>
 
 namespace scone
 {

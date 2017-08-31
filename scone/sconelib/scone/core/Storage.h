@@ -45,6 +45,8 @@ namespace scone
 				return m_Values[ idx ];
 			}
 
+			const std::vector< ValueT > GetValues() { return m_Values; }
+
 		private:
 			Storage< ValueT, TimeT >& m_Store;
 			TimeT m_Time;

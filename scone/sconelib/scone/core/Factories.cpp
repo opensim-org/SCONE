@@ -28,6 +28,7 @@
 #include "scone/controllers/SensorStateController.h"
 #include "scone/controllers/MirrorController.h"
 #include "scone/controllers/NeuralController.h"
+#include "../objectives/ImitationObjective.h"
 
 namespace scone
 {
@@ -130,6 +131,7 @@ namespace scone
 		if ( g_ObjectiveFactory.empty() )
 		{
 			g_ObjectiveFactory.register_class< SimulationObjective >();
+			g_ObjectiveFactory.register_class< ImitationObjective >();
 		}
 		return g_ObjectiveFactory;
 	}

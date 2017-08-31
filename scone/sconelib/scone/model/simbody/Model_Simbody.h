@@ -83,9 +83,10 @@ namespace scone
 		virtual const State& GetState() const override { return m_State; }
 		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
+		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 
 	private:
-		void SetTkState( const State& s );
+		//void SetTkState( const State& s );
 		void InitStateFromTk();
 		void CopyStateFromTk();
 		void CopyStateToTk();
