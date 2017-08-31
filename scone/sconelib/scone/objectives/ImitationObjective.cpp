@@ -9,6 +9,7 @@
 #include "scone/core/Factories.h"
 #include "../core/StorageIo.h"
 #include "scone/model/Muscle.h"
+#include <vector>
 
 namespace scone
 {
@@ -36,6 +37,15 @@ namespace scone
 			m_ExcitationChannels.push_back( m_Storage.GetChannelIndex( mus->GetName() + ".excitation" ) );
 			SCONE_THROW_IF( m_ExcitationChannels.back() == NoIndex, "Could not find excitation for " + mus->GetName() );
 		}
+
+		// find sensor channels
+		auto& ds = model->GetSensorDelayStorage();
+		m_SensorChannels.reserve( ds.GetChannelCount() );
+		for ( Index ds_idx = 0; ds_idx < ds.GetChannelCount(); ++ds_idx )
+		{
+			m_SensorChannels.push_back( m_Storage.GetChannelIndex( ds.GetLabels()[ ds_idx ] ) );
+			SCONE_THROW_IF( m_SensorChannels.back() == NoIndex, "Could not find sensor for " + ds.GetLabels()[ ds_idx ] );
+		}
 	}
 
 	ImitationObjective::~ImitationObjective()
@@ -45,8 +55,19 @@ namespace scone
 	{
 		// WARNING: this function must be thread-safe and should only access local or const variables
 		auto model = CreateModel( m_ModelPropsCopy, ParamInstance( point ) );
-		double result = 0.0;
 
+		// add sensor data
+		auto& ds = model->GetSensorDelayStorage();
+		for ( Index fidx = 1; fidx < m_Storage.GetFrameCount(); ++fidx )
+		{
+			auto sf = m_Storage.GetFrame( fidx );
+			ds.AddFrame( sf.GetTime() );
+			for ( Index cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
+				ds.Back()[ cidx ] = 0.5; // sf[ m_SensorChannels[ cidx ] ];
+		}
+
+		// compute result
+		double result = 0.0;
 		for ( Index i = 0; i < m_Storage.GetFrameCount(); ++i )
 		{
 			auto f = m_Storage.GetFrame( i );

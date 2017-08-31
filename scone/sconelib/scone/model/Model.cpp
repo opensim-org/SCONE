@@ -27,7 +27,7 @@ namespace scone
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass, StoreDataTypes::ControllerData } ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass, StoreDataTypes::SensorData, StoreDataTypes::ControllerData } ),
 		thread_safe_simulation( false )
 	{
 		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
@@ -149,6 +149,14 @@ namespace scone
 		// store muscle data
 		for ( MuscleUP& m : GetMuscles() )
 			m->StoreData( frame, flags );
+
+		// store sensor data
+		if ( flags( StoreDataTypes::SensorData ) )
+		{
+			auto sf = m_SensorDelayStorage.Back();
+			for ( Index i = 0; i < m_SensorDelayStorage.GetChannelCount(); ++i )
+				frame[ m_SensorDelayStorage.GetLabels()[ i ] ] = sf[ i ];
+		}
 
 		// store COP data
 		if ( flags( StoreDataTypes::CenterOfMass ) )

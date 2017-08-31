@@ -53,9 +53,9 @@ namespace scone
 
 		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
 		{
-			frame[ GetName() + ".fiber_length" ] = GetNormalizedFiberLength();
-			frame[ GetName() + ".fiber_velocity" ] = GetNormalizedFiberVelocity();
-			frame[ GetName() + ".fiber_force" ] = GetNormalizedFiberForce();
+			frame[ GetName() + ".L" ] = GetNormalizedFiberLength();
+			frame[ GetName() + ".V" ] = GetNormalizedFiberVelocity();
+			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
 		}
 	}
 }

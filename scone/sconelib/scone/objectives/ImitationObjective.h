@@ -31,5 +31,6 @@ namespace scone
 		Storage<> m_Storage;
 		String m_Signature;
 		std::vector< Index > m_ExcitationChannels;
+		std::vector< Index > m_SensorChannels;
 	};
 }

@@ -14,6 +14,7 @@ namespace scone
 		GroundReactionForce,
 		JointReactionForce,
 		CenterOfMass,
+		SensorData,
 		ControllerData
 	};
 

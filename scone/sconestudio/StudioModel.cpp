@@ -49,7 +49,7 @@ namespace scone
 			// start evaluation
 			is_evaluating = true;
 			model->SetStoreData( true );
-			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
+			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties, StoreDataTypes::SensorData } );
 			model->SetSimulationEndTime( so->max_duration );
 			log::info( "Starting simulation" );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
