@@ -8,6 +8,7 @@ namespace scone
 		SensorNeuron( Model& model, const string& type, const string& source, double delay, double offset = 0.0, bool inverted = false );
 		SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality locality );
 		double GetOutput() const override;
+		virtual string GetName() const override { return par_name_; }
 		void SetInputSensor( Model& model, const string& type, const string& name, const Locality& loc );
 
 		SensorDelayAdapter* input_;
@@ -16,5 +17,6 @@ namespace scone
 		double sensor_gain_;
 		string source_name_;
 		string type_;
+		string par_name_;
 	};
 }

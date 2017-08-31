@@ -23,9 +23,9 @@ namespace scone
 				if ( !input )
 					input = controller.AddSensorNeuron( input_pn.second, par, model, loc );
 
-				//double gain = par.get( input->par_name, input_pn.second[ "gain" ] );
-				//inputs_.push_back( std::make_pair( gain, input ) );
-				//log::info( name_, " <-- ", gain, " * ", input->name_ );
+				double gain = par.get( GetNameNoSide( input->GetName() ), input_pn.second[ "gain" ] );
+				inputs_.push_back( std::make_pair( gain, input ) );
+				//log::info( name_, " <-- ", gain, " * ", input->GetName() );
 			}
 		}
 

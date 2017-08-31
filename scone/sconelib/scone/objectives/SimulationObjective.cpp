@@ -40,7 +40,7 @@ namespace scone
 
 	scone::fitness_t SimulationObjective::evaluate( const ParamInstance& point ) const
 	{
-		// WARNING: this function is thread-safe and should only access local or const variables
+		// WARNING: this function must be thread-safe and should only access local or const variables
 		auto model = CreateModel( m_ModelPropsCopy, ParamInstance( point ) );
 
 		// run the simulation
