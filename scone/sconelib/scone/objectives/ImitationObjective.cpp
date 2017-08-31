@@ -63,7 +63,7 @@ namespace scone
 			auto sf = m_Storage.GetFrame( fidx );
 			ds.AddFrame( sf.GetTime() );
 			for ( Index cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
-				ds.Back()[ cidx ] = 0.5; // sf[ m_SensorChannels[ cidx ] ];
+				ds.Back()[ cidx ] = sf[ m_SensorChannels[ cidx ] ];
 		}
 
 		// compute result

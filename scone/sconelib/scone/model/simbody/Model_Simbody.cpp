@@ -751,6 +751,7 @@ namespace scone
 	{
 		m_State.SetValues( state.GetValues() );
 		CopyStateToTk();
+		GetTkState().setTime( timestamp );
 		for ( auto& c : GetControllers() )
 			c->UpdateControls( *this, timestamp );
 	}
@@ -758,6 +759,8 @@ namespace scone
 	void Model_Simbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
 	{
 		m_State.SetValues( state );
+		CopyStateToTk();
+		GetTkState().setTime( timestamp );
 	}
 
 	void Model_Simbody::ValidateDofAxes()
