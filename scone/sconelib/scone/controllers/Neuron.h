@@ -13,14 +13,11 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron( const string& name = "" ) : name_( name ), output_() {}
+		Neuron() : output_() {}
 		virtual ~Neuron() {}
 		virtual activation_t GetOutput() const = 0;
-
+		virtual string GetName() const { return ""; }
 		double ActivationFunction( double input ) const;
-		const String& GetName() { return name_; }
-		String name_;
-		String par_name_;
 		mutable double output_;
 	};
 }

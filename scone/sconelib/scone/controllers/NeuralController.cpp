@@ -74,7 +74,7 @@ namespace scone
 		double delay = 0.01;
 		double offset = 0.0;
 		for ( auto& name : sources )
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( model, loc, type, name, delay, offset ) );
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( model, type, name, delay, offset ) );
 	}
 
 	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
@@ -82,12 +82,11 @@ namespace scone
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto neuron = std::make_unique< InterNeuron >( stringf( "I%d", i ) + ( loc.mirrored ? "_m" : "" ) );
-			ScopedParamSetPrefixer ps( par, stringf( "N%d", i ) );
-
+			auto neuron = std::make_unique< InterNeuron >( stringf( "I%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
+			ScopedParamSetPrefixer ps( par, stringf( "N%d.", i ) );
 			for ( auto& s : m_SensorNeurons )
 			{
-				auto w = par.get( loc.ConvertName( s->name_ ) + ".W", 0.0, 0.1 );
+				auto w = par.get( loc.ConvertName( s->source_name_ ) + "." + s->type_, 0.0, 0.5 );
 				neuron->AddInput( w, s.get() );
 			}
 			m_InterNeurons.push_back( std::move( neuron ) );
@@ -101,15 +100,16 @@ namespace scone
 		auto muscles = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscles )
 		{
+			loc.mirrored = GetSideFromName( name ) == RightSide;
 			auto neuron = std::make_unique< InterNeuron >( name );
 			ScopedParamSetPrefixer ps( par, name );
 			for ( Index idx = 0; idx < inter_count; ++idx )
 			{
-				auto w = par.get( loc.ConvertName( m_InterNeurons[ idx ]->name_ ) + ".W", 0.0, 0.1 );
+				auto w = par.get( loc.ConvertName( m_InterNeurons[ idx ]->name_ ), 0.0, 0.5 );
 				neuron->AddInput( w, m_InterNeurons[ idx ].get() );
 			}
-			m_InterNeurons.push_back( std::move( neuron ) );
-			m_MotorNeurons.emplace_back( m_InterNeurons.back().get(), FindByName( model.GetMuscles(), name ).get() );
+			m_MotorInterNeurons.push_back( std::move( neuron ) );
+			m_MotorNeurons.emplace_back( m_MotorInterNeurons.back().get(), FindByName( model.GetMuscles(), name ).get() );
 		}
 	}
 
@@ -137,8 +137,10 @@ namespace scone
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
 	{
 		for ( auto& n : m_SensorNeurons )
-			frame[ "neuron." + n->name_ ] = n->output_;
+			frame[ "neuron." + n->source_name_ + "." + n->type_ ] = n->output_;
 		for ( auto& n : m_InterNeurons )
+			frame[ "neuron." + n->name_ ] = n->output_;
+		for ( auto& n : m_MotorInterNeurons )
 			frame[ "neuron." + n->name_ ] = n->output_;
 	}
 

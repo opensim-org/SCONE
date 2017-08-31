@@ -36,9 +36,9 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< InterNeuronUP > m_InterNeurons;
+		std::vector< InterNeuronUP > m_MotorInterNeurons;
 		std::vector< MotorNeuron > m_MotorNeurons;
 	};
 }

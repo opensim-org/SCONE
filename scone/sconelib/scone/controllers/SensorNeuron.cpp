@@ -11,33 +11,33 @@
 namespace scone
 {
 	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc ) :
-	Neuron( "" ),
 	input_(),
 	offset_(),
-	sensor_gain_( 1.0 )
+	sensor_gain_( 1.0 ),
+	type_( pn.get< string >( "type" ) )
 	{
-		const auto type = pn.get< string >( "type" );
 		bool opposite = pn.get_any< bool >( { "mirrored", "opposite" }, false );
 		bool inverted = pn.get< bool >( "inverted", false );
 		const auto source_name = pn.get< string >( "source", "leg" );
-		par_name_ = source_name + ( opposite ? "_o." : "." ) + type;
-		ScopedParamSetPrefixer sp( par, par_name_ );
+		auto par_name = source_name + ( opposite ? "_o." : "." ) + type_;
+		ScopedParamSetPrefixer sp( par, par_name );
 		INIT_PROP_REQUIRED( pn, delay_ );
-		INIT_PAR( pn, par, offset_, type == "L" ? 1 : ( inverted ? 1 : 0 ) );
+		INIT_PAR( pn, par, offset_, type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
 
 		if ( opposite )
 			loc = MakeMirrored( loc );
 
-		SetInputSensor( model, type, source_name, loc );
+		SetInputSensor( model, type_, source_name, loc );
 	}
 
-	SensorNeuron::SensorNeuron( Model& model, const Locality& loc, const string& type, const string& source, double delay, double offset, bool inverted ) :
+	SensorNeuron::SensorNeuron( Model& model, const string& type, const string& source, double delay, double offset, bool inverted ) :
 	offset_( offset ),
 	delay_( delay ),
-	sensor_gain_( inverted ? -1 : 1 )
+	sensor_gain_( inverted ? -1 : 1 ),
+	type_( type )
 	{
-		SetInputSensor( model, type, source, loc );
+		SetInputSensor( model, type_, source, Locality( NoSide ) );
 	}
 
 	void SensorNeuron::SetInputSensor( Model& model, const string& type, const string& name, const Locality& loc )
@@ -64,7 +64,7 @@ namespace scone
 		}
 
 		flut_assert_msg( input_, "Unknown type " + type );
-		name_ = input_->GetName() + stringf( "+%.0f", delay_ * 1000 );
+		source_name_ = name;
 	}
 
 	double SensorNeuron::GetOutput() const

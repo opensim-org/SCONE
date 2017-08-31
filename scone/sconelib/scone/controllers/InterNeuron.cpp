@@ -9,10 +9,10 @@
 namespace scone
 {
 	InterNeuron::InterNeuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& loc ) :
-	Neuron( loc.ConvertName( pn.get< string >( "name" ) ) )
+	name_( loc.ConvertName( pn.get< string >( "name" ) ) )
 	{
-		par_name_ = GetNameNoSide( name_ ) + '.';
-		ScopedParamSetPrefixer sp( par, par_name_ );
+		auto par_name = GetNameNoSide( name_ ) + '.';
+		ScopedParamSetPrefixer sp( par, par_name );
 		INIT_PAR( pn, par, offset_, 0 );
 
 		for ( auto& input_pn : pn )
@@ -23,8 +23,8 @@ namespace scone
 				if ( !input )
 					input = controller.AddSensorNeuron( input_pn.second, par, model, loc );
 
-				double gain = par.get( input->par_name_, input_pn.second[ "gain" ] );
-				inputs_.push_back( std::make_pair( gain, input ) );
+				//double gain = par.get( input->par_name, input_pn.second[ "gain" ] );
+				//inputs_.push_back( std::make_pair( gain, input ) );
 				//log::info( name_, " <-- ", gain, " * ", input->name_ );
 			}
 		}
