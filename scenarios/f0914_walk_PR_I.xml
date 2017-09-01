@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file></init_file>
-	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<global_std_factor>0.01</global_std_factor>
 	<global_std_offset>0.001</global_std_offset>
-	<Objective type="SimulationObjective">
-		<signature_postfix>R_STD001</signature_postfix>
+	<Objective type="ImitationObjective">
+		<file>results/f0914_walk_GH2.sto</file>
+		<signature_postfix>PR</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>

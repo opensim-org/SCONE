@@ -752,8 +752,8 @@ namespace scone
 		m_State.SetValues( state.GetValues() );
 		CopyStateToTk();
 		GetTkState().setTime( timestamp );
-		for ( auto& c : GetControllers() )
-			c->UpdateControls( *this, timestamp );
+		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		UpdateControlValues();
 	}
 
 	void Model_Simbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
@@ -761,6 +761,8 @@ namespace scone
 		m_State.SetValues( state );
 		CopyStateToTk();
 		GetTkState().setTime( timestamp );
+		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		UpdateControlValues();
 	}
 
 	void Model_Simbody::ValidateDofAxes()

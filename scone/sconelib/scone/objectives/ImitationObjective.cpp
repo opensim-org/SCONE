@@ -72,7 +72,7 @@ namespace scone
 		{
 			auto f = m_Storage.GetFrame( i );
 			model->SetStateValues( f.GetValues(), f.GetTime() );
-			model->UpdateControlValues();
+			//model->UpdateControlValues();
 
 			// compare results
 			for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )

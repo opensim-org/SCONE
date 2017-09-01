@@ -140,6 +140,8 @@ set(OBJECTIVES_FILES
 	scone/objectives/Measure.h
 	scone/objectives/SimulationObjective.cpp
 	scone/objectives/SimulationObjective.h
+	scone/objectives/ImitationObjective.cpp
+	scone/objectives/ImitationObjective.h
 	)
 
 set(OPT_API_FILES
