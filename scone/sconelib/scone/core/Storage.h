@@ -64,6 +64,8 @@ namespace scone
 		Storage& operator=( const Storage& other ) {
 			m_Labels = other.m_Labels;
 			m_LabelIndexMap = other.m_LabelIndexMap;
+			m_Data.clear();
+			m_Data.reserve( other.m_Data.size() );
 			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
 				m_Data.push_back( FrameUP( new Frame( **it ) ) );
 			m_InterpolationCache.clear();
