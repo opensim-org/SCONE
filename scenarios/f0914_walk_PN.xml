@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file></init_file>
-	<use_init_file>0</use_init_file>
+	<init_file>initializations/f0914_walk_PN.par</init_file>
+	<use_init_file>1</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
 		<max_duration>10</max_duration>
