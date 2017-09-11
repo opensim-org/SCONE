@@ -6,6 +6,7 @@
 	<Objective type="ImitationObjective">
 		<signature_postfix>IMO</signature_postfix>
 		<file>results/f0914_walk_GH2.sto</file>
+		<frame_delta>20</frame_delta>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
@@ -21,8 +22,8 @@
 					<SensorNeurons>
 						<Sensor type="L" include="*"/>
 						<Sensor type="F" include="*"/>
-						<!--Sensor type="DP" include="pelvis_tilt"/-->
-						<!--Sensor type="DV" include="pelvis_tilt"/-->
+						<Sensor type="DP" include="pelvis_tilt"/>
+						<Sensor type="DV" include="pelvis_tilt"/>
 					</SensorNeurons>
 					<InterNeurons amount="3"/>
 					<MotorNeurons include="*"/>

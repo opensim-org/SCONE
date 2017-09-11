@@ -82,9 +82,9 @@ namespace scone
 		else if ( type == "DP" || type == "DV" )
 			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
 
-		double offset = type == "L" ? 1.0 : 0.0;
 		for ( auto& name : sources )
 		{
+			double offset = type != "L" ? 0.0 : par.get( GetNameNoSide( name ) + ".L0", 1.0, std_ );
 			double delay = delays_.get< double >( GetNameNoSide( name ) );
 			m_Neurons.front().emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay, offset ) );
 		}
