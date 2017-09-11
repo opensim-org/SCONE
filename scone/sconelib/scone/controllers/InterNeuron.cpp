@@ -36,6 +36,11 @@ namespace scone
 		//	controller.AddMotorNeuron( this, FindByName( model.GetActuators(), loc.ConvertName( pn.get< string >( "target" ) ) ) );
 	}
 
+	InterNeuron::InterNeuron( NeuralController& nc, const string& name, double offset ) : Neuron( nc ), name_( name ), offset_( offset )
+	{
+
+	}
+
 	double InterNeuron::GetOutput() const
 	{
 		activation_t value = offset_;

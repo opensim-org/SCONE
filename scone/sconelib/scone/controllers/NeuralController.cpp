@@ -18,7 +18,6 @@ namespace scone
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
 	Controller( pn, par, model, locality )
 	{
-		INIT_PROP( pn, mean_, 0.0 );
 		INIT_PROP( pn, std_, 0.1 );
 
 		if ( pn.has_key( "delay_file" ) )
@@ -84,7 +83,7 @@ namespace scone
 
 		for ( auto& name : sources )
 		{
-			double offset = type != "L" ? 0.0 : par.get( GetNameNoSide( name ) + ".L0", 1.0, std_ );
+			double offset = type == "L" ? 1.0 : 0.0;
 			double delay = delays_.get< double >( GetNameNoSide( name ) );
 			m_Neurons.front().emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay, offset ) );
 		}
@@ -104,12 +103,14 @@ namespace scone
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto neuron = std::make_unique< InterNeuron >( *this, stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
-			ScopedParamSetPrefixer ps( par, stringf( "N%d.", i ) );
+			auto name = stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" );
+			ScopedParamSetPrefixer ps( par, name + "." );
+			auto offset = par.get( "C0", 0.0, std_ );
+			auto neuron = std::make_unique< InterNeuron >( *this, name );
 			for ( Index idx = 0; idx < m_Neurons[ prev_layer ].size(); ++idx )
 			{
 				auto s = m_Neurons[ prev_layer ][ idx ].get();
-				auto w = par.get( s->GetName( loc.mirrored ), mean_, std_);
+				auto w = par.get( s->GetName( loc.mirrored ), 0.0, std_);
 				neuron->AddInput( w, s );
 				log::info( "added ", s->GetName( loc.mirrored ) );
 			}
@@ -130,7 +131,7 @@ namespace scone
 			for ( Index idx = 0; idx < m_Neurons.back().size(); ++idx )
 			{
 				auto input = m_Neurons.back()[ idx ].get();
-				auto w = par.get( input->GetName( loc.mirrored ), mean_, std_ );
+				auto w = par.get( input->GetName( loc.mirrored ), 0.0, std_ );
 				neuron->AddInput( w, input );
 			}
 			m_MotorNeurons.push_back( std::move( neuron ) );

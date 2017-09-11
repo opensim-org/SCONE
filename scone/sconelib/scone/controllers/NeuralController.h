@@ -40,7 +40,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		double mean_;
 		double std_;
 		PropNode delays_;
 		std::vector< std::vector< NeuronUP > > m_Neurons;

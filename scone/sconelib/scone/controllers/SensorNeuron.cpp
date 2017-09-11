@@ -73,7 +73,7 @@ namespace scone
 
 	double SensorNeuron::GetOutput() const
 	{
-		return output_ = controller_.activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
+		return output_ = sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ );
 	}
 
 	scone::string SensorNeuron::GetName( bool mirrored ) const

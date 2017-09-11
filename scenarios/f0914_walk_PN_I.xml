@@ -18,7 +18,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>PNI3</signature_prefix>
+					<signature_prefix>N3</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="L" include="*"/>
 						<Sensor type="F" include="*"/>
