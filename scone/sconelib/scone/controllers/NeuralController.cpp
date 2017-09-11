@@ -105,7 +105,7 @@ namespace scone
 			auto* muscle = FindByName( model.GetMuscles(), name ).get();
 			auto neuron = std::make_unique< MotorNeuron >( muscle, name );
 			loc.mirrored = GetSideFromName( name ) == RightSide;
-			ScopedParamSetPrefixer ps( par, name );
+			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			for ( Index idx = 0; idx < m_Neurons.back().size(); ++idx )
 			{
 				auto input = m_Neurons.back()[ idx ].get();
