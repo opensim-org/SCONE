@@ -3,14 +3,14 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
-	<global_std_factor>0.1</global_std_factor>
-	<global_std_offset>0.01</global_std_offset>
 	<Objective type="ImitationObjective">
+		<signature_postfix>IMO</signature_postfix>
 		<file>results/f0914_walk_GH2.sto</file>
+		<frame_delta>20</frame_delta>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
-			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
+			<!--state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/-->
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>

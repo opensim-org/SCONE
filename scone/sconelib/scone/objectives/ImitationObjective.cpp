@@ -18,6 +18,7 @@ namespace scone
 	m_ModelPropsCopy( pn.get_child( "Model" ) )
 	{
 		INIT_PROP_REQUIRED( pn, file );
+		INIT_PROP( pn, frame_delta_, 1 );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
@@ -68,7 +69,7 @@ namespace scone
 
 		// compute result
 		double result = 0.0;
-		for ( Index i = 0; i < m_Storage.GetFrameCount(); ++i )
+		for ( Index i = 0; i < m_Storage.GetFrameCount(); i += frame_delta_ )
 		{
 			auto f = m_Storage.GetFrame( i );
 			model->SetStateValues( f.GetValues(), f.GetTime() );
@@ -78,7 +79,7 @@ namespace scone
 			for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
 				result += abs( model->GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
 		}
-		return result / m_Storage.GetFrameCount() / m_ExcitationChannels.size();
+		return result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
 	}
 
 	String ImitationObjective::GetClassSignature() const

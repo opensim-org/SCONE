@@ -22,6 +22,7 @@ namespace scone
 		fitness_t EvaluateModel( Model& m ) const;
 
 		path file;
+		size_t frame_delta_;
 
 	protected:
 		virtual String GetClassSignature() const override;
