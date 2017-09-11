@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Neuron.h"
+#include "InterNeuron.h"
 
 namespace scone
 {
-	struct MotorNeuron
+	struct MotorNeuron : public InterNeuron
 	{
-		MotorNeuron( Neuron* neuron, Actuator* act ) : input_( neuron ), output_( act ) {}
+		MotorNeuron( Actuator* act, const string& name = "" ) : InterNeuron( name ), actuator_( act ) {}
 		void UpdateActuator();
-		Neuron* input_;
-		Actuator* output_;
+		Actuator* actuator_;
 	};
 }

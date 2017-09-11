@@ -72,4 +72,11 @@ namespace scone
 	{
 		return output_ = ActivationFunction( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
+
+	scone::string SensorNeuron::GetName( bool mirrored ) const
+	{
+		if ( !mirrored )
+			return par_name_;
+		else return GetMirroredName( source_name_ ) + "." + type_;
+	}
 }

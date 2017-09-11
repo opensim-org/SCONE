@@ -23,7 +23,7 @@
 						<Sensor type="DP" include="pelvis_tilt"/>
 						<Sensor type="DV" include="pelvis_tilt"/>
 					</SensorNeurons>
-					<InterNeurons amount="3"/>
+					<!--InterNeurons amount="3"/-->
 					<MotorNeurons include="*"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>

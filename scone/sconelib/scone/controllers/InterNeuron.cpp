@@ -23,15 +23,16 @@ namespace scone
 				if ( !input )
 					input = controller.AddSensorNeuron( input_pn.second, par, model, loc );
 
-				double gain = par.get( GetNameNoSide( input->GetName() ), input_pn.second[ "gain" ] );
+				double gain = par.get( GetNameNoSide( input->GetName( false ) ), input_pn.second[ "gain" ] );
 				inputs_.push_back( std::make_pair( gain, input ) );
 				//log::info( name_, " <-- ", gain, " * ", input->GetName() );
 			}
 		}
 
 		// set target actuator (if any)
-		if ( pn.has_key( "target" ) )
-			controller.AddMotorNeuron( this, FindByName( model.GetActuators(), loc.ConvertName( pn.get< string >( "target" ) ) ) );
+		// TODO: move to MotorNeuron
+		//if ( pn.has_key( "target" ) )
+		//	controller.AddMotorNeuron( this, FindByName( model.GetActuators(), loc.ConvertName( pn.get< string >( "target" ) ) ) );
 	}
 
 	double InterNeuron::GetOutput() const
@@ -40,5 +41,10 @@ namespace scone
 		for ( auto& i : inputs_ )
 			value += i.first * i.second->GetOutput();
 		return output_ = ActivationFunction( value );
+	}
+
+	scone::string InterNeuron::GetName( bool mirrored ) const
+	{
+		return mirrored ? GetMirroredName( name_ ) : name_;
 	}
 }

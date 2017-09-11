@@ -10,8 +10,10 @@
 
 namespace scone
 {
+	SCONE_DECLARE_STRUCT_AND_PTR( Neuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( InterNeuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( SensorNeuron );
+	SCONE_DECLARE_STRUCT_AND_PTR( MotorNeuron );
 
 	class NeuralController : public Controller
 	{
@@ -21,7 +23,6 @@ namespace scone
 
 		SensorNeuron* AddSensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc );
 		InterNeuron* AddInterNeuron( const PropNode& pn, Params& par, Model& model, Locality loc );
-		void AddMotorNeuron( Neuron* neuron, Actuator* act );
 
 		void AddSensorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
 		void AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
@@ -36,9 +37,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< SensorNeuronUP > m_SensorNeurons;
-		std::vector< InterNeuronUP > m_InterNeurons;
-		std::vector< InterNeuronUP > m_MotorInterNeurons;
-		std::vector< MotorNeuron > m_MotorNeurons;
+		std::vector< std::vector< NeuronUP > > m_Neurons;
+		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};
 }
