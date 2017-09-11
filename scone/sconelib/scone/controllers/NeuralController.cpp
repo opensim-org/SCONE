@@ -148,7 +148,12 @@ namespace scone
 	{
 		size_t c = 0;
 		for ( auto& layer : m_Neurons )
-			c += layer.size();
-		return flut::stringf( "N%d-%d", m_Neurons.size(), c );
+			for ( auto& neuron : layer )
+				c += neuron->GetInputCount();
+
+		for ( auto& neuron : m_MotorNeurons )
+			c += neuron->GetInputCount();
+
+		return flut::stringf( "N%d", c );
 	}
 }

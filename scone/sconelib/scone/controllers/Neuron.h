@@ -15,6 +15,7 @@ namespace scone
 	{
 		Neuron() : output_() {}
 		virtual ~Neuron() {}
+		virtual size_t GetInputCount() { return 0; }
 		virtual activation_t GetOutput() const = 0;
 		virtual string GetName( bool mirrored ) const { return ""; }
 		double ActivationFunction( double input ) const;
