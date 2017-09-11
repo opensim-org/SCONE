@@ -6,3 +6,4 @@ vasti = 0.010
 gastroc = 0.020
 soleus = 0.020
 tib_ant = 0.020
+pelvis_tilt = 0.005

@@ -25,6 +25,7 @@ namespace scone
 		InterNeuron* AddInterNeuron( const PropNode& pn, Params& par, Model& model, Locality loc );
 
 		void AddSensorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
+		void AddInterNeuronLayer();
 		void AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
 		void AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
 
@@ -41,6 +42,7 @@ namespace scone
 	private:
 		double mean_;
 		double std_;
+		PropNode delays_;
 		std::vector< std::vector< NeuronUP > > m_Neurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};

@@ -20,11 +20,16 @@ namespace scone
 	{
 		INIT_PROP( pn, mean_, 0.0 );
 		INIT_PROP( pn, std_, 0.1 );
-		activation_function = GetActivationFunction( pn.get< string >( "activation_function" ) );
+
+		if ( pn.has_key( "delay_file" ) )
+			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
+
+		activation_function = GetActivationFunction( pn.get< string >( "activation_function", "rectifier" ) );
 
 		if ( auto neurons = pn.try_get_child( "Neurons" ) )
 		{
 			// hand-designed neural network
+			AddInterNeuronLayer();
 			for ( auto& neuron : *neurons )
 			{
 				AddInterNeuron( neuron.second, par, model, Locality( LeftSide ) );
@@ -42,6 +47,7 @@ namespace scone
 
 			if ( auto* n = pn.try_get_child( "InterNeurons" ) )
 			{
+				AddInterNeuronLayer();
 				AddInterNeurons( *n, par, model, Locality( NoSide, false ) );
 				AddInterNeurons( *n, par, model, Locality( NoSide, true ) );
 			}
@@ -76,26 +82,36 @@ namespace scone
 		else if ( type == "DP" || type == "DV" )
 			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
 
-		double delay = 0.01;
-		double offset = 0.0;
+		double offset = type == "L" ? 1.0 : 0.0;
 		for ( auto& name : sources )
+		{
+			double delay = delays_.get< double >( GetNameNoSide( name ) );
 			m_Neurons.front().emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay, offset ) );
+		}
+	}
+
+	void NeuralController::AddInterNeuronLayer()
+	{
+		m_Neurons.emplace_back();
 	}
 
 	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
-		SCONE_ASSERT( m_Neurons.size() > 0 );
-		Index prev_layer = m_Neurons.size() - 1;
-		m_Neurons.resize( m_Neurons.size() + 1 );
+		// Must call AddInterNeuronLayer before!
+		SCONE_ASSERT( m_Neurons.size() > 1 );
+		Index prev_layer = m_Neurons.size() - 2;
+
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto neuron = std::make_unique< InterNeuron >( *this, stringf( "I%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
+			auto neuron = std::make_unique< InterNeuron >( *this, stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
 			ScopedParamSetPrefixer ps( par, stringf( "N%d.", i ) );
-			for ( auto& s : m_Neurons[ prev_layer ] )
+			for ( Index idx = 0; idx < m_Neurons[ prev_layer ].size(); ++idx )
 			{
+				auto s = m_Neurons[ prev_layer ][ idx ].get();
 				auto w = par.get( s->GetName( loc.mirrored ), mean_, std_);
-				neuron->AddInput( w, s.get() );
+				neuron->AddInput( w, s );
+				log::info( "added ", s->GetName( loc.mirrored ) );
 			}
 			m_Neurons.back().push_back( std::move( neuron ) );
 		}
