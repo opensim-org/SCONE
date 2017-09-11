@@ -33,10 +33,14 @@ namespace scone
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
 
+		std::function< double( double ) > activation_function;
+
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
+		double mean_;
+		double std_;
 		std::vector< std::vector< NeuronUP > > m_Neurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};

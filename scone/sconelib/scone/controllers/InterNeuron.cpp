@@ -9,6 +9,7 @@
 namespace scone
 {
 	InterNeuron::InterNeuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& loc ) :
+	Neuron( controller ),
 	name_( loc.ConvertName( pn.get< string >( "name" ) ) )
 	{
 		auto par_name = GetNameNoSide( name_ ) + '.';
@@ -40,7 +41,8 @@ namespace scone
 		activation_t value = offset_;
 		for ( auto& i : inputs_ )
 			value += i.first * i.second->GetOutput();
-		return output_ = ActivationFunction( value );
+
+		return output_ = controller_.activation_function( value );
 	}
 
 	scone::string InterNeuron::GetName( bool mirrored ) const

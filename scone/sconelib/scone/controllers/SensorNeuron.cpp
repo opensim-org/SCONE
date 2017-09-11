@@ -7,10 +7,12 @@
 #include "scone/core/string_tools.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
+#include "NeuralController.h"
 
 namespace scone
 {
-	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc ) :
+	SensorNeuron::SensorNeuron( NeuralController& nc, const PropNode& pn, Params& par, Model& model, Locality loc ) :
+	Neuron( nc ),
 	input_(),
 	offset_(),
 	sensor_gain_( 1.0 ),
@@ -31,7 +33,8 @@ namespace scone
 		SetInputSensor( model, type_, source_name, loc );
 	}
 
-	SensorNeuron::SensorNeuron( Model& model, const string& type, const string& source, double delay, double offset, bool inverted ) :
+	SensorNeuron::SensorNeuron( NeuralController& nc, Model& model, const string& type, const string& source, double delay, double offset, bool inverted ) :
+	Neuron( nc ),
 	offset_( offset ),
 	delay_( delay ),
 	sensor_gain_( inverted ? -1 : 1 ),
@@ -70,7 +73,7 @@ namespace scone
 
 	double SensorNeuron::GetOutput() const
 	{
-		return output_ = ActivationFunction( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
+		return output_ = controller_.activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
 
 	scone::string SensorNeuron::GetName( bool mirrored ) const

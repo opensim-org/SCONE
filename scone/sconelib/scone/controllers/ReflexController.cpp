@@ -47,6 +47,8 @@ namespace scone
 				str >> name >> value >> mean >> std;
 				auto names = split_str( name, "-" );
 				auto delay = delay_pn.get< double >( GetNameNoSide( names[ 0 ] ), 0.0 );
+				mean = props.get< double >( "mean", mean );
+				std = props.get< double >( "std", std );
 				m_Reflexes.push_back( std::make_unique< SimpleMuscleReflex >( names[ 0 ], names.size() > 1 ? names[ 1 ] : "", mean, std, 2 * delay, model, par, area ) );
 				m_Reflexes.push_back( std::make_unique< SimpleMuscleReflex >( names[ 0 ], names.size() > 1 ? names[ 1 ] : "", mean, std, 2 * delay, model, par, MakeMirrored( area ) ) );
 			}

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<random_seed>123</random_seed>
-	<global_std_factor>0.01</global_std_factor>
-	<global_std_offset>0.001</global_std_offset>
 	<Objective type="ImitationObjective">
+		<signature_postfix>IMO</signature_postfix>
 		<file>results/f0914_walk_GH2.sto</file>
-		<signature_postfix>PR</signature_postfix>
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -17,7 +15,8 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="ReflexController" symmetric="1" reflex_file="f0914_walk_R.par" delay_file="neural_delays.pn"/>
+				<signature_prefix>PR</signature_prefix>
+				<Controller type="ReflexController" symmetric="1" reflex_file="f0914_walk_PR.par" mean="0.0" std="0.1" delay_file="neural_delays.pn"/>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
 		</Model>

@@ -11,12 +11,17 @@
 #include "../model/Muscle.h"
 #include "../model/Dof.h"
 #include <algorithm>
+#include "activation_functions.h"
 
 namespace scone
 {
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
 	Controller( pn, par, model, locality )
 	{
+		INIT_PROP( pn, mean_, 0.0 );
+		INIT_PROP( pn, std_, 0.1 );
+		activation_function = GetActivationFunction( pn.get< string >( "activation_function" ) );
+
 		if ( auto neurons = pn.try_get_child( "Neurons" ) )
 		{
 			// hand-designed neural network
@@ -56,7 +61,7 @@ namespace scone
 	SensorNeuron* NeuralController::AddSensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
 		m_Neurons.resize( std::max( (int)m_Neurons.size(), 1 ) );
-		m_Neurons.front().push_back( std::make_unique< SensorNeuron >( pn, par, model, loc ) );
+		m_Neurons.front().push_back( std::make_unique< SensorNeuron >( *this, pn, par, model, loc ) );
 		return dynamic_cast<SensorNeuron*>( m_Neurons.front().back().get() );
 	}
 
@@ -74,7 +79,7 @@ namespace scone
 		double delay = 0.01;
 		double offset = 0.0;
 		for ( auto& name : sources )
-			m_Neurons.front().emplace_back( std::make_unique< SensorNeuron >( model, type, name, delay, offset ) );
+			m_Neurons.front().emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay, offset ) );
 	}
 
 	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
@@ -85,11 +90,11 @@ namespace scone
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto neuron = std::make_unique< InterNeuron >( stringf( "I%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
+			auto neuron = std::make_unique< InterNeuron >( *this, stringf( "I%d", i ) + ( loc.mirrored ? "_r" : "_l" ) );
 			ScopedParamSetPrefixer ps( par, stringf( "N%d.", i ) );
 			for ( auto& s : m_Neurons[ prev_layer ] )
 			{
-				auto w = par.get( s->GetName( loc.mirrored ), 0.0, 0.5 );
+				auto w = par.get( s->GetName( loc.mirrored ), mean_, std_);
 				neuron->AddInput( w, s.get() );
 			}
 			m_Neurons.back().push_back( std::move( neuron ) );
@@ -103,13 +108,13 @@ namespace scone
 		for ( auto& name : muscle_names )
 		{
 			auto* muscle = FindByName( model.GetMuscles(), name ).get();
-			auto neuron = std::make_unique< MotorNeuron >( muscle, name );
+			auto neuron = std::make_unique< MotorNeuron >( *this, muscle, name );
 			loc.mirrored = GetSideFromName( name ) == RightSide;
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			for ( Index idx = 0; idx < m_Neurons.back().size(); ++idx )
 			{
 				auto input = m_Neurons.back()[ idx ].get();
-				auto w = par.get( input->GetName( loc.mirrored ), 0.0, 0.5 );
+				auto w = par.get( input->GetName( loc.mirrored ), mean_, std_ );
 				neuron->AddInput( w, input );
 			}
 			m_MotorNeurons.push_back( std::move( neuron ) );

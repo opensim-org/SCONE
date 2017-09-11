@@ -13,12 +13,13 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron() : output_() {}
+		Neuron( NeuralController& nc ) : output_(), controller_( nc ) {}
 		virtual ~Neuron() {}
 		virtual size_t GetInputCount() { return 0; }
 		virtual activation_t GetOutput() const = 0;
 		virtual string GetName( bool mirrored ) const { return ""; }
-		double ActivationFunction( double input ) const;
+
 		mutable double output_;
+		NeuralController& controller_;
 	};
 }

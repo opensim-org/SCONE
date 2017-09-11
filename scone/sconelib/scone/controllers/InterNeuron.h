@@ -4,9 +4,10 @@
 
 namespace scone
 {
+	class NeuralController;
 	struct InterNeuron : public Neuron
 	{
-		InterNeuron( const string& name = "" ) : name_( name ), offset_() {}
+		InterNeuron( NeuralController& nc, const string& name = "" ) : Neuron( nc ), name_( name ), offset_() {}
 		InterNeuron( const PropNode& pn, Params& par, Model& model, NeuralController& controller, const Locality& locality );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
