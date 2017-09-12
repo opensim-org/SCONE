@@ -51,8 +51,11 @@ namespace scone
 		// find common dof
 		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
 		{
-			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) && Sign( GetMomentArm( *dof ) != Sign( other.GetMomentArm( *dof ) ) ) )
-				return true;
+			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
+			{
+				if ( Sign( GetMomentArm( *dof ) ) != Sign( other.GetMomentArm( *dof ) ) )
+					return true;
+			}
 		}
 		return false;
 	}

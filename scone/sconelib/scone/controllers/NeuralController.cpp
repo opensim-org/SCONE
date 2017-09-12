@@ -161,7 +161,7 @@ namespace scone
 						if ( it1 != model.GetMuscles().end() && it2 != model.GetMuscles().end() )
 						{
 							if ( (*it1)->IsAntagonist( **it2 ) )
-								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ + "." + input->type_ ), 0.0, std_ ), input );
+								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, 0.0, std_ ), input );
 						}
 					}
 				}
