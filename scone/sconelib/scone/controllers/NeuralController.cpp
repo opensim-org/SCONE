@@ -124,6 +124,7 @@ namespace scone
 		SCONE_ASSERT( m_Neurons.size() > 0 );
 		bool monosynaptic = pn.get< bool >( "monosynaptic", false );
 		bool antagonistic = pn.get< bool >( "antagonistic", false );
+		bool balance = pn.get< bool >( "balance", false );
 
 		auto muscle_names = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
@@ -149,11 +150,10 @@ namespace scone
 				for ( Index idx = 0; idx < m_Neurons.front().size(); ++idx )
 				{
 					auto input = dynamic_cast<SensorNeuron*>( m_Neurons.front()[ idx ].get() );
-					if ( monosynaptic )
-					{
-						if ( input->source_name_ == name )
-							m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
-					}
+
+					if ( monosynaptic && input->source_name_ == name )
+						m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
+
 					if ( antagonistic )
 					{
 						auto it1 = TryFindByName( model.GetMuscles(), name );
@@ -164,6 +164,9 @@ namespace scone
 								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, 0.0, std_ ), input );
 						}
 					}
+
+					if ( balance && ( input->type_ == "DP" || input->type_ == "DV" ) )
+						m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
 				}
 			}
 		}
