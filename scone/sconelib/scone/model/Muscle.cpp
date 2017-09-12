@@ -4,6 +4,9 @@
 #include "Joint.h"
 #include "Dof.h"
 #include "flut/math/math.hpp"
+#include "Body.h"
+#include "Model.h"
+#include "../core/math.h"
 
 #pragma warning( disable: 4355 )
 
@@ -41,6 +44,17 @@ namespace scone
 		for ( const Link* l = orgLink; l && l != insLink; l = &l->GetParent() )
 			++joint_count;
 		return joint_count;
+	}
+
+	bool Muscle::IsAntagonist( const Muscle& other ) const
+	{
+		// find common dof
+		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
+		{
+			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) && Sign( GetMomentArm( *dof ) != Sign( other.GetMomentArm( *dof ) ) ) )
+				return true;
+		}
+		return false;
 	}
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )

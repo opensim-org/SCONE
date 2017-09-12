@@ -24,6 +24,12 @@ namespace scone
 	}
 
 	template< typename T >
+	typename std::vector< T >::iterator TryFindByName( std::vector< T >& cont, const String& name )
+	{
+		return std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
+	}
+
+	template< typename T >
 	std::vector< string > FindMatchingNames( std::vector< T >& cont, const String& include, const String& exclude )
 	{
 		std::vector< string > names;

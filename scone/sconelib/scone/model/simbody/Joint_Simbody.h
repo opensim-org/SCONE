@@ -21,7 +21,7 @@ namespace scone
 		virtual Vec3 GetPos() const override;
 
 		virtual size_t GetDofCount() const override;
-		virtual Real GetDof( size_t index = 0 ) const override;
+		virtual Real GetDofValue( size_t index = 0 ) const override;
 		virtual const String& GetDofName( size_t index = 0 ) const override;
 
 		class Model_Simbody& m_Model;
