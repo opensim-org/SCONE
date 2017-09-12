@@ -19,15 +19,15 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>N2</signature_prefix>
+					<signature_prefix>N0</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="L" include="*"/>
 						<Sensor type="F" include="*"/>
 						<Sensor type="DP" include="pelvis_tilt"/>
 						<Sensor type="DV" include="pelvis_tilt"/>
 					</SensorNeurons>
-					<InterNeurons amount="2"/>
-					<MotorNeurons include="*"/>
+					<InterNeurons amount="1"/>
+					<MotorNeurons include="*" top_layer="1" monosynaptic="1"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>

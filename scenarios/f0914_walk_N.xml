@@ -18,7 +18,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>PN3</signature_prefix>
+					<signature_prefix>N3</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="L" include="*"/>
 						<Sensor type="F" include="*"/>
@@ -26,7 +26,7 @@
 						<Sensor type="DV" include="pelvis_tilt"/>
 					</SensorNeurons>
 					<InterNeurons amount="3"/>
-					<MotorNeurons include="*"/>
+					<MotorNeurons include="*" monosynaptic="1"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
