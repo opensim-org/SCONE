@@ -104,7 +104,8 @@ namespace scone
 		for ( int i = 0; i < amount; ++i )
 		{
 			auto name = stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" );
-			ScopedParamSetPrefixer ps( par, name + "." );
+			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+
 			auto offset = par.get( "C0", 0.0, std_ );
 			auto neuron = std::make_unique< InterNeuron >( *this, name );
 			for ( Index idx = 0; idx < m_Neurons[ prev_layer ].size(); ++idx )
@@ -121,20 +122,50 @@ namespace scone
 	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
 		SCONE_ASSERT( m_Neurons.size() > 0 );
+		bool monosynaptic = pn.get< bool >( "monosynaptic", false );
+		bool antagonistic = pn.get< bool >( "antagonistic", false );
+
 		auto muscle_names = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
 		{
 			auto* muscle = FindByName( model.GetMuscles(), name ).get();
-			auto neuron = std::make_unique< MotorNeuron >( *this, muscle, name );
+			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( *this, muscle, name ) );
 			loc.mirrored = GetSideFromName( name ) == RightSide;
+
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-			for ( Index idx = 0; idx < m_Neurons.back().size(); ++idx )
+
+			if ( pn.get< bool >( "top_layer", true ) )
 			{
-				auto input = m_Neurons.back()[ idx ].get();
-				auto w = par.get( input->GetName( loc.mirrored ), 0.0, std_ );
-				neuron->AddInput( w, input );
+				for ( Index idx = 0; idx < m_Neurons.back().size(); ++idx )
+				{
+					auto input = m_Neurons.back()[ idx ].get();
+					auto weight = par.get( input->GetName( loc.mirrored ), 0.0, std_ );
+					m_MotorNeurons.back()->AddInput( weight, input );
+				}
 			}
-			m_MotorNeurons.push_back( std::move( neuron ) );
+
+			if ( monosynaptic || antagonistic )
+			{
+				for ( Index idx = 0; idx < m_Neurons.front().size(); ++idx )
+				{
+					auto input = dynamic_cast<SensorNeuron*>( m_Neurons.front()[ idx ].get() );
+					if ( monosynaptic )
+					{
+						if ( input->source_name_ == name )
+							m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
+					}
+					if ( antagonistic )
+					{
+						auto it1 = TryFindByName( model.GetMuscles(), name );
+						auto it2 = TryFindByName( model.GetMuscles(), input->source_name_ );
+						if ( it1 != model.GetMuscles().end() && it2 != model.GetMuscles().end() )
+						{
+							if ( (*it1)->IsAntagonist( **it2 ) )
+								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ + "." + input->type_ ), 0.0, std_ ), input );
+						}
+					}
+				}
+			}
 		}
 	}
 
