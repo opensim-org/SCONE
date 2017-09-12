@@ -183,10 +183,12 @@ namespace scone
 			if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
 			{
 				// delete the file(s)
+				boost::system::error_code ec;
 				for ( auto& file : testIt->second )
-					bfs::remove( bfs::path( file.str() ) );
+					bfs::remove( bfs::path( file.str() ), ec );
 
-				m_OutputFiles.erase( testIt );
+				if ( !ec )
+					m_OutputFiles.erase( testIt );
 			}
 		}
 	}
