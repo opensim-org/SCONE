@@ -79,7 +79,7 @@ namespace scone
 			for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
 				result += abs( model->GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
 		}
-		return result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
+		return 100 * result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
 	}
 
 	String ImitationObjective::GetClassSignature() const
