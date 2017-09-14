@@ -197,7 +197,7 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		std::ofstream str( path( file ).replace_extension( "neural_weights.txt").str() );
+		std::ofstream str( ( file + ".neural_weights.txt" ).str() );
 
 		for ( Index i = 1; i < m_InterNeurons.size(); ++i )
 		{
@@ -206,6 +206,7 @@ namespace scone
 				str << neuron->name_ << "\t" << neuron->offset_;
 				for ( auto& input : neuron->inputs_ )
 					str << "\t" << input.second->GetName( false ) << "\t" << input.first;
+				str << std::endl;
 			}
 		}
 
@@ -214,6 +215,7 @@ namespace scone
 			str << neuron->name_ << "\t" << neuron->offset_;
 			for ( auto& input : neuron->inputs_ )
 				str << "\t" << input.second->GetName( false ) << "\t" << input.first;
+			str << std::endl;
 		}
 	}
 
