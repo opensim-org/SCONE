@@ -67,11 +67,11 @@ namespace scone
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
 		GetReport().set( "cost_of_transport", cot );
-		GetReport().set( "average", m_Energy.GetAverage() );
+		//GetReport().set( "average", m_Energy.GetAverage() );
 		GetReport().set( "total", m_Energy.GetTotal() );
 		GetReport().set( "distance", distance );
 		GetReport().set( "speed", distance / model.GetTime() );
-		GetReport().set( "probe_total", model.GetTotalEnergyConsumption() );
+		//GetReport().set( "probe_total", model.GetTotalEnergyConsumption() );
 
 		if ( use_cost_of_transport )
 			return cot;

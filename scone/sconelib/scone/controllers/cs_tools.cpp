@@ -63,7 +63,7 @@ namespace scone
 			// read mean / std from init file
 			auto& optProp = configProp.get_child( "Optimizer" );
 			if ( optProp.get< bool >( "use_init_file" ) )
-				so->info().import_mean_std( optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
+				so->info().import_mean_std( GetFolder( SCONE_SCENARIO_FOLDER ) / optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
 		}
 
 		// report unused parameters

@@ -73,7 +73,7 @@ namespace scone
 	{
 		auto type = pn.get< string >( "type" );
 		std::vector< string > sources;
-		if ( type == "L" || type == "F" )
+		if ( type == "L" || type == "F" || type == "S" )
 			sources = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
 		else if ( type == "DP" || type == "DV" )
 			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
@@ -131,7 +131,7 @@ namespace scone
 
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 
-			if ( pn.get< bool >( "top_layer", true ) )
+			if ( pn.get( "top_layer", true ) )
 			{
 				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
 				{
@@ -164,6 +164,9 @@ namespace scone
 						m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
 				}
 			}
+
+			if ( pn.get( "offset", false ) )
+				m_MotorNeurons.back()->offset_ = par.get( "C0", 0.0, std_ );
 		}
 	}
 

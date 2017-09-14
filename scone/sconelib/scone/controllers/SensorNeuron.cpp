@@ -54,6 +54,10 @@ namespace scone
 		{
 			input_ = &model.AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), loc.ConvertName( name ) ) );
 		}
+		else if ( type == "S" )
+		{
+			input_ = &model.AcquireDelayedSensor< MuscleSpindleSensor >( *FindByName( model.GetMuscles(), loc.ConvertName( name ) ) );
+		}
 		else if ( type == "DP" )
 		{
 			input_ = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), name ) );
