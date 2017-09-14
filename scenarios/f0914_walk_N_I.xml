@@ -6,7 +6,7 @@
 	<max_generations>3000</max_generations>
 	<Objective type="ImitationObjective">
 		<signature_postfix>IMO</signature_postfix>
-		<file>results/f0914_walk_GH2.sto</file>
+		<file>results/f0914_walk_N0MABd_NSI.sto</file>
 		<frame_delta>20</frame_delta>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
@@ -19,15 +19,15 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>N0MAS</signature_prefix>
+					<signature_prefix>N0MABS</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" include="*"/>
 						<Sensor type="S" include="*"/>
-						<!--Sensor type="DP" include="pelvis_tilt"/-->
-						<!--Sensor type="DV" include="pelvis_tilt"/-->
+						<Sensor type="DP" include="pelvis_tilt"/>
+						<Sensor type="DV" include="pelvis_tilt"/>
 					</SensorNeurons>
 					<!--InterNeurons amount="1"/-->
-					<MotorNeurons include="*" top_layer="0" monosynaptic="1" antagonistic="1" offset="0"/>
+					<MotorNeurons include="*" top_layer="0" monosynaptic="1" antagonistic="1" balance="1" offset="0"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
