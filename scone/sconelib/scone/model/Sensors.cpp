@@ -46,17 +46,12 @@ namespace scone
 
 	scone::Real MuscleSpindleSensor::GetValue() const
 	{
-		// derived from [Prochazka1999], normalized to unit length
-		const double cv = 65.0 / 200.0;
-		const double cm = 80.0 / 200.0;
-		auto v = m_Muscle.GetNormalizedFiberVelocity();
-		auto l = m_Muscle.GetNormalizedFiberLength();
-		return std::max( 0.0, cv * flut::math::signed_sqrt( v ) + l + cm );
+		return m_Muscle.GetNormalizedSpindleRate();
 	}
 
 	scone::String MuscleSpindleSensor::GetName() const
 	{
-		return m_Muscle.GetName() + ".MS";
+		return m_Muscle.GetName() + ".S";
 	}
 
 	DofSensor::DofSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :

@@ -34,6 +34,7 @@ namespace scone
 
 		virtual Real GetLength() const = 0;
 		virtual Real GetVelocity() const = 0;
+		virtual Real GetNormalizedSpindleRate() const;
 
 		virtual Real GetFiberForce() const = 0;
 		virtual Real GetNormalizedFiberForce() const = 0;

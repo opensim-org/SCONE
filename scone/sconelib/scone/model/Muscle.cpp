@@ -21,6 +21,15 @@ namespace scone
 	{
 	}
 
+	Real Muscle::GetNormalizedSpindleRate() const
+	{
+		// derived from [Prochazka1999], normalized to unit length, 200s^-1 ~ 1
+		double vel = ( 65.0 / 200.0 ) * flut::math::signed_sqrt( GetNormalizedFiberVelocity() );
+		double disp = GetNormalizedFiberLength();
+		const double mean = 80.0 / 200.0;
+		return std::max( 0.0, vel + disp + mean );
+	}
+
 	bool Muscle::HasMomentArm( const Dof& dof ) const
 	{
 		const Link& orgLink = GetOriginLink();
@@ -70,9 +79,10 @@ namespace scone
 
 		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
 		{
+			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
 			frame[ GetName() + ".L" ] = GetNormalizedFiberLength();
 			frame[ GetName() + ".V" ] = GetNormalizedFiberVelocity();
-			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
+			frame[ GetName() + ".S" ] = GetNormalizedSpindleRate();
 		}
 	}
 }
