@@ -75,7 +75,7 @@ namespace scone
 		return "R";
 	}
 
-	void ReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void ReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		for ( auto& r : m_Reflexes )
 			r->StoreData( frame, flags );

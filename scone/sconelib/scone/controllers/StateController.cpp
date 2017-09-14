@@ -101,9 +101,9 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	void StateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void StateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( ConditionalController& cc : m_ConditionalControllers )
+		for ( auto& cc : m_ConditionalControllers )
 		{
 			if ( cc.first.is_active )
 				cc.second->StoreData( frame, flags );

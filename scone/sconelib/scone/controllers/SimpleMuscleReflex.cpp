@@ -36,8 +36,4 @@ namespace scone
 			m_Target.AddInput( m_Gain * m_Source->GetValue( delay ) );
 		else m_Target.AddInput( m_Gain );
 	}
-
-	void SimpleMuscleReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
-	{
-	}
 }

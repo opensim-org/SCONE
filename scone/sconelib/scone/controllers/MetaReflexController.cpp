@@ -133,9 +133,9 @@ namespace scone
 		return str;
 	}
 
-	void MetaReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void MetaReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( MetaReflexDofUP& mr : m_ReflexDofs )
+		for ( auto& mr : m_ReflexDofs )
 			mr->StoreData( frame, flags );
 	}
 }

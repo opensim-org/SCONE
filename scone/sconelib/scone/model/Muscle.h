@@ -62,6 +62,6 @@ namespace scone
 		virtual Count GetJointCount() const;
 		virtual bool IsAntagonist( const Muscle& other ) const;
 
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 	};
 }

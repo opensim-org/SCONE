@@ -53,7 +53,7 @@ namespace scone
 
 		virtual double GetSimulationEndTime() const override;
 		virtual void SetSimulationEndTime( double t ) override;
-		virtual String WriteData( const path& file_base ) const override;
+		virtual String WriteResult( const path& file_base ) const override;
 
 		virtual void SetTerminationRequest() override;
 

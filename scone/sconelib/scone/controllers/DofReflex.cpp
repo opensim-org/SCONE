@@ -70,7 +70,7 @@ namespace scone
 #endif
 	}
 
-	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
+	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ name + ".RP" ] = u_p;
 		frame[ name + ".RD" ] = u_d;

@@ -244,7 +244,7 @@ namespace scone
 		return s;
 	}
 
-	void GaitStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void GaitStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		// store states
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
@@ -254,7 +254,7 @@ namespace scone
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			frame[ m_LegStates[ idx ]->leg.GetName() + ".sag_pos" ] = m_LegStates[ idx ]->sagittal_pos;
 
-		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
+		for ( auto& cc : m_ConditionalControllers )
 		{
 			if ( cc->active )
 				cc->controller->StoreData( frame, flags );

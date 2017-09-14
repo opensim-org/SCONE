@@ -27,7 +27,7 @@ namespace scone
 		return Controller::SuccessfulUpdate;
 	}
 
-	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		// TODO: store joint load value
 		frame[ "legs.load_penalty" ] = load_penalty.GetLatest();

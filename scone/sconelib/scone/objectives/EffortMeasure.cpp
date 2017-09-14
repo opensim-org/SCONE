@@ -268,7 +268,7 @@ namespace scone
 		return s;
 	}
 
-	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ "metabolics_penalty" ] = m_Energy.GetLatest();
 	}

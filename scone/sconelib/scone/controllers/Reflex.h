@@ -17,7 +17,7 @@ namespace scone
 		virtual void ComputeControls( double timestamp );
 		TimeInSeconds delay;
 
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override {}
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 	protected:
 		/// clamp control value between min_control_value and max_control_value and add to target actuator

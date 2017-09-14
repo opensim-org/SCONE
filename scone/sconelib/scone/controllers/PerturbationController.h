@@ -20,7 +20,7 @@ namespace scone
 		TimeInSeconds duration;
 		TimeInSeconds start_time;
 
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 
 	protected:

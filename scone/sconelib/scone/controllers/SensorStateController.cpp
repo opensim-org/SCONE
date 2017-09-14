@@ -33,7 +33,7 @@ namespace scone
 		UpdateCurrentState( model, 0.0 );
 	}
 
-	void SensorStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void SensorStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		StateController::StoreData( frame, flags );
 

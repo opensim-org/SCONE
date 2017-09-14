@@ -43,10 +43,9 @@ namespace scone
 		Vec3 dof_rotation_axis;
 
 		Real GetLocalBalance();
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 	private:
-		bool MuscleCrossesDof( const Muscle& mus );
 
 		Real local_balance;
 		Real body_angvel_sensor_gain;

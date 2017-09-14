@@ -92,9 +92,9 @@ namespace scone
 		return "";
 	}
 
-	void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( Limit& l : m_Limits )
+		for ( auto& l : m_Limits )
 			frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
 	}
 }

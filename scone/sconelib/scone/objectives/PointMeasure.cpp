@@ -102,7 +102,7 @@ namespace scone
 		return "";
 	}
 
-	void PointMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void PointMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ m_pTargetBody->GetName() + ".point_penalty" ] = penalty.GetLatest();
 	}

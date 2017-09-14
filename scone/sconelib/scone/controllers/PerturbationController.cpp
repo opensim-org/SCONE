@@ -16,10 +16,6 @@ namespace scone
 		INIT_PROP( props, start_time, 0.0 );
 	}
 
-	void PerturbationController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
-	{
-	}
-
 	Controller::UpdateResult PerturbationController::UpdateControls( Model& model, double timestamp )
 	{
 		if ( timestamp >= start_time && fmod( timestamp - start_time, interval ) < duration )

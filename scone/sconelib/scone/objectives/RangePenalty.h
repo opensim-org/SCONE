@@ -26,8 +26,8 @@ namespace scone
 			penalty.AddSample( timestamp, pen );
 		}
 
-		T GetAverage() { return penalty.GetAverage(); }
-		T GetLatest() { return penalty.GetLatest(); }
+		T GetAverage() const { return penalty.GetAverage(); }
+		T GetLatest() const { return penalty.GetLatest(); }
 
 		virtual ~RangePenalty() {}
 		

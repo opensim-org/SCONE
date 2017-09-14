@@ -193,7 +193,7 @@ namespace scone
 		return iter != m_Neurons.back().end() ? iter->get() : nullptr;
 	}
 
-	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags )
+	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		for ( auto& layer : m_Neurons )
 			for ( auto& neuron : layer )

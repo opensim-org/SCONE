@@ -82,7 +82,7 @@ namespace scone
 
 		/// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
-		virtual String WriteData( const path& file_base ) const = 0;
+		virtual String WriteResult( const path& file_base ) const = 0;
 
 		/// get dynamic model statistics
 		virtual Vec3 GetComPos() const = 0;
@@ -160,7 +160,7 @@ namespace scone
 		void UpdateSensorDelayAdapters();
 		void CreateBalanceSensors( const PropNode& props, Params& par );
 
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();
 
 	protected:

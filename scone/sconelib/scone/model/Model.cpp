@@ -135,7 +135,7 @@ namespace scone
 		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
-	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -147,7 +147,7 @@ namespace scone
 		}
 
 		// store muscle data
-		for ( MuscleUP& m : GetMuscles() )
+		for ( auto& m : GetMuscles() )
 			m->StoreData( frame, flags );
 
 		// store sensor data
@@ -194,7 +194,7 @@ namespace scone
 		// store controller data
 		if ( flags( StoreDataTypes::ControllerData ) )
 		{
-			for ( ControllerUP& c : GetControllers() )
+			for ( auto& c : GetControllers() )
 				c->StoreData( frame, flags );
 		}
 	}

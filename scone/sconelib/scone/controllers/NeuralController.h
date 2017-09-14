@@ -32,7 +32,7 @@ namespace scone
 		Neuron* FindInput( const PropNode& pn, Locality loc );
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
-		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 		std::function< double( double ) > activation_function;
 

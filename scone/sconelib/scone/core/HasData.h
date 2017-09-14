@@ -23,7 +23,7 @@ namespace scone
 	class SCONE_API HasData
 	{
 	public:
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) = 0;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const = 0;
 		inline virtual ~HasData() {}
 	};
 }

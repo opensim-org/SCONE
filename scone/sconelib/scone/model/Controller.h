@@ -25,7 +25,10 @@ namespace scone
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) { return NoUpdate; }
 
 		// default implementation doesn't store anything
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override {}
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
+
+		// default implementation doesn't store anything
+		virtual void WriteResult( const path& file ) const {}
 
 	private:
 		bool m_TerminationRequest;

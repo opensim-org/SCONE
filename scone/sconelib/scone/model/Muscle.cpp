@@ -60,7 +60,7 @@ namespace scone
 		return false;
 	}
 
-	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( flags( StoreDataTypes::MuscleExcitation ) )
 			frame[ GetName() + ".excitation" ] = flut::math::clamped( GetInput(), 0.0, 1.0 );

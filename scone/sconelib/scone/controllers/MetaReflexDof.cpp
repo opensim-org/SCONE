@@ -78,10 +78,6 @@ namespace scone
 		return local_balance;
 	}
 
-	void MetaReflexDof::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
-	{
-	}
-
 	void MetaReflexDof::SetDofRotationAxis()
 	{
 		dof_rotation_axis = target_dof.GetRotationAxis();

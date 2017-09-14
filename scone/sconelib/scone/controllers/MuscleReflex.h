@@ -41,7 +41,7 @@ namespace scone
 		Real u_s = 0;
 		Real u_total = 0;
 
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		SensorDelayAdapter* m_pForceSensor;

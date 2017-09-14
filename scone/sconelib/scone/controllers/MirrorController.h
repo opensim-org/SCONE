@@ -23,7 +23,7 @@ namespace scone
 		virtual ~MirrorController() {}
 
 
-		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) override
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override
 		{
 			c0->StoreData( frame, flags );
 			c1->StoreData( frame, flags );

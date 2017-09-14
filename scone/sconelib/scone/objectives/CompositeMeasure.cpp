@@ -59,12 +59,12 @@ namespace scone
 		}
 	}
 
-	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags )
+	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( Term& t : m_Terms )
+		for ( auto& t : m_Terms )
 			t.measure->StoreData( frame, flags );
 
-		for ( MeasureUP& m : m_Measures )
+		for ( auto& m : m_Measures )
 			m->StoreData( frame, flags );
 	}
 
