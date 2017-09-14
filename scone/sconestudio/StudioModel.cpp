@@ -226,7 +226,7 @@ namespace scone
 			model->GetMeasure()->GetResult( *model );
 			PropNode results;
 			results.push_back( "result", model->GetMeasure()->GetReport() );
-			model->WriteData( path( filename ).replace_extension() );
+			model->WriteResult( path( filename ).replace_extension() );
 			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );
 		}

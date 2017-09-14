@@ -30,11 +30,15 @@ namespace scone
 		void AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc );
 
 		Neuron* FindInput( const PropNode& pn, Locality loc );
+		size_t GetLayerSize( Index layer ) const { return ( layer == 0 ) ? m_SensorNeurons.size() : m_InterNeurons[ layer - 1 ].size(); }
+		Neuron* GetNeuron( Index layer, Index idx ) { return ( layer == 0 ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer - 1 ][ idx ].get() ); }
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 		std::function< double( double ) > activation_function;
+
+		virtual void WriteResult( const path& file ) const override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -42,7 +46,8 @@ namespace scone
 	private:
 		double std_;
 		PropNode delays_;
-		std::vector< std::vector< NeuronUP > > m_Neurons;
+		std::vector< SensorNeuronUP > m_SensorNeurons;
+		std::vector< std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};
 }
