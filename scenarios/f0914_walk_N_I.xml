@@ -3,7 +3,7 @@
 	<init_file></init_file>
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
-	<max_generations>5000</max_generations>
+	<max_generations>3000</max_generations>
 	<Objective type="ImitationObjective">
 		<signature_postfix>IMO</signature_postfix>
 		<file>results/f0914_walk_GH2.sto</file>
@@ -18,16 +18,16 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" delay_file="neural_delays.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>N0</signature_prefix>
+				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier" std="0.1">
+					<signature_prefix>N0MAS</signature_prefix>
 					<SensorNeurons>
-						<Sensor type="L" include="*"/>
 						<Sensor type="F" include="*"/>
-						<Sensor type="DP" include="pelvis_tilt"/>
-						<Sensor type="DV" include="pelvis_tilt"/>
+						<Sensor type="S" include="*"/>
+						<!--Sensor type="DP" include="pelvis_tilt"/-->
+						<!--Sensor type="DV" include="pelvis_tilt"/-->
 					</SensorNeurons>
 					<!--InterNeurons amount="1"/-->
-					<MotorNeurons include="*" top_layer="0" monosynaptic="1" antagonistic="1"/>
+					<MotorNeurons include="*" top_layer="0" monosynaptic="1" antagonistic="1" offset="0"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
