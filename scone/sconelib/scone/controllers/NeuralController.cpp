@@ -190,6 +190,8 @@ namespace scone
 
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
+		for ( auto& neuron : m_SensorNeurons )
+			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& layer : m_InterNeurons )
 			for ( auto& neuron : layer )
 				frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
