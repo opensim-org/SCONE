@@ -21,6 +21,8 @@ namespace scone
 		INIT_PROPERTY( props, random_seed, DEFAULT_RANDOM_SEED );
 		INIT_PROPERTY( props, global_std_factor, 0.0 );
 		INIT_PROPERTY( props, global_std_offset, 0.0 );
+		INIT_PROPERTY( props, init_file_std_factor, 1.0 );
+		INIT_PROPERTY( props, init_file_std_offset, 0.0 );
 		INIT_PROPERTY( props, use_init_file_std, true );
 		INIT_PROPERTY( props, recombination_type, 2 );
 	}

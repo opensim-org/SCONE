@@ -7,6 +7,7 @@
 #include "MotorNeuron.h"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"
+#include "activation_functions.h"
 
 namespace scone
 {
@@ -36,7 +37,8 @@ namespace scone
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
-		std::function< double( double ) > activation_function;
+		activation_func_t activation_function;
+		activation_func_t sensor_activation_function;
 
 		virtual void WriteResult( const path& file ) const override;
 
@@ -44,7 +46,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		double std_;
 		PropNode delays_;
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< std::vector< InterNeuronUP > > m_InterNeurons;

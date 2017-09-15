@@ -4,7 +4,7 @@
 namespace scone
 {
 	
-	std::function< double( double ) > GetActivationFunction( const String& name )
+	activation_func_t GetActivationFunction( const String& name )
 	{
 		if ( name == "rectifier" ) return rectifier;
 		else if ( name == "soft_plus" ) return soft_plus;

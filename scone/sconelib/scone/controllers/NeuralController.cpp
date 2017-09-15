@@ -18,12 +18,11 @@ namespace scone
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
 	Controller( pn, par, model, locality )
 	{
-		INIT_PROP( pn, std_, 0.1 );
-
 		if ( pn.has_key( "delay_file" ) )
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
 		activation_function = GetActivationFunction( pn.get< string >( "activation_function", "rectifier" ) );
+		sensor_activation_function = GetActivationFunction( pn.get< string >( "sensor_activation_function", "rectifier" ) );
 
 		if ( auto neurons = pn.try_get_child( "Neurons" ) )
 		{
@@ -109,7 +108,7 @@ namespace scone
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
 			{
 				auto s = GetNeuron( prev_layer, idx );
-				auto w = par.get( s->GetName( loc.mirrored ), 0.0, std_);
+				auto w = par.try_get( s->GetName( loc.mirrored ), pn, "gain", 1.0 );
 				m_InterNeurons.back().back()->AddInput( w, s );
 				//log::info( "added ", s->GetName( loc.mirrored ) );
 			}
@@ -118,9 +117,10 @@ namespace scone
 
 	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
 	{
-		bool monosynaptic = pn.get< bool >( "monosynaptic", false );
-		bool antagonistic = pn.get< bool >( "antagonistic", false );
-		bool balance = pn.get< bool >( "balance", false );
+		bool monosynaptic = pn.has_value( "monosynaptic" );
+		bool antagonistic = pn.has_value( "antagonistic" );
+		bool balance = pn.has_value( "balance" );
+		bool top_layer = pn.has_value( "top" );
 
 		auto muscle_names = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
@@ -130,24 +130,23 @@ namespace scone
 			loc.mirrored = GetSideFromName( name ) == RightSide;
 
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-
-			if ( pn.get( "top_layer", true ) )
+			if ( top_layer )
 			{
 				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
 				{
 					auto input = m_InterNeurons.back()[ idx ].get();
-					auto weight = par.get( input->GetName( loc.mirrored ), 0.0, std_ );
+					auto weight = par.get( input->GetName( loc.mirrored ), pn.get_child( "top" ) );
 					m_MotorNeurons.back()->AddInput( weight, input );
 				}
 			}
 
-			if ( monosynaptic || antagonistic )
+			if ( monosynaptic || antagonistic || balance )
 			{
 				for ( Index idx = 0; idx < m_SensorNeurons.size(); ++idx )
 				{
 					auto input = m_SensorNeurons[ idx ].get();
 					if ( monosynaptic && input->source_name_ == name )
-						m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
+						m_MotorNeurons.back()->AddInput( par.get( input->type_, pn[ "monosynaptic" ] ), input );
 
 					if ( antagonistic )
 					{
@@ -156,12 +155,12 @@ namespace scone
 						if ( it1 != model.GetMuscles().end() && it2 != model.GetMuscles().end() )
 						{
 							if ( (*it1)->IsAntagonist( **it2 ) )
-								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, 0.0, std_ ), input );
+								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, pn[ "antagonistic" ] ), input );
 						}
 					}
 
 					if ( balance && ( input->type_ == "DP" || input->type_ == "DV" ) )
-						m_MotorNeurons.back()->AddInput( par.get( input->type_, 0.0, std_ ), input );
+						m_MotorNeurons.back()->AddInput( par.get( input->type_, pn[ "balance" ] ), input );
 				}
 			}
 

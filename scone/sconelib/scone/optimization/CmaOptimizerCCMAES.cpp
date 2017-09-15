@@ -32,7 +32,7 @@ namespace scone
 
 		// initialize settings from file
 		if ( use_init_file && !init_file.empty() )
-			GetObjective().info().import_mean_std( init_file, use_init_file_std );
+			GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
 			GetObjective().info().set_global_std( global_std_factor, global_std_offset );

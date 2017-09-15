@@ -23,6 +23,8 @@ namespace scone
 		double global_std_offset;
 
 		bool use_init_file_std;
+		double init_file_std_factor;
+		double init_file_std_offset;
 
 		size_t num_elitists;
 		int max_attempts;
