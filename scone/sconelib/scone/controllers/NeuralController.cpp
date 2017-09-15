@@ -16,73 +16,43 @@
 namespace scone
 {
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
-	Controller( pn, par, model, locality )
+	Controller( pn, par, model, locality ),
+	model_( model )
 	{
 		if ( pn.has_key( "delay_file" ) )
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
 		activation_function = GetActivationFunction( pn.get< string >( "activation_function", "rectifier" ) );
-		sensor_activation_function = GetActivationFunction( pn.get< string >( "sensor_activation_function", "rectifier" ) );
 
-		if ( auto neurons = pn.try_get_child( "Neurons" ) )
+		// automatic neural network
+		if ( auto* sensors = pn.try_get_child( "SensorNeurons" ) )
 		{
-			// hand-designed neural network
+			for ( auto& n : pn.get_child( "SensorNeurons" ) )
+				AddSensorNeurons( n.second, par, model );
+		}
+
+		if ( auto* n = pn.try_get_child( "InterNeurons" ) )
+		{
 			AddInterNeuronLayer();
-			for ( auto& neuron : *neurons )
-			{
-				AddInterNeuron( neuron.second, par, model, Locality( LeftSide ) );
-				AddInterNeuron( neuron.second, par, model, Locality( RightSide ) );
-			}
+			AddInterNeurons( *n, par, model, false );
+			AddInterNeurons( *n, par, model, true );
 		}
-		else
-		{
-			// automatic neural network
-			if ( auto* sensors = pn.try_get_child( "SensorNeurons" ) )
-			{
-				for ( auto& n : pn.get_child( "SensorNeurons" ) )
-					AddSensorNeurons( n.second, par, model, locality );
-			}
 
-			if ( auto* n = pn.try_get_child( "InterNeurons" ) )
-			{
-				AddInterNeuronLayer();
-				AddInterNeurons( *n, par, model, Locality( NoSide, false ) );
-				AddInterNeurons( *n, par, model, Locality( NoSide, true ) );
-			}
-
-			if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
-				AddMotorNeurons( *n, par, model, locality );
-		}
+		if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
+			AddMotorNeurons( *n, par, model, false );
 	}
 
-	scone::InterNeuron* NeuralController::AddInterNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
-	{
-		m_InterNeurons.resize( std::max( (int)m_InterNeurons.size(), 2 ) );
-		m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( pn, par, model, *this, loc ) );
-		return m_InterNeurons.back().back().get();
-	}
-
-	SensorNeuron* NeuralController::AddSensorNeuron( const PropNode& pn, Params& par, Model& model, Locality loc )
-	{
-		m_SensorNeurons.push_back( std::make_unique< SensorNeuron >( *this, pn, par, model, loc ) );
-		return m_SensorNeurons.back().get();
-	}
-
-	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
+	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par, Model& model )
 	{
 		auto type = pn.get< string >( "type" );
 		std::vector< string > sources;
 		if ( type == "L" || type == "F" || type == "S" )
-			sources = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
+			sources = FindMatchingNames( model.GetMuscles(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 		else if ( type == "DP" || type == "DV" )
-			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "include" ), pn.get< string >( "exclude", "" ) );
+			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 
 		for ( auto& name : sources )
-		{
-			double delay = delays_.get< double >( GetNameNoSide( name ) );
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay ) );
-			m_SensorNeurons.back()->offset_ = par.try_get( m_SensorNeurons.back()->par_name_ + "0", pn, ( "offset" ), type == "L" ? 1.0 : 0.0 );
-		}
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
 	}
 
 	void NeuralController::AddInterNeuronLayer()
@@ -90,7 +60,7 @@ namespace scone
 		m_InterNeurons.emplace_back();
 	}
 
-	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
+	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, bool mirrored )
 	{
 		// Must call AddInterNeuronLayer before!
 		SCONE_ASSERT( m_InterNeurons.size() >= 1 );
@@ -99,35 +69,33 @@ namespace scone
 		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto name = stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" );
+			auto name = stringf( "N%d", i ) + ( mirrored ? "_r" : "_l" );
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 
 			auto offset = par.try_get( "C0", pn, "offset", 0.0 );
-			m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( *this, name ) );
+			m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
 
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
 			{
 				auto s = GetNeuron( prev_layer, idx );
-				auto w = par.try_get( s->GetName( loc.mirrored ), pn, "gain", 1.0 );
+				auto w = par.try_get( s->GetName( mirrored ), pn, "gain", 1.0 );
 				m_InterNeurons.back().back()->AddInput( w, s );
 				//log::info( "added ", s->GetName( loc.mirrored ) );
 			}
 		}
 	}
 
-	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, Locality loc )
+	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, bool mirrored )
 	{
 		bool monosynaptic = pn.has_value( "monosynaptic" );
 		bool antagonistic = pn.has_value( "antagonistic" );
 		bool balance = pn.has_value( "balance" );
-		bool top_layer = pn.has_value( "top" );
+		bool top_layer = pn.has_value( "top_layer" );
 
 		auto muscle_names = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
 		{
-			auto* muscle = FindByName( model.GetMuscles(), name ).get();
-			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( *this, muscle, name ) );
-			loc.mirrored = GetSideFromName( name ) == RightSide;
+			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
 
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			if ( top_layer )
@@ -135,7 +103,7 @@ namespace scone
 				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
 				{
 					auto input = m_InterNeurons.back()[ idx ].get();
-					auto weight = par.get( input->GetName( loc.mirrored ), pn.get_child( "top" ) );
+					auto weight = par.get( input->GetName( mirrored ), pn.get_child( "top_layer" ) );
 					m_MotorNeurons.back()->AddInput( weight, input );
 				}
 			}

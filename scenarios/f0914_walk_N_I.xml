@@ -6,8 +6,8 @@
 	<max_generations>3000</max_generations>
 	<Objective type="ImitationObjective">
 		<signature_postfix>IMO</signature_postfix>
-		<file>results/f0914_walk_N0MABd_NSI.sto</file>
-		<frame_delta>20</frame_delta>
+		<file>results/f0914_walk_GH2.sto</file>
+		<frame_delta>50</frame_delta>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
@@ -18,16 +18,16 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier" std="0.1">
-					<signature_prefix>N0MABS</signature_prefix>
+				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
+					<signature_prefix>N0MABR</signature_prefix>
 					<SensorNeurons>
-						<Sensor type="F" include="*"/>
-						<Sensor type="S" include="*"/>
-						<Sensor type="DP" include="pelvis_tilt"/>
-						<Sensor type="DV" include="pelvis_tilt"/>
+						<Sensor type="F" source="*"/>
+						<Sensor type="L" source="*" offset="1~0.1" activation_function="rectifier"/>
+						<Sensor type="DP" source="pelvis_tilt" activation_function="linear"/>
+						<Sensor type="DV" source="pelvis_tilt" activation_function="linear"/>
 					</SensorNeurons>
-					<!--InterNeurons amount="1"/-->
-					<MotorNeurons include="*" top_layer="0" monosynaptic="1" antagonistic="1" balance="1" offset="0"/>
+					<InterNeurons amount="0"/>
+					<MotorNeurons include="*" monosynaptic="0~0.1" antagonistic="0~0.1" balance="0~0.1"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>

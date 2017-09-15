@@ -6,7 +6,7 @@ namespace scone
 {
 	struct MotorNeuron : public InterNeuron
 	{
-		MotorNeuron( NeuralController& nc, Actuator* act, const string& name = "" ) : InterNeuron( nc, name ), actuator_( act ) {}
+		MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& name = "" );
 		void UpdateActuator();
 		Actuator* actuator_;
 	};

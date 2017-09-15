@@ -11,73 +11,51 @@
 
 namespace scone
 {
-	SensorNeuron::SensorNeuron( NeuralController& nc, const PropNode& pn, Params& par, Model& model, Locality loc ) :
-	Neuron( nc ),
+	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name ) :
+	Neuron( pn, par, nc ),
 	input_(),
-	offset_(),
 	sensor_gain_( 1.0 ),
 	type_( pn.get< string >( "type" ) )
 	{
-		bool opposite = pn.get_any< bool >( { "mirrored", "opposite" }, false );
 		bool inverted = pn.get< bool >( "inverted", false );
-		const auto source_name = pn.get< string >( "source", "leg" );
-		par_name_ = source_name + ( opposite ? "_o." : "." ) + type_;
+		par_name_ = name + ( inverted ? "-." : "." ) + type_;
+
 		ScopedParamSetPrefixer sp( par, par_name_ );
-		INIT_PROP_REQUIRED( pn, delay_ );
+		delay_ = pn.get< double >( "delay", nc.delays_.get< double >( GetNameNoSide( name ) ) );
+
 		INIT_PAR( pn, par, offset_, type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
 
-		if ( opposite )
-			loc = MakeMirrored( loc );
+		auto& model = nc.GetModel();
 
-		SetInputSensor( model, type_, source_name, loc );
-	}
-
-	SensorNeuron::SensorNeuron( NeuralController& nc, Model& model, const string& type, const string& source, double delay, double offset, bool inverted ) :
-	Neuron( nc ),
-	offset_( offset ),
-	delay_( delay ),
-	sensor_gain_( inverted ? -1 : 1 ),
-	type_( type )
-	{
-		SetInputSensor( model, type_, source, Locality( NoSide ) );
-		par_name_ = source_name_ + "." + type_;
-	}
-
-	void SensorNeuron::SetInputSensor( Model& model, const string& type, const string& name, const Locality& loc )
-	{
-		if ( type == "F" )
+		if ( type_ == "F" )
 		{
-			input_ = &model.AcquireDelayedSensor< MuscleForceSensor >( *FindByName( model.GetMuscles(), loc.ConvertName( name ) ) );
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *FindByName( model.GetMuscles(), name ) );
 		}
-		else if ( type == "L" )
+		else if ( type_ == "L" )
 		{
-			input_ = &model.AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), loc.ConvertName( name ) ) );
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), name ) );
 		}
-		else if ( type == "S" )
+		else if ( type_ == "S" )
 		{
-			input_ = &model.AcquireDelayedSensor< MuscleSpindleSensor >( *FindByName( model.GetMuscles(), loc.ConvertName( name ) ) );
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *FindByName( model.GetMuscles(), name ) );
 		}
-		else if ( type == "DP" )
+		else if ( type_ == "DP" )
 		{
-			input_ = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), name ) );
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), name ) );
 		}
-		else if ( type == "DV" )
+		else if ( type_ == "DV" )
 		{
-			input_ = &model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), name ) );
-		}
-		else if ( type == "LD" )
-		{
-			input_ = &model.AcquireDelayedSensor< LegLoadSensor >( model.GetLeg( loc ) );
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), name ) );
 		}
 
-		flut_assert_msg( input_, "Unknown type " + type );
+		flut_assert_msg( input_, "Unknown type " + type_ );
 		source_name_ = name;
 	}
 
 	double SensorNeuron::GetOutput() const
 	{
-		return output_ = controller_.sensor_activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
+		return output_ = activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
 
 	scone::string SensorNeuron::GetName( bool mirrored ) const
