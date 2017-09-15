@@ -22,12 +22,12 @@
 					<signature_prefix>N0MAR</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
-						<Sensor type="L" source="*" offset="1~0.1" activation_function="rectifier"/>
+						<Sensor type="L" source="*" offset="1~0.01" activation_function="rectifier"/>
 						<!--Sensor type="DP" source="pelvis_tilt" activation_function="linear"/-->
 						<!--Sensor type="DV" source="pelvis_tilt" activation_function="linear"/-->
 					</SensorNeurons>
 					<InterNeurons amount="0"/>
-					<MotorNeurons include="*" monosynaptic="0~0.1" antagonistic="0~0.1"/>
+					<MotorNeurons include="*" monosynaptic="0.1~0.1" antagonistic="-0.1~0.1"/>
 				</Controller>
 			</Controllers>
 		</Model>
