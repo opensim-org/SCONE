@@ -19,7 +19,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
-					<signature_prefix>N0MAB</signature_prefix>
+					<signature_prefix>N0MABR</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
 						<Sensor type="L" source="*" offset="1~0.1" activation_function="rectifier"/>

@@ -19,17 +19,16 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
-					<signature_prefix>N0MABR</signature_prefix>
+					<signature_prefix>N0MAR</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
 						<Sensor type="L" source="*" offset="1~0.1" activation_function="rectifier"/>
-						<Sensor type="DP" source="pelvis_tilt" activation_function="linear"/>
-						<Sensor type="DV" source="pelvis_tilt" activation_function="linear"/>
+						<!--Sensor type="DP" source="pelvis_tilt" activation_function="linear"/-->
+						<!--Sensor type="DV" source="pelvis_tilt" activation_function="linear"/-->
 					</SensorNeurons>
 					<InterNeurons amount="0"/>
-					<MotorNeurons include="*" monosynaptic="0~0.1" antagonistic="0~0.1" balance="0~0.1"/>
+					<MotorNeurons include="*" monosynaptic="0~0.1" antagonistic="0~0.1"/>
 				</Controller>
-				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>

@@ -5,6 +5,7 @@
 #include "NeuralController.h"
 #include "../model/Model.h"
 #include "../model/Actuator.h"
+#include "../model/Side.h"
 
 namespace scone
 {
@@ -12,6 +13,8 @@ namespace scone
 	Neuron( pn, par, nc ),
 	name_( "name" )
 	{
+		ScopedParamSetPrefixer prefix( par, GetNameNoSide( name ) + "." );
+		INIT_PAR_NAMED( pn, par, offset_, "C0", 0 );
 	}
 
 	double InterNeuron::GetOutput() const

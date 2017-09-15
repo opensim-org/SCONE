@@ -22,9 +22,8 @@ namespace scone
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.delays_.get< double >( GetNameNoSide( name ) ) );
-
-		INIT_PAR( pn, par, offset_, type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
-		INIT_PROP( pn, sensor_gain_, inverted ? -1 : 1 );
+		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
+		sensor_gain_ = inverted ? -1 : 1;
 
 		auto& model = nc.GetModel();
 
