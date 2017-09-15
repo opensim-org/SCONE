@@ -80,9 +80,9 @@ namespace scone
 
 		for ( auto& name : sources )
 		{
-			double offset = type == "L" ? 1.0 : 0.0;
 			double delay = delays_.get< double >( GetNameNoSide( name ) );
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay, offset ) );
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( *this, model, type, name, delay ) );
+			m_SensorNeurons.back()->offset_ = par.try_get( m_SensorNeurons.back()->par_name_ + "0", pn, ( "offset" ), type == "L" ? 1.0 : 0.0 );
 		}
 	}
 
@@ -103,7 +103,7 @@ namespace scone
 			auto name = stringf( "N%d", i ) + ( loc.mirrored ? "_r" : "_l" );
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 
-			auto offset = par.get( "C0", 0.0, std_ );
+			auto offset = par.try_get( "C0", pn, "offset", 0.0 );
 			m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( *this, name ) );
 
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
@@ -165,8 +165,7 @@ namespace scone
 				}
 			}
 
-			if ( pn.get( "offset", false ) )
-				m_MotorNeurons.back()->offset_ = par.get( "C0", 0.0, std_ );
+			m_MotorNeurons.back()->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
 

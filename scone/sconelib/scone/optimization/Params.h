@@ -9,10 +9,10 @@
 #include "spot/objective_info.h"
 
 #define INIT_PARAM( PROP_, PAR_, VAR_, DEFAULT_ ) \
-	VAR_ = PAR_.get_or( GetCleanVarName( #VAR_ ), PROP_.try_get_child( GetCleanVarName( #VAR_ ) ), DEFAULT_ )
+	VAR_ = PAR_.try_get( GetCleanVarName( #VAR_ ), PROP_, GetCleanVarName( #VAR_ ), DEFAULT_ )
 
 #define INIT_PARAM_NAMED( PROP_, PAR_, VAR_, NAME_, DEFAULT_ ) \
-	VAR_ = PAR_.get_or( NAME_, PROP_.try_get_child( NAME_ ), DEFAULT_ )
+	VAR_ = PAR_.try_get( NAME_, PROP_, NAME_, DEFAULT_ )
 
 #define INIT_PARAM_REQUIRED( PROP_, PAR_, VAR_ ) \
 	VAR_ = PAR_.get( GetCleanVarName( #VAR_ ), PROP_.get_child( #VAR_ ) )
