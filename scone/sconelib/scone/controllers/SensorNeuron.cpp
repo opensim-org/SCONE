@@ -18,7 +18,7 @@ namespace scone
 	type_( pn.get< string >( "type" ) )
 	{
 		bool inverted = pn.get< bool >( "inverted", false );
-		par_name_ = name + ( inverted ? "-." : "." ) + type_;
+		par_name_ = GetNameNoSide( name ) + ( inverted ? "-." : "." ) + type_;
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.delays_.get< double >( GetNameNoSide( name ) ) );
