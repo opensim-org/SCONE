@@ -6,6 +6,7 @@
 #include "flut/container_tools.hpp"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"
+#include "PatternNeuron.h"
 #include "flut/pattern_matcher.hpp"
 #include "../model/Model.h"
 #include "../model/Muscle.h"
@@ -31,6 +32,9 @@ namespace scone
 				AddSensorNeurons( n.second, par );
 		}
 
+		if ( auto* n = pn.try_get_child( "PatternNeurons" ) )
+			AddPatternNeurons( *n, par );
+
 		if ( auto* n = pn.try_get_child( "InterNeurons" ) )
 		{
 			AddInterNeuronLayer();
@@ -53,6 +57,15 @@ namespace scone
 
 		for ( auto& name : sources )
 			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
+	}
+
+	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
+	{
+		auto amount = pn.get< int >( "amount" );
+		for ( int i = 0; i < amount; ++i )
+			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, false ) );
+		for ( int i = 0; i < amount; ++i )
+			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, true ) );
 	}
 
 	void NeuralController::AddInterNeuronLayer()
@@ -90,6 +103,7 @@ namespace scone
 		bool monosynaptic = pn.has_value( "monosynaptic" );
 		bool antagonistic = pn.has_value( "antagonistic" );
 		bool balance = pn.has_value( "balance" );
+		bool pattern = pn.has_value( "pattern" );
 		bool top_layer = pn.has_value( "top_layer" );
 
 		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
@@ -132,6 +146,14 @@ namespace scone
 				}
 			}
 
+			if ( pattern )
+			{
+				bool mirror = GetSideFromName( name ) == RightSide;
+				for ( auto& n : m_PatternNeurons )
+					if ( n->mirrored_ == mirror )
+						m_MotorNeurons.back()->AddInput( par.get( n->name_, pn[ "pattern" ] ), n.get() );
+			}
+
 			m_MotorNeurons.back()->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
@@ -159,6 +181,8 @@ namespace scone
 
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
+		for ( auto& neuron : m_PatternNeurons )
+			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& neuron : m_SensorNeurons )
 			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& layer : m_InterNeurons )

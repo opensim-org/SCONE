@@ -19,15 +19,16 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
-					<signature_prefix>N0MABO_NSI</signature_prefix>
+					<signature_prefix>N0MABP_NSI</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
 						<Sensor type="L" source="*" offset="1" activation_function="linear"/>
 						<Sensor type="DP" source="pelvis_tilt" activation_function="linear"/>
 						<Sensor type="DV" source="pelvis_tilt" activation_function="linear"/>
 					</SensorNeurons>
+					<PatternNeurons amount="0" width="0.1~0.01" period="1.2~0.02"/>
 					<InterNeurons amount="0"/>
-					<MotorNeurons include="*" offset="0~0.01" monosynaptic="0.1~0.1" antagonistic="-0.1~0.1" balance="0~0.1"/>
+					<MotorNeurons include="*" offset="0~0.01" monosynaptic="0.1~0.1" antagonistic="-0.1~0.1" balance="0~0.1" pattern="0.1~0.01"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
 			</Controllers>

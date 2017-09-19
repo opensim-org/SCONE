@@ -7,6 +7,7 @@
 #include "MotorNeuron.h"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"
+#include "PatternNeuron.h"
 #include "activation_functions.h"
 
 namespace scone
@@ -15,6 +16,7 @@ namespace scone
 	SCONE_DECLARE_STRUCT_AND_PTR( InterNeuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( SensorNeuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( MotorNeuron );
+	SCONE_DECLARE_STRUCT_AND_PTR( PatternNeuron );
 
 	class NeuralController : public Controller
 	{
@@ -23,6 +25,7 @@ namespace scone
 		virtual ~NeuralController() {}
 
 		void AddSensorNeurons( const PropNode& pn, Params& par );
+		void AddPatternNeurons( const PropNode& pn, Params& par );
 		void AddInterNeuronLayer();
 		void AddInterNeurons( const PropNode& pn, Params& par, bool mirrored );
 		void AddMotorNeurons( const PropNode& pn, Params& par, bool mirrored );
@@ -46,6 +49,7 @@ namespace scone
 
 	private:
 		Model& model_;
+		std::vector< PatternNeuronUP > m_PatternNeurons;
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
