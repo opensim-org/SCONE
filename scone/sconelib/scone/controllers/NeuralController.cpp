@@ -28,28 +28,28 @@ namespace scone
 		if ( auto* sensors = pn.try_get_child( "SensorNeurons" ) )
 		{
 			for ( auto& n : pn.get_child( "SensorNeurons" ) )
-				AddSensorNeurons( n.second, par, model );
+				AddSensorNeurons( n.second, par );
 		}
 
 		if ( auto* n = pn.try_get_child( "InterNeurons" ) )
 		{
 			AddInterNeuronLayer();
-			AddInterNeurons( *n, par, model, false );
-			AddInterNeurons( *n, par, model, true );
+			AddInterNeurons( *n, par, false );
+			AddInterNeurons( *n, par, true );
 		}
 
 		if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
-			AddMotorNeurons( *n, par, model, false );
+			AddMotorNeurons( *n, par, false );
 	}
 
-	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par, Model& model )
+	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
 	{
 		auto type = pn.get< string >( "type" );
 		std::vector< string > sources;
 		if ( type == "L" || type == "F" || type == "S" )
-			sources = FindMatchingNames( model.GetMuscles(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
+			sources = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 		else if ( type == "DP" || type == "DV" )
-			sources = FindMatchingNames( model.GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
+			sources = FindMatchingNames( GetModel().GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 
 		for ( auto& name : sources )
 			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
@@ -60,7 +60,7 @@ namespace scone
 		m_InterNeurons.emplace_back();
 	}
 
-	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, Model& model, bool mirrored )
+	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, bool mirrored )
 	{
 		// Must call AddInterNeuronLayer before!
 		SCONE_ASSERT( m_InterNeurons.size() >= 1 );
@@ -85,14 +85,14 @@ namespace scone
 		}
 	}
 
-	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, Model& model, bool mirrored )
+	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, bool mirrored )
 	{
 		bool monosynaptic = pn.has_value( "monosynaptic" );
 		bool antagonistic = pn.has_value( "antagonistic" );
 		bool balance = pn.has_value( "balance" );
 		bool top_layer = pn.has_value( "top_layer" );
 
-		auto muscle_names = FindMatchingNames( model.GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
+		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
 		{
 			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
@@ -118,9 +118,9 @@ namespace scone
 
 					if ( antagonistic )
 					{
-						auto it1 = TryFindByName( model.GetMuscles(), name );
-						auto it2 = TryFindByName( model.GetMuscles(), input->source_name_ );
-						if ( it1 != model.GetMuscles().end() && it2 != model.GetMuscles().end() )
+						auto it1 = TryFindByName( GetModel().GetMuscles(), name );
+						auto it2 = TryFindByName( GetModel().GetMuscles(), input->source_name_ );
+						if ( it1 != GetModel().GetMuscles().end() && it2 != GetModel().GetMuscles().end() )
 						{
 							if ( (*it1)->IsAntagonist( **it2 ) )
 								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, pn[ "antagonistic" ] ), input );
