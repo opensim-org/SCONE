@@ -6,10 +6,12 @@ namespace scone
 	class PatternNeuron : public Neuron
 	{
 	public:
-		PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc );
+		PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name );
 		virtual ~PatternNeuron() {}
 
 		virtual activation_t GetOutput() const override;
+
+		string name_;
 
 	private:
 		double sigma_;
