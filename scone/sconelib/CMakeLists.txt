@@ -89,6 +89,8 @@ set(CS_CONTROLLERS_NC_FILES
 	scone/controllers/InterNeuron.h
 	scone/controllers/MotorNeuron.cpp
 	scone/controllers/MotorNeuron.h
+	scone/controllers/PatternNeuron.cpp
+	scone/controllers/PatternNeuron.h
 	scone/controllers/activation_functions.cpp
 	scone/controllers/activation_functions.h
 	)

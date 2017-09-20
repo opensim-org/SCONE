@@ -14,7 +14,7 @@
 		</Measure>
 		<Measure type="CompositeMeasure" name="Posture" weight="1" threshold="0">
 			<Measures>
-				<Measure type="DofLimitMeasure" name="Pelvis" dof="pelvis_tilt" min_deg="-15" max_deg="15" abs_range_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="Pelvis" dof="pelvis_tilt" min_deg="-30" max_deg="15" abs_range_penalty="1"/>
 			</Measures>
 		</Measure>
 	</Measures>

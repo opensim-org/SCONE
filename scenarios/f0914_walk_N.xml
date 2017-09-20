@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_N0MAB_NSI.par</init_file>
+	<init_file>initializations/f0914_walk_N0MAB_NSI_S10.par</init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
 	<use_init_file>1</use_init_file>
@@ -10,8 +10,8 @@
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
-			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
-			<!--state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/-->
+			<state_init_file>f2354_init_walk_3_S20.sto</state_init_file>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<use_fixed_control_step_size>1</use_fixed_control_step_size>
@@ -19,7 +19,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
-					<signature_prefix>N0MABP1_NSI</signature_prefix>
+					<signature_prefix>N0MAB</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
 						<Sensor type="L" source="*" offset="1" activation_function="linear"/>
@@ -30,7 +30,7 @@
 					<InterNeurons amount="0"/>
 					<MotorNeurons include="*" offset="0~0.01" monosynaptic="0.1~0.1" antagonistic="-0.1~0.1" balance="0~0.1" pattern="0.1~0.1"/>
 				</Controller>
-				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
+				<INCLUDE file="measures/M_CG20_CoT_GH.xml"/>
 			</Controllers>
 		</Model>
 	</Objective>
