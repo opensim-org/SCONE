@@ -36,7 +36,8 @@ namespace scone
 
 	double gaussian_width( double input, double width )
 	{
-		auto b = 1 / ( 2 * flut::math::squared( width / 2.35482 ) );
-		return exp( -b * ( input * input ) );
+		auto c = width / 2.35482;
+		auto b = 1 / ( 2 * c * c );
+		return exp( -b * input * input );
 	}
 }
