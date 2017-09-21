@@ -94,8 +94,8 @@ namespace scone
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
 			{
 				auto s = GetNeuron( prev_layer, idx );
-				auto w = par.try_get( s->GetName( false ) + ".w", pn, "gain", 1.0 );
-				auto m = par.try_get( s->GetName( false ) + ".m", pn, "mean", 0.0 );
+				auto w = par.try_get( s->GetName( mirrored ) + ".w", pn, "gain", 1.0 );
+				auto m = par.try_get( s->GetName( mirrored ) + ".m", pn, "mean", 0.0 );
 				m_InterNeurons.back().back()->AddInput( s, w, m );
 				//log::info( "added interneuron: ", name + "." + s->GetName( false ) );
 			}
