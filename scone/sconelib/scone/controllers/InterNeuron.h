@@ -10,9 +10,18 @@ namespace scone
 		InterNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& name );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
-		void AddInput( double weight, Neuron* input ) { inputs_.emplace_back( weight, input ); }
+		void AddInput( Neuron* input, double weight, double mean = 0.0 ) { inputs_.emplace_back( Input{ input, weight, mean } ); }
 		virtual size_t GetInputCount() override { return inputs_.size(); }
-		std::vector< std::pair< double, Neuron* > > inputs_;
+
+		struct Input {
+			Neuron* neuron;
+			double weight;
+			double mean;
+		};
+
+		double width_;
+		bool use_distance_;
+		std::vector< Input > inputs_;
 		string name_;
 	};
 }

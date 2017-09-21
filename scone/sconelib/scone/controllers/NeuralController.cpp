@@ -56,7 +56,10 @@ namespace scone
 			sources = FindMatchingNames( GetModel().GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 
 		for ( auto& name : sources )
+		{
 			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
+			//log::info( "added sensor", m_SensorNeurons.back()->GetName( false ) );
+		}
 	}
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
@@ -91,9 +94,10 @@ namespace scone
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
 			{
 				auto s = GetNeuron( prev_layer, idx );
-				auto w = par.try_get( s->GetName( mirrored ), pn, "gain", 1.0 );
-				m_InterNeurons.back().back()->AddInput( w, s );
-				//log::info( "added ", s->GetName( loc.mirrored ) );
+				auto w = par.try_get( s->GetName( false ) + ".w", pn, "gain", 1.0 );
+				auto m = par.try_get( s->GetName( false ) + ".m", pn, "mean", 0.0 );
+				m_InterNeurons.back().back()->AddInput( s, w, m );
+				//log::info( "added interneuron: ", name + "." + s->GetName( false ) );
 			}
 		}
 	}
@@ -118,7 +122,7 @@ namespace scone
 				{
 					auto input = m_InterNeurons.back()[ idx ].get();
 					auto weight = par.get( input->GetName( mirrored ), pn.get_child( "top_layer" ) );
-					m_MotorNeurons.back()->AddInput( weight, input );
+					m_MotorNeurons.back()->AddInput( input, weight );
 				}
 			}
 
@@ -128,7 +132,7 @@ namespace scone
 				{
 					auto input = m_SensorNeurons[ idx ].get();
 					if ( monosynaptic && input->source_name_ == name )
-						m_MotorNeurons.back()->AddInput( par.get( input->type_, pn[ "monosynaptic" ] ), input );
+						m_MotorNeurons.back()->AddInput( input, par.get( input->type_, pn[ "monosynaptic" ] ) );
 
 					if ( antagonistic )
 					{
@@ -137,12 +141,12 @@ namespace scone
 						if ( it1 != GetModel().GetMuscles().end() && it2 != GetModel().GetMuscles().end() )
 						{
 							if ( (*it1)->IsAntagonist( **it2 ) )
-								m_MotorNeurons.back()->AddInput( par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, pn[ "antagonistic" ] ), input );
+								m_MotorNeurons.back()->AddInput( input, par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, pn[ "antagonistic" ] ) );
 						}
 					}
 
 					if ( balance && ( input->type_ == "DP" || input->type_ == "DV" ) )
-						m_MotorNeurons.back()->AddInput( par.get( input->type_, pn[ "balance" ] ), input );
+						m_MotorNeurons.back()->AddInput( input, par.get( input->type_, pn[ "balance" ] ) );
 				}
 			}
 
@@ -151,7 +155,7 @@ namespace scone
 				bool mirror = GetSideFromName( name ) == RightSide;
 				for ( auto& n : m_PatternNeurons )
 					if ( n->mirrored_ == mirror )
-						m_MotorNeurons.back()->AddInput( par.get( n->name_, pn[ "pattern" ] ), n.get() );
+						m_MotorNeurons.back()->AddInput( n.get(), par.get( n->name_, pn[ "pattern" ] ) );
 			}
 
 			m_MotorNeurons.back()->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
@@ -200,7 +204,7 @@ namespace scone
 			{
 				str << neuron->name_ << "\t" << neuron->offset_;
 				for ( auto& input : neuron->inputs_ )
-					str << "\t" << input.second->GetName( false ) << "\t" << input.first;
+					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight;
 				str << std::endl;
 			}
 		}
@@ -209,7 +213,7 @@ namespace scone
 		{
 			str << neuron->name_ << "\t" << neuron->offset_;
 			for ( auto& input : neuron->inputs_ )
-				str << "\t" << input.second->GetName( false ) << "\t" << input.first;
+				str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight;
 			str << std::endl;
 		}
 	}

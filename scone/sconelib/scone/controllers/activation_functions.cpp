@@ -9,6 +9,7 @@ namespace scone
 		if ( name == "rectifier" ) return rectifier;
 		else if ( name == "soft_plus" ) return soft_plus;
 		else if ( name == "linear" ) return linear;
+		else if ( name == "gaussian" ) return gaussian;
 		else SCONE_THROW( "Unknown activation function: " + name );
 	}
 
@@ -28,4 +29,14 @@ namespace scone
 		return input;
 	}
 
+	double gaussian( double input )
+	{
+		return exp( -( input * input ) );
+	}
+
+	double gaussian_width( double input, double width )
+	{
+		auto b = 1 / ( 2 * flut::math::squared( width / 2.35482 ) );
+		return exp( -b * ( input * input ) );
+	}
 }

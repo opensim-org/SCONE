@@ -12,4 +12,6 @@ namespace scone
 	double rectifier( double input );
 	double soft_plus( double input );
 	double linear( double input );
+	double gaussian( double input );
+	double gaussian_width( double input, double width );
 }

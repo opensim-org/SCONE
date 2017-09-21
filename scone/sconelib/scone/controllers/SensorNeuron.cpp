@@ -60,7 +60,7 @@ namespace scone
 	scone::string SensorNeuron::GetName( bool mirrored ) const
 	{
 		if ( !mirrored )
-			return par_name_;
+			return source_name_ + "." + type_;
 		else return GetMirroredName( source_name_ ) + "." + type_;
 	}
 }
