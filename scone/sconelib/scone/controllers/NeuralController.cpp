@@ -90,13 +90,15 @@ namespace scone
 
 			auto offset = par.try_get( "C0", pn, "offset", 0.0 );
 			m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
-
 			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
 			{
 				auto s = GetNeuron( prev_layer, idx );
-				auto w = par.try_get( s->GetName( mirrored ) + ".w", pn, "gain", 1.0 );
-				auto m = par.try_get( s->GetName( mirrored ) + ".m", pn, "mean", 0.0 );
-				m_InterNeurons.back().back()->AddInput( s, w, m );
+				if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
+				{
+					auto w = par.try_get( s->GetParName() + ".w", pn, "gain", 1.0 );
+					auto m = par.try_get( s->GetParName() + ".m", pn, "mean", 0.0 );
+					m_InterNeurons.back().back()->AddInput( s, w, m );
+				}
 				//log::info( "added interneuron: ", name + "." + s->GetName( false ) );
 			}
 		}

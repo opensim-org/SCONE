@@ -13,6 +13,8 @@ namespace scone
 	model_( nc.GetModel() ),
 	mirrored_( mirrored )
 	{
+		side_ = mirrored ? RightSide : LeftSide;
+
 		period_ = par.get( "CPG.period", pn[ "period" ] );
 		auto amount = pn.get< int >( "amount" );
 

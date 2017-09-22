@@ -8,6 +8,7 @@ namespace scone
 		SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
+		virtual string GetParName() const override;
 
 		SensorDelayAdapter* input_;
 		TimeInSeconds delay_;

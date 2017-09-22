@@ -13,6 +13,7 @@ namespace scone
 	Neuron( pn, par, nc ),
 	name_( name )
 	{
+		side_ = GetSideFromName( name );
 		//ScopedParamSetPrefixer prefix( par, GetNameNoSide( name ) + "." );
 		INIT_PAR_NAMED( pn, par, offset_, "C0", 0 );
 		INIT_PAR( pn, par, width_, 0.0 );

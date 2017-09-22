@@ -88,7 +88,7 @@ namespace scone
 		if ( frame_count > 0 )
 		{
 			result = 100 * result / m_ExcitationChannels.size();
-			log::trace( "t=", t, " frames=", frame_count, " start=", frame_start, " result=", result );
+			//log::trace( "t=", t, " frames=", frame_count, " start=", frame_start, " result=", result );
 			model.GetUserData()[ "IM_res" ] = result + model.GetUserData().get< double >( "IM_res" );
 			model.GetUserData()[ "IM_fra" ] = frame_start + frame_count;
 		}

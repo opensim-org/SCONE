@@ -19,6 +19,7 @@ namespace scone
 	{
 		bool inverted = pn.get< bool >( "inverted", false );
 		par_name_ = GetNameNoSide( name ) + ( inverted ? "-." : "." ) + type_;
+		side_ = GetSideFromName( name );
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.delays_.get< double >( GetNameNoSide( name ) ) );
@@ -57,10 +58,16 @@ namespace scone
 		return output_ = activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
 	}
 
-	scone::string SensorNeuron::GetName( bool mirrored ) const
+	string SensorNeuron::GetName( bool mirrored ) const
 	{
 		if ( !mirrored )
 			return source_name_ + "." + type_;
 		else return GetMirroredName( source_name_ ) + "." + type_;
 	}
+
+	string SensorNeuron::GetParName() const
+	{
+		return par_name_;
+	}
+
 }
