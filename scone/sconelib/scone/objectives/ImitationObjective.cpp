@@ -10,12 +10,12 @@
 #include "../core/StorageIo.h"
 #include "scone/model/Muscle.h"
 #include <vector>
+#include "flut/prop_node.hpp"
 
 namespace scone
 {
 	ImitationObjective::ImitationObjective( const PropNode& pn ) :
-	Objective( pn ),
-	m_ModelPropsCopy( pn.get_child( "Model" ) )
+	ModelObjective( pn )
 	{
 		INIT_PROP_REQUIRED( pn, file );
 		INIT_PROP( pn, frame_delta_, 1 );
@@ -52,34 +52,67 @@ namespace scone
 	ImitationObjective::~ImitationObjective()
 	{}
 
-	scone::fitness_t ImitationObjective::evaluate( const ParamInstance& point ) const
+	void ImitationObjective::AdvanceModel( Model& model, TimeInSeconds t ) const
 	{
-		// WARNING: this function must be thread-safe and should only access local or const variables
-		auto model = CreateModel( m_ModelPropsCopy, ParamInstance( point ) );
-
-		// add sensor data
-		auto& ds = model->GetSensorDelayStorage();
-		for ( Index fidx = 1; fidx < m_Storage.GetFrameCount(); ++fidx )
+		if ( !model.GetUserData().has_key( "IM_fra" ) )
 		{
-			auto sf = m_Storage.GetFrame( fidx );
-			ds.AddFrame( sf.GetTime() );
-			for ( Index cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
-				ds.Back()[ cidx ] = sf[ m_SensorChannels[ cidx ] ];
+			model.GetUserData()[ "IM_fra" ] = 0;
+			model.GetUserData()[ "IM_res" ] = 0.0;
+
+			// add sensor data
+			auto& ds = model.GetSensorDelayStorage();
+			for ( Index fidx = 1; fidx < m_Storage.GetFrameCount(); ++fidx )
+			{
+				auto sf = m_Storage.GetFrame( fidx );
+				ds.AddFrame( sf.GetTime() );
+				for ( Index cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
+					ds.Back()[ cidx ] = sf[ m_SensorChannels[ cidx ] ];
+			}
 		}
 
 		// compute result
 		double result = 0.0;
-		for ( Index i = 0; i < m_Storage.GetFrameCount(); i += frame_delta_ )
+		Index frame_start = model.GetUserData().get< Index >( "IM_fra" );
+		Index frame_count = 0;
+		for ( Index idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
 		{
-			auto f = m_Storage.GetFrame( i );
-			model->SetStateValues( f.GetValues(), f.GetTime() );
-			//model->UpdateControlValues();
+			auto f = m_Storage.GetFrame( idx );
 
-			// compare results
+			// set state and compare output
+			model.SetStateValues( f.GetValues(), f.GetTime() );
 			for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
-				result += abs( model->GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
+				result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
+			++frame_count;
 		}
-		return 100 * result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
+
+		if ( frame_count > 0 )
+		{
+			result = 100 * result / m_ExcitationChannels.size();
+			log::trace( "t=", t, " frames=", frame_count, " start=", frame_start, " result=", result );
+			model.GetUserData()[ "IM_res" ] = result + model.GetUserData().get< double >( "IM_res" );
+			model.GetUserData()[ "IM_fra" ] = frame_start + frame_count;
+		}
+
+		//for ( Index i = 0; i < m_Storage.GetFrameCount(); i += frame_delta_ )
+		//{
+		//	auto f = m_Storage.GetFrame( i );
+		//	model.SetStateValues( f.GetValues(), f.GetTime() );
+
+		//	// compare results
+		//	for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
+		//		result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
+		//}
+		//return 100 * result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
+	}
+
+	scone::fitness_t ImitationObjective::GetResult( Model& m ) const
+	{
+		return m.GetUserData().get< fitness_t >( "IM_res" ) / ( m.GetUserData().get< Index >( "IM_fra" ) );
+	}
+
+	PropNode ImitationObjective::GetReport( Model& m ) const
+	{
+		return flut::make_prop_node( GetResult( m ) );
 	}
 
 	String ImitationObjective::GetClassSignature() const

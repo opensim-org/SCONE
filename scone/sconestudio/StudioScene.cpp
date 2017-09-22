@@ -47,7 +47,7 @@ namespace scone
 		if ( model )
 		{
 			if ( model->IsEvaluating() )
-				return model->GetObjective().max_duration;
+				return model->GetObjective().GetDuration();
 			else return model->GetData().IsEmpty() ? 0.0 : model->GetData().Back().GetTime();
 		}
 		else return 0.0;

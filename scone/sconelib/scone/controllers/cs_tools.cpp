@@ -16,15 +16,15 @@ namespace scone
 	PropNode SCONE_API RunSimulation( const path& par_file, bool write_results )
 	{
 		// create the simulation objective object
-		SimulationObjectiveUP so = CreateSimulationObjective( par_file );
-		auto model = so->CreateModelFromParFile( par_file );
+		auto mob = CreateModelObjective( par_file );
+		auto model = mob->CreateModelFromParFile( par_file );
 
 		// set data storage
 		if ( write_results )
 			model->SetStoreData( true );
 
 		timer t;
-		double result = so->EvaluateModel( *model );
+		double result = mob->EvaluateModel( *model );
 		auto duration = t.seconds();
 
 		// reset profiler (only if enabled)
@@ -41,12 +41,12 @@ namespace scone
 
 		// write results
 		if ( write_results )
-			so->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
+			mob->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
 
 		return statistics;
 	}
 
-	SimulationObjectiveUP SCONE_API CreateSimulationObjective( const path& file )
+	ModelObjectiveUP SCONE_API CreateModelObjective( const path& file )
 	{
 		bool is_par_file = file.extension() == "par";
 		path config_file = is_par_file ? file.parent_path() / "config.xml" : file;
@@ -56,19 +56,19 @@ namespace scone
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 		// create SimulationObjective object
-		SimulationObjectiveUP so = dynamic_unique_cast<SimulationObjective>( CreateObjective( objProp ) );
+		auto mob = dynamic_unique_cast< ModelObjective >( CreateObjective( objProp ) );
 
 		if ( !is_par_file )
 		{
 			// read mean / std from init file
 			auto& optProp = configProp.get_child( "Optimizer" );
 			if ( optProp.get< bool >( "use_init_file" ) )
-				so->info().import_mean_std( GetFolder( SCONE_SCENARIO_FOLDER ) / optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
+				mob->info().import_mean_std( GetFolder( SCONE_SCENARIO_FOLDER ) / optProp.get< path >( "init_file" ), optProp.get< bool >( "use_init_file_std", true ) );
 		}
 
 		// report unused parameters
 		LogUntouched( objProp );
 
-		return so;
+		return mob;
 	}
 }

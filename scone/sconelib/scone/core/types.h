@@ -7,6 +7,8 @@ namespace scone
 	SCONE_DECLARE_CLASS_AND_PTR( Function );
 
 	SCONE_DECLARE_CLASS_AND_PTR( SimulationObjective );
+	SCONE_DECLARE_CLASS_AND_PTR( ImitationObjective );
+	SCONE_DECLARE_CLASS_AND_PTR( ModelObjective );
 	SCONE_DECLARE_CLASS_AND_PTR( FeedForwardController );
 	SCONE_DECLARE_CLASS_AND_PTR( ReflexController );
 	SCONE_DECLARE_CLASS_AND_PTR( MuscleReflex );

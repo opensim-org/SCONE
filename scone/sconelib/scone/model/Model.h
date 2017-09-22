@@ -99,6 +99,7 @@ namespace scone
 		// custom model properties
 		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : flut::empty_prop_node(); }
 		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : flut::empty_prop_node(); }
+		PropNode& GetUserData() { return m_UserData; }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -182,6 +183,7 @@ namespace scone
 
 		const PropNode* m_pModelProps;
 		const PropNode* m_pCustomProps;
+		PropNode m_UserData;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;

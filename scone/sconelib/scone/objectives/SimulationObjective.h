@@ -8,10 +8,11 @@
 #include "Measure.h"
 #include <vector>
 #include "flut/system/path.hpp"
+#include "ModelObjective.h"
 
 namespace scone
 {
-	class SCONE_API SimulationObjective : public Objective
+	class SCONE_API SimulationObjective : public ModelObjective
 	{
 	public:
 		SimulationObjective( const PropNode& props );
@@ -19,16 +20,17 @@ namespace scone
 
 		double max_duration;
 
-		virtual fitness_t evaluate( const ParamInstance& point ) const override;
-		fitness_t EvaluateModel( Model& m ) const;
-		ModelUP CreateModelFromParameters( Params& par ) const;
-		ModelUP CreateModelFromParFile( const path& parfile ) const;
+		virtual fitness_t EvaluateModel( Model& m ) const override;
+		virtual TimeInSeconds GetDuration() const override { return max_duration; }
+
+		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
+		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure()->GetResult( m ); }
+		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure()->GetReport(); }
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
-		PropNode m_ModelPropsCopy;
 		String m_Signature;
 	};
 }

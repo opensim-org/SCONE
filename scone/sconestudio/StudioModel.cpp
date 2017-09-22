@@ -26,10 +26,10 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file or config file
-		so = CreateSimulationObjective( file );
+		model_objective = CreateModelObjective( file );
 		if ( file.extension() == "par" )
-			model = so->CreateModelFromParFile( file );
-		else model = so->CreateModelFromParameters( ParamInstance( so->info() ) );
+			model = model_objective->CreateModelFromParFile( file );
+		else model = model_objective->CreateModelFromParameters( ParamInstance( model_objective->info() ) );
 
 		// accept filename and clear data
 		filename = file;
@@ -50,7 +50,7 @@ namespace scone
 			is_evaluating = true;
 			model->SetStoreData( true );
 			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties, StoreDataTypes::SensorData } );
-			model->SetSimulationEndTime( so->max_duration );
+			model->SetSimulationEndTime( model_objective->GetDuration() );
 			log::info( "Starting simulation" );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
@@ -190,30 +190,10 @@ namespace scone
 		forces[ force_idx ].pos( cop, cop + 0.001 * force );
 	}
 
-	void StudioModel::EvaluateObjective()
-	{
-		model->SetStoreData( true );
-		model->SetThreadSafeSimulation( true );
-		so->EvaluateModel( *model );
-
-		PropNode results;
-		results.set( "result", model->GetMeasure()->GetReport() );
-		log::info( results );
-		so->WriteResults( path( filename ).replace_extension().str() );
-
-		// copy data
-		data = model->GetData();
-		InitStateDataIndices();
-
-		is_evaluating = false;
-		model->GetSimulationCondVar().notify_one();
-	}
-
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
 		SCONE_PROFILE_FUNCTION;
-		model->AdvanceSimulationTo( t );
-
+		model_objective->AdvanceModel( *model, t );
 		if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
 			FinalizeEvaluation( true );
 	}
@@ -223,9 +203,10 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 		if ( output_results )
 		{
-			model->GetMeasure()->GetResult( *model );
+			auto fitness = model_objective->GetResult( *model );
+			log::info( "fitness = ", fitness );
 			PropNode results;
-			results.push_back( "result", model->GetMeasure()->GetReport() );
+			results.push_back( "result", model_objective->GetReport( *model ) );
 			model->WriteResult( path( filename ).replace_extension() );
 			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );

@@ -762,6 +762,9 @@ namespace scone
 		GetTkState().setTime( timestamp );
 		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 		UpdateControlValues();
+
+		if ( GetStoreData() )
+			StoreCurrentFrame();
 	}
 
 	void Model_Simbody::ValidateDofAxes()

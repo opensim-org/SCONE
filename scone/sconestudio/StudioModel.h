@@ -30,13 +30,12 @@ namespace scone
 		void UpdateVis( TimeInSeconds t );
 		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
 
-		void EvaluateObjective();
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
 		Model& GetSimModel() { return *model; }
-		SimulationObjective& GetObjective() { return *so; }
+		ModelObjective& GetObjective() { return *model_objective; }
 
 		bool IsEvaluating() { return is_evaluating; }
 		TimeInSeconds GetTime() const { return model->GetTime(); }
@@ -48,7 +47,7 @@ namespace scone
 		void InitVis( vis::scene& s );
 
 		Storage<> data;
-		SimulationObjectiveUP so;
+		ModelObjectiveUP model_objective;
 		ModelUP model;
 		path filename;
 
