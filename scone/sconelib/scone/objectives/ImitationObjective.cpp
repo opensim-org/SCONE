@@ -92,17 +92,6 @@ namespace scone
 			model.GetUserData()[ "IM_res" ] = result + model.GetUserData().get< double >( "IM_res" );
 			model.GetUserData()[ "IM_fra" ] = frame_start + frame_count;
 		}
-
-		//for ( Index i = 0; i < m_Storage.GetFrameCount(); i += frame_delta_ )
-		//{
-		//	auto f = m_Storage.GetFrame( i );
-		//	model.SetStateValues( f.GetValues(), f.GetTime() );
-
-		//	// compare results
-		//	for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
-		//		result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
-		//}
-		//return 100 * result / ( m_Storage.GetFrameCount() / frame_delta_ ) / m_ExcitationChannels.size();
 	}
 
 	scone::fitness_t ImitationObjective::GetResult( Model& m ) const
