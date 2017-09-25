@@ -101,7 +101,7 @@ namespace scone
 	void StudioModel::InitStateDataIndices()
 	{
 		// setup state_data_index (lazy init)
-		SCONE_ASSERT( state_data_index.empty() );
+		state_data_index.clear();
 
 		model_state = model->GetState();
 		state_data_index.resize( model_state.GetSize() );
@@ -193,6 +193,7 @@ namespace scone
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
 		SCONE_PROFILE_FUNCTION;
+		SCONE_ASSERT( IsEvaluating() );
 		model_objective->AdvanceModel( *model, t );
 		if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
 			FinalizeEvaluation( true );

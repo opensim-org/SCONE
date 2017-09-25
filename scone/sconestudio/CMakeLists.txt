@@ -12,8 +12,6 @@ if(${Qt5Widgets_FOUND})
 		main.cpp
 		StudioModel.cpp
 		StudioModel.h
-		StudioScene.cpp
-		StudioScene.h
 		studio_config.h
 		SconeStudio.cpp
 		SconeStudio.h

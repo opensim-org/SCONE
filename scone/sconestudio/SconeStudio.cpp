@@ -23,6 +23,7 @@
 #include "spot/console_reporter.h"
 #include "spot/file_reporter.h"
 #include "flut/filesystem.hpp"
+#include "simvis/color.h"
 
 using namespace scone;
 using namespace std;
@@ -34,7 +35,8 @@ com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
-captureProcess( nullptr )
+captureProcess( nullptr ),
+scene( true )
 {
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
@@ -73,6 +75,10 @@ captureProcess( nullptr )
 	registerDockWidget( ui.messagesDock, "&Messages" );
 	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, adw );
+
+	// init scene
+	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
+	scene.create_tile_floor( 64, 64, 1 );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -89,7 +95,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	ui.osgViewer->setScene( manager.GetOsgRoot() );
+	ui.osgViewer->setScene( scene.osg_group().asNode() );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
@@ -127,22 +133,14 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::runSimulation( const QString& filename )
 {
-	try
+	if ( createModel( filename.toStdString() ) )
 	{
-		manager.CreateModel( filename.toStdString() );
 		updateViewSettings();
-
-		storageModel.setStorage( &manager.GetModel().GetData() );
+		storageModel.setStorage( &model->GetData() );
 		analysisView->reset();
-
-		if ( manager.IsEvaluating() )
+		if ( model->IsEvaluating() )
 			evaluate();
-
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
-	}
-	catch ( std::exception& e )
-	{
-		QMessageBox::critical( this, "Exception", e.what() );
+		ui.playControl->setRange( 0, model->GetMaxTime() );
 	}
 }
 
@@ -152,7 +150,8 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	showViewer();
 	ui.playControl->reset();
 	runSimulation( currentParFile );
-	ui.playControl->play();
+	if ( model )
+		ui.playControl->play();
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
@@ -189,24 +188,26 @@ void SconeStudio::evaluate()
 	const double step_size = 0.05;
 	int vis_step = 0;
 	flut::timer real_time;
-	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
+	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
-		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 		{
-			manager.GetModel().FinalizeEvaluation( false );
+			model->FinalizeEvaluation( false );
 			ui.stackedWidget->setCurrentIndex( 0 );
 			return;
 		}
 		setTime( t, vis_step++ % 5 == 0 );
 	}
 	ui.progressBar->setValue( 100 );
-	manager.Update( manager.GetMaxTime(), true );
+	if ( model->IsEvaluating() )
+		model->EvaluateTo( model->GetMaxTime() );
+	model->UpdateVis( model->GetTime() );
 
 	// report duration
 	auto real_dur = real_time.seconds();
-	auto sim_time = manager.GetModel().GetTime();
+	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
@@ -231,10 +232,10 @@ void SconeStudio::createVideo()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
-	for ( double t = 0.0; t <= manager.GetMaxTime(); t += step_size )
+	for ( double t = 0.0; t <= model->GetMaxTime(); t += step_size )
 	{
 		setTime( t, true );
-		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 			break;
@@ -259,17 +260,20 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
 	SCONE_PROFILE_FUNCTION;
 
-	if ( !manager.HasModel() )
+	if ( !model )
 		return;
 
 	// update current time and stop when done
 	current_time = t;
 
 	// update ui and visualization
-	manager.Update( current_time, update_vis );
+	if ( model->IsEvaluating() )
+		model->EvaluateTo( t );
+	
 	if ( update_vis )
 	{
-		auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
+		model->UpdateVis( t );
+		auto d = com_delta( model->GetSimModel().GetComPos() );
 		ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 		ui.osgViewer->setFrameTime( current_time );
 		if ( analysisView->isVisible() )
@@ -364,6 +368,21 @@ void SconeStudio::updateRecentFilesMenu()
 		connect( act, SIGNAL( triggered() ), this, SLOT( fileOpenRecent() ) );
 	}
 	ui.action_Recent->setMenu( recent_menu );
+}
+
+bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
+{
+	try
+	{
+		model.reset();
+		model = StudioModelUP( new StudioModel( scene, path( par_file ), force_evaluation ) );
+	}
+	catch ( std::exception& e )
+	{
+		error( "Could not create model", e.what() );
+		return false;
+	}
+	return true;
 }
 
 bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
@@ -501,14 +520,14 @@ void SconeStudio::tabCloseRequested( int idx )
 
 void SconeStudio::updateViewSettings()
 {
-	if ( manager.HasModel() )
+	if ( model )
 	{
 		StudioModel::ViewFlags f;
 		f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
 		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
 		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
-		manager.GetModel().ApplyViewSettings( f );
+		model->ApplyViewSettings( f );
 	}
 }
 
@@ -588,12 +607,12 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 
 void SconeStudio::performReflexAnalysis()
 {
-	if ( !manager.HasModel() || manager.IsEvaluating() )
+	if ( !model || model->IsEvaluating() )
 		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No model evaluated" );
 
 	path par_file( currentParFile.toStdString() );
 
-	ReflexAnalysisObjective reflex_objective( manager.GetModel().GetData(), "use_force=1;use_length=0;use_velocity=0" );
+	ReflexAnalysisObjective reflex_objective( model->GetData(), "use_force=1;use_length=0;use_velocity=0" );
 	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
 	
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );

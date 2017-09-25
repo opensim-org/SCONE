@@ -13,6 +13,7 @@
 #include "simvis/axes.h"
 #include "scone/model/State.h"
 #include "scone/core/types.h"
+#include "scone/objectives/ModelObjective.h"
 
 namespace scone
 {
@@ -37,8 +38,9 @@ namespace scone
 		Model& GetSimModel() { return *model; }
 		ModelObjective& GetObjective() { return *model_objective; }
 
-		bool IsEvaluating() { return is_evaluating; }
+		bool IsEvaluating() const { return is_evaluating; }
 		TimeInSeconds GetTime() const { return model->GetTime(); }
+		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
 
 		void SetViewSetting( ViewSettings e, bool value );
 		void ApplyViewSettings( const ViewFlags& f );
