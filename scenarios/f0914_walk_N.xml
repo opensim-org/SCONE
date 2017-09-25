@@ -19,7 +19,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation_function="rectifier">
-					<signature_prefix>N0MAB</signature_prefix>
+					<signature_prefix>N0MABG1</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
 						<Sensor type="L" source="*" offset="1" activation_function="linear"/>
@@ -27,7 +27,7 @@
 						<Sensor type="DV" source="pelvis_tilt" activation_function="linear"/>
 					</SensorNeurons>
 					<!--PatternNeurons amount="1" period="1.25~0.02" t0="0.8~0.01" w0="0.3~0.03"/-->
-					<InterNeurons amount="1" activation_function="gaussian" mean="0.0~0.5" width="3.0~0.3"/>
+					<InterNeurons amount="1" activation_function="gaussian" mean="0.3~0.3" width="2.0~0.2"/>
 					<MotorNeurons include="*" top_layer="0.0~0.1" offset="0~0.01" monosynaptic="0.1~0.1" antagonistic="-0.1~0.1" balance="0~0.1" pattern="0.1~0.1"/>
 				</Controller>
 				<INCLUDE file="measures/M_CG20_CoT_GH.xml"/>
