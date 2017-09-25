@@ -115,17 +115,20 @@ namespace scone
 		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
 		{
+			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			Side muscle_side = GetSideFromName( name );
+			bool right_muscle = muscle_side == RightSide;
 
+			// create the motor neuron
 			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
 
-			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+			// add inputs
 			if ( top_layer )
 			{
 				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
 				{
 					auto input = m_InterNeurons.back()[ idx ].get();
-					auto gain = par.get( input->GetParName(), pn.get_child( "top_layer" ) );
+					auto gain = par.get( input->GetName( right_muscle ), pn.get_child( "top_layer" ) );
 					m_MotorNeurons.back()->AddInput( input, gain );
 				}
 			}
@@ -156,7 +159,6 @@ namespace scone
 
 			if ( pattern )
 			{
-				bool right_muscle = muscle_side == RightSide;
 				for ( auto& n : m_PatternNeurons )
 					if ( n->mirrored_ == right_muscle )
 						m_MotorNeurons.back()->AddInput( n.get(), par.get( n->name_, pn[ "pattern" ] ) );
