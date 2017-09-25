@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
 	<init_file>initializations/f0914_walk_G1.par</init_file>
-	<use_init_file>0</use_init_file>
+	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
 	<random_seed>123</random_seed>
@@ -24,7 +24,7 @@
 					<signature_prefix>N0MABG1</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
-						<Sensor type="L" source="*" offset="0.5" activation_function="linear"/>
+						<Sensor type="L" source="*" offset="0.5" activation_function="rectifier"/>
 						<Sensor type="DP" source="pelvis_tilt" activation_function="linear"/>
 						<Sensor type="DV" source="pelvis_tilt" activation_function="linear"/>
 					</SensorNeurons>
