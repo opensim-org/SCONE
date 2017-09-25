@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_N0MAB_NSI_S10.par</init_file>
+	<init_file>initializations/f0914_walk_G1.par</init_file>
+	<use_init_file>0</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
-	<use_init_file>1</use_init_file>
 	<random_seed>123</random_seed>
 	<max_generations>3000</max_generations>
 	<Objective type="ImitationObjective">
@@ -24,13 +24,13 @@
 					<signature_prefix>NGF1</signature_prefix>
 					<SensorNeurons>
 						<Sensor type="F" source="*"/>
-						<!--Sensor type="L" source="*" offset="1" activation_function="linear"/-->
+						<Sensor type="L" source="*" offset="0.5" activation_function="linear"/>
 						<!--Sensor type="DP" source="pelvis_tilt" activation_function="linear"/-->
 						<!--Sensor type="DV" source="pelvis_tilt" activation_function="linear"/-->
 					</SensorNeurons>
 					<!--PatternNeurons amount="1" period="1.25~0.02" t0="0.8~0.01" w0="0.3~0.03"/-->
-					<InterNeurons amount="1" activation_function="gaussian" gain="1~1[0,100]" mean="0.2~0.01" width="0.5~0.1"/>
-					<MotorNeurons include="*" top_layer="0.0~0.1" monosynaptic=""/>
+					<InterNeurons amount="1" activation_function="gaussian" weight="1" mean="0.3~0.1" width="1.0~0.1[0,10]"/>
+					<MotorNeurons include="*" top_layer="0.0~0.1"/>
 				</Controller>
 			</Controllers>
 		</Model>
