@@ -142,6 +142,8 @@ set(OBJECTIVES_FILES
 	scone/objectives/RangePenalty.h
 	scone/objectives/Measure.cpp
 	scone/objectives/Measure.h
+	scone/objectives/ModelObjective.cpp
+	scone/objectives/ModelObjective.h
 	scone/objectives/SimulationObjective.cpp
 	scone/objectives/SimulationObjective.h
 	scone/objectives/ImitationObjective.cpp
