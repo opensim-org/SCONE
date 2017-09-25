@@ -101,8 +101,7 @@ namespace scone
 	void StudioModel::InitStateDataIndices()
 	{
 		// setup state_data_index (lazy init)
-		state_data_index.clear();
-
+		SCONE_ASSERT( state_data_index.empty() );
 		model_state = model->GetState();
 		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
