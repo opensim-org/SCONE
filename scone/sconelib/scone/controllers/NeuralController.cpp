@@ -95,7 +95,7 @@ namespace scone
 				auto s = GetNeuron( prev_layer, idx );
 				if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
 				{
-					auto w = par.try_get( s->GetParName() + ".w", pn, "gain", 1.0 );
+					auto w = par.try_get( s->GetParName() + ".w", pn, "weight", 1.0 );
 					auto m = par.try_get( s->GetParName() + ".m", pn, "mean", 0.0 );
 					m_InterNeurons.back().back()->AddInput( s, w, m );
 				}
@@ -120,11 +120,12 @@ namespace scone
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			if ( top_layer )
 			{
+				bool right_muscle = GetSideFromName( name ) == RightSide;
 				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
 				{
 					auto input = m_InterNeurons.back()[ idx ].get();
-					auto weight = par.get( input->GetName( mirrored ), pn.get_child( "top_layer" ) );
-					m_MotorNeurons.back()->AddInput( input, weight );
+					auto gain = par.get( input->GetName( right_muscle ), pn.get_child( "top_layer" ) );
+					m_MotorNeurons.back()->AddInput( input, gain );
 				}
 			}
 
@@ -154,9 +155,9 @@ namespace scone
 
 			if ( pattern )
 			{
-				bool mirror = GetSideFromName( name ) == RightSide;
+				bool right_muscle = GetSideFromName( name ) == RightSide;
 				for ( auto& n : m_PatternNeurons )
-					if ( n->mirrored_ == mirror )
+					if ( n->mirrored_ == right_muscle )
 						m_MotorNeurons.back()->AddInput( n.get(), par.get( n->name_, pn[ "pattern" ] ) );
 			}
 
