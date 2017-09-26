@@ -2,8 +2,8 @@
 <Optimizer type="CmaOptimizer">
 	<init_file>initializations/f0914_walk_N0MAB_NSI_S10_new.par</init_file>
 	<use_init_file>1</use_init_file>
-	<init_file_std_factor>0.1</init_file_std_factor>
-	<init_file_std_offset>0.01</init_file_std_offset>
+	<init_file_std_factor>0.01</init_file_std_factor>
+	<init_file_std_offset>0.001</init_file_std_offset>
 	<use_init_file_std>0</use_init_file_std>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">

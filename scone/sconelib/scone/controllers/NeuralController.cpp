@@ -117,10 +117,17 @@ namespace scone
 		for ( auto& name : muscle_names )
 		{
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+
 			// create the motor neuron
-			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
-			m_MotorNeurons.back()->AddInputs( pn, par, *this );
-			m_MotorNeurons.back()->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
+			auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
+			if ( it == m_MotorNeurons.end() )
+			{
+				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
+				it = m_MotorNeurons.end() - 1;
+			}
+
+			(*it)->AddInputs( pn, par, *this );
+			(*it)->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
 
