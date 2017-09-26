@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_N0MAB_NSI_S10_new.par</init_file>
+	<init_file>initializations/f0914_walk_N0MABG1_S10_new.par</init_file>
 	<use_init_file>1</use_init_file>
-	<init_file_std_factor>0.01</init_file_std_factor>
+	<init_file_std_factor>0.001</init_file_std_factor>
 	<init_file_std_offset>0.001</init_file_std_offset>
 	<use_init_file_std>0</use_init_file_std>
 	<random_seed>123</random_seed>
@@ -22,12 +22,12 @@
 					<signature_prefix>N0MABG1</signature_prefix>
 					<Neurons>
 						<SensorNeuron type="F" source="*"/>
-						<SensorNeuron type="L" source="*" offset="1" activation="linear"/>
+						<SensorNeuron type="L" source="*" offset="0.5" activation="rectifier"/>
 						<SensorNeuron type="DP" source="pelvis_tilt" activation="linear"/>
 						<SensorNeuron type="DV" source="pelvis_tilt" activation="linear"/>
 						
-						<!--InterNeuron input_layer="0" amount="1" layer="1" type="F" connect="ipsilateral" activation="gaussian" mean="0.3~0.3" gain="1.0~0.1"/-->
-						<!--InterNeuron input_layer="0" amount="1" layer="1" type="L" connect="ipsilateral" activation="gaussian" mean="0.3~0.3" gain="1.0~0.1"/-->
+						<InterNeuron input_layer="0" amount="1" layer="1" type="F" connect="ipsilateral" activation="gaussian" mean="0.3~0.3" gain="1"/>
+						<InterNeuron input_layer="0" amount="1" layer="1" type="L" connect="ipsilateral" activation="gaussian" mean="0.3~0.3" gain="1"/>
 						
 						<MotorNeuron input_layer="0" include="*" connect="monosynaptic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" include="*" connect="monosynaptic" type="L" gain="0~0.1"/>
@@ -35,7 +35,7 @@
 						<MotorNeuron input_layer="0" include="*" connect="antagonistic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" include="*" type="DP" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" include="*" type="DV" gain="0~0.1"/>
-						<!--MotorNeuron input_layer="1" include="*" gain="0~0.1"/-->
+						<MotorNeuron input_layer="1" include="*" gain="0~0.001"/>
 						<!--MotorNeuron layer="0" include="*" type="B" gain="0~0.1"/-->
 					</Neurons>
 				</Controller>

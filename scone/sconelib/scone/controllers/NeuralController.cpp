@@ -86,22 +86,29 @@ namespace scone
 			{
 				auto name = stringf( "N%d", i ) + ( mirrored ? "_r" : "_l" );
 				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+				auto& neuron_layer = m_InterNeurons[ layer - 1 ];
 
-				m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
-				m_InterNeurons.back().back()->AddInputs( pn, par, *this );
-
-				for ( Index idx = 0; idx < GetLayerSize( input_layer ); ++idx )
+				auto it = flut::find_if( neuron_layer, [&]( InterNeuronUP& m ) { return m->name_ == name; } );
+				if ( it == neuron_layer.end() )
 				{
-					auto s = GetNeuron( input_layer, idx );
-					if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
-					{
-						auto input_name = s->GetParName();
-						auto w = par.try_get( input_name + ".w", pn, "weight", 1.0 );
-						auto m = par.try_get( input_name + ".m", pn, "mean", 0.0 );
-						m_InterNeurons.back().back()->AddInput( s, w, m );
-					}
-					log::info( "added interneuron: ", name + "." + s->GetName( false ) );
+					neuron_layer.emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
+					it = neuron_layer.end() - 1;
 				}
+
+				(*it)->AddInputs( pn, par, *this );
+
+				//for ( Index idx = 0; idx < GetLayerSize( input_layer ); ++idx )
+				//{
+				//	auto s = GetNeuron( input_layer, idx );
+				//	if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
+				//	{
+				//		auto input_name = s->GetParName();
+				//		auto w = par.try_get( input_name + ".w", pn, "weight", 1.0 );
+				//		auto m = par.try_get( input_name + ".m", pn, "mean", 0.0 );
+				//		m_InterNeurons.back().back()->AddInput( s, w, m );
+				//	}
+				//	log::info( "added interneuron: ", name + "." + s->GetName( false ) );
+				//}
 			}
 		}
 	}
