@@ -26,9 +26,8 @@ namespace scone
 
 		void AddSensorNeurons( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );
-		void AddInterNeuronLayer();
-		void AddInterNeurons( const PropNode& pn, Params& par, bool mirrored );
-		void AddMotorNeurons( const PropNode& pn, Params& par, bool mirrored );
+		void AddInterNeurons( const PropNode& pn, Params& par );
+		void AddMotorNeurons( const PropNode& pn, Params& par );
 
 		Neuron* FindInput( const PropNode& pn, Locality loc );
 		size_t GetLayerSize( Index layer ) const { return ( layer == 0 ) ? m_SensorNeurons.size() : m_InterNeurons[ layer - 1 ].size(); }
@@ -36,6 +35,8 @@ namespace scone
 
 		const Model& GetModel() const { return model_; }
 		Model& GetModel() { return model_; }
+
+		std::vector< SensorNeuronUP >& GetSensorNeurons() { return m_SensorNeurons; }
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;

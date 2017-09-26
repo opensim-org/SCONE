@@ -10,7 +10,7 @@ namespace scone
 	output_(),
 	side_( NoSide )
 	{
-		auto str = pn.get< string >( "activation_function", "" );
+		auto str = pn.get< string >( "activation", "" );
 		activation_function = str.empty() ? nc.activation_function : GetActivationFunction( str );
 	}
 }
