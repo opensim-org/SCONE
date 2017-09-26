@@ -13,6 +13,7 @@
 #include "../model/Dof.h"
 #include <algorithm>
 #include "activation_functions.h"
+#include "flut/hash.hpp"
 
 namespace scone
 {
@@ -26,24 +27,20 @@ namespace scone
 		activation_function = GetActivationFunction( pn.get< string >( "activation_function", "rectifier" ) );
 
 		// automatic neural network
-		if ( auto* sensors = pn.try_get_child( "SensorNeurons" ) )
+		if ( auto* neurons = pn.try_get_child( "Neurons" ) )
 		{
-			for ( auto& n : pn.get_child( "SensorNeurons" ) )
-				AddSensorNeurons( n.second, par );
+			for ( auto& n : *neurons )
+			{
+				switch ( flut::hash( n.first ) )
+				{
+				case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
+				case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
+				case "InterNeuron"_hash: AddInterNeurons( n.second, par, false ); break;
+				case "MotorNeuron"_hash: AddMotorNeurons( n.second, par, false ); break;
+				default: SCONE_THROW( "Unknown neuron type: " + n.first );
+				}
+			}
 		}
-
-		if ( auto* n = pn.try_get_child( "PatternNeurons" ) )
-			AddPatternNeurons( *n, par );
-
-		if ( auto* n = pn.try_get_child( "InterNeurons" ) )
-		{
-			AddInterNeuronLayer();
-			AddInterNeurons( *n, par, false );
-			AddInterNeurons( *n, par, true );
-		}
-
-		if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
-			AddMotorNeurons( *n, par, false );
 	}
 
 	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
