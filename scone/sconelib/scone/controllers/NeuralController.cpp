@@ -174,13 +174,13 @@ namespace scone
 	{
 		std::ofstream str( ( file + ".neural_weights.txt" ).str() );
 
-		for ( Index i = 1; i < m_InterNeurons.size(); ++i )
+		for ( auto& inter_layer : m_InterNeurons )
 		{
-			for ( auto& neuron : m_InterNeurons[ i ] )
+			for ( auto& neuron : inter_layer )
 			{
 				str << neuron->name_ << "\t" << neuron->offset_;
 				for ( auto& input : neuron->inputs_ )
-					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight;
+					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight << "\t" << input.mean;
 				str << std::endl;
 			}
 		}
