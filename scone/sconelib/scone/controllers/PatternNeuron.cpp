@@ -9,7 +9,7 @@
 namespace scone
 {
 	PatternNeuron::PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc, int index, bool mirrored ) :
-	Neuron( pn, par, nc ),
+	Neuron( pn, par, "linear" ),
 	model_( nc.GetModel() ),
 	mirrored_( mirrored )
 	{

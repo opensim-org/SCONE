@@ -13,6 +13,8 @@
 #include "../model/Dof.h"
 #include <algorithm>
 #include "activation_functions.h"
+#include "flut/hash.hpp"
+#include "flut/string_tools.hpp"
 
 namespace scone
 {
@@ -23,27 +25,34 @@ namespace scone
 		if ( pn.has_key( "delay_file" ) )
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
-		activation_function = GetActivationFunction( pn.get< string >( "activation_function", "rectifier" ) );
+		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
-		// automatic neural network
-		if ( auto* sensors = pn.try_get_child( "SensorNeurons" ) )
-		{
-			for ( auto& n : pn.get_child( "SensorNeurons" ) )
-				AddSensorNeurons( n.second, par );
-		}
+		// create sensor neurons
+		for ( auto& n : pn.get_child( "SensorNeuronLayer" ) )
+			AddSensorNeurons( n.second, par );
 
-		if ( auto* n = pn.try_get_child( "PatternNeurons" ) )
-			AddPatternNeurons( *n, par );
+		// create inter neurons
+		for ( auto& n : pn.select( "InterNeuronLayer" ) )
+			AddInterNeuronLayer( n.second, par );
 
-		if ( auto* n = pn.try_get_child( "InterNeurons" ) )
-		{
-			AddInterNeuronLayer();
-			AddInterNeurons( *n, par, false );
-			AddInterNeurons( *n, par, true );
-		}
+		// create sensor neurons
+		for ( auto& n : pn.get_child( "MotorNeuronLayer" ) )
+			AddMotorNeurons( n.second, par );
 
-		if ( auto* n = pn.try_get_child( "MotorNeurons" ) )
-			AddMotorNeurons( *n, par, false );
+		//if ( auto* neurons = pn.try_get_child( "Neurons" ) )
+		//{
+		//	for ( auto& n : *neurons )
+		//	{
+		//		switch ( flut::hash( n.first ) )
+		//		{
+		//		case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
+		//		case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
+		//		case "InterNeuronLayer"_hash: AddInterNeuronLayer( n.second, par ); break;
+		//		case "MotorNeuron"_hash: AddMotorNeurons( n.second, par ); break;
+		//		default: SCONE_THROW( "Unknown neuron type: " + n.first );
+		//		}
+		//	}
+		//}
 	}
 
 	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
@@ -57,7 +66,7 @@ namespace scone
 
 		for ( auto& name : sources )
 		{
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, "linear" ) );
 			//log::info( "added sensor", m_SensorNeurons.back()->GetName( false ) );
 		}
 	}
@@ -71,100 +80,55 @@ namespace scone
 			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, true ) );
 	}
 
-	void NeuralController::AddInterNeuronLayer()
+	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
-		m_InterNeurons.emplace_back();
-	}
+		Index layer = pn.get< Index >( "layer", 1 );
+		int amount = pn.get< int >( "neurons" );
+		string act_func = pn.get< string >( "activation", "rectifier" );
 
-	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par, bool mirrored )
-	{
-		// Must call AddInterNeuronLayer before!
-		SCONE_ASSERT( m_InterNeurons.size() >= 1 );
-		Index prev_layer = m_InterNeurons.size() - 1;
+		// allocate layer
+		SCONE_ASSERT( layer > 0 && layer == m_InterNeurons.size() + 1 );
+		m_InterNeurons.resize( std::max( layer, m_InterNeurons.size() ) );
 
-		int amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 		{
-			auto name = stringf( "N%d", i ) + ( mirrored ? "_r" : "_l" );
-			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-
-			auto offset = par.try_get( "C0", pn, "offset", 0.0 );
-			m_InterNeurons.back().emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
-			for ( Index idx = 0; idx < GetLayerSize( prev_layer ); ++idx )
+			for ( bool mirrored : { false, true } )
 			{
-				auto s = GetNeuron( prev_layer, idx );
-				if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
+				auto name = stringf( "N%d_%d", layer, i ) + ( mirrored ? "_r" : "_l" );
+				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+				m_InterNeurons[ layer - 1 ].emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
+
+				for ( auto& child : pn.select( "InterNeuron" ) )
 				{
-					auto w = par.try_get( s->GetParName() + ".w", pn, "weight", 1.0 );
-					auto m = par.try_get( s->GetParName() + ".m", pn, "mean", 0.0 );
-					m_InterNeurons.back().back()->AddInput( s, w, m );
+					SCONE_ASSERT( child.first == "InterNeuron" );
+					m_InterNeurons[ layer - 1 ].back()->AddInputs( child.second, par, *this );
 				}
-				//log::info( "added interneuron: ", name + "." + s->GetName( false ) );
 			}
 		}
 	}
 
-	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par, bool mirrored )
+	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par )
 	{
-		bool monosynaptic = pn.has_value( "monosynaptic" );
-		bool antagonistic = pn.has_value( "antagonistic" );
-		bool balance = pn.has_value( "balance" );
-		bool pattern = pn.has_value( "pattern" );
-		bool top_layer = pn.has_value( "top_layer" );
+		string input_type = pn.get< string >( "type", "*" );
+		bool monosynaptic = pn.get( "monosynaptic", false );
+		bool antagonistic = pn.get( "antagonistic", false );
+		Index input_layer = pn.get< Index >( "input_layer" );
 
 		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
 		for ( auto& name : muscle_names )
 		{
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-			Side muscle_side = GetSideFromName( name );
-			bool right_muscle = muscle_side == RightSide;
 
 			// create the motor neuron
-			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
-
-			// add inputs
-			if ( top_layer )
+			auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
+			if ( it == m_MotorNeurons.end() )
 			{
-				for ( Index idx = 0; idx < m_InterNeurons.back().size(); ++idx )
-				{
-					auto input = m_InterNeurons.back()[ idx ].get();
-					auto gain = par.get( input->GetName( right_muscle ), pn.get_child( "top_layer" ) );
-					m_MotorNeurons.back()->AddInput( input, gain );
-				}
+				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
+				it = m_MotorNeurons.end() - 1;
 			}
 
-			if ( monosynaptic || antagonistic || balance )
-			{
-				for ( Index idx = 0; idx < m_SensorNeurons.size(); ++idx )
-				{
-					auto input = m_SensorNeurons[ idx ].get();
-					if ( monosynaptic && input->source_name_ == name )
-						m_MotorNeurons.back()->AddInput( input, par.get( input->type_, pn[ "monosynaptic" ] ) );
-
-					if ( antagonistic )
-					{
-						auto it1 = TryFindByName( GetModel().GetMuscles(), name );
-						auto it2 = TryFindByName( GetModel().GetMuscles(), input->source_name_ );
-						if ( it1 != GetModel().GetMuscles().end() && it2 != GetModel().GetMuscles().end() )
-						{
-							if ( (*it1)->IsAntagonist( **it2 ) )
-								m_MotorNeurons.back()->AddInput( input, par.get( GetNameNoSide( input->source_name_ ) + "." + input->type_, pn[ "antagonistic" ] ) );
-						}
-					}
-
-					if ( balance && ( input->type_ == "DP" || input->type_ == "DV" ) )
-						m_MotorNeurons.back()->AddInput( input, par.get( input->type_, pn[ "balance" ] ) );
-				}
-			}
-
-			if ( pattern )
-			{
-				for ( auto& n : m_PatternNeurons )
-					if ( n->mirrored_ == right_muscle )
-						m_MotorNeurons.back()->AddInput( n.get(), par.get( n->name_, pn[ "pattern" ] ) );
-			}
-
-			m_MotorNeurons.back()->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
+			(*it)->AddInputs( pn, par, *this );
+			(*it)->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
 
@@ -204,13 +168,13 @@ namespace scone
 	{
 		std::ofstream str( ( file + ".neural_weights.txt" ).str() );
 
-		for ( Index i = 1; i < m_InterNeurons.size(); ++i )
+		for ( auto& inter_layer : m_InterNeurons )
 		{
-			for ( auto& neuron : m_InterNeurons[ i ] )
+			for ( auto& neuron : inter_layer )
 			{
 				str << neuron->name_ << "\t" << neuron->offset_;
 				for ( auto& input : neuron->inputs_ )
-					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight;
+					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight << "\t" << input.mean;
 				str << std::endl;
 			}
 		}

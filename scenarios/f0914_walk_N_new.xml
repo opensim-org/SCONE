@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<init_file>initializations/f0914_walk_N0MABG1_S10_new.par</init_file>
+	<use_init_file>1</use_init_file>
+	<init_file_std_factor>0.1</init_file_std_factor>
+	<init_file_std_offset>0.01</init_file_std_offset>
+	<use_init_file_std>0</use_init_file_std>
+	<random_seed>123</random_seed>
+	<Objective type="SimulationObjective">
+		<max_duration>10</max_duration>
+		<Model type="Simbody">
+			<model_file>f0914.osim</model_file>
+			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
+			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<Controllers>
+				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation="rectifier">
+					<signature_prefix>N0MABG1</signature_prefix>
+					<Neurons>
+						<SensorNeuron type="F" source="*"/>
+						<SensorNeuron type="L" source="*" offset="0.5" activation="rectifier"/>
+						<SensorNeuron type="DP" source="pelvis_tilt" activation="linear"/>
+						<SensorNeuron type="DV" source="pelvis_tilt" activation="linear"/>
+						
+						<InterNeuron input_layer="0" amount="1" layer="1" type="F" connect="ipsilateral" activation="gaussian" width="1.0~0.1" mean="0.3~0.3" gain="1"/>
+						<InterNeuron input_layer="0" amount="1" layer="1" type="L" connect="ipsilateral" activation="gaussian" mean="0.3~0.3" gain="1"/>
+						
+						<MotorNeuron input_layer="0" include="*" connect="monosynaptic" type="F" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" include="*" connect="monosynaptic" type="L" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" include="*" connect="antagonistic" type="F" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" include="*" connect="antagonistic" type="L" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" include="*" type="DP" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" include="*" type="DV" gain="0~0.1"/>
+						<MotorNeuron input_layer="1" include="*" gain="0~0.001"/>
+						<!--MotorNeuron layer="0" include="*" type="B" gain="0~0.1"/-->
+					</Neurons>
+				</Controller>
+				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>

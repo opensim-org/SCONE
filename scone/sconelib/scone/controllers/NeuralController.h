@@ -24,18 +24,14 @@ namespace scone
 		NeuralController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~NeuralController() {}
 
-		void AddSensorNeurons( const PropNode& pn, Params& par );
-		void AddPatternNeurons( const PropNode& pn, Params& par );
-		void AddInterNeuronLayer();
-		void AddInterNeurons( const PropNode& pn, Params& par, bool mirrored );
-		void AddMotorNeurons( const PropNode& pn, Params& par, bool mirrored );
-
 		Neuron* FindInput( const PropNode& pn, Locality loc );
 		size_t GetLayerSize( Index layer ) const { return ( layer == 0 ) ? m_SensorNeurons.size() : m_InterNeurons[ layer - 1 ].size(); }
 		Neuron* GetNeuron( Index layer, Index idx ) { return ( layer == 0 ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer - 1 ][ idx ].get() ); }
 
 		const Model& GetModel() const { return model_; }
 		Model& GetModel() { return model_; }
+
+		std::vector< SensorNeuronUP >& GetSensorNeurons() { return m_SensorNeurons; }
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
@@ -49,6 +45,12 @@ namespace scone
 
 	private:
 		Model& model_;
+
+		void AddSensorNeurons( const PropNode& pn, Params& par );
+		void AddPatternNeurons( const PropNode& pn, Params& par );
+		void AddInterNeuronLayer( const PropNode& pn, Params& par );
+		void AddMotorNeurons( const PropNode& pn, Params& par );
+
 		std::vector< PatternNeuronUP > m_PatternNeurons;
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		std::vector< std::vector< InterNeuronUP > > m_InterNeurons;
