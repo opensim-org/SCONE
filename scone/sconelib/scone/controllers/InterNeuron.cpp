@@ -18,14 +18,14 @@ namespace scone
 		{ InterNeuron::ipsilateral, "ipsilateral" },
 		{ InterNeuron::contralateral, "contralateral" } } );
 
-	InterNeuron::InterNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& name ) :
-	Neuron( pn, par, nc ),
+	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& name, const string& act_func ) :
+	Neuron( pn, par, act_func ),
 	name_( name )
 	{
 		side_ = GetSideFromName( name );
 		INIT_PAR_NAMED( pn, par, offset_, "C0", 0 );
 		INIT_PAR( pn, par, width_, 0.0 );
-		use_distance_ = pn.get< string >( "activation", "" ) == "gaussian"; // TODO: neater
+		use_distance_ = act_func == "gaussian"; // TODO: neater
 	}
 
 	double InterNeuron::GetOutput() const

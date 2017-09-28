@@ -7,10 +7,11 @@ namespace scone
 	class NeuralController;
 	struct InterNeuron : public Neuron
 	{
-		InterNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& name );
+		InterNeuron( const PropNode& pn, Params& par, const string& name, const string& act_func );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
 		virtual string GetParName() const override { return GetNameNoSide( name_ ); }
+
 		void AddInput( Neuron* input, double weight, double mean = 0.0 ) { inputs_.emplace_back( Input{ input, weight, mean } ); }
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
 		virtual size_t GetInputCount() override { return inputs_.size(); }

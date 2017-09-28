@@ -15,7 +15,7 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron( const PropNode& pn, Params& par, const NeuralController& nc );
+		Neuron( const PropNode& pn, Params& par, const String& default_activation );
 		virtual ~Neuron() {}
 		virtual size_t GetInputCount() { return 0; }
 		virtual activation_t GetOutput() const = 0;

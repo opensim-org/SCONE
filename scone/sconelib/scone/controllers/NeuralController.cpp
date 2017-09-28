@@ -36,7 +36,7 @@ namespace scone
 				{
 				case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
 				case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
-				case "InterNeuron"_hash: AddInterNeurons( n.second, par ); break;
+				case "InterNeuronLayer"_hash: AddInterNeuronLayer( n.second, par ); break;
 				case "MotorNeuron"_hash: AddMotorNeurons( n.second, par ); break;
 				default: SCONE_THROW( "Unknown neuron type: " + n.first );
 				}
@@ -55,7 +55,7 @@ namespace scone
 
 		for ( auto& name : sources )
 		{
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name ) );
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, "linear" ) );
 			//log::info( "added sensor", m_SensorNeurons.back()->GetName( false ) );
 		}
 	}
@@ -69,46 +69,29 @@ namespace scone
 			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, true ) );
 	}
 
-	void NeuralController::AddInterNeurons( const PropNode& pn, Params& par )
+	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
 		Index layer = pn.get< Index >( "layer", 1 );
-		Index input_layer = pn.get< Index >( "input_layer", 0 );
-		string input_type = pn.get< string >( "type", "*" );
-		int amount = pn.get< int >( "amount" );
+		int amount = pn.get< int >( "neurons" );
+		string act_func = pn.get< string >( "activation", "rectifier" );
 
-		// make sure layer exists
-		SCONE_ASSERT( layer > 0 );
+		// allocate layer
+		SCONE_ASSERT( layer > 0 && layer == m_InterNeurons.size() + 1 );
 		m_InterNeurons.resize( std::max( layer, m_InterNeurons.size() ) );
 
-		for ( bool mirrored : { false, true } )
+		for ( int i = 0; i < amount; ++i )
 		{
-			for ( int i = 0; i < amount; ++i )
+			for ( bool mirrored : { false, true } )
 			{
-				auto name = stringf( "N%d", i ) + ( mirrored ? "_r" : "_l" );
+				auto name = stringf( "N%d_%d", layer, i ) + ( mirrored ? "_r" : "_l" );
 				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-				auto& neuron_layer = m_InterNeurons[ layer - 1 ];
+				m_InterNeurons[ layer - 1 ].emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
 
-				auto it = flut::find_if( neuron_layer, [&]( InterNeuronUP& m ) { return m->name_ == name; } );
-				if ( it == neuron_layer.end() )
+				for ( auto& child : pn.select( "InterNeuron" ) )
 				{
-					neuron_layer.emplace_back( std::make_unique< InterNeuron >( pn, par, *this, name ) );
-					it = neuron_layer.end() - 1;
+					SCONE_ASSERT( child.first == "InterNeuron" );
+					m_InterNeurons[ layer - 1 ].back()->AddInputs( child.second, par, *this );
 				}
-
-				(*it)->AddInputs( pn, par, *this );
-
-				//for ( Index idx = 0; idx < GetLayerSize( input_layer ); ++idx )
-				//{
-				//	auto s = GetNeuron( input_layer, idx );
-				//	if ( s->GetSide() == m_InterNeurons.back().back()->GetSide() )
-				//	{
-				//		auto input_name = s->GetParName();
-				//		auto w = par.try_get( input_name + ".w", pn, "weight", 1.0 );
-				//		auto m = par.try_get( input_name + ".m", pn, "mean", 0.0 );
-				//		m_InterNeurons.back().back()->AddInput( s, w, m );
-				//	}
-				//	log::info( "added interneuron: ", name + "." + s->GetName( false ) );
-				//}
 			}
 		}
 	}
