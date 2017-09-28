@@ -38,21 +38,6 @@ namespace scone
 		// create sensor neurons
 		for ( auto& n : pn.get_child( "MotorNeuronLayer" ) )
 			AddMotorNeurons( n.second, par );
-
-		//if ( auto* neurons = pn.try_get_child( "Neurons" ) )
-		//{
-		//	for ( auto& n : *neurons )
-		//	{
-		//		switch ( flut::hash( n.first ) )
-		//		{
-		//		case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
-		//		case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
-		//		case "InterNeuronLayer"_hash: AddInterNeuronLayer( n.second, par ); break;
-		//		case "MotorNeuron"_hash: AddMotorNeurons( n.second, par ); break;
-		//		default: SCONE_THROW( "Unknown neuron type: " + n.first );
-		//		}
-		//	}
-		//}
 	}
 
 	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
@@ -65,10 +50,7 @@ namespace scone
 			sources = FindMatchingNames( GetModel().GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 
 		for ( auto& name : sources )
-		{
 			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, "linear" ) );
-			//log::info( "added sensor", m_SensorNeurons.back()->GetName( false ) );
-		}
 	}
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
