@@ -21,17 +21,19 @@
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation="rectifier">
 					<signature_prefix>N0MABG1</signature_prefix>
 
-					<Neurons>
+					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
 						<SensorNeuron type="L" source="*" offset="0.5" activation="rectifier"/>
 						<SensorNeuron type="DP" source="pelvis_tilt" activation="linear"/>
 						<SensorNeuron type="DV" source="pelvis_tilt" activation="linear"/>
+					</SensorNeuronLayer>
 
-						<InterNeuronLayer layer="1" neurons="1" activation="gaussian" width="1.0~0.1">
-							<InterNeuron input_layer="0" type="F" connect="ipsilateral" mean="0.3~0.3" gain="1"/>
-							<InterNeuron input_layer="0" type="L" connect="ipsilateral" mean="0.3~0.3" gain="1"/>
-						</InterNeuronLayer>
+					<InterNeuronLayer layer="1" neurons="1" activation="gaussian" width="1.0~0.1">
+						<InterNeuron input_layer="0" type="F" connect="ipsilateral" mean="0.3~0.3" gain="1"/>
+						<InterNeuron input_layer="0" type="L" connect="ipsilateral" mean="0.3~0.3" gain="1"/>
+					</InterNeuronLayer>
 
+					<MotorNeuronLayer>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="F" gain="0~0.1"/>
@@ -39,7 +41,7 @@
 						<MotorNeuron input_layer="0" type="DP" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" type="DV" gain="0~0.1"/>
 						<MotorNeuron input_layer="1" gain="0~0.001"/>
-					</Neurons>
+					</MotorNeuronLayer>
 
 				</Controller>
 				<INCLUDE file="measures/M_CG10_CoT_GH.xml"/>

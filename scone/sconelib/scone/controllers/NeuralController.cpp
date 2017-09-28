@@ -27,21 +27,32 @@ namespace scone
 
 		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
-		// automatic neural network
-		if ( auto* neurons = pn.try_get_child( "Neurons" ) )
-		{
-			for ( auto& n : *neurons )
-			{
-				switch ( flut::hash( n.first ) )
-				{
-				case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
-				case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
-				case "InterNeuronLayer"_hash: AddInterNeuronLayer( n.second, par ); break;
-				case "MotorNeuron"_hash: AddMotorNeurons( n.second, par ); break;
-				default: SCONE_THROW( "Unknown neuron type: " + n.first );
-				}
-			}
-		}
+		// create sensor neurons
+		for ( auto& n : pn.get_child( "SensorNeuronLayer" ) )
+			AddSensorNeurons( n.second, par );
+
+		// create inter neurons
+		for ( auto& n : pn.select( "InterNeuronLayer" ) )
+			AddInterNeuronLayer( n.second, par );
+
+		// create sensor neurons
+		for ( auto& n : pn.get_child( "MotorNeuronLayer" ) )
+			AddMotorNeurons( n.second, par );
+
+		//if ( auto* neurons = pn.try_get_child( "Neurons" ) )
+		//{
+		//	for ( auto& n : *neurons )
+		//	{
+		//		switch ( flut::hash( n.first ) )
+		//		{
+		//		case "SensorNeuron"_hash: AddSensorNeurons( n.second, par ); break;
+		//		case "PatternNeuron"_hash: AddPatternNeurons( n.second, par ); break;
+		//		case "InterNeuronLayer"_hash: AddInterNeuronLayer( n.second, par ); break;
+		//		case "MotorNeuron"_hash: AddMotorNeurons( n.second, par ); break;
+		//		default: SCONE_THROW( "Unknown neuron type: " + n.first );
+		//		}
+		//	}
+		//}
 	}
 
 	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
