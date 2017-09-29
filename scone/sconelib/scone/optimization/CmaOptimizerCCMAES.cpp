@@ -80,7 +80,7 @@ namespace scone
 			auto current_best_it = GetObjective().info().maximize() ? flut::max_element( results ) : flut::min_element( results );
 			size_t current_best_idx = current_best_it - results.begin();
 			auto current_best = *current_best_it;
-			auto current_avg_fitness = flut::average( results );
+			auto current_avg_fitness = flut::top_average( results, m_Mu );
 			auto current_med_fitness = flut::median( results );
 
 			// report results
