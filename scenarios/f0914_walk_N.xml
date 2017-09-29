@@ -19,7 +19,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation="rectifier">
-					<signature_prefix>N0MABG1</signature_prefix>
+					<signature_prefix>NMABG1</signature_prefix>
 
 					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
@@ -33,14 +33,18 @@
 						<InterNeuron input_layer="0" type="L" connect="ipsilateral" mean="0.3~0.3" gain="1"/>
 					</InterNeuronLayer>
 
+					<InterNeuronLayer layer="2" neurons="1" activation="linear">
+						<InterNeuron input_layer="0" type="DP" gain="1"/>
+						<InterNeuron input_layer="0" type="DV" gain="0.2~0.02"/>
+					</InterNeuronLayer>
+
 					<MotorNeuronLayer>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="L" gain="0~0.1"/>
-						<MotorNeuron input_layer="0" type="DP" gain="0~0.1"/>
-						<MotorNeuron input_layer="0" type="DV" gain="0~0.1"/>
-						<MotorNeuron input_layer="1" gain="0~0.001"/>
+						<MotorNeuron input_layer="1" gain="0~0.1"/>
+						<MotorNeuron input_layer="2" connect="ipsilateral" gain="0~0.1"/>
 					</MotorNeuronLayer>
 
 				</Controller>
