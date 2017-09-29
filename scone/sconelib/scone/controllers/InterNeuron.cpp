@@ -67,24 +67,52 @@ namespace scone
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( flut::pattern_match( sensor->type_, input_type ) )
 				{
-					if ( connect == antagonistic )
+					switch ( connect )
 					{
-						auto it1 = TryFindByName( nc.GetModel().GetMuscles(), name_ );
-						auto it2 = TryFindByName( nc.GetModel().GetMuscles(), sensor->source_name_ );
-						if ( it1 != nc.GetModel().GetMuscles().end() && it2 != nc.GetModel().GetMuscles().end() )
-						{
-							if ( ( *it1 )->IsAntagonist( **it2 ) )
-								AddInput( sensor, par.get( sensor->GetParName(), pn[ "gain" ] ) );
-						}
+					case scone::InterNeuron::universal:
+					{
+						auto gain = par.get( sensor->GetName( right_side ), pn[ "gain" ] );
+						auto mean = par.try_get( sensor->GetName( right_side ) + ".m", pn, "mean", 0.0 );
+						AddInput( sensor, gain, mean );
+						break;
 					}
-					else if ( connect == monosynaptic && sensor->source_name_ == name_ )
-						AddInput( sensor, par.get( sensor->type_, pn[ "gain" ] ) );
-					else if ( connect == ipsilateral && sensor->GetSide() == GetSide() )
-						AddInput( sensor, par.get( sensor->GetParName(), pn[ "gain" ] ), par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 ) );
-					else if ( connect == contralateral && sensor->GetSide() != GetSide() )
-						AddInput( sensor, par.get( sensor->GetParName(), pn[ "gain" ] ), par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 ) );
-					else if ( connect == universal )
-						AddInput( sensor, par.get( sensor->GetName( right_side ), pn[ "gain" ] ), par.try_get( GetName( right_side ) + ".m", pn, "mean", 0.0 ) );
+					case scone::InterNeuron::monosynaptic:
+					{
+						if ( sensor->source_name_ == name_ )
+							AddInput( sensor, par.get( sensor->type_, pn[ "gain" ] ) );
+						break;
+					}
+					case scone::InterNeuron::antagonistic:
+					{
+						auto& muscles = nc.GetModel().GetMuscles();
+						auto it1 = TryFindByName( muscles, name_ );
+						auto it2 = TryFindByName( muscles, sensor->source_name_ );
+						if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).IsAntagonist( **it2 ) )
+							AddInput( sensor, par.get( sensor->GetParName(), pn[ "gain" ] ) );
+						break;
+					}
+					case scone::InterNeuron::ipsilateral:
+					{
+						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
+						{
+							auto gain = par.get( sensor->GetParName(), pn[ "gain" ] );
+							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
+							AddInput( sensor, gain, mean );
+						}
+						break;
+					}
+					case scone::InterNeuron::contralateral:
+					{
+						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
+						{
+							auto gain = par.get( sensor->GetParName(), pn[ "gain" ] );
+							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
+							AddInput( sensor, gain, mean );
+						}
+						break;
+					}
+					default: SCONE_THROW( "Unknown connection type " + connect );
+					}
 				}
 			}
 		}
@@ -92,15 +120,23 @@ namespace scone
 		{
 			for ( Index idx = 0; idx < nc.GetLayerSize( input_layer ); ++idx )
 			{
-				// TODO: move this to upper code
 				auto input = nc.GetNeuron( input_layer, idx );
-
-				if ( connect == ipsilateral && input->GetSide() == GetSide() )
-					AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
-				else if ( connect == contralateral && input->GetSide() != GetSide() )
-					AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
-				else if ( connect == universal )
+				switch ( connect )
+				{
+				case scone::InterNeuron::universal:
 					AddInput( input, par.get( input->GetName( right_side ), pn[ "gain" ] ) );
+					break;
+				case scone::InterNeuron::ipsilateral:
+					if ( input->GetSide() == GetSide() || input->GetSide() == NoSide )
+						AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
+					break;
+				case scone::InterNeuron::contralateral:
+					if ( input->GetSide() != GetSide() || input->GetSide() == NoSide )
+						AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
