@@ -34,7 +34,7 @@ namespace scone
 		if ( use_init_file && !init_file.empty() )
 		{
 			auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
-			log::info( "Imported ", init_file, "; ", result.first, " parameters read, ", result.second, " skipped" );
+			log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
 		}
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
