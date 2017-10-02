@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_NMA_S10.par</init_file>
+	<init_file>initializations/f0914_walk_N0MAB_1379.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
@@ -23,22 +23,24 @@
 
 					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
-						<SensorNeuron type="L" source="*" offset="0.5" activation="rectifier"/>
+						<SensorNeuron type="L" source="*" offset="1" activation="linear"/>
 						<SensorNeuron type="DP" source="pelvis_tilt" activation="linear"/>
 						<SensorNeuron type="DV" source="pelvis_tilt" activation="linear"/>
 					</SensorNeuronLayer>
 
-					<InterNeuronLayer layer="1" neurons="1" activation="linear">
+					<!--InterNeuronLayer layer="1" neurons="1" activation="linear">
 						<InterNeuron input_layer="0" type="DP" gain="1"/>
 						<InterNeuron input_layer="0" type="DV" gain="0.3~0.03"/>
-					</InterNeuronLayer>
+					</InterNeuronLayer-->
 
 					<MotorNeuronLayer>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="L" gain="0~0.1"/>
-						<MotorNeuron input_layer="1" connect="ipsilateral" gain="0~0.01"/>
+						<MotorNeuron input_layer="0" connect="universal" type="DP" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" connect="universal" type="DV" gain="0~0.1"/>
+						<!--MotorNeuron input_layer="1" connect="ipsilateral" gain="0~0.01"/-->
 					</MotorNeuronLayer>
 
 				</Controller>
