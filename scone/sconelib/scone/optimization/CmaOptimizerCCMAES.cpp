@@ -49,6 +49,7 @@ namespace scone
 		m_Mu = cma.mu();
 		m_Sigma = cma.sigma();
 		cma.set_max_threads( (int)max_threads );
+		cma.enable_fitness_tracking( 1000 );
 
 		// create m_Lambda objectives
 		//CreateObjectives( m_Lambda );
@@ -85,13 +86,14 @@ namespace scone
 			auto current_best = *current_best_it;
 			auto current_avg_fitness = flut::top_average( results, m_Mu );
 			auto current_med_fitness = flut::median( results );
+			auto cur_trend = cma.fitness_trend();
 
 			// report results
 			if ( GetProgressOutput() )
-				printf( " A=%.3f", current_avg_fitness );
+				printf( " A=%.3f O=%.3f S=%.3f", current_avg_fitness, cur_trend.offset(), cur_trend.slope() );
 
 			if ( GetStatusOutput() )
-				OutputStatus( "generation", flut::stringf( "%d %f %f %f", gen, current_best, current_med_fitness, current_avg_fitness ) );
+				OutputStatus( "generation", flut::stringf( "%d %f %f %f %f %f", gen, current_best, current_med_fitness, current_avg_fitness, cur_trend.offset(), cur_trend.slope() ) );
 
 			bool new_best = IsBetterThan( current_best, m_BestFitness );
 			if ( new_best )
