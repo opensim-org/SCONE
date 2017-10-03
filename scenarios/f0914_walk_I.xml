@@ -4,9 +4,9 @@
 	<use_init_file>0</use_init_file>
 	<random_seed>123</random_seed>
 	<Objective type="ImitationObjective">
-		<signature_postfix>IMO</signature_postfix>
+		<signature_prefix>IM</signature_prefix>
 		<file>results/f0914_walk_GH2.sto</file>
-		<frame_delta>20</frame_delta>
+		<frame_delta>100</frame_delta>
 		<Model type="Simbody">
 			<model_file>f0914.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
