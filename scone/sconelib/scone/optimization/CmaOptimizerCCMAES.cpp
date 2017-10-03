@@ -49,7 +49,7 @@ namespace scone
 		m_Mu = cma.mu();
 		m_Sigma = cma.sigma();
 		cma.set_max_threads( (int)max_threads );
-		cma.enable_fitness_tracking( 1000 );
+		cma.enable_fitness_tracking( window_size );
 
 		// create m_Lambda objectives
 		//CreateObjectives( m_Lambda );
@@ -66,6 +66,7 @@ namespace scone
 			OutputStatus( "lambda", m_Lambda );
 			OutputStatus( "mu", m_Mu );
 			OutputStatus( "max_generations", max_generations );
+			OutputStatus( "window_size", window_size );
 		}
 
 		// optimization loop

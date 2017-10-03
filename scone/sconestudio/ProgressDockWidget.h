@@ -40,6 +40,7 @@ public:
 	flut::linear_function< float > cur_reg;
 	int generation;
 	int max_generations;
+	int window_size;
 	QVector< double > bestvec;
 	QVector< double > avgvec;
 	QVector< double > medvec;

@@ -529,6 +529,10 @@ void SconeStudio::updateViewSettings()
 		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
 		model->ApplyViewSettings( f );
 	}
+
+	ProgressDockWidget::AxisScaleType scale = ui.actionShow_Body_Axes->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
+	for ( auto& o : optimizations )
+		o->SetAxisScaleType( scale );
 }
 
 void SconeStudio::fixViewCheckboxes()

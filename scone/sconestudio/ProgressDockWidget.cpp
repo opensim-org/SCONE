@@ -126,6 +126,10 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 			max_generations = flut::from_str< int >( kvp.second );
 			updateText();
 		}
+		else if ( kvp.first == "window_size" )
+		{
+			window_size = flut::from_str< int >( kvp.second );
+		}
 		else if ( kvp.first == "generation" )
 		{
 			flut::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
@@ -141,7 +145,8 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
 			ui.plot->graph( 1 )->setData( genvec, avgvec );
 			ui.plot->graph( 2 )->clearData();
-			ui.plot->graph( 2 )->addData( 0.0, cur_reg( 0 ) );
+			auto start = std::max( 0, generation - window_size );
+			ui.plot->graph( 2 )->addData( start, cur_reg( start ) );
 			ui.plot->graph( 2 )->addData( generation, cur_reg( float( generation ) ) );
 			ui.plot->xAxis->setRange( 0, std::max( 8, generation ) );
 			ui.plot->xAxis->setAutoTickCount( 7 );

@@ -219,6 +219,8 @@
     <addaction name="actionShow_Muscles"/>
     <addaction name="actionShow_Bone_Geometry"/>
     <addaction name="actionShow_Body_Axes"/>
+    <addaction name="separator"/>
+    <addaction name="actionUse_Log_Scale"/>
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
@@ -493,6 +495,14 @@
    </property>
    <property name="text">
     <string>Show Body &amp;Axes</string>
+   </property>
+  </action>
+  <action name="actionUse_Log_Scale">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use &amp;Log Scale with Optimization Progress</string>
    </property>
   </action>
  </widget>
@@ -799,6 +809,22 @@
   </connection>
   <connection>
    <sender>actionShow_Body_Axes</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionUse_Log_Scale</sender>
    <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>updateViewSettings()</slot>

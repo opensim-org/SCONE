@@ -17,6 +17,7 @@ namespace scone
 		int m_Lambda;
 		double m_Sigma;
 		size_t max_generations;
+		size_t window_size;
 		int recombination_type; // 0 = equal, 1 = linear, 2 = superlinear
 
 		double global_std_factor;
