@@ -530,7 +530,7 @@ void SconeStudio::updateViewSettings()
 		model->ApplyViewSettings( f );
 	}
 
-	ProgressDockWidget::AxisScaleType scale = ui.actionShow_Body_Axes->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
+	ProgressDockWidget::AxisScaleType scale = ui.actionUse_Log_Scale->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
 	for ( auto& o : optimizations )
 		o->SetAxisScaleType( scale );
 }

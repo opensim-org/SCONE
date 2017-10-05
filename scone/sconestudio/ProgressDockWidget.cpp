@@ -19,6 +19,7 @@ best( 0.0f ),
 best_gen( 0 ),
 highest( 0 ),
 lowest( 0 ),
+cur_pred( 0 ),
 state( StartingState )
 {
 	QString program = make_qt( flut::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );

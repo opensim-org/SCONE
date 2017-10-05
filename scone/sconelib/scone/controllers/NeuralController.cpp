@@ -15,6 +15,7 @@
 #include "activation_functions.h"
 #include "flut/hash.hpp"
 #include "flut/string_tools.hpp"
+#include "flut/table.hpp"
 
 namespace scone
 {
@@ -148,26 +149,24 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		std::ofstream str( ( file + ".neural_weights.txt" ).str() );
+		//std::ofstream str( ( file + ".neural_weights.txt" ).str() );
+		flut::table< double > data;
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
 			for ( auto& neuron : inter_layer )
 			{
-				str << neuron->name_ << "\t" << neuron->offset_;
 				for ( auto& input : neuron->inputs_ )
-					str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight << "\t" << input.mean;
-				str << std::endl;
+					data( neuron->name_, input.neuron->GetName( false ) ) = input.weight;
 			}
 		}
 
 		for ( auto& neuron : m_MotorNeurons )
 		{
-			str << neuron->name_ << "\t" << neuron->offset_;
 			for ( auto& input : neuron->inputs_ )
-				str << "\t" << input.neuron->GetName( false ) << "\t" << input.weight;
-			str << std::endl;
+				data( neuron->name_, input.neuron->GetName( false ) ) = input.weight;
 		}
+		std::ofstream( ( file + ".neural_weights.txt" ).str() ) << data;
 	}
 
 	String NeuralController::GetClassSignature() const
