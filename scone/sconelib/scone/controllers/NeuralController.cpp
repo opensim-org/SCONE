@@ -157,14 +157,14 @@ namespace scone
 			for ( auto& neuron : inter_layer )
 			{
 				for ( auto& input : neuron->inputs_ )
-					data( neuron->name_, input.neuron->GetName( false ) ) = input.weight;
+					data( input.neuron->GetName( false ), neuron->name_ ) = input.weight;
 			}
 		}
 
 		for ( auto& neuron : m_MotorNeurons )
 		{
 			for ( auto& input : neuron->inputs_ )
-				data( neuron->name_, input.neuron->GetName( false ) ) = input.weight;
+				data( input.neuron->GetName( false ), neuron->name_ ) = input.weight;
 		}
 		std::ofstream( ( file + ".neural_weights.txt" ).str() ) << data;
 	}
