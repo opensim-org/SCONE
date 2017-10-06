@@ -3,19 +3,11 @@
 	<Model name="f0914">
 		<!--Feed forward model with 9 DOF 18 Muscles, following [Geyer & Herr 2010]. Adapted by Thomas Geijtenbeek.
 
-		2016.06.30:
-			- Updated contact parameters
-		
-		2016.06.29:
-			- Updated contact parameters
-		
-		2016.06.28:
-			- Changed dissipation to 0.3
-			- Removed med contact sphere
-			- Repositioned heel and toe contact spheres
-		
+		2016.10.17: Updated knee limits to -5 deg and 0.3Nm/s
+		2016.06.30: Updated contact parameters
+		2016.06.29: Updated contact parameters
+		2016.06.28: Changed dissipation to 0.3, Removed med contact sphere, Repositioned heel and toe contact spheres
 		2016.06.22: Changed Hunt-Crossly force to 1e7
-		
 		2016.06.22: Initial version
 		-->
 		<credits>A planar reduced gait model with 9 degrees of freedom and 18 muscles by Ajay Seth. Closely based on Delp S.L., Loan J.P., Hoy M.G., Zajac F.E., Topp E.L., Rosen J.M., Thelen D.G., Anderson F.C., Seth A. Notes: 3D, 23 DOF gait model created by D.G. Thelen, Univ. of Wisconsin-Madison, and Ajay Seth, Frank C. Anderson, and Scott L. Delp, Stanford University. Lower extremity joint defintions based on Delp et al. (1990). Low back joint and anthropometry based on Anderson and Pandy (1999, 2001). Planar knee model of Yamaguchi and Zajac (1989). Seth replaced tibia translation constraints with a CustomJoint for the knee and removed the patella to eliminate all kinematic constraints; insertions of the quadrucepts are handled with moving points in the tibia frame as defined by Delp 1990. Number of muscles was reduced by Anderson to improve simulation speed for demonstrations and is not intended to be used in research. License: Creative Commons (CCBY 3.0). You are free to distribute, remix, tweak, and build upon this work, even commercially, as long as you credit us for the original creation. http://creativecommons.org/licenses/by/3.0/ More Information: http://simtk-confluence.stanford.edu:8080/display/OpenSim/Gait+2392+and+2354+Models</credits>
@@ -2582,9 +2574,9 @@
 								<geometry>platform r_heel r_toe</geometry>
 								<stiffness>1e7</stiffness>
 								<dissipation>0.5</dissipation>
-								<static_friction>0.1</static_friction>
-								<dynamic_friction>0.1</dynamic_friction>
-								<viscous_friction>0.1</viscous_friction>
+								<static_friction>0.9</static_friction>
+								<dynamic_friction>0.8</dynamic_friction>
+								<viscous_friction>0.6</viscous_friction>
 							</HuntCrossleyForce::ContactParameters>
 						</objects>
 						<groups />
@@ -2602,10 +2594,10 @@
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel l_toe</geometry>
 								<stiffness>1e7</stiffness>
-								<dissipation>0.1</dissipation>
-								<static_friction>0.1</static_friction>
-								<dynamic_friction>0.1</dynamic_friction>
-								<viscous_friction>0.1</viscous_friction>
+								<dissipation>0.5</dissipation>
+								<static_friction>0.9</static_friction>
+								<dynamic_friction>0.8</dynamic_friction>
+								<viscous_friction>0.6</viscous_friction>
 							</HuntCrossleyForce::ContactParameters>
 						</objects>
 						<groups />
@@ -2619,15 +2611,15 @@
 					<!--Coordinate (name) to be limited.-->
 					<coordinate>knee_angle_r</coordinate>
 					<!--Stiffness of the passive limit force when coordinate exceeds upper limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>20</upper_stiffness>
+					<upper_stiffness>0.3</upper_stiffness>
 					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
-					<upper_limit>0</upper_limit>
+					<upper_limit>-5</upper_limit>
 					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>20</lower_stiffness>
+					<lower_stiffness>0.3</lower_stiffness>
 					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
 					<lower_limit>-120</lower_limit>
 					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
-					<damping>0.25</damping>
+					<damping>0.3</damping>
 					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
 					<transition>10</transition>
 				</CoordinateLimitForce>
@@ -2637,15 +2629,15 @@
 					<!--Coordinate (name) to be limited.-->
 					<coordinate>knee_angle_l</coordinate>
 					<!--Stiffness of the passive limit force when coordinate exceeds upper limit. Note, rotational stiffness expected in N*m/degree.-->
-					<upper_stiffness>20</upper_stiffness>
+					<upper_stiffness>0.3</upper_stiffness>
 					<!--The upper limit of the coordinate range of motion (rotations in degrees).-->
-					<upper_limit>0</upper_limit>
+					<upper_limit>-5</upper_limit>
 					<!--Stiffness of the passive limit force when coordinate exceeds lower limit. Note, rotational stiffness expected in N*m/degree.-->
-					<lower_stiffness>20</lower_stiffness>
+					<lower_stiffness>0.3</lower_stiffness>
 					<!--The lower limit of the coordinate range of motion (rotations in degrees).-->
 					<lower_limit>-120</lower_limit>
 					<!--Damping factor on the coordinate's speed applied only when limit is exceeded. For translational has units N/(m/s) and rotational has Nm/(degree/s)-->
-					<damping>0.25</damping>
+					<damping>0.3</damping>
 					<!--Transition region width in the units of the coordinate (rotations in degrees). Dictates the transition from zero to constant stiffness as coordinate exceeds its limit.-->
 					<transition>10</transition>
 				</CoordinateLimitForce>
