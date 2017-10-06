@@ -8,9 +8,9 @@
 			<Measures>
 				<Measure type="DofLimitMeasure" name="AnkleL" weight="0.1" dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
 				<Measure type="DofLimitMeasure" name="AnkleR" weight="0.1" dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="KneeL" weight="0.1" threshold="2" dof="knee_angle_l" abs_force_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="KneeR" weight="0.1" threshold="2" dof="knee_angle_r" abs_force_penalty="1"/>
-				<Measure type="DofLimitMeasure" name="Pelvis" weight="1" dof="pelvis_tilt" min_deg_s="-30" max_deg_s="30" abs_velocity_range_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeL" weight="0.1" threshold="3" dof="knee_angle_l" abs_force_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeR" weight="0.1" threshold="3" dof="knee_angle_r" abs_force_penalty="1"/>
+				<!--Measure type="DofLimitMeasure" name="Pelvis" weight="1" dof="pelvis_tilt" min_deg_s="-30" max_deg_s="30" abs_velocity_range_penalty="1"/-->
 			</Measures>
 		</Measure>
 	</Measures>
