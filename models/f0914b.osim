@@ -2573,7 +2573,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform r_heel r_toe</geometry>
-								<stiffness>40000</stiffness>
+								<stiffness>1e7</stiffness>
 								<dissipation>300</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
@@ -2594,7 +2594,7 @@
 							<HuntCrossleyForce::ContactParameters>
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel l_toe</geometry>
-								<stiffness>40000</stiffness>
+								<stiffness>1e7</stiffness>
 								<dissipation>300</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
