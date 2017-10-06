@@ -2574,7 +2574,7 @@
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform r_heel r_toe</geometry>
 								<stiffness>1e7</stiffness>
-								<dissipation>300</dissipation>
+								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
@@ -2595,7 +2595,7 @@
 								<!--Names of geometry objects affected by these parameters.-->
 								<geometry>platform l_heel l_toe</geometry>
 								<stiffness>1e7</stiffness>
-								<dissipation>300</dissipation>
+								<dissipation>0.5</dissipation>
 								<static_friction>0.9</static_friction>
 								<dynamic_friction>0.8</dynamic_friction>
 								<viscous_friction>0.6</viscous_friction>
