@@ -1,4 +1,4 @@
-set target_folder=%USERPROFILE%\Dropbox\Development\scone
+set target_folder=%Dropbox%\Development\scone
 
 xcopy "%~dp0bin\msvc2015_64\Release\*" "%target_folder%\bin\msvc2015_64\Release\*" /S /D /Y
 xcopy "%~dp0scenarios\*" "%target_folder%\scenarios\*" /S /Y
