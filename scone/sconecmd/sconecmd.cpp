@@ -69,7 +69,8 @@ int main(int argc, char* argv[])
 				OptimizerUP o = PrepareOptimization( props, scenario_file );
 				o->SetConsoleOutput( !quietOutput.getValue() );
 				o->SetStatusOutput( statusOutput.getValue() );
-				if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+				if ( o->GetStatusOutput() )
+					o->OutputStatus( "scenario", optArg.getValue() );
 				o->Run();
 			}
 		}
@@ -84,10 +85,10 @@ int main(int argc, char* argv[])
 	catch (std::exception& e)
 	{
 		log::Critical( e.what() );
-		cout << "*error=" << e.what() << endl;
+		cout << std::endl << "*error=" << e.what() << endl;
 		cout.flush();
 
-		// sleep some time for the error message to sing in...
+		// sleep some time for the error message to sink in...
 		std::this_thread::sleep_for( std::chrono::seconds( 5 ) );
 	}
 	catch (TCLAP::ExitException& e )
