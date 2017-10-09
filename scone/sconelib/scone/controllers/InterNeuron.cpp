@@ -59,7 +59,6 @@ namespace scone
 		connection_t connect = connection_dict( pn.get< string >( "connect", "universal" ) );
 		bool right_side = GetSide() == RightSide;
 
-		// add inputs
 		if ( input_layer == 0 )
 		{
 			for ( Index idx = 0; idx < nc.GetSensorNeurons().size(); ++idx )

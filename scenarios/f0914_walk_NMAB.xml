@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914_walk_NMAB_S10.par</init_file>
+	<init_file>initializations/f0914t_walk_NMAB_S10.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
@@ -9,7 +9,7 @@
 	<Objective type="SimulationObjective">
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
-			<model_file>research/f0914t_k5s03d03_c1e7d05.osim</model_file>
+			<model_file>research/f0914t_k5s2_c5e7d10.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S10.sto</state_init_file>
 			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
@@ -34,6 +34,7 @@
 					</InterNeuronLayer>
 
 					<MotorNeuronLayer>
+						<MotorNeuron include="*" offset="0~0.01"/>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="antagonistic" type="F" gain="0~0.1"/>

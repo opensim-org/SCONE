@@ -93,11 +93,10 @@ namespace scone
 	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par )
 	{
 		string input_type = pn.get< string >( "type", "*" );
-		bool monosynaptic = pn.get( "monosynaptic", false );
-		bool antagonistic = pn.get( "antagonistic", false );
-		Index input_layer = pn.get< Index >( "input_layer" );
+		string include = pn.get< string >( "include", "*" );
+		string exclude = pn.get< string >( "exclude", "" );
 
-		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "include", "*" ), pn.get< string >( "exclude", "" ) );
+		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), include, exclude );
 		for ( auto& name : muscle_names )
 		{
 			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
@@ -109,9 +108,11 @@ namespace scone
 				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
 				it = m_MotorNeurons.end() - 1;
 			}
+			auto& neuron = *it;
 
-			(*it)->AddInputs( pn, par, *this );
-			(*it)->offset_ = par.try_get( "C0", pn, "offset", 0.0 );
+			if ( pn.has_key( "input_layer" ) )
+				(*it)->AddInputs( pn, par, *this );
+			(*it)->offset_ += par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
 
