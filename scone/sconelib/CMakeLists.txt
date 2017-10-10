@@ -274,15 +274,13 @@ use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "
 
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} )
-	
+
 target_link_libraries(sconelib flut spot shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
-set_target_properties(sconelib PROPERTIES
-    PROJECT_LABEL sconelib
-    #FOLDER "sconelib"
-    )
+set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 
 target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )
+target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_FLUT_PROFILING>" )
 
 # To create folders in Visual Studio.
 source_group("core\\base" FILES ${CORE_BASE_FILES})

@@ -11,6 +11,7 @@
 #include "scone/model/Muscle.h"
 #include <vector>
 #include "flut/prop_node.hpp"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -54,8 +55,11 @@ namespace scone
 
 	void ImitationObjective::AdvanceModel( Model& model, TimeInSeconds t ) const
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		if ( !model.GetUserData().has_key( "IM_fra" ) )
 		{
+			SCONE_PROFILE_SCOPE( "SetupStorage" );
 			model.GetUserData()[ "IM_fra" ] = 0;
 			model.GetUserData()[ "IM_res" ] = 0.0;
 
@@ -74,15 +78,19 @@ namespace scone
 		double result = 0.0;
 		Index frame_start = model.GetUserData().get< Index >( "IM_fra" );
 		Index frame_count = 0;
-		for ( Index idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
-		{
-			auto f = m_Storage.GetFrame( idx );
 
-			// set state and compare output
-			model.SetStateValues( f.GetValues(), f.GetTime() );
-			for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
-				result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
-			++frame_count;
+		{
+			SCONE_PROFILE_SCOPE( "ComputeSimularity" );
+			for ( Index idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
+			{
+				auto f = m_Storage.GetFrame( idx );
+
+				// set state and compare output
+				model.SetStateValues( f.GetValues(), f.GetTime() );
+				for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
+					result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
+				++frame_count;
+			}
 		}
 
 		if ( frame_count > 0 )

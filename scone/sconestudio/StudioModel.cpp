@@ -191,7 +191,6 @@ namespace scone
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
-		SCONE_PROFILE_FUNCTION;
 		SCONE_ASSERT( IsEvaluating() );
 		model_objective->AdvanceModel( *model, t );
 		if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
@@ -200,7 +199,6 @@ namespace scone
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
-		SCONE_PROFILE_FUNCTION;
 		if ( output_results )
 		{
 			auto fitness = model_objective->GetResult( *model );

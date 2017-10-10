@@ -78,7 +78,7 @@ namespace scone
 		void StoreCurrentFrame() override;
 		void UpdateOsimStorage();
 
-		OpenSim::ConstantForce& GetOsimBodyForce( int idx ) { return *m_BodyForces.at( idx ); }
+		OpenSim::ConstantForce* GetOsimBodyForce( Index idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
 		virtual State& GetState() override { return m_State; }
@@ -107,6 +107,7 @@ namespace scone
 		bool use_fixed_control_step_size;
 		double fixed_control_step_size;
 		String model_file;
+		bool create_body_forces;
 
 		int m_PrevIntStep;
 		double m_PrevTime;

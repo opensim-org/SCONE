@@ -140,6 +140,7 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::runSimulation( const QString& filename )
 {
+	SCONE_PROFILE_RESET;
 	if ( createModel( filename.toStdString() ) )
 	{
 		updateViewSettings();
@@ -149,6 +150,7 @@ void SconeStudio::runSimulation( const QString& filename )
 			evaluate();
 		ui.playControl->setRange( 0, model->GetMaxTime() );
 	}
+	SCONE_PROFILE_REPORT;
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
@@ -191,7 +193,6 @@ void SconeStudio::evaluate()
 	ui.progressBar->setFormat( " Evaluating (%p%)" );
 	ui.stackedWidget->setCurrentIndex( 1 );
 
-	SCONE_PROFILE_RESET;
 	const double step_size = 0.05;
 	int vis_step = 0;
 	flut::timer real_time;
@@ -218,8 +219,6 @@ void SconeStudio::evaluate()
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
-
-	log::info( SCONE_PROFILE_REPORT );
 }
 
 void SconeStudio::createVideo()
@@ -252,8 +251,6 @@ void SconeStudio::createVideo()
 	finalizeCapture();
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.osgViewer->startTimer();
-
-	log::info( SCONE_PROFILE_REPORT );
 }
 
 void SconeStudio::captureImage()
@@ -265,26 +262,24 @@ void SconeStudio::captureImage()
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
-	SCONE_PROFILE_FUNCTION;
-
-	if ( !model )
-		return;
-
-	// update current time and stop when done
-	current_time = t;
-
-	// update ui and visualization
-	if ( model->IsEvaluating() )
-		model->EvaluateTo( t );
-	
-	if ( update_vis )
+	if ( model )
 	{
-		model->UpdateVis( t );
-		auto d = com_delta( model->GetSimModel().GetComPos() );
-		ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-		ui.osgViewer->setFrameTime( current_time );
-		if ( analysisView->isVisible() )
-			analysisView->refresh( current_time, false );
+		// update current time and stop when done
+		current_time = t;
+
+		// update ui and visualization
+		if ( model->IsEvaluating() )
+			model->EvaluateTo( t );
+
+		if ( update_vis )
+		{
+			model->UpdateVis( t );
+			auto d = com_delta( model->GetSimModel().GetComPos() );
+			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+			ui.osgViewer->setFrameTime( current_time );
+			if ( analysisView->isVisible() )
+				analysisView->refresh( current_time, false );
+		}
 	}
 }
 
