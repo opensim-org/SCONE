@@ -56,12 +56,13 @@ namespace scone
 	{
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = pn.get< string >( "input_layer" );
+		size_t layer_size = nc.GetLayerSize( input_layer );
 		connection_t connect = connection_dict( pn.get< string >( "connect", "universal" ) );
 		bool right_side = GetSide() == RightSide;
 
 		if ( input_layer == "0" )
 		{
-			for ( Index idx = 0; idx < nc.GetSensorNeurons().size(); ++idx )
+			for ( Index idx = 0; idx < layer_size; ++idx )
 			{
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( flut::pattern_match( sensor->type_, input_type ) )
@@ -117,7 +118,7 @@ namespace scone
 		}
 		else
 		{
-			for ( Index idx = 0; idx < nc.GetLayerSize( input_layer ); ++idx )
+			for ( Index idx = 0; idx < layer_size; ++idx )
 			{
 				auto input = nc.GetNeuron( input_layer, idx );
 				switch ( connect )
