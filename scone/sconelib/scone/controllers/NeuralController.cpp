@@ -81,7 +81,10 @@ namespace scone
 				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
 				for ( auto& child : pn.select( "InterNeuron" ) )
+				{
+					layer.back()->offset_ += par.try_get( "C0", child.second, "offset", 0.0 );
 					layer.back()->AddInputs( child.second, par, *this );
+				}
 			}
 		}
 	}
@@ -106,9 +109,9 @@ namespace scone
 			}
 			auto& neuron = *it;
 
+			( *it )->offset_ += par.try_get( "C0", pn, "offset", 0.0 );
 			if ( pn.has_key( "input_layer" ) )
 				(*it)->AddInputs( pn, par, *this );
-			(*it)->offset_ += par.try_get( "C0", pn, "offset", 0.0 );
 		}
 	}
 
