@@ -16,6 +16,7 @@
 #include "flut/hash.hpp"
 #include "flut/string_tools.hpp"
 #include "flut/table.hpp"
+#include "flut/system/string_cast.hpp"
 
 namespace scone
 {
@@ -65,27 +66,22 @@ namespace scone
 
 	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
-		Index layer = pn.get< Index >( "layer", 1 );
+		auto layer_name = pn.get< string >( "layer" );
 		int amount = pn.get< int >( "neurons" );
 		string act_func = pn.get< string >( "activation", "rectifier" );
 
-		// allocate layer
-		SCONE_ASSERT( layer > 0 && layer == m_InterNeurons.size() + 1 );
-		m_InterNeurons.resize( std::max( layer, m_InterNeurons.size() ) );
-
+		auto& layer = m_InterNeurons[ layer_name ];
 		for ( int i = 0; i < amount; ++i )
 		{
 			for ( bool mirrored : { false, true } )
 			{
-				auto name = stringf( "N%d_%d", layer, i ) + ( mirrored ? "_r" : "_l" );
-				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-				m_InterNeurons[ layer - 1 ].emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
+				auto name = layer_name + stringf( "_%d", i ) + ( mirrored ? "_r" : "_l" );
+				if ( from_str< int >( layer_name ) > 0 ) name = "N" + name; // backwards compatibility
 
+				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
 				for ( auto& child : pn.select( "InterNeuron" ) )
-				{
-					SCONE_ASSERT( child.first == "InterNeuron" );
-					m_InterNeurons[ layer - 1 ].back()->AddInputs( child.second, par, *this );
-				}
+					layer.back()->AddInputs( child.second, par, *this );
 			}
 		}
 	}
@@ -124,19 +120,6 @@ namespace scone
 		return Controller::SuccessfulUpdate;
 	}
 
-	Neuron* NeuralController::FindInput( const PropNode& pn, Locality loc )
-	{
-		if ( pn.get_any< bool >( { "mirrored", "opposite" }, false ) )
-			loc = MakeMirrored( loc );
-		auto name = loc.ConvertName( pn.get< string >( "source", "leg0" ) );
-
-		if ( pn.get< string >( "type" ) != "Neuron" )
-			name += '.' + pn.get< string >( "type" );
-
-		auto iter = flut::find_if( m_InterNeurons.back(), [&]( const InterNeuronUP& n ) { return n->GetName( loc.mirrored ) == name; } );
-		return iter != m_InterNeurons.back().end() ? iter->get() : nullptr;
-	}
-
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		for ( auto& neuron : m_PatternNeurons )
@@ -144,7 +127,7 @@ namespace scone
 		for ( auto& neuron : m_SensorNeurons )
 			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& layer : m_InterNeurons )
-			for ( auto& neuron : layer )
+			for ( auto& neuron : layer.second )
 				frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
 	}
 
@@ -155,7 +138,7 @@ namespace scone
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
-			for ( auto& neuron : inter_layer )
+			for ( auto& neuron : inter_layer.second )
 			{
 				for ( auto& input : neuron->inputs_ )
 					data( input.neuron->GetName( false ), neuron->name_ ) = input.weight;
@@ -174,7 +157,7 @@ namespace scone
 	{
 		size_t c = 0;
 		for ( auto& layer : m_InterNeurons )
-			for ( auto& neuron : layer )
+			for ( auto& neuron : layer.second )
 				c += neuron->GetInputCount();
 
 		for ( auto& neuron : m_MotorNeurons )

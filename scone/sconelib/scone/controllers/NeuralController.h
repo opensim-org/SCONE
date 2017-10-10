@@ -9,6 +9,7 @@
 #include "InterNeuron.h"
 #include "PatternNeuron.h"
 #include "activation_functions.h"
+#include "flut/flat_map.hpp"
 
 namespace scone
 {
@@ -24,9 +25,8 @@ namespace scone
 		NeuralController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~NeuralController() {}
 
-		Neuron* FindInput( const PropNode& pn, Locality loc );
-		size_t GetLayerSize( Index layer ) const { return ( layer == 0 ) ? m_SensorNeurons.size() : m_InterNeurons[ layer - 1 ].size(); }
-		Neuron* GetNeuron( Index layer, Index idx ) { return ( layer == 0 ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer - 1 ][ idx ].get() ); }
+		size_t GetLayerSize( const string& layer ) const { return ( layer == "0" ) ? m_SensorNeurons.size() : m_InterNeurons[ layer ].size(); }
+		Neuron* GetNeuron( const string& layer, Index idx ) { return ( layer == "0" ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer ][ idx ].get() ); }
 
 		const Model& GetModel() const { return model_; }
 		Model& GetModel() { return model_; }
@@ -53,7 +53,7 @@ namespace scone
 
 		std::vector< PatternNeuronUP > m_PatternNeurons;
 		std::vector< SensorNeuronUP > m_SensorNeurons;
-		std::vector< std::vector< InterNeuronUP > > m_InterNeurons;
+		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 	};
 }

@@ -55,11 +55,11 @@ namespace scone
 	void InterNeuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
 		string input_type = pn.get< string >( "type", "*" );
-		Index input_layer = pn.get< Index >( "input_layer" );
+		string input_layer = pn.get< string >( "input_layer" );
 		connection_t connect = connection_dict( pn.get< string >( "connect", "universal" ) );
 		bool right_side = GetSide() == RightSide;
 
-		if ( input_layer == 0 )
+		if ( input_layer == "0" )
 		{
 			for ( Index idx = 0; idx < nc.GetSensorNeurons().size(); ++idx )
 			{
