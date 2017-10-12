@@ -12,7 +12,7 @@
 namespace scone
 {
 	flut::dictionary< InterNeuron::connection_t > connection_dict( {
-		{ InterNeuron::universal, "universal" },
+		{ InterNeuron::bilateral, "bilateral" },
 		{ InterNeuron::monosynaptic, "monosynaptic" },
 		{ InterNeuron::antagonistic, "antagonistic" },
 		{ InterNeuron::ipsilateral, "ipsilateral" },
@@ -57,7 +57,7 @@ namespace scone
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = pn.get< string >( "input_layer" );
 		size_t layer_size = nc.GetLayerSize( input_layer );
-		connection_t connect = connection_dict( pn.get< string >( "connect", "universal" ) );
+		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
 		bool right_side = GetSide() == RightSide;
 
 		if ( input_layer == "0" )
@@ -69,9 +69,9 @@ namespace scone
 				{
 					switch ( connect )
 					{
-					case scone::InterNeuron::universal:
+					case scone::InterNeuron::bilateral:
 					{
-						auto gain = par.get( sensor->GetName( right_side ), pn[ "gain" ] );
+						auto gain = par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 );
 						auto mean = par.try_get( sensor->GetName( right_side ) + ".m", pn, "mean", 0.0 );
 						AddInput( sensor, gain, mean );
 						break;
@@ -79,7 +79,7 @@ namespace scone
 					case scone::InterNeuron::monosynaptic:
 					{
 						if ( sensor->source_name_ == name_ )
-							AddInput( sensor, par.get( sensor->type_, pn[ "gain" ] ) );
+							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::antagonistic:
@@ -88,14 +88,14 @@ namespace scone
 						auto it1 = TryFindByName( muscles, name_ );
 						auto it2 = TryFindByName( muscles, sensor->source_name_ );
 						if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).IsAntagonist( **it2 ) )
-							AddInput( sensor, par.get( sensor->GetParName(), pn[ "gain" ] ) );
+							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
 						{
-							auto gain = par.get( sensor->GetParName(), pn[ "gain" ] );
+							auto gain = par.try_get( sensor->GetParName(), pn, "gain", 1.0 );
 							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
 							AddInput( sensor, gain, mean );
 						}
@@ -105,7 +105,7 @@ namespace scone
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
 						{
-							auto gain = par.get( sensor->GetParName(), pn[ "gain" ] );
+							auto gain = par.try_get( sensor->GetParName(), pn, "gain", 1.0 );
 							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
 							AddInput( sensor, gain, mean );
 						}
@@ -123,16 +123,16 @@ namespace scone
 				auto input = nc.GetNeuron( input_layer, idx );
 				switch ( connect )
 				{
-				case scone::InterNeuron::universal:
-					AddInput( input, par.get( input->GetName( right_side ), pn[ "gain" ] ) );
+				case scone::InterNeuron::bilateral:
+					AddInput( input, par.try_get( input->GetName( right_side ), pn, "gain", 1.0 ) );
 					break;
 				case scone::InterNeuron::ipsilateral:
 					if ( input->GetSide() == GetSide() || input->GetSide() == NoSide )
-						AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
+						AddInput( input, par.try_get( input->GetParName(), pn, "gain", 1.0 ) );
 					break;
 				case scone::InterNeuron::contralateral:
 					if ( input->GetSide() != GetSide() || input->GetSide() == NoSide )
-						AddInput( input, par.get( input->GetParName(), pn[ "gain" ] ) );
+						AddInput( input, par.try_get( input->GetParName(), pn, "gain", 1.0 ) );
 					break;
 				default:
 					break;
