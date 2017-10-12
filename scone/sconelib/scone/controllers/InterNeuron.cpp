@@ -1,5 +1,6 @@
 #include "InterNeuron.h"
 
+#include "scone/core/string_tools.h"
 #include "scone/model/Locality.h"
 #include "spot/par_tools.h"
 #include "NeuralController.h"
@@ -8,6 +9,7 @@
 #include "../model/Side.h"
 #include "flut/dictionary.hpp"
 #include "scone/model/Muscle.h"
+#include "flut/string_tools.hpp"
 
 namespace scone
 {
@@ -18,11 +20,12 @@ namespace scone
 		{ InterNeuron::ipsilateral, "ipsilateral" },
 		{ InterNeuron::contralateral, "contralateral" } } );
 
-	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& name, const string& act_func ) :
-	Neuron( pn, par, act_func ),
-	name_( name )
+	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& layer, Index idx, Side side, const string& act_func ) :
+	Neuron( pn, par, idx, side, act_func )
 	{
-		side_ = GetSideFromName( name );
+		name_ = GetSidedName( layer + stringf( "_%d", idx ), side );
+		if ( from_str< int >( layer ) > 0 ) name_ = "N" + name_; // backwards compatibility
+
 		INIT_PAR_NAMED( pn, par, offset_, "C0", 0 );
 		INIT_PAR( pn, par, width_, 0.0 );
 		use_distance_ = act_func == "gaussian"; // TODO: neater
@@ -56,13 +59,13 @@ namespace scone
 	{
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = pn.get< string >( "input_layer" );
-		size_t layer_size = nc.GetLayerSize( input_layer );
+		size_t input_layer_size = nc.GetLayerSize( input_layer );
 		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
 		bool right_side = GetSide() == RightSide;
 
 		if ( input_layer == "0" )
 		{
-			for ( Index idx = 0; idx < layer_size; ++idx )
+			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( flut::pattern_match( sensor->type_, input_type ) )
@@ -111,18 +114,22 @@ namespace scone
 						}
 						break;
 					}
-					default: SCONE_THROW( "Unknown connection type " + connect );
+					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 					}
 				}
 			}
 		}
 		else
 		{
-			for ( Index idx = 0; idx < layer_size; ++idx )
+			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto input = nc.GetNeuron( input_layer, idx );
 				switch ( connect )
 				{
+				case scone::InterNeuron::monosynaptic:
+					if ( input->index_ == index_ )
+						AddInput( input, par.try_get( input->GetParName(), pn, "gain", 1.0 ) );
+					break;
 				case scone::InterNeuron::bilateral:
 					AddInput( input, par.try_get( input->GetName( right_side ), pn, "gain", 1.0 ) );
 					break;
@@ -134,8 +141,7 @@ namespace scone
 					if ( input->GetSide() != GetSide() || input->GetSide() == NoSide )
 						AddInput( input, par.try_get( input->GetParName(), pn, "gain", 1.0 ) );
 					break;
-				default:
-					break;
+				default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 				}
 			}
 		}

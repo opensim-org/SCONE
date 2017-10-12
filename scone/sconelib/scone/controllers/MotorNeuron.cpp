@@ -8,10 +8,11 @@
 
 namespace scone
 {
-	MotorNeuron::MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& name, const string& act_func ) :
-	InterNeuron( pn, par, name, act_func ),
-	actuator_( FindByName( nc.GetModel().GetMuscles(), name ).get() )
+	MotorNeuron::MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& muscle, Index idx, Side side, const string& act_func ) :
+	InterNeuron( pn, par, GetNameNoSide( muscle ), idx, side, act_func ),
+	actuator_( FindByName( nc.GetModel().GetMuscles(), muscle ).get() )
 	{
+		name_ = muscle;
 	}
 
 	void MotorNeuron::UpdateActuator()

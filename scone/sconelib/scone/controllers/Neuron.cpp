@@ -6,9 +6,10 @@
 
 namespace scone
 {
-	Neuron::Neuron( const PropNode& pn, Params& par, const String& default_activation ) :
+	Neuron::Neuron( const PropNode& pn, Params& par, Index idx, Side s, const String& default_activation ) :
 	output_(),
-	side_( NoSide )
+	index_( idx ),
+	side_( s )
 	{
 		activation_function = GetActivationFunction( pn.get< string >( "activation", default_activation ) );
 	}

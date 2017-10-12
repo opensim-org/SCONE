@@ -52,7 +52,7 @@ namespace scone
 			sources = FindMatchingNames( GetModel().GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
 
 		for ( auto& name : sources )
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, "linear" ) );
+			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, m_SensorNeurons.size(), GetSideFromName( name ), "linear" ) );
 	}
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
@@ -73,13 +73,12 @@ namespace scone
 		auto& layer = m_InterNeurons[ layer_name ];
 		for ( int i = 0; i < amount; ++i )
 		{
-			for ( bool mirrored : { false, true } )
+			for ( auto side : { LeftSide, RightSide } )
 			{
-				auto name = layer_name + stringf( "_%d", i ) + ( mirrored ? "_r" : "_l" );
-				if ( from_str< int >( layer_name ) > 0 ) name = "N" + name; // backwards compatibility
-
-				ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, name, act_func ) );
+				//auto name = layer_name + stringf( "_%d", i ) + ( mirrored ? "_r" : "_l" );
+				//if ( from_str< int >( layer_name ) > 0 ) name = "N" + name; // backwards compatibility
+				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, layer_name, i, side, act_func ) );
+				ScopedParamSetPrefixer ps( par, layer.back()->GetParName() + "." );
 				for ( auto& child : pn.select( "InterNeuron" ) )
 				{
 					layer.back()->offset_ += par.try_get( "C0", child.second, "offset", 0.0 );
@@ -104,7 +103,7 @@ namespace scone
 			auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
 			if ( it == m_MotorNeurons.end() )
 			{
-				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name ) );
+				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
 				it = m_MotorNeurons.end() - 1;
 			}
 			auto& neuron = *it;

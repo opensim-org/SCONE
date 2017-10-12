@@ -7,7 +7,7 @@ namespace scone
 	class NeuralController;
 	struct InterNeuron : public Neuron
 	{
-		InterNeuron( const PropNode& pn, Params& par, const string& name, const string& act_func );
+		InterNeuron( const PropNode& pn, Params& par, const string& layer, Index idx, Side side, const string& act_func );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
 		virtual string GetParName() const override { return GetNameNoSide( name_ ); }

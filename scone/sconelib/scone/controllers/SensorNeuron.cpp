@@ -11,8 +11,8 @@
 
 namespace scone
 {
-	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, const String& act_func ) :
-	Neuron( pn, par, act_func ),
+	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, Index idx, Side side, const String& act_func ) :
+	Neuron( pn, par, idx, side, act_func ),
 	input_(),
 	sensor_gain_( 1.0 ),
 	type_( pn.get< string >( "type" ) )

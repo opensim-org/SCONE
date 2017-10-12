@@ -15,7 +15,7 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron( const PropNode& pn, Params& par, const String& default_activation );
+		Neuron( const PropNode& pn, Params& par, Index idx, Side s, const String& act_func );
 		virtual ~Neuron() {}
 		virtual size_t GetInputCount() { return 0; }
 		virtual activation_t GetOutput() const = 0;
@@ -25,6 +25,8 @@ namespace scone
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
 		Side side_;
+		Index index_;
+
 		double offset_;
 		mutable double output_;
 		activation_func_t activation_function;

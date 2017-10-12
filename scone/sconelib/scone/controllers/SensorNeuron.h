@@ -5,7 +5,7 @@ namespace scone
 {
 	struct SensorNeuron : public Neuron
 	{
-		SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, const String& act_func );
+		SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, Index idx, Side side, const String& act_func );
 		double GetOutput() const override;
 		virtual string GetName( bool mirrored ) const override;
 		virtual string GetParName() const override;
