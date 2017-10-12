@@ -8,6 +8,8 @@ namespace scone
 	{
 	public:
 		CmaOptimizer( const PropNode& props );
+		CmaOptimizer( const CmaOptimizer& ) = delete;
+		CmaOptimizer& operator=( const CmaOptimizer& ) = delete;
 		virtual ~CmaOptimizer();
 
 		virtual void Run() override { SCONE_THROW( "Please use a subclass of CmaOptimzer" ); }
@@ -32,9 +34,6 @@ namespace scone
 		long random_seed;
 
 	private: // non-copyable and non-assignable
-		CmaOptimizer( const CmaOptimizer& );
-		CmaOptimizer& operator=( const CmaOptimizer& );
-
 		virtual String GetClassSignature() const override;
 	};
 }
