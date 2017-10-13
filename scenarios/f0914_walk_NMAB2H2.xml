@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0914t_walk_NMAB2_IM_S15.par</init_file>
+	<init_file>initializations/f0914t_walk_NMAB2H2_IM_S15.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
