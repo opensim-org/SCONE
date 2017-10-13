@@ -72,7 +72,7 @@ namespace scone
 
 	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
-		auto layer_name = pn.get< string >( "layer" );
+		auto layer_name = FixLayerName( pn.get< string >( "layer" ) );
 		int amount = pn.get< int >( "neurons" );
 		string act_func = pn.get< string >( "activation", "rectifier" );
 
@@ -81,9 +81,9 @@ namespace scone
 		{
 			for ( auto side : { LeftSide, RightSide } )
 			{
+				ScopedParamSetPrefixer ps( par, layer_name + stringf( "_%d.", i ) );
 				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, layer_name, i, side, act_func ) );
-				ScopedParamSetPrefixer ps( par, layer.back()->GetParName() + "." );
-				for ( auto& child : pn.select( "InterNeuron" ) )
+				for ( auto& child : pn )
 					layer.back()->AddInputs( child.second, par, *this );
 			}
 		}
@@ -91,32 +91,17 @@ namespace scone
 
 	void NeuralController::AddMotorNeuronLayer( const PropNode& pn, Params& par )
 	{
-		string include = pn.get< string >( "include", "*" );
-		string exclude = pn.get< string >( "exclude", "" );
-
-		//auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), include, exclude );
-
 		for ( auto& muscle : GetModel().GetMuscles() )
 		{
-			ScopedParamSetPrefixer ps( par, GetNameNoSide( muscle->GetName() ) + "." );
-			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, muscle->GetName(), m_MotorNeurons.size(), GetSideFromName( muscle->GetName() ) ) );
-			auto& neuron = m_MotorNeurons.back();
-
-
-
-			//ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
-
-			// create the motor neuron
-			//auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
-			//if ( it == m_MotorNeurons.end() )
-			//{
-			//	m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
-			//	it = m_MotorNeurons.end() - 1;
-			//}
-
+			auto name = muscle->GetName();
+			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
 			for ( auto& child_pn : pn )
 			{
-				neuron->AddInputs( child_pn.second, par, *this );
+				auto include = child_pn.second.get< flut::pattern_matcher >( "include", "*" );
+				auto exclude = child_pn.second.get< flut::pattern_matcher >( "exclude", "" );
+				if ( include( name ) && !exclude( name ) )
+					m_MotorNeurons.back()->AddInputs( child_pn.second, par, *this );
 			}
 		}
 	}
@@ -142,24 +127,22 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		//std::ofstream str( ( file + ".neural_weights.txt" ).str() );
 		flut::table< double > data;
-
 		for ( auto& inter_layer : m_InterNeurons )
 		{
 			for ( auto& neuron : inter_layer.second )
 			{
 				for ( auto& input : neuron->inputs_ )
-					data( input.neuron->GetName( false ), neuron->name_ ) = input.weight;
+					data( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 			}
 		}
 
 		for ( auto& neuron : m_MotorNeurons )
 		{
 			for ( auto& input : neuron->inputs_ )
-				data( input.neuron->GetName( false ), neuron->name_ ) = input.weight;
+				data( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 		}
-		std::ofstream( ( file + ".neural_weights.txt" ).str() ) << data;
+		std::ofstream( ( file + ".txt" ).str() ) << data;
 	}
 
 	String NeuralController::GetClassSignature() const

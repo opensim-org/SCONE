@@ -10,6 +10,7 @@
 #include "PatternNeuron.h"
 #include "activation_functions.h"
 #include "flut/flat_map.hpp"
+#include "flut/string_tools.hpp"
 
 namespace scone
 {
@@ -39,6 +40,8 @@ namespace scone
 		PropNode delays_;
 		activation_func_t activation_function;
 		virtual void WriteResult( const path& file ) const override;
+
+		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
 
 	protected:
 		virtual String GetClassSignature() const override;

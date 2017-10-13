@@ -24,29 +24,30 @@ namespace scone
 	Neuron( pn, par, idx, side, act_func )
 	{
 		name_ = GetSidedName( layer + stringf( "_%d", idx ), side );
-		if ( from_str< int >( layer ) > 0 ) name_ = "N" + name_; // backwards compatibility
-		INIT_PAR( pn, par, width_, 0.0 );
 
+		INIT_PAR( pn, par, width_, 0.0 );
 		use_distance_ = act_func == "gaussian"; // TODO: neater
 	}
 
 	double InterNeuron::GetOutput() const
 	{
-		activation_t value = offset_;
 		if ( use_distance_ )
 		{
+			double dist = 0.0;
 			for ( auto& i : inputs_ )
-				value += i.weight * flut::math::squared( i.neuron->GetOutput() - i.mean );
-			value = sqrt( value );
-			return output_ = gaussian_width( value, width_ );
+				dist += flut::math::squared( i.neuron->GetOutput() - i.center );
+			dist = sqrt( dist );
+
+			return output_ = offset_ + gaussian_width( dist, width_ );
 		}
 		else
 		{
+			activation_t value = offset_;
 			for ( auto& i : inputs_ )
-				value += i.weight * i.neuron->GetOutput();
-		}
+				value += i.gain * i.neuron->GetOutput();
 
-		return output_ = activation_function( value );
+			return output_ = activation_function( value );
+		}
 	}
 
 	scone::string InterNeuron::GetName( bool mirrored ) const
@@ -61,7 +62,8 @@ namespace scone
 
 		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
-		string input_layer = pn.get< string >( "input_layer", "" );
+		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", "" ) );
+
 		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
 		bool right_side = GetSide() == RightSide;
 

@@ -12,18 +12,19 @@ namespace scone
 		virtual string GetName( bool mirrored ) const override;
 		virtual string GetParName() const override { return GetNameNoSide( name_ ); }
 
-		void AddInput( Neuron* input, double weight, double mean = 0.0 ) { inputs_.emplace_back( Input{ input, weight, mean } ); }
+		void AddInput( Neuron* input, double gain, double mean = 0.0  ) { inputs_.emplace_back( Input{ input, gain, mean } ); }
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
 		virtual size_t GetInputCount() override { return inputs_.size(); }
 
 		struct Input {
 			Neuron* neuron;
-			double weight;
-			double mean;
+			double gain;
+			double center;
 		};
 
 		double width_;
 		bool use_distance_;
+
 		std::vector< Input > inputs_;
 		string name_;
 
