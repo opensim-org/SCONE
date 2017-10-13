@@ -12,5 +12,6 @@ namespace scone
 	side_( s )
 	{
 		activation_function = GetActivationFunction( pn.get< string >( "activation", default_activation ) );
+		offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 	}
 }

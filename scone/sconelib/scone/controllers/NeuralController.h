@@ -46,10 +46,10 @@ namespace scone
 	private:
 		Model& model_;
 
-		void AddSensorNeurons( const PropNode& pn, Params& par );
+		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );
 		void AddInterNeuronLayer( const PropNode& pn, Params& par );
-		void AddMotorNeurons( const PropNode& pn, Params& par );
+		void AddMotorNeuronLayer( const PropNode& pn, Params& par );
 
 		std::vector< PatternNeuronUP > m_PatternNeurons;
 		std::vector< SensorNeuronUP > m_SensorNeurons;

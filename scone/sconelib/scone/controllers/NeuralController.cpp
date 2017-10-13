@@ -29,30 +29,36 @@ namespace scone
 
 		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
-		// create sensor neurons
-		for ( auto& n : pn.get_child( "SensorNeuronLayer" ) )
-			AddSensorNeurons( n.second, par );
+		// create sensor neuron layer
+		AddSensorNeuronLayer( pn.get_child( "SensorNeuronLayer" ), par );
 
-		// create inter neurons
+		// create inter neuron layers
 		for ( auto& n : pn.select( "InterNeuronLayer" ) )
 			AddInterNeuronLayer( n.second, par );
 
-		// create sensor neurons
-		for ( auto& n : pn.get_child( "MotorNeuronLayer" ) )
-			AddMotorNeurons( n.second, par );
+		// create motor neuron layer
+		AddMotorNeuronLayer( pn.get_child( "MotorNeuronLayer" ), par );
 	}
 
-	void NeuralController::AddSensorNeurons( const PropNode& pn, Params& par )
+	void NeuralController::AddSensorNeuronLayer( const PropNode& layer_pn, Params& par )
 	{
-		auto type = pn.get< string >( "type" );
-		std::vector< string > sources;
-		if ( type == "L" || type == "F" || type == "S" )
-			sources = FindMatchingNames( GetModel().GetMuscles(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
-		else if ( type == "DP" || type == "DV" )
-			sources = FindMatchingNames( GetModel().GetDofs(), pn.get< string >( "source" ), pn.get< string >( "exclude", "" ) );
+		for ( auto& child_kvp : layer_pn )
+		{
+			auto& child_pn = child_kvp.second;
 
-		for ( auto& name : sources )
-			m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( pn, par, *this, name, m_SensorNeurons.size(), GetSideFromName( name ), "linear" ) );
+			auto type = child_pn.get< string >( "type" );
+			auto source_mask = child_pn.get< string >( "source" );
+			auto exclude_mask = child_pn.get< string >( "exclude", "" );
+			std::vector< string > source_names;
+
+			if ( type == "L" || type == "F" || type == "S" )
+				source_names = FindMatchingNames( GetModel().GetMuscles(), source_mask, exclude_mask );
+			else if ( type == "DP" || type == "DV" )
+				source_names = FindMatchingNames( GetModel().GetDofs(), source_mask, exclude_mask );
+
+			for ( auto& name : source_names )
+				m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), GetSideFromName( name ), "linear" ) );
+		}
 	}
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
@@ -75,42 +81,43 @@ namespace scone
 		{
 			for ( auto side : { LeftSide, RightSide } )
 			{
-				//auto name = layer_name + stringf( "_%d", i ) + ( mirrored ? "_r" : "_l" );
-				//if ( from_str< int >( layer_name ) > 0 ) name = "N" + name; // backwards compatibility
 				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, layer_name, i, side, act_func ) );
 				ScopedParamSetPrefixer ps( par, layer.back()->GetParName() + "." );
 				for ( auto& child : pn.select( "InterNeuron" ) )
-				{
-					layer.back()->offset_ += par.try_get( "C0", child.second, "offset", 0.0 );
 					layer.back()->AddInputs( child.second, par, *this );
-				}
 			}
 		}
 	}
 
-	void NeuralController::AddMotorNeurons( const PropNode& pn, Params& par )
+	void NeuralController::AddMotorNeuronLayer( const PropNode& pn, Params& par )
 	{
-		string input_type = pn.get< string >( "type", "*" );
 		string include = pn.get< string >( "include", "*" );
 		string exclude = pn.get< string >( "exclude", "" );
 
-		auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), include, exclude );
-		for ( auto& name : muscle_names )
+		//auto muscle_names = FindMatchingNames( GetModel().GetMuscles(), include, exclude );
+
+		for ( auto& muscle : GetModel().GetMuscles() )
 		{
-			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
+			ScopedParamSetPrefixer ps( par, GetNameNoSide( muscle->GetName() ) + "." );
+			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, muscle->GetName(), m_MotorNeurons.size(), GetSideFromName( muscle->GetName() ) ) );
+			auto& neuron = m_MotorNeurons.back();
+
+
+
+			//ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 
 			// create the motor neuron
-			auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
-			if ( it == m_MotorNeurons.end() )
-			{
-				m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
-				it = m_MotorNeurons.end() - 1;
-			}
-			auto& neuron = *it;
+			//auto it = flut::find_if( m_MotorNeurons, [&]( MotorNeuronUP& m ) { return m->name_ == name; } );
+			//if ( it == m_MotorNeurons.end() )
+			//{
+			//	m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
+			//	it = m_MotorNeurons.end() - 1;
+			//}
 
-			( *it )->offset_ += par.try_get( "C0", pn, "offset", 0.0 );
-			if ( pn.has_key( "input_layer" ) )
-				(*it)->AddInputs( pn, par, *this );
+			for ( auto& child_pn : pn )
+			{
+				neuron->AddInputs( child_pn.second, par, *this );
+			}
 		}
 	}
 

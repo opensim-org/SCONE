@@ -25,9 +25,8 @@ namespace scone
 	{
 		name_ = GetSidedName( layer + stringf( "_%d", idx ), side );
 		if ( from_str< int >( layer ) > 0 ) name_ = "N" + name_; // backwards compatibility
-
-		INIT_PAR_NAMED( pn, par, offset_, "C0", 0 );
 		INIT_PAR( pn, par, width_, 0.0 );
+
 		use_distance_ = act_func == "gaussian"; // TODO: neater
 	}
 
@@ -57,14 +56,18 @@ namespace scone
 
 	void InterNeuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
+		// add additional input-specific offset (if present)
+		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
+
+		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
-		string input_layer = pn.get< string >( "input_layer" );
-		size_t input_layer_size = nc.GetLayerSize( input_layer );
+		string input_layer = pn.get< string >( "input_layer", "" );
 		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
 		bool right_side = GetSide() == RightSide;
 
 		if ( input_layer == "0" )
 		{
+			size_t input_layer_size = nc.GetLayerSize( input_layer );
 			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
@@ -119,8 +122,9 @@ namespace scone
 				}
 			}
 		}
-		else
+		else if ( !input_layer.empty() )
 		{
+			size_t input_layer_size = nc.GetLayerSize( input_layer );
 			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto input = nc.GetNeuron( input_layer, idx );
