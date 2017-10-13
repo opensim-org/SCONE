@@ -44,7 +44,11 @@ namespace scone
 		{
 			activation_t value = offset_;
 			for ( auto& i : inputs_ )
-				value += i.gain * i.neuron->GetOutput();
+			{
+				auto input = i.gain * i.neuron->GetOutput();
+				i.contribution += abs( input );
+				value += input;
+			}
 
 			return output_ = activation_function( value );
 		}

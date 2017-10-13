@@ -127,22 +127,28 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		flut::table< double > data;
+		flut::table< double > weights, contribs;
+
 		for ( auto& inter_layer : m_InterNeurons )
 		{
 			for ( auto& neuron : inter_layer.second )
 			{
 				for ( auto& input : neuron->inputs_ )
-					data( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
+					weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 			}
 		}
 
 		for ( auto& neuron : m_MotorNeurons )
 		{
+			auto tot = std::accumulate( neuron->inputs_.begin(), neuron->inputs_.end(), 0.0, [&]( double v1, const InterNeuron::Input& i ) { return v1 + i.contribution; } );
 			for ( auto& input : neuron->inputs_ )
-				data( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
+			{
+				weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
+				contribs( input.neuron->GetName( false ), neuron->name_ ) = input.contribution / tot;
+			}
 		}
-		std::ofstream( ( file + ".txt" ).str() ) << data;
+		std::ofstream( ( file + ".stats.weights.txt" ).str() ) << weights;
+		std::ofstream( ( file + ".stats.contrib.txt" ).str() ) << contribs;
 	}
 
 	String NeuralController::GetClassSignature() const
