@@ -54,8 +54,10 @@ scene( true )
 
 	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
-	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::toggle, Qt::Key_Space );
-	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8, true );
+	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
+	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_Space );
+	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
 	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
 	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ), true );
 	addMenuAction( actionMenu, "Step &Back", ui.playControl, &QPlayControl::stepBack, QKeySequence( "Ctrl+Left" ) );
