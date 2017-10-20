@@ -9,7 +9,7 @@
 	<Objective type="SimulationObjective">
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
-			<model_file>research/f0918t_k5s2_c2e7d05.osim</model_file>
+			<model_file>research/f0918t_k5s2_c5e7d10.osim</model_file>
 			<state_init_file>f2354_init_run_S30.sto</state_init_file>
 			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_u" init_std="0.01" min="-0.5" max="0.5"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
@@ -19,7 +19,7 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation="rectifier">
-					<signature_prefix>NMAB_c2e7d05</signature_prefix>
+					<signature_prefix>NMAB</signature_prefix>
 
 					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
