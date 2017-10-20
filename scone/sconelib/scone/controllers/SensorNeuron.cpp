@@ -22,7 +22,7 @@ namespace scone
 		side_ = GetSideFromName( name );
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
-		delay_ = pn.get< double >( "delay", nc.delays_.get< double >( GetNameNoSide( name ) ) );
+		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );
 		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		sensor_gain_ = inverted ? -1 : 1;
 

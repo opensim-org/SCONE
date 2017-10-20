@@ -27,6 +27,7 @@ namespace scone
 		if ( pn.has_key( "delay_file" ) )
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
+		INIT_PROP( pn, delay_factor_, 1.0 );
 		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
 		// create sensor neuron layer
@@ -163,4 +164,10 @@ namespace scone
 
 		return flut::stringf( "N%d", c );
 	}
+
+	TimeInSeconds NeuralController::GetDelay( const string& name )
+	{
+		return delay_factor_ * delays_.get< double >( name );
+	}
+
 }

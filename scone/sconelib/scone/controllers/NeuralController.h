@@ -37,17 +37,19 @@ namespace scone
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
-		PropNode delays_;
-		activation_func_t activation_function;
 		virtual void WriteResult( const path& file ) const override;
 
 		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
+		TimeInSeconds GetDelay( const string& name );
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
 		Model& model_;
+		PropNode delays_;
+		TimeInSeconds delay_factor_;
+		activation_func_t activation_function;
 
 		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );
