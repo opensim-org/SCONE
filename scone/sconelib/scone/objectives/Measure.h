@@ -26,6 +26,7 @@ namespace scone
 
 	protected:
 		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) = 0;
+		virtual bool IsActive( const Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
 
 		TimeInSeconds start_time;
 		PropNode report;

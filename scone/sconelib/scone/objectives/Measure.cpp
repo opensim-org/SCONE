@@ -13,8 +13,8 @@ namespace scone
 
 	scone::Controller::UpdateResult Measure::UpdateAnalysis( const Model& model, double timestamp )
 	{
-		if ( timestamp < start_time )
-			return Controller::NoUpdate;
-		else return UpdateMeasure( model, timestamp );
+		if ( IsActive( model, timestamp ) )
+			return UpdateMeasure( model, timestamp );
+		else return Controller::NoUpdate;
 	}
 }
