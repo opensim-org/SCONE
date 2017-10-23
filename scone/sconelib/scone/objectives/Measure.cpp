@@ -10,4 +10,11 @@ namespace scone
 		INIT_PROPERTY( props, threshold, 0.0 );
 		INIT_PROPERTY( props, offset, 0.0 );
 	}
+
+	scone::Controller::UpdateResult Measure::UpdateAnalysis( const Model& model, double timestamp )
+	{
+		if ( timestamp < start_time )
+			return Controller::NoUpdate;
+		else return UpdateMeasure( model, timestamp );
+	}
 }

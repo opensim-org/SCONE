@@ -70,12 +70,9 @@ namespace scone
 
 	CompositeMeasure::~CompositeMeasure() { }
 
-	Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		bool terminate = false;
 

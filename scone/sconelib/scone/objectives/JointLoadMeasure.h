@@ -16,7 +16,7 @@ namespace scone
 		enum Method { NoMethod, JointReactionForce };
 
 		virtual double GetResult( Model& model ) override;
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

@@ -17,7 +17,7 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult JointLoadMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	scone::Controller::UpdateResult JointLoadMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		joint_load = joint.GetLoad();
 		load_penalty.AddSample( timestamp, joint_load );

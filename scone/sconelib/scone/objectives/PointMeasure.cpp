@@ -40,7 +40,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult PointMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult PointMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

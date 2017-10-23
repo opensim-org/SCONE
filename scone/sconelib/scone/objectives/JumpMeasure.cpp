@@ -44,11 +44,8 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult JumpMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult JumpMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
-
 		Vec3 com_pos = model.GetComPos();
 		Vec3 com_vel = model.GetComVel();
 		double grf = model.GetTotalContactForce();

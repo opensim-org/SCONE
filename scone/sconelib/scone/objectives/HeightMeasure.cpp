@@ -32,7 +32,7 @@ namespace scone
 		m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetComPos()[ 1 ] : model.GetComPos()[ 1 ];
 	}
 
-	Controller::UpdateResult HeightMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult HeightMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

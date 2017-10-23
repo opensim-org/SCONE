@@ -16,7 +16,7 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult ReactionForceMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	scone::Controller::UpdateResult ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		Real leg_load = 0.0f;
 		for ( auto& leg : model.GetLegs() )

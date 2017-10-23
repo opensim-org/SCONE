@@ -44,14 +44,12 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult GaitMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// make sure this is a new step
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		// check termination
 		bool terminate = false;

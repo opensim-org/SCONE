@@ -12,7 +12,7 @@ namespace scone
 		GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~GaitMeasure();
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		void UpdateVelocityMeasure( const Model &model, double timestamp );
 
 		virtual double GetResult( Model& model ) override;

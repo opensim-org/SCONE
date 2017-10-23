@@ -15,7 +15,7 @@ namespace scone
 		virtual ~JumpMeasure();
 
 		virtual double GetResult( Model& model ) override;
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
 	private:

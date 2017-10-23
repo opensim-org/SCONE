@@ -12,7 +12,7 @@ namespace scone
 		virtual ~ReactionForceMeasure() {}
 
 		virtual double GetResult( Model& model ) override;
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 
 	protected:
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;

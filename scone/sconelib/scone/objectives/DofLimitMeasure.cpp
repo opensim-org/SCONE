@@ -37,12 +37,9 @@ namespace scone
 		INIT_PROPERTY( props, abs_force_penalty, 0 );
 	}
 
-	Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult DofLimitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		for ( Limit& l : m_Limits )
 		{

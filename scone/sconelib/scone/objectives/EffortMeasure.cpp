@@ -46,14 +46,12 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult EffortMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// make sure this is a new step and the measure is active
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		double current_effort = GetEnergy( model );
 		m_Energy.AddSample( timestamp, current_effort );
