@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Measure type="CompositeMeasure">
+	<signature_postfix>KL</signature_postfix>
+	<Measures>
+		<Measure type="GaitMeasure" name="Gait" weight="100" threshold="0.05" termination_height="0.85" min_velocity="1.0"/>
+		<Measure type="EffortMeasure" name="Effort" weight="0.1" measure_type="Wang2012" use_cost_of_transport="1"/>
+		<Measure type="CompositeMeasure" name="DofLimits" weight="1" threshold="0">
+			<Measures>
+				<Measure type="DofLimitMeasure" name="AnkleL" weight="0.1" dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="AnkleR" weight="0.1" dof="ankle_angle_r" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeL" weight="0.1" threshold="5" dof="knee_angle_l" abs_force_penalty="1"/>
+				<Measure type="DofLimitMeasure" name="KneeR" weight="0.1" threshold="5" dof="knee_angle_r" abs_force_penalty="1"/>
+			</Measures>
+		</Measure>
+		<Measure type="ReactionForceMeasure" name="GRF" weight="10" max="2" squared_range_penalty="1"/>
+	</Measures>
+</Measure>
