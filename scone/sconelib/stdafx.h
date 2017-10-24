@@ -11,7 +11,6 @@
 
 // boost
 #include <boost/filesystem.hpp>
-#include <boost/format.hpp>
 
 // FLUT
 #include <flut/math/vec3.hpp>

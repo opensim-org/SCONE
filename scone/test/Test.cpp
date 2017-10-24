@@ -15,7 +15,6 @@
 #include "scone/core/Log.h"
 
 #include <boost/filesystem.hpp>
-#include <boost/format.hpp>
 
 #include "scone/optimization/opt_tools.h"
 #include "scone/objectives/SimulationObjective.h"
@@ -178,9 +177,9 @@ namespace scone
 				if ( GetSideFromName( mus->GetName() ) == RightSide )
 				{
 					Muscle& lmus = *FindByName( m->GetMuscles(), GetMirroredName( mus->GetName() ) );
-					cout << boost::format( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f" )
-						% mus->GetName() % mus->GetLength() % lmus.GetName() % lmus.GetLength()
-						% std::abs( mus->GetLength() - lmus.GetLength() ) << endl;
+					cout << stringf( "%l20s: %.3f\t%l20s: %.3f\tdelta=%.3f",
+						mus->GetName().c_str(), mus->GetLength(), lmus.GetName(), lmus.GetLength(),
+						std::abs( mus->GetLength() - lmus.GetLength() ) );
 				}
 			}
 		}
