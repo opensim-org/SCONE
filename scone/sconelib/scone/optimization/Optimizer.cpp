@@ -2,7 +2,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/format.hpp>
-#include <boost/thread.hpp>
 
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"

@@ -4,8 +4,6 @@
 
 #include <fstream>
 
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/lock_guard.hpp>
 #include <boost/filesystem.hpp>
 
 #include "flut/system_tools.hpp"
@@ -19,10 +17,11 @@
 #include "string"
 #include "flut/system/types.hpp"
 #include "flut/filesystem.hpp"
+#include <mutex>
 
 namespace scone
 {
-	boost::mutex g_SystemMutex;
+	std::mutex g_SystemMutex;
 	PropNode g_GlobalSettings;
 	String g_Version;
 	path g_RootFolder;
@@ -42,7 +41,7 @@ namespace scone
 
 	const PropNode& GetSconeSettings()
 	{
-		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		std::lock_guard< std::mutex > lock( g_SystemMutex );
 		// lazy initialization
 		if ( g_GlobalSettings.empty() )
 		{
@@ -68,7 +67,7 @@ namespace scone
 
 	void SaveSconeSettings( const PropNode& newSettings )
 	{
-		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		std::lock_guard< std::mutex > lock( g_SystemMutex );
 		auto settings_file = GetSettingsFolder() / "settings.ini";
 
 		g_GlobalSettings = newSettings;

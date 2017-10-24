@@ -15,7 +15,6 @@
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
-#include <boost/thread.hpp>
 #include <boost/filesystem.hpp>
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
@@ -27,6 +26,7 @@
 #include <thread>
 #include "flut/pattern_matcher.hpp"
 #include "flut/container_tools.hpp"
+#include <mutex>
 
 using std::cout;
 using std::endl;
@@ -44,7 +44,7 @@ namespace scone
 	};
 
 
-	boost::mutex g_SimBodyMutex;
+	std::mutex g_SimBodyMutex;
 	ResourceCache< OpenSim::Model > g_ModelCache;
 	ResourceCache< OpenSim::Storage > g_StorageCache;
 

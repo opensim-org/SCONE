@@ -57,7 +57,7 @@ namespace scone
 	}
 
 	// TODO: Could use regex to remove platform dependencies
-	// Currently assumes one delimeter char. Can extend with boost if needed
+	// Currently assumes one delimiter char. Can extend with boost if needed
 	bool SCONE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
 	{
 #ifdef WIN32

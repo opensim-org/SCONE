@@ -1,7 +1,5 @@
 #include "Log.h"
 
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/lock_guard.hpp>
 #include <stdarg.h>
 #include "flut/system/log_sink.hpp"
 
@@ -26,7 +24,6 @@ namespace scone
 		// TODO: replace g_LogLevel with atomic variable
 		// Even though simple read / write operations are atomic on WIN32
 		// (see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684122(v=vs.85).aspx)
-		boost::mutex g_LogMutex;
 		const int g_MaxLogMessageSize = 1000;
 
 		std::ostream& LogStream() { return std::cout; }
