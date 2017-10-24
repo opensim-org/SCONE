@@ -15,7 +15,6 @@
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
-#include <boost/filesystem.hpp>
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/ResourceCache.h"

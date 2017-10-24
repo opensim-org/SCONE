@@ -1,7 +1,5 @@
 #include "Optimizer.h"
 
-#include <boost/filesystem.hpp>
-
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
@@ -11,13 +9,12 @@
 
 #include "scone/optimization/Objective.h"
 
-namespace bfs = boost::filesystem;
-
 #if defined(_MSC_VER)
 #	define NOMINMAX
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
 #endif
+#include "flut/filesystem.hpp"
 
 namespace scone
 {
@@ -56,10 +53,10 @@ namespace scone
 		auto output_base = output_root / GetSignature();
 		m_OutputFolder = output_base;
 
-		for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder.str() ) ); ++i )
+		for ( int i = 1; flut::exists( flut::path( m_OutputFolder.str() ) ); ++i )
 			m_OutputFolder = output_base + stringf( " (%d)", i );
 
-		create_directories( bfs::path( m_OutputFolder.str() ) );
+		flut::create_directories( flut::path( m_OutputFolder.str() ) );
 		m_OutputFolder;
 	}
 
@@ -100,11 +97,11 @@ namespace scone
 			if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
 			{
 				// delete the file(s)
-				boost::system::error_code ec;
+				bool ok = true;
 				for ( auto& file : testIt->second )
-					bfs::remove( bfs::path( file.str() ), ec );
+					ok &= flut::remove( file );
 
-				if ( !ec )
+				if ( ok )
 					m_OutputFiles.erase( testIt );
 			}
 		}

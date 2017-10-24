@@ -1,15 +1,14 @@
 #include "cs_tools.h"
 
-#include <boost/filesystem.hpp>
 #include <flut/timer.hpp>
 #include "flut/prop_node_tools.hpp"
 #include "PerturbationController.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
+#include "flut/system/path.hpp"
 
 using flut::timer;
-namespace bfs = boost::filesystem;
 
 namespace scone
 {
@@ -41,7 +40,7 @@ namespace scone
 
 		// write results
 		if ( write_results )
-			mob->WriteResults( bfs::path( par_file.str() ).replace_extension().string() );
+			mob->WriteResults( flut::path( par_file ).replace_extension().str() );
 
 		return statistics;
 	}

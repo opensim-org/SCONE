@@ -1,7 +1,5 @@
 #include "common.h"
 
-#include <boost/filesystem.hpp>
-
 #include "scone/optimization/opt_tools.h"
 #include "scone/optimization/Objective.h"
 
@@ -9,7 +7,6 @@
 #include "scone/core/math.h"
 #include "flut/system/path.hpp"
 
-using namespace boost::filesystem;
 using namespace scone;
 
 class TestObjective : public scone::Objective

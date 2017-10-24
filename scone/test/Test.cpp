@@ -14,8 +14,6 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
 
-#include <boost/filesystem.hpp>
-
 #include "scone/optimization/opt_tools.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/model/sim_tools.h"
@@ -24,7 +22,6 @@
 #include "scone/model/Side.h"
 #include "scone/model/simbody/Model_Simbody.h"
 
-namespace bfs = boost::filesystem;
 using std::cout;
 using std::endl;
 

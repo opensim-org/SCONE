@@ -9,9 +9,6 @@
 // OpenSim
 #include <OpenSim/OpenSim.h>
 
-// boost
-#include <boost/filesystem.hpp>
-
 // FLUT
 #include <flut/math/vec3.hpp>
 #include <flut/math/quat.hpp>

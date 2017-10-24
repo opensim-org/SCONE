@@ -9,11 +9,8 @@
 #include "scone/controllers/cs_tools.h"
 #include "scone/model/Muscle.h"
 
-#include <boost/filesystem.hpp>
 #include "flut/timer.hpp"
-
-
-namespace bfs = boost::filesystem;
+#include "flut/filesystem.hpp"
 
 namespace scone
 {
@@ -35,8 +32,8 @@ namespace scone
 		filename = file;
 
 		// see if we can load a matching .sto file
-		auto sto_file = bfs::path( file.str() ).replace_extension( "sto" );
-		if ( !force_evaluation && bfs::exists( sto_file ) && filename.extension() == "par" )
+		auto sto_file = flut::path( file.str() ).replace_extension( "sto" );
+		if ( !force_evaluation && flut::exists( sto_file ) && filename.extension() == "par" )
 		{
 			flut::timer t;
 			log::info( "Reading ", sto_file.string() );

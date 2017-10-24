@@ -3,7 +3,6 @@
 #include "scone/controllers/cs_tools.h"
 #include "scone/model/simbody/sim_simbody.h"
 #include "flut/system_tools.hpp"
-#include <boost/filesystem.hpp>
 #include <tclap/CmdLine.h>
 #include <thread>
 #include "flut/system/log_sink.hpp"

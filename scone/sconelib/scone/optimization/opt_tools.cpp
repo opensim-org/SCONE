@@ -6,13 +6,11 @@
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 
-#include <boost/filesystem.hpp>
-
-namespace bfs = boost::filesystem;
 using namespace std;
 
 #include "flut/timer.hpp"
 #include "flut/prop_node_tools.hpp"
+#include "flut/filesystem.hpp"
 
 using flut::timer;
 
@@ -25,18 +23,18 @@ namespace scone
 		LogUntouched( props );
 
 		// set current path to config file path
-		bfs::path config_path( scenario_file.str() );
+		flut::path config_path( scenario_file.str() );
 		if ( config_path.has_parent_path() )
-			current_path( config_path.parent_path() );
+			flut::current_path( config_path.parent_path() );
 
 		// copy original and write resolved config files
-		bfs::path outdir( o->AcquireOutputFolder().str() );
-		bfs::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), bfs::copy_option::overwrite_if_exists );
+		flut::path outdir( o->AcquireOutputFolder().str() );
+		flut::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), true );
 		flut::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
 		// copy model to output folder
-		bfs::path modelfile = props.get_delimited< string >( "Optimizer.Objective.Model.model_file" );
-		bfs::copy_file( bfs::path( GetFolder( SCONE_MODEL_FOLDER ).str() ) / modelfile, outdir / modelfile.filename(), bfs::copy_option::overwrite_if_exists );
+		flut::path modelfile = props.get_delimited< path >( "Optimizer.Objective.Model.model_file" );
+		flut::copy_file( GetFolder( SCONE_MODEL_FOLDER ) / modelfile, outdir / modelfile.filename(), true );
 
 		// return created optimizer
 		return std::move( o );
@@ -46,7 +44,7 @@ namespace scone
 	{
 		cout << "--- Starting evaluation ---" << endl;
 
-		bfs::path config_path = bfs::path( filename.str() ).parent_path() / "config.xml";
+		flut::path config_path = flut::path( filename.str() ).parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 
