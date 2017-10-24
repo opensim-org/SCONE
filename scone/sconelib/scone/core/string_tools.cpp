@@ -10,9 +10,9 @@
 #include <fnmatch.h>
 #endif
 
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <sstream>
 #include <cstdarg>
+#include <chrono>
 
 using std::cout;
 using std::endl;
@@ -34,26 +34,19 @@ namespace scone
 
 	std::string GetDateTimeAsString()
 	{
-		auto now = boost::posix_time::second_clock::local_time();
-		auto month = static_cast<int>( now.date().month() );
-		auto day = static_cast<int>( now.date().day() );
-		auto hours = static_cast<int>( now.time_of_day().hours() );
-		auto mins = static_cast<int>( now.time_of_day().minutes() );
-
-		return stringf( "%02d%02d.%02d%02d", month, day, hours, mins );
+		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+		auto tm = std::localtime( &today );
+		return stringf( "%02d%02d.%02d%02d", tm->tm_mon, tm->tm_mday, tm->tm_hour, tm->tm_min );
 	}
 
 	std::string GetDateTimeExactAsString()
 	{
-		auto now = boost::posix_time::microsec_clock::local_time();
-		auto month = static_cast<int>( now.date().month() );
-		auto day = static_cast<int>( now.date().day() );
-		auto hours = static_cast<int>( now.time_of_day().hours() );
-		auto mins = static_cast<int>( now.time_of_day().minutes() );
-		auto secs = static_cast<int>( now.time_of_day().seconds() );
-        auto frac_secs = static_cast<int>( now.time_of_day().fractional_seconds() );
-
-		return stringf( "%02d%02d.%02d%02d%02d.%06d", month, day, hours, mins, secs, frac_secs );
+		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
+		auto tm = std::localtime( &today );
+		auto p = std::chrono::high_resolution_clock::now();
+		auto nsec = std::chrono::duration_cast<std::chrono::nanoseconds>( p.time_since_epoch() );
+		auto frac_secs = nsec.count() % 1000000;
+		return stringf( "%02d%02d.%02d%02d%02d.%06d", tm->tm_mon, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, frac_secs );
 	}
 
 	// TODO: Could use regex to remove platform dependencies
