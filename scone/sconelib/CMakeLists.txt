@@ -50,6 +50,10 @@ set(CORE_STORAGE_FILES
 	scone/core/propnode_tools.cpp
 	scone/core/PropNode.h
 	scone/core/StringMap.h
+)
+set(CORE_TOOL_FILES
+	scone/core/Event.cpp
+	scone/core/Event.h
 	scone/core/string_tools.cpp
 	scone/core/string_tools.h
 )
@@ -245,6 +249,7 @@ set (SCONELIB_FILES
 	${CORE_PROPNODE_FILES}
 	${CORE_SYSTEM_FILES}
 	${CORE_STORAGE_FILES}
+	${CORE_TOOL_FILES}
 	
 	${CS_CONTROLLERS_FILES}
 	${CS_CONTROLLERS_MRC_FILES}
@@ -286,6 +291,7 @@ target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_E
 source_group("core\\base" FILES ${CORE_BASE_FILES})
 source_group("core\\math" FILES ${CORE_MATH_FILES})
 source_group("core\\system" FILES ${CORE_SYSTEM_FILES})
+source_group("core\\tools" FILES ${CORE_TOOL_FILES})
 source_group("core\\properties" FILES ${CORE_PROPNODE_FILES})
 source_group("core\\storage" FILES ${CORE_STORAGE_FILES})
 
