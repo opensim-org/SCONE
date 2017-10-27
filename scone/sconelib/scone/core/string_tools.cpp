@@ -19,19 +19,6 @@ using std::endl;
 
 namespace scone
 {
-	std::string GetStringF( const char* format, ... )
-	{
-		va_list args;
-		va_start( args, format );
-
-		char buf[8192];
-		vsnprintf( buf, sizeof( buf ), format, args );
-
-		va_end( args );
-
-		return std::string( buf );
-	}
-
 	std::string GetDateTimeAsString()
 	{
 		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );

@@ -92,7 +92,7 @@ namespace scone
 		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 		INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
-		INIT_PROPERTY( props, create_body_forces, false );
+		INIT_PROPERTY( props, create_body_forces, true );
 
 		// create new OpenSim Model using resource cache
 		{
@@ -103,7 +103,7 @@ namespace scone
 		// create torque and point actuators
 		if ( create_body_forces )
 		{
-			SCONE_PROFILE_SCOPE( "SetupActuators" );
+			SCONE_PROFILE_SCOPE( "SetupBodyForces" );
 			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
 				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );

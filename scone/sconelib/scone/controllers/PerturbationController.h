@@ -27,6 +27,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
+		Vec3 position_offset;
 		Vec3 current_force;
 		Body& force_body;
 	};

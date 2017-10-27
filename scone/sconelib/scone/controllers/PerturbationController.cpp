@@ -5,15 +5,17 @@
 namespace scone
 {
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
-		Controller( props, par, model, target_area ),
-		force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
-		current_force( 0 )
+	Controller( props, par, model, target_area ),
+	force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
+	current_force( 0 )
 	{
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, force, 100.0 );
 		INIT_PROP( props, interval, 1.0 );
 		INIT_PROP( props, duration, 0.1 );
 		INIT_PROP( props, start_time, 0.0 );
+		INIT_PROP( props, position_offset, Vec3( 0, 0, 0 ) );
+		position_offset = props.get< Vec3 >( "position_offset" );
 	}
 
 	Controller::UpdateResult PerturbationController::UpdateControls( Model& model, double timestamp )
@@ -25,7 +27,7 @@ namespace scone
 		}
 		else current_force.clear();
 
-		force_body.SetExternalForce( current_force );
+		force_body.SetExternalForceAtPoint( current_force, position_offset );
 
 		return Controller::SuccessfulUpdate;
 	}
