@@ -7,7 +7,7 @@
 	<use_init_file_std>0</use_init_file_std>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<max_duration>60</max_duration>
+		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>research/f0918t_k5s2_c2e6d10r4.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S15.sto</state_init_file>
@@ -41,9 +41,9 @@
 						<MotorNeuron input_layer="0" connect="antagonistic" type="L" gain="0~0.1"/>
 						<MotorNeuron input_layer="VES" connect="ipsilateral" gain="0~0.1"/>
 					</MotorNeuronLayer>
-
 				</Controller>
 				<INCLUDE file="measures/M_gait_S10.xml"/>
+				<Controller type="PerturbationController" duration="0.1" interval="1" force="150" body="pelvis" start_time="2" position_offset="-0.15 0.35 0"/>
 			</Controllers>
 		</Model>
 	</Objective>
