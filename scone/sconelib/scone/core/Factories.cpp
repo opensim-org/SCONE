@@ -29,6 +29,7 @@
 #include "scone/controllers/MirrorController.h"
 #include "scone/controllers/NeuralController.h"
 #include "../objectives/ImitationObjective.h"
+#include "../objectives/BalanceMeasure.h"
 
 namespace scone
 {
@@ -62,6 +63,7 @@ namespace scone
 			g_ControllerFactory.register_class< JointLoadMeasure >();
 			g_ControllerFactory.register_class< ReactionForceMeasure >();
 			g_ControllerFactory.register_class< PointMeasure >();
+			g_ControllerFactory.register_class< BalanceMeasure >();
 		}
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}

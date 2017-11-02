@@ -27,8 +27,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		Statistic< double > m_Energy;
-
 		// settings
 		std::vector< Body* > m_GaitBodies;
 		Real GetGaitDist( const Model &model );

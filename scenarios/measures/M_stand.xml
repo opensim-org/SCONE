@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Measure type="CompositeMeasure">
+	<signature_postfix></signature_postfix>
+	<Measures>
+		<Measure type="BalanceMeasure" name="Balance" weight="100" termination_height="0.75" />
+		<Measure type="EffortMeasure" name="Effort" weight="0.1" measure_type="Wang2012"/>
+	</Measures>
+</Measure>
