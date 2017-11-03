@@ -6,15 +6,15 @@
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"
 #include "scone/core/math.h"
-
 #include "scone/optimization/Objective.h"
+
+#include "flut/filesystem.hpp"
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
 #endif
-#include "flut/filesystem.hpp"
 
 namespace scone
 {
