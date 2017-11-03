@@ -3,7 +3,7 @@
 	<signature_postfix></signature_postfix>
 	<Measures>
 		<Measure type="BalanceMeasure" name="Balance" weight="100" termination_height="0.75" />
-		<Measure type="EffortMeasure" name="Effort" weight="0.1" measure_type="Wang2012"/>
+		<Measure type="EffortMeasure" name="Effort" weight="0.01" measure_type="Wang2012"/>
 		<Measure type="CompositeMeasure" name="DofLimits" weight="1" threshold="0">
 			<Measures>
 				<Measure type="DofLimitMeasure" name="AnkleL" weight="0.1" dof="ankle_angle_l" min_deg="-60" max_deg="60" squared_range_penalty="1"/>
