@@ -123,6 +123,8 @@ set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/TimeStateController.h
 	)
 set(OBJECTIVES_FILES
+	scone/objectives/BalanceMeasure.cpp
+	scone/objectives/BalanceMeasure.h
 	scone/objectives/CompositeMeasure.cpp
 	scone/objectives/CompositeMeasure.h
 	scone/objectives/DofLimitMeasure.cpp

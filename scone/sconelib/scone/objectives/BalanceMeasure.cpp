@@ -26,7 +26,7 @@ namespace scone
 
 	double BalanceMeasure::GetResult( Model& model )
 	{
-		return model.GetSimulationEndTime() - model.GetTime();
+		return std::max( 0.0, ( model.GetSimulationEndTime() - model.GetTime() ) / model.GetSimulationEndTime() );
 	}
 
 	String BalanceMeasure::GetClassSignature() const

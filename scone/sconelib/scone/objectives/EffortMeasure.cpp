@@ -64,16 +64,20 @@ namespace scone
 		double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
-		GetReport().set( "cost_of_transport", cot );
-		//GetReport().set( "average", m_Energy.GetAverage() );
 		GetReport().set( "total", m_Energy.GetTotal() );
-		GetReport().set( "distance", distance );
-		GetReport().set( "speed", distance / model.GetTime() );
-		//GetReport().set( "probe_total", model.GetTotalEnergyConsumption() );
 
 		if ( use_cost_of_transport )
+		{
+			GetReport().set( "cost_of_transport", cot );
+			GetReport().set( "distance", distance );
+			GetReport().set( "speed", distance / model.GetTime() );
 			return cot;
-		else return m_Energy.GetAverage();
+		}
+		else
+		{
+			GetReport().set( "average", m_Energy.GetAverage() );
+			return m_Energy.GetAverage();
+		}
 	}
 
 	double EffortMeasure::GetEnergy( const Model& model ) const
