@@ -43,7 +43,10 @@
 					</MotorNeuronLayer>
 
 				</Controller>
+
 				<INCLUDE file="measures/M_stand.xml"/>
+				<Controller type="PerturbationController" duration="0.1" interval_min="1" interval_max="3" force="200" body="pelvis" start_time="2" position_offset="-0.15 0.35 0"/>
+
 			</Controllers>
 		</Model>
 	</Objective>

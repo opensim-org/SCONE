@@ -5,6 +5,7 @@
 #include "scone/core/PropNode.h"
 #include "scone/optimization/Params.h"
 #include "scone/core/Vec3.h"
+#include <random>
 
 namespace scone
 {
@@ -17,6 +18,8 @@ namespace scone
 		String name;
 		double force;
 		TimeInSeconds interval;
+		TimeInSeconds interval_min;
+		TimeInSeconds interval_max;
 		TimeInSeconds duration;
 		TimeInSeconds start_time;
 
@@ -27,8 +30,11 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
+		std::vector< std::pair< TimeInSeconds, double > > perturbation_times;
+
 		Vec3 position_offset;
 		Vec3 current_force;
+		TimeInSeconds next_perturbation;
 		Body& force_body;
 	};
 }
