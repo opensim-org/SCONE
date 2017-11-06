@@ -228,6 +228,7 @@ namespace scone
 			m_pOsimManager->setWriteToStorage( false );
 			m_pOsimManager->setPerformAnalyses( false );
 			m_pOsimManager->setInitialTime( 0.0 );
+			m_pOsimManager->setFinalTime( 0.0 );
 
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 		}
