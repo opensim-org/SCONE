@@ -17,6 +17,7 @@ namespace scone
 
 		String name;
 		double force;
+		double moment;
 		TimeInSeconds interval;
 		TimeInSeconds interval_min;
 		TimeInSeconds interval_max;
@@ -35,6 +36,7 @@ namespace scone
 
 		Vec3 position_offset;
 		Vec3 current_force;
+		Vec3 current_moment;
 		TimeInSeconds next_perturbation;
 		Body& force_body;
 	};

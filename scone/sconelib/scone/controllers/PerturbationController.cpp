@@ -12,13 +12,14 @@ namespace scone
 	{
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, force, 100.0 );
+		INIT_PROP( props, moment, 0.0 );
+		INIT_PROP( props, position_offset, Vec3( 0, 0, 0 ) );
 		INIT_PROP( props, interval, 2.0 );
 		INIT_PROP( props, interval_min, interval );
 		INIT_PROP( props, interval_max, interval );
 		INIT_PROP( props, duration, 0.1 );
 		INIT_PROP( props, start_time, 0.0 );
 		INIT_PROP( props, end_time, 600.0 );
-		INIT_PROP( props, position_offset, Vec3( 0, 0, 0 ) );
 		position_offset = props.get< Vec3 >( "position_offset" );
 
 		std::default_random_engine rng_engine;
