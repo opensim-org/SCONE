@@ -23,11 +23,10 @@ namespace scone
 
 	Real Muscle::GetNormalizedSpindleRate() const
 	{
-		// derived from [Prochazka1999], normalized to unit length, 200s^-1 ~ 1
+		// derived from [Prochazka1999], velocity component normalized to unit length
 		double vel = ( 65.0 / 200.0 ) * flut::math::signed_sqrt( GetNormalizedFiberVelocity() );
 		double disp = GetNormalizedFiberLength();
-		const double mean = 80.0 / 200.0;
-		return std::max( 0.0, vel + disp + mean );
+		return std::max( 0.0, vel + disp );
 	}
 
 	bool Muscle::HasMomentArm( const Dof& dof ) const
