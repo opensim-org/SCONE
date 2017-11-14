@@ -13,7 +13,7 @@ namespace scone
 		SensorDelayAdapter* input_;
 		TimeInSeconds delay_;
 		bool use_sample_delay_;
-		int sample_delay_;
+		int sample_delay_frames_;
 		int sample_delay_window_;
 		double sensor_gain_;
 		string source_name_;

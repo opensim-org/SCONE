@@ -16,8 +16,8 @@ namespace scone
 	input_(),
 	sensor_gain_( 1.0 ),
 	type_( pn.get< string >( "type" ) ),
-	sample_delay_( 0 ),
-	sample_delay_window_( 5 ),
+	sample_delay_frames_( 0 ),
+	sample_delay_window_( 21 ),
 	use_sample_delay_( false )
 	{
 		bool inverted = pn.get< bool >( "inverted", false );
@@ -26,7 +26,7 @@ namespace scone
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );
-		sample_delay_ = std::lround( delay_ / nc.GetModel().GetSimulationStepSize() );
+		sample_delay_frames_ = std::lround( delay_ / nc.GetModel().GetSimulationStepSize() );
 		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		sensor_gain_ = inverted ? -1 : 1;
 
@@ -43,6 +43,7 @@ namespace scone
 		else if ( type_ == "S" )
 		{
 			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *FindByName( model.GetMuscles(), name ) );
+			use_sample_delay_ = true;
 		}
 		else if ( type_ == "DP" )
 		{
@@ -59,7 +60,8 @@ namespace scone
 
 	double SensorNeuron::GetOutput() const
 	{
-		return output_ = activation_function( sensor_gain_ * ( input_->GetValue( delay_ ) - offset_ ) );
+		auto input = use_sample_delay_ ? input_->GetAverageValue( sample_delay_frames_, sample_delay_window_ ) : input_->GetValue( delay_ );
+		return output_ = activation_function( sensor_gain_ * ( input - offset_ ) );
 	}
 
 	string SensorNeuron::GetName( bool mirrored ) const
