@@ -75,9 +75,16 @@ namespace scone
 			for ( auto& geom_file : geom_files )
 			{
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ) ) );
-				body_meshes.back().back().set_material( bone_mat );
-				body_axes.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+				try
+				{
+					body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ) ) );
+					body_meshes.back().back().set_material( bone_mat );
+					body_axes.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+				}
+				catch ( std::exception& e )
+				{
+					log::warning( "Could not load ", geom_file, ": ", e.what() );
+				}
 			}
 		}
 		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
