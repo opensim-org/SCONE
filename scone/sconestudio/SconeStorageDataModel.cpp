@@ -49,7 +49,7 @@ std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int i
 
 double SconeStorageDataModel::getTimeFinish() const
 {
-	return storage ? storage->Back().GetTime() : 0.0;
+	return storage && !storage->IsEmpty() ? storage->Back().GetTime() : 0.0;
 }
 
 double SconeStorageDataModel::getTimeStart() const
