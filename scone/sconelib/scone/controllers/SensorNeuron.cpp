@@ -15,7 +15,10 @@ namespace scone
 	Neuron( pn, par, idx, side, act_func ),
 	input_(),
 	sensor_gain_( 1.0 ),
-	type_( pn.get< string >( "type" ) )
+	type_( pn.get< string >( "type" ) ),
+	sample_delay_( 0 ),
+	sample_delay_window_( 5 ),
+	use_sample_delay_( false )
 	{
 		bool inverted = pn.get< bool >( "inverted", false );
 		par_name_ = GetNameNoSide( name ) + ( inverted ? "-." : "." ) + type_;
@@ -23,6 +26,7 @@ namespace scone
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );
+		sample_delay_ = std::lround( delay_ / nc.GetModel().GetSimulationStepSize() );
 		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		sensor_gain_ = inverted ? -1 : 1;
 
