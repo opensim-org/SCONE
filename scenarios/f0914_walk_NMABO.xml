@@ -7,7 +7,7 @@
 	<use_init_file_std>0</use_init_file_std>
 	<random_seed>123</random_seed>
 	<Objective type="SimulationObjective">
-		<max_duration>60</max_duration>
+		<max_duration>10</max_duration>
 		<Model type="Simbody">
 			<model_file>research/f0918t_k5s2_c2e6d10r4.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S15.sto</state_init_file>
