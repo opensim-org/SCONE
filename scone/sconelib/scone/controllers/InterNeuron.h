@@ -30,6 +30,6 @@ namespace scone
 		std::vector< Input > inputs_;
 		string name_;
 
-		enum connection_t { bilateral, monosynaptic, antagonistic, ipsilateral, contralateral };
+		enum connection_t { bilateral, monosynaptic, antagonistic, synergetic, ipsilateral, contralateral };
 	};
 }

@@ -17,6 +17,7 @@ namespace scone
 		{ InterNeuron::bilateral, "bilateral" },
 		{ InterNeuron::monosynaptic, "monosynaptic" },
 		{ InterNeuron::antagonistic, "antagonistic" },
+		{ InterNeuron::synergetic, "synergetic" },
 		{ InterNeuron::ipsilateral, "ipsilateral" },
 		{ InterNeuron::contralateral, "contralateral" } } );
 
@@ -101,6 +102,18 @@ namespace scone
 						auto it2 = TryFindByName( muscles, sensor->source_name_ );
 						if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).IsAntagonist( **it2 ) )
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+						break;
+					}
+					case scone::InterNeuron::synergetic:
+					{
+						if ( sensor->source_name_ != name_ )
+						{
+							auto& muscles = nc.GetModel().GetMuscles();
+							auto it1 = TryFindByName( muscles, name_ );
+							auto it2 = TryFindByName( muscles, sensor->source_name_ );
+							if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).HasSharedDofs( **it2 ) )
+								AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+						}
 						break;
 					}
 					case scone::InterNeuron::ipsilateral:

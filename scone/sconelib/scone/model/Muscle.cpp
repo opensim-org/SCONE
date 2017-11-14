@@ -56,7 +56,7 @@ namespace scone
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const
 	{
-		// find common dof
+		// TODO: more efficient
 		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
@@ -64,6 +64,17 @@ namespace scone
 				if ( Sign( GetMomentArm( *dof ) ) != Sign( other.GetMomentArm( *dof ) ) )
 					return true;
 			}
+		}
+		return false;
+	}
+
+	bool Muscle::HasSharedDofs( const Muscle& other ) const
+	{
+		// TODO: more efficient
+		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
+		{
+			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
+				return true;
 		}
 		return false;
 	}
