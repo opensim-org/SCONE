@@ -17,6 +17,8 @@ namespace scone
 		Real GetValue( Real delay ) const;
 		Real GetValue( Index idx, Real delay ) const;
 
+		Real GetAverageValue( int history_begin, int history_end );
+
 		void UpdateStorage();
 		Sensor& GetInputSensor() { return m_InputSensor; }
 

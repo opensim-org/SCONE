@@ -804,6 +804,12 @@ namespace scone
 			StoreCurrentFrame();
 	}
 
+	TimeInSeconds Model_Simbody::GetSimulationStepSize()
+	{
+		SCONE_ASSERT( use_fixed_control_step_size );
+		return fixed_control_step_size;
+	}
+
 	void Model_Simbody::ValidateDofAxes()
 	{
 		SimTK::Matrix jsmat;

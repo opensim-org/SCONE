@@ -61,6 +61,7 @@ namespace scone
 		virtual double GetPreviousTime() const override;
 		virtual int GetIntegrationStep() const override;
 		virtual int GetPreviousIntegrationStep() const override;
+		virtual TimeInSeconds GetSimulationStepSize() override;
 
 		/// Get the OpenSim model attached to this model
 		OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }

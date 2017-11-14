@@ -63,11 +63,12 @@ namespace scone
 		const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 
 		/// Get simulation info
-		virtual double GetTime() const = 0;
+		virtual TimeInSeconds GetTime() const = 0;
 		virtual int GetIntegrationStep() const = 0;
 		virtual int GetPreviousIntegrationStep() const = 0;
-		virtual double GetPreviousTime() const = 0;
-		virtual double GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
+		virtual TimeInSeconds GetPreviousTime() const = 0;
+		virtual TimeInSeconds GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
+		virtual TimeInSeconds GetSimulationStepSize() = 0;
 
 		/// Model state access
 		virtual const State& GetState() const = 0;
