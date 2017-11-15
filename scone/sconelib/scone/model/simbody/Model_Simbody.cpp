@@ -188,8 +188,8 @@ namespace scone
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
 			m_pTkIntegrator->resetAllStatistics();
-
 		}
+
 		// read initial state
 		{
 			SCONE_PROFILE_SCOPE( "InitState" );
