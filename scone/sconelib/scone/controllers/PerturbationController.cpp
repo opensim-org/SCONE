@@ -20,9 +20,10 @@ namespace scone
 		INIT_PROP( props, duration, 0.1 );
 		INIT_PROP( props, start_time, 0.0 );
 		INIT_PROP( props, end_time, 600.0 );
+		INIT_PROP( props, random_seed, 5489U );
 		position_offset = props.get< Vec3 >( "position_offset" );
 
-		std::default_random_engine rng_engine;
+		std::default_random_engine rng_engine( random_seed );
 		auto time_dist = std::uniform_real_distribution< TimeInSeconds >( interval_min, interval_max );
 		auto dir_dist = std::uniform_real_distribution< double >( 0, 2 * flut::double_pi );
 		perturbation_times.emplace_back( start_time, dir_dist( rng_engine ) );
