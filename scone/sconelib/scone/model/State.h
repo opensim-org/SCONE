@@ -29,11 +29,11 @@ namespace scone
 		void SetValue( Index i, Real value ) { values_.at( i ) = value; }
 		void SetValues( const std::vector< Real >& v );
 
-		void AddChildState( State& other );
-		void CopyChildState( const State& other );
+		//void AddChildState( State& other );
+		//void CopyChildState( const State& other );
 
 	private:
-		Index parent_idx_;
+		//Index parent_idx_;
 		std::vector< String > names_;
 		std::vector< Real > values_;
 	};

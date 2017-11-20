@@ -30,6 +30,10 @@ namespace scone
 		INIT_PROP( pn, delay_factor_, 1.0 );
 		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
+		// backup the current state and set all DOFs to zero
+		State org_state = model.GetState();
+		model.SetNullState();
+
 		// create sensor neuron layer
 		AddSensorNeuronLayer( pn.get_child( "SensorNeuronLayer" ), par );
 
@@ -39,6 +43,9 @@ namespace scone
 
 		// create motor neuron layer
 		AddMotorNeuronLayer( pn.get_child( "MotorNeuronLayer" ), par );
+
+		// restore original state
+		model.SetState( org_state, 0.0 );
 	}
 
 	void NeuralController::AddSensorNeuronLayer( const PropNode& layer_pn, Params& par )

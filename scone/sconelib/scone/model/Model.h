@@ -75,6 +75,7 @@ namespace scone
 		virtual State& GetState() = 0;
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) = 0;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) = 0;
+		void SetNullState();
 
 		/// Simulate model
 		virtual bool AdvanceSimulationTo( double time ) = 0;

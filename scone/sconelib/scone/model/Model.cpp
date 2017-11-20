@@ -246,6 +246,18 @@ namespace scone
 		return *link;
 	}
 
+	void Model::SetNullState()
+	{
+		State zero_state = GetState();
+		for ( Index i = 0; i < zero_state.GetSize(); ++i )
+		{
+			if ( !flut::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
+				 !flut::str_ends_with( zero_state.GetName( i ), ".activation" ) )
+				zero_state.SetValue( i, 0 );
+		}
+		SetState( zero_state, 0 );
+	}
+
 	scone::Real Model::GetTotalContactForce() const
 	{
 		Real force = 0.0;
