@@ -74,6 +74,7 @@ namespace scone
 
 		if ( input_layer == "0" )
 		{
+			// connection from sensor neurons
 			size_t input_layer_size = nc.GetLayerSize( input_layer );
 			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
@@ -143,6 +144,7 @@ namespace scone
 		}
 		else if ( !input_layer.empty() )
 		{
+			// connection from previous interneuron layer
 			size_t input_layer_size = nc.GetLayerSize( input_layer );
 			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{

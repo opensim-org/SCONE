@@ -176,5 +176,4 @@ namespace scone
 	{
 		return delay_factor_ * delays_.get< double >( name );
 	}
-
 }

@@ -29,7 +29,7 @@ namespace scone
 
 		// copy original and write resolved config files
 		flut::path outdir( o->AcquireOutputFolder().str() );
-		flut::copy_file( config_path.filename(), outdir / ( "config_original" + config_path.extension().string() ), true );
+		flut::copy_file( config_path.filename(), outdir / path( "config_original" ).replace_extension( config_path.extension() ), true );
 		flut::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
 		// copy model to output folder
