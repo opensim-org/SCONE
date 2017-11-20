@@ -86,6 +86,19 @@ namespace scone
 		return m_Dof.GetName() + ".DV";
 	}
 
+	scone::Real DofPosVelSensor::GetValue() const
+	{
+		// TODO: get rid of this if statement and use a "constant" Dof?
+		if ( m_pRootDof )
+			return m_pRootDof->GetPos() + m_Dof.GetPos() + m_KV * ( m_pRootDof->GetVel() + m_Dof.GetVel() );
+		else return m_Dof.GetPos() + m_KV * m_Dof.GetVel();
+	}
+
+	String DofPosVelSensor::GetName() const
+	{
+		return m_Dof.GetName() + ".DPV";
+	}
+
 	LegLoadSensor::LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Leg( *FindBySide( model.GetLegs(), target_area.side ) )

@@ -59,9 +59,9 @@ namespace scone
 			auto exclude_mask = child_pn.get< string >( "exclude", "" );
 			std::vector< string > source_names;
 
-			if ( type == "L" || type == "F" || type == "S" )
+			if ( type == "L" || type == "F" || type == "V" || type == "S" )
 				source_names = FindMatchingNames( GetModel().GetMuscles(), source_mask, exclude_mask );
-			else if ( type == "DP" || type == "DV" )
+			else if ( type == "DP" || type == "DV" || type == "DPV" )
 				source_names = FindMatchingNames( GetModel().GetDofs(), source_mask, exclude_mask );
 
 			for ( auto& name : source_names )

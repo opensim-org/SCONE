@@ -53,8 +53,13 @@ namespace scone
 		{
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), name ) );
 		}
+		else if ( type_ == "DPV" )
+		{
+			auto kv = par.get( ".DV", 0.1, 0.01, 0, 1 );
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv );
+		}
 
-		flut_assert_msg( input_, "Unknown type " + type_ );
+		flut_error_if( !input_, "Unknown type " + type_ );
 		source_name_ = name;
 	}
 

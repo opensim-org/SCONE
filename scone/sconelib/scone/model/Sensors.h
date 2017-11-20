@@ -84,6 +84,16 @@ namespace scone
 		virtual String GetName() const override;
 	};
 
+	class SCONE_API DofPosVelSensor : public DofSensor
+	{
+	public:
+		DofPosVelSensor( Dof& dof, double kv ) : DofSensor( dof ), m_KV( kv ) {}
+		DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
+		virtual Real GetValue() const override;
+		virtual String GetName() const override;
+		double m_KV;
+	};
+
 	// Sensor for normalized leg load, based on target_area
 	class SCONE_API LegLoadSensor : public Sensor
 	{
