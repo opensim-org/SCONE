@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene &s, const path& file, bool force_evaluation ) :
+	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
 	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
