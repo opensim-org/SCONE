@@ -89,7 +89,6 @@ namespace scone
 		{
 			for ( auto side : { LeftSide, RightSide } )
 			{
-				ScopedParamSetPrefixer ps( par, layer_name + stringf( "_%d.", i ) );
 				layer.emplace_back( std::make_unique< InterNeuron >( pn, par, layer_name, i, side, act_func ) );
 				for ( auto& child : pn )
 					layer.back()->AddInputs( child.second, par, *this );
@@ -102,7 +101,6 @@ namespace scone
 		for ( auto& muscle : GetModel().GetMuscles() )
 		{
 			auto name = muscle->GetName();
-			ScopedParamSetPrefixer ps( par, GetNameNoSide( name ) + "." );
 			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
 			for ( auto& child_pn : pn )
 			{

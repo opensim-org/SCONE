@@ -9,10 +9,12 @@
 namespace scone
 {
 	MotorNeuron::MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& muscle, Index idx, Side side, const string& act_func ) :
-	InterNeuron( pn, par, GetNameNoSide( muscle ), idx, side, act_func ),
+	Neuron( pn, idx, side, act_func ),
 	actuator_( FindByName( nc.GetModel().GetMuscles(), muscle ).get() )
 	{
+		ScopedParamSetPrefixer ps( par, GetNameNoSide( muscle ) + "." );
 		name_ = muscle;
+		offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 	}
 
 	void MotorNeuron::UpdateActuator()
