@@ -12,13 +12,10 @@
 namespace scone
 {
 	Muscle_Simbody::Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus ) : m_Model( model ), m_osMus( mus )
-	{
-	}
+	{}
 
 	Muscle_Simbody::~Muscle_Simbody()
-	{
-
-	}
+	{}
 
 	const String& Muscle_Simbody::GetName() const
 	{
@@ -128,6 +125,11 @@ namespace scone
 	{
 		const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
 		return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+	}
+
+	const scone::Model& Muscle_Simbody::GetModel() const
+	{
+		return m_Model;
 	}
 
 	scone::Real scone::Muscle_Simbody::GetTendonLength() const

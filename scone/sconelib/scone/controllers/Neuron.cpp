@@ -25,7 +25,8 @@ namespace scone
 	offset_(),
 	index_( idx ),
 	side_( s ),
-	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) )
+	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) ),
+	muscle_( nullptr )
 	{}
 
 	scone::activation_t Neuron::GetOutput() const
@@ -39,14 +40,6 @@ namespace scone
 		}
 
 		return output_ = activation_function( value );
-	}
-
-	void Neuron::AddSensorInput( struct SensorNeuron* sensor, const PropNode& pn, Params& par, connection_t ct )
-	{
-		string name = ct == monosynaptic ? sensor->type_ : sensor->GetParName();
-		auto gain = par.try_get( name, pn, "gain", 1.0 );
-
-		AddInput( sensor, gain );
 	}
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
@@ -83,40 +76,37 @@ namespace scone
 					case scone::InterNeuron::monosynaptic:
 					{
 						if ( sensor->source_name_ == name_ )
-							AddSensorInput( sensor, pn, par, connect );
+							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::antagonistic:
 					{
-						auto& muscles = nc.GetModel().GetMuscles();
-						auto it1 = TryFindByName( muscles, name_ );
-						auto it2 = TryFindByName( muscles, sensor->source_name_ );
-						if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).IsAntagonist( **it2 ) )
-							AddSensorInput( sensor, pn, par, connect );
+						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
+							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::synergetic:
 					{
-						if ( sensor->source_name_ != name_ )
+						if ( sensor->muscle_ )
 						{
-							auto& muscles = nc.GetModel().GetMuscles();
-							auto it1 = TryFindByName( muscles, name_ );
-							auto it2 = TryFindByName( muscles, sensor->source_name_ );
-							if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).HasSharedDofs( **it2 ) )
-								AddSensorInput( sensor, pn, par, connect );
+							// find correspondance
+
+
+							if ( muscle_ && sensor->muscle_ && muscle_->HasSharedDofs( *sensor->muscle_ ) )
+								AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						}
 						break;
 					}
 					case scone::InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-							AddSensorInput( sensor, pn, par, connect );
+							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::contralateral:
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
-							AddSensorInput( sensor, pn, par, connect );
+							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );

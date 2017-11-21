@@ -25,11 +25,12 @@ namespace scone
 
 		void AddInput( Neuron* input, double gain, double mean = 0.0 ) { inputs_.emplace_back( input, gain, mean ); }
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
-		void AddSensorInput( struct SensorNeuron* input, const PropNode& pn, Params& par, connection_t ct );
 		size_t GetInputCount() { return inputs_.size(); }
 
 		Side side_;
 		Index index_;
+		string name_;
+		Muscle* muscle_;
 
 		double offset_;
 		mutable double output_;
@@ -44,6 +45,5 @@ namespace scone
 		};
 
 		std::vector< Input > inputs_;
-		string name_;
 	};
 }

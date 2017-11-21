@@ -12,13 +12,24 @@
 
 namespace scone
 {
-	Muscle::Muscle() :
-		Actuator()
+	Muscle::Muscle() : Actuator()
 	{
 	}
 
 	Muscle::~Muscle()
 	{
+	}
+
+	std::vector< std::pair< Dof*, Real > > Muscle::GetMomentArms() const
+	{
+		std::vector< std::pair< Dof*, Real > > result;
+		for ( auto& dof : GetModel().GetDofs() )
+		{
+			auto moment = GetMomentArm( *dof );
+			if ( moment != 0 )
+				result.emplace_back( dof.get(), moment );
+		}
+		return result;
 	}
 
 	Real Muscle::GetNormalizedSpindleRate() const

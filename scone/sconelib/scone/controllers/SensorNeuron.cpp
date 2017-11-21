@@ -34,15 +34,18 @@ namespace scone
 
 		if ( type_ == "F" )
 		{
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *FindByName( model.GetMuscles(), name ) );
+			muscle_ = FindByName( model.GetMuscles(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *muscle_ );
 		}
 		else if ( type_ == "L" )
 		{
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *FindByName( model.GetMuscles(), name ) );
+			muscle_ = FindByName( model.GetMuscles(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *muscle_ );
 		}
 		else if ( type_ == "S" )
 		{
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *FindByName( model.GetMuscles(), name ) );
+			muscle_ = FindByName( model.GetMuscles(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *muscle_ );
 			use_sample_delay_ = true;
 		}
 		else if ( type_ == "DP" )

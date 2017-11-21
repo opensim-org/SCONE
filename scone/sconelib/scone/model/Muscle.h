@@ -21,8 +21,10 @@ namespace scone
 
 		virtual const Link& GetOriginLink() const = 0;
 		virtual const Link& GetInsertionLink() const = 0;
+		virtual const Model& GetModel() const = 0;
 
 		virtual Real GetMomentArm( const Dof& dof ) const = 0;
+		std::vector< std::pair< Dof*, Real > > GetMomentArms() const;
 
 		virtual Real GetMaxIsometricForce() const = 0;
 		virtual Real GetOptimalFiberLength() const = 0;
