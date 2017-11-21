@@ -92,7 +92,7 @@ namespace scone
 		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 		INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
-		INIT_PROPERTY( props, create_body_forces, true );
+		INIT_PROPERTY( props, create_body_forces, false );
 
 		// create new OpenSim Model using resource cache
 		{

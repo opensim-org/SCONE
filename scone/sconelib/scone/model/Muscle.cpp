@@ -7,30 +7,17 @@
 #include "Body.h"
 #include "Model.h"
 #include "../core/math.h"
+#include "../core/Profiler.h"
 
 #pragma warning( disable: 4355 )
 
 namespace scone
 {
 	Muscle::Muscle() : Actuator()
-	{
-	}
+	{}
 
 	Muscle::~Muscle()
-	{
-	}
-
-	std::vector< std::pair< Dof*, Real > > Muscle::GetMomentArms() const
-	{
-		std::vector< std::pair< Dof*, Real > > result;
-		for ( auto& dof : GetModel().GetDofs() )
-		{
-			auto moment = GetMomentArm( *dof );
-			if ( moment != 0 )
-				result.emplace_back( dof.get(), moment );
-		}
-		return result;
-	}
+	{}
 
 	Real Muscle::GetNormalizedSpindleRate() const
 	{
@@ -42,6 +29,10 @@ namespace scone
 
 	bool Muscle::HasMomentArm( const Dof& dof ) const
 	{
+		SCONE_PROFILE_FUNCTION;
+
+		//return GetMomentArm( dof ) != 0;
+
 		const Link& orgLink = GetOriginLink();
 		const Link& insLink = GetInsertionLink();
 		const Link* l = &insLink;
@@ -57,6 +48,8 @@ namespace scone
 
 	scone::Count Muscle::GetJointCount() const
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		Count joint_count = 0;
 		const Link* orgLink = &GetOriginLink();
 		const Link* insLink = &GetInsertionLink();
@@ -67,8 +60,10 @@ namespace scone
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		// TODO: more efficient
-		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
+		for ( auto& dof : GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
 			{
@@ -81,6 +76,8 @@ namespace scone
 
 	bool Muscle::HasSharedDofs( const Muscle& other ) const
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		// TODO: more efficient
 		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
 		{

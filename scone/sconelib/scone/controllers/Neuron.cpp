@@ -8,6 +8,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Side.h"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -44,6 +45,8 @@ namespace scone
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		// set param prefix
 		ScopedParamSetPrefixer ps( par, GetParName() + "." );
 
@@ -75,12 +78,14 @@ namespace scone
 					}
 					case scone::InterNeuron::monosynaptic:
 					{
+						SCONE_PROFILE_SCOPE( "monosynaptic" );
 						if ( sensor->source_name_ == name_ )
 							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::antagonistic:
 					{
+						SCONE_PROFILE_SCOPE( "antagonistic" );
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
@@ -90,10 +95,7 @@ namespace scone
 						if ( sensor->muscle_ )
 						{
 							// find correspondance
-
-
-							if ( muscle_ && sensor->muscle_ && muscle_->HasSharedDofs( *sensor->muscle_ ) )
-								AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+							SCONE_THROW_NOT_IMPLEMENTED;
 						}
 						break;
 					}

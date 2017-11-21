@@ -17,6 +17,7 @@
 #include "flut/string_tools.hpp"
 #include "flut/table.hpp"
 #include "flut/system/string_cast.hpp"
+#include "../core/Profiler.h"
 
 namespace scone
 {
@@ -24,6 +25,8 @@ namespace scone
 	Controller( pn, par, model, locality ),
 	model_( model )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		if ( pn.has_key( "delay_file" ) )
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
@@ -50,6 +53,8 @@ namespace scone
 
 	void NeuralController::AddSensorNeuronLayer( const PropNode& layer_pn, Params& par )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		for ( auto& child_kvp : layer_pn )
 		{
 			auto& child_pn = child_kvp.second;
@@ -71,6 +76,8 @@ namespace scone
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		auto amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, false ) );
@@ -80,6 +87,8 @@ namespace scone
 
 	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		auto layer_name = FixLayerName( pn.get< string >( "layer" ) );
 		int amount = pn.get< int >( "neurons" );
 		string act_func = pn.get< string >( "activation", "rectifier" );
@@ -98,6 +107,8 @@ namespace scone
 
 	void NeuralController::AddMotorNeuronLayer( const PropNode& pn, Params& par )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		for ( auto& muscle : GetModel().GetMuscles() )
 		{
 			auto name = muscle->GetName();

@@ -111,20 +111,31 @@ namespace scone
 
 	const Link& Muscle_Simbody::GetOriginLink() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
 		return m_Model.FindLink( pps.get( 0 ).getBodyName() );
 	}
 
 	const Link& Muscle_Simbody::GetInsertionLink() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
 		return m_Model.FindLink( pps.get( pps.getSize() - 1 ).getBodyName() );
 	}
 
 	scone::Real Muscle_Simbody::GetMomentArm( const Dof& dof ) const
 	{
-		const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
-		return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+		SCONE_PROFILE_FUNCTION;
+
+		auto iter = m_MomentArmCache.find( &dof );
+		if ( iter == m_MomentArmCache.end() )
+		{
+			const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
+			auto moment = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+			m_MomentArmCache[ &dof ] = moment;
+			return moment;
+		}
+		else return iter->second;
 	}
 
 	const scone::Model& Muscle_Simbody::GetModel() const
@@ -134,6 +145,7 @@ namespace scone
 
 	scone::Real scone::Muscle_Simbody::GetTendonLength() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getTendonLength( m_Model.GetTkState() );
 	}
 
@@ -154,6 +166,7 @@ namespace scone
 
 	std::vector< Vec3 > scone::Muscle_Simbody::GetMusclePath() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 		auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );
