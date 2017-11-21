@@ -53,7 +53,7 @@ int main( int argc, char *argv[] )
 		SconeStudio w;
 
 		// sleep a while so people can enjoy the splash screen :-)
-		QThread::sleep( 1 );
+		QThread::sleep( 0 );
 
 #if QT_VERSION >= 0x050000
 		// Qt5 is currently crashing and reporting "Cannot make QOpenGLContext current in a different thread" when the viewer is run multi-threaded, this is regression from Qt4

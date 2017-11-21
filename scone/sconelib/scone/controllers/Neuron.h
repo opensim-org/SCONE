@@ -10,7 +10,6 @@
 namespace scone
 {
 	class NeuralController;
-	class SensorDelayAdapter;
 	using activation_t = double;
 
 	struct Neuron
@@ -22,8 +21,11 @@ namespace scone
 		virtual string GetParName() const { return GetNameNoSide( name_ ); }
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
+		enum connection_t { bilateral, monosynaptic, antagonistic, synergetic, ipsilateral, contralateral };
+
 		void AddInput( Neuron* input, double gain, double mean = 0.0 ) { inputs_.emplace_back( input, gain, mean ); }
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
+		void AddSensorInput( struct SensorNeuron* input, const PropNode& pn, Params& par, connection_t ct );
 		size_t GetInputCount() { return inputs_.size(); }
 
 		Side side_;
@@ -43,8 +45,5 @@ namespace scone
 
 		std::vector< Input > inputs_;
 		string name_;
-
-		enum connection_t { bilateral, monosynaptic, antagonistic, synergetic, ipsilateral, contralateral };
-
 	};
 }

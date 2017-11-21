@@ -41,6 +41,14 @@ namespace scone
 		return output_ = activation_function( value );
 	}
 
+	void Neuron::AddSensorInput( struct SensorNeuron* sensor, const PropNode& pn, Params& par, connection_t ct )
+	{
+		string name = ct == monosynaptic ? sensor->type_ : sensor->GetParName();
+		auto gain = par.try_get( name, pn, "gain", 1.0 );
+
+		AddInput( sensor, gain );
+	}
+
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
 		// set param prefix
@@ -69,15 +77,13 @@ namespace scone
 					{
 					case scone::InterNeuron::bilateral:
 					{
-						auto gain = par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 );
-						auto mean = par.try_get( sensor->GetName( right_side ) + ".m", pn, "mean", 0.0 );
-						AddInput( sensor, gain, mean );
+						AddInput( sensor, par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 ) );
 						break;
 					}
 					case scone::InterNeuron::monosynaptic:
 					{
 						if ( sensor->source_name_ == name_ )
-							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
+							AddSensorInput( sensor, pn, par, connect );
 						break;
 					}
 					case scone::InterNeuron::antagonistic:
@@ -86,7 +92,7 @@ namespace scone
 						auto it1 = TryFindByName( muscles, name_ );
 						auto it2 = TryFindByName( muscles, sensor->source_name_ );
 						if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).IsAntagonist( **it2 ) )
-							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+							AddSensorInput( sensor, pn, par, connect );
 						break;
 					}
 					case scone::InterNeuron::synergetic:
@@ -97,28 +103,20 @@ namespace scone
 							auto it1 = TryFindByName( muscles, name_ );
 							auto it2 = TryFindByName( muscles, sensor->source_name_ );
 							if ( it1 != muscles.end() && it2 != muscles.end() && ( **it1 ).HasSharedDofs( **it2 ) )
-								AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+								AddSensorInput( sensor, pn, par, connect );
 						}
 						break;
 					}
 					case scone::InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-						{
-							auto gain = par.try_get( sensor->GetParName(), pn, "gain", 1.0 );
-							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
-							AddInput( sensor, gain, mean );
-						}
+							AddSensorInput( sensor, pn, par, connect );
 						break;
 					}
 					case scone::InterNeuron::contralateral:
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
-						{
-							auto gain = par.try_get( sensor->GetParName(), pn, "gain", 1.0 );
-							auto mean = par.try_get( sensor->GetParName() + ".m", pn, "mean", 0.0 );
-							AddInput( sensor, gain, mean );
-						}
+							AddSensorInput( sensor, pn, par, connect );
 						break;
 					}
 					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
