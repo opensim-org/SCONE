@@ -4,7 +4,6 @@
 
 namespace scone
 {
-	class NeuralController;
 	struct InterNeuron : public Neuron
 	{
 		InterNeuron( const PropNode& pn, Params& par, const string& layer, Index idx, Side side, const string& act_func );
