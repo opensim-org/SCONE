@@ -31,19 +31,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		//return GetMomentArm( dof ) != 0;
-
-		const Link& orgLink = GetOriginLink();
-		const Link& insLink = GetInsertionLink();
-		const Link* l = &insLink;
-		while ( l && l != &orgLink )
-		{
-			if ( l->GetJoint().HasDof( dof.GetName() ) )
-				return true;
-
-			l = &l->GetParent();
-		}
-		return false;
+		return GetMomentArm( dof ) != 0;
 	}
 
 	scone::Count Muscle::GetJointCount() const
@@ -62,14 +50,24 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		// TODO: more efficient
 		for ( auto& dof : GetModel().GetDofs() )
 		{
-			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
-			{
-				if ( Sign( GetMomentArm( *dof ) ) != Sign( other.GetMomentArm( *dof ) ) )
-					return true;
-			}
+			auto mom1 = GetMomentArm( *dof );
+			auto mom2 = other.GetMomentArm( *dof );
+			if ( mom1 != 0 && mom2 != 0 && Sign( mom1 ) != Sign( mom2 ) )
+				return true;
+		}
+		return false;
+	}
+
+	bool Muscle::IsProtagonist( const Muscle& other ) const
+	{
+		for ( auto& dof : GetModel().GetDofs() )
+		{
+			auto mom1 = GetMomentArm( *dof );
+			auto mom2 = other.GetMomentArm( *dof );
+			if ( mom1 != 0 && mom2 != 0 && Sign( mom1 ) == Sign( mom2 ) )
+				return true;
 		}
 		return false;
 	}
