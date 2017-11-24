@@ -19,7 +19,8 @@ namespace scone
 		{ Neuron::agonistic, "agonistic" },
 		{ Neuron::synergetic, "synergetic" },
 		{ Neuron::ipsilateral, "ipsilateral" },
-		{ Neuron::contralateral, "contralateral" }
+		{ Neuron::contralateral, "contralateral" },
+		{ Neuron::agonistic, "protagonistic" } // backwards compatibility
 	} );
 
 	Neuron::Neuron( const PropNode& pn, Index idx, Side s, const String& default_activation ) :
