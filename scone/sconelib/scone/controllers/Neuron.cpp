@@ -16,7 +16,7 @@ namespace scone
 		{ Neuron::bilateral, "bilateral" },
 		{ Neuron::monosynaptic, "monosynaptic" },
 		{ Neuron::antagonistic, "antagonistic" },
-		{ Neuron::protagonistic, "protagonistic" },
+		{ Neuron::agonistic, "agonistic" },
 		{ Neuron::synergetic, "synergetic" },
 		{ Neuron::ipsilateral, "ipsilateral" },
 		{ Neuron::contralateral, "contralateral" }
@@ -96,10 +96,10 @@ namespace scone
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
-					case InterNeuron::protagonistic:
+					case InterNeuron::agonistic:
 					{
-						SCONE_PROFILE_SCOPE( "protagonistic" );
-						if ( muscle_ && sensor->muscle_ && muscle_->IsProtagonist( *sensor->muscle_ ) )
+						SCONE_PROFILE_SCOPE( "agonistic" );
+						if ( muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ ) )
 							AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}

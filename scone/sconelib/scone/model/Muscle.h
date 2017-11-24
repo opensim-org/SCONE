@@ -63,7 +63,7 @@ namespace scone
 		// count the number of joints this muscle crosses
 		virtual Count GetJointCount() const;
 		virtual bool IsAntagonist( const Muscle& other ) const;
-		virtual bool IsProtagonist( const Muscle& other ) const;
+		virtual bool IsAgonist( const Muscle& other ) const;
 		virtual bool HasSharedDofs( const Muscle& other ) const;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;

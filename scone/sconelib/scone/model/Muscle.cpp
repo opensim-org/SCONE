@@ -60,7 +60,7 @@ namespace scone
 		return false;
 	}
 
-	bool Muscle::IsProtagonist( const Muscle& other ) const
+	bool Muscle::IsAgonist( const Muscle& other ) const
 	{
 		for ( auto& dof : GetModel().GetDofs() )
 		{
