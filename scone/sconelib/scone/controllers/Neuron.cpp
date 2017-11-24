@@ -17,9 +17,10 @@ namespace scone
 		{ Neuron::monosynaptic, "monosynaptic" },
 		{ Neuron::antagonistic, "antagonistic" },
 		{ Neuron::protagonistic, "protagonistic" },
+		{ Neuron::synergetic, "synergetic" },
 		{ Neuron::ipsilateral, "ipsilateral" },
-		{ Neuron::contralateral, "contralateral" } }
-	);
+		{ Neuron::contralateral, "contralateral" }
+	} );
 
 	Neuron::Neuron( const PropNode& pn, Index idx, Side s, const String& default_activation ) :
 	output_(),
@@ -41,6 +42,11 @@ namespace scone
 		}
 
 		return output_ = activation_function( value );
+	}
+
+	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )
+	{
+		SCONE_THROW_NOT_IMPLEMENTED;
 	}
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
@@ -71,39 +77,46 @@ namespace scone
 				{
 					switch ( connect )
 					{
-					case scone::InterNeuron::bilateral:
+					case InterNeuron::bilateral:
 					{
 						AddInput( sensor, par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 ) );
 						break;
 					}
-					case scone::InterNeuron::monosynaptic:
+					case InterNeuron::monosynaptic:
 					{
 						SCONE_PROFILE_SCOPE( "monosynaptic" );
 						if ( sensor->source_name_ == name_ )
 							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
-					case scone::InterNeuron::antagonistic:
+					case InterNeuron::antagonistic:
 					{
 						SCONE_PROFILE_SCOPE( "antagonistic" );
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
-					case scone::InterNeuron::protagonistic:
+					case InterNeuron::protagonistic:
 					{
 						SCONE_PROFILE_SCOPE( "protagonistic" );
 						if ( muscle_ && sensor->muscle_ && muscle_->IsProtagonist( *sensor->muscle_ ) )
 							AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
-					case scone::InterNeuron::ipsilateral:
+					case InterNeuron::synergetic:
+					{
+						SCONE_PROFILE_SCOPE( "synergetic" );
+						if ( muscle_ && sensor->muscle_ )
+							AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
+						break;
+					}
+					case InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
-					case scone::InterNeuron::contralateral:
+					case InterNeuron::contralateral:
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
 							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
