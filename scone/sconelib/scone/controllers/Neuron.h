@@ -21,7 +21,7 @@ namespace scone
 		virtual string GetParName() const { return GetNameNoSide( name_ ); }
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
-		enum connection_t { bilateral, monosynaptic, antagonistic, synergetic, ipsilateral, contralateral };
+		enum connection_t { bilateral, monosynaptic, antagonistic, protagonistic, ipsilateral, contralateral };
 
 		void AddInput( Neuron* input, double gain, double mean = 0.0 ) { inputs_.emplace_back( input, gain, mean ); }
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
