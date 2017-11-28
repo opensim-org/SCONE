@@ -8,6 +8,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Side.h"
+#include "scone/model/Dof.h"
 #include "../core/Profiler.h"
 
 namespace scone
@@ -47,7 +48,25 @@ namespace scone
 
 	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )
 	{
-		SCONE_THROW_NOT_IMPLEMENTED;
+		// remove existing muscle name prefix (TODO: more elegant)
+		auto prefix = par.pop_prefix();
+
+		double gain = 0;
+		for ( auto& dof : muscle_->GetModel().GetDofs() )
+		{
+			auto muscle_mom = muscle_->GetNormalizedMomentArm( *dof );
+			auto sensor_mom = sensor->muscle_->GetNormalizedMomentArm( *dof );
+			if ( muscle_mom != 0 && sensor_mom != 0 )
+			{
+				string parname = dof->GetName() + SignChar( muscle_mom ) + SignChar( sensor_mom );
+				auto factor = sqrt( abs( muscle_mom * sensor_mom ) );
+				gain += par.try_get( parname, pn, "gain", 0.0 ) * factor;
+			}
+		}
+		if ( gain != 0 )
+			AddInput( sensor, gain );
+
+		par.push_prefix( prefix );
 	}
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
@@ -108,7 +127,7 @@ namespace scone
 					{
 						SCONE_PROFILE_SCOPE( "synergetic" );
 						if ( muscle_ && sensor->muscle_ )
-							AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
+							AddSynergeticInput( sensor, pn, par, nc );
 						break;
 					}
 					case InterNeuron::ipsilateral:

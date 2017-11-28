@@ -24,6 +24,7 @@ namespace scone
 		virtual const Model& GetModel() const = 0;
 
 		virtual Real GetMomentArm( const Dof& dof ) const = 0;
+		virtual Real GetNormalizedMomentArm( const Dof& dof ) const;
 
 		virtual Real GetMaxIsometricForce() const = 0;
 		virtual Real GetOptimalFiberLength() const = 0;

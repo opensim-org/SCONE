@@ -19,6 +19,19 @@ namespace scone
 	Muscle::~Muscle()
 	{}
 
+	scone::Real Muscle::GetNormalizedMomentArm( const Dof& dof ) const
+	{
+		Real mom = GetMomentArm( dof );
+		if ( mom != 0 )
+		{
+			Real total_mom = 0.0;
+			for ( auto& d : GetModel().GetDofs() )
+				total_mom += abs( GetMomentArm( *d ) );
+			return mom / total_mom;
+		}
+		else return mom;
+	}
+
 	Real Muscle::GetNormalizedSpindleRate() const
 	{
 		// derived from [Prochazka1999], velocity component normalized to unit length
@@ -76,7 +89,6 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		// TODO: more efficient
 		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )

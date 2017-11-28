@@ -20,6 +20,8 @@ namespace scone
 	using flut::from_str;
 	using flut::quoted;
 
+	template< typename T > char SignChar( const T& v ) { return v < 0 ? '-' : '+'; }
+
 	/// Get formatted date/time string
 	String SCONE_API GetDateTimeAsString();
 
