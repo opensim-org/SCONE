@@ -58,7 +58,7 @@ namespace scone
 			auto sensor_mom = sensor->muscle_->GetNormalizedMomentArm( *dof );
 			if ( muscle_mom != 0 && sensor_mom != 0 )
 			{
-				string parname = dof->GetName() + SignChar( muscle_mom ) + SignChar( sensor_mom );
+				string parname = GetNameNoSide( dof->GetName() ) + SignChar( muscle_mom ) + SignChar( sensor_mom );
 				auto factor = sqrt( abs( muscle_mom * sensor_mom ) );
 				gain += par.try_get( parname, pn, "gain", 0.0 ) * factor;
 			}
