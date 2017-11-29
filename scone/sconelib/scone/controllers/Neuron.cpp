@@ -10,6 +10,8 @@
 #include "scone/model/Side.h"
 #include "scone/model/Dof.h"
 #include "../core/Profiler.h"
+#include "../model/Link.h"
+#include "../model/Joint.h"
 
 namespace scone
 {
@@ -51,6 +53,13 @@ namespace scone
 		// remove existing muscle name prefix (TODO: more elegant)
 		auto prefix = par.pop_prefix();
 
+		// add joint names to par prefix
+		string joint_prefix;
+		const Link* orgLink = &muscle_->GetOriginLink();
+		for ( const Link* l = &muscle_->GetInsertionLink(); l != orgLink; l = &l->GetParent() )
+			joint_prefix += GetNameNoSide( l->GetJoint().GetName() ) + ".";
+		par.push_prefix( joint_prefix );
+
 		double gain = 0;
 		for ( auto& dof : muscle_->GetModel().GetDofs() )
 		{
@@ -66,6 +75,7 @@ namespace scone
 		if ( gain != 0 )
 			AddInput( sensor, gain );
 
+		par.pop_prefix();
 		par.push_prefix( prefix );
 	}
 
