@@ -55,10 +55,12 @@ namespace scone
 
 		// add joint names to par prefix
 		string joint_prefix;
-		const Link* orgLink = &muscle_->GetOriginLink();
-		for ( const Link* l = &muscle_->GetInsertionLink(); l != orgLink; l = &l->GetParent() )
+		for ( const Link* l = &muscle_->GetInsertionLink(); l != &muscle_->GetOriginLink(); l = &l->GetParent() )
 			joint_prefix += GetNameNoSide( l->GetJoint().GetName() ) + ".";
-		par.push_prefix( joint_prefix );
+		joint_prefix[ joint_prefix.size() - 1 ] = '-';
+		for ( const Link* l = &sensor->muscle_->GetInsertionLink(); l != &sensor->muscle_->GetOriginLink(); l = &l->GetParent() )
+			joint_prefix += GetNameNoSide( l->GetJoint().GetName() ) + ".";
+		joint_prefix[ joint_prefix.size() - 1 ] = '-';
 
 		double gain = 0;
 		for ( auto& dof : muscle_->GetModel().GetDofs() )
@@ -67,15 +69,14 @@ namespace scone
 			auto sensor_mom = sensor->muscle_->GetNormalizedMomentArm( *dof );
 			if ( muscle_mom != 0 && sensor_mom != 0 )
 			{
-				string parname = GetNameNoSide( dof->GetName() ) + SignChar( muscle_mom ) + SignChar( sensor_mom );
+				string dof_name = GetNameNoSide( dof->GetName() ) + '.' + SignChar( muscle_mom ) + SignChar( sensor_mom );
 				auto factor = sqrt( abs( muscle_mom * sensor_mom ) );
-				gain += par.try_get( parname, pn, "gain", 0.0 ) * factor;
+				gain += par.try_get( joint_prefix + dof_name, pn, "gain", 0.0 ) * factor;
 			}
 		}
 		if ( gain != 0 )
 			AddInput( sensor, gain );
 
-		par.pop_prefix();
 		par.push_prefix( prefix );
 	}
 
