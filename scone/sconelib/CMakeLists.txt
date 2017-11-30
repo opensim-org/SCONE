@@ -212,8 +212,8 @@ set(SIM_SIMULATIONANDCONTROL_FILES
     scone/model/Simulation.h
     )
 set(SIM_SYSTEM_FILES
-    scone/model/sim_tools.cpp
-    scone/model/sim_tools.h
+    scone/model/model_tools.cpp
+    scone/model/model_tools.h
     )
 set(SIM_TOPOLOGY_FILES
     scone/model/Locality.cpp
