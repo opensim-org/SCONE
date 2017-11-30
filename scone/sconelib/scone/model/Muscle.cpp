@@ -51,12 +51,22 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		Count joint_count = 0;
-		const Link* orgLink = &GetOriginLink();
-		const Link* insLink = &GetInsertionLink();
-		for ( const Link* l = orgLink; l && l != insLink; l = &l->GetParent() )
-			++joint_count;
-		return joint_count;
+		return GetJoints().size();
+	}
+
+	const std::vector< const Joint* >& Muscle::GetJoints() const
+	{
+		SCONE_PROFILE_FUNCTION;
+
+		if ( m_Joints.empty() )
+		{
+			const Link* orgLink = &GetOriginLink();
+			const Link* insLink = &GetInsertionLink();
+			for ( const Link* l = insLink; l && l != orgLink; l = &l->GetParent() )
+				m_Joints.push_back( &l->GetJoint() );
+		}
+
+		return m_Joints;
 	}
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const

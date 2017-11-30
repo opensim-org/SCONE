@@ -16,7 +16,7 @@
 
 #include "scone/optimization/opt_tools.h"
 #include "scone/objectives/SimulationObjective.h"
-#include "scone/model/sim_tools.h"
+#include "scone/model/model_tools.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Side.h"

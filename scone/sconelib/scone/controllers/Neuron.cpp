@@ -12,6 +12,7 @@
 #include "../core/Profiler.h"
 #include "../model/Link.h"
 #include "../model/Joint.h"
+#include "../model/model_tools.h"
 
 namespace scone
 {
@@ -50,34 +51,38 @@ namespace scone
 
 	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )
 	{
-		// remove existing muscle name prefix (TODO: more elegant)
-		auto prefix = par.pop_prefix();
+		auto& mjoints = muscle_->GetJoints();
+		auto& sjoints = sensor->muscle_->GetJoints();
 
-		// add joint names to par prefix
-		string joint_prefix;
-		for ( const Link* l = &muscle_->GetInsertionLink(); l != &muscle_->GetOriginLink(); l = &l->GetParent() )
-			joint_prefix += GetNameNoSide( l->GetJoint().GetName() ) + ".";
-		joint_prefix[ joint_prefix.size() - 1 ] = '-';
-		for ( const Link* l = &sensor->muscle_->GetInsertionLink(); l != &sensor->muscle_->GetOriginLink(); l = &l->GetParent() )
-			joint_prefix += GetNameNoSide( l->GetJoint().GetName() ) + ".";
-		joint_prefix[ joint_prefix.size() - 1 ] = '-';
+		// check if muscle and input have common joints
+		int common_joints = 0;
+		for ( auto& mj : mjoints )
+			for ( auto& sj : sjoints )
+				common_joints += ( mj == sj );
 
-		double gain = 0;
-		for ( auto& dof : muscle_->GetModel().GetDofs() )
+		if ( common_joints > 0 )
 		{
-			auto muscle_mom = muscle_->GetNormalizedMomentArm( *dof );
-			auto sensor_mom = sensor->muscle_->GetNormalizedMomentArm( *dof );
-			if ( muscle_mom != 0 && sensor_mom != 0 )
-			{
-				string dof_name = GetNameNoSide( dof->GetName() ) + '.' + SignChar( muscle_mom ) + SignChar( sensor_mom );
-				auto factor = sqrt( abs( muscle_mom * sensor_mom ) );
-				gain += par.try_get( joint_prefix + dof_name, pn, "gain", 0.0 ) * factor;
-			}
-		}
-		if ( gain != 0 )
-			AddInput( sensor, gain );
+			auto prefix = par.pop_prefix();
 
-		par.push_prefix( prefix );
+			double gain = 0;
+			auto mvmvec = GetVirtualMuscles( *muscle_ );
+			auto svmvec = GetVirtualMuscles( *sensor->muscle_ );
+
+			for ( auto& mvm : mvmvec )
+			{
+				for ( auto& svm : svmvec )
+				{
+					string parname = mvm.first + '.' + svm.first + '.' + sensor->type_;
+					auto factor = sqrt( mvm.second * svm.second );
+					gain += factor * par.try_get( parname, pn, "gain", 0.0 );
+				}
+			}
+
+			if ( gain != 0 )
+				AddInput( sensor, gain );
+
+			par.push_prefix( prefix );
+		}
 	}
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
