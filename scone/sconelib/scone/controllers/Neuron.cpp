@@ -72,7 +72,7 @@ namespace scone
 			{
 				for ( auto& svm : svmvec )
 				{
-					string parname = mvm.first + '.' + svm.first + '.' + sensor->type_;
+					string parname = ( mvm.first == svm.first ? mvm.first : mvm.first + '.' + svm.first ) + '.' + sensor->type_;
 					auto factor = sqrt( mvm.second * svm.second );
 					gain += factor * par.try_get( parname, pn, "gain", 0.0 );
 				}
