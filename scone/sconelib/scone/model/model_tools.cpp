@@ -7,6 +7,9 @@
 #include "Dof.h"
 #include "Side.h"
 
+using std::vector;
+using std::pair;
+
 namespace scone
 {
 	SCONE_API Vec3 GetGroundCop( const Vec3& force, const Vec3& moment, Real min_force )
@@ -18,21 +21,31 @@ namespace scone
 
 	SCONE_API std::vector< std::pair< string, double > > GetVirtualMuscles( const Muscle& mus )
 	{
-		std::vector< std::pair< string, double > > r( 1 );
+		vector< pair< string, double > > vm( 1 );
 
-		for ( auto& j : mus.GetJoints() )
+		auto& joints = mus.GetJoints();
+		vector< vector< Dof* > > dof_list( joints.size() );
+
+		for ( Index joint_idx = 0; joint_idx < joints.size(); ++joint_idx )
 		{
-			auto joint_name = j->GetName();
-			auto& dofs = j->GetDofs();
-			if ( dofs.size() == 1 )
+			auto& joint = joints[ joint_idx ];
+			auto& dofs = joint->GetDofs();
+			for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 			{
-				auto& dof = *dofs[ 0 ];
-				auto mom = mus.GetMomentArm( dof );
-				r.front().first += GetNameNoSide( dof.GetName() ) + SignChar( mom );
+				auto& dof = dofs[ dof_idx ];
+				auto mom = mus.GetNormalizedMomentArm( *dof );
+				auto name = GetNameNoSide( dof->GetName() ) + SignChar( mom );
+				dof_list[ joint_idx ].emplace_back( dofs[ dof_idx ] );
+
+				// HACK for trivial case
+				vm.front().first += name;
+				vm.front().second = 1.0;
 			}
 		}
-		r.front().second = 1.0;
 
-		return r;
+		// TODO: flatten vector?
+
+
+		return vm;
 	}
 }

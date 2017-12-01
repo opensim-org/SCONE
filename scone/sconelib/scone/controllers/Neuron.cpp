@@ -90,7 +90,10 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// set param prefix
-		ScopedParamSetPrefixer ps( par, GetParName() + "." );
+		bool dof_par = pn.get( "dof_par", false );
+		string par_name = dof_par ? GetVirtualMuscles( *muscle_ ).front().first : GetParName();
+
+		ScopedParamSetPrefixer ps( par, par_name + "." );
 
 		// add additional input-specific offset (if present)
 		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
