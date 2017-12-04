@@ -49,6 +49,19 @@ namespace scone
 		return output_ = activation_function( value );
 	}
 
+	double Neuron::GetMusclePar( Muscle* mus, SensorNeuron* sensor, Params& par, const PropNode& pn, const String& name, bool dof_par, double default_value )
+	{
+		if ( dof_par )
+		{
+			FLUT_NOT_IMPLEMENTED;
+		}
+		else
+		{
+			auto par_name = sensor->muscle_ == muscle_ ? sensor->GetParName() : GetParName() + '.' + sensor->GetParName();
+			return par.try_get( par_name, pn, name, default_value );
+		}
+	}
+
 	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )
 	{
 		auto& mjoints = muscle_->GetJoints();
@@ -97,6 +110,7 @@ namespace scone
 
 		// add additional input-specific offset (if present)
 		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
+		//offset_ = GetMusclePar( muscle_, nullptr, par, pn, "offset", dof_par, 0.0 );
 
 		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
