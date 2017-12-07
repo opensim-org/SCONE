@@ -18,7 +18,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" delay_file="neural_delays_FEA_2392.pn" delay_factor="1" activation="rectifier">
+				<Controller type="NeuralController" delay_file="neural_delays_FEA_2392.pn" delay_factor="1" activation="rectifier" parameter_mode="muscle">
 					<signature_prefix>NSBO</signature_prefix>
 
 					<SensorNeuronLayer>
