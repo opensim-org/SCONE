@@ -1,6 +1,7 @@
 #include "model_tools.h"
 
 #include "scone/core/string_tools.h"
+#include "scone/core/Profiler.h"
 #include "Sensors.h"
 #include "Muscle.h"
 #include "Joint.h"
@@ -19,13 +20,13 @@ namespace scone
 		else return Vec3::zero();
 	}
 
-	SCONE_API std::vector< std::pair< string, double > > GetVirtualMuscles( const Muscle& mus, Index joint_idx )
+	std::vector< std::pair< string, double > > GetVirtualMusclesRecursive( const Muscle* mus, Index joint_idx )
 	{
-		auto& joints = mus.GetJoints();
+		auto& joints = mus->GetJoints();
 		if ( joint_idx >= joints.size() )
 			return std::vector< std::pair< string, double > >();
 
-		auto children = GetVirtualMuscles( mus, joint_idx + 1 );
+		auto children = GetVirtualMusclesRecursive( mus, joint_idx + 1 );
 
 		auto& joint = joints[ joint_idx ];
 		auto& dofs = joint->GetDofs();
@@ -36,16 +37,23 @@ namespace scone
 		for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 		{
 			auto& dof = dofs[ dof_idx ];
-			auto mom = mus.GetNormalizedMomentArm( *dof );
+			auto mom = mus->GetNormalizedMomentArm( *dof );
 			auto name = GetNameNoSide( dof->GetName() ) + SignChar( mom );
 			if ( !children.empty() )
 			{
 				for ( auto& ch : children )
-					results.emplace_back( name + ch.first, 1.0 );
+					results.emplace_back( name + ch.first, abs( mom ) * ch.second );
 			}
 			else results.emplace_back( name, abs( mom ) );
 		}
 
 		return results;
+	}
+
+	SCONE_API std::vector< std::pair< string, double > > GetVirtualMuscles( const Muscle* mus )
+	{
+		SCONE_PROFILE_FUNCTION;
+
+		return GetVirtualMusclesRecursive( mus, 0 );
 	}
 }

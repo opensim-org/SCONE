@@ -78,8 +78,8 @@ namespace scone
 			auto prefix = par.pop_prefix();
 
 			double gain = 0;
-			auto mvmvec = GetVirtualMuscles( *muscle_ );
-			auto svmvec = GetVirtualMuscles( *sensor->muscle_ );
+			auto mvmvec = nc.GetVirtualMuscles( *muscle_ );
+			auto svmvec = nc.GetVirtualMuscles( *sensor->muscle_ );
 
 			for ( auto& mvm : mvmvec )
 			{
@@ -104,12 +104,12 @@ namespace scone
 
 		// set param prefix
 		bool dof_par = pn.get( "dof_par", false );
-		auto vm = GetVirtualMuscles( *muscle_ );
-		if ( dof_par )
-		{
-			log::debug( "Virtual muscles for ", muscle_->GetName() );
-			for ( auto& v : vm ) log::debug( "\t", v.first, ": ", v.second );
-		}
+		auto vm = nc.GetVirtualMuscles( *muscle_ );
+		//if ( dof_par )
+		//{
+		//	log::debug( "Virtual muscles for ", muscle_->GetName() );
+		//	for ( auto& v : vm ) log::debug( "\t", v.first, ": ", v.second );
+		//}
 		string par_name = dof_par ? vm.front().first : GetParName();
 
 		ScopedParamSetPrefixer ps( par, par_name + "." );

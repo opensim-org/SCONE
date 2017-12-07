@@ -24,8 +24,9 @@ namespace scone
 		Real mom = GetMomentArm( dof );
 		if ( mom != 0 )
 		{
+			// normalize
 			Real total_mom = 0.0;
-			for ( auto& d : GetModel().GetDofs() )
+			for ( auto& d : dof.GetJoint().GetDofs() )
 				total_mom += abs( GetMomentArm( *d ) );
 			return mom / total_mom;
 		}

@@ -11,6 +11,7 @@
 #include "activation_functions.h"
 #include "flut/flat_map.hpp"
 #include "flut/string_tools.hpp"
+#include "flut/memoize.hpp"
 
 namespace scone
 {
@@ -42,6 +43,9 @@ namespace scone
 		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );
 
+		using VirtualMuscleList = std::vector< std::pair< string, double > >;
+		VirtualMuscleList GetVirtualMuscles( const Muscle& mus );
+
 	protected:
 		virtual String GetClassSignature() const override;
 
@@ -60,5 +64,6 @@ namespace scone
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
+		flut::memoize< VirtualMuscleList( const Muscle* ) > m_VirtualMuscles;
 	};
 }

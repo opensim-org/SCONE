@@ -18,12 +18,14 @@
 #include "flut/table.hpp"
 #include "flut/system/string_cast.hpp"
 #include "../core/Profiler.h"
+#include "../model/model_tools.h"
 
 namespace scone
 {
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
 	Controller( pn, par, model, locality ),
-	model_( model )
+	model_( model ),
+	m_VirtualMuscles( scone::GetVirtualMuscles )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -184,5 +186,14 @@ namespace scone
 	TimeInSeconds NeuralController::GetDelay( const string& name )
 	{
 		return delay_factor_ * delays_.get< double >( name );
+	}
+
+	scone::NeuralController::VirtualMuscleList NeuralController::GetVirtualMuscles( const Muscle& mus )
+	{
+#if 0
+		return m_VirtualMuscles( &mus );
+#else
+		return scone::GetVirtualMuscles( &mus );
+#endif
 	}
 }
