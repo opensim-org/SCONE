@@ -190,7 +190,7 @@ namespace scone
 
 	scone::NeuralController::VirtualMuscleList NeuralController::GetVirtualMuscles( const Muscle& mus )
 	{
-#if 0
+#if 1
 		return m_VirtualMuscles( &mus );
 #else
 		return scone::GetVirtualMuscles( &mus );
