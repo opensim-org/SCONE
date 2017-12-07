@@ -43,8 +43,8 @@ namespace scone
 		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );
 
-		using VirtualMuscleList = std::vector< std::pair< string, double > >;
-		VirtualMuscleList GetVirtualMuscles( const Muscle& mus );
+		using MuscleParamList = std::vector< std::pair< string, double > >;
+		MuscleParamList GetMuscleParams( const Muscle& mus );
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -53,7 +53,9 @@ namespace scone
 		Model& model_;
 		PropNode delays_;
 		TimeInSeconds delay_factor_;
-		activation_func_t activation_function;
+		activation_func_t activation_function_;
+
+		enum parameter_mode_t { muscle_mode, dof_mode, virtual_muscle_mode } par_mode_;
 
 		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );
@@ -64,6 +66,8 @@ namespace scone
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
-		flut::memoize< VirtualMuscleList( const Muscle* ) > m_VirtualMuscles;
+		flut::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
+
+		MuscleParamList GetMuscleDofs( const Muscle* mus );
 	};
 }

@@ -19,6 +19,8 @@
 #include "flut/system/string_cast.hpp"
 #include "../core/Profiler.h"
 #include "../model/model_tools.h"
+#include "flut/dictionary.hpp"
+#include "../model/Side.h"
 
 namespace scone
 {
@@ -33,7 +35,9 @@ namespace scone
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
 		INIT_PROP( pn, delay_factor_, 1.0 );
-		activation_function = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
+		par_mode_ = flut::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
+			{ "muscle", muscle_mode }, { "dof", dof_mode }, { "virtual_muscle", virtual_muscle_mode } } );
+		activation_function_ = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
 		// backup the current state and set all DOFs to zero
 		State org_state = model.GetState();
@@ -125,6 +129,21 @@ namespace scone
 		}
 	}
 
+	scone::NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus )
+	{
+		MuscleParamList result;
+
+		for ( auto& dof : mus->GetModel().GetDofs() )
+		{
+			if ( mus->HasMomentArm( *dof ) )
+			{
+				auto mom = mus->GetNormalizedMomentArm( *dof );
+				result.emplace_back( dof->GetName() + GetSignChar( mom ), abs( mom ) );
+			}
+		}
+		return result;
+	}
+
 	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
 	{
 		for ( auto& n : m_MotorNeurons )
@@ -188,12 +207,14 @@ namespace scone
 		return delay_factor_ * delays_.get< double >( name );
 	}
 
-	scone::NeuralController::VirtualMuscleList NeuralController::GetVirtualMuscles( const Muscle& mus )
+	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle& mus )
 	{
-#if 1
-		return m_VirtualMuscles( &mus );
-#else
-		return scone::GetVirtualMuscles( &mus );
-#endif
+		switch ( par_mode_ )
+		{
+		case NeuralController::muscle_mode: return { { GetNameNoSide( mus.GetName() ), 1 } };
+		case NeuralController::dof_mode: return GetMuscleDofs( &mus );
+		case NeuralController::virtual_muscle_mode: return GetVirtualMuscles( &mus );
+		default: SCONE_THROW( "Unknown parameter mode" );
+		}
 	}
 }

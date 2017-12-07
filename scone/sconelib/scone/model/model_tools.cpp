@@ -38,7 +38,7 @@ namespace scone
 		{
 			auto& dof = dofs[ dof_idx ];
 			auto mom = mus->GetNormalizedMomentArm( *dof );
-			auto name = GetNameNoSide( dof->GetName() ) + SignChar( mom );
+			auto name = GetNameNoSide( dof->GetName() ) + GetSignChar( mom );
 			if ( !children.empty() )
 			{
 				for ( auto& ch : children )

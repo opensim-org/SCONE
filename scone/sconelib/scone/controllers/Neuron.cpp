@@ -75,11 +75,11 @@ namespace scone
 
 		if ( common_joints > 0 )
 		{
-			auto prefix = par.pop_prefix();
+			//auto prefix = par.pop_prefix();
 
 			double gain = 0;
-			auto mvmvec = nc.GetVirtualMuscles( *muscle_ );
-			auto svmvec = nc.GetVirtualMuscles( *sensor->muscle_ );
+			auto mvmvec = nc.GetMuscleParams( *muscle_ );
+			auto svmvec = nc.GetMuscleParams( *sensor->muscle_ );
 
 			for ( auto& mvm : mvmvec )
 			{
@@ -94,7 +94,7 @@ namespace scone
 			if ( gain != 0 )
 				AddInput( sensor, gain );
 
-			par.push_prefix( prefix );
+			//par.push_prefix( prefix );
 		}
 	}
 
@@ -103,20 +103,15 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// set param prefix
-		bool dof_par = pn.get( "dof_par", false );
-		auto vm = nc.GetVirtualMuscles( *muscle_ );
-		//if ( dof_par )
-		//{
-		//	log::debug( "Virtual muscles for ", muscle_->GetName() );
-		//	for ( auto& v : vm ) log::debug( "\t", v.first, ": ", v.second );
-		//}
-		string par_name = dof_par ? vm.front().first : GetParName();
+		auto mpars = nc.GetMuscleParams( *muscle_ );
+		for ( auto& mp : mpars )
+			offset_ += mp.second * par.try_get( mp.first + ".C0", pn, "offset", 0.0 );
 
+#if 0
 		ScopedParamSetPrefixer ps( par, par_name + "." );
-
 		// add additional input-specific offset (if present)
 		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
-		//offset_ = GetMusclePar( muscle_, nullptr, par, pn, "offset", dof_par, 0.0 );
+#endif
 
 		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
@@ -172,7 +167,13 @@ namespace scone
 					case InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+						{
+							// TODO: neater!
+							double gain = 0;
+							for ( auto& mp : mpars )
+								gain += mp.second * par.try_get( mp.first + '.' + sensor->type_, pn, "gain", 1.0 );
+							AddInput( sensor, gain );
+						}
 						break;
 					}
 					case InterNeuron::contralateral:
