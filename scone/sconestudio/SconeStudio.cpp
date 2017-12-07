@@ -110,7 +110,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
 	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setPlaybackTime );
-	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::refreshAnalysis );
+	//connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
 	//connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
 	//connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
