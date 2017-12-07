@@ -19,33 +19,33 @@ namespace scone
 		else return Vec3::zero();
 	}
 
-	SCONE_API std::vector< std::pair< string, double > > GetVirtualMuscles( const Muscle& mus )
+	SCONE_API std::vector< std::pair< string, double > > GetVirtualMuscles( const Muscle& mus, Index joint_idx )
 	{
-		vector< pair< string, double > > vm( 1 );
-
 		auto& joints = mus.GetJoints();
-		vector< vector< Dof* > > dof_list( joints.size() );
+		if ( joint_idx >= joints.size() )
+			return std::vector< std::pair< string, double > >();
 
-		for ( Index joint_idx = 0; joint_idx < joints.size(); ++joint_idx )
+		auto children = GetVirtualMuscles( mus, joint_idx + 1 );
+
+		auto& joint = joints[ joint_idx ];
+		auto& dofs = joint->GetDofs();
+		if ( dofs.empty() )
+			return children;
+
+		std::vector< std::pair< string, double > > results;
+		for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 		{
-			auto& joint = joints[ joint_idx ];
-			auto& dofs = joint->GetDofs();
-			for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
+			auto& dof = dofs[ dof_idx ];
+			auto mom = mus.GetNormalizedMomentArm( *dof );
+			auto name = GetNameNoSide( dof->GetName() ) + SignChar( mom );
+			if ( !children.empty() )
 			{
-				auto& dof = dofs[ dof_idx ];
-				auto mom = mus.GetNormalizedMomentArm( *dof );
-				auto name = GetNameNoSide( dof->GetName() ) + SignChar( mom );
-				dof_list[ joint_idx ].emplace_back( dofs[ dof_idx ] );
-
-				// HACK for trivial case
-				vm.front().first += name;
-				vm.front().second = 1.0;
+				for ( auto& ch : children )
+					results.emplace_back( name + ch.first, 1.0 );
 			}
+			else results.emplace_back( name, abs( mom ) );
 		}
 
-		// TODO: flatten vector?
-
-
-		return vm;
+		return results;
 	}
 }

@@ -104,7 +104,13 @@ namespace scone
 
 		// set param prefix
 		bool dof_par = pn.get( "dof_par", false );
-		string par_name = dof_par ? GetVirtualMuscles( *muscle_ ).front().first : GetParName();
+		auto vm = GetVirtualMuscles( *muscle_ );
+		if ( dof_par )
+		{
+			log::debug( "Virtual muscles for ", muscle_->GetName() );
+			for ( auto& v : vm ) log::debug( "\t", v.first, ": ", v.second );
+		}
+		string par_name = dof_par ? vm.front().first : GetParName();
 
 		ScopedParamSetPrefixer ps( par, par_name + "." );
 
