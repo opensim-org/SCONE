@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <OpenSimDocument Version="20303">
-	<Model name="f1886">
+	<Model name="f2086m">
 		<!--Feed forward version of the Gait2392 model. Adapted by Thomas Geijtenbeek.
 
 		2016.01.20: Changed HuntCrossleyForce stiffness from 10^8 to 10^7
