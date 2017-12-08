@@ -210,7 +210,7 @@ namespace scone
 		return delay_factor_ * delays_.get< double >( name );
 	}
 
-	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus )
+	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor )
 	{
 		if ( mus )
 		{
@@ -218,7 +218,7 @@ namespace scone
 			{
 			case NeuralController::muscle_mode: return { { GetNameNoSide( mus->GetName() ), 1 } };
 			case NeuralController::dof_mode: return GetMuscleDofs( mus );
-			case NeuralController::virtual_muscle_mode: return GetVirtualMuscles( mus );
+			case NeuralController::virtual_muscle_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus );
 			default: SCONE_THROW( "Unknown parameter mode" );
 			}
 		}

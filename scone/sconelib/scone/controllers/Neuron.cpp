@@ -62,11 +62,9 @@ namespace scone
 
 		if ( common_joints > 0 )
 		{
-			//auto prefix = par.pop_prefix();
-
 			double gain = 0;
-			auto mvmvec = nc.GetMuscleParams( muscle_ );
-			auto svmvec = nc.GetMuscleParams( sensor->muscle_ );
+			auto mvmvec = nc.GetMuscleParams( muscle_, false );
+			auto svmvec = nc.GetMuscleParams( sensor->muscle_, true );
 
 			for ( auto& mvm : mvmvec )
 			{
@@ -80,8 +78,6 @@ namespace scone
 
 			if ( gain != 0 )
 				AddInput( sensor, gain );
-
-			//par.push_prefix( prefix );
 		}
 	}
 
@@ -90,7 +86,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// set param prefix
-		auto mpars = nc.GetMuscleParams( muscle_ );
+		auto mpars = nc.GetMuscleParams( muscle_, false );
 		if ( pn.has_key( "offset" ) )
 		{
 			for ( auto& mp : mpars )
