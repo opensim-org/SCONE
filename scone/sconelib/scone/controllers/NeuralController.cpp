@@ -38,7 +38,9 @@ namespace scone
 		par_mode_ = flut::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
 			{ "muscle", muscle_mode },
 			{ "dof", dof_mode },
-			{ "virtual", virtual_muscle_mode } } );
+			{ "virtual", virtual_mode },
+			{ "virtual_dof", virtual_dof_mode },
+		} );
 
 		activation_function_ = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
@@ -218,7 +220,8 @@ namespace scone
 			{
 			case NeuralController::muscle_mode: return { { GetNameNoSide( mus->GetName() ), 1 } };
 			case NeuralController::dof_mode: return GetMuscleDofs( mus );
-			case NeuralController::virtual_muscle_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus );
+			case NeuralController::virtual_mode: return GetVirtualMuscles( mus );
+			case NeuralController::virtual_dof_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus );
 			default: SCONE_THROW( "Unknown parameter mode" );
 			}
 		}

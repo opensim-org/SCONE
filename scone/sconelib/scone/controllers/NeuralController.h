@@ -56,7 +56,7 @@ namespace scone
 		TimeInSeconds delay_factor_;
 		activation_func_t activation_function_;
 
-		enum parameter_mode_t { muscle_mode, dof_mode, virtual_muscle_mode } par_mode_;
+		enum parameter_mode_t { muscle_mode, dof_mode, virtual_mode, virtual_dof_mode } par_mode_;
 
 		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );
