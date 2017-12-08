@@ -65,8 +65,8 @@ namespace scone
 			//auto prefix = par.pop_prefix();
 
 			double gain = 0;
-			auto mvmvec = nc.GetMuscleParams( *muscle_ );
-			auto svmvec = nc.GetMuscleParams( *sensor->muscle_ );
+			auto mvmvec = nc.GetMuscleParams( muscle_ );
+			auto svmvec = nc.GetMuscleParams( sensor->muscle_ );
 
 			for ( auto& mvm : mvmvec )
 			{
@@ -90,13 +90,12 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// set param prefix
-		auto mpars = nc.GetMuscleParams( *muscle_ );
-
+		auto mpars = nc.GetMuscleParams( muscle_ );
 		if ( pn.has_key( "offset" ) )
 		{
 			for ( auto& mp : mpars )
 			{
-				log::trace( muscle_->GetName(), "\t", mp.first, " x ", mp.second );
+				//log::trace( muscle_->GetName(), "\t", mp.first, " x ", mp.second );
 				offset_ += mp.second * par.try_get( mp.first + ".C0", pn, "offset", 0.0 );
 			}
 		}
@@ -123,37 +122,38 @@ namespace scone
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( flut::pattern_match( sensor->type_, input_type ) )
 				{
+					string postfix;
 					switch ( connect )
 					{
 					case InterNeuron::bilateral:
 					{
-						AddInput( sensor, par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 ) );
+						postfix = sensor->GetName( right_side );
+						//AddInput( sensor, par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::monosynaptic:
 					{
-						SCONE_PROFILE_SCOPE( "monosynaptic" );
 						if ( sensor->source_name_ == name_ )
-							AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
+							postfix = sensor->type_;
+						//AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::antagonistic:
 					{
-						SCONE_PROFILE_SCOPE( "antagonistic" );
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
-							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+							postfix = sensor->GetParName();
+						//AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::agonistic:
 					{
-						SCONE_PROFILE_SCOPE( "agonistic" );
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ ) )
-							AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
+							postfix = sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName();
+						//AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::synergetic:
 					{
-						SCONE_PROFILE_SCOPE( "synergetic" );
 						if ( muscle_ && sensor->muscle_ )
 							AddSynergeticInput( sensor, pn, par, nc );
 						break;
@@ -162,22 +162,34 @@ namespace scone
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
 						{
+							postfix = sensor->GetParName();
+
 							// TODO: neater!
-							double gain = 0;
-							for ( auto& mp : mpars )
-								gain += mp.second * par.try_get( mp.first + '.' + sensor->type_, pn, "gain", 1.0 );
-							AddInput( sensor, gain );
+							//double gain = 0;
+							//for ( auto& mp : mpars )
+							//	gain += mp.second * par.try_get( mp.first + '.' + sensor->type_, pn, "gain", 1.0 );
+							//AddInput( sensor, gain );
 						}
 						break;
 					}
 					case InterNeuron::contralateral:
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
-							AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
+							postfix = sensor->GetParName();
+						//AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 					}
+
+					if ( !postfix.empty() )
+					{
+						double gain = 0;
+						for ( auto& mp : mpars )
+							gain += mp.second * par.try_get( mp.first + '.' + postfix, pn, "gain", 1.0 );
+						AddInput( sensor, gain );
+					}
+
 				}
 			}
 		}

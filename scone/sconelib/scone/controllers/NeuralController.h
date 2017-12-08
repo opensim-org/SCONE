@@ -44,7 +44,7 @@ namespace scone
 		TimeInSeconds GetDelay( const string& name );
 
 		using MuscleParamList = std::vector< std::pair< string, double > >;
-		MuscleParamList GetMuscleParams( const Muscle& mus );
+		MuscleParamList GetMuscleParams( const Muscle* mus );
 
 	protected:
 		virtual String GetClassSignature() const override;
