@@ -94,6 +94,11 @@ namespace scone
 
 		INIT_PROPERTY( props, create_body_forces, false );
 
+		// always set create_body_forces when there's a PerturbationController
+		// TODO: think of a nicer, more generic way of dealing with this issue
+		for ( auto& cprops : props.get_child( "Controllers" ) )
+			create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
