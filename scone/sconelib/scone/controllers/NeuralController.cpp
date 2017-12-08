@@ -36,7 +36,10 @@ namespace scone
 
 		INIT_PROP( pn, delay_factor_, 1.0 );
 		par_mode_ = flut::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
-			{ "muscle", muscle_mode }, { "dof", dof_mode }, { "virtual_muscle", virtual_muscle_mode } } );
+			{ "muscle", muscle_mode },
+			{ "dof", dof_mode },
+			{ "virtual", virtual_muscle_mode } } );
+
 		activation_function_ = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
 
 		// backup the current state and set all DOFs to zero
