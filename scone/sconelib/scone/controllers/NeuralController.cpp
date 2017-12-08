@@ -137,8 +137,8 @@ namespace scone
 		{
 			if ( mus->HasMomentArm( *dof ) )
 			{
-				auto mom = mus->GetNormalizedMomentArm( *dof );
-				result.emplace_back( dof->GetName() + GetSignChar( mom ), abs( mom ) );
+				auto mom = mus->GetMomentArm( *dof );
+				result.emplace_back( GetNameNoSide( dof->GetName() ) + GetSignChar( mom ), abs( mom ) );
 			}
 		}
 		return result;

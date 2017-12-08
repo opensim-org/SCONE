@@ -24,7 +24,6 @@ namespace scone
 
 		enum connection_t { bilateral, monosynaptic, antagonistic, agonistic, synergetic, ipsilateral, contralateral };
 
-		double GetMusclePar( Muscle* mus, SensorNeuron* sensor, Params& par, const PropNode& pn, const String& name, bool dof_par, double default_value );
 		void AddInput( Neuron* input, double gain, double mean = 0.0 ) { inputs_.emplace_back( input, gain, mean ); }
 		void AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc );
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
