@@ -9,7 +9,7 @@
 	<Objective type="SimulationObjective">
 		<max_duration>10</max_duration>
 		<Model type="Simbody">
-			<model_file>f2086m.osim</model_file>
+			<model_file>f2086am.osim</model_file>
 			<state_init_file>f2354_init_walk_3_S15.sto</state_init_file>
 			<state_init_optimization include_states="*" exclude_states="*_tx;*_ty;*_tz;*_u" init_std="0.01" min="-0.5" max="0.5"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
@@ -18,7 +18,7 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" delay_file="neural_delays_FEA_2392.pn" delay_factor="1" activation="rectifier" parameter_mode="muscle">
+				<Controller type="NeuralController" delay_file="neural_delays_FEA_2392.pn" delay_factor="1" activation="rectifier" par_mode="virtual">
 					<signature_prefix>NSBO</signature_prefix>
 
 					<SensorNeuronLayer>
@@ -30,10 +30,10 @@
 					</SensorNeuronLayer>
 
 					<MotorNeuronLayer>
-						<MotorNeuron include="*" offset="0~0.01" dof_par="1"/>
+						<MotorNeuron include="*" offset="0~0.01"/>
 						<MotorNeuron input_layer="0" connect="synergetic" type="F" gain="0~0.1"/>
 						<MotorNeuron input_layer="0" connect="synergetic" type="L" gain="0~0.1"/>
-						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~0.1" dof_par="1"/>
+						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~0.1"/>
 					</MotorNeuronLayer>
 
 				</Controller>

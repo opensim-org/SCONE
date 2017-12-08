@@ -140,7 +140,7 @@ namespace scone
 		{
 			if ( mus->HasMomentArm( *dof ) )
 			{
-				auto mom = mus->GetMomentArm( *dof );
+				auto mom = mus->GetNormalizedMomentArm( *dof );
 				result.emplace_back( GetNameNoSide( dof->GetName() ) + GetSignChar( mom ), abs( mom ) );
 			}
 		}
