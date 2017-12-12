@@ -20,6 +20,7 @@ namespace scone
 
 	void MotorNeuron::UpdateActuator()
 	{
-		muscle_->AddInput( GetOutput() );
+		auto v = GetOutput();
+		muscle_->AddInput( v );
 	}
 }

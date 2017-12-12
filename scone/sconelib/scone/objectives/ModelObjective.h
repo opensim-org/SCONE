@@ -19,7 +19,7 @@ namespace scone
 		virtual PropNode GetReport( Model& m ) const = 0;
 
 		virtual TimeInSeconds GetDuration() const = 0;
-		ModelUP CreateModelFromParameters( Params& par ) const;
+		ModelUP CreateModelFromParInstance( const ParamInstance& par ) const;
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
 		
 	protected:

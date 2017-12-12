@@ -210,15 +210,16 @@ void SconeStudio::evaluate()
 		}
 		setTime( t, vis_step++ % 5 == 0 );
 	}
-	ui.progressBar->setValue( 100 );
-	if ( model->IsEvaluating() )
-		model->EvaluateTo( model->GetMaxTime() );
-	model->UpdateVis( model->GetTime() );
 
 	// report duration
 	auto real_dur = real_time.seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+
+	ui.progressBar->setValue( 100 );
+	if ( model->IsEvaluating() )
+		model->EvaluateTo( model->GetMaxTime() );
+	model->UpdateVis( model->GetTime() );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
 }

@@ -154,6 +154,8 @@ set(OBJECTIVES_FILES
 	scone/objectives/SimulationObjective.h
 	scone/objectives/ImitationObjective.cpp
 	scone/objectives/ImitationObjective.h
+	scone/objectives/SimilarityObjective.cpp
+	scone/objectives/SimilarityObjective.h
 	)
 
 set(OPT_API_FILES

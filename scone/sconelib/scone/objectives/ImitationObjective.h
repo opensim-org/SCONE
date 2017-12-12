@@ -24,7 +24,7 @@ namespace scone
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
 
-		path file;
+		path file_;
 		size_t frame_delta_;
 
 

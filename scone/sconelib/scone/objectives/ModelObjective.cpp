@@ -22,9 +22,9 @@ namespace scone
 		return GetResult( m );
 	}
 
-	scone::ModelUP ModelObjective::CreateModelFromParameters( Params& par ) const
+	scone::ModelUP ModelObjective::CreateModelFromParInstance( const ParamInstance& par ) const
 	{
-		return CreateModel( m_ModelPropsCopy, par );
+		return CreateModel( m_ModelPropsCopy, ParamInstance( par ) );
 	}
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const

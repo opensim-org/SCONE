@@ -47,6 +47,8 @@ namespace scone
 		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor );
 		MuscleParamList GetMuscleDofs( const Muscle* mus );
 
+		double GetSimilarity( const NeuralController& other ) const;
+
 	protected:
 		virtual String GetClassSignature() const override;
 

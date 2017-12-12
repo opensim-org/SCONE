@@ -166,6 +166,8 @@ namespace scone
 		for ( auto& layer : m_InterNeurons )
 			for ( auto& neuron : layer.second )
 				frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
+		for ( auto& neuron : m_MotorNeurons )
+			frame[ neuron->GetName( false ) + ".linear_output" ] = neuron->linear_output_;
 	}
 
 	void NeuralController::WriteResult( const path& file ) const
@@ -199,10 +201,10 @@ namespace scone
 		size_t c = 0;
 		for ( auto& layer : m_InterNeurons )
 			for ( auto& neuron : layer.second )
-				c += neuron->GetInputCount();
+				c += neuron->GetInputs().size();
 
 		for ( auto& neuron : m_MotorNeurons )
-			c += neuron->GetInputCount();
+			c += neuron->GetInputs().size();
 
 		return flut::stringf( "N%d", c );
 	}
@@ -214,6 +216,8 @@ namespace scone
 
 	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		if ( mus )
 		{
 			switch ( par_mode_ )
@@ -226,5 +230,26 @@ namespace scone
 			}
 		}
 		else return { { "IN", 1 } };
+	}
+
+	double NeuralController::GetSimilarity( const NeuralController& other ) const
+	{
+		SCONE_ASSERT( m_MotorNeurons.size() == other.m_MotorNeurons.size() );
+
+		double fitness = 0.0;
+		int samples = 0;
+		for ( auto& neuron : m_MotorNeurons )
+		{
+			auto other_neuron = flut::find_if( other.m_MotorNeurons, [&]( const MotorNeuronUP& m ) { return neuron->GetName() == m->GetName(); } );
+			SCONE_THROW_IF( other_neuron == other.m_MotorNeurons.end(), "Could not find Neuron " + neuron->GetName() );
+			for ( auto& input : neuron->GetInputs() )
+			{
+				auto other_input = flut::find_if( (*other_neuron)->GetInputs(), [&]( const Neuron::Input& i ) { return input.neuron->GetName() == i.neuron->GetName(); } );
+				SCONE_THROW_IF( other_input == (*other_neuron )->GetInputs().end(), "Could not find Input " + input.neuron->GetName() + " for " + neuron->GetName() );
+				fitness += abs( input.gain - other_input->gain );
+				++samples;
+			}
+		}
+		return 100 * fitness / samples;
 	}
 }

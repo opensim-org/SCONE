@@ -30,6 +30,7 @@
 #include "scone/controllers/NeuralController.h"
 #include "../objectives/ImitationObjective.h"
 #include "../objectives/BalanceMeasure.h"
+#include "../objectives/SimilarityObjective.h"
 
 namespace scone
 {
@@ -134,6 +135,7 @@ namespace scone
 		{
 			g_ObjectiveFactory.register_class< SimulationObjective >();
 			g_ObjectiveFactory.register_class< ImitationObjective >();
+			g_ObjectiveFactory.register_class< SimilarityObjective >();
 		}
 		return g_ObjectiveFactory;
 	}

@@ -26,7 +26,7 @@ namespace scone
 		model_objective = CreateModelObjective( file );
 		if ( file.extension() == "par" )
 			model = model_objective->CreateModelFromParFile( file );
-		else model = model_objective->CreateModelFromParameters( ParamInstance( model_objective->info() ) );
+		else model = model_objective->CreateModelFromParInstance( ParamInstance( model_objective->info() ) );
 
 		// accept filename and clear data
 		filename = file;
@@ -216,7 +216,8 @@ namespace scone
 
 		// copy data and init data
 		data = model->GetData();
-		InitStateDataIndices();
+		if ( !data.IsEmpty() )
+			InitStateDataIndices();
 
 		// reset this stuff
 		is_evaluating = false;

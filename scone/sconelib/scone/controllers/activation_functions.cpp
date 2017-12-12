@@ -3,7 +3,6 @@
 
 namespace scone
 {
-	
 	activation_func_t GetActivationFunction( const String& name )
 	{
 		if ( name == "rectifier" ) return rectifier;

@@ -46,6 +46,7 @@ namespace scone
 			value += input;
 		}
 
+		linear_output_ = value;
 		return output_ = activation_function( value );
 	}
 
@@ -66,18 +67,21 @@ namespace scone
 			auto mvmvec = nc.GetMuscleParams( muscle_, false );
 			auto svmvec = nc.GetMuscleParams( sensor->muscle_, true );
 
+			//log::trace( muscle_->GetName(), " <-- ", sensor->GetParName() );
 			for ( auto& mvm : mvmvec )
 			{
 				for ( auto& svm : svmvec )
 				{
 					string parname = ( mvm.first == svm.first ? mvm.first : mvm.first + '.' + svm.first ) + '.' + sensor->type_;
 					auto factor = sqrt( mvm.second * svm.second );
-					gain += factor * par.try_get( parname, pn, "gain", 0.0 );
+					auto par_value = par.try_get( parname, pn, "gain", 0.0 );
+					gain += factor * par_value;
+					//log::trace( "\t", parname, " = ", factor, " x ", par_value );
 				}
 			}
+			//log::trace( "\tTOTAL = ", gain );
 
-			if ( gain != 0 )
-				AddInput( sensor, gain );
+			AddInput( sensor, gain );
 		}
 	}
 

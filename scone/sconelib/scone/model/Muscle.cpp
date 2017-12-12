@@ -111,7 +111,10 @@ namespace scone
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( flags( StoreDataTypes::MuscleExcitation ) )
-			frame[ GetName() + ".excitation" ] = flut::math::clamped( GetInput(), 0.0, 1.0 );
+			frame[ GetName() + ".input" ] = GetInput();
+
+		if ( flags( StoreDataTypes::MuscleExcitation ) )
+			frame[ GetName() + ".excitation" ] = GetExcitation();
 
 		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
 			frame[ GetName() + ".activation" ] = GetActivation();

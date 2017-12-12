@@ -18,13 +18,15 @@ namespace scone
 	ImitationObjective::ImitationObjective( const PropNode& pn ) :
 	ModelObjective( pn )
 	{
-		INIT_PROP_REQUIRED( pn, file );
+		INIT_PROP_REQUIRED( pn, file_ );
 		INIT_PROP( pn, frame_delta_, 1 );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
+
+		// prepare data
 		m_Signature = model->GetSignature();
-		ReadStorageSto( m_Storage, ( scone::GetFolder(SCONE_SCENARIO_FOLDER ) / file ).str() );
+		ReadStorageSto( m_Storage, ( scone::GetFolder(SCONE_SCENARIO_FOLDER ) / file_ ).str() );
 
 		// make sure data and model are compatible
 		auto state = model->GetState();
