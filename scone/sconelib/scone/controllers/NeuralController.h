@@ -44,8 +44,9 @@ namespace scone
 		TimeInSeconds GetDelay( const string& name );
 
 		using MuscleParamList = std::vector< std::pair< string, double > >;
-		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor );
-		MuscleParamList GetMuscleDofs( const Muscle* mus );
+		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor ) const;
+		MuscleParamList GetMuscleDofs( const Muscle* mus ) const;
+		MuscleParamList GetVirtualMuscles( const Muscle* mus ) const;
 
 		double GetSimilarity( const NeuralController& other ) const;
 
@@ -69,6 +70,6 @@ namespace scone
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
-		flut::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
+		mutable flut::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
 	};
 }

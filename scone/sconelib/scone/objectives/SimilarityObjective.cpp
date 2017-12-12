@@ -14,6 +14,8 @@ namespace scone
 	{
 		INIT_PROP_REQUIRED( pn, file_ );
 
+		file_ = GetFolder( SCONE_SCENARIO_FOLDER ) / file_;
+
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
 		m_Signature = model->GetSignature();
@@ -52,5 +54,4 @@ namespace scone
 	{
 		return m_Signature;
 	}
-
 }

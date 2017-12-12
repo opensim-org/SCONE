@@ -134,7 +134,7 @@ namespace scone
 		}
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus )
+	scone::NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus ) const
 	{
 		MuscleParamList result;
 
@@ -147,6 +147,11 @@ namespace scone
 			}
 		}
 		return result;
+	}
+
+	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMuscles( const Muscle* mus ) const
+	{
+		return m_VirtualMuscles( mus );
 	}
 
 	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
@@ -214,7 +219,7 @@ namespace scone
 		return delay_factor_ * delays_.get< double >( name );
 	}
 
-	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor )
+	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -242,10 +247,17 @@ namespace scone
 		{
 			auto other_neuron = flut::find_if( other.m_MotorNeurons, [&]( const MotorNeuronUP& m ) { return neuron->GetName() == m->GetName(); } );
 			SCONE_THROW_IF( other_neuron == other.m_MotorNeurons.end(), "Could not find Neuron " + neuron->GetName() );
+
+			// measure difference in MotorNeuron offset
+			fitness += abs( neuron->offset_ - (*other_neuron)->offset_ );
+			++samples;
+
 			for ( auto& input : neuron->GetInputs() )
 			{
 				auto other_input = flut::find_if( (*other_neuron)->GetInputs(), [&]( const Neuron::Input& i ) { return input.neuron->GetName() == i.neuron->GetName(); } );
 				SCONE_THROW_IF( other_input == (*other_neuron )->GetInputs().end(), "Could not find Input " + input.neuron->GetName() + " for " + neuron->GetName() );
+
+				// measure difference in MotorNeuron input gain
 				fitness += abs( input.gain - other_input->gain );
 				++samples;
 			}
