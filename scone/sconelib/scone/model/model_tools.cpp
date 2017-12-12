@@ -54,6 +54,16 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		return GetVirtualMusclesRecursive( mus, 0 );
+		auto result = GetVirtualMusclesRecursive( mus, 0 );
+
+		// square root & normalize
+		double total_gain = 0.0;
+		for ( auto& vm : result )
+			total_gain += ( vm.second = sqrt( vm.second ) );
+
+		for ( auto& vm : result )
+			vm.second /= total_gain;
+
+		return result;
 	}
 }
