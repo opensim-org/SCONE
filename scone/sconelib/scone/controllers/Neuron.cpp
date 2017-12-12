@@ -67,7 +67,7 @@ namespace scone
 			auto mvmvec = nc.GetMuscleParams( muscle_, false );
 			auto svmvec = nc.GetMuscleParams( sensor->muscle_, true );
 
-			log::trace( muscle_->GetName(), " <-- ", sensor->GetParName() );
+			//log::trace( muscle_->GetName(), " <-- ", sensor->GetParName() );
 			for ( auto& mvm : mvmvec )
 			{
 				for ( auto& svm : svmvec )
@@ -76,7 +76,7 @@ namespace scone
 					auto factor = mvm.second * svm.second;
 					auto par_value = par.try_get( parname, pn, "gain", 0.0 );
 					gain += factor * par_value;
-					log::trace( "\t", parname, " = ", factor, " x ", par_value );
+					//log::trace( "\t", parname, " = ", factor, " x ", par_value );
 				}
 			}
 			//log::trace( "\tTOTAL = ", gain );
