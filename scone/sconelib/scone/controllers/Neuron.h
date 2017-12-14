@@ -44,7 +44,7 @@ namespace scone
 
 		double offset_;
 		mutable double output_;
-		mutable double linear_output_;
+		mutable double input_;
 		activation_func_t activation_function;
 
 		std::vector< Input > inputs_;

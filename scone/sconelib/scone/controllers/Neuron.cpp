@@ -45,8 +45,7 @@ namespace scone
 			i.contribution += abs( input );
 			value += input;
 		}
-
-		linear_output_ = value;
+		input_ = value;
 		return output_ = activation_function( value );
 	}
 

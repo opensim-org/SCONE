@@ -207,6 +207,8 @@ namespace scone
 
 	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		for ( auto& n : m_MotorNeurons )
 			n->UpdateActuator();
 
@@ -216,14 +218,14 @@ namespace scone
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		for ( auto& neuron : m_PatternNeurons )
-			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
+			frame[ "PN." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& neuron : m_SensorNeurons )
-			frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
+			frame[ "SN." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& layer : m_InterNeurons )
 			for ( auto& neuron : layer.second )
-				frame[ "neuron." + neuron->GetName( false ) ] = neuron->output_;
+				frame[ "IN." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& neuron : m_MotorNeurons )
-			frame[ neuron->GetName( false ) + ".linear_output" ] = neuron->linear_output_;
+			frame[ "MN." + neuron->GetName( false ) + ".input" ] = neuron->input_;
 	}
 
 	void NeuralController::WriteResult( const path& file ) const
