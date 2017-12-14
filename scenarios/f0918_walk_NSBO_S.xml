@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<init_file>initializations/f0918t_NMAB_S15.par</init_file>
+	<use_init_file>0</use_init_file>
+	<random_seed>123</random_seed>
+	<max_generations>10000</max_generations>
+	<Objective type="SimilarityObjective">
+		<signature_prefix>SO</signature_prefix>
+		<file>results/1543.f0918m.NPABO.N198.S10CW.D10.I.R2 [473]/2992_4.650_0.473.par</file>
+		<Model type="Simbody">
+			<model_file>research/f0918m_k5s2_c2e6d10r4.osim</model_file>
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<Controllers>
+				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" delay_factor="1" activation="rectifier" par_mode="dof">
+					<signature_prefix>NSBOD</signature_prefix>
+
+					<SensorNeuronLayer>
+						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
+						<SensorNeuron type="L" source="*" offset="1" activation="linear"/>
+						<SensorNeuron type="DPV" source="pelvis_tilt" activation="linear"/>
+					</SensorNeuronLayer>
+
+					<MotorNeuronLayer>
+						<MotorNeuron include="*" offset="0~1"/>
+						<MotorNeuron input_layer="0" connect="synergetic" type="F" gain="0~1"/>
+						<MotorNeuron input_layer="0" connect="synergetic" type="L" gain="0~1"/>
+						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~1"/>
+					</MotorNeuronLayer>
+
+				</Controller>
+				<INCLUDE file="measures/M_gait_S10.xml"/>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>
