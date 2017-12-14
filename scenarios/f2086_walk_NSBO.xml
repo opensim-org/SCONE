@@ -30,10 +30,10 @@
 					</SensorNeuronLayer>
 
 					<MotorNeuronLayer>
-						<MotorNeuron include="*" offset="0~0.01"/>
-						<MotorNeuron input_layer="0" connect="synergetic" type="F" gain="0~0.1"/>
-						<MotorNeuron input_layer="0" connect="synergetic" type="L" gain="0~0.1"/>
-						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~0.1"/>
+						<MotorNeuron include="*" offset="0.05~0.05"/>
+						<MotorNeuron input_layer="0" connect="synergetic" type="F" gain="0~0.01"/>
+						<MotorNeuron input_layer="0" connect="synergetic" type="L" gain="0~0.01"/>
+						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~0.01"/>
 					</MotorNeuronLayer>
 
 				</Controller>

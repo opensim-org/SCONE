@@ -43,7 +43,13 @@ namespace scone
 		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );
 
-		using MuscleParamList = std::vector< std::pair< string, double > >;
+		struct MuscleParam {
+			string name;
+			double correlation;
+			std::vector< Dof* > dofs;
+		};
+
+		using MuscleParamList = std::vector< MuscleParam >;
 		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor ) const;
 		MuscleParamList GetMuscleDofs( const Muscle* mus ) const;
 		MuscleParamList GetVirtualMuscles( const Muscle* mus ) const;
@@ -71,5 +77,8 @@ namespace scone
 		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 		mutable flut::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
+
+		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx );
+		static MuscleParamList GetVirtualMusclesFunc( const Muscle* mus );
 	};
 }

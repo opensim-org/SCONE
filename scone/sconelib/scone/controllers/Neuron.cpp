@@ -64,19 +64,23 @@ namespace scone
 		if ( common_joints > 0 )
 		{
 			double gain = 0;
-			auto mvmvec = nc.GetMuscleParams( muscle_, false );
-			auto svmvec = nc.GetMuscleParams( sensor->muscle_, true );
+			auto mpvec = nc.GetMuscleParams( muscle_, false );
+			auto spvec = nc.GetMuscleParams( sensor->muscle_, true );
 
 			//log::trace( muscle_->GetName(), " <-- ", sensor->GetParName() );
-			for ( auto& mvm : mvmvec )
+			for ( auto& mp : mpvec )
 			{
-				for ( auto& svm : svmvec )
+				for ( auto& sp : spvec )
 				{
-					string parname = ( mvm.first == svm.first ? mvm.first : mvm.first + '.' + svm.first ) + '.' + sensor->type_;
-					auto factor = mvm.second * svm.second;
-					auto par_value = par.try_get( parname, pn, "gain", 0.0 );
-					gain += factor * par_value;
-					//log::trace( "\t", parname, " = ", factor, " x ", par_value );
+					if ( std::find_first_of( mp.dofs.begin(), mp.dofs.end(), sp.dofs.begin(), sp.dofs.end(), 
+						[&]( Dof* a, Dof* b ) { return a != b && &a->GetJoint() == &b->GetJoint(); } ) == mp.dofs.end() )
+					{
+						string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
+						auto factor = mp.correlation * sp.correlation;
+						auto par_value = par.try_get( parname, pn, "gain", 0.0 );
+						gain += factor * par_value;
+						//log::trace( "\t", parname, " = ", factor, " x ", par_value );
+					}
 				}
 			}
 			//log::trace( "\tTOTAL = ", gain );
@@ -96,7 +100,7 @@ namespace scone
 			for ( auto& mp : mpars )
 			{
 				//log::trace( muscle_->GetName(), "\t", mp.first, " x ", mp.second );
-				offset_ += mp.second * par.try_get( mp.first + ".C0", pn, "offset", 0.0 );
+				offset_ += mp.correlation * par.try_get( mp.name + ".C0", pn, "offset", 0.0 );
 			}
 		}
 
@@ -186,7 +190,7 @@ namespace scone
 					{
 						double gain = 0;
 						for ( auto& mp : mpars )
-							gain += mp.second * par.try_get( mp.first + '.' + postfix, pn, "gain", 1.0 );
+							gain += mp.correlation * par.try_get( mp.name + '.' + postfix, pn, "gain", 1.0 );
 						AddInput( sensor, gain );
 					}
 
