@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0918m_NPABO_S30.par</init_file>
+	<init_file>initializations/f0918m_NSBOV_S20.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
@@ -18,8 +18,8 @@
 			<fixed_control_step_size>0.001</fixed_control_step_size>
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
-				<Controller type="NeuralController" par_mode="muscle" delay_file="neural_delays_FEA.pn" delay_factor="1" activation="rectifier">
-					<signature_prefix>NSBOM</signature_prefix>
+				<Controller type="NeuralController" par_mode="virtual" delay_file="neural_delays_FEA.pn" delay_factor="1" activation="rectifier">
+					<signature_prefix>NSBOV</signature_prefix>
 
 					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
