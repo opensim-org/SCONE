@@ -10,3 +10,6 @@
 [submodule "submodules/spot"]
 	path = submodules/spot
 	url = https://github.com/tgeijten/spot.git
+[submodule "submodules/xo"]
+	path = submodules/xo
+	url = ../../tgeijten/xo.git
