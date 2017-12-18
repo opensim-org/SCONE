@@ -1,6 +1,3 @@
-[submodule "submodules/flut"]
-	path = submodules/flut
-	url = https://github.com/tgeijten/flut.git
 [submodule "submodules/simvis"]
 	path = submodules/simvis
 	url = https://github.com/tgeijten/simvis.git
