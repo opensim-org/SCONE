@@ -38,21 +38,20 @@ namespace scone
 	}
 }
 
-// import FLUT logging, using dynamic logging
-#define FLUT_STATIC_LOG_LEVEL FLUT_LOG_LEVEL_TRACE
-#include <flut/system/log.hpp>
+// import XO logging, using dynamic logging
+#define XO_STATIC_LOG_LEVEL XO_LOG_LEVEL_TRACE
+#include "xo/system/log.h"
 
 namespace scone
 {
 	namespace log
 	{
-		// import flut logging
-		using flut::log::level;
-		using flut::log::trace;
-		using flut::log::debug;
-		using flut::log::info;
-		using flut::log::warning;
-		using flut::log::error;
-		using flut::log::critical;
+		using xo::log::level;
+		using xo::log::trace;
+		using xo::log::debug;
+		using xo::log::info;
+		using xo::log::warning;
+		using xo::log::error;
+		using xo::log::critical;
 	}
 }

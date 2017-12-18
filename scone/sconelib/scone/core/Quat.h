@@ -1,12 +1,12 @@
 #pragma once
 
 #include "core.h"
-#include <flut/math/quat.hpp>
+#include "xo/geometry/quat.h"
 
 namespace scone
 {
-	// import Quat from flut
-	using Quat = flut::math::quat_< Real >;
-	using Quatf = flut::math::quat_< float >;
-	using Quatd = flut::math::quat_< double >;
+	// import Quat from xo
+	using Quat = xo::quat_< Real >;
+	using Quatf = xo::quat_< float >;
+	using Quatd = xo::quat_< double >;
 }

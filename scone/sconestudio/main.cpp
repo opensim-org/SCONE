@@ -11,8 +11,8 @@
 #include "scone/model/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
 #include "qt_tools.h"
-#include "flut/system/log_sink.hpp"
-#include "flut/system_tools.hpp"
+#include "xo/system/log_sink.h"
+#include "xo/system/system_tools.h"
 #include "scone/core/string_tools.h"
 
 int main( int argc, char *argv[] )
@@ -26,18 +26,18 @@ int main( int argc, char *argv[] )
 	QDir().mkdir( make_qt( scone::GetSettingsFolder() ) );
 	QDir().mkdir( make_qt( scone::GetSettingsFolder() / "log" ) );
 
-	flut::path log_file = scone::GetSettingsFolder() / "log" / flut::path( flut::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".txt" );
-	flut::log::file_sink file_sink( flut::log::debug_level, log_file );
+	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".txt" );
+	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
 
 	if ( !file_sink.good() )
 	{
 		QMessageBox::critical( 0, "Error creating log file", "Could not create file " + make_qt( log_file.str() ) );
 		return -1;
 	}
-	else flut::log::debug( "Created log file ", log_file );
+	else xo::log::debug( "Created log file ", log_file );
 
 #ifdef _DEBUG
-	flut::log::stream_sink console_log_sink( flut::log::trace_level, std::cout );
+	xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
 #endif
 
 	try

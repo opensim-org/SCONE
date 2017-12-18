@@ -6,7 +6,7 @@
 #include "scone/model/Sensors.h"
 #include "scone/model/Muscle.h"
 
-using namespace flut;
+using namespace xo;
 
 namespace scone
 {

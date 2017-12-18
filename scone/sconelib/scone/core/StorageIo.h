@@ -3,7 +3,7 @@
 #include "core.h"
 #include "Storage.h"
 #include <fstream>
-#include "flut/char_stream.hpp"
+#include "xo/stream/char_stream.h"
 
 namespace scone
 {
@@ -14,8 +14,8 @@ namespace scone
 	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ofstream& str, const String& name );
 
 	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file );
-	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str );
+	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str );
 
 	void SCONE_API ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file );
-	void SCONE_API ReadStorageSto( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str );
+	void SCONE_API ReadStorageSto( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str );
 }

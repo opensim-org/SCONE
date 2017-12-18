@@ -9,8 +9,8 @@
 #include "scone/controllers/cs_tools.h"
 #include "scone/model/Muscle.h"
 
-#include "flut/timer.hpp"
-#include "flut/filesystem.hpp"
+#include "xo/time/timer.h"
+#include "xo/filesystem/filesystem.h"
 
 namespace scone
 {
@@ -32,10 +32,10 @@ namespace scone
 		filename = file;
 
 		// see if we can load a matching .sto file
-		auto sto_file = flut::path( file.str() ).replace_extension( "sto" );
-		if ( !force_evaluation && flut::exists( sto_file ) && filename.extension() == "par" )
+		auto sto_file = xo::path( file.str() ).replace_extension( "sto" );
+		if ( !force_evaluation && xo::exists( sto_file ) && filename.extension() == "par" )
 		{
-			flut::timer t;
+			xo::timer t;
 			log::info( "Reading ", sto_file.string() );
 			ReadStorageSto( data, sto_file.string() );
 			InitStateDataIndices();
@@ -66,7 +66,7 @@ namespace scone
 	{
 		scone_scene.attach( root );
 
-		flut::timer t;
+		xo::timer t;
 		for ( auto& body : model->GetBodies() )
 		{
 			body_meshes.push_back( std::vector< vis::mesh >() );

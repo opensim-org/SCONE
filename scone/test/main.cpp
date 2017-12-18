@@ -2,9 +2,9 @@
 #include "scone/core/system_tools.h"
 #include "Test.h"
 #include "scone/core/string_tools.h"
-#include "flut/system_tools.hpp"
+#include "xo/system/system_tools.h"
 #include <chrono>
-#include "flut/timer.hpp"
+#include "xo/time/timer.h"
 
 using std::cout;
 using std::endl;
@@ -30,7 +30,7 @@ int main( int argc, const char* argv[] )
 	}
 
 #ifdef _DEBUG
-	flut::wait_for_key();
+	xo::wait_for_key();
 #endif
 	return 0;
 }

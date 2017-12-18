@@ -15,8 +15,9 @@ set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # find flut include path
-find_package(Flut REQUIRED)
+# find_package(Flut REQUIRED)
 find_package(Spot REQUIRED)
+find_package(Xo REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
 find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
@@ -48,8 +49,9 @@ endif()
 # include folders
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
-include_directories(${FLUT_INCLUDE_DIR})
+# include_directories(${XO_INCLUDE_DIR})
 include_directories(${SPOT_INCLUDE_DIR})
+include_directories(${XO_INCLUDE_DIR})
 
 include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
 
@@ -98,7 +100,8 @@ if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/simvis)
 endif()
 
-add_subdirectory(submodules/flut)
+# add_subdirectory(submodules/flut)
+add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
 
 #

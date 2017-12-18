@@ -1,14 +1,14 @@
 #include "Log.h"
 
 #include <stdarg.h>
-#include "flut/system/log_sink.hpp"
+#include "xo/system/log_sink.h"
 
 #ifdef WIN32
 #	pragma warning( disable: 4996 ) // we don't need to push/pop because it's not a header
 #endif
 
 #define LOG_MESSAGE_F( LEVEL, FORMAT ) \
-if ( flut::log::test_log_level( static_cast< flut::log::level >( LEVEL ) ) ) \
+if ( xo::log::test_log_level( static_cast< xo::log::level >( LEVEL ) ) ) \
 { \
 	va_list args; va_start( args, FORMAT ); \
 		char _buf_[ g_MaxLogMessageSize ]; \
@@ -28,11 +28,11 @@ namespace scone
 
 		std::ostream& LogStream() { return std::cout; }
 
-		std::unique_ptr< flut::log::stream_sink > g_DefaultSink;
+		std::unique_ptr< xo::log::stream_sink > g_DefaultSink;
 
 		void LogMessageCheck( Level level, const char* message )
 		{
-			flut::log::message( static_cast< flut::log::level >( level ), message );
+			xo::log::message( static_cast< xo::log::level >( level ), message );
 		}
 
 		void SCONE_API LogMessage( Level level, const String& msg )

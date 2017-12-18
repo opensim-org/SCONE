@@ -3,15 +3,15 @@
 #include "scone/core/types.h"
 #include "scone/core/PropNode.h"
 #include "scone/model/Controller.h"
-#include "flut/system/types.hpp"
+#include "xo/utility/types.h"
 #include "MotorNeuron.h"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"
 #include "PatternNeuron.h"
 #include "activation_functions.h"
-#include "flut/flat_map.hpp"
-#include "flut/string_tools.hpp"
-#include "flut/memoize.hpp"
+#include "xo/container/flat_map.h"
+#include "xo/string/string_tools.h"
+#include "xo/utility/memoize.h"
 
 namespace scone
 {
@@ -40,7 +40,7 @@ namespace scone
 
 		virtual void WriteResult( const path& file ) const override;
 
-		static string FixLayerName( string str ) { return flut::from_str< int >( str ) > 0 ? "N" + str : str; }
+		static string FixLayerName( string str ) { return xo::from_str< int >( str ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );
 
 		struct MuscleParam {
@@ -74,9 +74,9 @@ namespace scone
 
 		std::vector< PatternNeuronUP > m_PatternNeurons;
 		std::vector< SensorNeuronUP > m_SensorNeurons;
-		flut::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
+		xo::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
-		mutable flut::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
+		mutable xo::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
 
 		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx );
 		static MuscleParamList GetVirtualMusclesFunc( const Muscle* mus );

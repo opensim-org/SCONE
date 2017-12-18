@@ -3,7 +3,7 @@
 #include "Link.h"
 #include "Joint.h"
 #include "Dof.h"
-#include "flut/math/math.hpp"
+#include "xo/numerical/math.h"
 #include "Body.h"
 #include "Model.h"
 #include "../core/math.h"
@@ -36,7 +36,7 @@ namespace scone
 	Real Muscle::GetNormalizedSpindleRate() const
 	{
 		// derived from [Prochazka1999], velocity component normalized to unit length
-		double vel = ( 65.0 / 200.0 ) * flut::math::signed_sqrt( GetNormalizedFiberVelocity() );
+		double vel = ( 65.0 / 200.0 ) * xo::signed_sqrt( GetNormalizedFiberVelocity() );
 		double disp = GetNormalizedFiberLength();
 		return std::max( 0.0, vel + disp );
 	}

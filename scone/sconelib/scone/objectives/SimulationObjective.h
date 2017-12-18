@@ -7,7 +7,7 @@
 
 #include "Measure.h"
 #include <vector>
-#include "flut/system/path.hpp"
+#include "xo/filesystem/path.h"
 #include "ModelObjective.h"
 
 namespace scone

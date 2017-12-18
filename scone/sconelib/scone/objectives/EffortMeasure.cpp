@@ -3,7 +3,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/math.h"
-#include "flut/pattern_matcher.hpp"
+#include "xo/string/pattern_matcher.h"
 
 namespace scone
 {
@@ -240,7 +240,7 @@ namespace scone
 			bool foundMuscle = false;
 			for ( auto it = muscPropsInput.begin(); it != muscPropsInput.end(); ++it )
 			{
-				if ( flut::pattern_matcher( it->muscle, ";" )( mus->GetName() ) )
+				if ( xo::pattern_matcher( it->muscle, ";" )( mus->GetName() ) )
 				{
 					SCONE_ASSERT_MSG( !foundMuscle, "multiple muscle names matched in MuscleProperties" );
 					m_SlowTwitchFiberRatios[ i ] = it->slow_twitch_ratio;

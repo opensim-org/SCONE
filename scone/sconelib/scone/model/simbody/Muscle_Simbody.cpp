@@ -8,7 +8,7 @@
 
 #include "Dof_Simbody.h"
 #include "simbody_tools.h"
-#include "flut/math/math.hpp"
+#include "xo/numerical/math.h"
 
 namespace scone
 {
@@ -196,7 +196,7 @@ namespace scone
 		// use our own control value, as OpenSim calls getControls()
 		// this could lead to infinite recursion
 		// make sure to clamp it for calls (important for metabolics)
-		return flut::math::clamped( GetInput(), 0.0, 1.0 );
+		return xo::clamped( GetInput(), 0.0, 1.0 );
 	}
 
 	void scone::Muscle_Simbody::SetExcitation( Real u )

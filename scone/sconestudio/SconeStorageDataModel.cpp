@@ -1,5 +1,5 @@
 #include "SconeStorageDataModel.h"
-#include "flut/math/math.hpp"
+#include "xo/numerical/math.h"
 
 SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
 {}
@@ -25,7 +25,7 @@ double SconeStorageDataModel::getValue( int idx, double time ) const
 {
 	SCONE_ASSERT( storage );
 	double reltime = time / storage->Back().GetTime();
-	int frame_idx = flut::math::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ), 0, storage->GetFrameCount() - 1 );
+	int frame_idx = xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ), 0, storage->GetFrameCount() - 1 );
 	return storage->GetFrame( frame_idx )[ idx ];
 }
 

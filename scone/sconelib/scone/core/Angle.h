@@ -1,11 +1,11 @@
 #pragma once
 
 #include "core.h"
-#include <flut/math/angle.hpp>
+#include "xo/geometry/angle.h"
 
 namespace scone
 {
-	// import Radian and Degree from flut
-	using Degree = flut::math::degree_< Real >;
-	using Radian = flut::math::radian_< Real >;
+	// import Radian and Degree from xo
+	using Degree = xo::degree_< Real >;
+	using Radian = xo::radian_< Real >;
 }

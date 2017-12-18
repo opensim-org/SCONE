@@ -1,14 +1,14 @@
 #include "cs_tools.h"
 
-#include <flut/timer.hpp>
-#include "flut/prop_node_tools.hpp"
+#include "xo/time/timer.h"
+#include "xo/stream/prop_node_tools.h"
+#include "xo/filesystem/path.h"
 #include "PerturbationController.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
-#include "flut/system/path.hpp"
 
-using flut::timer;
+using xo::timer;
 
 namespace scone
 {
@@ -40,7 +40,7 @@ namespace scone
 
 		// write results
 		if ( write_results )
-			mob->WriteResults( flut::path( par_file ).replace_extension().str() );
+			mob->WriteResults( xo::path( par_file ).replace_extension().str() );
 
 		return statistics;
 	}
@@ -51,7 +51,7 @@ namespace scone
 		path config_file = is_par_file ? file.parent_path() / "config.xml" : file;
 
 		// read properties
-		PropNode configProp = flut::load_file_with_include( config_file, "INCLUDE" );
+		PropNode configProp = xo::load_file_with_include( config_file, "INCLUDE" );
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 		// create SimulationObjective object

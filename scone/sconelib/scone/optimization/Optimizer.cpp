@@ -8,7 +8,7 @@
 #include "scone/core/math.h"
 #include "scone/optimization/Objective.h"
 
-#include "flut/filesystem.hpp"
+#include "xo/filesystem/filesystem.h"
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
@@ -53,10 +53,10 @@ namespace scone
 		auto output_base = output_root / GetSignature();
 		m_OutputFolder = output_base;
 
-		for ( int i = 1; flut::exists( flut::path( m_OutputFolder.str() ) ); ++i )
+		for ( int i = 1; xo::exists( xo::path( m_OutputFolder.str() ) ); ++i )
 			m_OutputFolder = output_base + stringf( " (%d)", i );
 
-		flut::create_directories( flut::path( m_OutputFolder.str() ) );
+		xo::create_directories( xo::path( m_OutputFolder.str() ) );
 		m_OutputFolder;
 	}
 
@@ -99,7 +99,7 @@ namespace scone
 				// delete the file(s)
 				bool ok = true;
 				for ( auto& file : testIt->second )
-					ok &= flut::remove( file );
+					ok &= xo::remove( file );
 
 				if ( ok )
 					m_OutputFiles.erase( testIt );

@@ -11,7 +11,7 @@
 
 #include "simvis/osg_tools.h"
 #include "scone/optimization/opt_tools.h"
-#include "flut/system_tools.hpp"
+#include "xo/system/system_tools.h"
 #include "qt_tools.h"
 #include "qevent.h"
 #include "qcustomplot.h"
@@ -22,7 +22,7 @@
 #include "spot/cma_optimizer.h"
 #include "spot/console_reporter.h"
 #include "spot/file_reporter.h"
-#include "flut/filesystem.hpp"
+#include "xo/filesystem/filesystem.h"
 #include "simvis/color.h"
 
 using namespace scone;
@@ -38,7 +38,7 @@ evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr ),
 scene( true )
 {
-	flut::log::debug( "Constructing UI elements" );
+	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 	ui.stackedWidget->setCurrentIndex( 0 );
 
@@ -121,10 +121,10 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	backgroundUpdateTimer.start( 1000 );
 
 	// only do this after the ui has been initialized
-	flut::log::add_sink( ui.outputText );
-	ui.outputText->set_log_level( flut::log::trace_level );
+	xo::log::add_sink( ui.outputText );
+	ui.outputText->set_log_level( xo::log::trace_level );
 
-	flut::log::debug( "Loading GUI settings" );
+	xo::log::debug( "Loading GUI settings" );
 	QSettings cfg( "SCONE", "SconeStudio" );
 	restoreGeometry( cfg.value( "geometry" ).toByteArray() );
 	restoreState( cfg.value( "windowState" ).toByteArray() );
@@ -197,7 +197,7 @@ void SconeStudio::evaluate()
 
 	const double step_size = 0.05;
 	int vis_step = 0;
-	flut::timer real_time;
+	xo::timer real_time;
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
 		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
@@ -571,7 +571,7 @@ void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = make_qt( flut::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
+	QString program = make_qt( xo::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
 	args << "-r" << QString::number( capture_frequency ) << "-i" << captureFilename + ".images/image_0_%d.png" << "-c:v" << "mpeg4" << "-q:v" << "3" << captureFilename;
 
@@ -582,7 +582,7 @@ void SconeStudio::finalizeCapture()
 	captureProcess = new QProcess( this );
 	captureProcess->start( program, args );
 
-	flut_error_if( !captureProcess->waitForStarted( 5000 ), "Could not start process" );
+	xo_error_if( !captureProcess->waitForStarted( 5000 ), "Could not start process" );
 	scone::log::info( "Generating video for ", captureFilename.toStdString() );
 
 	if ( !captureProcess->waitForFinished( 30000 ) )
@@ -605,7 +605,7 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 		return;
 	}
 
-	flut::log::debug( "Saving GUI settings" );
+	xo::log::debug( "Saving GUI settings" );
 	QSettings cfg( "SCONE", "SconeStudio" );
 	cfg.setValue( "geometry", saveGeometry() );
 	cfg.setValue( "windowState", saveState() );

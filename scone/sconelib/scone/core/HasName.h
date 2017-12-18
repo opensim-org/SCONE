@@ -33,8 +33,8 @@ namespace scone
 	std::vector< string > FindMatchingNames( std::vector< T >& cont, const String& include, const String& exclude )
 	{
 		std::vector< string > names;
-		auto inc_pat = flut::pattern_matcher( include );
-		auto ex_pat = flut::pattern_matcher( exclude );
+		auto inc_pat = xo::pattern_matcher( include );
+		auto ex_pat = xo::pattern_matcher( exclude );
 		for ( auto& item : cont )
 		{
 			if ( inc_pat( item->GetName() ) && !ex_pat( item->GetName() ) )

@@ -59,7 +59,7 @@ namespace scone
 		{
 			// get state masks
 			String state_masks = ccIt->second.get< String >( "states" );
-			auto state_tokens = flut::split_str( state_masks, ";," );
+			auto state_tokens = xo::split_str( state_masks, ";," );
 			for ( const String& instance_states : state_tokens )
 			{
 				// automatically create controllers for all legs (sides)

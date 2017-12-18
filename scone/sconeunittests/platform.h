@@ -2,8 +2,8 @@
 
 #include <boost/predef.h>
 
-#include "flut/string_tools.hpp"
-using flut::stringf;
+#include "xo/string/string_tools.h"
+using xo::stringf;
 
 #if BOOST_ARCH_X86
 #	define SCONE_ARCH "X86"

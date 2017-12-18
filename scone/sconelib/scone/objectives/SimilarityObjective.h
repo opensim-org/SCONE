@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ModelObjective.h"
-#include "flut/system/path.hpp"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {

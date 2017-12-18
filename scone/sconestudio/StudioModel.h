@@ -6,7 +6,7 @@
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/optimization/Objective.h"
 
-#include "flut/flag_set.hpp"
+#include "xo/container/flag_set.h"
 #include "simvis/arrow.h"
 
 #include "SconeStorageDataModel.h"
@@ -23,7 +23,7 @@ namespace scone
 	{
 	public:
 		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows, ShowAxes };
-		typedef flut::flag_set< ViewSettings > ViewFlags;
+		typedef xo::flag_set< ViewSettings > ViewFlags;
  
 		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
 		virtual ~StudioModel();

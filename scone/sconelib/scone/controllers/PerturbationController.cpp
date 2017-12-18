@@ -1,7 +1,7 @@
 #include "PerturbationController.h"
 #include "scone/model/Model.h"
 #include "scone/core/string_tools.h"
-#include "flut/math/math.hpp"
+#include "xo/numerical/math.h"
 
 namespace scone
 {
@@ -25,7 +25,7 @@ namespace scone
 
 		std::default_random_engine rng_engine( random_seed );
 		auto time_dist = std::uniform_real_distribution< TimeInSeconds >( interval_min, interval_max );
-		auto dir_dist = std::uniform_real_distribution< double >( 0, 2 * flut::double_pi );
+		auto dir_dist = std::uniform_real_distribution< double >( 0, 2 * xo::double_pi );
 		perturbation_times.emplace_back( start_time, dir_dist( rng_engine ) );
 		while ( perturbation_times.back().first < end_time )
 			perturbation_times.emplace_back( perturbation_times.back().first + time_dist( rng_engine ), dir_dist( rng_engine ) );

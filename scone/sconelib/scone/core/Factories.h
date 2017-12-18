@@ -1,6 +1,6 @@
 #pragma once
 
-#include "flut/factory.hpp"
+#include "xo/utility/factory.h"
 
 #include "scone/core/PropNode.h"
 #include "scone/core/types.h"
@@ -22,5 +22,5 @@ namespace scone
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );
 	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop );
-	SCONE_API flut::factory< Objective, const PropNode& >& GetObjectiveFactory();
+	SCONE_API xo::factory< Objective, const PropNode& >& GetObjectiveFactory();
 }

@@ -19,12 +19,12 @@
 #include "scone/core/Profiler.h"
 #include "scone/core/ResourceCache.h"
 
-#include <flut/string_tools.hpp>
+#include "xo/string/string_tools.h"
 
 #include "scone/core/StorageIo.h"
 #include <thread>
-#include "flut/pattern_matcher.hpp"
-#include "flut/container_tools.hpp"
+#include "xo/string/pattern_matcher.h"
+#include "xo/container/container_tools.h"
 #include <mutex>
 
 using std::cout;
@@ -188,7 +188,7 @@ namespace scone
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
 			else if ( integration_method == "SemiExplicitEuler2" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-			else SCONE_THROW( "Invalid integration method: " + flut::quoted( integration_method ) );
+			else SCONE_THROW( "Invalid integration method: " + xo::quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
@@ -206,8 +206,8 @@ namespace scone
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
-				auto inc_pat = flut::pattern_matcher( iso->get< String >( "include_states" ), ";" );
-				auto ex_pat = flut::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
+				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states" ), ";" );
+				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
 				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
@@ -335,7 +335,7 @@ namespace scone
 				int usage = 0;
 				if ( mp.first == "Actuator" )
 				{
-					for ( auto act : flut::make_view_if( m_Actuators, flut::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
+					for ( auto act : xo::make_view_if( m_Actuators, xo::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
 					{
 						SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
 						act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
@@ -356,7 +356,7 @@ namespace scone
 		{
 			for ( auto param_it = osim_pars->begin(); param_it != osim_pars->end(); ++param_it )
 			{
-				flut::pattern_matcher pm( param_it->second.get< String >( "name" ) );
+				xo::pattern_matcher pm( param_it->second.get< String >( "name" ) );
 				if ( param_it->first == "Force" )
 				{
 					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )

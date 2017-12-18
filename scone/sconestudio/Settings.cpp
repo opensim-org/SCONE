@@ -5,7 +5,7 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/system_tools.h"
 #include "qt_tools.h"
-#include "flut/system/path.hpp"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
@@ -17,10 +17,10 @@ namespace scone
 
 		// init settings
 		PropNode pn = GetSconeSettings();
-		settings.scenariosFolder->setText( make_qt( flut::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
-		settings.modelsFolder->setText( make_qt( flut::path( GetFolder( SCONE_MODEL_FOLDER ) ).make_preferred() ) );
-		settings.resultsFolder->setText( make_qt( flut::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
-		settings.geometryFolder->setText( make_qt( flut::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
+		settings.scenariosFolder->setText( make_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
+		settings.modelsFolder->setText( make_qt( xo::path( GetFolder( SCONE_MODEL_FOLDER ) ).make_preferred() ) );
+		settings.resultsFolder->setText( make_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
+		settings.geometryFolder->setText( make_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
 
 		int ret = dlg->exec();
 		if ( ret == QDialog::Accepted )

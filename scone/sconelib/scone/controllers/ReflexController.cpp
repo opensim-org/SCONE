@@ -12,9 +12,9 @@
 #include "MuscleReflex.h"
 #include <tuple>
 #include "SimpleMuscleReflex.h"
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 
-using namespace flut;
+using namespace xo;
 
 namespace scone
 {
@@ -38,7 +38,7 @@ namespace scone
 		path delay_file = props.get< path >( "delay_file", "" );
 		if ( !reflex_file.empty() && !delay_file.empty() )
 		{
-			auto str = flut::char_stream( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / reflex_file );
+			auto str = xo::char_stream( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / reflex_file );
 			auto delay_pn = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / delay_file );
 			while ( str.good() )
 			{

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Reflex.h"
-#include "flut/filter.hpp"
+#include "xo/numerical/filter.h"
 
 namespace scone
 {
@@ -33,6 +33,6 @@ namespace scone
 		SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
 		SensorDelayAdapter& m_DelayedRootVel; // used for world coordinates, TODO: neater
 		bool m_bUseRoot;
-		flut::iir_filter< double, 2 > m_Filter;
+		xo::iir_filter< double, 2 > m_Filter;
 	};
 }

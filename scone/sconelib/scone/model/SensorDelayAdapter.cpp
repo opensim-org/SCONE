@@ -54,7 +54,7 @@ namespace scone
 	{
 		auto& sto = m_Model.GetSensorDelayStorage();
 		auto history_begin = std::max( 0, (int)sto.GetFrameCount() - delay_samples - window_size / 2 );
-		auto history_end = flut::math::clamped( (int)sto.GetFrameCount() - delay_samples - window_size / 2 + window_size, 1, (int)sto.GetFrameCount() );
+		auto history_end = xo::clamped( (int)sto.GetFrameCount() - delay_samples - window_size / 2 + window_size, 1, (int)sto.GetFrameCount() );
 
 		Real value = 0.0;
 		for ( auto i = history_begin; i < history_end; ++i )

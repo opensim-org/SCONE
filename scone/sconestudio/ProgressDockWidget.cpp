@@ -1,12 +1,12 @@
 #include "ProgressDockWidget.h"
 #include "SconeStudio.h"
 #include "qt_tools.h"
-#include "flut/system_tools.hpp"
-#include "flut/system/assert.hpp"
+#include "xo/system/system_tools.h"
+#include "xo/system/assert.h"
 #include "scone/core/Log.h"
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 #include "studio_config.h"
-#include "flut/filesystem.hpp"
+#include "xo/filesystem/filesystem.h"
 
 using namespace scone;
 
@@ -22,7 +22,7 @@ lowest( 0 ),
 cur_pred( 0 ),
 state( StartingState )
 {
-	QString program = make_qt( flut::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
+	QString program = make_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
 
@@ -31,7 +31,7 @@ state( StartingState )
 	process->start( program, args );
 	fileName = config_file;
 
-	flut_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName.toStdString() );
+	xo_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName.toStdString() );
 	scone::log::info( "Started scenario ", fileName.toStdString() );
 
 	ui.setupUi( this );
@@ -108,13 +108,13 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 
 	while ( process->canReadLine() )
 	{
-		std::string s = flut::trim_str( QString::fromLocal8Bit( process->readLine() ).toStdString() );
+		std::string s = xo::trim_str( QString::fromLocal8Bit( process->readLine() ).toStdString() );
 		//if ( !s.empty() ) log::trace( name, ": ", s );
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
 
-		auto kvp = flut::make_key_value_str( s.substr( 1 ) );
+		auto kvp = xo::make_key_value_str( s.substr( 1 ) );
 		if ( kvp.first == "folder" )
 		{
 			name = make_qt( path( kvp.second ).filename() );
@@ -125,16 +125,16 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		}
 		else if ( kvp.first == "max_generations" )
 		{
-			max_generations = flut::from_str< int >( kvp.second );
+			max_generations = xo::from_str< int >( kvp.second );
 			updateText();
 		}
 		else if ( kvp.first == "window_size" )
 		{
-			window_size = flut::from_str< int >( kvp.second );
+			window_size = xo::from_str< int >( kvp.second );
 		}
 		else if ( kvp.first == "generation" )
 		{
-			flut::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
+			xo::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
 			avgvec.push_back( cur_avg );
 			bestvec.push_back( cur_best );
 			medvec.push_back( cur_med );
@@ -158,7 +158,7 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		}
 		else if ( kvp.first == "best" )
 		{
-			best = flut::from_str< float >( kvp.second );
+			best = xo::from_str< float >( kvp.second );
 			best_gen = generation;
 			updateText();
 		}

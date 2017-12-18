@@ -2,13 +2,13 @@
 
 #include "core.h"
 #include "PropNode.h"
-#include "flut/system/version.hpp"
-#include "flut/system/path.hpp"
+#include "xo/system/version.h"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
-	using flut::version;
-	using flut::path;
+	using xo::version;
+	using xo::path;
 	SCONE_API version GetSconeVersion();
 	SCONE_API String GetSconeBuildNumber();
 	SCONE_API const PropNode& GetSconeSettings();

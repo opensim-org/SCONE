@@ -1,9 +1,8 @@
 #include "PatternNeuron.h"
 #include "NeuralController.h"
-#include "..\model\Model.h"
+#include "../model/Model.h"
 #include <cmath>
-#include "flut\math\math.hpp"
-#include "spot\par_tools.h"
+#include "spot/par_tools.h"
 #include "scone/core/string_tools.h"
 
 namespace scone
@@ -39,7 +38,7 @@ namespace scone
 
 	scone::activation_t PatternNeuron::GetOutput() const
 	{
-		auto t = flut::math::wrapped( model_.GetTime() - t0_, -0.5 * period_, 0.5 * period_ );
+		auto t = xo::wrapped( model_.GetTime() - t0_, -0.5 * period_, 0.5 * period_ );
 		return output_ = exp( -beta_ * t * t );
 	}
 }
