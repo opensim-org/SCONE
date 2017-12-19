@@ -23,7 +23,6 @@
 #include "scone/core/Polynomial.h"
 #include "scone/model/simbody/Model_Simbody.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
-//#include "scone/optimization/CmaOptimizerShark3.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
 #include "scone/controllers/MirrorController.h"
@@ -122,7 +121,6 @@ namespace scone
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
-			//g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );

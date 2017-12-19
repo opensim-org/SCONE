@@ -18,19 +18,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 find_package(Spot REQUIRED)
 find_package(Xo REQUIRED)
 
-# Shark 3.0 provides a SharkConfig.cmake.
-# set(SHARK_ROOT "" CACHE PATH "Installation directory of shark.")
-# find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
-
-# Link with boost's static libraries.
-#set(Boost_USE_STATIC_LIBS OFF)
-#set(Boost_USE_STATIC_RUNTIME OFF)
-#find_package(Boost REQUIRED COMPONENTS 
-#	filesystem system thread date_time chrono timer serialization unit_test_framework)
-#if(UNIX)
-#	ADD_DEFINITIONS(-DBOOST_TEST_DYN_LINK)
-#endif()
-
 # This uses the FindOpenSim.cmake file in build/cmake.
 find_package(OpenSim 3.3 REQUIRED)
 
@@ -38,21 +25,10 @@ find_package(OpenSim 3.3 REQUIRED)
 find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
 
-# Incorporate dependencies.
-# -------------------------
-# Reports automatic linking info with Visual Studio.
-# add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
-# if(WIN32)
-# 	add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK)
-#endif()
-
 # include folders
-#include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
 include_directories(${XO_INCLUDE_DIR})
 include_directories(${SPOT_INCLUDE_DIR})
-
-#include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
 
 # Add sconelib include folder to all projects
 include_directories(${CMAKE_SOURCE_DIR}/scone/sconelib)

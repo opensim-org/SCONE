@@ -180,7 +180,6 @@ set(OPT_API_FILES
     )
 set(OPT_SYSTEM_FILES
 #	scone/optimization/SharkHelperClasses.h
-	scone/optimization/opt_config.h
     )
 	
 set(SIM_MODELCOMPONENTS_FILES
