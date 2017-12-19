@@ -1,17 +1,13 @@
-#include "common.h"
+#include "xo/filesystem/path.h"
+#include "scone/core/system_tools.h"
 
-#include <boost/filesystem.hpp>
-#include <boost/predef.h>
-#include "platform.h"
-
-using namespace boost::filesystem;
-using std::cout;
-using std::endl;
-
-BOOST_AUTO_TEST_CASE( simulation_test )
+void simulation_test()
 {
-	path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test" ).str();
+	xo::path testpath = scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test";
 
+	XO_NOT_IMPLEMENTED;
+
+#if 0
 	for ( directory_iterator dir_it( testpath ); dir_it != directory_iterator(); ++dir_it )
 	{
 		if ( is_directory( dir_it->path() ) )
@@ -48,4 +44,5 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 			}
 		}
 	}
+#endif
 }
