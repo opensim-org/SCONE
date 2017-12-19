@@ -19,7 +19,7 @@ public:
 			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
-	double Rosenbrock( const xo::vecd& v ) const
+	double Rosenbrock( const spot::par_vec& v ) const
 	{
 		// Rosenbrock function
 		double sum = 0.0;

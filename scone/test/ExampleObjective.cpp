@@ -10,7 +10,7 @@
 
 namespace scone
 {
-	double Rosenbrock( const xo::vecd& v )
+	double Rosenbrock( const spot::par_vec& v )
 	{
 		// Rosenbrock function
 		double sum = 0.0;
