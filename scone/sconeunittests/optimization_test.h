@@ -19,7 +19,7 @@ public:
 			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
-	static double Rosenbrock( const std::vector< double >& v )
+	double Rosenbrock( const xo::vecd& v ) const
 	{
 		// Rosenbrock function
 		double sum = 0.0;

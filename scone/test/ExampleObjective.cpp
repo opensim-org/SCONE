@@ -10,6 +10,26 @@
 
 namespace scone
 {
+	double Rosenbrock( const xo::vecd& v )
+	{
+		// Rosenbrock function
+		double sum = 0.0;
+		for ( unsigned int i = 0; i < v.size() - 1; i++ ) {
+			sum += 100 * GetSquared( v[ i + 1 ] - GetSquared( v[ i ] ) ) + GetSquared( 1. - v[ i ] );
+		}
+
+		// Grind some
+#ifdef _DEBUG
+		int imax = 10000;
+#else
+		int imax = 10000000;
+#endif
+		for ( int i = 0; i < imax; ++i )
+			sum += sqrt( (double)i ) - sqrt( (double)i );
+
+		return( sum );
+	}
+
 	ExampleObjective::ExampleObjective( const PropNode& props ) :
 	Objective( props ),
 	num_params( 0 ),
@@ -29,25 +49,5 @@ namespace scone
 		is_evaluating = false;
 
 		return result;
-	}
-
-	double ExampleObjective::Rosenbrock( const std::vector< double >& v )
-	{
-		// Rosenbrock function
-		double sum = 0.0;
-		for( unsigned int i = 0; i < v.size()-1; i++ ) {
-			sum += 100 * GetSquared( v[i+1] - GetSquared( v[ i ] ) ) + GetSquared( 1. - v[ i ] );
-		}
-
-		// Grind some
-#ifdef _DEBUG
-		int imax = 10000;
-#else
-		int imax = 10000000;
-#endif
-		for ( int i = 0; i < imax; ++i )
-			sum += sqrt( (double)i ) - sqrt( (double)i );
-
-		return( sum );
 	}
 }
