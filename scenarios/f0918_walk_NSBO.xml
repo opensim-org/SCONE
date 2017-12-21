@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0918m_NSBOV_S20.par</init_file>
+	<init_file>initializations/f0918m_NSBOV_S25.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.5</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
