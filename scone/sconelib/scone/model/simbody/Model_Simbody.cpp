@@ -26,26 +26,17 @@
 #include "xo/string/pattern_matcher.h"
 #include "xo/container/container_tools.h"
 #include <mutex>
+#include "xo/utility/resource_cache.h"
 
 using std::cout;
 using std::endl;
 
 namespace scone
 {
-	// OpenSim model resource cache
-	template<> inline OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Model( name );
-	}
-	template<> inline OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Storage( name );
-	};
-
-
 	std::mutex g_SimBodyMutex;
-	ResourceCache< OpenSim::Model > g_ModelCache;
-	ResourceCache< OpenSim::Storage > g_StorageCache;
+
+	xo::resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
+	xo::resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
 
 	/// Simbody controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
@@ -102,7 +93,8 @@ namespace scone
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
-			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
+			//m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
+			m_pOsimModel = g_ModelCache( ( GetFolder( "models" ) / model_file ) );
 		}
 
 		// create torque and point actuators
@@ -200,7 +192,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
-				ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
+				ReadState( GetFolder( "models" ) / state_init_file );
 
 			// update state variables if they are being optimized
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
@@ -698,10 +690,10 @@ namespace scone
 		return GetOsimModel().getName();
 	}
 
-	void Model_Simbody::ReadState( const String& file )
+	void Model_Simbody::ReadState( const path& file )
 	{
 		// create a copy of the storage
-		auto store = g_StorageCache.CreateCopy( file );
+		auto store = g_StorageCache( file );
 		OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
 		OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
 

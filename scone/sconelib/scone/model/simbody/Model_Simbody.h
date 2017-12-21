@@ -91,7 +91,7 @@ namespace scone
 		void InitStateFromTk();
 		void CopyStateFromTk();
 		void CopyStateToTk();
-		void ReadState( const String& file );
+		void ReadState( const path& file );
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
 		void CreateModelWrappers( const PropNode& pn, Params& par );
