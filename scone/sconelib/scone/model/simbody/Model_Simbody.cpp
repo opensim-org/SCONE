@@ -2,6 +2,7 @@
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/Factories.h"
+#include "scone/core/StorageIo.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
@@ -17,16 +18,14 @@
 
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
-#include "scone/core/ResourceCache.h"
 
 #include "xo/string/string_tools.h"
-
-#include "scone/core/StorageIo.h"
-#include <thread>
 #include "xo/string/pattern_matcher.h"
 #include "xo/container/container_tools.h"
+#include "xo/utility/file_resource_cache.h"
+
+#include <thread>
 #include <mutex>
-#include "xo/utility/resource_cache.h"
 
 using std::cout;
 using std::endl;
@@ -35,8 +34,8 @@ namespace scone
 {
 	std::mutex g_SimBodyMutex;
 
-	xo::resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
-	xo::resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
+	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
+	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
 
 	/// Simbody controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
