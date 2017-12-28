@@ -84,7 +84,7 @@ namespace scone
 
 	void PlaybackTest( const path& filename )
 	{
-		xo::log::stream_sink cout_log( xo::log::trace_level );
+		xo::log::console_sink cout_log( xo::log::trace_level );
 
 		auto config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
