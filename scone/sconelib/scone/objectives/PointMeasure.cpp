@@ -2,10 +2,11 @@
 #include "scone/model/Model.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/math.h"
 
 namespace scone
 {
-	PointMeasure::PointMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	PointMeasure::PointMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 	{
@@ -39,7 +40,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult PointMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult PointMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -101,7 +102,7 @@ namespace scone
 		return "";
 	}
 
-	void PointMeasure::StoreData( Storage< Real >::Frame& frame )
+	void PointMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ m_pTargetBody->GetName() + ".point_penalty" ] = penalty.GetLatest();
 	}

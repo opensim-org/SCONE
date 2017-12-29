@@ -28,7 +28,7 @@ namespace scone
 	{
 	}
 
-	CompositeMeasure::CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area )
 	{
 		// get Terms (obsolete)
@@ -59,23 +59,20 @@ namespace scone
 		}
 	}
 
-	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame )
+	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( Term& t : m_Terms )
-			t.measure->StoreData( frame );
+		for ( auto& t : m_Terms )
+			t.measure->StoreData( frame, flags );
 
-		for ( MeasureUP& m : m_Measures )
-			m->StoreData( frame );
+		for ( auto& m : m_Measures )
+			m->StoreData( frame, flags );
 	}
 
 	CompositeMeasure::~CompositeMeasure() { }
 
-	Controller::UpdateResult CompositeMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		bool terminate = false;
 

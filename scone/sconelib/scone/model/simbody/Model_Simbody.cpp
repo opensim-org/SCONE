@@ -15,8 +15,6 @@
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
-#include <boost/thread.hpp>
-#include <boost/filesystem.hpp>
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/ResourceCache.h"
@@ -27,6 +25,7 @@
 #include <thread>
 #include "flut/pattern_matcher.hpp"
 #include "flut/container_tools.hpp"
+#include <mutex>
 
 using std::cout;
 using std::endl;
@@ -44,7 +43,7 @@ namespace scone
 	};
 
 
-	boost::mutex g_SimBodyMutex;
+	std::mutex g_SimBodyMutex;
 	ResourceCache< OpenSim::Model > g_ModelCache;
 	ResourceCache< OpenSim::Storage > g_StorageCache;
 
@@ -62,7 +61,7 @@ namespace scone
 	};
 
 	/// Constructor
-	Model_Simbody::Model_Simbody( const PropNode& props, ParamSet& par ) :
+	Model_Simbody::Model_Simbody( const PropNode& props, Params& par ) :
 		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
@@ -93,136 +92,179 @@ namespace scone
 		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 		INIT_PROPERTY( props, initial_leg_load, 0.2 );
 
-		// create new OpenSim Model using resource cache
-		m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
+		INIT_PROPERTY( props, create_body_forces, false );
 
-		// create torque and point actuators
-		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
+		// always set create_body_forces when there's a PerturbationController
+		// TODO: think of a nicer, more generic way of dealing with this issue
+		for ( auto& cprops : props.get_child( "Controllers" ) )
+			create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+
+		// create new OpenSim Model using resource cache
 		{
-			OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
-			cf->set_point_is_global( false );
-			cf->set_force_is_global( true );
-			cf->set_torque_is_global( false );
-			m_BodyForces.push_back( cf );
-			m_pOsimModel->addForce( cf );
+			SCONE_PROFILE_SCOPE( "CreateModel" );
+			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
 		}
 
-		// change model properties
-		SetOpenSimParameters( props, par );
-
-		// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
-		m_pControllerDispatcher = new ControllerDispatcher( *this );
-		m_pOsimModel->addController( m_pControllerDispatcher );
-
-		// create probe (ownership is automatically passed to OpenSim::Model)
-		// OpenSim: this doesn't work! It either crashes or gives inconsistent results
-		if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
+		// create torque and point actuators
+		if ( create_body_forces )
 		{
-			auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
-			GetOsimModel().addProbe( probe );
-			for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
+			SCONE_PROFILE_SCOPE( "SetupBodyForces" );
+			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
-				OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
-				//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Wronlgy derived from [Wang2012], should be 235?
-				double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
-				probe->addMuscle( mus.getName(), 0.5 );
+				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
+				cf->set_point_is_global( false );
+				cf->set_force_is_global( true );
+				cf->set_torque_is_global( false );
+				m_BodyForces.push_back( cf );
+				m_pOsimModel->addForce( cf );
 			}
-			probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
-			probe->setOperation( "integrate" );
-			m_pProbe = probe;
+		}
+
+		{
+			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
+
+			// change model properties
+			SetOpenSimParameters( props, par );
+
+			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
+			m_pControllerDispatcher = new ControllerDispatcher( *this );
+			m_pOsimModel->addController( m_pControllerDispatcher );
+
+			// create probe (ownership is automatically passed to OpenSim::Model)
+			// OpenSim: this doesn't work! It either crashes or gives inconsistent results
+			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
+			{
+				auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
+				GetOsimModel().addProbe( probe );
+				for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
+				{
+					OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
+					//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Wronlgy derived from [Wang2012], should be 235?
+					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
+					probe->addMuscle( mus.getName(), 0.5 );
+				}
+				probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
+				probe->setOperation( "integrate" );
+				m_pProbe = probe;
+			}
 		}
 
 		// Initialize the system
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
-		g_SimBodyMutex.lock();
-		m_pTkState = &m_pOsimModel->initSystem();
-		g_SimBodyMutex.unlock();
-
-		// create model component wrappers and sensors
-		CreateModelWrappers( props, par );
-		SetModelProperties( props, par );
-		CreateBalanceSensors( props, par );
-
-		// initialize cached variables to save computation time
-		m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
-		m_BW = GetGravity().length() * GetMass();
-
-		ValidateDofAxes();
-
-		// Create the integrator for the simulation.
-		if ( integration_method == "RungeKuttaMerson" )
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
-		else if ( integration_method == "RungeKutta2" )
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta2Integrator( m_pOsimModel->getMultibodySystem() ) );
-		else if ( integration_method == "RungeKutta3" )
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta3Integrator( m_pOsimModel->getMultibodySystem() ) );
-		else if ( integration_method == "SemiExplicitEuler" )
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
-		else if ( integration_method == "SemiExplicitEuler2" )
-			m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-		else SCONE_THROW( "Invalid integration method: " + flut::quoted( integration_method ) );
-
-		m_pTkIntegrator->setAccuracy( integration_accuracy );
-		m_pTkIntegrator->setMaximumStepSize( max_step_size );
-		m_pTkIntegrator->resetAllStatistics();
-
-		// read initial state
-		InitStateFromTk();
-		if ( !state_init_file.empty() )
-			ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
-
-		// update state variables if they are being optimized
-		if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 		{
-			bool symmetric = iso->get< bool >( "symmetric", false );
-			auto inc_pat = flut::pattern_matcher( iso->get< String >( "include_states" ), ";" );
-			auto ex_pat = flut::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
-			for ( Index i = 0; i < m_State.GetSize(); ++i )
-			{
-				const String& state_name = m_State.GetName( i );
-				if ( inc_pat( state_name ) && !ex_pat( state_name ) )
-				{
-					auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-					m_State[ i ] += par.Get( ParamInfo( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), 0, 0, iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) ) );
-				}
-			}
+			SCONE_PROFILE_SCOPE( "InitSystem" );
+			g_SimBodyMutex.lock();
+			m_pTkState = &m_pOsimModel->initSystem();
+			g_SimBodyMutex.unlock();
 		}
 
-		// apply and fix state
-		CopyStateToTk();
-		FixTkState( initial_leg_load * GetBW() );
-		CopyStateFromTk();
+		// create model component wrappers and sensors
+		{
+			SCONE_PROFILE_SCOPE( "CreateWrappers" );
+			CreateModelWrappers( props, par );
+			SetModelProperties( props, par );
+			CreateBalanceSensors( props, par );
+		}
 
-		// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-		m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
-		m_pOsimManager->setWriteToStorage( GetStoreData() );
-		m_pOsimManager->setPerformAnalyses( false );
-		m_pOsimManager->setInitialTime( 0.0 );
+		{
+			SCONE_PROFILE_SCOPE( "InitVariables" );
+			// initialize cached variables to save computation time
+			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
+			m_BW = GetGravity().length() * GetMass();
+			ValidateDofAxes();
+		}
+
+		// Create the integrator for the simulation.
+		{
+			SCONE_PROFILE_SCOPE( "InitIntegrators" );
+
+			if ( integration_method == "RungeKuttaMerson" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "RungeKutta2" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta2Integrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "RungeKutta3" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta3Integrator( m_pOsimModel->getMultibodySystem() ) );
+			else if ( integration_method == "SemiExplicitEuler" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
+			else if ( integration_method == "SemiExplicitEuler2" )
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
+			else SCONE_THROW( "Invalid integration method: " + flut::quoted( integration_method ) );
+
+			m_pTkIntegrator->setAccuracy( integration_accuracy );
+			m_pTkIntegrator->setMaximumStepSize( max_step_size );
+			m_pTkIntegrator->resetAllStatistics();
+		}
+
+		// read initial state
+		{
+			SCONE_PROFILE_SCOPE( "InitState" );
+			InitStateFromTk();
+			if ( !state_init_file.empty() )
+				ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
+
+			// update state variables if they are being optimized
+			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
+			{
+				bool symmetric = iso->get< bool >( "symmetric", false );
+				auto inc_pat = flut::pattern_matcher( iso->get< String >( "include_states" ), ";" );
+				auto ex_pat = flut::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
+				for ( Index i = 0; i < m_State.GetSize(); ++i )
+				{
+					const String& state_name = m_State.GetName( i );
+					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
+					{
+						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
+						m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
+					}
+				}
+			}
+
+			// apply and fix state
+			CopyStateToTk();
+			FixTkState( initial_leg_load * GetBW() );
+			CopyStateFromTk();
+		}
 
 		// Realize acceleration because controllers may need it and in this way the results are consistent
-		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		{
+			SCONE_PROFILE_SCOPE( "RealizeSystem" );
+			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
+			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
+			m_pOsimManager->setWriteToStorage( false );
+			m_pOsimManager->setPerformAnalyses( false );
+			m_pOsimManager->setInitialTime( 0.0 );
+			m_pOsimManager->setFinalTime( 0.0 );
+
+			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		}
 
 		// create and initialize controllers
-		const PropNode& cprops = props.get_child( "Controllers" );
-		for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-			m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
+		{
+			SCONE_PROFILE_SCOPE( "CreateControllers" );
+			const PropNode& cprops = props.get_child( "Controllers" );
+			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
+				m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
+		}
 
-		// Initialize muscle dynamics STEP 1
-		// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
-		InitializeOpenSimMuscleActivations( 0.05 );
-		UpdateSensorDelayAdapters();
+		{
+			SCONE_PROFILE_SCOPE( "InitMuscleDynamics" );
+			// Initialize muscle dynamics STEP 1
+			// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
+			InitializeOpenSimMuscleActivations( 0.05 );
+			UpdateSensorDelayAdapters();
 
-		// Initialize muscle dynamics STEP 2
-		// compute actual initial control values and re-equilibrate muscles
-		UpdateControlValues();
-		InitializeOpenSimMuscleActivations();
+			// Initialize muscle dynamics STEP 2
+			// compute actual initial control values and re-equilibrate muscles
+			UpdateControlValues();
+			InitializeOpenSimMuscleActivations();
+		}
 
 		log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 	}
 
 	Model_Simbody::~Model_Simbody() {}
 
-	void Model_Simbody::CreateModelWrappers( const PropNode& pn, ParamSet& par )
+	void Model_Simbody::CreateModelWrappers( const PropNode& pn, Params& par )
 	{
 		SCONE_ASSERT( m_pOsimModel );
 		SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
@@ -284,7 +326,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetModelProperties( const PropNode &pn, ParamSet& par )
+	void Model_Simbody::SetModelProperties( const PropNode &pn, Params& par )
 	{
 		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
 		{
@@ -308,7 +350,7 @@ namespace scone
 	}
 
 
-	void Model_Simbody::SetOpenSimParameters( const PropNode& props, ParamSet& par )
+	void Model_Simbody::SetOpenSimParameters( const PropNode& props, Params& par )
 	{
 		if ( auto* osim_pars = props.try_get_child( "OpenSimParameters" ) )
 		{
@@ -320,7 +362,7 @@ namespace scone
 					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )
 					{
 						auto& osMus = m_pOsimModel->updMuscles().get( i );
-						if ( pm.match( osMus.getName() ) )
+						if ( pm( osMus.getName() ) )
 							SetOpenSimParameter( osMus, param_it->second, par );
 					}
 				}
@@ -328,12 +370,12 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, ParamSet& par )
+	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par )
 	{
 		// we have a match!
 		String prop_str = pn.get< String >( "property" );
 		ScopedParamSetPrefixer prefix( par, pn.get< String >( "name" ) + "." );
-		double value = par.Get( prop_str, pn, "value" );
+		double value = par.get( prop_str, pn.get_child( "value" ) );
 		if ( os.hasProperty( prop_str ) )
 		{
 			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();
@@ -341,15 +383,14 @@ namespace scone
 		}
 	}
 
-	String Model_Simbody::WriteData( const String& file ) const
+	String Model_Simbody::WriteResult( const path& file ) const
 	{
-		boost::filesystem::path path( file + ".sto" );
-		auto name = ( path.parent_path().filename() / path.stem() ).string();
-
 		// write scone data
-		WriteStorageSto( m_Data, path.string(), name );
+		WriteStorageSto( m_Data, ( file + ".sto" ).str(), ( file.parent_path().filename() / file.stem() ).str() );
+		for ( auto& c : GetControllers() )
+			c->WriteResult( file );
 
-		return path.string();
+		return file.str();
 	}
 
 	Vec3 Model_Simbody::GetComPos() const
@@ -652,11 +693,6 @@ namespace scone
 		m_pTkIntegrator->setFinalTime( t );
 	}
 
-	scone::String Model_Simbody::GetClassSignature() const
-	{
-		return GetOsimModel().getName();
-	}
-
 	const String& Model_Simbody::GetName() const
 	{
 		return GetOsimModel().getName();
@@ -723,17 +759,11 @@ namespace scone
 			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
 
-	void Model_Simbody::SetStoreData( bool store )
-	{
-		Model::SetStoreData( store );
-		m_pOsimManager->setWriteToStorage( store );
-	}
-
-	void Model_Simbody::SetTkState( const State& s )
-	{
-		for ( Index i = 0; i < s.GetSize(); ++i )
-			GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
-	}
+	//void Model_Simbody::SetTkState( const State& s )
+	//{
+	//	for ( Index i = 0; i < s.GetSize(); ++i )
+	//		GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
+	//}
 
 	void Model_Simbody::InitStateFromTk()
 	{
@@ -762,8 +792,27 @@ namespace scone
 	{
 		m_State.SetValues( state.GetValues() );
 		CopyStateToTk();
-		for ( auto& c : GetControllers() )
-			c->UpdateControls( *this, timestamp );
+		GetTkState().setTime( timestamp );
+		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		UpdateControlValues();
+	}
+
+	void Model_Simbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
+	{
+		m_State.SetValues( state );
+		CopyStateToTk();
+		GetTkState().setTime( timestamp );
+		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+		UpdateControlValues();
+
+		if ( GetStoreData() )
+			StoreCurrentFrame();
+	}
+
+	TimeInSeconds Model_Simbody::GetSimulationStepSize()
+	{
+		SCONE_ASSERT( use_fixed_control_step_size );
+		return fixed_control_step_size;
 	}
 
 	void Model_Simbody::ValidateDofAxes()

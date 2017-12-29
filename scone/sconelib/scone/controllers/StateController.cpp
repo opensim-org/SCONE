@@ -5,13 +5,13 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	StateController::StateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Controller( props, par, model, area ),
 	m_CurrentState( NoIndex )
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Locality& area )
 	{
 		// create instances for each controller
 		log::trace( "Creating Conditional Controllers for " + area.GetName() );
@@ -42,8 +42,9 @@ namespace scone
 				{
 					if ( controller_state_name == GetStateName( i ) )
 					{
+						// This may not work for the original SSC examples
 						ccs.state_mask[ i ] = has_any_state = true;
-						size_t bit_string_idx = area.mirrored ? GetStateCount() - i : GetStateCount() - 1 - i; // HACK, rewrite all this crap
+						size_t bit_string_idx = GetStateCount() - 1 - i;
 						bit_string[ bit_string_idx ] = '1';
 					}
 				}
@@ -100,12 +101,12 @@ namespace scone
 		return SuccessfulUpdate;
 	}
 
-	void StateController::StoreData( Storage<Real>::Frame& frame )
+	void StateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( ConditionalController& cc : m_ConditionalControllers )
+		for ( auto& cc : m_ConditionalControllers )
 		{
 			if ( cc.first.is_active )
-				cc.second->StoreData( frame );
+				cc.second->StoreData( frame, flags );
 		}
 	}
 

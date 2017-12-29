@@ -12,8 +12,6 @@ if(${Qt5Widgets_FOUND})
 		main.cpp
 		StudioModel.cpp
 		StudioModel.h
-		StudioScene.cpp
-		StudioScene.h
 		studio_config.h
 		SconeStudio.cpp
 		SconeStudio.h
@@ -25,6 +23,8 @@ if(${Qt5Widgets_FOUND})
 		SconeStorageDataModel.cpp
 		ResultsFileSystemModel.h
 		ResultsFileSystemModel.cpp
+		ReflexAnalysisObjective.h
+		ReflexAnalysisObjective.cpp
 		)
 	
 	set(QTFILES
@@ -110,7 +110,8 @@ if(${Qt5Widgets_FOUND})
 		)
 	
 	# no console in release mode
-	set_target_properties(sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
+	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_FLUT_PROFILING>" )
 
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )

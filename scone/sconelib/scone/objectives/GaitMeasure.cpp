@@ -6,11 +6,11 @@
 #include "scone/core/Log.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
-#include "../core/Range.h"
+#include "scone/core/Range.h"
 
 namespace scone
 {
-	GaitMeasure::GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_MinVelocityMeasure( Statistic<>::NoInterpolation ),
 		m_nSteps( 0 ),
@@ -44,14 +44,12 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult GaitMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// make sure this is a new step
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		// check termination
 		bool terminate = false;

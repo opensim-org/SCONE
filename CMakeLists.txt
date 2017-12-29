@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
 # find flut include path
 find_package(Flut REQUIRED)
+find_package(Spot REQUIRED)
 
 # Shark 3.0 provides a SharkConfig.cmake.
 find_package(Shark 3.0 REQUIRED PATHS "${SHARK_ROOT}")
@@ -43,9 +44,13 @@ add_definitions(${Boost_LIB_DIAGNOSTIC_DEFINITIONS})
 if(WIN32)
 	add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_ALL_DYN_LINK)
 endif()
+
+# include folders
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
-include_directories(${FLUT_INCLUDE_DIRS})
+include_directories(${FLUT_INCLUDE_DIR})
+include_directories(${SPOT_INCLUDE_DIR})
+
 include(${SHARK_USE_FILE}) # UseShark.cmake file actually handles the includes
 
 # Add sconelib include folder to all projects
@@ -92,7 +97,9 @@ set(CMAKE_MACOSX_RPATH ON)
 if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/simvis)
 endif()
+
 add_subdirectory(submodules/flut)
+add_subdirectory(submodules/spot)
 
 #
 # Add single sconelib target

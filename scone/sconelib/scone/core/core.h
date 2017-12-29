@@ -35,6 +35,7 @@ namespace scone
 	typedef size_t Index;
 	typedef size_t Count;
 	typedef std::string String;
+	using std::string;
 	const Index NoIndex = size_t( -1 );
 
 	typedef double TimeInSeconds;

@@ -32,7 +32,7 @@ namespace scone
 		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) )
 	{ }
 
-	GaitStateController::GaitStateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area ) :
+	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		// TODO: move contact_force_threshold to leg?
@@ -239,12 +239,12 @@ namespace scone
 
 		// output number of controllers per leg
 		for ( auto it = controllers.begin(); it != controllers.end(); ++it )
-			s += "_" + to_str( it->second / m_LegStates.size() ) + it->first;
+			s += to_str( it->second / m_LegStates.size() ) + it->first;
 
 		return s;
 	}
 
-	void GaitStateController::StoreData( Storage<Real>::Frame& frame )
+	void GaitStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		// store states
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
@@ -254,10 +254,10 @@ namespace scone
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )
 			frame[ m_LegStates[ idx ]->leg.GetName() + ".sag_pos" ] = m_LegStates[ idx ]->sagittal_pos;
 
-		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
+		for ( auto& cc : m_ConditionalControllers )
 		{
 			if ( cc->active )
-				cc->controller->StoreData( frame );
+				cc->controller->StoreData( frame, flags );
 		}
 	}
 

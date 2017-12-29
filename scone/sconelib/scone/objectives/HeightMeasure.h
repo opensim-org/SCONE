@@ -9,10 +9,10 @@ namespace scone
 	class HeightMeasure : public Measure
 	{
 	public:
-		HeightMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~HeightMeasure() { };
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
 	protected:

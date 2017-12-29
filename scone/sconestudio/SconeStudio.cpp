@@ -18,6 +18,12 @@
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
 #include "scone/core/Profiler.h"
+#include "ReflexAnalysisObjective.h"
+#include "spot/cma_optimizer.h"
+#include "spot/console_reporter.h"
+#include "spot/file_reporter.h"
+#include "flut/filesystem.hpp"
+#include "simvis/color.h"
 
 using namespace scone;
 using namespace std;
@@ -29,7 +35,8 @@ com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
-captureProcess( nullptr )
+captureProcess( nullptr ),
+scene( true )
 {
 	flut::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
@@ -40,16 +47,25 @@ captureProcess( nullptr )
 	analysisView->setMinSeriesInterval( 0 );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
-	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::captureVideo );
+	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Capture &Image", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
+	addMenuAction( toolsMenu, "Perform &Reflex Analysis", this, &SconeStudio::performReflexAnalysis, QKeySequence(), true );
 	addMenuAction( toolsMenu, "&Preferences", this, &SconeStudio::showSettingsDialog );
 
 	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
-	addMenuAction( actionMenu, "Toggle &Play", ui.playControl, &QPlayControl::play, Qt::Key_F5 );
-	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stop, Qt::Key_F8, true );
-	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ), true );
-	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
+	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
+	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_Space );
+	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
+	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
+	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ), true );
+	addMenuAction( actionMenu, "Step &Back", ui.playControl, &QPlayControl::stepBack, QKeySequence( "Ctrl+Left" ) );
+	addMenuAction( actionMenu, "Step &Forward", ui.playControl, &QPlayControl::stepForward, QKeySequence( "Ctrl+Right" ) );
+	addMenuAction( actionMenu, "Page &Back", ui.playControl, &QPlayControl::pageBack, QKeySequence( "Ctrl+PgUp" ) );
+	addMenuAction( actionMenu, "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
+	addMenuAction( actionMenu, "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
+	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ), true );
 	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
@@ -67,6 +83,10 @@ captureProcess( nullptr )
 	registerDockWidget( ui.messagesDock, "&Messages" );
 	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, adw );
+
+	// init scene
+	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
+	scene.create_tile_floor( 64, 64, 1 );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -75,22 +95,25 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	resultsModel = new ResultsFileSystemModel( nullptr );
 	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
 	QDir().mkdir( results_folder );
-	ui.resultsBrowser->init( results_folder, "*.par", 1, resultsModel );
+	ui.resultsBrowser->setModel( resultsModel );
+	ui.resultsBrowser->setNumColumns( 1 );
+	ui.resultsBrowser->setRoot( results_folder, "*.par" );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	ui.osgViewer->setScene( manager.GetOsgRoot() );
+	ui.osgViewer->setScene( scene.osg_group().asNode() );
 	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
 	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setPlaybackTime );
+	//connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
-	connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
-	connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
+	//connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
+	//connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
 	connect( analysisView, &QDataAnalysisView::timeChanged, ui.playControl, &QPlayControl::setTime );
 
 	// start timer for viewer
@@ -115,43 +138,31 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 }
 
 SconeStudio::~SconeStudio()
-{
-}
+{}
 
 void SconeStudio::runSimulation( const QString& filename )
 {
-	try
+	SCONE_PROFILE_RESET;
+	if ( createModel( filename.toStdString() ) )
 	{
-		showViewer();
-		ui.playControl->stop();
-		ui.playControl->reset();
-		manager.CreateModel( filename.toStdString() );
 		updateViewSettings();
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		storageModel.setStorage( &manager.GetModel().GetData() );
+		storageModel.setStorage( &model->GetData() );
 		analysisView->reset();
-
-		if ( manager.IsEvaluating() )
-		{
-			ui.playControl->setDisabled( true );
+		if ( model->IsEvaluating() )
 			evaluate();
-		}
-
-		ui.playControl->setRange( 0, manager.GetMaxTime() );
-		ui.playControl->setDisabled( false );
-		ui.playControl->reset();
-		ui.playControl->play();
+		ui.playControl->setRange( 0, model->GetMaxTime() );
 	}
-	catch ( std::exception& e )
-	{
-		QMessageBox::critical( this, "Exception", e.what() );
-	}
+	SCONE_PROFILE_REPORT;
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+	showViewer();
+	ui.playControl->reset();
 	runSimulation( currentParFile );
+	if ( model )
+		ui.playControl->play();
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
@@ -178,34 +189,42 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
+	ui.playControl->reset();
 	ui.abortButton->setChecked( false );
 	ui.progressBar->setValue( 0 );
 	ui.progressBar->setFormat( " Evaluating (%p%)" );
 	ui.stackedWidget->setCurrentIndex( 1 );
 
-	SCONE_PROFILE_RESET;
 	const double step_size = 0.05;
 	int vis_step = 0;
-	for ( double t = step_size; t < manager.GetMaxTime(); t += step_size )
+	flut::timer real_time;
+	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
-		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 		{
-			manager.GetModel().FinalizeEvaluation( false );
+			model->FinalizeEvaluation( false );
 			ui.stackedWidget->setCurrentIndex( 0 );
 			return;
 		}
 		setTime( t, vis_step++ % 5 == 0 );
 	}
-	ui.progressBar->setValue( 100 );
-	manager.Update( manager.GetMaxTime(), true );
-	ui.stackedWidget->setCurrentIndex( 0 );
 
-	log::info( SCONE_PROFILE_REPORT );
+	// report duration
+	auto real_dur = real_time.seconds();
+	auto sim_time = model->GetTime();
+	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+
+	ui.progressBar->setValue( 100 );
+	if ( model->IsEvaluating() )
+		model->EvaluateTo( model->GetMaxTime() );
+	model->UpdateVis( model->GetTime() );
+
+	ui.stackedWidget->setCurrentIndex( 0 );
 }
 
-void SconeStudio::captureVideo()
+void SconeStudio::createVideo()
 {
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 	if ( captureFilename.isEmpty() )
@@ -222,10 +241,10 @@ void SconeStudio::captureVideo()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
-	for ( double t = 0.0; t <= manager.GetMaxTime(); t += step_size )
+	for ( double t = 0.0; t <= model->GetMaxTime(); t += step_size )
 	{
 		setTime( t, true );
-		ui.progressBar->setValue( int( t / manager.GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 			break;
@@ -235,8 +254,6 @@ void SconeStudio::captureVideo()
 	finalizeCapture();
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.osgViewer->startTimer();
-
-	log::info( SCONE_PROFILE_REPORT );
 }
 
 void SconeStudio::captureImage()
@@ -248,23 +265,24 @@ void SconeStudio::captureImage()
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
-	SCONE_PROFILE_FUNCTION;
-
-	if ( !manager.HasModel() )
-		return;
-
-	// update current time and stop when done
-	current_time = t;
-
-	// update ui and visualization
-	manager.Update( current_time, update_vis );
-	if ( update_vis )
+	if ( model )
 	{
-		auto d = com_delta( manager.GetModel().GetSimModel().GetComPos() );
-		ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
-		ui.osgViewer->setFrameTime( current_time );
-		if ( analysisView->isVisible() )
-			analysisView->refresh( current_time, false );
+		// update current time and stop when done
+		current_time = t;
+
+		// update ui and visualization
+		if ( model->IsEvaluating() )
+			model->EvaluateTo( t );
+
+		if ( update_vis )
+		{
+			model->UpdateVis( t );
+			auto d = com_delta( model->GetSimModel().GetComPos() );
+			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+			ui.osgViewer->setFrameTime( current_time );
+			if ( analysisView->isVisible() )
+				analysisView->refresh( current_time, false );
+		}
 	}
 }
 
@@ -355,6 +373,21 @@ void SconeStudio::updateRecentFilesMenu()
 		connect( act, SIGNAL( triggered() ), this, SLOT( fileOpenRecent() ) );
 	}
 	ui.action_Recent->setMenu( recent_menu );
+}
+
+bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
+{
+	try
+	{
+		model.reset();
+		model = StudioModelUP( new StudioModel( scene, path( par_file ), force_evaluation ) );
+	}
+	catch ( std::exception& e )
+	{
+		error( "Could not create model", e.what() );
+		return false;
+	}
+	return true;
 }
 
 bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
@@ -492,15 +525,19 @@ void SconeStudio::tabCloseRequested( int idx )
 
 void SconeStudio::updateViewSettings()
 {
-	if ( manager.HasModel() )
+	if ( model )
 	{
 		StudioModel::ViewFlags f;
 		f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
 		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
 		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
-		manager.GetModel().ApplyViewSettings( f );
+		model->ApplyViewSettings( f );
 	}
+
+	ProgressDockWidget::AxisScaleType scale = ui.actionUse_Log_Scale->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
+	for ( auto& o : optimizations )
+		o->SetAxisScaleType( scale );
 }
 
 void SconeStudio::fixViewCheckboxes()
@@ -575,4 +612,23 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 	cfg.setValue( "recentFiles", recentFiles );
 
 	QMainWindow::closeEvent( e );
+}
+
+void SconeStudio::performReflexAnalysis()
+{
+	if ( !model || model->IsEvaluating() )
+		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No model evaluated" );
+
+	path par_file( currentParFile.toStdString() );
+
+	ReflexAnalysisObjective reflex_objective( model->GetData(), "use_force=1;use_length=0;use_velocity=0" );
+	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
+	
+	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
+	spot::cma_optimizer cma( reflex_objective );
+	cma.set_max_threads( 32 );
+	cma.add_reporter( std::make_shared< spot::console_reporter >( 0, 2 ) );
+	cma.add_reporter( std::make_shared< spot::file_reporter >( par_file.replace_extension( "analysis" ) ) );
+	cma.run( 1000 );
+	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best_point() );
 }

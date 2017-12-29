@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	MetaReflexDof::MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	MetaReflexDof::MetaReflexDof( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		target_dof( *FindByName( model.GetDofs(), props.get< String >( "target" ) + GetSideName( area.side ) ) ),
 		tot_available_pos_mom( 0.0 ),
 		tot_available_neg_mom( 0.0 ),
@@ -76,10 +76,6 @@ namespace scone
 	scone::Real MetaReflexDof::GetLocalBalance()
 	{
 		return local_balance;
-	}
-
-	void MetaReflexDof::StoreData( Storage< Real >::Frame& frame )
-	{
 	}
 
 	void MetaReflexDof::SetDofRotationAxis()

@@ -4,7 +4,7 @@
 #include "QDirIterator"
 #include <iostream>
 #include "flut/prop_node_tools.hpp"
-#include "flut/error_code.h"
+#include "flut/system/error_code.hpp"
 #include "scone/core/Log.h"
 
 ResultsFileSystemModel::ResultsFileSystemModel( QObject* parent ) : QFileSystemModel( parent )
@@ -16,7 +16,7 @@ ResultsFileSystemModel::~ResultsFileSystemModel()
 ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi ) const
 {
 	Status stat{ 0, 0 };
-	if ( !fi.isDir() )
+	if ( !fi.isDir() && fi.suffix() == "par" )
 	{
 		auto split = fi.completeBaseName().split( "_" );
 		if ( split.size() > 0 )

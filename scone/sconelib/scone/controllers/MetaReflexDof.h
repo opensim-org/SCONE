@@ -2,7 +2,7 @@
 
 #include "scone/core/PropNode.h"
 #include "scone/model/Model.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "MetaReflexParams.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/core/HasData.h"
@@ -14,7 +14,7 @@ namespace scone
 	class SCONE_API MetaReflexDof : public HasData
 	{
 	public:
-		MetaReflexDof( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		MetaReflexDof( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MetaReflexDof() {}
 
 		void SetupUsingCurrentPose();
@@ -43,10 +43,9 @@ namespace scone
 		Vec3 dof_rotation_axis;
 
 		Real GetLocalBalance();
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 	private:
-		bool MuscleCrossesDof( const Muscle& mus );
 
 		Real local_balance;
 		Real body_angvel_sensor_gain;

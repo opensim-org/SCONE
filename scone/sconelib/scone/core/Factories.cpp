@@ -23,18 +23,22 @@
 #include "scone/core/Polynomial.h"
 #include "scone/model/simbody/Model_Simbody.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
-#include "scone/optimization/CmaOptimizerShark3.h"
-#include "scone/optimization/CmaOptimizerCCMAES.h"
+//#include "scone/optimization/CmaOptimizerShark3.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
+#include "scone/controllers/MirrorController.h"
+#include "scone/controllers/NeuralController.h"
+#include "../objectives/ImitationObjective.h"
+#include "../objectives/BalanceMeasure.h"
+#include "../objectives/SimilarityObjective.h"
 
 namespace scone
 {
-	static flut::factory< Controller, const PropNode&, ParamSet&, Model&, const Locality& > g_ControllerFactory;
-	static flut::factory< Reflex, const PropNode&, ParamSet&, Model&, const Locality& > g_ReflexFactory;
-	static flut::factory< Function, const PropNode&, ParamSet& > g_FunctionFactory;
+	static flut::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
+	static flut::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
+	static flut::factory< Function, const PropNode&, Params& > g_FunctionFactory;
 
-	SCONE_API ControllerUP CreateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
+	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ControllerFactory.empty() )
 		{
@@ -45,7 +49,9 @@ namespace scone
 			g_ControllerFactory.register_class< TimeStateController >();
 			g_ControllerFactory.register_class< MetaReflexController >();
 			g_ControllerFactory.register_class< PerturbationController >();
-			g_ControllerFactory.register_class< SensorStateController>();
+			g_ControllerFactory.register_class< SensorStateController >();
+			g_ControllerFactory.register_class< MirrorController >();
+			g_ControllerFactory.register_class< NeuralController >();
 
 			// register measures
 			g_ControllerFactory.register_class< HeightMeasure >();
@@ -58,11 +64,12 @@ namespace scone
 			g_ControllerFactory.register_class< JointLoadMeasure >();
 			g_ControllerFactory.register_class< ReactionForceMeasure >();
 			g_ControllerFactory.register_class< PointMeasure >();
+			g_ControllerFactory.register_class< BalanceMeasure >();
 		}
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area )
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
 		if ( g_ReflexFactory.empty() )
 		{
@@ -73,7 +80,7 @@ namespace scone
 		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API FunctionUP CreateFunction( const PropNode& props, ParamSet& par )
+	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par )
 	{
 		if ( g_FunctionFactory.empty() )
 		{
@@ -84,8 +91,8 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	static flut::factory< Model, const PropNode&, ParamSet& > g_ModelFactory;
-	SCONE_API ModelUP CreateModel( const PropNode& prop, ParamSet& par )
+	static flut::factory< Model, const PropNode&, Params& > g_ModelFactory;
+	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
 	{
 		if ( g_ModelFactory.empty() )
 		{
@@ -94,8 +101,8 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static flut::factory< Sensor, const PropNode&, ParamSet&, Model&, const Locality& > g_SensorFactory;
-	SCONE_API SensorUP CreateSensor( const PropNode& props, ParamSet& par, Model& m, const Locality& a )
+	static flut::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
+	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Locality& a )
 	{
 		if ( g_SensorFactory.empty() )
 		{
@@ -115,24 +122,26 @@ namespace scone
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
-			g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
+			//g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	static flut::factory< Objective, const PropNode&, ParamSet& > g_ObjectiveFactory;
-	SCONE_API flut::factory< Objective, const PropNode&, ParamSet& >& GetObjectiveFactory()
+	static flut::factory< Objective, const PropNode& > g_ObjectiveFactory;
+	SCONE_API flut::factory< Objective, const PropNode& >& GetObjectiveFactory()
 	{
 		if ( g_ObjectiveFactory.empty() )
 		{
 			g_ObjectiveFactory.register_class< SimulationObjective >();
+			g_ObjectiveFactory.register_class< ImitationObjective >();
+			g_ObjectiveFactory.register_class< SimilarityObjective >();
 		}
 		return g_ObjectiveFactory;
 	}
 
-	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop, ParamSet& par )
+	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop )
 	{
-		return GetObjectiveFactory()( prop.get< String >( "type" ), prop, par );
+		return GetObjectiveFactory()( prop.get< String >( "type" ), prop );
 	}
 }

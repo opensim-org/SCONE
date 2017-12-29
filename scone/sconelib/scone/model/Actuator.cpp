@@ -29,9 +29,8 @@ namespace scone
 		else return m_ActuatorControlValue;
 	}
 
-	void Actuator::StoreData( Storage< Real >::Frame& frame )
+	void Actuator::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ GetName() + ".input" ] = GetInput();
 	}
 
 	void Actuator::SetDelay( TimeInSeconds d, TimeInSeconds cs )

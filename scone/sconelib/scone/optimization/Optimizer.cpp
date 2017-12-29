@@ -1,18 +1,14 @@
 #include "Optimizer.h"
 
-#include <boost/filesystem.hpp>
-#include <boost/format.hpp>
-#include <boost/thread.hpp>
-
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"
-
+#include "scone/core/math.h"
 #include "scone/optimization/Objective.h"
 
-namespace bfs = boost::filesystem;
+#include "flut/filesystem.hpp"
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
@@ -23,13 +19,14 @@ namespace bfs = boost::filesystem;
 namespace scone
 {
 	Optimizer::Optimizer( const PropNode& props ) :
-		HasSignature( props ),
-		max_threads( 1 ),
-		thread_priority( 0 ),
-		m_ObjectiveProps( props.get_child( "Objective" ) ),
-		console_output( true ),
-		status_output( false ),
-		m_LastFileOutputGen( 0 )
+	HasSignature( props ),
+	max_threads( 1 ),
+	thread_priority( 0 ),
+	m_ObjectiveProps( props.get_child( "Objective" ) ),
+	console_output( true ),
+	status_output( false ),
+	m_LastFileOutputGen( 0 ),
+	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
 		INIT_PROPERTY( props, max_threads, size_t( 32 ) );
 		INIT_PROPERTY( props, thread_priority, -2 );
@@ -38,7 +35,7 @@ namespace scone
 		INIT_PROPERTY( props, show_optimization_time, false );
 		INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
 		INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
-		INIT_PROPERTY( props, init_file, String( "" ) );
+		INIT_PROPERTY( props, init_file, path( "" ) );
 		INIT_PROPERTY( props, use_init_file, true );
 		INIT_PROPERTY( props, output_objective_result_files, false );
 
@@ -51,98 +48,19 @@ namespace scone
 	Optimizer::~Optimizer()
 	{}
 
-	// evaluate individuals
-	std::vector< double > Optimizer::Evaluate( std::vector< ParamSet >& parsets )
-	{
-		// run parsets through streams for awesomely reproducibility
-		for ( size_t idx = 0; idx < parsets.size(); ++idx )
-		{
-			std::stringstream str;
-			parsets[ idx ].ToStream( str );
-			parsets[ idx ].FromStream( str, true );
-		}
-
-		// make sure there are enough objectives
-		CreateObjectives( parsets.size() );
-
-		if ( max_threads == 1 )
-			return EvaluateSingleThreaded( parsets );
-		else return EvaluateMultiThreaded( parsets );
-	}
-
-	// evaluate individuals one-by-one in current thread
-	std::vector< double > Optimizer::EvaluateSingleThreaded( std::vector< ParamSet >& parsets )
-	{
-		std::vector< double > fitnesses( parsets.size(), 999 );
-		for ( size_t ind_idx = 0; ind_idx < parsets.size(); ++ind_idx )
-		{
-			// copy values into par
-			fitnesses[ ind_idx ] = m_Objectives[ ind_idx ]->Evaluate( parsets[ ind_idx ] );
-			if ( GetProgressOutput() )
-				printf( " %3.0f", fitnesses[ ind_idx ] );
-		}
-		return fitnesses;
-	}
-
-	std::vector< double > Optimizer::EvaluateMultiThreaded( std::vector< ParamSet >& parsets )
-	{
-		// evaluate individuals
-		size_t next_idx = 0;
-		std::vector< double > fitnesses( parsets.size(), 999 );
-
-		size_t num_active_threads = 0;
-		std::vector< std::shared_ptr< boost::thread > > threads( parsets.size(), nullptr );
-
-		while ( num_active_threads > 0 || ( next_idx < parsets.size() ) )
-		{
-			// add threads
-			while ( num_active_threads < max_threads && next_idx < parsets.size() )
-			{
-				// create new thread at next_idx
-				threads[ next_idx ] = std::unique_ptr< boost::thread >( new boost::thread( EvaluateFunc, m_Objectives[ next_idx ].get(), parsets[ next_idx ], &fitnesses[ next_idx ], thread_priority ) );
-
-				num_active_threads++;
-				next_idx++;
-			}
-
-			// see if threads are finished
-			for ( size_t thread_idx = 0; thread_idx < threads.size(); ++thread_idx )
-			{
-				if ( threads[ thread_idx ] != nullptr && threads[ thread_idx ]->timed_join( boost::posix_time::milliseconds( 100 ) ) )
-				{
-					// decrease number of active threads
-					threads[ thread_idx ].reset();
-					num_active_threads--;
-
-					// print some stuff
-					if ( GetProgressOutput() )
-						printf( "%3.0f ", fitnesses[ thread_idx ] );
-				}
-			}
-		}
-
-		return fitnesses;
-	}
-
-	void Optimizer::EvaluateFunc( Objective* obj, ParamSet& par, double* fitness, int priority )
-	{
-		Optimizer::SetThreadPriority( priority );
-		*fitness = obj->Evaluate( par );
-	}
-
 	void Optimizer::InitOutputFolder()
 	{
-		auto output_base = ( GetFolder( SCONE_RESULTS_FOLDER ) / GetSignature() ).str();
+		auto output_base = output_root / GetSignature();
 		m_OutputFolder = output_base;
 
-		for ( int i = 1; bfs::exists( bfs::path( m_OutputFolder ) ); ++i )
+		for ( int i = 1; flut::exists( flut::path( m_OutputFolder.str() ) ); ++i )
 			m_OutputFolder = output_base + stringf( " (%d)", i );
 
-		create_directories( bfs::path( m_OutputFolder ) );
-		m_OutputFolder += "/";
+		flut::create_directories( flut::path( m_OutputFolder.str() ) );
+		m_OutputFolder;
 	}
 
-	const String& Optimizer::AcquireOutputFolder()
+	const path& Optimizer::AcquireOutputFolder()
 	{
 		if ( m_OutputFolder.empty() )
 			InitOutputFolder();
@@ -162,14 +80,10 @@ namespace scone
 	{
 		// create at least one objective instance (required for finding number of parameters)
 		while ( m_Objectives.size() < count )
-		{
-			ParamSet par;
-			m_Objectives.push_back( CreateObjective( m_ObjectiveProps, par ) );
-			m_Objectives.back()->debug_idx = (int)m_Objectives.size();
-		}
+			m_Objectives.push_back( CreateObjective( m_ObjectiveProps ) );
 	}
 
-	void Optimizer::ManageFileOutput( double fitness, const std::vector< String >& files )
+	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files )
 	{
 		m_OutputFiles.push_back( std::make_pair( fitness, files ) );
 		if ( m_OutputFiles.size() >= 3 )
@@ -183,10 +97,12 @@ namespace scone
 			if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
 			{
 				// delete the file(s)
-				for ( String& file : testIt->second )
-					bfs::remove( bfs::path( file ) );
+				bool ok = true;
+				for ( auto& file : testIt->second )
+					ok &= flut::remove( file );
 
-				m_OutputFiles.erase( testIt );
+				if ( ok )
+					m_OutputFiles.erase( testIt );
 			}
 		}
 	}

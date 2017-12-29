@@ -1,11 +1,10 @@
-
-
 #include "Model.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
 #include "scone/core/core.h"
 #include "scone/core/Storage.h"
 #include "scone/core/string_tools.h"
+#include <algorithm>
 
 namespace scone
 {
@@ -38,7 +37,7 @@ namespace scone
 
 	scone::Real SensorDelayAdapter::GetValue( Index idx ) const
 	{
-		return GetValue( idx, m_Delay );
+		return GetValue( m_StorageIdx + idx, m_Delay );
 	}
 
 	scone::Real SensorDelayAdapter::GetValue( Real delay ) const
@@ -49,6 +48,18 @@ namespace scone
 	scone::Real SensorDelayAdapter::GetValue( Index idx, Real delay ) const
 	{
 		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx + idx );
+	}
+
+	scone::Real SensorDelayAdapter::GetAverageValue( int delay_samples, int window_size ) const
+	{
+		auto& sto = m_Model.GetSensorDelayStorage();
+		auto history_begin = std::max( 0, (int)sto.GetFrameCount() - delay_samples - window_size / 2 );
+		auto history_end = flut::math::clamped( (int)sto.GetFrameCount() - delay_samples - window_size / 2 + window_size, 1, (int)sto.GetFrameCount() );
+
+		Real value = 0.0;
+		for ( auto i = history_begin; i < history_end; ++i )
+			value += sto.GetFrame( i )[ m_StorageIdx ];
+		return value / ( history_end - history_begin );
 	}
 
 	void SensorDelayAdapter::UpdateStorage()

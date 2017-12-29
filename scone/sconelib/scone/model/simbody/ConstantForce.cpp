@@ -14,6 +14,7 @@ namespace OpenSim
 		setNull();
 		setAuthors( "Thomas Geijtenbeek" );
 
+		state_variable_names_.reserve( 9 );
 		state_variable_names_.push_back( bodyName + "_force_x" );
 		state_variable_names_.push_back( bodyName + "_force_y" );
 		state_variable_names_.push_back( bodyName + "_force_z" );

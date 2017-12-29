@@ -8,10 +8,10 @@ namespace scone
 	class SCONE_API CompositeMeasure : public Measure
 	{
 	public:
-		CompositeMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~CompositeMeasure();
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
 		struct Term
@@ -35,7 +35,7 @@ namespace scone
 		CompositeMeasure( CompositeMeasure& other );
 		CompositeMeasure& operator=( CompositeMeasure& other );
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 		std::vector< Term > m_Terms;
 		std::vector< MeasureUP > m_Measures;

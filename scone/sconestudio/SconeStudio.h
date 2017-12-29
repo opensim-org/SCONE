@@ -11,7 +11,6 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "StudioScene.h"
 #include "flut/timer.hpp"
 #include "flut/math/delta.hpp"
 #include "ProgressDockWidget.h"
@@ -21,6 +20,7 @@
 #include "QCompositeMainWindow.h"
 #include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
+#include "StudioModel.h"
 
 using scone::TimeInSeconds;
 
@@ -56,21 +56,20 @@ public slots:
 	void abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();
-	void captureVideo();
+	void createVideo();
 	void captureImage();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
-	void viewResults( bool v ) { if ( v ) ui.resultsDock->show(); else ui.resultsDock->hide(); }
-	void viewMessages( bool v ) { if ( v ) ui.messagesDock->show(); else ui.messagesDock->hide(); }
 	void fixViewCheckboxes();
 	void updateTabTitles();
+	void performReflexAnalysis();
 
 public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
-	bool isEvalutating() { return manager.HasModel() && manager.GetModel().IsEvaluating(); }
+	bool isEvalutating() { return model && model->IsEvaluating(); }
 
 private:
 	void evaluate();
@@ -83,7 +82,12 @@ private:
 	void updateRecentFilesMenu();
 	QStringList recentFiles;
 
-	scone::StudioScene manager;
+	vis::scene scene;
+	std::unique_ptr< scone::StudioModel > model;
+
+	bool createModel( const String& par_file, bool force_evaluation = false );
+
+	//scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
 	QTimer backgroundUpdateTimer;

@@ -2,7 +2,7 @@
 
 #include "scone/model/Controller.h"
 #include "scone/core/PropNode.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
 
 namespace scone
@@ -10,12 +10,12 @@ namespace scone
 	class SCONE_API StateController : public Controller
 	{
 	public:
-		StateController( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		StateController( const PropNode& props, Params& par, Model& model, const Locality& area );
 		StateController( const StateController& other ) = delete;
 		StateController& operator=( const StateController& other ) = delete;
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
-		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		typedef size_t StateIndex;
@@ -35,7 +35,7 @@ namespace scone
 		typedef std::pair< ConditionalControllerState, ControllerUP > ConditionalController;
 		std::vector< ConditionalController > m_ConditionalControllers;
 
-		void CreateConditionalControllers( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		void CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Locality& area );
 		void UpdateCurrentState( Model& model, TimeInSeconds timestamp );
 
 		StateIndex m_CurrentState;

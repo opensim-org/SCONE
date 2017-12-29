@@ -8,17 +8,17 @@
 
 #include "Dof_Simbody.h"
 #include "simbody_tools.h"
+#include "flut/math/math.hpp"
 
 namespace scone
 {
+	const double MOMENT_ARM_EPSILON = 0.000001;
+
 	Muscle_Simbody::Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus ) : m_Model( model ), m_osMus( mus )
-	{
-	}
+	{}
 
 	Muscle_Simbody::~Muscle_Simbody()
-	{
-
-	}
+	{}
 
 	const String& Muscle_Simbody::GetName() const
 	{
@@ -114,24 +114,43 @@ namespace scone
 
 	const Link& Muscle_Simbody::GetOriginLink() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
 		return m_Model.FindLink( pps.get( 0 ).getBodyName() );
 	}
 
 	const Link& Muscle_Simbody::GetInsertionLink() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
 		return m_Model.FindLink( pps.get( pps.getSize() - 1 ).getBodyName() );
 	}
 
 	scone::Real Muscle_Simbody::GetMomentArm( const Dof& dof ) const
 	{
-		const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
-		return m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+		SCONE_PROFILE_FUNCTION;
+
+		auto iter = m_MomentArmCache.find( &dof );
+		if ( iter == m_MomentArmCache.end() )
+		{
+			const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
+			auto moment = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+			if ( fabs( moment ) < MOMENT_ARM_EPSILON )
+				moment = 0;
+			m_MomentArmCache[ &dof ] = moment;
+			return moment;
+		}
+		else return iter->second;
+	}
+
+	const scone::Model& Muscle_Simbody::GetModel() const
+	{
+		return m_Model;
 	}
 
 	scone::Real scone::Muscle_Simbody::GetTendonLength() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getTendonLength( m_Model.GetTkState() );
 	}
 
@@ -152,6 +171,7 @@ namespace scone
 
 	std::vector< Vec3 > scone::Muscle_Simbody::GetMusclePath() const
 	{
+		SCONE_PROFILE_FUNCTION;
 		//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 		auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );
@@ -175,14 +195,8 @@ namespace scone
 	{
 		// use our own control value, as OpenSim calls getControls()
 		// this could lead to infinite recursion
-		double u = GetInput();
-
-		// since the control value is internal, the actual excitation may be
-		// incorrect. make sure to clamp it for calls (important for metabolics)
-		if ( u < 0.0 ) u = 0.0;
-		if ( u > 1.0 ) u = 1.0;
-
-		return u;
+		// make sure to clamp it for calls (important for metabolics)
+		return flut::math::clamped( GetInput(), 0.0, 1.0 );
 	}
 
 	void scone::Muscle_Simbody::SetExcitation( Real u )

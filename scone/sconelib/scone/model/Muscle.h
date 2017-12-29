@@ -4,6 +4,7 @@
 #include "scone/core/types.h"
 #include "scone/core/HasData.h"
 #include "scone/core/Vec3.h"
+#include "scone/core/Storage.h"
 
 #include "Actuator.h"
 #include "Sensors.h"
@@ -20,8 +21,10 @@ namespace scone
 
 		virtual const Link& GetOriginLink() const = 0;
 		virtual const Link& GetInsertionLink() const = 0;
+		virtual const Model& GetModel() const = 0;
 
 		virtual Real GetMomentArm( const Dof& dof ) const = 0;
+		virtual Real GetNormalizedMomentArm( const Dof& dof ) const;
 
 		virtual Real GetMaxIsometricForce() const = 0;
 		virtual Real GetOptimalFiberLength() const = 0;
@@ -33,6 +36,7 @@ namespace scone
 
 		virtual Real GetLength() const = 0;
 		virtual Real GetVelocity() const = 0;
+		virtual Real GetNormalizedSpindleRate() const;
 
 		virtual Real GetFiberForce() const = 0;
 		virtual Real GetNormalizedFiberForce() const = 0;
@@ -56,10 +60,15 @@ namespace scone
 
 		// checks if a muscle crosses a Dof. Default implementation
 		virtual bool HasMomentArm( const Dof& dof ) const;
-
-		// count the number of joints this muscle crosses
 		virtual Count GetJointCount() const;
+		virtual const std::vector< const Joint* >& GetJoints() const;
+		virtual bool IsAntagonist( const Muscle& other ) const;
+		virtual bool IsAgonist( const Muscle& other ) const;
+		virtual bool HasSharedDofs( const Muscle& other ) const;
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
+
+	private:
+		mutable std::vector< const Joint* > m_Joints;
 	};
 }

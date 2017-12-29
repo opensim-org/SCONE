@@ -9,10 +9,10 @@ namespace scone
 	class GaitMeasure : public Measure
 	{
 	public:
-		GaitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~GaitMeasure();
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		void UpdateVelocityMeasure( const Model &model, double timestamp );
 
 		virtual double GetResult( Model& model ) override;
@@ -27,8 +27,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		Statistic< double > m_Energy;
-
 		// settings
 		std::vector< Body* > m_GaitBodies;
 		Real GetGaitDist( const Model &model );

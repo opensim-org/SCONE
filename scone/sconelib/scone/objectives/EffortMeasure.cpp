@@ -2,6 +2,7 @@
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
+#include "scone/core/math.h"
 #include "flut/pattern_matcher.hpp"
 
 namespace scone
@@ -13,7 +14,7 @@ namespace scone
 		EffortMeasure::Uchida2016, "Uchida2016"
 		);
 
-	EffortMeasure::EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
@@ -45,14 +46,12 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult EffortMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// make sure this is a new step and the measure is active
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		double current_effort = GetEnergy( model );
 		m_Energy.AddSample( timestamp, current_effort );
@@ -65,16 +64,20 @@ namespace scone
 		double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
-		GetReport().set( "cost_of_transport", cot );
-		GetReport().set( "average", m_Energy.GetAverage() );
 		GetReport().set( "total", m_Energy.GetTotal() );
-		GetReport().set( "distance", distance );
-		GetReport().set( "speed", distance / model.GetTime() );
-		GetReport().set( "probe_total", model.GetTotalEnergyConsumption() );
 
 		if ( use_cost_of_transport )
+		{
+			GetReport().set( "cost_of_transport", cot );
+			GetReport().set( "distance", distance );
+			GetReport().set( "speed", distance / model.GetTime() );
 			return cot;
-		else return m_Energy.GetAverage();
+		}
+		else
+		{
+			GetReport().set( "average", m_Energy.GetAverage() );
+			return m_Energy.GetAverage();
+		}
 	}
 
 	double EffortMeasure::GetEnergy( const Model& model ) const
@@ -267,7 +270,7 @@ namespace scone
 		return s;
 	}
 
-	void EffortMeasure::StoreData( Storage< Real >::Frame& frame )
+	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ "metabolics_penalty" ] = m_Energy.GetLatest();
 	}

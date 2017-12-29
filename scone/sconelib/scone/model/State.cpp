@@ -14,22 +14,22 @@ namespace scone
 
 	void State::SetValues( const std::vector< Real >& v )
 	{
-		SCONE_ASSERT( values_.size() == v.size() );
-		copy( v.begin(), v.end(), values_.begin() );
+		SCONE_ASSERT( values_.size() <= v.size() );
+		copy( v.begin(), v.begin() + values_.size(), values_.begin() );
 	}
 
-	void State::AddChildState( State& other )
-	{
-		other.parent_idx_ = names_.size();
-		names_.insert( names_.end(), other.GetNames().begin(), other.GetNames().end() );
-		values_.insert( values_.end(), other.GetValues().begin(), other.GetValues().end() );
-	}
+	//void State::AddChildState( State& other )
+	//{
+	//	other.parent_idx_ = names_.size();
+	//	names_.insert( names_.end(), other.GetNames().begin(), other.GetNames().end() );
+	//	values_.insert( values_.end(), other.GetValues().begin(), other.GetValues().end() );
+	//}
 
-	void State::CopyChildState( const State& other )
-	{
-		SCONE_ASSERT( other.GetSize() <= GetSize() - other.parent_idx_ );
-		std::copy( other.GetValues().begin(), other.GetValues().end(), values_.begin() + other.parent_idx_ );
-	}
+	//void State::CopyChildState( const State& other )
+	//{
+	//	SCONE_ASSERT( other.GetSize() <= GetSize() - other.parent_idx_ );
+	//	std::copy( other.GetValues().begin(), other.GetValues().end(), values_.begin() + other.parent_idx_ );
+	//}
 
 	Index State::GetIndex( const String& name ) const
 	{

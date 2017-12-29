@@ -5,6 +5,7 @@
 #include "scone/core/core.h"
 #include "scone/core/memory_tools.h"
 #include "scone/core/PropNode.h"
+#include "flut/math/polynomial.hpp"
 
 using scone::String;
 using scone::PropNode;
@@ -34,10 +35,15 @@ public:
 	float lowest;
 	float cur_best;
 	float cur_avg;
+	float cur_med;
+	float cur_pred;
+	flut::linear_function< float > cur_reg;
 	int generation;
 	int max_generations;
+	int window_size;
 	QVector< double > bestvec;
 	QVector< double > avgvec;
+	QVector< double > medvec;
 	QVector< double > genvec;
 
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };

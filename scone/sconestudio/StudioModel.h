@@ -13,6 +13,7 @@
 #include "simvis/axes.h"
 #include "scone/model/State.h"
 #include "scone/core/types.h"
+#include "scone/objectives/ModelObjective.h"
 
 namespace scone
 {
@@ -24,22 +25,22 @@ namespace scone
 		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows, ShowAxes };
 		typedef flut::flag_set< ViewSettings > ViewFlags;
  
-		StudioModel( vis::scene &s, const path& filename );
+		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
-
 		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
 
-		void EvaluateObjective();
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
-		Model& GetSimModel() { return so->GetModel(); }
-		SimulationObjective& GetObjective() { return *so; }
+		Model& GetSimModel() { return *model; }
+		ModelObjective& GetObjective() { return *model_objective; }
 
-		bool IsEvaluating() { return is_evaluating; }
+		bool IsEvaluating() const { return is_evaluating; }
+		TimeInSeconds GetTime() const { return model->GetTime(); }
+		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
 
 		void SetViewSetting( ViewSettings e, bool value );
 		void ApplyViewSettings( const ViewFlags& f );
@@ -48,7 +49,8 @@ namespace scone
 		void InitVis( vis::scene& s );
 
 		Storage<> data;
-		SimulationObjectiveUP so;
+		ModelObjectiveUP model_objective;
+		ModelUP model;
 		path filename;
 
 		ViewFlags view_flags;

@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	HeightMeasure::HeightMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	HeightMeasure::HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr ),
 		m_JumpState( InitialState )
@@ -32,7 +32,7 @@ namespace scone
 		m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetComPos()[ 1 ] : model.GetComPos()[ 1 ];
 	}
 
-	Controller::UpdateResult HeightMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult HeightMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

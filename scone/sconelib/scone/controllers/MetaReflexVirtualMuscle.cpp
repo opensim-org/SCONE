@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	MetaReflexVirtualMuscle::MetaReflexVirtualMuscle( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		local_balance( 0 ),
 		body_angvel_sensor_gain( model.balance_sensor_ori_vel_gain ),
 		body_sensor_delay( model.balance_sensor_delay ),

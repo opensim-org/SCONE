@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	MuscleReflex( props, par, model, area ),
 	m_pConditionalDofPos( nullptr ),
 	m_pConditionalDofVel( nullptr )
@@ -24,8 +24,8 @@ namespace scone
 		}
 		else
 		{
-			m_ConditionalPosRange.max = Degree( par.Get( "pos_max", cp, "pos_max", 180.0 ) );
-			m_ConditionalPosRange.min = Degree( par.Get( "pos_min", cp, "pos_min", -180.0 ) );
+			m_ConditionalPosRange.max = Degree( par.try_get( "pos_max", cp, "pos_max", 180.0 ) );
+			m_ConditionalPosRange.min = Degree( par.try_get( "pos_min", cp, "pos_min", -180.0 ) );
 		}
 
 		//log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );

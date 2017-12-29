@@ -4,7 +4,7 @@
 #include "Joint.h"
 #include "scone/core/Profiler.h"
 #include "Model.h"
-#include "sim_tools.h"
+#include "model_tools.h"
 
 namespace scone
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/core/core.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/core/HasName.h"
 
 namespace scone

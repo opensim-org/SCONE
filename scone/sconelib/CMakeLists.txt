@@ -50,6 +50,10 @@ set(CORE_STORAGE_FILES
 	scone/core/propnode_tools.cpp
 	scone/core/PropNode.h
 	scone/core/StringMap.h
+)
+set(CORE_TOOL_FILES
+	scone/core/Event.cpp
+	scone/core/Event.h
 	scone/core/string_tools.cpp
 	scone/core/string_tools.h
 )
@@ -60,6 +64,7 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/PerturbationController.h
 	scone/controllers/ExternalBalanceController.cpp
 	scone/controllers/ExternalBalanceController.h
+	scone/controllers/MirrorController.h
 	)
 set(CS_SYSTEM_FILES
 	scone/controllers/cs_tools.cpp
@@ -77,6 +82,22 @@ set(CS_CONTROLLERS_MRC_FILES
     scone/controllers/MetaReflexVirtualMuscle.cpp
     scone/controllers/MetaReflexVirtualMuscle.h
 	)
+set(CS_CONTROLLERS_NC_FILES
+	scone/controllers/NeuralController.cpp
+	scone/controllers/NeuralController.h
+	scone/controllers/Neuron.cpp
+	scone/controllers/Neuron.h
+	scone/controllers/SensorNeuron.cpp
+	scone/controllers/SensorNeuron.h
+	scone/controllers/InterNeuron.cpp
+	scone/controllers/InterNeuron.h
+	scone/controllers/MotorNeuron.cpp
+	scone/controllers/MotorNeuron.h
+	scone/controllers/PatternNeuron.cpp
+	scone/controllers/PatternNeuron.h
+	scone/controllers/activation_functions.cpp
+	scone/controllers/activation_functions.h
+	)
 set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/ConditionalMuscleReflex.cpp
 	scone/controllers/ConditionalMuscleReflex.h
@@ -84,6 +105,8 @@ set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/DofReflex.h
 	scone/controllers/MuscleReflex.cpp
 	scone/controllers/MuscleReflex.h
+	scone/controllers/SimpleMuscleReflex.cpp
+	scone/controllers/SimpleMuscleReflex.h
 	scone/controllers/Reflex.cpp
 	scone/controllers/Reflex.h
 	scone/controllers/ReflexController.cpp
@@ -100,6 +123,8 @@ set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/TimeStateController.h
 	)
 set(OBJECTIVES_FILES
+	scone/objectives/BalanceMeasure.cpp
+	scone/objectives/BalanceMeasure.h
 	scone/objectives/CompositeMeasure.cpp
 	scone/objectives/CompositeMeasure.h
 	scone/objectives/DofLimitMeasure.cpp
@@ -123,32 +148,38 @@ set(OBJECTIVES_FILES
 	scone/objectives/RangePenalty.h
 	scone/objectives/Measure.cpp
 	scone/objectives/Measure.h
+	scone/objectives/ModelObjective.cpp
+	scone/objectives/ModelObjective.h
 	scone/objectives/SimulationObjective.cpp
 	scone/objectives/SimulationObjective.h
+	scone/objectives/ImitationObjective.cpp
+	scone/objectives/ImitationObjective.h
+	scone/objectives/SimilarityObjective.cpp
+	scone/objectives/SimilarityObjective.h
 	)
 
 set(OPT_API_FILES
 	scone/optimization/CmaOptimizer.cpp
 	scone/optimization/CmaOptimizer.h
-	scone/optimization/CmaOptimizerShark2.cpp
-	scone/optimization/CmaOptimizerShark2.h
-	scone/optimization/CmaOptimizerShark3.cpp
-	scone/optimization/CmaOptimizerShark3.h
+#	scone/optimization/CmaOptimizerShark2.cpp
+#	scone/optimization/CmaOptimizerShark2.h
+#	scone/optimization/CmaOptimizerShark3.cpp
+#	scone/optimization/CmaOptimizerShark3.h
 	scone/optimization/CmaOptimizerCCMAES.cpp
 	scone/optimization/CmaOptimizerCCMAES.h
 	scone/optimization/Objective.cpp
 	scone/optimization/Objective.h
 	scone/optimization/Optimizer.cpp
 	scone/optimization/Optimizer.h
-	scone/optimization/ParamInfo.cpp
-	scone/optimization/ParamInfo.h
-	scone/optimization/ParamSet.cpp
-	scone/optimization/ParamSet.h
+#	scone/optimization/ParamInfo.cpp
+#	scone/optimization/ParamInfo.h
+#	scone/optimization/ParamSet.cpp
+	scone/optimization/Params.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h
     )
 set(OPT_SYSTEM_FILES
-	scone/optimization/SharkHelperClasses.h
+#	scone/optimization/SharkHelperClasses.h
 	scone/optimization/opt_config.h
     )
 	
@@ -183,8 +214,8 @@ set(SIM_SIMULATIONANDCONTROL_FILES
     scone/model/Simulation.h
     )
 set(SIM_SYSTEM_FILES
-    scone/model/sim_tools.cpp
-    scone/model/sim_tools.h
+    scone/model/model_tools.cpp
+    scone/model/model_tools.h
     )
 set(SIM_TOPOLOGY_FILES
     scone/model/Locality.cpp
@@ -222,9 +253,11 @@ set (SCONELIB_FILES
 	${CORE_PROPNODE_FILES}
 	${CORE_SYSTEM_FILES}
 	${CORE_STORAGE_FILES}
+	${CORE_TOOL_FILES}
 	
 	${CS_CONTROLLERS_FILES}
 	${CS_CONTROLLERS_MRC_FILES}
+	${CS_CONTROLLERS_NC_FILES}
 	${CS_CONTROLLERS_REFLEX_FILES}
 	${CS_CONTROLLERS_STATE_FILES}
     ${CS_FUNCTIONS_FILES}
@@ -250,26 +283,26 @@ use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "
 
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} )
-	
-target_link_libraries(sconelib flut shark ${Boost_LIBRARIES} ${OPENSIMSIMBODY_LIBRARIES})
 
-set_target_properties(sconelib PROPERTIES
-    PROJECT_LABEL sconelib
-    #FOLDER "sconelib"
-    )
+target_link_libraries(sconelib flut spot ${OPENSIMSIMBODY_LIBRARIES})
+
+set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 
 target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )
+target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_FLUT_PROFILING>" )
 
 # To create folders in Visual Studio.
 source_group("core\\base" FILES ${CORE_BASE_FILES})
 source_group("core\\math" FILES ${CORE_MATH_FILES})
 source_group("core\\system" FILES ${CORE_SYSTEM_FILES})
+source_group("core\\tools" FILES ${CORE_TOOL_FILES})
 source_group("core\\properties" FILES ${CORE_PROPNODE_FILES})
 source_group("core\\storage" FILES ${CORE_STORAGE_FILES})
 
 source_group("controllers" FILES ${CS_CONTROLLERS_FILES} )
-source_group("controllers" FILES ${CS_CONTROLLERS_STATE_FILES} )
-source_group("controllers" FILES ${CS_CONTROLLERS_REFLEX_FILES})
+source_group("controllers\\State Control" FILES ${CS_CONTROLLERS_STATE_FILES} )
+source_group("controllers\\Reflex Control" FILES ${CS_CONTROLLERS_REFLEX_FILES})
+source_group("controllers\\Neural Control" FILES ${CS_CONTROLLERS_NC_FILES})
 source_group("controllers" FILES ${CS_SYSTEM_FILES})
 source_group("controllers\\Meta Reflex Control" FILES ${CS_CONTROLLERS_MRC_FILES})
 

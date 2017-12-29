@@ -41,7 +41,7 @@ namespace scone
 			Real leg_length;
 		};
 
-		GaitStateController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~GaitStateController();
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
@@ -52,7 +52,7 @@ namespace scone
 		Real stance_load_threshold;
 		Real swing_load_threshold;
 
-		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		virtual void UpdateLegStates( Model& model, double timestamp );

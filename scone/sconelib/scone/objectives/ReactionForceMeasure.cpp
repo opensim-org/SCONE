@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		load_penalty( props )
 	{
@@ -16,7 +16,7 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult ReactionForceMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	scone::Controller::UpdateResult ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		Real leg_load = 0.0f;
 		for ( auto& leg : model.GetLegs() )
@@ -27,7 +27,7 @@ namespace scone
 		return Controller::SuccessfulUpdate;
 	}
 
-	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame )
+	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		// TODO: store joint load value
 		frame[ "legs.load_penalty" ] = load_penalty.GetLatest();

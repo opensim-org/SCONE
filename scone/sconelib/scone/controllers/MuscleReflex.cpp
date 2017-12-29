@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
@@ -91,18 +91,18 @@ namespace scone
 #endif
 	}
 
-	void MuscleReflex::StoreData( Storage<Real>::Frame& frame )
+	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( m_pLengthSensor )
-			frame[ name + ".length_feedback" ] = u_l;
+			frame[ name + ".RL" ] = u_l;
 
 		if ( m_pVelocitySensor )
-			frame[ name + ".velocity_feedback" ] = u_v;
+			frame[ name + ".RV" ] = u_v;
 
 		if ( m_pForceSensor )
-			frame[ name + ".force_feedback" ] = u_f;
+			frame[ name + ".RF" ] = u_f;
 
 		if ( m_pSpindleSensor )
-			frame[ name + ".spindle_feedback" ] = u_s;
+			frame[ name + ".RS" ] = u_s;
 	}
 }

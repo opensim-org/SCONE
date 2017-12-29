@@ -9,7 +9,7 @@ namespace scone
 	class SCONE_API MuscleReflex : public Reflex
 	{
 	public:
-		MuscleReflex( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MuscleReflex();
 
 		virtual void ComputeControls( double timestamp ) override;
@@ -41,7 +41,7 @@ namespace scone
 		Real u_s = 0;
 		Real u_total = 0;
 
-		virtual void StoreData( Storage<Real>::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		SensorDelayAdapter* m_pForceSensor;

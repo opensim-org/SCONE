@@ -13,4 +13,4 @@ set_target_properties(scone-unit-tests PROPERTIES
     PROJECT_LABEL "sconeunittests"
     OUTPUT_NAME sconeunittests)
 
-target_link_libraries(scone-unit-tests sconelib)
+target_link_libraries(scone-unit-tests sconelib ${Boost_LIBRARIES} )

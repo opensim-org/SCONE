@@ -3,7 +3,7 @@
 #include "scone/core/types.h"
 #include "scone/model/Controller.h"
 #include "scone/core/PropNode.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/core/Function.h"
 #include "scone/model/Leg.h"
 
@@ -17,7 +17,7 @@ namespace scone
 	class SCONE_API FeedForwardController : public Controller
 	{
 	public:
-		FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area );
+		FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~FeedForwardController() { };
 
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;

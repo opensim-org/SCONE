@@ -1,4 +1,4 @@
-#include "ParamSet.h"
+#include "Params.h"
 #include "scone/core/Exception.h"
 #include <algorithm>
 #include <fstream>
@@ -9,12 +9,12 @@
 
 namespace scone
 {
-	ParamSet::ParamSet( const path& filename ) : m_Mode( ConstructionMode )
+	ParamInterface::ParamInterface( const path& filename ) : m_Mode( ConstructionMode )
 	{
 		Read( filename, true );
 	}
 
-	double ParamSet::Get( const ParamInfo& info )
+	double ParamInterface::Get( const ParamInfo& info )
 	{
 		if ( m_Mode == ConstructionMode )
 		{
@@ -44,7 +44,7 @@ namespace scone
 		SCONE_THROW( "Invalid mode: " + to_str( m_Mode ) );
 	}
 
-	double ParamSet::Get( const String& name, const PropNode& props, const String& node_name )
+	double ParamInterface::Get( const String& name, const PropNode& props, const String& node_name )
 	{
 		// get par node (throws if not exists)
 		const PropNode& parNode = props.get_child( node_name );
@@ -58,34 +58,34 @@ namespace scone
 		SCONE_THROW( "Could not read parameter " + node_name );
 	}
 
-	double ParamSet::Get( const String& name, const PropNode& props, const String& node_name, double default_value )
+	double ParamInterface::Get( const String& name, const PropNode& props, const String& node_name, double default_value )
 	{
 		if ( props.has_key( node_name ) )
 			return Get( name, props, node_name );
 		else return default_value;
 	}
 
-	double ParamSet::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )
+	double ParamInterface::GetMeanStd( const String& name, double init_mean, double init_std, double min, double max )
 	{
 		return Get( ParamInfo( GetNamePrefix() + name, init_mean, init_std, 0.0, 0.0, min, max ) );
 	}
 
-	double ParamSet::GetMinMax( const String& name, double init_min, double init_max, double min, double max )
+	double ParamInterface::GetMinMax( const String& name, double init_min, double init_max, double min, double max )
 	{
 		return Get( ParamInfo( GetNamePrefix() + name, 0.0, 0.0, init_min, init_max, min, max ) );
 	}
 
-	std::vector< std::pair< ParamInfo, double > >::iterator ParamSet::FindParamByName( const String& name )
+	std::vector< std::pair< ParamInfo, double > >::iterator ParamInterface::FindParamByName( const String& name )
 	{
 		return std::find_if( m_Params.begin(), m_Params.end(), [&]( const std::pair< ParamInfo, double >& v ) { return v.first.name == name; } );
 	}
 
-	size_t ParamSet::GetFreeParamCount()
+	size_t ParamInterface::GetFreeParamCount()
 	{
 		return std::count_if( m_Params.begin(), m_Params.end(), [&]( const std::pair< ParamInfo, double >& v ) { return v.first.is_free; } );
 	}
 
-	std::vector< double > ParamSet::GetFreeParamValues()
+	std::vector< double > ParamInterface::GetFreeParamValues()
 	{
 		std::vector< double > vec;
 		for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
@@ -96,7 +96,7 @@ namespace scone
 		return vec;
 	}
 
-	void ParamSet::SetFreeParamValues( const std::vector< double >& values )
+	void ParamInterface::SetFreeParamValues( const std::vector< double >& values )
 	{
 		auto vecIter = values.begin();
 		for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
@@ -109,19 +109,19 @@ namespace scone
 		}
 	}
 
-	bool ParamSet::CheckValues()
+	bool ParamInterface::CheckValues()
 	{
 		return std::find_if( m_Params.begin(), m_Params.end(),
 			[&]( const std::pair< ParamInfo, double >& v ) { return !v.first.CheckValue( v.second ); } ) == m_Params.end();
 	}
 
-	void ParamSet::ClampValues()
+	void ParamInterface::ClampValues()
 	{
 		std::for_each( m_Params.begin(), m_Params.end(),
 			[&]( std::pair< ParamInfo, double >& v ) { v.first.ClampValue( v.second ); } );
 	}
 
-	void ParamSet::InitRandom()
+	void ParamInterface::InitRandom()
 	{
 		for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 		{
@@ -130,14 +130,14 @@ namespace scone
 		}
 	}
 
-	void ParamSet::Write( const path& filename ) const
+	void ParamInterface::Write( const path& filename ) const
 	{
 		std::ofstream ofstr( filename.str() );
 		SCONE_THROW_IF( !ofstr.good(), "Error opening file: " + filename.str() );
 		ToStream( ofstr );
 	}
 
-	void ParamSet::Read( const path& filename, bool read_std )
+	void ParamInterface::Read( const path& filename, bool read_std )
 	{
 		log::debug( "Reading " + quoted( filename.str() ) );
 		std::ifstream ifstr( filename.str() );
@@ -145,7 +145,7 @@ namespace scone
 		FromStream( ifstr, read_std );
 	}
 
-	void ParamSet::UpdateMeanStd( const std::vector< ParamSet >& parsets )
+	void ParamInterface::UpdateMeanStd( const std::vector< ParamInterface >& parsets )
 	{
 		for ( size_t parIdx = 0; parIdx < m_Params.size(); ++parIdx )
 		{
@@ -166,7 +166,7 @@ namespace scone
 		}
 	}
 
-	void ParamSet::UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds )
+	void ParamInterface::UpdateMeanStd( const std::vector< double >& means, const std::vector< double >& stds )
 	{
 		SCONE_ASSERT( means.size() == stds.size() );
 		size_t vec_idx = 0;
@@ -182,19 +182,19 @@ namespace scone
 		}
 	}
 
-	void ParamSet::PushNamePrefix( const String& prefix )
+	void ParamInterface::PushNamePrefix( const String& prefix )
 	{
 		m_NamePrefixes.push_back( prefix );
 	}
 
-	void ParamSet::PopNamePrefix()
+	void ParamInterface::PopNamePrefix()
 	{
 		SCONE_ASSERT( m_NamePrefixes.size() > 0 );
 
 		m_NamePrefixes.pop_back();
 	}
 
-	String ParamSet::GetNamePrefix() const
+	String ParamInterface::GetNamePrefix() const
 	{
 		String full_prefix;
 		for ( const String& s : m_NamePrefixes )
@@ -202,13 +202,13 @@ namespace scone
 		return full_prefix;
 	}
 
-	void ParamSet::SetGlobalStd( double factor, double offset )
+	void ParamInterface::SetGlobalStd( double factor, double offset )
 	{
 		for ( auto& p : m_Params )
 			p.first.init_std = factor * fabs( p.first.init_mean ) + offset;
 	}
 
-	std::ostream& ParamSet::ToStream( std::ostream& str ) const
+	std::ostream& ParamInterface::ToStream( std::ostream& str ) const
 	{
 		for ( auto iter = m_Params.begin(); iter != m_Params.end(); ++iter )
 		{
@@ -219,7 +219,7 @@ namespace scone
 		return str;
 	}
 
-	std::istream& ParamSet::FromStream( std::istream& str, bool load_std )
+	std::istream& ParamInterface::FromStream( std::istream& str, bool load_std )
 	{
 		size_t params_set = 0;
 		size_t params_not_found = 0;

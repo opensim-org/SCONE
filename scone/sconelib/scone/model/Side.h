@@ -19,7 +19,7 @@ namespace scone
 
 	inline Side GetMirroredSide( Side s ) { return static_cast< Side >( -s ); }
 
-	inline Side GetSide( const String& str )
+	inline Side GetSideFromName( const String& str )
 	{
 		if ( str.length() >= 2 )
 		{
@@ -33,7 +33,7 @@ namespace scone
 
 	inline String GetNameNoSide( const String& str )
 	{
-		if ( GetSide( str ) != NoSide )
+		if ( GetSideFromName( str ) != NoSide )
 			return str.substr( 0, str.length() - 2 );
 		else return str;
 	}
@@ -59,7 +59,7 @@ namespace scone
 
 	inline String GetMirroredName( const String& str )
 	{
-		return GetNameNoSide( str ) + GetSideName( GetMirroredSide( GetSide( str ) ) );
+		return GetNameNoSide( str ) + GetSideName( GetMirroredSide( GetSideFromName( str ) ) );
 	}
 
 	template< typename T >

@@ -30,7 +30,7 @@ namespace scone
 		return m_osJoint.numCoordinates();
 	}
 
-	scone::Real Joint_Simbody::GetDof( size_t index /*= 0 */ ) const
+	scone::Real Joint_Simbody::GetDofValue( size_t index /*= 0 */ ) const
 	{
 		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
 	}

@@ -13,18 +13,21 @@
 
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
+#include "flut/container_tools.hpp"
+#include "../objectives/Measure.h"
 
 using std::endl;
 
 namespace scone
 {
-	Model::Model( const PropNode& props, ParamSet& par ) :
+	Model::Model( const PropNode& props, Params& par ) :
 		HasSignature( props ),
 		m_ShouldTerminate( false ),
 		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass, StoreDataTypes::SensorData, StoreDataTypes::ControllerData } ),
 		thread_safe_simulation( false )
 	{
 		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
@@ -44,7 +47,7 @@ namespace scone
 		return str;
 	}
 
-	Sensor& Model::AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area )
+	Sensor& Model::AcquireSensor( const PropNode& pn, Params& par, const Locality& area )
 	{
 		// create the sensor first, so we can use its name to find it
 		SensorUP sensor = CreateSensor( pn, par, *this, area );
@@ -74,7 +77,7 @@ namespace scone
 		else return **it;
 	}
 
-	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area )
+	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, Params& par, const Locality& area )
 	{
 		// acquire sensor first
 		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );
@@ -86,6 +89,26 @@ namespace scone
 		return Vec3( m_OriSensors[ 0 ]->GetValue( balance_sensor_delay ),
 			m_OriSensors[ 1 ]->GetValue( balance_sensor_delay ),
 			m_OriSensors[ 2 ]->GetValue( balance_sensor_delay ) );
+	}
+
+	Measure* Model::GetMeasure()
+	{
+		// find measure controller
+		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast< Measure* >( c.get() ) != nullptr; };
+		auto measureIter = flut::find_if( GetControllers(), is_measure );
+
+		SCONE_THROW_IF( measureIter == GetControllers().end(), "Could not find a measure" );
+		SCONE_THROW_IF( std::find_if( measureIter + 1, GetControllers().end(), is_measure ) != GetControllers().end(), "More than one measure was found" );
+
+		return dynamic_cast< Measure* >( measureIter->get() );
+	}
+
+	String Model::GetClassSignature() const
+	{
+		auto str = GetName();
+		for ( auto& c : GetControllers() )
+			str += "." + c->GetSignature();
+		return str;
 	}
 
 	void Model::UpdateSensorDelayAdapters()
@@ -102,7 +125,7 @@ namespace scone
 		//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
 	}
 
-	void Model::CreateBalanceSensors( const PropNode& props, ParamSet& par )
+	void Model::CreateBalanceSensors( const PropNode& props, Params& par )
 	{
 		Real kp = 1;
 		Real kd = balance_sensor_ori_vel_gain;
@@ -112,77 +135,76 @@ namespace scone
 		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
-	void Model::StoreData( Storage< Real >::Frame& frame )
+	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		// store states
-		for ( size_t i = 0; i < GetState().GetSize(); ++i )
-			frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
+		if ( flags( StoreDataTypes::State ) )
+		{
+			for ( size_t i = 0; i < GetState().GetSize(); ++i )
+				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
+		}
 
 		// store muscle data
-		for ( MuscleUP& m : GetMuscles() )
-			m->StoreData( frame );
+		for ( auto& m : GetMuscles() )
+			m->StoreData( frame, flags );
+
+		// store sensor data
+		if ( flags( StoreDataTypes::SensorData ) )
+		{
+			auto sf = m_SensorDelayStorage.Back();
+			for ( Index i = 0; i < m_SensorDelayStorage.GetChannelCount(); ++i )
+				frame[ m_SensorDelayStorage.GetLabels()[ i ] ] = sf[ i ];
+		}
 
 		// store COP data
-		auto com = GetComPos();
-		auto com_u = GetComVel();
-		frame[ "com_x" ] = com.x;
-		frame[ "com_y" ] = com.y;
-		frame[ "com_z" ] = com.z;
-		frame[ "com_x_u" ] = com_u.x;
-		frame[ "com_y_u" ] = com_u.y;
-		frame[ "com_z_u" ] = com_u.z;
+		if ( flags( StoreDataTypes::CenterOfMass ) )
+		{
+			auto com = GetComPos();
+			auto com_u = GetComVel();
+			frame[ "com_x" ] = com.x;
+			frame[ "com_y" ] = com.y;
+			frame[ "com_z" ] = com.z;
+			frame[ "com_x_u" ] = com_u.x;
+			frame[ "com_y_u" ] = com_u.y;
+			frame[ "com_z_u" ] = com_u.z;
+		}
 
 		// store GRF data (measured in BW)
-		for ( auto& leg : GetLegs() )
+		if ( flags( StoreDataTypes::GroundReactionForce ) )
 		{
-			auto grf = leg->GetContactForce() / GetBW();
-			frame[ leg->GetName() + ".grf_x" ] = grf.x;
-			frame[ leg->GetName() + ".grf_y" ] = grf.y;
-			frame[ leg->GetName() + ".grf_z" ] = grf.z;
+			for ( auto& leg : GetLegs() )
+			{
+				auto grf = leg->GetContactForce() / GetBW();
+				frame[ leg->GetName() + ".grf_x" ] = grf.x;
+				frame[ leg->GetName() + ".grf_y" ] = grf.y;
+				frame[ leg->GetName() + ".grf_z" ] = grf.z;
+			}
+
 		}
 
 		// store joint reaction force magnitude
-		for ( auto& joint : GetJoints() )
-			frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+		if ( flags( StoreDataTypes::JointReactionForce ) )
+		{
+			for ( auto& joint : GetJoints() )
+				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+		}
 
 		// store controller data
-		for ( ControllerUP& c : GetControllers() )
-			c->StoreData( frame );
-
-		// store external forces (should be part of state)
-		//for ( auto& b : GetBodies() )
-		//{
-		//	auto f = b->GetExternalForce();
-		//	frame[ b->GetName() + ".force_x" ] = f.x;
-		//	frame[ b->GetName() + ".force_y" ] = f.y;
-		//	frame[ b->GetName() + ".force_z" ] = f.z;
-
-		//	auto p = b->GetExternalForcePoint();
-		//	frame[ b->GetName() + ".force_point_x" ] = p.x;
-		//	frame[ b->GetName() + ".force_point_y" ] = p.y;
-		//	frame[ b->GetName() + ".force_point_z" ] = p.z;
-
-		//	auto t = b->GetExternalTorque();
-		//	frame[ b->GetName() + ".torque_x" ] = t.x;
-		//	frame[ b->GetName() + ".torque_y" ] = t.y;
-		//	frame[ b->GetName() + ".torque_z" ] = t.z;
-		//}
-
-		// store all force data (measured in BW)
-		//for ( auto& body : GetBodies() )
-		//{
-		//	const auto& forces = body->GetContactForceValues();
-		//	for ( size_t i = 0; i < forces.size(); ++i )
-		//		frame[ body->GetName() + '.' + body->GetContactForceLabels()[ i ] ] = forces[ i ] / GetBW();
-		//}
+		if ( flags( StoreDataTypes::ControllerData ) )
+		{
+			for ( auto& c : GetControllers() )
+				c->StoreData( frame, flags );
+		}
 	}
 
 	void Model::StoreCurrentFrame()
 	{
-		m_Data.AddFrame( GetTime() );
-		StoreData( m_Data.Back() );
+		if ( m_Data.IsEmpty() || GetTime() > m_Data.Back().GetTime() )
+			m_Data.AddFrame( GetTime() );
+
+		StoreData( m_Data.Back(), m_StoreDataFlags );
 	}
 
 	void Model::UpdateControlValues()
@@ -222,6 +244,18 @@ namespace scone
 		const Link* link = GetRootLink().FindLink( body_name );
 		SCONE_THROW_IF( link == nullptr, "Could not find link " + body_name );
 		return *link;
+	}
+
+	void Model::SetNullState()
+	{
+		State zero_state = GetState();
+		for ( Index i = 0; i < zero_state.GetSize(); ++i )
+		{
+			if ( !flut::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
+				 !flut::str_ends_with( zero_state.GetName( i ), ".activation" ) )
+				zero_state.SetValue( i, 0 );
+		}
+		SetState( zero_state, 0 );
 	}
 
 	scone::Real Model::GetTotalContactForce() const

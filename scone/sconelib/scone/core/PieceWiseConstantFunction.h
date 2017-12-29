@@ -11,7 +11,7 @@ namespace scone
 	{
 	public:
 		PieceWiseConstantFunction();
-		PieceWiseConstantFunction( const PropNode& props, ParamSet& par );
+		PieceWiseConstantFunction( const PropNode& props, Params& par );
 		virtual ~PieceWiseConstantFunction();
 
 		virtual Real GetValue( Real x ) override;

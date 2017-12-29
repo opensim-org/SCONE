@@ -4,10 +4,6 @@
 
 #include <fstream>
 
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/lock_guard.hpp>
-#include <boost/filesystem.hpp>
-
 #include "flut/system_tools.hpp"
 #include "flut/system/path.hpp"
 #include "Log.h"
@@ -18,30 +14,19 @@
 #include "flut/prop_node_tools.hpp"
 #include "string"
 #include "flut/system/types.hpp"
+#include "flut/filesystem.hpp"
+#include <mutex>
 
 namespace scone
 {
-	boost::mutex g_SystemMutex;
+	std::mutex g_SystemMutex;
 	PropNode g_GlobalSettings;
 	String g_Version;
 	path g_RootFolder;
 
-	SCONE_API String GetApplicationFolder()
-	{
-#ifdef _MSC_VER
-		char buf[ 1024 ];
-		GetModuleFileName( 0, buf, sizeof( buf ) );
-
-		boost::filesystem::path folder( buf );
-		return folder.parent_path().string();
-#else
-        return "";
-#endif
-	}
-
 	const PropNode& GetSconeSettings()
 	{
-		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		std::lock_guard< std::mutex > lock( g_SystemMutex );
 		// lazy initialization
 		if ( g_GlobalSettings.empty() )
 		{
@@ -49,7 +34,7 @@ namespace scone
 			if ( flut::file_exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
-				g_GlobalSettings = flut::load_ini( settings_file.str() );
+				g_GlobalSettings = flut::load_ini( settings_file );
 			}
 			else
 			{
@@ -67,11 +52,11 @@ namespace scone
 
 	void SaveSconeSettings( const PropNode& newSettings )
 	{
-		boost::lock_guard< boost::mutex > lock( g_SystemMutex );
+		std::lock_guard< std::mutex > lock( g_SystemMutex );
 		auto settings_file = GetSettingsFolder() / "settings.ini";
 
 		g_GlobalSettings = newSettings;
-		boost::filesystem::create_directories( boost::filesystem::path( settings_file.str() ).parent_path() );
+		flut::create_directories( flut::path( settings_file.str() ).parent_path() );
 
 		flut::save_ini( g_GlobalSettings, settings_file );
 		log::debug( "Saved settings to ", settings_file );
@@ -83,7 +68,7 @@ namespace scone
 		{
 			for ( g_RootFolder = flut::get_application_folder(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
 			{
-				if ( boost::filesystem::exists( boost::filesystem::path( g_RootFolder.str() ) / ".version" ) )
+				if ( flut::exists( g_RootFolder / ".version" ) )
 					break;
 			}
 			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat" );
@@ -141,12 +126,12 @@ namespace scone
 	{
 		if ( g_Version.empty() )
 		{
-			boost::filesystem::path versionpath( GetApplicationFolder() );
+			flut::path versionpath( flut::get_application_folder() );
 
 			// look for .version file, up to three levels from application folder
 			for ( int level = 0; level <= 3; ++level )
 			{
-				if ( boost::filesystem::exists( versionpath / ".version" ) )
+				if ( flut::exists( versionpath / ".version" ) )
 				{
 					// .version file found, read its contents
 					std::ifstream ifstr( ( versionpath / ".version" ).string() );

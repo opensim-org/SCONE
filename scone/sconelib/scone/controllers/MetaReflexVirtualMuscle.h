@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/core/PropNode.h"
-#include "scone/optimization/ParamSet.h"
+#include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
 #include "scone/model/Locality.h"
 #include "scone/model/SensorDelayAdapter.h"
@@ -14,7 +14,7 @@ namespace scone
 	class MetaReflexVirtualMuscle
 	{
 	public:
-		MetaReflexVirtualMuscle( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		MetaReflexVirtualMuscle( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MetaReflexVirtualMuscle() {}
 
 		Real GetLocalBalance() { return local_balance; }
@@ -28,7 +28,6 @@ namespace scone
 
 		Real GetSimilarity( const Muscle& mus, Real tot_abs_moment_arm );
 		size_t GetDofCount() { return dof_infos.size(); }
-		void SetDofRotationAxis();
 		Vec3 average_moment_axis;
 
 	private:

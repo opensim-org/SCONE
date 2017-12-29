@@ -9,13 +9,13 @@ namespace scone
 	class EffortMeasure : public Measure
 	{
 	public:
-		EffortMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area );
+		EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~EffortMeasure();
 
 		enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
 		static StringMap< EnergyMeasureType > m_MeasureNames;
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override;
+		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
 		EnergyMeasureType measure_type;
@@ -27,7 +27,7 @@ namespace scone
 
 	protected:
 		virtual String GetClassSignature() const override;
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		Real m_Wang2012BasalEnergy;

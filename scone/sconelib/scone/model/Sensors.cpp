@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	MuscleSensor::MuscleSensor( const PropNode& pn, ParamSet& par, Model& model, const Locality& target_area ) :
+	MuscleSensor::MuscleSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Muscle( *FindByName( model.GetMuscles(), pn.get< String >( "muscle" ) ) )
 	{}
@@ -46,16 +46,15 @@ namespace scone
 
 	scone::Real MuscleSpindleSensor::GetValue() const
 	{
-		// derived from [Prochazka1999], normalized to unit length
-		return 0.325 * flut::math::signed_sqrt( m_Muscle.GetNormalizedFiberVelocity() ) + m_Muscle.GetNormalizedFiberLength();
+		return m_Muscle.GetNormalizedSpindleRate();
 	}
 
 	scone::String MuscleSpindleSensor::GetName() const
 	{
-		return m_Muscle.GetName() + ".MS";
+		return m_Muscle.GetName() + ".S";
 	}
 
-	DofSensor::DofSensor( const PropNode& pn, ParamSet& par, Model& model, const Locality& target_area ) :
+	DofSensor::DofSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Dof( *FindByName( model.GetDofs(), pn.get< String >( "dof" ) ) ),
 		m_pRootDof( pn.has_key( "root_dof" ) ? FindByName( model.GetDofs(), pn.get< String >( "root_dof" ) ).get() : nullptr )
@@ -71,7 +70,7 @@ namespace scone
 
 	scone::String DofPositionSensor::GetName() const
 	{
-		return m_Dof.GetName() + ".P";
+		return m_Dof.GetName() + ".DP";
 	}
 
 	scone::Real DofVelocitySensor::GetValue() const
@@ -84,10 +83,23 @@ namespace scone
 
 	scone::String DofVelocitySensor::GetName() const
 	{
-		return m_Dof.GetName() + ".V";
+		return m_Dof.GetName() + ".DV";
 	}
 
-	LegLoadSensor::LegLoadSensor( const PropNode& pn, ParamSet& par, Model& model, const Locality& target_area ) :
+	scone::Real DofPosVelSensor::GetValue() const
+	{
+		// TODO: get rid of this if statement and use a "constant" Dof?
+		if ( m_pRootDof )
+			return m_pRootDof->GetPos() + m_Dof.GetPos() + m_KV * ( m_pRootDof->GetVel() + m_Dof.GetVel() );
+		else return m_Dof.GetPos() + m_KV * m_Dof.GetVel();
+	}
+
+	String DofPosVelSensor::GetName() const
+	{
+		return m_Dof.GetName() + ".DPV";
+	}
+
+	LegLoadSensor::LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Leg( *FindBySide( model.GetLegs(), target_area.side ) )
 	{}
@@ -99,7 +111,7 @@ namespace scone
 
 	scone::String LegLoadSensor::GetName() const
 	{
-		return m_Leg.GetName() + ".L";
+		return m_Leg.GetName() + ".LD";
 	}
 
 	static const char* g_PelvisNames[] = { "pelvis_tilt", "pelvis_list", "pelvis_rotation" };
@@ -107,7 +119,7 @@ namespace scone
 	static const char* g_PlaneNames[] = { "Sagittal", "Coronal", "Transverse" };
 
 	// TODO: get rid of hard-coded dof names
-	OrientationSensor::OrientationSensor( const PropNode& pn, ParamSet& par, Model& model, const Locality& target_area ) :
+	OrientationSensor::OrientationSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Plane( Invalid ),
 		m_Pelvis( nullptr ),
@@ -172,7 +184,7 @@ namespace scone
 		return String( "Ori." ) + g_PlaneNames[ m_Plane ];
 	}
 
-	BodySensor::BodySensor( const PropNode& pn, ParamSet& par, Model& model, const Locality& target_area ) :
+	BodySensor::BodySensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Body( *FindByName( model.GetBodies(), pn.get< String >( "body" ) ) )
 	{}

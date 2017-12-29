@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	JointLoadMeasure::JointLoadMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area ),
 		joint( *FindByName( model.GetJoints(), props.get< String >( "joint" ) ) ),
 		load_penalty( props )
@@ -17,7 +17,7 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult JointLoadMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	scone::Controller::UpdateResult JointLoadMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		joint_load = joint.GetLoad();
 		load_penalty.AddSample( timestamp, joint_load );
@@ -30,7 +30,7 @@ namespace scone
 		return "";
 	}
 
-	void JointLoadMeasure::StoreData( Storage< Real >::Frame& frame )
+	void JointLoadMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		// TODO: store joint load value
 		frame[ joint.GetName() + ".load_penalty" ] = load_penalty.GetLatest();

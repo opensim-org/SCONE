@@ -24,6 +24,7 @@ namespace scone
 		// access to bodies
 		virtual const Link& GetOriginLink() const override;
 		virtual const Link& GetInsertionLink() const override;
+		virtual const Model& GetModel() const override;
 
 		// muscle parameters
 		virtual Real GetMaxIsometricForce() const override;
@@ -67,5 +68,6 @@ namespace scone
 	private:
 		OpenSim::Muscle& m_osMus;
 		Model_Simbody& m_Model;
+		mutable flut::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }

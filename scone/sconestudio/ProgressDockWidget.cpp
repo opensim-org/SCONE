@@ -6,6 +6,7 @@
 #include "scone/core/Log.h"
 #include "flut/string_tools.hpp"
 #include "studio_config.h"
+#include "flut/filesystem.hpp"
 
 using namespace scone;
 
@@ -18,12 +19,12 @@ best( 0.0f ),
 best_gen( 0 ),
 highest( 0 ),
 lowest( 0 ),
+cur_pred( 0 ),
 state( StartingState )
 {
 	QString program = make_qt( flut::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
-	//for ( auto& a : args ) log::trace( a.toStdString() );
 
 	process = new QProcess( this );
 	process->setReadChannel( QProcess::StandardOutput );
@@ -46,14 +47,20 @@ state( StartingState )
 	ui.plot->addGraph();
 	ui.plot->graph( 0 )->setPen( QPen( QColor( 0, 100, 255 ) ) );
 	ui.plot->graph( 0 )->setLineStyle( QCPGraph::lsLine );
-	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 	ui.plot->graph( 0 )->setName( "Best fitness" );
+	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
 	ui.plot->addGraph();
 	ui.plot->graph( 1 )->setPen( QPen( QColor( 255, 100, 0 ), 1, Qt::DashLine ) );
 	ui.plot->graph( 1 )->setLineStyle( QCPGraph::lsLine );
-	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 	ui.plot->graph( 1 )->setName( "Average fitness" );
+	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
+
+	ui.plot->addGraph();
+	ui.plot->graph( 2 )->setPen( QPen( QColor( 50, 50, 50 ), 1, Qt::SolidLine ) );
+	ui.plot->graph( 2 )->setLineStyle( QCPGraph::lsLine );
+	ui.plot->graph( 2 )->setName( "Trend" );
+	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
 	ui.plot->xAxis->setRange( 0, 8 );
 	ui.plot->xAxis->setAutoTickCount( 7 );
@@ -76,8 +83,9 @@ ProgressDockWidget::~ProgressDockWidget()
 
 void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 {
-	ui.plot->yAxis->setScaleType( Linear ? QCPAxis::stLinear : QCPAxis::stLogarithmic );
-	ui.plot->yAxis->setScaleLogBase( log_base );
+	log::info( "Changing axis style to ", ast );
+	//ui.plot->yAxis->setScaleType( Linear ? QCPAxis::stLinear : QCPAxis::stLogarithmic );
+	//ui.plot->yAxis->setScaleLogBase( log_base );
 }
 
 ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
@@ -106,10 +114,10 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
 
-		auto kvp = flut::key_value_str( s.substr( 1 ) );
+		auto kvp = flut::make_key_value_str( s.substr( 1 ) );
 		if ( kvp.first == "folder" )
 		{
-			name = make_qt( flut::get_filename_without_folder( flut::left_str( kvp.second, -1 ) ) );
+			name = make_qt( path( kvp.second ).filename() );
 			state = RunningState;
 			ui.plot->show();
 			setWindowTitle( name );
@@ -120,17 +128,28 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 			max_generations = flut::from_str< int >( kvp.second );
 			updateText();
 		}
+		else if ( kvp.first == "window_size" )
+		{
+			window_size = flut::from_str< int >( kvp.second );
+		}
 		else if ( kvp.first == "generation" )
 		{
-			flut::scan_str( kvp.second, generation, cur_avg, cur_best );
+			flut::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
 			avgvec.push_back( cur_avg );
 			bestvec.push_back( cur_best );
+			medvec.push_back( cur_med );
 			genvec.push_back( generation );
 			highest = std::max( highest, std::max( cur_best, cur_avg ) );
 			lowest = std::min( lowest, std::min( cur_best, cur_avg ) );
+			cur_pred = cur_reg( float( max_generations ) );
 			updateText();
+
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
 			ui.plot->graph( 1 )->setData( genvec, avgvec );
+			ui.plot->graph( 2 )->clearData();
+			auto start = std::max( 0, generation - window_size );
+			ui.plot->graph( 2 )->addData( start, cur_reg( start ) );
+			ui.plot->graph( 2 )->addData( generation, cur_reg( float( generation ) ) );
 			ui.plot->xAxis->setRange( 0, std::max( 8, generation ) );
 			ui.plot->xAxis->setAutoTickCount( 7 );
 
@@ -207,7 +226,7 @@ void ProgressDockWidget::updateText()
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		s = QString().sprintf( "Generation %d of %d. Best=%.3f (Gen %d)", generation, max_generations, best, best_gen );
+		s = QString().sprintf( "Gen %d of %d. Best=%.3f (Gen %d) P=%.3f", generation, max_generations, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
 		s = QString().sprintf( "Optimization finished. Best=%.3f (Gen %d)", best, best_gen );

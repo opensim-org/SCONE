@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	DofLimitMeasure::DofLimitMeasure( const PropNode& props, ParamSet& par, Model& model, const Locality& area ) :
+	DofLimitMeasure::DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area )
 	{
 		if ( const PropNode* lp = props.try_get_child( "Limits" ) )
@@ -37,12 +37,9 @@ namespace scone
 		INIT_PROPERTY( props, abs_force_penalty, 0 );
 	}
 
-	Controller::UpdateResult DofLimitMeasure::UpdateAnalysis( const Model& model, double timestamp )
+	Controller::UpdateResult DofLimitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-
-		if ( !IsActive( model, timestamp ) )
-			return NoUpdate;
 
 		for ( Limit& l : m_Limits )
 		{
@@ -92,9 +89,9 @@ namespace scone
 		return "";
 	}
 
-	void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame )
+	void DofLimitMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( Limit& l : m_Limits )
+		for ( auto& l : m_Limits )
 			frame[ l.dof.GetName() + ".limit_penalty" ] = l.penalty.GetLatest();
 	}
 }

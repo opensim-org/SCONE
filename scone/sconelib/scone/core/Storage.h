@@ -45,6 +45,8 @@ namespace scone
 				return m_Values[ idx ];
 			}
 
+			const std::vector< ValueT > GetValues() { return m_Values; }
+
 		private:
 			Storage< ValueT, TimeT >& m_Store;
 			TimeT m_Time;
@@ -62,6 +64,8 @@ namespace scone
 		Storage& operator=( const Storage& other ) {
 			m_Labels = other.m_Labels;
 			m_LabelIndexMap = other.m_LabelIndexMap;
+			m_Data.clear();
+			m_Data.reserve( other.m_Data.size() );
 			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
 				m_Data.push_back( FrameUP( new Frame( **it ) ) );
 			m_InterpolationCache.clear();
@@ -93,6 +97,13 @@ namespace scone
 		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 
+		std::vector< ValueT > GetChannelData( Index idx ) const {
+			std::vector< ValueT > result( GetFrameCount() );
+			for ( Index f = 0; f < GetFrameCount(); ++f )
+				result[ f ] = GetFrame( f )[ idx ];
+			return result;
+		}
+
 		size_t GetFrameCount() const { return m_Data.size(); }
 
 		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
@@ -112,7 +123,7 @@ namespace scone
 		}
 
 		size_t GetChannelCount() const { return m_Labels.size(); }
-		const std::vector< String >& GetLables() const { return m_Labels; }
+		const std::vector< String >& GetLabels() const { return m_Labels; }
 		const std::vector< FrameUP >& GetData() const { return m_Data; }
 
 		ValueT GetInterpolatedValue( TimeT time, Index idx ) const {

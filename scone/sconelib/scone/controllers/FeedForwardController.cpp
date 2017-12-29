@@ -11,7 +11,7 @@
 
 namespace scone
 {
-	FeedForwardController::FeedForwardController( const PropNode& props, ParamSet& par, Model& model, const Locality& target_area ) :
+	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		DECLARE_AND_INIT( props, bool, symmetric, true );
@@ -23,7 +23,7 @@ namespace scone
 			ActInfo ai;
 			ai.full_name = model.GetMuscles()[ idx ]->GetName();
 			ai.name = GetNameNoSide( ai.full_name );
-			ai.side = GetSide( ai.full_name );
+			ai.side = GetSideFromName( ai.full_name );
 			ai.muscle_idx = idx;
 
 			// see if this muscle is on the right side
@@ -62,7 +62,7 @@ namespace scone
 				ai.mode_weights.resize( number_of_modes );
 				String prefix = symmetric ? ai.name : ai.full_name;
 				for ( size_t mode = 0; mode < number_of_modes; ++mode )
-					ai.mode_weights[ mode ] = par.Get( prefix + stringf( ".Mode%d", mode ), props, "mode_weight" );
+					ai.mode_weights[ mode ] = par.get( prefix + stringf( ".Mode%d", mode ), props[ "mode_weight" ] );
 			}
 			else
 			{

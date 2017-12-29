@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Optimizer type="CmaOptimizer">
+	<init_file>initializations/f0914t_walk_NMAB_S15_NSI_457.par</init_file>
+	<use_init_file>1</use_init_file>
+	<init_file_std_factor>0.1</init_file_std_factor>
+	<init_file_std_offset>0.01</init_file_std_offset>
+	<random_seed>123</random_seed>
+	<max_generations>5000</max_generations>
+	<Objective type="ImitationObjective">
+		<signature_prefix>IM</signature_prefix>
+		<file>results/f0914_walk_N2MB_S25_662.sto</file>
+		<frame_delta>50</frame_delta>
+		<Model type="Simbody">
+			<model_file>f0914t.osim</model_file>
+			<integration_method>SemiExplicitEuler2</integration_method>
+			<integration_accuracy>0.001</integration_accuracy>
+			<use_fixed_control_step_size>1</use_fixed_control_step_size>
+			<fixed_control_step_size>0.001</fixed_control_step_size>
+			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
+			<Controllers>
+				<Controller type="NeuralController" delay_file="neural_delays_FEA.pn" activation="rectifier">
+					<signature_prefix>NMAB</signature_prefix>
+
+					<SensorNeuronLayer>
+						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
+						<SensorNeuron type="L" source="*" offset="1" activation="linear"/>
+						<SensorNeuron type="DP" source="pelvis_tilt" activation="linear"/>
+						<SensorNeuron type="DV" source="pelvis_tilt" activation="linear"/>
+					</SensorNeuronLayer>
+
+					<InterNeuronLayer layer="VES" neurons="1" activation="linear">
+						<InterNeuron input_layer="0" type="DP" gain="1"/>
+						<InterNeuron input_layer="0" type="DV" gain="0.3~0.03"/>
+					</InterNeuronLayer>
+
+					<MotorNeuronLayer>
+						<!--MotorNeuron include="*" offset="0~0.01"/-->
+						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" connect="antagonistic" type="F" gain="0~0.1"/>
+						<MotorNeuron input_layer="0" connect="antagonistic" type="L" gain="0~0.1"/>
+						<MotorNeuron input_layer="VES" connect="ipsilateral" gain="0~0.1"/>
+					</MotorNeuronLayer>
+
+				</Controller>
+			</Controllers>
+		</Model>
+	</Objective>
+</Optimizer>

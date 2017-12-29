@@ -9,7 +9,7 @@ namespace scone
 
 	}
 
-	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, ParamSet& par )
+	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par )
 	{
 		size_t control_points;
 		INIT_PROPERTY( props, control_points, size_t( 0 ) );
@@ -20,10 +20,10 @@ namespace scone
 			Real xVal = 0.0;
 			if ( cpidx > 0 )
 			{
-				double dt = par.Get( stringf( "DT%d", cpidx - 1 ), props, "control_point_delta_time" );
+				double dt = par.get( stringf( "DT%d", cpidx - 1 ), props.get_child( "control_point_delta_time" ) );
 				xVal = GetX( cpidx - 1 ) + dt;
 			}
-			Real yVal = par.Get( stringf( "Y%d", cpidx ), props, "control_point_y" );
+			Real yVal = par.get( stringf( "Y%d", cpidx ), props.get_child( "control_point_y" ) );
 			AddPoint( xVal, yVal );
 		}
 	}

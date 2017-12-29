@@ -18,7 +18,7 @@ size_t SconeStorageDataModel::getVariableCount() const
 QString SconeStorageDataModel::getLabel( int idx ) const
 {
 	SCONE_ASSERT( storage );
-	return QString( storage->GetLables()[ idx ].c_str() );
+	return QString( storage->GetLabels()[ idx ].c_str() );
 }
 
 double SconeStorageDataModel::getValue( int idx, double time ) const
@@ -49,7 +49,7 @@ std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int i
 
 double SconeStorageDataModel::getTimeFinish() const
 {
-	return storage ? storage->Back().GetTime() : 0.0;
+	return storage && !storage->IsEmpty() ? storage->Back().GetTime() : 0.0;
 }
 
 double SconeStorageDataModel::getTimeStart() const

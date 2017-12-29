@@ -1,1 +1,0 @@
-"%~dp0\bin\msvc2013_release_copy\sconecmd.exe" -o %1 Optimizer.signature_postfix=DATE_TIME

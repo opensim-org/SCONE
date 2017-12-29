@@ -22,7 +22,7 @@ namespace scone
 	class SCONE_API Model : public HasName, public HasSignature, public HasData
 	{
 	public:
-		Model( const PropNode& props, ParamSet& par );
+		Model( const PropNode& props, Params& par );
 		virtual ~Model();
 
 		/// muscle access
@@ -42,7 +42,6 @@ namespace scone
 		const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
 		/// Sensor access
-		//std::vector< ChannelSensor* >& GetChannelSensors() { return m_ChannelSensors; }
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 		/// link access
@@ -59,20 +58,24 @@ namespace scone
 		/// leg access
 		size_t GetLegCount() const { return m_Legs.size(); }
 		const Leg& GetLeg( size_t idx ) const { return *m_Legs[ idx ]; }
+		const Leg& GetLeg( const Locality& loc ) const { for ( auto& l : m_Legs ) if ( l->GetSide() == loc.GetSide() ) return *l; flut_error( "Could not find leg" ); }
 		std::vector< LegUP >& GetLegs() { return m_Legs; }
 		const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 
 		/// Get simulation info
-		virtual double GetTime() const = 0;
+		virtual TimeInSeconds GetTime() const = 0;
 		virtual int GetIntegrationStep() const = 0;
 		virtual int GetPreviousIntegrationStep() const = 0;
-		virtual double GetPreviousTime() const = 0;
-		virtual double GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
+		virtual TimeInSeconds GetPreviousTime() const = 0;
+		virtual TimeInSeconds GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
+		virtual TimeInSeconds GetSimulationStepSize() = 0;
 
 		/// Model state access
 		virtual const State& GetState() const = 0;
 		virtual State& GetState() = 0;
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) = 0;
+		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) = 0;
+		void SetNullState();
 
 		/// Simulate model
 		virtual bool AdvanceSimulationTo( double time ) = 0;
@@ -81,7 +84,7 @@ namespace scone
 
 		/// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
-		virtual String WriteData( const String& file_base ) const = 0;
+		virtual String WriteResult( const path& file_base ) const = 0;
 
 		/// get dynamic model statistics
 		virtual Vec3 GetComPos() const = 0;
@@ -98,6 +101,7 @@ namespace scone
 		// custom model properties
 		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : flut::empty_prop_node(); }
 		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : flut::empty_prop_node(); }
+		PropNode& GetUserData() { return m_UserData; }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -127,38 +131,39 @@ namespace scone
 		}
 
 		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, ParamSet& par, const Locality& area );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, ParamSet& par, const Locality& area );
+		Sensor& AcquireSensor( const PropNode& pn, Params& par, const Locality& area );
+		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, Params& par, const Locality& area );
 
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 		Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
 
-
-		template< typename SensorT, typename... Args >
-		SensorDelayAdapter& AcquireDelayedSensor( Args&&... args ) {
-			return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) );
-		}
+		template< typename SensorT, typename... Args > SensorDelayAdapter& AcquireDelayedSensor( Args&&... args )
+		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
 		Real sensor_delay_scaling_factor;
 		Real balance_sensor_ori_vel_gain;
 		Real balance_sensor_delay;
 		Vec3 GetDelayedOrientation();
 
-		virtual void SetStoreData( bool store ) { m_StoreData = store; }
-		virtual bool GetStoreData() { return m_StoreData; }
+		void SetStoreData( bool store ) { m_StoreData = store; }
+		bool GetStoreData() const { return m_StoreData; }
+		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
+		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
 		void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
 		bool GetThreadSafeSimulation() { return thread_safe_simulation; }
 		std::mutex& GetSimulationMutex() { return simulation_mutex; }
 		std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
 
-	protected:
-		virtual String GetClassSignature() const override { return GetName(); }
-		void UpdateSensorDelayAdapters();
-		void CreateBalanceSensors( const PropNode& props, ParamSet& par );
+		Measure* GetMeasure();
 
-		virtual void StoreData( Storage< Real >::Frame& frame ) override;
+	protected:
+		virtual String GetClassSignature() const override;
+		void UpdateSensorDelayAdapters();
+		void CreateBalanceSensors( const PropNode& props, Params& par );
+
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();
 
 	protected:
@@ -180,10 +185,12 @@ namespace scone
 
 		const PropNode* m_pModelProps;
 		const PropNode* m_pCustomProps;
+		PropNode m_UserData;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;
 		bool m_StoreData;
+		StoreDataFlags m_StoreDataFlags;
 
 		// thread safety stuff
 		bool thread_safe_simulation;

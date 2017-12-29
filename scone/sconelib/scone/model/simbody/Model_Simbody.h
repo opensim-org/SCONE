@@ -34,7 +34,7 @@ namespace scone
 	class SCONE_API Model_Simbody : public Model
 	{
 	public:
-		Model_Simbody( const PropNode& props, ParamSet& par );
+		Model_Simbody( const PropNode& props, Params& par );
 
 		void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
 
@@ -53,7 +53,7 @@ namespace scone
 
 		virtual double GetSimulationEndTime() const override;
 		virtual void SetSimulationEndTime( double t ) override;
-		virtual String WriteData( const String& file_base ) const override;
+		virtual String WriteResult( const path& file_base ) const override;
 
 		virtual void SetTerminationRequest() override;
 
@@ -61,6 +61,7 @@ namespace scone
 		virtual double GetPreviousTime() const override;
 		virtual int GetIntegrationStep() const override;
 		virtual int GetPreviousIntegrationStep() const override;
+		virtual TimeInSeconds GetSimulationStepSize() override;
 
 		/// Get the OpenSim model attached to this model
 		OpenSim::Model& GetOsimModel() { return *m_pOsimModel; }
@@ -78,32 +79,28 @@ namespace scone
 		void StoreCurrentFrame() override;
 		void UpdateOsimStorage();
 
-		OpenSim::ConstantForce& GetOsimBodyForce( int idx ) { return *m_BodyForces.at( idx ); }
+		OpenSim::ConstantForce* GetOsimBodyForce( Index idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
 		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
-
-	protected:
-		virtual String GetClassSignature() const override;
+		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 
 	private:
-		void SetTkState( const State& s );
+		//void SetTkState( const State& s );
 		void InitStateFromTk();
 		void CopyStateFromTk();
 		void CopyStateToTk();
 		void ReadState( const String& file );
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
-		void CreateModelWrappers( const PropNode& pn, ParamSet& par );
-		void SetModelProperties( const PropNode &pn, ParamSet& par );
-		void SetOpenSimParameters( const PropNode& pn, ParamSet& par );
-		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, ParamSet& par );
+		void CreateModelWrappers( const PropNode& pn, Params& par );
+		void SetModelProperties( const PropNode &pn, Params& par );
+		void SetOpenSimParameters( const PropNode& pn, Params& par );
+		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 		void ClearBodyForces();
-
-		virtual void SetStoreData( bool store ) override;
 
 		String integration_method;
 		double integration_accuracy;
@@ -111,6 +108,7 @@ namespace scone
 		bool use_fixed_control_step_size;
 		double fixed_control_step_size;
 		String model_file;
+		bool create_body_forces;
 
 		int m_PrevIntStep;
 		double m_PrevTime;
