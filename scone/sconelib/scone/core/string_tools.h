@@ -3,7 +3,7 @@
 #include "core.h"
 #include <iosfwd>
 
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 
 // need for demangling with GCC
 #ifndef _MSC_VER
@@ -12,13 +12,13 @@
 
 namespace scone
 {
-	// import string tools from flut
-	using flut::stringf;
-	using flut::get_filename_ext;
-	using flut::get_filename_without_ext;
-	using flut::to_str;
-	using flut::from_str;
-	using flut::quoted;
+	// import string tools from xo
+	using xo::stringf;
+	using xo::get_filename_ext;
+	using xo::get_filename_without_ext;
+	using xo::to_str;
+	using xo::from_str;
+	using xo::quoted;
 
 	template< typename T > char GetSignChar( const T& v ) { return v < 0 ? '-' : '+'; }
 

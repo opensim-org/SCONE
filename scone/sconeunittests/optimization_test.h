@@ -1,11 +1,11 @@
-#include "common.h"
-
 #include "scone/optimization/opt_tools.h"
 #include "scone/optimization/Objective.h"
 
 #include "scone/core/Factories.h"
 #include "scone/core/math.h"
-#include "flut/system/path.hpp"
+#include "xo/filesystem/path.h"
+
+#include "xo/diagnose/test_framework.h"
 
 using namespace scone;
 
@@ -19,7 +19,7 @@ public:
 			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}
 
-	static double Rosenbrock( const std::vector< double >& v )
+	double Rosenbrock( const spot::par_vec& v ) const
 	{
 		// Rosenbrock function
 		double sum = 0.0;
@@ -49,7 +49,7 @@ private:
 	mutable bool is_evaluating;
 };
 
-BOOST_AUTO_TEST_CASE( optimization_test )
+void optimization_test()
 {
 	GetObjectiveFactory().register_class< TestObjective >();
 
@@ -59,5 +59,5 @@ BOOST_AUTO_TEST_CASE( optimization_test )
 	o->SetConsoleOutput( false );
 	o->Run();
 
-	BOOST_CHECK( o->GetBestFitness() < 0.1 );
+	XO_TEST( o->GetBestFitness() < 0.1 );
 }

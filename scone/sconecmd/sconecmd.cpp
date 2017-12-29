@@ -2,11 +2,11 @@
 #include "scone/optimization/opt_tools.h"
 #include "scone/controllers/cs_tools.h"
 #include "scone/model/simbody/sim_simbody.h"
-#include "flut/system_tools.hpp"
+#include "xo/system/system_tools.h"
 #include <tclap/CmdLine.h>
 #include <thread>
-#include "flut/system/log_sink.hpp"
-#include "flut/prop_node_tools.hpp"
+#include "xo/system/log_sink.h"
+#include "xo/stream/prop_node_tools.h"
 #include "spot/optimization_pool.h"
 #include <xutility>
 
@@ -15,7 +15,7 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	flut::log::stream_sink console_sink( flut::log::info_level, std::cout );
+	xo::log::stream_sink console_sink( xo::log::info_level, std::cout );
 
 	try
 	{
@@ -34,16 +34,16 @@ int main(int argc, char* argv[])
 		if ( optArg.isSet() )
 		{
 			// set log level
-			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel ) );
+			console_sink.set_log_level( xo::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel ) );
 			auto scenario_file = path( optArg.getValue() );
 
 			// load properties
-			PropNode props = flut::load_file_with_include( scenario_file, "INCLUDE" );
+			PropNode props = xo::load_file_with_include( scenario_file, "INCLUDE" );
 
 			// apply command line settings (parameter 2 and further)
 			for ( auto kvstring : propArg )
 			{
-				auto kvp = flut::make_key_value_str( kvstring );
+				auto kvp = xo::make_key_value_str( kvstring );
 				props.set_delimited( kvp.first, kvp.second, '.' );
 			}
 
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 			if ( multiArg.isSet() )
 			{
 				// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
-				FLUT_NOT_IMPLEMENTED;
+				XO_NOT_IMPLEMENTED;
 				spot::optimization_pool op( promiseWindowArg.getValue() );
 				for ( int i = 0; i < multiArg.getValue(); ++i )
 				{
@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 		else if ( resArg.isSet() )
 		{
 			// set log level
-			console_sink.set_log_level( flut::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
+			console_sink.set_log_level( xo::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
 			SimulateObjective( path( resArg.getValue() ) );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen

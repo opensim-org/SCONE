@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 
 namespace scone
 {
@@ -65,7 +65,7 @@ namespace scone
 	template< typename T >
 	T& FindBySide( std::vector< T >& cont, Side side )
 	{
-		using flut::to_str;
+		using xo::to_str;
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetSide() == side; } );
 		SCONE_THROW_IF( it == cont.end(), "Could not find item with side " + to_str( side ) );
 		return *it;
@@ -74,7 +74,7 @@ namespace scone
 	template< typename T >
 	T& FindNamedTrySided( std::vector< T >& cont, const String& name, const Side& side )
 	{
-		using flut::quoted;
+		using xo::quoted;
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 		if ( it == cont.end() ) // try sided name
 			it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name + GetSideName( side ); } );

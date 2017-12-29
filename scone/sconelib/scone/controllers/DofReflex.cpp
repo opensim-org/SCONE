@@ -30,7 +30,7 @@ namespace scone
 
 		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
 		if ( filter_cutoff_frequency != 0.0 )
-			m_Filter = flut::make_lowpass_butterworth_2nd_order( filter_cutoff_frequency / 1000.0 ); // TODO: use actual update frequency
+			m_Filter = xo::make_lowpass_butterworth_2nd_order( filter_cutoff_frequency / 1000.0 ); // TODO: use actual update frequency
 
 		//log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
 	}

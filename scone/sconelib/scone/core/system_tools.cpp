@@ -4,17 +4,17 @@
 
 #include <fstream>
 
-#include "flut/system_tools.hpp"
-#include "flut/system/path.hpp"
+#include "xo/system/system_tools.h"
+#include "xo/filesystem/path.h"
 #include "Log.h"
 
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
-#include "flut/prop_node_tools.hpp"
+#include "xo/stream/prop_node_tools.h"
 #include "string"
-#include "flut/system/types.hpp"
-#include "flut/filesystem.hpp"
+#include "xo/utility/types.h"
+#include "xo/filesystem/filesystem.h"
 #include <mutex>
 
 namespace scone
@@ -31,10 +31,10 @@ namespace scone
 		if ( g_GlobalSettings.empty() )
 		{
 			auto settings_file = GetSettingsFolder() / "settings.ini";
-			if ( flut::file_exists( settings_file ) )
+			if ( xo::file_exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
-				g_GlobalSettings = flut::load_ini( settings_file );
+				g_GlobalSettings = xo::load_ini( settings_file );
 			}
 			else
 			{
@@ -56,9 +56,9 @@ namespace scone
 		auto settings_file = GetSettingsFolder() / "settings.ini";
 
 		g_GlobalSettings = newSettings;
-		flut::create_directories( flut::path( settings_file.str() ).parent_path() );
+		xo::create_directories( xo::path( settings_file.str() ).parent_path() );
 
-		flut::save_ini( g_GlobalSettings, settings_file );
+		xo::save_ini( g_GlobalSettings, settings_file );
 		log::debug( "Saved settings to ", settings_file );
 	}
 
@@ -66,9 +66,9 @@ namespace scone
 	{
 		if ( g_RootFolder.empty() )
 		{
-			for ( g_RootFolder = flut::get_application_folder(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
+			for ( g_RootFolder = xo::get_application_folder(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
 			{
-				if ( flut::exists( g_RootFolder / ".version" ) )
+				if ( xo::exists( g_RootFolder / ".version" ) )
 					break;
 			}
 			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat" );
@@ -79,19 +79,19 @@ namespace scone
 
 	path GetSettingsFolder()
 	{
-		return flut::get_config_folder() / "SCONE";
+		return xo::get_config_folder() / "SCONE";
 	}
 
 	path GetDefaultDataFolder()
 	{
-		return flut::get_documents_folder() / "SCONE";
+		return xo::get_documents_folder() / "SCONE";
 	}
 
 	path GetFolder( const String& folder, const path& default_path )
 	{
 		if ( GetSconeSettings().has_key( "folders" ) )
 		{
-			auto path_to_folder = flut::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
+			auto path_to_folder = xo::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
 			if ( !path_to_folder.empty() )
 				return path_to_folder;
 		}
@@ -112,12 +112,12 @@ namespace scone
 		}
 	}
 
-	flut::version GetSconeVersion()
+	xo::version GetSconeVersion()
 	{
 		auto build = GetSconeBuildNumber();
 		int build_nr = 0;
 		if ( build != "UNKNOWN" )
-			build_nr = flut::from_str< int >( build );
+			build_nr = xo::from_str< int >( build );
 		return version( SCONE_VERSION_MAJOR, SCONE_VERSION_MINOR, SCONE_VERSION_PATCH, build_nr, SCONE_VERSION_POSTFIX );
 
 	}
@@ -126,12 +126,12 @@ namespace scone
 	{
 		if ( g_Version.empty() )
 		{
-			flut::path versionpath( flut::get_application_folder() );
+			xo::path versionpath( xo::get_application_folder() );
 
 			// look for .version file, up to three levels from application folder
 			for ( int level = 0; level <= 3; ++level )
 			{
-				if ( flut::exists( versionpath / ".version" ) )
+				if ( xo::exists( versionpath / ".version" ) )
 				{
 					// .version file found, read its contents
 					std::ifstream ifstr( ( versionpath / ".version" ).string() );

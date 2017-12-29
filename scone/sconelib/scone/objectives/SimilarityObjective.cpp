@@ -1,6 +1,6 @@
 #include "SimilarityObjective.h"
 #include "../core/Factories.h"
-#include "flut/prop_node_tools.hpp"
+#include "xo/stream/prop_node_tools.h"
 #include "../controllers/cs_tools.h"
 #include "spot/search_point.h"
 #include "../controllers/NeuralController.h"
@@ -37,7 +37,7 @@ namespace scone
 
 	PropNode SimilarityObjective::GetReport( Model& m ) const
 	{
-		return flut::make_prop_node( GetResult( m ) );
+		return xo::make_prop_node( GetResult( m ) );
 	}
 
 	scone::fitness_t SimilarityObjective::EvaluateModel( Model& m ) const

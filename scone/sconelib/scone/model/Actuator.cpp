@@ -1,5 +1,4 @@
 #include "Actuator.h"
-#include "flut/string_tools.hpp"
 
 namespace scone
 {

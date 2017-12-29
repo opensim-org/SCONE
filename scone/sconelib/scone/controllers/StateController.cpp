@@ -20,7 +20,7 @@ namespace scone
 		{
 			// get state masks
 			String state_masks = ccIt->second.get< String >( "states" );
-			auto state_tokens = flut::split_str( state_masks, ";," );
+			auto state_tokens = xo::split_str( state_masks, ";," );
 			for ( String controller_state_name : state_tokens )
 			{
 				// fix name for mirrored case -- yes, this is pretty nasty

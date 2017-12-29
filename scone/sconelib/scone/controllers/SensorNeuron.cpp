@@ -62,7 +62,7 @@ namespace scone
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv );
 		}
 
-		flut_error_if( !input_, "Unknown type " + type_ );
+		xo_error_if( !input_, "Unknown type " + type_ );
 		source_name_ = name;
 	}
 

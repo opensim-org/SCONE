@@ -1,17 +1,13 @@
-#include "common.h"
+#include "xo/filesystem/path.h"
+#include "scone/core/system_tools.h"
 
-#include <boost/filesystem.hpp>
-#include <boost/predef.h>
-#include "platform.h"
-
-using namespace boost::filesystem;
-using std::cout;
-using std::endl;
-
-BOOST_AUTO_TEST_CASE( simulation_test )
+void simulation_test()
 {
-	path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test" ).str();
+	xo::path testpath = scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test";
 
+	XO_NOT_IMPLEMENTED;
+
+#if 0
 	for ( directory_iterator dir_it( testpath ); dir_it != directory_iterator(); ++dir_it )
 	{
 		if ( is_directory( dir_it->path() ) )
@@ -22,17 +18,17 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 				if ( fileit->path().extension() == ".par" )
 				{
 					path fp = fileit->path();
-					flut::prop_node result = scone::RunSimulation( flut::path( fp.string() ) );
+					xo::prop_node result = scone::RunSimulation( xo::path( fp.string() ) );
 
 					path reportpath = fp.parent_path() / ( "result_" + make_platform_id() + "_" + fp.stem().string() + ".prop" );
 					if ( !exists( reportpath ) )
 					{
 						BOOST_ERROR( "Could not find simulation report: " + reportpath.string() );
-						save_prop( result, flut::path( reportpath.string() ) );
+						save_prop( result, xo::path( reportpath.string() ) );
 					}
 					else
 					{
-						auto verify = flut::load_prop( flut::path( reportpath.string() ) );
+						auto verify = xo::load_prop( xo::path( reportpath.string() ) );
 						auto rep1 = result.get_child( "result" );
 						auto rep2 = verify.get_child( "result" );
 						BOOST_CHECK( rep1 == rep2 );
@@ -48,4 +44,5 @@ BOOST_AUTO_TEST_CASE( simulation_test )
 			}
 		}
 	}
+#endif
 }

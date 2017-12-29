@@ -3,7 +3,7 @@
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
 #include "scone/core/Storage.h"
-#include "flut/circular_deque.hpp"
+#include "xo/container/circular_deque.h"
 
 namespace scone
 {
@@ -23,7 +23,7 @@ namespace scone
 
 	protected:
 		size_t m_DelaySamples;
-		flut::circular_deque< double > m_DelayBuffer;
+		xo::circular_deque< double > m_DelayBuffer;
 
 		double m_ActuatorControlValue;
 	};

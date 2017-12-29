@@ -1,7 +1,7 @@
 #include "SensorStateController.h"
 
 #include "scone/model/Model.h"
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 #include "scone/core/math.h"
 
 namespace scone
@@ -37,11 +37,11 @@ namespace scone
 	{
 		StateController::StoreData( frame, flags );
 
-		string prefix = create_mirrored_state ? "ssc" : "ssc" + flut::to_str( mirrored );
+		string prefix = create_mirrored_state ? "ssc" : "ssc" + xo::to_str( mirrored );
 		frame[ prefix + "_state" ] = (double)m_CurrentState;
 		for ( size_t idx = 0; idx < m_States.size(); ++idx )
 		{
-			string postfix = flut::to_str( idx );
+			string postfix = xo::to_str( idx );
 			frame[ prefix + "_d" + postfix ] = m_StateDist[ idx ];
 			frame[ prefix + "_ld" + postfix ] = m_States[ idx ].ld;
 			frame[ prefix + "_sd" + postfix ] = m_States[ idx ].sd;
@@ -87,6 +87,6 @@ namespace scone
 
 	String SensorStateController::GetClassSignature() const
 	{
-		return flut::stringf( "SSC%d", GetStateCount() );
+		return xo::stringf( "SSC%d", GetStateCount() );
 	}
 }

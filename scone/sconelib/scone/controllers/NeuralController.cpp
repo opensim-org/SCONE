@@ -4,23 +4,23 @@
 #include "scone/core/string_tools.h"
 #include "scone/model/Locality.h"
 #include "scone/core/HasName.h"
-#include "flut/container_tools.hpp"
+#include "xo/container/container_tools.h"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"
 #include "PatternNeuron.h"
-#include "flut/pattern_matcher.hpp"
+#include "xo/string/pattern_matcher.h"
 #include "../model/Model.h"
 #include "../model/Muscle.h"
 #include "../model/Dof.h"
 #include <algorithm>
 #include "activation_functions.h"
-#include "flut/hash.hpp"
-#include "flut/string_tools.hpp"
-#include "flut/table.hpp"
-#include "flut/system/string_cast.hpp"
+#include "xo/utility/hash.h"
+#include "xo/string/string_tools.h"
+#include "xo/container/table.h"
+#include "xo/string/string_cast.h"
 #include "../core/Profiler.h"
 #include "../model/model_tools.h"
-#include "flut/dictionary.hpp"
+#include "xo/string/dictionary.h"
 #include "../model/Side.h"
 
 namespace scone
@@ -36,7 +36,7 @@ namespace scone
 			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
 
 		INIT_PROP( pn, delay_factor_, 1.0 );
-		par_mode_ = flut::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
+		par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
 			{ "muscle", muscle_mode },
 			{ "dof", dof_mode },
 			{ "virtual", virtual_mode },
@@ -127,8 +127,8 @@ namespace scone
 			m_MotorNeurons.emplace_back( std::make_unique< MotorNeuron >( pn, par, *this, name, m_MotorNeurons.size(), GetSideFromName( name ) ) );
 			for ( auto& child_pn : pn )
 			{
-				auto include = child_pn.second.get< flut::pattern_matcher >( "include", "*" );
-				auto exclude = child_pn.second.get< flut::pattern_matcher >( "exclude", "" );
+				auto include = child_pn.second.get< xo::pattern_matcher >( "include", "*" );
+				auto exclude = child_pn.second.get< xo::pattern_matcher >( "exclude", "" );
 				if ( include( name ) && !exclude( name ) )
 					m_MotorNeurons.back()->AddInputs( child_pn.second, par, *this );
 			}
@@ -230,7 +230,7 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		flut::table< double > weights, contribs;
+		xo::table< double > weights, contribs;
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
@@ -264,7 +264,7 @@ namespace scone
 		for ( auto& neuron : m_MotorNeurons )
 			c += neuron->GetInputs().size();
 
-		return flut::stringf( "N%d", c );
+		return xo::stringf( "N%d", c );
 	}
 
 	TimeInSeconds NeuralController::GetDelay( const string& name )
@@ -298,7 +298,7 @@ namespace scone
 		int samples = 0;
 		for ( auto& neuron : m_MotorNeurons )
 		{
-			auto other_neuron = flut::find_if( other.m_MotorNeurons, [&]( const MotorNeuronUP& m ) { return neuron->GetName() == m->GetName(); } );
+			auto other_neuron = xo::find_if( other.m_MotorNeurons, [&]( const MotorNeuronUP& m ) { return neuron->GetName() == m->GetName(); } );
 			SCONE_THROW_IF( other_neuron == other.m_MotorNeurons.end(), "Could not find Neuron " + neuron->GetName() );
 
 			// measure difference in MotorNeuron offset
@@ -307,7 +307,7 @@ namespace scone
 
 			for ( auto& input : neuron->GetInputs() )
 			{
-				auto other_input = flut::find_if( (*other_neuron)->GetInputs(), [&]( const Neuron::Input& i ) { return input.neuron->GetName() == i.neuron->GetName(); } );
+				auto other_input = xo::find_if( (*other_neuron)->GetInputs(), [&]( const Neuron::Input& i ) { return input.neuron->GetName() == i.neuron->GetName(); } );
 				SCONE_THROW_IF( other_input == (*other_neuron )->GetInputs().end(), "Could not find Input " + input.neuron->GetName() + " for " + neuron->GetName() );
 
 				// measure difference in MotorNeuron input gain

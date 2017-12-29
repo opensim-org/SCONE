@@ -2,6 +2,7 @@
 #include "scone/core/Log.h"
 #include "scone/core/propnode_tools.h"
 #include "scone/core/Factories.h"
+#include "scone/core/StorageIo.h"
 
 #include "Model_Simbody.h"
 #include "Body_Simbody.h"
@@ -17,14 +18,13 @@
 
 #include "scone/core/system_tools.h"
 #include "scone/core/Profiler.h"
-#include "scone/core/ResourceCache.h"
 
-#include <flut/string_tools.hpp>
+#include "xo/string/string_tools.h"
+#include "xo/string/pattern_matcher.h"
+#include "xo/container/container_tools.h"
+#include "xo/utility/file_resource_cache.h"
 
-#include "scone/core/StorageIo.h"
 #include <thread>
-#include "flut/pattern_matcher.hpp"
-#include "flut/container_tools.hpp"
 #include <mutex>
 
 using std::cout;
@@ -32,20 +32,10 @@ using std::endl;
 
 namespace scone
 {
-	// OpenSim model resource cache
-	template<> inline OpenSim::Model* ResourceCache< OpenSim::Model >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Model( name );
-	}
-	template<> inline OpenSim::Storage* ResourceCache< OpenSim::Storage >::CreateFirst( const String& name )
-	{
-		return new OpenSim::Storage( name );
-	};
-
-
 	std::mutex g_SimBodyMutex;
-	ResourceCache< OpenSim::Model > g_ModelCache;
-	ResourceCache< OpenSim::Storage > g_StorageCache;
+
+	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
+	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
 
 	/// Simbody controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
@@ -102,7 +92,8 @@ namespace scone
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
-			m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
+			//m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
+			m_pOsimModel = g_ModelCache( ( GetFolder( "models" ) / model_file ) );
 		}
 
 		// create torque and point actuators
@@ -188,7 +179,7 @@ namespace scone
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
 			else if ( integration_method == "SemiExplicitEuler2" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
-			else SCONE_THROW( "Invalid integration method: " + flut::quoted( integration_method ) );
+			else SCONE_THROW( "Invalid integration method: " + xo::quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
 			m_pTkIntegrator->setMaximumStepSize( max_step_size );
@@ -200,14 +191,14 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
-				ReadState( ( GetFolder( "models" ) / state_init_file ).str() );
+				ReadState( GetFolder( "models" ) / state_init_file );
 
 			// update state variables if they are being optimized
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
-				auto inc_pat = flut::pattern_matcher( iso->get< String >( "include_states" ), ";" );
-				auto ex_pat = flut::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
+				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states" ), ";" );
+				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
 				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
@@ -335,7 +326,7 @@ namespace scone
 				int usage = 0;
 				if ( mp.first == "Actuator" )
 				{
-					for ( auto act : flut::make_view_if( m_Actuators, flut::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
+					for ( auto act : xo::make_view_if( m_Actuators, xo::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
 					{
 						SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
 						act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
@@ -356,7 +347,7 @@ namespace scone
 		{
 			for ( auto param_it = osim_pars->begin(); param_it != osim_pars->end(); ++param_it )
 			{
-				flut::pattern_matcher pm( param_it->second.get< String >( "name" ) );
+				xo::pattern_matcher pm( param_it->second.get< String >( "name" ) );
 				if ( param_it->first == "Force" )
 				{
 					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )
@@ -698,10 +689,10 @@ namespace scone
 		return GetOsimModel().getName();
 	}
 
-	void Model_Simbody::ReadState( const String& file )
+	void Model_Simbody::ReadState( const path& file )
 	{
 		// create a copy of the storage
-		auto store = g_StorageCache.CreateCopy( file );
+		auto store = g_StorageCache( file );
 		OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
 		OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
 

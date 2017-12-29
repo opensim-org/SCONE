@@ -1,5 +1,5 @@
 #include "Factories.h"
-#include "flut/factory.hpp"
+#include "xo/utility/factory.h"
 #include "scone/controllers/GaitStateController.h"
 #include "scone/controllers/TimeStateController.h"
 #include "scone/controllers/PerturbationController.h"
@@ -23,7 +23,6 @@
 #include "scone/core/Polynomial.h"
 #include "scone/model/simbody/Model_Simbody.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
-//#include "scone/optimization/CmaOptimizerShark3.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
 #include "scone/controllers/MirrorController.h"
@@ -34,9 +33,9 @@
 
 namespace scone
 {
-	static flut::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
-	static flut::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
-	static flut::factory< Function, const PropNode&, Params& > g_FunctionFactory;
+	static xo::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
+	static xo::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
+	static xo::factory< Function, const PropNode&, Params& > g_FunctionFactory;
 
 	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
@@ -91,7 +90,7 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	static flut::factory< Model, const PropNode&, Params& > g_ModelFactory;
+	static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
 	{
 		if ( g_ModelFactory.empty() )
@@ -101,7 +100,7 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static flut::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
+	static xo::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
 	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Locality& a )
 	{
 		if ( g_SensorFactory.empty() )
@@ -116,20 +115,19 @@ namespace scone
 		return g_SensorFactory( props.get< String >( "type" ), props, par, m, a );
 	}
 
-	static flut::factory< Optimizer, const PropNode& > g_OptimizerFactory;
+	static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
 	{
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
-			//g_OptimizerFactory.register_class< CmaOptimizerShark3 >();
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	static flut::factory< Objective, const PropNode& > g_ObjectiveFactory;
-	SCONE_API flut::factory< Objective, const PropNode& >& GetObjectiveFactory()
+	static xo::factory< Objective, const PropNode& > g_ObjectiveFactory;
+	SCONE_API xo::factory< Objective, const PropNode& >& GetObjectiveFactory()
 	{
 		if ( g_ObjectiveFactory.empty() )
 		{

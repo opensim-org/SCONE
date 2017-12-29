@@ -11,12 +11,12 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "flut/timer.hpp"
-#include "flut/math/delta.hpp"
+#include "xo/time/timer.h"
+#include "xo/numerical/delta.h"
 #include "ProgressDockWidget.h"
 #include "QCodeEditor.h"
 #include "Settings.h"
-#include "flut/system/log_sink.hpp"
+#include "xo/system/log_sink.h"
 #include "QCompositeMainWindow.h"
 #include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
@@ -96,7 +96,7 @@ private:
 	TimeInSeconds current_time;
 	TimeInSeconds capture_frequency;
 	TimeInSeconds evaluation_time_step;
-	flut::delta< scone::Vec3 > com_delta;
+	xo::delta< scone::Vec3 > com_delta;
 
 	QString currentParFile;
 

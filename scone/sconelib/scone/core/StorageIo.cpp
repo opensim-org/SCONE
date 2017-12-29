@@ -1,7 +1,7 @@
 #include "StorageIo.h"
 
-#include <flut/string_tools.hpp>
-#include "scone/../../../submodules/flut/flut/system/path.hpp"
+#include "xo/string/string_tools.h"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
@@ -53,12 +53,12 @@ namespace scone
 
 	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		flut::char_stream str = flut::load_char_stream( flut::path( file ) );
+		xo::char_stream str = xo::load_char_stream( xo::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageSto( storage, str );
 	}
 
-	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str )
+	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str )
 	{
 		// skip the header since we don't need it
 		String s;
@@ -71,12 +71,12 @@ namespace scone
 
 	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		flut::char_stream str = flut::load_char_stream( flut::path( file ) );
+		xo::char_stream str = xo::load_char_stream( xo::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageTxt( storage, str );
 	}
 
-	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, flut::char_stream& str )
+	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str )
 	{
 		storage.Clear();
 
@@ -87,7 +87,7 @@ namespace scone
 
 		String header = str.get_line();
 		SCONE_ASSERT_MSG( !str.fail(), "Error reading file labels" );
-		auto labels = flut::split_str( header, "\t " );
+		auto labels = xo::split_str( header, "\t " );
 
 		// add channels to storage
 		for ( auto& s : labels )

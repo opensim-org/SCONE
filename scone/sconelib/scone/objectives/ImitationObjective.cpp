@@ -10,7 +10,7 @@
 #include "../core/StorageIo.h"
 #include "scone/model/Muscle.h"
 #include <vector>
-#include "flut/prop_node.hpp"
+#include "xo/container/prop_node.h"
 #include "../core/Profiler.h"
 
 namespace scone
@@ -111,7 +111,7 @@ namespace scone
 
 	PropNode ImitationObjective::GetReport( Model& m ) const
 	{
-		return flut::make_prop_node( GetResult( m ) );
+		return xo::make_prop_node( GetResult( m ) );
 	}
 
 	String ImitationObjective::GetClassSignature() const

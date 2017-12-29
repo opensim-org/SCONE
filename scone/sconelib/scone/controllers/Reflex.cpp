@@ -30,7 +30,7 @@ namespace scone
 
 	scone::Real Reflex::AddTargetControlValue( Real u )
 	{
-		flut::math::clamp( u, min_control_value, max_control_value );
+		xo::clamp( u, min_control_value, max_control_value );
 		m_Target.AddInput( u );
 		return u;
 	}

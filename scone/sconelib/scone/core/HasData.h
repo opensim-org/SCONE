@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Storage.h"
-#include "flut/flag_set.hpp"
+#include "xo/container/flag_set.h"
 
 namespace scone
 {
@@ -18,7 +18,7 @@ namespace scone
 		ControllerData
 	};
 
-	using StoreDataFlags = flut::flag_set< StoreDataTypes >;
+	using StoreDataFlags = xo::flag_set< StoreDataTypes >;
 
 	class SCONE_API HasData
 	{

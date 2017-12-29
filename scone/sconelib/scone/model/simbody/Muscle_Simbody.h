@@ -2,7 +2,7 @@
 
 #include "sim_simbody.h"
 #include "scone/model/Muscle.h"
-#include "flut/circular_deque.hpp"
+#include "xo/container/circular_deque.h"
 
 #include <vector>
 
@@ -68,6 +68,6 @@ namespace scone
 	private:
 		OpenSim::Muscle& m_osMus;
 		Model_Simbody& m_Model;
-		mutable flut::flat_map< const Dof*, Real > m_MomentArmCache;
+		mutable xo::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }

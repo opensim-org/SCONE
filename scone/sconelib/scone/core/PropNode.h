@@ -8,15 +8,15 @@
 
 #include "Exception.h"
 
-#include "flut/prop_node.hpp"
-#include "flut/prop_node_tools.hpp"
+#include "xo/container/prop_node.h"
+#include "xo/stream/prop_node_tools.h"
 
 namespace scone
 {
-	using PropNode = flut::prop_node;
-	using flut::load_xml;
-	using flut::load_file_with_include;
-	using flut::save_xml;
-	using flut::load_ini;
-	using flut::save_ini;
+	using PropNode = xo::prop_node;
+	using xo::load_xml;
+	using xo::load_file_with_include;
+	using xo::save_xml;
+	using xo::load_ini;
+	using xo::save_ini;
 }

@@ -1,5 +1,5 @@
 #include "CmaOptimizer.h"
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 
 namespace scone
 {
@@ -30,7 +30,7 @@ namespace scone
 
 	scone::String CmaOptimizer::GetClassSignature() const
 	{
-		return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? flut::stringf( ".R%d", random_seed ) : "" );
+		return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? xo::stringf( ".R%d", random_seed ) : "" );
 	}
 
 	CmaOptimizer::~CmaOptimizer()

@@ -1,10 +1,10 @@
 #include "ResultsFileSystemModel.h"
-#include "flut/system/log.hpp"
+#include "xo/system/log.h"
 #include <algorithm>
 #include "QDirIterator"
 #include <iostream>
-#include "flut/prop_node_tools.hpp"
-#include "flut/system/error_code.hpp"
+#include "xo/stream/prop_node_tools.h"
+#include "xo/system/error_code.h"
 #include "scone/core/Log.h"
 
 ResultsFileSystemModel::ResultsFileSystemModel( QObject* parent ) : QFileSystemModel( parent )

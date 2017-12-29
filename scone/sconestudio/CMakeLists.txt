@@ -98,7 +98,6 @@ if(${Qt5Widgets_FOUND})
 		sconelib
 		simvis
 #		Qt5::Widgets
-		${Boost_LIBRARIES}
 		${OSG_LIBRARIES}
 		${OSGWIDGET_LIBRARIES}
 		${OSGGA_LIBRARIES}
@@ -111,7 +110,7 @@ if(${Qt5Widgets_FOUND})
 	
 	# no console in release mode
 	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
-	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_FLUT_PROFILING>" )
+	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
 
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
@@ -131,18 +130,8 @@ if(${Qt5Widgets_FOUND})
 			COMMENT "Updating DLLs" VERBATIM
 		)
 
-		# Copy all Boost DLLs to the binary directory.
-		SET(BOOST_DLLS filesystem system thread date_time chrono serialization timer unit_test_framework)
-		foreach(boostdll ${BOOST_DLLS})
-			# copy depending on VC version. TODO: find out if CMake allows a better way to do this
-			SET( BOOST_DLL_FILENAME boost_${boostdll}-vc${VS_PLATFORM_TOOLSET_NUMBER}-mt-$<$<CONFIG:debug>:gd->${Boost_LIB_VERSION}.dll )
-			add_custom_command(TARGET sconestudio POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Boost_LIBRARY_DIRS}/${BOOST_DLL_FILENAME} ${DLL_TARGET_DIR}
-			)
-		endforeach()
-
 		# Copy Qt DLLs to the binary directory.
-		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport Qt5Charts)
+		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport)
 		foreach(qt5lib ${QT5_LIBS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}

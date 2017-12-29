@@ -26,7 +26,7 @@ namespace scone
 		INIT_PROPERTY( props, gait_bodies, String() );
 
 		// extract individual body names from gait_bodies string
-		auto tokens = flut::split_str( gait_bodies, ", " );
+		auto tokens = xo::split_str( gait_bodies, ", " );
 		for ( const String& t : tokens )
 		{
 			Body& b = *FindByName( model.GetBodies(), t );

@@ -7,9 +7,9 @@
 #include "../model/Model.h"
 #include "../model/Actuator.h"
 #include "../model/Side.h"
-#include "flut/dictionary.hpp"
+#include "xo/string/dictionary.h"
 #include "scone/model/Muscle.h"
-#include "flut/string_tools.hpp"
+#include "xo/string/string_tools.h"
 
 namespace scone
 {
@@ -31,7 +31,7 @@ namespace scone
 		{
 			double dist = 0.0;
 			for ( auto& i : inputs_ )
-				dist += flut::math::squared( i.neuron->GetOutput() - i.center );
+				dist += xo::squared( i.neuron->GetOutput() - i.center );
 			dist = sqrt( dist );
 
 			return output_ = offset_ + gaussian_width( dist, width_ );

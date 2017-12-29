@@ -3,7 +3,7 @@
 #include "activation_functions.h"
 #include "NeuralController.h"
 #include "spot/par_tools.h"
-#include "flut/dictionary.hpp"
+#include "xo/string/dictionary.h"
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Actuator.h"
@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	flut::dictionary< InterNeuron::connection_t > connection_dict( {
+	xo::dictionary< InterNeuron::connection_t > connection_dict( {
 		{ Neuron::bilateral, "bilateral" },
 		{ Neuron::monosynaptic, "monosynaptic" },
 		{ Neuron::antagonistic, "antagonistic" },
@@ -123,7 +123,7 @@ namespace scone
 			for ( Index idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
-				if ( flut::pattern_match( sensor->type_, input_type ) )
+				if ( xo::pattern_match( sensor->type_, input_type ) )
 				{
 					string postfix;
 					switch ( connect )

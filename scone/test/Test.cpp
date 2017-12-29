@@ -25,11 +25,11 @@
 using std::cout;
 using std::endl;
 
-#include <flut/timer.hpp>
-#include "flut/system/log_sink.hpp"
-#include "flut/system/log.hpp"
-#include "flut/filesystem.hpp"
-using flut::timer;
+#include "xo/time/timer.h"
+#include "xo/system/log_sink.h"
+#include "xo/system/log.h"
+#include "xo/filesystem/filesystem.h"
+using xo::timer;
 
 namespace scone
 {
@@ -84,11 +84,11 @@ namespace scone
 
 	void PlaybackTest( const path& filename )
 	{
-		flut::log::stream_sink cout_log( flut::log::trace_level );
+		xo::log::console_sink cout_log( xo::log::trace_level );
 
 		auto config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
-			flut::current_path( config_path.parent_path() );
+			xo::current_path( config_path.parent_path() );
 
 		const PropNode configProp = load_file_with_include( config_path ) ;
 		PropNode objProp = configProp[ "Optimizer" ][ "Objective" ];

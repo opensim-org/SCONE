@@ -13,7 +13,7 @@
 
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
-#include "flut/container_tools.hpp"
+#include "xo/container/container_tools.h"
 #include "../objectives/Measure.h"
 
 using std::endl;
@@ -95,7 +95,7 @@ namespace scone
 	{
 		// find measure controller
 		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast< Measure* >( c.get() ) != nullptr; };
-		auto measureIter = flut::find_if( GetControllers(), is_measure );
+		auto measureIter = xo::find_if( GetControllers(), is_measure );
 
 		SCONE_THROW_IF( measureIter == GetControllers().end(), "Could not find a measure" );
 		SCONE_THROW_IF( std::find_if( measureIter + 1, GetControllers().end(), is_measure ) != GetControllers().end(), "More than one measure was found" );
@@ -251,8 +251,8 @@ namespace scone
 		State zero_state = GetState();
 		for ( Index i = 0; i < zero_state.GetSize(); ++i )
 		{
-			if ( !flut::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
-				 !flut::str_ends_with( zero_state.GetName( i ), ".activation" ) )
+			if ( !xo::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
+				 !xo::str_ends_with( zero_state.GetName( i ), ".activation" ) )
 				zero_state.SetValue( i, 0 );
 		}
 		SetState( zero_state, 0 );
