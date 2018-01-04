@@ -8,6 +8,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
 #include "NeuralController.h"
+#include "xo/utility/hash.h"
 
 namespace scone
 {
@@ -32,34 +33,35 @@ namespace scone
 
 		auto& model = nc.GetModel();
 
-		if ( type_ == "F" )
+		switch( xo::hash( type_ ) )
 		{
+		case "F"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
 			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *muscle_ );
-		}
-		else if ( type_ == "L" )
-		{
+			break;
+		case "L"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
 			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *muscle_ );
-		}
-		else if ( type_ == "S" )
-		{
+			break;
+		case "S"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
 			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *muscle_ );
 			use_sample_delay_ = true;
-		}
-		else if ( type_ == "DP" )
-		{
+			break;
+		case "U"_hash:
+			muscle_ = FindByName( model.GetMuscles(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleExcitationSensor >( *muscle_ );
+			break;
+		case "DP"_hash:
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), name ) );
-		}
-		else if ( type_ == "DV" )
-		{
+			break;
+		case "DV"_hash:
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), name ) );
-		}
-		else if ( type_ == "DPV" )
-		{
+			break;
+		case "DPV"_hash:
 			auto kv = par.get( ".DV", 0.1, 0.01, 0, 1 );
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv );
+			break;
 		}
 
 		xo_error_if( !input_, "Unknown type " + type_ );
