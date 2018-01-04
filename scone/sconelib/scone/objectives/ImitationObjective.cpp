@@ -47,8 +47,9 @@ namespace scone
 		m_SensorChannels.reserve( ds.GetChannelCount() );
 		for ( Index ds_idx = 0; ds_idx < ds.GetChannelCount(); ++ds_idx )
 		{
-			m_SensorChannels.push_back( m_Storage.GetChannelIndex( ds.GetLabels()[ ds_idx ] ) );
-			SCONE_THROW_IF( m_SensorChannels.back() == NoIndex, "Could not find sensor for " + ds.GetLabels()[ ds_idx ] );
+			auto& sensor_name = ds.GetLabels()[ ds_idx ];
+			m_SensorChannels.push_back( m_Storage.GetChannelIndex( sensor_name ) );
+			SCONE_THROW_IF( m_SensorChannels.back() == NoIndex, "Could not find sensor for " + sensor_name );
 		}
 	}
 
