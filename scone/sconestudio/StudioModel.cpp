@@ -215,7 +215,7 @@ namespace scone
 		}
 
 		// copy data and init data
-		data = model->GetData().CopySlice( 0, 0, 5 );
+		data = model->GetData();
 		if ( !data.IsEmpty() )
 			InitStateDataIndices();
 
