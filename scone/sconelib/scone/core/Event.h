@@ -21,4 +21,5 @@ namespace scone
 	};
 
 	SCONE_API std::vector< Event > DetectGrfEvents( const Storage< Real, TimeInSeconds>& s, double threshold = 0.0001, double duration_filter = 0.2 );
+	SCONE_API Storage<> SliceData( const Storage<>& sto, const std::vector< Event >& events, Event e );
 }
