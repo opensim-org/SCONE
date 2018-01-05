@@ -54,6 +54,7 @@ namespace scone
 		path filename;
 
 		ViewFlags view_flags;
+		size_t store_data_downsample_stride;
 
 		std::vector< size_t > state_data_index;
 		scone::State model_state;

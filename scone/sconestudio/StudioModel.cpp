@@ -21,6 +21,7 @@ namespace scone
 	is_evaluating( false )
 	{
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
+		store_data_downsample_stride = 10;
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
@@ -203,6 +204,11 @@ namespace scone
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
+		// copy data and init data
+		data = model->GetData().CopySlice( 0, 0, store_data_downsample_stride );
+		if ( !data.IsEmpty() )
+			InitStateDataIndices();
+
 		if ( output_results )
 		{
 			auto fitness = model_objective->GetResult( *model );
@@ -210,14 +216,11 @@ namespace scone
 			PropNode results;
 			results.push_back( "result", model_objective->GetReport( *model ) );
 			model->WriteResult( path( filename ).replace_extension() );
+			WriteStorageSto( data, path( filename ).replace_extension ( "sto" ), ( filename.parent_path().filename() / filename.stem() ).str() );
+
 			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );
 		}
-
-		// copy data and init data
-		data = model->GetData();
-		if ( !data.IsEmpty() )
-			InitStateDataIndices();
 
 		// reset this stuff
 		is_evaluating = false;

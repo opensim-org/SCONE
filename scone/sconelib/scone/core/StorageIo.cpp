@@ -44,10 +44,10 @@ namespace scone
 		WriteStorageTxt( storage, str );
 	}
 
-	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const String& file, const String& name )
+	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name )
 	{
-		std::ofstream str( file );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
+		std::ofstream str( file.str() );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		WriteStorageSto( storage, str, name );
 	}
 

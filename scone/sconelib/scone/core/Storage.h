@@ -83,11 +83,12 @@ namespace scone
 		void Clear() { m_Labels.clear(); m_LabelIndexMap.clear(); m_Data.clear(); m_InterpolationCache.clear(); }
 
 		Storage CopySlice( size_t start, size_t size, size_t stride ) const {
+			SCONE_ASSERT( stride > 0 );
 			Storage r;
 			r.m_Labels = m_Labels;
 			r.m_LabelIndexMap = m_LabelIndexMap;
 			if ( size == 0 || size > GetFrameCount() / stride )
-				size = GetFrameCount() / stride;
+				size = ( GetFrameCount() + stride - 1 ) / stride;
 			r.m_Data.reserve( size );
 			for ( size_t i = start; r.m_Data.size() < size && i < m_Data.size(); i += stride )
 				r.m_Data.push_back( FrameUP( new Frame( *m_Data[ i ] ) ) );

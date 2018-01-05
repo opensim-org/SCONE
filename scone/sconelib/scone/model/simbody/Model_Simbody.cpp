@@ -376,8 +376,8 @@ namespace scone
 
 	String Model_Simbody::WriteResult( const path& file ) const
 	{
-		// write scone data
-		WriteStorageSto( m_Data, ( file + ".sto" ).str(), ( file.parent_path().filename() / file.stem() ).str() );
+		//WriteStorageSto( m_Data, ( file + ".sto" ).str(), ( file.parent_path().filename() / file.stem() ).str() );
+		// write results
 		for ( auto& c : GetControllers() )
 			c->WriteResult( file );
 
