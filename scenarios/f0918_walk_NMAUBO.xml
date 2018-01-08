@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Optimizer type="CmaOptimizer">
-	<init_file>initializations/f0918m_NSBOV_S10_NSI.par</init_file>
+	<init_file>initializations/f0918m_NMAUBOV_S10.par</init_file>
 	<use_init_file>1</use_init_file>
 	<init_file_std_factor>0.1</init_file_std_factor>
 	<init_file_std_offset>0.01</init_file_std_offset>
@@ -19,18 +19,20 @@
 			<sensor_delay_scaling_factor>1.0</sensor_delay_scaling_factor>
 			<Controllers>
 				<Controller type="NeuralController" par_mode="virtual" delay_file="neural_delays_FEA.pn" delay_factor="1" activation="rectifier">
-					<signature_prefix>NSBOV_IA0001</signature_prefix>
+					<signature_prefix>NMAUBOV</signature_prefix>
 
 					<SensorNeuronLayer>
 						<SensorNeuron type="F" source="*" offset="0" activation="rectifier"/>
 						<SensorNeuron type="L" source="*" offset="1" activation="linear"/>
+						<SensorNeuron type="U" source="*" offset="0" activation="linear"/>
 						<SensorNeuron type="DPV" source="pelvis_tilt" activation="linear"/>
 					</SensorNeuronLayer>
 
 					<MotorNeuronLayer>
 						<MotorNeuron include="*" offset="0~0.01"/>
-						<MotorNeuron input_layer="0" connect="synergetic" type="F" gain="0~0.01[-10,10]"/>
-						<MotorNeuron input_layer="0" connect="synergetic" type="L" gain="0~0.01[-10,10]"/>
+						<MotorNeuron input_layer="0" connect="monosynaptic" type="F" gain="0~0.01[-10,10]"/>
+						<MotorNeuron input_layer="0" connect="monosynaptic" type="L" gain="0~0.01[-10,10]"/>
+						<MotorNeuron input_layer="0" connect="antagonistic" type="U" gain="0~0.1[-10,10]"/>
 						<MotorNeuron input_layer="0" connect="ipsilateral" type="DPV" gain="0~0.1[-10,10]"/>
 					</MotorNeuronLayer>
 
