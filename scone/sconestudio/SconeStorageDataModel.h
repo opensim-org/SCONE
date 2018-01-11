@@ -10,7 +10,7 @@ public:
 	virtual ~SconeStorageDataModel() {}
 
 	void setStorage( const scone::Storage<>* s );
-	virtual size_t getVariableCount() const override;
+	virtual size_t getSeriesCount() const override;
 	virtual QString getLabel( int idx ) const override;
 
 	virtual double getValue( int idx, double time ) const override;

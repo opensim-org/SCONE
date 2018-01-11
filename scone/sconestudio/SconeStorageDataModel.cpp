@@ -9,7 +9,7 @@ void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 	storage = s;
 }
 
-size_t SconeStorageDataModel::getVariableCount() const
+size_t SconeStorageDataModel::getSeriesCount() const
 {
 	if ( storage ) return storage->GetChannelCount();
 	else return 0;
