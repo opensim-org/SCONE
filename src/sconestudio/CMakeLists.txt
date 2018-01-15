@@ -146,6 +146,14 @@ if(${Qt5Widgets_FOUND})
 			)
 		endforeach()
 
+		# Copy extra opensim files
+		SET(OPENSIM_EXTRA_DLLS libblas liblapack libgcc_s_sjlj-1 libgfortran-3 libquadmath-0 pthreadVC2_x64)
+		foreach(opensimdll ${OPENSIM_EXTRA_DLLS})
+			add_custom_command(TARGET sconestudio POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}.dll ${DLL_TARGET_DIR}
+			)
+		endforeach()
+
 		# Copy OSG DLLs
 		SET(OSG_DLLS osg130-osg osg130-osgwidget osg130-osgqt osg130-osgga osg130-osgviewer osg130-osgutil osg130-osgtext osg130-osgdb osg130-osgshadow ot20-OpenThreads)
 		foreach(osgdll ${OSG_DLLS})

@@ -6,9 +6,6 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-# User options.
-# -------------
-
 # Find dependencies.
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
@@ -31,7 +28,7 @@ include_directories(${XO_INCLUDE_DIR})
 include_directories(${SPOT_INCLUDE_DIR})
 
 # Add sconelib include folder to all projects
-include_directories(${CMAKE_SOURCE_DIR}/scone/sconelib)
+include_directories(${CMAKE_SOURCE_DIR}/src/sconelib)
 
 # Add TCLAP
 include_directories(${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
@@ -75,19 +72,14 @@ if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/simvis)
 endif()
 
-# add_subdirectory(submodules/flut)
 add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
 
 #
-# Add single sconelib target
+# Add targets
 #
-add_subdirectory(scone/sconelib)
-
-#
-# Add target executables
-#
-add_subdirectory(scone/sconecmd)
-add_subdirectory(scone/sconestudio)
-add_subdirectory(scone/sconeunittests)
-add_subdirectory(scone/test)
+add_subdirectory(src/sconelib)
+add_subdirectory(src/sconecmd)
+add_subdirectory(src/sconestudio)
+add_subdirectory(src/sconeunittests)
+add_subdirectory(src/test)
