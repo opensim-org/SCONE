@@ -44,7 +44,7 @@ namespace scone
 	{
 		cout << "--- Starting evaluation ---" << endl;
 
-		xo::path config_path = xo::path( filename.str() ).parent_path() / "config.xml";
+		xo::path config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 
