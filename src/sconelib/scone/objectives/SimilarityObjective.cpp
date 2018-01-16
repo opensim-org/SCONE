@@ -14,11 +14,12 @@ namespace scone
 	{
 		INIT_PROP_REQUIRED( pn, file_ );
 
-		file_ = GetFolder( SCONE_SCENARIO_FOLDER ) / file_;
+		external_files_.push_back( file_ );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
-		m_Signature = model->GetSignature();
+		signature_ = model->GetSignature();
+		append( external_files_, model->GetExternalFiles() );
 
 		// load target model (TODO: this should be one function call?)
 		target_ = CreateModelObjective( file_ );
@@ -52,6 +53,6 @@ namespace scone
 
 	String SimilarityObjective::GetClassSignature() const
 	{
-		return m_Signature;
+		return signature_;
 	}
 }

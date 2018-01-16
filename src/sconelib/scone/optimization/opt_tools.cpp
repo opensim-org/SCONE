@@ -32,9 +32,18 @@ namespace scone
 		xo::copy_file( config_path.filename(), outdir / path( "config_original" ).replace_extension( config_path.extension() ), true );
 		xo::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
+		// create objective
+		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
+		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
+		auto obj = CreateObjective( objProp );
+
+		// copy all objective resources to output folder
+		for ( auto& f : obj->GetExternalFiles() )
+			xo::copy_file( f, outdir / f.filename(), true );
+
 		// copy model to output folder
-		xo::path modelfile = props.get_delimited< path >( "Optimizer.Objective.Model.model_file" );
-		xo::copy_file( GetFolder( SCONE_MODEL_FOLDER ) / modelfile, outdir / modelfile.filename(), true );
+		//xo::path modelfile = props.get_delimited< path >( "Optimizer.Objective.Model.model_file" );
+		//xo::copy_file( modelfile, outdir / modelfile.filename(), true );
 
 		// return created optimizer
 		return std::move( o );
@@ -42,8 +51,6 @@ namespace scone
 
 	PropNode SCONE_API SimulateObjective( const path& filename )
 	{
-		cout << "--- Starting evaluation ---" << endl;
-
 		xo::path config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
@@ -71,10 +78,7 @@ namespace scone
 		statistics.set( "simulation time", model->GetTime() );
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
-		cout << "--- Evaluation report ---" << endl;
-		cout << statistics << endl;
-
-		cout << Profiler::GetGlobalInstance().GetReport();
+		log::info( statistics );
 
 		// write results
 		obj->WriteResults( path( filename ).replace_extension().str() );

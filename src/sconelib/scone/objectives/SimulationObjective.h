@@ -26,11 +26,13 @@ namespace scone
 		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
 		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure()->GetResult( m ); }
 		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure()->GetReport(); }
+		virtual std::vector<path> GetExternalFiles() const override { return external_files_; }
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
-		String m_Signature;
+		String signature_;
+		std::vector< path > external_files_;
 	};
 }

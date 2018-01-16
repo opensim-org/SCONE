@@ -64,8 +64,8 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		String model_file;
-		String state_init_file;
+		path model_file;
+		path state_init_file;
 		String probe_class;
 		double pre_control_simulation_time;
 		double initial_leg_load;
@@ -77,7 +77,7 @@ namespace scone
 		INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
 
 		INIT_PROPERTY_REQUIRED( props, model_file );
-		INIT_PROPERTY( props, state_init_file, String() );
+		INIT_PROPERTY( props, state_init_file, path() );
 		INIT_PROPERTY( props, probe_class, String() );
 		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 		INIT_PROPERTY( props, initial_leg_load, 0.2 );
@@ -92,8 +92,10 @@ namespace scone
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
-			//m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
-			m_pOsimModel = g_ModelCache( ( GetFolder( "models" ) / model_file ) );
+			if ( !file_exists( model_file ) )
+				model_file = model_file.filename();
+			m_pOsimModel = g_ModelCache( model_file );
+			external_files_.push_back( model_file );
 		}
 
 		// create torque and point actuators
@@ -191,7 +193,10 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
-				ReadState( GetFolder( "models" ) / state_init_file );
+			{
+				ReadState( state_init_file );
+				external_files_.push_back( model_file );
+			}
 
 			// update state variables if they are being optimized
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )

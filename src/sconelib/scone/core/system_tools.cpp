@@ -112,6 +112,15 @@ namespace scone
 		}
 	}
 
+	SCONE_API path FindFile( const path& p )
+	{
+		if ( file_exists( p ) )
+			return p; // original filename
+		else if ( p.has_filename() && file_exists( p.filename() ) )
+			return p.filename(); // filename with no path -- in current folder
+		else SCONE_THROW( "Could not find " + p.string() );
+	}
+
 	xo::version GetSconeVersion()
 	{
 		auto build = GetSconeBuildNumber();

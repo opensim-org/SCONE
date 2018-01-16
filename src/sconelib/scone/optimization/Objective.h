@@ -4,6 +4,7 @@
 #include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
 #include "spot/objective.h"
+#include "scone/core/system_tools.h"
 
 namespace scone
 {
@@ -17,5 +18,6 @@ namespace scone
 
 		// write results and return all files written
 		virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
+		virtual std::vector< path > GetExternalFiles() const { return std::vector< path >(); }
 	};
 }

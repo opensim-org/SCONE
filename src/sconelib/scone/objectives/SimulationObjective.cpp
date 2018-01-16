@@ -17,7 +17,8 @@ namespace scone
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( props.get_child( "Model" ), info_ );
-		m_Signature = model->GetSignature() + stringf( ".D%.0f", max_duration );
+		signature_ = model->GetSignature() + stringf( ".D%.0f", max_duration );
+		append( external_files_, model->GetExternalFiles() );
 	}
 
 	SimulationObjective::~SimulationObjective()
@@ -37,6 +38,6 @@ namespace scone
 
 	String SimulationObjective::GetClassSignature() const
 	{
-		return m_Signature;
+		return signature_;
 	}
 }

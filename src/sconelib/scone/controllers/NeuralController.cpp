@@ -33,7 +33,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		if ( pn.has_key( "delay_file" ) )
-			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
+			delays_ = load_prop( pn.get< path >( "delay_file" ) );
 
 		INIT_PROP( pn, delay_factor_, 1.0 );
 		par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {

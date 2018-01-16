@@ -288,7 +288,7 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 
 void SconeStudio::fileOpen()
 {
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString(), "SCONE Scenarios (*.xml *.pn)" );
 	if ( !filename.isEmpty() )
 		fileOpen( filename );
 }
@@ -324,7 +324,7 @@ void SconeStudio::fileSaveAs()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		s->saveAsDialog( make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
+		s->saveAsDialog( s->fileName, "XML file (*.xml);; Property Node file (*.pn)" );
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 		addRecentFile( s->fileName );
 	}
@@ -622,7 +622,7 @@ void SconeStudio::performReflexAnalysis()
 	path par_file( currentParFile.toStdString() );
 
 	ReflexAnalysisObjective reflex_objective( model->GetData(), "use_force=1;use_length=0;use_velocity=0" );
-	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
+	reflex_objective.set_delays( "neural_delays.pn" );
 	
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
 	spot::cma_optimizer cma( reflex_objective );

@@ -3,6 +3,7 @@
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
 #include "scone/core/Quat.h"
+#include "scone/core/system_tools.h"
 
 namespace scone
 {
@@ -45,6 +46,6 @@ namespace scone
 		virtual const class Model& GetModel() const = 0;
 		virtual class Model& GetModel() = 0;
 
-		virtual std::vector< String > GetDisplayGeomFileNames() const { return std::vector< String >(); }
+		virtual std::vector< path > GetDisplayGeomFileNames() const { return std::vector< path >(); }
 	};
 }

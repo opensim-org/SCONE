@@ -233,9 +233,9 @@ namespace scone
 		return dynamic_cast<Model&>( m_Model );
 	}
 
-	std::vector< scone::String > Body_Simbody::GetDisplayGeomFileNames() const
+	std::vector< path > Body_Simbody::GetDisplayGeomFileNames() const
 	{
-		std::vector< String > names;
+		std::vector< path > names;
 		for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
 			names.push_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
 		return names;
