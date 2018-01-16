@@ -118,7 +118,7 @@ namespace scone
 			return p; // original filename
 		else if ( p.has_filename() && file_exists( p.filename() ) )
 			return p.filename(); // filename with no path -- in current folder
-		else SCONE_THROW( "Could not find " + p.string() );
+		else SCONE_THROW( "Could not find " + p.string() + "; current path: " + xo::current_path().string() );
 	}
 
 	xo::version GetSconeVersion()

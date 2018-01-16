@@ -18,32 +18,22 @@ namespace scone
 {
 	SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
 	{
+		// set current path to config file path
+		if ( scenario_file.has_parent_path() )
+			xo::current_path( scenario_file.parent_path() );
+
 		// create optimizer and report unused parameters
 		OptimizerUP o = CreateOptimizer( props.get_child( "Optimizer" ) );
 		LogUntouched( props );
 
-		// set current path to config file path
-		xo::path config_path( scenario_file.str() );
-		if ( config_path.has_parent_path() )
-			xo::current_path( config_path.parent_path() );
-
 		// copy original and write resolved config files
 		xo::path outdir( o->AcquireOutputFolder().str() );
-		xo::copy_file( config_path.filename(), outdir / path( "config_original" ).replace_extension( config_path.extension() ), true );
+		xo::copy_file( scenario_file.filename(), outdir / path( "config_original" ).replace_extension( scenario_file.extension() ), true );
 		xo::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
-		// create objective
-		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
-		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
-		auto obj = CreateObjective( objProp );
-
 		// copy all objective resources to output folder
-		for ( auto& f : obj->GetExternalFiles() )
+		for ( auto& f : o->GetObjective().GetExternalFiles() )
 			xo::copy_file( f, outdir / f.filename(), true );
-
-		// copy model to output folder
-		//xo::path modelfile = props.get_delimited< path >( "Optimizer.Objective.Model.model_file" );
-		//xo::copy_file( modelfile, outdir / modelfile.filename(), true );
 
 		// return created optimizer
 		return std::move( o );
