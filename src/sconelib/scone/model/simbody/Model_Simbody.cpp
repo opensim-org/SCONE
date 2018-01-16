@@ -92,9 +92,7 @@ namespace scone
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
-			if ( !file_exists( model_file ) )
-				model_file = model_file.filename();
-			m_pOsimModel = g_ModelCache( model_file );
+			m_pOsimModel = g_ModelCache( FindFile( model_file ) );
 			external_files_.push_back( model_file );
 		}
 
@@ -194,7 +192,7 @@ namespace scone
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
 			{
-				ReadState( state_init_file );
+				ReadState( FindFile( state_init_file ) );
 				external_files_.push_back( model_file );
 			}
 
