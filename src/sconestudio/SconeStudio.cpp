@@ -92,12 +92,13 @@ scene( true )
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
+	auto results_folder = scone::GetFolder( SCONE_RESULTS_FOLDER );
+	xo::create_directories( results_folder );
+
 	resultsModel = new ResultsFileSystemModel( nullptr );
-	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
-	QDir().mkdir( results_folder );
 	ui.resultsBrowser->setModel( resultsModel );
 	ui.resultsBrowser->setNumColumns( 1 );
-	ui.resultsBrowser->setRoot( results_folder, "*.par" );
+	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par" );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -288,7 +289,11 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 
 void SconeStudio::fileOpen()
 {
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", QString(), "SCONE Scenarios (*.xml *.pn)" );
+	QString default_path = make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) );
+	if ( auto* s = getActiveScenario() )
+		default_path = make_qt( path( s->fileName.toStdString() ).parent_path() );
+
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.xml *.pn)" );
 	if ( !filename.isEmpty() )
 		fileOpen( filename );
 }

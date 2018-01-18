@@ -36,15 +36,6 @@ namespace scone
 				log::debug( "Loaded settings from ", settings_file );
 				g_GlobalSettings = xo::load_ini( settings_file );
 			}
-			else
-			{
-				// add default settings here
-				auto& fn = g_GlobalSettings.push_back( "folders" );
-				fn.set( "results", GetDefaultDataFolder() / "results" );
-				fn.set( "models", GetDefaultDataFolder() / "models" );
-				fn.set( "scenarios", GetDefaultDataFolder() / "scenarios" );
-				fn.set( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
-			}
 		}
 
 		return g_GlobalSettings;
@@ -77,25 +68,21 @@ namespace scone
 		return g_RootFolder;
 	}
 
+	path GetFolder( const String& folder, const path& default_path )
+	{
+		if ( GetSconeSettings().has_key( "folders" ) )
+			return xo::path( GetSconeSettings().get_child( "folders" ).get< path >( folder, default_path ) );
+		return default_path;
+	}
+
 	path GetSettingsFolder()
 	{
 		return xo::get_config_folder() / "SCONE";
 	}
 
-	path GetDefaultDataFolder()
+	path GetDataFolder()
 	{
-		return xo::get_documents_folder() / "SCONE";
-	}
-
-	path GetFolder( const String& folder, const path& default_path )
-	{
-		if ( GetSconeSettings().has_key( "folders" ) )
-		{
-			auto path_to_folder = xo::path( GetSconeSettings().get_child( "folders" ).get< String >( folder, "" ) );
-			if ( !path_to_folder.empty() )
-				return path_to_folder;
-		}
-		return default_path;
+		return GetFolder( "scenarios", xo::get_documents_folder() / "SCONE" );
 	}
 
 	path GetFolder( SconeFolder folder )
@@ -103,10 +90,11 @@ namespace scone
 		switch ( folder )
 		{
 		case scone::SCONE_ROOT_FOLDER: return GetInstallFolder();
-		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDefaultDataFolder() / "results" );
-		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDefaultDataFolder() / "models" );
-		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDefaultDataFolder() / "scenarios" );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry", GetDefaultDataFolder() / "models" / "geometry" );
+		case scone::SCONE_DATA_FOLDER: return GetFolder( "data", GetDataFolder() );
+		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDataFolder() / "results" );
+		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDataFolder() );
+		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDataFolder() );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "ui", GetInstallFolder() / "resources/geometry" );
 		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetInstallFolder()/ "resources/ui" );
 		default: SCONE_THROW( "Unknown folder type" );
 		}
