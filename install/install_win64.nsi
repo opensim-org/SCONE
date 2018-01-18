@@ -2,10 +2,12 @@
 ;Start Menu Folder Selection Example Script
 ;Written by Joost Verburg
 
-!define SCONE_VERSION "0.9.5 ALPHA"
-!define BIN_FOLDER "..\bin\msvc2017_64\Release"
+!define SCONE_VERSION "0.10.0 ALPHA"
+!define MSVC_VERSION "msvc2015_64"
+!define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
+!define VCREDIST_FILE "vcredist_${MSVC_VERSION}.exe"
 
 ;--------------------------------
 ;Include Modern UI
@@ -20,7 +22,7 @@ OutFile "Install SCONE ${SCONE_VERSION}.exe"
 SetCompressor /SOLID lzma
 
 ;Default installation folder
-InstallDir "$PROGRAMFILES\SCONE"
+InstallDir "$PROGRAMFILES64\SCONE"
 
 ;Get installation folder from registry if available
 InstallDirRegKey HKCU "Software\SCONE\INSTDIR" ""
@@ -79,7 +81,7 @@ Section "Program Files" SecMain
 	SetOutPath "$INSTDIR\bin"
 	File "${BIN_FOLDER}\*.exe"
 	File "${BIN_FOLDER}\*.dll"
-	File "vcredist_x86.exe"
+	File "${VCREDIST_FILE}"
 	SetOutPath "$INSTDIR\bin\${OSG_PLUGINS_FOLDER}"
 	File "${BIN_FOLDER}\${OSG_PLUGINS_FOLDER}\*.dll"
 	SetOutPath "$INSTDIR\bin\platforms"
@@ -106,7 +108,7 @@ Section "Program Files" SecMain
 	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall SCONE.lnk" "$INSTDIR\Uninstall.exe"
 	
 	; Install VC Redistributables
-	ExecWait `"$INSTDIR\bin\VC_redist_x64.exe" /quiet`
+	ExecWait `"$INSTDIR\bin\${VCREDIST_FILE}" /quiet`
 
 	!insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
@@ -122,7 +124,7 @@ SectionEnd
 Section "Tutorials" SecTutorials
 	; scenarios
 	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\tutorials"
-	File "..\scenarios\tutorials\*.xml"
+	File "..\tutorials\*.xml"
 SectionEnd
 
 ; Set section to read-only
@@ -136,7 +138,7 @@ FunctionEnd
 
 	;Language strings
 	LangString DESC_SecMain ${LANG_ENGLISH} "Files needed to run SCONE"
-	LangString DESC_SecModels ${LANG_ENGLISH} "Example OpenSim models"
+	;LangString DESC_SecModels ${LANG_ENGLISH} "Example OpenSim models"
 	LangString DESC_SecTutorials ${LANG_ENGLISH} "SCONE tutorials and examples"
 
 	;Assign language strings to sections
