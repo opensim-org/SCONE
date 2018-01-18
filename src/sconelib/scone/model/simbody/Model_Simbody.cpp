@@ -94,7 +94,7 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "CreateModel" );
 			model_file = FindFile( model_file );
 			m_pOsimModel = g_ModelCache( model_file );
-			external_files_.push_back( model_file );
+			AddExternalResource( model_file );
 		}
 
 		// create torque and point actuators
@@ -195,7 +195,7 @@ namespace scone
 			{
 				state_init_file = FindFile( state_init_file );
 				ReadState( state_init_file );
-				external_files_.push_back( state_init_file );
+				AddExternalResource( state_init_file );
 			}
 
 			// update state variables if they are being optimized

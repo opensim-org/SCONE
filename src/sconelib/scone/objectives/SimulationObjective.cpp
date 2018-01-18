@@ -18,7 +18,7 @@ namespace scone
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( props.get_child( "Model" ), info_ );
 		signature_ = model->GetSignature() + stringf( ".D%.0f", max_duration );
-		append( external_files_, model->GetExternalFiles() );
+		AddExternalResources( model->GetExternalResources() );
 	}
 
 	SimulationObjective::~SimulationObjective()

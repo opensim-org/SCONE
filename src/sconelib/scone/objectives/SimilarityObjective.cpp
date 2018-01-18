@@ -14,12 +14,12 @@ namespace scone
 	{
 		INIT_PROP_REQUIRED( pn, file_ );
 
-		external_files_.push_back( file_ );
+		AddExternalResource( file_ );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
 		signature_ = model->GetSignature();
-		append( external_files_, model->GetExternalFiles() );
+		AddExternalResources( model->GetExternalResources() );
 
 		// load target model (TODO: this should be one function call?)
 		target_ = CreateModelObjective( file_ );

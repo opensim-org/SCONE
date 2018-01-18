@@ -23,7 +23,6 @@ namespace scone
 		virtual TimeInSeconds GetDuration() const override { return m_Storage.Back().GetTime(); }
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
-		virtual std::vector<path> GetExternalFiles() const override { return external_files_; }
 
 		path file_;
 		size_t frame_delta_;
@@ -32,7 +31,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< path > external_files_;
 		Storage<> m_Storage;
 		String m_Signature;
 		std::vector< Index > m_ExcitationChannels;

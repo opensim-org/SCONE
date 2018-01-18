@@ -24,8 +24,7 @@ namespace scone
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
-		append( external_files_, model->GetExternalFiles() );
-		std::vector< path > external_files_;
+		AddExternalResources( model->GetExternalResources() );
 
 		// prepare data
 		m_Signature = model->GetSignature();

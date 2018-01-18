@@ -10,6 +10,7 @@
 #include <vector>
 #include "scone/core/HasName.h"
 #include "scone/core/HasSignature.h"
+#include "scone/core/HasExternalResources.h"
 #include "Sensor.h"
 #include "scone/core/Storage.h"
 #include <array>
@@ -19,7 +20,7 @@
 
 namespace scone
 {
-	class SCONE_API Model : public HasName, public HasSignature, public HasData
+	class SCONE_API Model : public HasName, public HasSignature, public HasData, public HasExternalResources
 	{
 	public:
 		Model( const PropNode& props, Params& par );
@@ -102,7 +103,6 @@ namespace scone
 		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : xo::empty_prop_node(); }
 		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : xo::empty_prop_node(); }
 		PropNode& GetUserData() { return m_UserData; }
-		virtual std::vector<path> GetExternalFiles() const { return external_files_; }
 
 		// TODO: perhaps remove termination request here
 		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
@@ -166,8 +166,6 @@ namespace scone
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();
-
-		std::vector< path > external_files_;
 
 	protected:
 		LinkUP m_RootLink;

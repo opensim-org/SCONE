@@ -32,7 +32,7 @@ namespace scone
 		xo::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
 		// copy all objective resources to output folder
-		for ( auto& f : o->GetObjective().GetExternalFiles() )
+		for ( auto& f : o->GetObjective().GetExternalResources() )
 			xo::copy_file( f, outdir / f.filename(), true );
 
 		// return created optimizer

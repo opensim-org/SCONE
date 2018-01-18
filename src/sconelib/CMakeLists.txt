@@ -3,9 +3,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(CORE_BASE_FILES
 	scone/core/HasData.h
 	scone/core/HasName.h
+	scone/core/HasExternalResources.h
 	scone/core/HasSignature.cpp
 	scone/core/HasSignature.h
-	scone/core/Result.h
 )
 set(CORE_MATH_FILES
 	scone/core/Angle.h
