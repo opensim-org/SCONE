@@ -88,6 +88,8 @@ Section "Program Files" SecMain
 	; resource files
 	SetOutPath "$INSTDIR\resources\ui"
 	File "..\resources\ui\*.*"
+	SetOutPath "$INSTDIR\resources\geometry"
+	File "..\resources\geometry\*.*"
 
 	;Store installation folder
 	WriteRegStr HKCU "Software\SCONE\INSTDIR" "" $INSTDIR
@@ -109,11 +111,13 @@ Section "Program Files" SecMain
 	!insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
-Section "Example Models" SecModels
+;Section "Example Models" SecModels
 	; models
-	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\geometry"
-	File "..\models\geometry\*.*"
-SectionEnd
+;	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models"
+;	File "..\models\*.osim"
+;	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models\geometry"
+;	File "..\models\geometry\*.*"
+;SectionEnd
 
 Section "Tutorials" SecTutorials
 	; scenarios
