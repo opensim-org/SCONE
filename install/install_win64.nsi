@@ -106,7 +106,7 @@ Section "Program Files" SecMain
 	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall SCONE.lnk" "$INSTDIR\Uninstall.exe"
 	
 	; Install VC Redistributables
-	ExecWait `"$INSTDIR\bin\vcredist_x86.exe" /quiet`
+	ExecWait `"$INSTDIR\bin\VC_redist_x64.exe" /quiet`
 
 	!insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
