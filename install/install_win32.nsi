@@ -3,7 +3,7 @@
 ;Written by Joost Verburg
 
 !define SCONE_VERSION "0.9.5 ALPHA"
-!define BIN_FOLDER "..\bin\msvc2013\Release"
+!define BIN_FOLDER "..\bin\msvc2017_64\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
 
@@ -111,15 +111,13 @@ SectionEnd
 
 Section "Example Models" SecModels
 	; models
-	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models"
-	File "..\models\*.osim"
-	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models\geometry"
+	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\geometry"
 	File "..\models\geometry\*.*"
 SectionEnd
 
 Section "Tutorials" SecTutorials
 	; scenarios
-	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\scenarios\tutorials"
+	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\tutorials"
 	File "..\scenarios\tutorials\*.xml"
 SectionEnd
 
