@@ -10,6 +10,7 @@
 
 #include "xo/container/prop_node.h"
 #include "xo/serialization/prop_node_tools.h"
+#include "xo/serialization/serialize.h"
 
 namespace scone
 {

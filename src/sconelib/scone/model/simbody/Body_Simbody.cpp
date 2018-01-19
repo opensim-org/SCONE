@@ -237,7 +237,7 @@ namespace scone
 	{
 		std::vector< path > names;
 		for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
-			names.push_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
+			names.emplace_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
 		return names;
 	}
 
