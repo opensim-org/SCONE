@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "QDirIterator"
 #include <iostream>
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "xo/system/error_code.h"
 #include "scone/core/Log.h"
 

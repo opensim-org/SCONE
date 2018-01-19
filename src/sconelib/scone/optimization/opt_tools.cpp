@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "xo/time/timer.h"
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
 
 using xo::timer;
