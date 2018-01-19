@@ -40,7 +40,9 @@ scene( true )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
+
 	ui.stackedWidget->setCurrentIndex( 0 );
+	ui.playControl->setDigits( 6, 3 );
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );

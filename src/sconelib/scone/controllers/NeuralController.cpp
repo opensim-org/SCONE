@@ -229,7 +229,12 @@ namespace scone
 			for ( auto& neuron : layer.second )
 				frame[ "IN." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& neuron : m_MotorNeurons )
-			frame[ "MN." + neuron->GetName( false ) + ".input" ] = neuron->input_;
+		{
+			auto prefix = "MN." + neuron->GetName( false ) + '.';
+			frame[ prefix + "input" ] = neuron->input_;
+			for ( auto& i : neuron->inputs_ )
+				frame[ prefix + i.neuron->GetName( false ) ] = i.gain * i.neuron->GetOutput();
+		}
 	}
 
 	void NeuralController::WriteResult( const path& file ) const

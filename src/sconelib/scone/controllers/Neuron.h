@@ -27,7 +27,6 @@ namespace scone
 		void AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc );
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
 
-
 		struct Input {
 			Input( Neuron* n, double g, double c ) : neuron( n ), gain( g ), center( c ), contribution( 0 ) {}
 			Neuron* neuron;
