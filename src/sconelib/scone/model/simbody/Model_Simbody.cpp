@@ -202,8 +202,8 @@ namespace scone
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
-				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states" ), ";" );
-				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
+				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states", "*" ), ";" );
+				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
 				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );

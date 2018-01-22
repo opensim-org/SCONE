@@ -321,7 +321,6 @@ void SconeStudio::fileSave()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		//log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 	}
@@ -331,9 +330,13 @@ void SconeStudio::fileSaveAs()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		s->saveAsDialog( s->fileName, "XML file (*.xml);; Property Node file (*.pn)" );
-		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-		addRecentFile( s->fileName );
+		QString fn = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "XML file (*.xml);; Property Node file (*.pn)" );
+		if ( !fn.isEmpty() )
+		{
+			s->saveAs( fn );
+			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+			addRecentFile( s->fileName );
+		}
 	}
 }
 
