@@ -5,13 +5,12 @@
 	<Objective type="SimulationObjective">
 		<max_duration>2</max_duration>
 		<Model type="Simbody">
-			<model_file>f1020.osim</model_file>
-			<state_init_optimization symmetric="1" init_std="0.01" min="-0.1" max="0.1" include_states="*" exclude_states="*_tx;*_ty;*_u;*.activation;*.fiber_length"/>
+			<model_file>f0918m.osim</model_file>
+			<state_init_optimization symmetric="1" init_std="0.01" min="-0.1" max="0.1" exclude_states="*_tx;*_ty;*_u"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
 			<Controllers>
-				<Controller type="FeedForwardController">
-					<use_symmetric_actuators>1</use_symmetric_actuators>
+				<Controller type="FeedForwardController" symmetric="1">
 					<Function type="PieceWiseConstantFunction">
 						<control_points>2</control_points>
 						<control_point_y init_mean="0.2" init_std="0.1" min="0" max="1"/>
