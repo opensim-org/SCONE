@@ -239,7 +239,7 @@ namespace scone
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		xo::table< double > weights, contribs;
+		xo::table< double > weights, contribs, sources;
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
@@ -257,10 +257,12 @@ namespace scone
 			{
 				weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 				contribs( input.neuron->GetName( false ), neuron->name_ ) = input.contribution / tot;
+				sources( xo::left_of_str( input.neuron->GetParName(), "." ), neuron->GetParName() ) += input.contribution / tot / 2.0;
 			}
 		}
 		std::ofstream( ( file + ".stats.weights.txt" ).str() ) << weights;
 		std::ofstream( ( file + ".stats.contrib.txt" ).str() ) << contribs;
+		std::ofstream( ( file + ".stats.sources.txt" ).str() ) << sources;
 	}
 
 	String NeuralController::GetClassSignature() const
