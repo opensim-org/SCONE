@@ -6,7 +6,6 @@ namespace scone
 	PieceWiseLinearFunction::PieceWiseLinearFunction( bool flatExtrapolation ) :
 	flat_extrapolation( flatExtrapolation )
 	{
-
 	}
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par )
