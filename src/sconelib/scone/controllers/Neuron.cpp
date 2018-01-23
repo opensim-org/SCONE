@@ -103,12 +103,6 @@ namespace scone
 			}
 		}
 
-#if 0
-		ScopedParamSetPrefixer ps( par, par_name + "." );
-		// add additional input-specific offset (if present)
-		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
-#endif
-
 		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", "" ) );
@@ -164,15 +158,7 @@ namespace scone
 					case InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-						{
 							postfix = sensor->GetParName();
-
-							// TODO: neater!
-							//double gain = 0;
-							//for ( auto& mp : mpars )
-							//	gain += mp.second * par.try_get( mp.first + '.' + sensor->type_, pn, "gain", 1.0 );
-							//AddInput( sensor, gain );
-						}
 						break;
 					}
 					case InterNeuron::contralateral:
@@ -187,12 +173,14 @@ namespace scone
 
 					if ( !postfix.empty() )
 					{
-						double gain = 0;
+						double gain = 0, offset = 0;
 						for ( auto& mp : mpars )
+						{
 							gain += mp.correlation * par.try_get( mp.name + '.' + postfix, pn, "gain", 1.0 );
+							offset += mp.correlation * par.try_get( mp.name + '.' + postfix + '0', pn, "offset", 0.0 );
+						}
 						AddInput( sensor, gain );
 					}
-
 				}
 			}
 		}
