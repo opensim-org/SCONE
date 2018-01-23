@@ -28,10 +28,10 @@ namespace scone
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
 
 		struct Input {
-			Input( Neuron* n, double g, double c ) : neuron( n ), gain( g ), center( c ), contribution( 0 ) {}
+			Input( Neuron* n, double g, double c ) : neuron( n ), gain( g ), offset( c ), contribution( 0 ) {}
 			Neuron* neuron;
 			double gain;
-			double center;
+			double offset;
 			mutable double contribution = 0.0;
 		};
 		const std::vector< Input >& GetInputs() const { return inputs_; }
