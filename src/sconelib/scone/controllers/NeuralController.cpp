@@ -23,6 +23,8 @@
 #include "xo/string/dictionary.h"
 #include "../model/Side.h"
 
+#include <numeric>
+
 namespace scone
 {
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
