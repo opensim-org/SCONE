@@ -2,8 +2,8 @@
 ;Start Menu Folder Selection Example Script
 ;Written by Joost Verburg
 
-!define SCONE_VERSION "0.10.0 ALPHA"
-!define MSVC_VERSION "msvc2017_64"
+!define SCONE_VERSION "0.10.1-x64-ALPHA"
+!define MSVC_VERSION "msvc2015_64"
 !define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
@@ -18,7 +18,7 @@
 
 ;Name and file
 Name "SCONE"
-OutFile "Install SCONE ${SCONE_VERSION}.exe"
+OutFile "SCONE-${SCONE_VERSION}.exe"
 SetCompressor /SOLID lzma
 
 ;Default installation folder
@@ -125,6 +125,10 @@ Section "Tutorials" SecTutorials
 	; scenarios
 	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\tutorials"
 	File "..\tutorials\*.xml"
+	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\tutorials\models"
+	File "..\tutorials\models\*"
+	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\tutorials\data"
+	File "..\tutorials\data\*"
 SectionEnd
 
 ; Set section to read-only
