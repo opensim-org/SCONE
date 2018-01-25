@@ -2,16 +2,14 @@
 <Optimizer type="CmaOptimizer" max_generations="1000" maximize_objective="1">
 	<Objective type="SimulationObjective" max_duration="2">
 		<Model type="Simbody">
-			<model_file>f0918m.osim</model_file>
+			<model_file>models/f0914m.osim</model_file>
 			<state_init_optimization symmetric="1" init_std="0.01" min="-0.1" max="0.1" exclude_states="*_tx;*_ty;*_u"/>
 			<integration_method>SemiExplicitEuler2</integration_method>
 			<integration_accuracy>0.001</integration_accuracy>
-			<Controllers>
-				<Controller type="FeedForwardController" symmetric="1">
-					<Function type="PieceWiseConstantFunction" control_points="2" control_point_y="0.2~0.1[0,1]" control_point_delta_time="0.2~0.01"/>
-				</Controller>
-				<Measure type="JumpMeasure" terminate_on_peak="1" termination_height="0.75" prepare_time="0.2"/>
-			</Controllers>
+			<Controller type="FeedForwardController" symmetric="1">
+				<Function type="PieceWiseConstantFunction" control_points="2" control_point_y="0.2~0.1[0,1]" control_point_dt="0.2~0.01"/>
+			</Controller>
+			<Measure type="JumpMeasure" terminate_on_peak="1" termination_height="0.75" prepare_time="0.2"/>
 		</Model> 
 	</Objective>
 </Optimizer>
