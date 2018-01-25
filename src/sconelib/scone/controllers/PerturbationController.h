@@ -16,8 +16,8 @@ namespace scone
 		virtual ~PerturbationController() {}
 
 		String name;
-		double force;
-		double moment;
+		Vec3 force;
+		Vec3 moment;
 		TimeInSeconds interval;
 		TimeInSeconds interval_min;
 		TimeInSeconds interval_max;

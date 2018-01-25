@@ -11,9 +11,9 @@ namespace scone
 	current_force( 0 )
 	{
 		INIT_PROP( props, name, "" );
-		INIT_PROP( props, force, 100.0 );
-		INIT_PROP( props, moment, 0.0 );
-		INIT_PROP( props, position_offset, Vec3( 0, 0, 0 ) );
+		INIT_PROP( props, force, Vec3::zero() );
+		INIT_PROP( props, moment, Vec3::zero() );
+		INIT_PROP( props, position_offset, Vec3::zero() );
 		INIT_PROP( props, interval, 2.0 );
 		INIT_PROP( props, interval_min, interval );
 		INIT_PROP( props, interval_max, interval );
@@ -40,8 +40,8 @@ namespace scone
 		if ( it != perturbation_times.begin() ) --it;
 		if ( timestamp >= *it && timestamp < *it + duration )
 		{
-			body_.SetExternalForceAtPoint( current_force, position_offset );
-			body_.SetExternalMoment( current_moment );
+			body_.SetExternalForceAtPoint( force, position_offset );
+			body_.SetExternalMoment( moment );
 		}
 		else body_.ClearExternalForceAndMoment();
 
@@ -50,6 +50,6 @@ namespace scone
 
 	String PerturbationController::GetClassSignature() const
 	{
-		return stringf( "P%d", int( force ) );
+		return stringf( "P%d", int( force.length() + moment.length() ) );
 	}
 }
