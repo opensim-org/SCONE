@@ -272,7 +272,7 @@ namespace scone
 			cf->setForceAtPoint( make_osim( force ), make_osim( point ) );
 	}
 
-	void Body_Simbody::SetExternalTorque( const Vec3& torque )
+	void Body_Simbody::SetExternalMoment( const Vec3& torque )
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			cf->setTorque( make_osim( torque ) );
@@ -292,7 +292,7 @@ namespace scone
 		else return Vec3::zero();
 	}
 
-	scone::Vec3 Body_Simbody::GetExternalTorque() const
+	scone::Vec3 Body_Simbody::GetExternalMoment() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			return ToVec3( cf->getTorque() );

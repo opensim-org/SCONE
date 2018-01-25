@@ -163,6 +163,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
 		void CreateBalanceSensors( const PropNode& props, Params& par );
+		void CreateControllers( const PropNode& pn, Params& par );
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();

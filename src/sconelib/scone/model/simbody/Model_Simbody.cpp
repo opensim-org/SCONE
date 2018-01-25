@@ -86,8 +86,11 @@ namespace scone
 
 		// always set create_body_forces when there's a PerturbationController
 		// TODO: think of a nicer, more generic way of dealing with this issue
-		for ( auto& cprops : props.get_child( "Controllers" ) )
-			create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+		if ( auto* controllers = props.try_get_child( "Controllers" ) )
+		{
+			for ( auto& cprops : *controllers )
+				create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+		}
 
 		// create new OpenSim Model using resource cache
 		{
@@ -235,12 +238,7 @@ namespace scone
 		}
 
 		// create and initialize controllers
-		{
-			SCONE_PROFILE_SCOPE( "CreateControllers" );
-			const PropNode& cprops = props.get_child( "Controllers" );
-			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-				m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
-		}
+		CreateControllers( props, par );
 
 		{
 			SCONE_PROFILE_SCOPE( "InitMuscleDynamics" );

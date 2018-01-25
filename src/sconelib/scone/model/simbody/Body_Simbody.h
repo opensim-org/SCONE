@@ -53,12 +53,12 @@ namespace scone
 		virtual const std::vector< String >& GetContactForceLabels() const override { return m_ContactForceLabels; }
 
 		virtual void SetExternalForce( const Vec3& f ) override;
+		virtual void SetExternalMoment( const Vec3& torque ) override;
 		virtual void SetExternalForceAtPoint( const Vec3& force, const Vec3& point ) override;
-		virtual void SetExternalTorque( const Vec3& torque ) override;
 
 		virtual Vec3 GetExternalForce() const override;
+		virtual Vec3 GetExternalMoment() const override;
 		virtual Vec3 GetExternalForcePoint() const override;
-		virtual Vec3 GetExternalTorque() const override;
 
 	private:
 		Vec3 m_LocalComPos;
