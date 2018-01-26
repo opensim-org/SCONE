@@ -6,7 +6,7 @@
 #include <tclap/CmdLine.h>
 #include <thread>
 #include "xo/system/log_sink.h"
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "spot/optimization_pool.h"
 #include <xutility>
 

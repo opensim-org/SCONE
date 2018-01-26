@@ -73,12 +73,14 @@ namespace scone
 			body_meshes.push_back( std::vector< vis::mesh >() );
 			auto geom_files = body->GetDisplayGeomFileNames();
 
-			for ( auto& geom_file : geom_files )
+			for ( auto geom_file : geom_files )
 			{
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				try
 				{
-					body_meshes.back().push_back( root.add_mesh( ( scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file ) ) );
+					if ( !xo::file_exists( geom_file ) )
+						geom_file = scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file;
+					body_meshes.back().push_back( root.add_mesh( geom_file ) );
 					body_meshes.back().back().set_material( bone_mat );
 					body_axes.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 				}

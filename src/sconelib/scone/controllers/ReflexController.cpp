@@ -38,8 +38,8 @@ namespace scone
 		path delay_file = props.get< path >( "delay_file", "" );
 		if ( !reflex_file.empty() && !delay_file.empty() )
 		{
-			auto str = xo::char_stream( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / reflex_file );
-			auto delay_pn = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / delay_file );
+			auto str = xo::char_stream( reflex_file );
+			auto delay_pn = load_prop( delay_file );
 			while ( str.good() )
 			{
 				String name;

@@ -9,7 +9,7 @@ namespace scone
 		PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc, int index, bool mirrored );
 		virtual ~PatternNeuron() {}
 
-		virtual activation_t GetOutput() const override;
+		virtual activation_t GetOutput( double offset = 0.0 ) const override;
 		virtual string GetName( bool mirrored ) const override { return name_ + ( mirrored_ ? "_r" : "_l" ); }
 
 		bool mirrored_;

@@ -12,6 +12,7 @@
 #include <vector>
 #include "xo/container/prop_node.h"
 #include "../core/Profiler.h"
+#include "xo/container/container_tools.h"
 
 namespace scone
 {
@@ -23,10 +24,11 @@ namespace scone
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
+		AddExternalResources( model->GetExternalResources() );
 
 		// prepare data
 		m_Signature = model->GetSignature();
-		ReadStorageSto( m_Storage, ( scone::GetFolder(SCONE_SCENARIO_FOLDER ) / file_ ).str() );
+		ReadStorageSto( m_Storage, file_.str() );
 
 		// make sure data and model are compatible
 		auto state = model->GetState();

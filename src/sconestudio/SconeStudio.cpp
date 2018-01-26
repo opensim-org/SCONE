@@ -40,7 +40,9 @@ scene( true )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
+
 	ui.stackedWidget->setCurrentIndex( 0 );
+	ui.playControl->setDigits( 6, 3 );
 
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
@@ -92,12 +94,13 @@ scene( true )
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 {
 	// init file model and browser widget
+	auto results_folder = scone::GetFolder( SCONE_RESULTS_FOLDER );
+	xo::create_directories( results_folder );
+
 	resultsModel = new ResultsFileSystemModel( nullptr );
-	auto results_folder = make_qt( scone::GetFolder( SCONE_RESULTS_FOLDER ) );
-	QDir().mkdir( results_folder );
 	ui.resultsBrowser->setModel( resultsModel );
 	ui.resultsBrowser->setNumColumns( 1 );
-	ui.resultsBrowser->setRoot( results_folder, "*.par" );
+	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par" );
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -288,7 +291,11 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 
 void SconeStudio::fileOpen()
 {
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
+	QString default_path = make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) );
+	if ( auto* s = getActiveScenario() )
+		default_path = make_qt( path( s->fileName.toStdString() ).parent_path() );
+
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.xml *.pn)" );
 	if ( !filename.isEmpty() )
 		fileOpen( filename );
 }
@@ -314,7 +321,6 @@ void SconeStudio::fileSave()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		//log::trace( "Active scenario: ", getActiveScenario()->fileName.toStdString() );
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 	}
@@ -324,9 +330,13 @@ void SconeStudio::fileSaveAs()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		s->saveAsDialog( make_qt( scone::GetFolder( SCONE_SCENARIO_FOLDER ) ), "SCONE Scenarios (*.xml)" );
-		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-		addRecentFile( s->fileName );
+		QString fn = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "XML file (*.xml);; Property Node file (*.pn)" );
+		if ( !fn.isEmpty() )
+		{
+			s->saveAs( fn );
+			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+			addRecentFile( s->fileName );
+		}
 	}
 }
 
@@ -622,7 +632,7 @@ void SconeStudio::performReflexAnalysis()
 	path par_file( currentParFile.toStdString() );
 
 	ReflexAnalysisObjective reflex_objective( model->GetData(), "use_force=1;use_length=0;use_velocity=0" );
-	reflex_objective.set_delays( load_prop( scone::GetFolder( SCONE_MODEL_FOLDER ) / "neural_delays.pn" ) );
+	reflex_objective.set_delays( "neural_delays.pn" );
 	
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
 	spot::cma_optimizer cma( reflex_objective );

@@ -68,10 +68,10 @@ namespace scone
 		source_name_ = name;
 	}
 
-	double SensorNeuron::GetOutput() const
+	double SensorNeuron::GetOutput( double offset ) const
 	{
 		auto input = use_sample_delay_ ? input_->GetAverageValue( sample_delay_frames_, sample_delay_window_ ) : input_->GetValue( delay_ );
-		return output_ = activation_function( sensor_gain_ * ( input - offset_ ) );
+		return output_ = activation_function( sensor_gain_ * ( input - offset_ - offset ) );
 	}
 
 	string SensorNeuron::GetName( bool mirrored ) const

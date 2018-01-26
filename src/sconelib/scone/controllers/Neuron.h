@@ -17,22 +17,21 @@ namespace scone
 	{
 		Neuron( const PropNode& pn, Index idx, Side s, const String& act_func );
 		virtual ~Neuron() {}
-		virtual activation_t GetOutput() const;
+		virtual activation_t GetOutput( double offset = 0.0 ) const;
 		virtual string GetName( bool mirrored = false ) const { return mirrored ? GetMirroredName( name_ ) : name_; }
 		virtual string GetParName() const { return GetNameNoSide( name_ ); }
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
 		enum connection_t { bilateral, monosynaptic, antagonistic, agonistic, synergetic, ipsilateral, contralateral };
-		void AddInput( Neuron* input, double gain, double mean = 0.0 ) { inputs_.emplace_back( input, gain, mean ); }
+		void AddInput( Neuron* input, double gain, double offset = 0.0 ) { inputs_.emplace_back( input, gain, offset ); }
 		void AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc );
 		void AddInputs( const PropNode& pn, Params& par, NeuralController& nc );
 
-
 		struct Input {
-			Input( Neuron* n, double g, double c ) : neuron( n ), gain( g ), center( c ), contribution( 0 ) {}
+			Input( Neuron* n, double g, double o ) : neuron( n ), gain( g ), offset( o ), contribution( 0 ) {}
 			Neuron* neuron;
 			double gain;
-			double center;
+			double offset;
 			mutable double contribution = 0.0;
 		};
 		const std::vector< Input >& GetInputs() const { return inputs_; }

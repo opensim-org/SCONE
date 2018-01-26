@@ -9,4 +9,10 @@ namespace scone
 	Body::~Body()
 	{
 	}
+
+	void Body::ClearExternalForceAndMoment()
+	{
+		SetExternalForce( Vec3::zero() );
+		SetExternalMoment( Vec3::zero() );
+	}
 }

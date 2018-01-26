@@ -1,6 +1,6 @@
 #include "SimilarityObjective.h"
 #include "../core/Factories.h"
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "../controllers/cs_tools.h"
 #include "spot/search_point.h"
 #include "../controllers/NeuralController.h"
@@ -14,11 +14,12 @@ namespace scone
 	{
 		INIT_PROP_REQUIRED( pn, file_ );
 
-		file_ = GetFolder( SCONE_SCENARIO_FOLDER ) / file_;
+		AddExternalResource( file_ );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
-		m_Signature = model->GetSignature();
+		signature_ = model->GetSignature();
+		AddExternalResources( model->GetExternalResources() );
 
 		// load target model (TODO: this should be one function call?)
 		target_ = CreateModelObjective( file_ );
@@ -52,6 +53,6 @@ namespace scone
 
 	String SimilarityObjective::GetClassSignature() const
 	{
-		return m_Signature;
+		return signature_;
 	}
 }

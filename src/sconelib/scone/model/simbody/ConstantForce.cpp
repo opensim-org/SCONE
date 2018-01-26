@@ -72,7 +72,7 @@ namespace OpenSim
 		// apply torque
 		Vec3 torqueVec = torque_;
 		if ( !get_torque_is_global() )
-			engine.transform( s, *body_, forceVec, engine.getGroundBody(), torqueVec );
+			engine.transform( s, *body_, torqueVec, engine.getGroundBody(), torqueVec );
 		applyTorque( s, *body_, torqueVec, bodyForces );
 	}
 

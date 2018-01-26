@@ -36,7 +36,7 @@ namespace scone
 		beta_ = 1 / ( 2 * c * c );
 	}
 
-	scone::activation_t PatternNeuron::GetOutput() const
+	scone::activation_t PatternNeuron::GetOutput( double offset ) const
 	{
 		auto t = xo::wrapped( model_.GetTime() - t0_, -0.5 * period_, 0.5 * period_ );
 		return output_ = exp( -beta_ * t * t );

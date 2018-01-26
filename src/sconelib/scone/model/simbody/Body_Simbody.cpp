@@ -233,11 +233,11 @@ namespace scone
 		return dynamic_cast<Model&>( m_Model );
 	}
 
-	std::vector< scone::String > Body_Simbody::GetDisplayGeomFileNames() const
+	std::vector< path > Body_Simbody::GetDisplayGeomFileNames() const
 	{
-		std::vector< String > names;
+		std::vector< path > names;
 		for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
-			names.push_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
+			names.emplace_back( m_osBody.getDisplayer()->getGeometryFileName( i ) );
 		return names;
 	}
 
@@ -272,7 +272,7 @@ namespace scone
 			cf->setForceAtPoint( make_osim( force ), make_osim( point ) );
 	}
 
-	void Body_Simbody::SetExternalTorque( const Vec3& torque )
+	void Body_Simbody::SetExternalMoment( const Vec3& torque )
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			cf->setTorque( make_osim( torque ) );
@@ -292,7 +292,7 @@ namespace scone
 		else return Vec3::zero();
 	}
 
-	scone::Vec3 Body_Simbody::GetExternalTorque() const
+	scone::Vec3 Body_Simbody::GetExternalMoment() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			return ToVec3( cf->getTorque() );

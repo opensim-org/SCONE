@@ -3,7 +3,7 @@
 #include "core.h"
 #include "Storage.h"
 #include <fstream>
-#include "xo/stream/char_stream.h"
+#include "xo/serialization/char_stream.h"
 
 namespace scone
 {

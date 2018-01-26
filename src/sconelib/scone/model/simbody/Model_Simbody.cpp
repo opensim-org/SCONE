@@ -64,8 +64,8 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		String model_file;
-		String state_init_file;
+		path model_file;
+		path state_init_file;
 		String probe_class;
 		double pre_control_simulation_time;
 		double initial_leg_load;
@@ -77,7 +77,7 @@ namespace scone
 		INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
 
 		INIT_PROPERTY_REQUIRED( props, model_file );
-		INIT_PROPERTY( props, state_init_file, String() );
+		INIT_PROPERTY( props, state_init_file, path() );
 		INIT_PROPERTY( props, probe_class, String() );
 		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
 		INIT_PROPERTY( props, initial_leg_load, 0.2 );
@@ -86,14 +86,18 @@ namespace scone
 
 		// always set create_body_forces when there's a PerturbationController
 		// TODO: think of a nicer, more generic way of dealing with this issue
-		for ( auto& cprops : props.get_child( "Controllers" ) )
-			create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+		if ( auto* controllers = props.try_get_child( "Controllers" ) )
+		{
+			for ( auto& cprops : *controllers )
+				create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+		}
 
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
-			//m_pOsimModel = g_ModelCache.CreateCopy( ( GetFolder( "models" ) / model_file ).str() );
-			m_pOsimModel = g_ModelCache( ( GetFolder( "models" ) / model_file ) );
+			model_file = FindFile( model_file );
+			m_pOsimModel = g_ModelCache( model_file );
+			AddExternalResource( model_file );
 		}
 
 		// create torque and point actuators
@@ -191,14 +195,18 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
-				ReadState( GetFolder( "models" ) / state_init_file );
+			{
+				state_init_file = FindFile( state_init_file );
+				ReadState( state_init_file );
+				AddExternalResource( state_init_file );
+			}
 
 			// update state variables if they are being optimized
 			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
 			{
 				bool symmetric = iso->get< bool >( "symmetric", false );
-				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states" ), ";" );
-				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states" ) + ";*.activation;*.fiber_length", ";" );
+				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states", "*" ), ";" );
+				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
 				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
@@ -230,12 +238,7 @@ namespace scone
 		}
 
 		// create and initialize controllers
-		{
-			SCONE_PROFILE_SCOPE( "CreateControllers" );
-			const PropNode& cprops = props.get_child( "Controllers" );
-			for ( auto iter = cprops.begin(); iter != cprops.end(); ++iter )
-				m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
-		}
+		CreateControllers( props, par );
 
 		{
 			SCONE_PROFILE_SCOPE( "InitMuscleDynamics" );

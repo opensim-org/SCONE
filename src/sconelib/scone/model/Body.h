@@ -3,6 +3,7 @@
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
 #include "scone/core/Quat.h"
+#include "scone/core/system_tools.h"
 
 namespace scone
 {
@@ -36,15 +37,17 @@ namespace scone
 
 		virtual void SetExternalForce( const Vec3& force ) = 0;
 		virtual void SetExternalForceAtPoint( const Vec3& force, const Vec3& point ) = 0;
-		virtual void SetExternalTorque( const Vec3& torque ) = 0;
+		virtual void SetExternalMoment( const Vec3& torque ) = 0;
 
 		virtual Vec3 GetExternalForce() const = 0;
 		virtual Vec3 GetExternalForcePoint() const = 0;
-		virtual Vec3 GetExternalTorque() const = 0;
+		virtual Vec3 GetExternalMoment() const = 0;
+
+		virtual void ClearExternalForceAndMoment();
 
 		virtual const class Model& GetModel() const = 0;
 		virtual class Model& GetModel() = 0;
 
-		virtual std::vector< String > GetDisplayGeomFileNames() const { return std::vector< String >(); }
+		virtual std::vector< path > GetDisplayGeomFileNames() const { return std::vector< path >(); }
 	};
 }

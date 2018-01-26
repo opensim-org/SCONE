@@ -25,23 +25,23 @@ namespace scone
 		offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 	}
 
-	double InterNeuron::GetOutput() const
+	double InterNeuron::GetOutput( double offset ) const
 	{
 		if ( use_distance_ )
 		{
 			double dist = 0.0;
 			for ( auto& i : inputs_ )
-				dist += xo::squared( i.neuron->GetOutput() - i.center );
+				dist += xo::squared( i.neuron->GetOutput( i.offset ) - i.offset - offset );
 			dist = sqrt( dist );
 
 			return output_ = offset_ + gaussian_width( dist, width_ );
 		}
 		else
 		{
-			activation_t value = offset_;
+			activation_t value = offset_ + offset;
 			for ( auto& i : inputs_ )
 			{
-				auto input = i.gain * i.neuron->GetOutput();
+				auto input = i.gain * i.neuron->GetOutput( i.offset );
 				i.contribution += abs( input );
 				value += input;
 			}

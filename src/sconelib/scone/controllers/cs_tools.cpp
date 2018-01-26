@@ -1,12 +1,13 @@
 #include "cs_tools.h"
 
 #include "xo/time/timer.h"
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "xo/filesystem/path.h"
 #include "PerturbationController.h"
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
+#include "xo/filesystem/filesystem.h"
 
 using xo::timer;
 
@@ -48,10 +49,13 @@ namespace scone
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& file )
 	{
 		bool is_par_file = file.extension() == "par";
-		path config_file = is_par_file ? file.parent_path() / "config.xml" : file;
+		path scenario_file = is_par_file ? file.parent_path() / "config.xml" : file;
+
+		// set current path to scenario path
+		xo::current_path( scenario_file.parent_path() );
 
 		// read properties
-		PropNode configProp = xo::load_file_with_include( config_file, "INCLUDE" );
+		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
 		// create SimulationObjective object
@@ -61,10 +65,10 @@ namespace scone
 		{
 			// read mean / std from init file
 			auto& optProp = configProp.get_child( "Optimizer" );
-			if ( optProp.get< bool >( "use_init_file" ) )
+			if ( optProp.has_key( "init_file" ) && optProp.get< bool >( "use_init_file", true ) )
 			{
 				auto init_file = optProp.get< path >( "init_file" );
-				auto result = mob->info().import_mean_std( GetFolder( SCONE_SCENARIO_FOLDER ) / init_file, optProp.get< bool >( "use_init_file_std", true ) );
+				auto result = mob->info().import_mean_std( init_file, optProp.get< bool >( "use_init_file_std", true ) );
 				log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
 			}
 		}

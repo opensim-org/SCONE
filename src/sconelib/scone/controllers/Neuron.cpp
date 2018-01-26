@@ -36,12 +36,12 @@ namespace scone
 	muscle_( nullptr )
 	{}
 
-	scone::activation_t Neuron::GetOutput() const
+	scone::activation_t Neuron::GetOutput( double offset ) const
 	{
-		activation_t value = offset_;
+		activation_t value = offset_ + offset;
 		for ( auto& i : inputs_ )
 		{
-			auto input = i.gain * i.neuron->GetOutput();
+			auto input = i.gain * i.neuron->GetOutput( i.offset );
 			i.contribution += abs( input );
 			value += input;
 		}
@@ -62,7 +62,7 @@ namespace scone
 
 		if ( common_joints > 0 )
 		{
-			double gain = 0;
+			double gain = 0, offset = 0;
 			auto mpvec = nc.GetMuscleParams( muscle_, false );
 			auto spvec = nc.GetMuscleParams( sensor->muscle_, true );
 
@@ -76,15 +76,15 @@ namespace scone
 					{
 						string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
 						auto factor = mp.correlation * sp.correlation;
-						auto par_value = par.try_get( parname, pn, "gain", 0.0 );
-						gain += factor * par_value;
-						//log::trace( "\t", parname, " = ", factor, " x ", par_value );
+						gain += factor * par.try_get( parname, pn, "gain", 0.0 );
+						offset += factor * par.try_get( parname + '0', pn, "offset", 0.0 );
+						//log::trace( "\t", parname, "; factor=", factor, " gain=", gain, " offset=", offset );
 					}
 				}
 			}
-			//log::trace( "\tTOTAL = ", gain );
+			//log::trace( "\tTOTAL gain=", gain, " offset=", offset );
 
-			AddInput( sensor, gain );
+			AddInput( sensor, gain, offset );
 		}
 	}
 
@@ -94,28 +94,14 @@ namespace scone
 
 		// set param prefix
 		auto mpars = nc.GetMuscleParams( muscle_, false );
-		if ( pn.has_key( "offset" ) )
-		{
-			for ( auto& mp : mpars )
-			{
-				//log::trace( muscle_->GetName(), "\t", mp.first, " x ", mp.second );
-				offset_ += mp.correlation * par.try_get( mp.name + ".C0", pn, "offset", 0.0 );
-			}
-		}
-
-#if 0
-		ScopedParamSetPrefixer ps( par, par_name + "." );
-		// add additional input-specific offset (if present)
-		offset_ += par.try_get( "C0", pn, "offset", 0.0 );
-#endif
 
 		// see if there's an input
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", "" ) );
-
 		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
 		bool right_side = GetSide() == RightSide;
 
+		// check the input layer
 		if ( input_layer == "0" )
 		{
 			// connection from sensor neurons
@@ -131,28 +117,24 @@ namespace scone
 					case InterNeuron::bilateral:
 					{
 						postfix = sensor->GetName( right_side );
-						//AddInput( sensor, par.try_get( sensor->GetName( right_side ), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::monosynaptic:
 					{
 						if ( sensor->source_name_ == name_ )
 							postfix = sensor->type_;
-						//AddInput( sensor, par.try_get( sensor->type_, pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::antagonistic:
 					{
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
 							postfix = sensor->GetParName();
-						//AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::agonistic:
 					{
 						if ( muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ ) )
 							postfix = sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName();
-						//AddInput( sensor, par.try_get( sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					case InterNeuron::synergetic:
@@ -164,22 +146,13 @@ namespace scone
 					case InterNeuron::ipsilateral:
 					{
 						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-						{
 							postfix = sensor->GetParName();
-
-							// TODO: neater!
-							//double gain = 0;
-							//for ( auto& mp : mpars )
-							//	gain += mp.second * par.try_get( mp.first + '.' + sensor->type_, pn, "gain", 1.0 );
-							//AddInput( sensor, gain );
-						}
 						break;
 					}
 					case InterNeuron::contralateral:
 					{
 						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
 							postfix = sensor->GetParName();
-						//AddInput( sensor, par.try_get( sensor->GetParName(), pn, "gain", 1.0 ) );
 						break;
 					}
 					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
@@ -187,12 +160,14 @@ namespace scone
 
 					if ( !postfix.empty() )
 					{
-						double gain = 0;
+						double gain = 0, offset = 0;
 						for ( auto& mp : mpars )
+						{
 							gain += mp.correlation * par.try_get( mp.name + '.' + postfix, pn, "gain", 1.0 );
+							offset += mp.correlation * par.try_get( mp.name + '.' + postfix + '0', pn, "offset", 0.0 );
+						}
 						AddInput( sensor, gain );
 					}
-
 				}
 			}
 		}
@@ -223,6 +198,12 @@ namespace scone
 				default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 				}
 			}
+		}
+		else if ( pn.has_key( "offset" ) )
+		{
+			// this is a channel with only an offset -- used for backwards compatibility
+			for ( auto& mp : mpars )
+				offset_ += mp.correlation * par.try_get( mp.name + ".C0", pn, "offset", 0.0 );
 		}
 	}
 }

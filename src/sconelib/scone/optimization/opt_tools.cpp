@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "xo/time/timer.h"
-#include "xo/stream/prop_node_tools.h"
+#include "xo/serialization/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
 
 using xo::timer;
@@ -18,23 +18,22 @@ namespace scone
 {
 	SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
 	{
+		// set current path to config file path
+		if ( scenario_file.has_parent_path() )
+			xo::current_path( scenario_file.parent_path() );
+
 		// create optimizer and report unused parameters
 		OptimizerUP o = CreateOptimizer( props.get_child( "Optimizer" ) );
 		LogUntouched( props );
 
-		// set current path to config file path
-		xo::path config_path( scenario_file.str() );
-		if ( config_path.has_parent_path() )
-			xo::current_path( config_path.parent_path() );
-
 		// copy original and write resolved config files
 		xo::path outdir( o->AcquireOutputFolder().str() );
-		xo::copy_file( config_path.filename(), outdir / path( "config_original" ).replace_extension( config_path.extension() ), true );
+		xo::copy_file( scenario_file.filename(), outdir / path( "config_original" ).replace_extension( scenario_file.extension() ), true );
 		xo::save_xml( props, path( ( outdir / "config.xml" ).string() ) );
 
-		// copy model to output folder
-		xo::path modelfile = props.get_delimited< path >( "Optimizer.Objective.Model.model_file" );
-		xo::copy_file( GetFolder( SCONE_MODEL_FOLDER ) / modelfile, outdir / modelfile.filename(), true );
+		// copy all objective resources to output folder
+		for ( auto& f : o->GetObjective().GetExternalResources() )
+			xo::copy_file( f, outdir / f.filename(), true );
 
 		// return created optimizer
 		return std::move( o );
@@ -42,9 +41,7 @@ namespace scone
 
 	PropNode SCONE_API SimulateObjective( const path& filename )
 	{
-		cout << "--- Starting evaluation ---" << endl;
-
-		xo::path config_path = xo::path( filename.str() ).parent_path() / "config.xml";
+		xo::path config_path = filename.parent_path() / "config.xml";
 		if ( config_path.has_parent_path() )
 			current_path( config_path.parent_path() );
 
@@ -71,10 +68,7 @@ namespace scone
 		statistics.set( "simulation time", model->GetTime() );
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
-		cout << "--- Evaluation report ---" << endl;
-		cout << statistics << endl;
-
-		cout << Profiler::GetGlobalInstance().GetReport();
+		log::info( statistics );
 
 		// write results
 		obj->WriteResults( path( filename ).replace_extension().str() );

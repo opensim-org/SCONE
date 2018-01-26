@@ -1,8 +1,0 @@
-subject01_walk1_states
-version=1
-nRows=1
-nColumns=47
-inDegrees=no
-endheader
-time	pelvis_tilt	pelvis_list	pelvis_rotation	pelvis_tx	pelvis_ty	pelvis_tz	hip_flexion_r	hip_adduction_r	hip_rotation_r	knee_angle_r	ankle_angle_r	subtalar_angle_r	mtp_angle_r	hip_flexion_l	hip_adduction_l	hip_rotation_l	knee_angle_l	ankle_angle_l	subtalar_angle_l	mtp_angle_l	lumbar_extension	lumbar_bending	lumbar_rotation	pelvis_tilt_u	pelvis_list_u	pelvis_rotation_u	pelvis_tx_u	pelvis_ty_u	pelvis_tz_u	hip_flexion_r_u	hip_adduction_r_u	hip_rotation_r_u	knee_angle_r_u	ankle_angle_r_u	subtalar_angle_r_u	mtp_angle_r_u	hip_flexion_l_u	hip_adduction_l_u	hip_rotation_l_u	knee_angle_l_u	ankle_angle_l_u	subtalar_angle_l_u	mtp_angle_l_u	lumbar_extension_u	lumbar_bending_u	lumbar_rotation_u
-0.860556517	0.075120829	-0.02467114	0.061702448	0	1.0	0.030827669	0.198073031	0.028924648	-0.128616065	-0.353340584	0.082248043	-0.003417825	-0.004966804	0.076747152	-0.114396113	-0.079227964	-1.141805287	-0.121871869	-0.001285988	0.001298863	-0.31133766	0.076365618	-0.061429619	0.088975931	-0.16139328	-0.14492493	2.0	0.185776799	0.197637825	-1.885983607	0.574812482	0.110495191	1.223749158	0.463643083	-0.021609331	-0.193596706	2.619876127	-0.584628656	-0.562274192	-2.462161399	1.017495597	-0.050034225	0.049947019	-0.057391651	-0.005467988	0.657281461

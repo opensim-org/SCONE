@@ -31,6 +31,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		String m_Signature;
+		String signature_;
+		std::vector< path > external_files_;
 	};
 }

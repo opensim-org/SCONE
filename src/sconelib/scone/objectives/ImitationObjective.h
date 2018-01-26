@@ -27,8 +27,6 @@ namespace scone
 		path file_;
 		size_t frame_delta_;
 
-
-
 	protected:
 		virtual String GetClassSignature() const override;
 

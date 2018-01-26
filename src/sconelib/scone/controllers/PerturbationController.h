@@ -16,8 +16,8 @@ namespace scone
 		virtual ~PerturbationController() {}
 
 		String name;
-		double force;
-		double moment;
+		Vec3 force;
+		Vec3 moment;
 		TimeInSeconds interval;
 		TimeInSeconds interval_min;
 		TimeInSeconds interval_max;
@@ -32,13 +32,13 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< std::pair< TimeInSeconds, double > > perturbation_times;
+		std::vector< TimeInSeconds > perturbation_times;
 
 		unsigned int random_seed;
 		Vec3 position_offset;
 		Vec3 current_force;
 		Vec3 current_moment;
 		TimeInSeconds next_perturbation;
-		Body& force_body;
+		Body& body_;
 	};
 }

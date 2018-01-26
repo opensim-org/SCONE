@@ -30,16 +30,6 @@
           <string>Folders</string>
          </property>
          <layout class="QFormLayout" name="formLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Optimization Results</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="resultsFolder"/>
-          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_3">
             <property name="text">
@@ -51,17 +41,14 @@
            <widget class="QLineEdit" name="scenariosFolder"/>
           </item>
           <item row="2" column="0">
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="label">
             <property name="text">
-             <string>Models</string>
+             <string>Optimization Results</string>
             </property>
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QLineEdit" name="modelsFolder"/>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="geometryFolder"/>
+           <widget class="QLineEdit" name="resultsFolder"/>
           </item>
           <item row="3" column="0">
            <widget class="QLabel" name="label_7">
@@ -69,6 +56,9 @@
              <string>Model Geometry</string>
             </property>
            </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLineEdit" name="geometryFolder"/>
           </item>
          </layout>
         </widget>

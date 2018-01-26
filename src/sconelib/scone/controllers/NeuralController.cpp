@@ -23,6 +23,8 @@
 #include "xo/string/dictionary.h"
 #include "../model/Side.h"
 
+#include <numeric>
+
 namespace scone
 {
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
@@ -32,8 +34,12 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		if ( pn.has_key( "delay_file" ) )
-			delays_ = load_prop( scone::GetFolder( SCONE_SCENARIO_FOLDER ) / pn.get< path >( "delay_file" ) );
+		auto delay_file = pn.get< path >( "delay_file", "" );
+		if ( !delay_file.empty() )
+		{
+			delays_ = load_prop( delay_file );
+			model.AddExternalResource( delay_file );
+		}
 
 		INIT_PROP( pn, delay_factor_, 1.0 );
 		par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
@@ -225,12 +231,17 @@ namespace scone
 			for ( auto& neuron : layer.second )
 				frame[ "IN." + neuron->GetName( false ) ] = neuron->output_;
 		for ( auto& neuron : m_MotorNeurons )
-			frame[ "MN." + neuron->GetName( false ) + ".input" ] = neuron->input_;
+		{
+			auto prefix = "MN." + neuron->GetName( false ) + '.';
+			frame[ prefix + "input" ] = neuron->input_;
+			for ( auto& i : neuron->inputs_ )
+				frame[ prefix + i.neuron->GetName( false ) ] = i.gain * i.neuron->GetOutput();
+		}
 	}
 
 	void NeuralController::WriteResult( const path& file ) const
 	{
-		xo::table< double > weights, contribs;
+		xo::table< double > weights, contribs, sources;
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
@@ -248,10 +259,12 @@ namespace scone
 			{
 				weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 				contribs( input.neuron->GetName( false ), neuron->name_ ) = input.contribution / tot;
+				sources( xo::left_of_str( input.neuron->GetParName(), "." ), neuron->GetParName() ) += input.contribution / tot / 2.0;
 			}
 		}
 		std::ofstream( ( file + ".stats.weights.txt" ).str() ) << weights;
 		std::ofstream( ( file + ".stats.contrib.txt" ).str() ) << contribs;
+		std::ofstream( ( file + ".stats.sources.txt" ).str() ) << sources;
 	}
 
 	String NeuralController::GetClassSignature() const

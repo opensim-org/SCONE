@@ -10,6 +10,7 @@
 #include <vector>
 #include "scone/core/HasName.h"
 #include "scone/core/HasSignature.h"
+#include "scone/core/HasExternalResources.h"
 #include "Sensor.h"
 #include "scone/core/Storage.h"
 #include <array>
@@ -19,7 +20,7 @@
 
 namespace scone
 {
-	class SCONE_API Model : public HasName, public HasSignature, public HasData
+	class SCONE_API Model : public HasName, public HasSignature, public HasData, public HasExternalResources
 	{
 	public:
 		Model( const PropNode& props, Params& par );
@@ -162,6 +163,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
 		void CreateBalanceSensors( const PropNode& props, Params& par );
+		void CreateControllers( const PropNode& pn, Params& par );
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();

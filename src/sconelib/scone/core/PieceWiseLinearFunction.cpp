@@ -6,7 +6,6 @@ namespace scone
 	PieceWiseLinearFunction::PieceWiseLinearFunction( bool flatExtrapolation ) :
 	flat_extrapolation( flatExtrapolation )
 	{
-
 	}
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par )
@@ -20,7 +19,7 @@ namespace scone
 			Real xVal = 0.0;
 			if ( cpidx > 0 )
 			{
-				double dt = par.get( stringf( "DT%d", cpidx - 1 ), props.get_child( "control_point_delta_time" ) );
+				double dt = par.get( stringf( "DT%d", cpidx - 1 ), props.get_child( "control_point_dt" ) );
 				xVal = GetX( cpidx - 1 ) + dt;
 			}
 			Real yVal = par.get( stringf( "Y%d", cpidx ), props.get_child( "control_point_y" ) );

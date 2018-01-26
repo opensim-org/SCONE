@@ -135,6 +135,26 @@ namespace scone
 		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
+	void Model::CreateControllers( const PropNode& pn, Params& par )
+	{
+		SCONE_PROFILE_FUNCTION;
+
+		// add controller (new style)
+		if ( auto* cprops = pn.try_get_child( "Controller" ) )
+			m_Controllers.push_back( CreateController( *cprops, par, *this, Locality( NoSide ) ) );
+
+		// add measure (new style)
+		if ( auto* cprops = pn.try_get_child( "Measure" ) )
+			m_Controllers.push_back( CreateController( *cprops, par, *this, Locality( NoSide ) ) );
+
+		// add multiple controllers / measures (old style)
+		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
+		{
+			for ( auto iter = cprops->begin(); iter != cprops->end(); ++iter )
+				m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
+		}
+	}
+
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		SCONE_PROFILE_FUNCTION;

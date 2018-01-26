@@ -21,7 +21,7 @@ namespace scone
 		path file_;
 		ModelObjectiveUP target_;
 		ModelUP target_model_;
-		String m_Signature;
+		String signature_;
 		mutable fitness_t result_;
 
 	protected:
