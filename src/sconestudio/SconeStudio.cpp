@@ -330,7 +330,7 @@ void SconeStudio::fileSaveAs()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		QString fn = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "XML file (*.xml);; Property Node file (*.pn)" );
+		QString fn = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "XML file (*.xml);; ZML file (*.zml)" );
 		if ( !fn.isEmpty() )
 		{
 			s->saveAs( fn );
