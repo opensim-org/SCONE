@@ -84,7 +84,7 @@ namespace scone
 				auto results = cma.evaluate( pop );
 
 				// analyze results
-				auto current_best_it = GetObjective().info().maximize() ? xo::max_element( results ) : xo::min_element( results );
+				auto current_best_it = GetObjective().info().maximize() ? std::max_element( results.begin(), results.end() ) : std::min_element( results.begin(), results.end() );
 				size_t current_best_idx = current_best_it - results.begin();
 				auto current_best = *current_best_it;
 				auto current_avg_fitness = xo::top_average( results, m_Mu );
