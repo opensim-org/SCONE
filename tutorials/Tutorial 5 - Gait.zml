@@ -12,7 +12,7 @@ Optimizer = {
 			state_init_optimization = {
 				include_states = *
 				exclude_states = "*_tx;*_ty;*_u"
-				offset = "0~0.01[-0.5,0.5]"
+				offset = { mean = 0 std = 0.01 min = -0.5 max = 0.5 }
 			}
 			integration_method = SemiExplicitEuler2
 			integration_accuracy = 0.001
@@ -20,8 +20,8 @@ Optimizer = {
 			fixed_control_step_size = 0.001
 			sensor_delay_scaling_factor = 1.0
 
-			INCLUDE = { file = ControllerGeyerHerr2010.zml }
-			INCLUDE = { file = GaitMeasure.zml }
+			INCLUDE = { file = data/ControllerGeyerHerr2010.zml }
+			INCLUDE = { file = data/GaitMeasure.zml }
 		}
 	}
 }
