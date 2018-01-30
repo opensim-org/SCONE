@@ -37,7 +37,7 @@ namespace scone
 		auto delay_file = pn.get< path >( "delay_file", "" );
 		if ( !delay_file.empty() )
 		{
-			delays_ = load_prop( delay_file );
+			delays_ = load_zml( delay_file );
 			model.AddExternalResource( delay_file );
 		}
 
