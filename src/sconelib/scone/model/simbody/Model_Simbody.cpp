@@ -213,7 +213,9 @@ namespace scone
 					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
 					{
 						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-						m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
+						if ( iso->has_key( "offset" ) )
+							m_State[ i ] += par.get( par_name + ".offset", iso->get_child( "offset" ) );
+						else m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
 					}
 				}
 			}
