@@ -1,0 +1,27 @@
+Optimizer = {
+	type = CmaOptimizer
+	random_seed = 123
+	Objective = {
+		type = SimulationObjective
+		signature_postfix = GH
+		max_duration = 10
+		Model = {
+			type = Simbody
+			model_file = models/f0914t.osim
+			state_init_file = data/f2354_init_walk_S15.sto
+			state_init_optimization = {
+				include_states = *
+				exclude_states = "*_tx;*_ty;*_u"
+				offset = "0~0.01[-0.5,0.5]"
+			}
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			use_fixed_control_step_size = 1
+			fixed_control_step_size = 0.001
+			sensor_delay_scaling_factor = 1.0
+
+			INCLUDE = { file = ControllerGeyerHerr2010.zml }
+			INCLUDE = { file = GaitMeasure.zml }
+		}
+	}
+}
