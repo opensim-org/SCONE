@@ -8,20 +8,20 @@ Optimizer = {
 		Model = {
 			type = Simbody
 			model_file = models/f0914t.osim
-			state_init_file = data/f2354_init_walk_S15.sto
+			state_init_file = data/f0914_init_walk_S15_neutral.sto
 			state_init_optimization = {
 				include_states = *
 				exclude_states = "*_tx;*_ty;*_u"
-				offset = { mean = 0 std = 0.01 min = -0.5 max = 0.5 }
+				offset = "0~0.01[-0.5,0.5]"
 			}
 			integration_method = SemiExplicitEuler2
 			integration_accuracy = 0.001
 			use_fixed_control_step_size = 1
 			fixed_control_step_size = 0.001
 			sensor_delay_scaling_factor = 1.0
-
-			INCLUDE = { file = data/ControllerGeyerHerr2010.zml }
-			INCLUDE = { file = data/GaitMeasure.zml }
+			
+			#include "data/ControllerGeyerHerr2010.zml"
+			#include "data/GaitMeasure.zml"
 		}
 	}
 }
