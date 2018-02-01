@@ -1,12 +1,8 @@
 #include "opt_tools.h"
 #include "scone/core/types.h"
-
 #include "scone/core/Factories.h"
-
 #include "scone/objectives/SimulationObjective.h"
 #include "scone/core/Profiler.h"
-
-using namespace std;
 
 #include "xo/time/timer.h"
 #include "xo/serialization/prop_node_tools.h"
