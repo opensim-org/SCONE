@@ -1,0 +1,8 @@
+f0914_init_walk
+version=1
+nRows=504
+nColumns=194
+inDegrees=no
+endheader
+time	pelvis_tilt	pelvis_tx	pelvis_ty	hip_flexion_r	knee_angle_r	ankle_angle_r	hip_flexion_l	knee_angle_l	ankle_angle_l	pelvis_tilt_u	pelvis_tx_u	pelvis_ty_u	hip_flexion_r_u	knee_angle_r_u	ankle_angle_r_u	hip_flexion_l_u	knee_angle_l_u	ankle_angle_l_u	
+0	0.0792467	0	0.946291	-0.168213	-0.120911	0.15732	0.350017	-0.548168	-0.0168644	-0.0676977	1.5	0	-1.47401	0.674868	0.558845	-0.241444	6.55371	-0.71837
