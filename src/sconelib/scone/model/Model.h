@@ -100,8 +100,8 @@ namespace scone
 		virtual Real GetBW() const;
 
 		// custom model properties
-		const PropNode& GetCustomProps() { return m_pCustomProps ? *m_pCustomProps : xo::empty_prop_node(); }
-		const PropNode& GetModelProps() { return m_pModelProps ? *m_pModelProps : xo::empty_prop_node(); }
+		const PropNode* GetCustomProps() { return m_pCustomProps; }
+		const PropNode* GetModelProps() { return m_pModelProps; }
 		PropNode& GetUserData() { return m_UserData; }
 
 		// TODO: perhaps remove termination request here
