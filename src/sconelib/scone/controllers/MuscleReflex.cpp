@@ -4,8 +4,6 @@
 #include "scone/model/Dof.h"
 #include "scone/core/propnode_tools.h"
 
-//#define DEBUG_MUSCLE "vasti_r"
-
 namespace scone
 {
 	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
@@ -84,11 +82,6 @@ namespace scone
 		// sum it up
 		u_total = u_l + u_v + u_f + u_s + u_constant;
 		AddTargetControlValue( u_total );
-
-#ifdef DEBUG_MUSCLE
-		if ( m_Target.GetName() == DEBUG_MUSCLE )
-			log::TraceF( "u_l=%.3f u_v=%.3f u_f=%.3f", u_l, u_v, u_f );
-#endif
 	}
 
 	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

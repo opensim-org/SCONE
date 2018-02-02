@@ -1,18 +1,17 @@
 #include "DofReflex.h"
 #include "scone/model/Dof.h"
+#include "scone/model/Side.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Model.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/model/Sensors.h"
 
-//#define DEBUG_MUSCLE "glut_max_r"
-
 namespace scone
 {
 	DofReflex::DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
-	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
-	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source" ) ) ) ),
+	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
+	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
 	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
 	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
 	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
@@ -27,6 +26,7 @@ namespace scone
 		INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
 		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
+		INIT_PROP( props, condition, 0 );
 
 		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
 		if ( filter_cutoff_frequency != 0.0 )
@@ -41,14 +41,14 @@ namespace scone
 
 	void DofReflex::ComputeControls( double timestamp )
 	{
-		// TODO: Add world coordinate option to Body
-		Real root_pos = m_DelayedRootPos.GetValue( delay );
-		Real root_vel = m_DelayedRootVel.GetValue( delay );
 		Real pos = m_DelayedPos.GetValue( delay );
 		Real vel = m_DelayedVel.GetValue( delay );
 
 		if ( m_bUseRoot )
 		{
+			// TODO: Add world coordinate option to Body
+			Real root_pos = m_DelayedRootPos.GetValue( delay );
+			Real root_vel = m_DelayedRootVel.GetValue( delay );
 			pos += root_pos;
 			vel += root_vel;
 		}
@@ -59,15 +59,16 @@ namespace scone
 			vel = m_Filter.velocity() * 1000;
 		}
 
-		u_p = pos_gain * ( target_pos - pos );
-		u_d = vel_gain * ( target_vel - vel );
+		auto delta_pos = target_pos - pos;
+		auto delta_vel = target_vel - vel;
 
-		AddTargetControlValue( constant_u + u_p + u_d );
-
-#ifdef DEBUG_MUSCLE
-		if ( m_Target.GetName() == DEBUG_MUSCLE )
-			log::TraceF( "pos=%.3f vel=%.3f root_pos=%.3f root_vel=%.3f u_p=%.3f u_d=%.3f", pos, vel, root_pos, root_vel, u_p, u_d );
-#endif
+		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || condition == 1 && delta_pos > 0 && delta_vel > 0 )
+		{
+			u_p = pos_gain * delta_pos;
+			u_d = vel_gain * delta_vel;
+			AddTargetControlValue( constant_u + u_p + u_d );
+		}
+		else u_p = u_d = 0.0;
 	}
 
 	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

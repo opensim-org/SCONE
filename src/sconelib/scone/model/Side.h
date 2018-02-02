@@ -72,7 +72,7 @@ namespace scone
 	}
 
 	template< typename T >
-	T& FindNamedTrySided( std::vector< T >& cont, const String& name, const Side& side )
+	T& FindByNameTrySided( std::vector< T >& cont, const String& name, const Side& side )
 	{
 		using xo::quoted;
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );

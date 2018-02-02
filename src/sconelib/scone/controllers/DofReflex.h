@@ -20,6 +20,7 @@ namespace scone
 		Real vel_gain;
 		Real constant_u;
 		Real filter_cutoff_frequency;
+		int condition; // 1 = pos, -1 = neg, 0 = always
 
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
