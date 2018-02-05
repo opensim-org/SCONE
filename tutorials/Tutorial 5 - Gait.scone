@@ -1,6 +1,6 @@
 Optimizer = {
 	type = CmaOptimizer
-	signature_prefix = SCONE_BUILD
+	signature_prefix = DATE_TIME
 	random_seed = 123
 	Objective = {
 		type = SimulationObjective
