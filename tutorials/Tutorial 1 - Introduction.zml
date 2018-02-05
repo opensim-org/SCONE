@@ -1,5 +1,6 @@
 Optimizer = {
 	type = CmaOptimizer
+	signature_prefix = DATE_TIME
 	max_generations = 1000
 	maximize_objective = 1
 	Objective = {
@@ -8,13 +9,14 @@ Optimizer = {
 		Model = {
 			type = Simbody
 			model_file = models/f0914m.osim
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
 			state_init_optimization = {
 				symmetric = 1
 				offset = { mean = 0 std = 0.01 min = -0.1 max = 0.1 }
 				exclude_states = "*_tx;*_ty;*_u"
 			}
-			integration_method = SemiExplicitEuler2
-			integration_accuracy = 0.001
+			
 			Controller = {
 				type = FeedForwardController
 				symmetric = 1
@@ -25,9 +27,10 @@ Optimizer = {
 					control_point_dt = { mean = 0.2 std = 0.01 min = 0 max = 1 }
 				}
 			}
+
 			Measure = {
 				type = JumpMeasure
-				terminate_on_peak = 1
+				terminate_on_peak = 0
 				termination_height = 0.75
 				prepare_time = 0.2
 			}

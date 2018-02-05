@@ -1,14 +1,15 @@
 Optimizer = {
 	type = CmaOptimizer
+	signature_prefix = SCONE_BUILD
 	random_seed = 123
 	Objective = {
 		type = SimulationObjective
-		signature_postfix = GH
+		signature_postfix = ""
 		max_duration = 10
 		Model = {
 			type = Simbody
-			model_file = models/f0914t.osim
-			state_init_file = data/f0914_init_walk_S15_neutral.sto
+			model_file = models/f0914m_k5s2_c2e6d10r4.osim
+			state_init_file = data/f0914_init_walk_S12_forward.sto
 			state_init_optimization = {
 				include_states = *
 				exclude_states = "*_tx;*_ty;*_u"
@@ -20,7 +21,7 @@ Optimizer = {
 			fixed_control_step_size = 0.001
 			sensor_delay_scaling_factor = 1.0
 			
-			#include "data/ControllerGeyerHerr2010.zml"
+			#include "data/ControllerGeyerHerr2010v3.zml"
 			#include "data/GaitMeasure.zml"
 		}
 	}

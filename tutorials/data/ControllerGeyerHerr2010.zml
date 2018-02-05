@@ -1,7 +1,9 @@
 Controller = {
+	; Gait controller based on [Geyer & Herr 2010]
+	signature_postfix = "GH2010v3"
 	type = GaitStateController
-	stance_load_threshold = "0.1~0.01[0.001,1]"
-	leg_load_sensor_delay = 0.02
+	stance_load_threshold = "~0.1<0.001,1>"
+	leg_load_sensor_delay = 0
 	ConditionalControllers = {
 		ConditionalController = {
 			; TA stretch reflexes [Geyer & Herr 2010]
@@ -14,7 +16,7 @@ Controller = {
 						type = MuscleReflex
 						target = tib_ant
 						delay = 0.020
-						KL = "~1.1"
+						KL = "~1.1<-10,10>"
 						L0 = "~0.71<0,2>"
 					}
 					Reflex = {
@@ -50,20 +52,32 @@ Controller = {
 			}
 		}
 		ConditionalController = {
-			; Stance reflexes [Geyer & Herr 2010]
+			; Stance reflexes
 			states = "EarlyStance LateStance"
 			Controller = {
 				type = ReflexController
 				symmetric = 1
 				Reflexes = {
-					; F+ VAS when knee angle < 10 degrees
+					; F+ VAS
 					Reflex = {
-						type = ConditionalMuscleReflex
+						type = MuscleReflex
 						target = vasti
 						delay = 0.010
 						KF = "~1.15<-10,10>" ; G_VAS
-						Condition = { dof = knee_angle pos_min = -180 pos_max = -10 }
+						C0 = "~0.09<0,1>" ; S_0,VAS
 					}
+					; VAS inhibition when knee angle > -10 degrees
+					Reflex = {
+						type = DofReflex
+						target = vasti
+						source = knee_angle
+						condition = -1
+						delay = 0.010
+						KP = "~2<-10,10>" ; k_p
+						KV = 0
+						P0 = "-0.175" ; knee angle
+					}
+					
 					; Root stability
 					Reflex = {
 						type = DofReflex
@@ -72,7 +86,8 @@ Controller = {
 						delay = 0.005
 						KP = "~1.91<-10,10>" ; k_p
 						KV = "~0.25<-10,10>" ; k_d
-						P0 = "~-0.105<-1,1>" ; theta_ref
+						P0 = -0.105 ; theta_ref, not optimized because of C0
+						C0 = "~0.05<0,1>" ; S_0,BAL
 					}
 					Reflex = {
 						type = DofReflex
@@ -81,7 +96,8 @@ Controller = {
 						delay = 0.005
 						KP = "~1.91<-10,10>" ; k_p
 						KV = "~0.25<-10,10>" ; k_d
-						P0 = "~-0.105<-1,1>" ; theta_ref
+						P0 = -0.105 ; theta_ref, not optimized because of C0
+						C0 = "~0.05<0,1>" ; S_0,BAL
 					}
 					Reflex = {
 						type = DofReflex
@@ -90,13 +106,14 @@ Controller = {
 						delay = 0.005
 						KP = "~-1.91<-10,10>" ; -k_p
 						KV = "~-0.25<-10,10>" ; -k_d
-						P0 = "~-0.105<-1,1>" ; theta_ref
+						P0 = -0.105 ; theta_ref, not optimized because of C0
+						C0 = "~0.05<0,1>" ; S_0,BAL
 					}
 				}
 			}
 		}
 		ConditionalController = {
-			; Double support reflexes [Geyer & Herr 2010]
+			; Double support reflexes
 			states = "Liftoff"
 			Controller = {
 				type = ReflexController
@@ -106,21 +123,20 @@ Controller = {
 						type = MuscleReflex
 						target = iliopsoas
 						delay = 0.005
-						C0 = "~0.25<0,1>"
+						C0 = "~0.25<0,1>" ; DELTA_S
 					}
 					Reflex = {
 						type = MuscleReflex
 						target = glut_max
 						delay = 0.005
-						C0 = "~0.25<0,1>"
+						C0 = "~0.25<0,1>" ; DELTA_S
 					}
 				}
 			}
 		}
-		
 		ConditionalController = {
-			; Swing reflexes, [Geyer & Herr 2010]
-			states = "Liftoff Swing Landing"
+			; Swing reflexes
+			states = "Swing Landing"
 			Controller = {
 				type = ReflexController
 				symmetric = 1
@@ -139,6 +155,7 @@ Controller = {
 						source = pelvis_tilt
 						delay = 0.005
 						KP = "~1.15<-10,10>" ; k_lean
+						KV = "~0.25<-10,10>" ; not in [GH2010]
 						P0 = "~-0.105<-1,1>" ; theta_ref
 					}
 					; late-swing HFL inhibition [Geyer & Herr 2010]
