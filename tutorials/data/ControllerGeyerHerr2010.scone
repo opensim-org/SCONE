@@ -1,6 +1,6 @@
 Controller = {
 	; Gait controller based on [Geyer & Herr 2010]
-	signature_postfix = "GH2010v3"
+	signature_postfix = "GH2010"
 	type = GaitStateController
 	stance_load_threshold = "~0.1<0.001,1>"
 	leg_load_sensor_delay = 0

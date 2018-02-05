@@ -1,7 +1,6 @@
 Optimizer = {
 	type = CmaOptimizer
 	signature_prefix = DATE_TIME
-	random_seed = 123
 	Objective = {
 		type = SimulationObjective
 		signature_postfix = ""
@@ -17,12 +16,10 @@ Optimizer = {
 			}
 			integration_method = SemiExplicitEuler2
 			integration_accuracy = 0.001
-			use_fixed_control_step_size = 1
 			fixed_control_step_size = 0.001
-			sensor_delay_scaling_factor = 1.0
 			
-			#include "data/ControllerGeyerHerr2010v3.zml"
-			#include "data/GaitMeasure.zml"
+			#include "data/ControllerGeyerHerr2010v3.scone"
+			#include "data/GaitMeasure.scone"
 		}
 	}
 }
