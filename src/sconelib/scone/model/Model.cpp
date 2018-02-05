@@ -15,6 +15,7 @@
 #include "scone/model/State.h"
 #include "xo/container/container_tools.h"
 #include "../objectives/Measure.h"
+#include "xo/string/string_tools.h"
 
 using std::endl;
 
@@ -105,10 +106,15 @@ namespace scone
 
 	String Model::GetClassSignature() const
 	{
-		auto str = GetName();
+		auto sig = GetName();
 		for ( auto& c : GetControllers() )
-			str += "." + c->GetSignature();
-		return str;
+		{
+			auto controller_sig = c->GetSignature();
+			if ( !xo::str_ends_with( sig, "." ) && !xo::str_begins_with( controller_sig, "." ) )
+				sig += "."; // add dot if it isn't there
+			sig += c->GetSignature();
+		}
+		return sig;
 	}
 
 	void Model::UpdateSensorDelayAdapters()
