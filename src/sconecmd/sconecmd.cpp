@@ -9,6 +9,7 @@
 #include "xo/serialization/prop_node_tools.h"
 #include "spot/optimization_pool.h"
 #include <xutility>
+#include "xo/serialization/serialize.h"
 
 using namespace scone;
 using namespace std;
@@ -16,6 +17,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	xo::log::stream_sink console_sink( xo::log::info_level, std::cout );
+	xo::register_file_format( "scone", xo::file_format::zml );
 
 	try
 	{

@@ -28,6 +28,7 @@ int main( int argc, char *argv[] )
 
 	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".txt" );
 	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
+	xo::register_file_format( "scone", xo::file_format::zml );
 
 	if ( !file_sink.good() )
 	{
