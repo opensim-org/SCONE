@@ -35,6 +35,7 @@ namespace scone
 		Vec3 prepare_com;
 		Vec3 peak_com;
 		Vec3 peak_com_vel;
+		double peak_height;
 		Vec3 recover_com;
 		TimeInSeconds recover_start_time;
 		Real prepare_time;

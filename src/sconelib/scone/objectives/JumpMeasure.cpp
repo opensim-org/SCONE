@@ -21,6 +21,7 @@ namespace scone
 			target_body = FindByName( model.GetBodies(), props.get< String >( "target_body" ) ).get();
 
 		prepare_com = init_com = model.GetComPos();
+		peak_height = init_com.y;
 
 		for ( auto& body : model.GetBodies() )
 			init_min_x = std::min( init_min_x, body->GetComPos().x );
@@ -56,6 +57,9 @@ namespace scone
 			return RequestTermination;
 		}
 
+		Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
+		peak_height = xo::max( peak_height, pos.y );
+
 		switch ( state )
 		{
 		case Prepare:
@@ -73,8 +77,18 @@ namespace scone
 				state = Flight;
 				log::trace( timestamp, ": State changed to Flight, com_pos=", com_pos );
 			}
-			if ( com_vel.y < 0 ) // don't allow moving down during takeoff
-				return RequestTermination;
+			else if ( com_vel.y < 0 )
+			{
+				// unsuccessful take-off
+				state = Recover;
+				peak_com = com_pos;
+				peak_com_vel = com_vel;
+				recover_com = com_pos;
+				log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
+
+				if ( terminate_on_peak )
+					return RequestTermination;
+			}
 			break;
 
 		case Flight:
@@ -84,9 +98,11 @@ namespace scone
 				peak_com = com_pos;
 				peak_com_vel = com_vel;
 				log::trace( timestamp, ": State changed to Landing, com_pos=", com_pos );
+
 				if ( terminate_on_peak )
 					return RequestTermination;
 			}
+			break;
 
 		case Landing:
 			if ( grf > 0 )
@@ -101,6 +117,7 @@ namespace scone
 		case Recover:
 			log::trace( "com_vel=", com_vel.x );
 			recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
+
 			if ( timestamp - recover_start_time >= recover_time )
 				return RequestTermination;
 			break;
@@ -124,9 +141,10 @@ namespace scone
 	double JumpMeasure::GetHighJumpResult( const Model& model )
 	{
 		Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
+		peak_height = xo::max( peak_height, pos.y );
 
 		double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
-		double jump_height = 100 * pos.y;
+		double jump_height = 100 * peak_height;
 		double result = 0.0;
 
 		switch ( state )
@@ -138,6 +156,7 @@ namespace scone
 		case scone::JumpMeasure::Takeoff:
 		case scone::JumpMeasure::Flight:
 		case scone::JumpMeasure::Landing:
+		case scone::JumpMeasure::Recover:
 			// we've managed to jump, return height as result, with penalty for early jumping
 			result = jump_height - early_jump_penalty;
 			break;
