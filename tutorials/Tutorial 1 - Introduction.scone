@@ -9,13 +9,14 @@ Optimizer = {
 		Model = {
 			type = Simbody
 			model_file = models/f0914m.osim
-			integration_method = SemiExplicitEuler2
-			integration_accuracy = 0.001
 			state_init_optimization = {
 				symmetric = 1
 				offset = { mean = 0 std = 0.01 min = -0.1 max = 0.1 }
 				exclude_states = "*_tx;*_ty;*_u"
 			}
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			fixed_control_step_size = 0.001
 			
 			Controller = {
 				type = FeedForwardController
@@ -23,14 +24,14 @@ Optimizer = {
 				Function = {
 					type = PieceWiseConstantFunction
 					control_points = 2
-					control_point_y = { mean = 0.2 std = 0.1 min = 0 max = 1 }
+					control_point_y = { mean = 0.2 std = 0.01 min = 0.0 max = 0.3 }
 					control_point_dt = { mean = 0.2 std = 0.01 min = 0 max = 1 }
 				}
 			}
 
 			Measure = {
 				type = JumpMeasure
-				terminate_on_peak = 0
+				terminate_on_peak = 1
 				termination_height = 0.75
 				prepare_time = 0.2
 			}
