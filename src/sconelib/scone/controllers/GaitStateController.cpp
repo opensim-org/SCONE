@@ -231,17 +231,17 @@ namespace scone
 
 	scone::String GaitStateController::GetClassSignature() const
 	{
+#ifdef SCONE_VERBOSE_SIGNATURES
 		String s = "G";
-
 		std::map< String, int > controllers;
 		for ( const ConditionalControllerUP& cc : m_ConditionalControllers )
 			controllers[ cc->controller->GetSignature() ] += 1;
-
-		// output number of controllers per leg
 		for ( auto it = controllers.begin(); it != controllers.end(); ++it )
 			s += to_str( it->second / m_LegStates.size() ) + it->first;
-
 		return s;
+#else
+		return "";
+#endif
 	}
 
 	void GaitStateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

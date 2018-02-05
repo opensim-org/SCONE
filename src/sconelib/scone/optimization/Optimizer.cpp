@@ -69,7 +69,7 @@ namespace scone
 
 	scone::String Optimizer::GetClassSignature() const
 	{
-		String s = GetSconeBuildNumber() + "." + GetObjective().GetSignature();
+		String s = GetObjective().GetSignature();
 		if ( use_init_file && !init_file.empty() )
 			s += ".I";
 
