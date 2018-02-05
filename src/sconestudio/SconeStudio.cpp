@@ -302,13 +302,20 @@ void SconeStudio::fileOpen()
 
 void SconeStudio::fileOpen( const QString& filename )
 {
-	QCodeEditor* edw = new QCodeEditor( this );
-	edw->open( filename );
-	int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
-	ui.tabWidget->setCurrentIndex( idx );
-	connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
-	scenarios.push_back( edw );
-	addRecentFile( filename );
+	try
+	{
+		QCodeEditor* edw = new QCodeEditor( this );
+		edw->open( filename );
+		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
+		ui.tabWidget->setCurrentIndex( idx );
+		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
+		scenarios.push_back( edw );
+		addRecentFile( filename );
+	}
+	catch ( std::exception& e )
+	{
+		error( "Error opening file", e.what() );
+	}
 }
 
 void SconeStudio::fileOpenRecent()
