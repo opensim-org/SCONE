@@ -295,7 +295,7 @@ void SconeStudio::fileOpen()
 	if ( auto* s = getActiveScenario() )
 		default_path = make_qt( path( s->fileName.toStdString() ).parent_path() );
 
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.xml *.zml)" );
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.scone *.xml *.zml)" );
 	if ( !filename.isEmpty() )
 		fileOpen( filename );
 }
