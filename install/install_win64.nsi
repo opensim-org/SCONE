@@ -3,7 +3,7 @@
 ;Written by Joost Verburg
 
 !define SCONE_VERSION "0.10.1-x64-ALPHA"
-!define MSVC_VERSION "msvc2015_64"
+!define MSVC_VERSION "msvc2017_64"
 !define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
@@ -148,7 +148,7 @@ FunctionEnd
 	;Assign language strings to sections
 	!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 		!insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
-		!insertmacro MUI_DESCRIPTION_TEXT ${SecModels} $(DESC_SecModels)
+		;!insertmacro MUI_DESCRIPTION_TEXT ${SecModels} $(DESC_SecModels)
 		!insertmacro MUI_DESCRIPTION_TEXT ${SecTutorials} $(DESC_SecTutorials)
 	!insertmacro MUI_FUNCTION_DESCRIPTION_END
  
