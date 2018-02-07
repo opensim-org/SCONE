@@ -83,12 +83,20 @@ namespace scone
 			std::vector< string > source_names;
 
 			if ( type == "L" || type == "F" || type == "V" || type == "S" || type == "U" )
+			{
 				source_names = FindMatchingNames( GetModel().GetMuscles(), source_mask, exclude_mask );
+				for ( auto& name : source_names )
+					m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), GetSideFromName( name ), "linear" ) );
+			}
 			else if ( type == "DP" || type == "DV" || type == "DPV" )
+			{
 				source_names = FindMatchingNames( GetModel().GetDofs(), source_mask, exclude_mask );
-
-			for ( auto& name : source_names )
-				m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), GetSideFromName( name ), "linear" ) );
+				for ( auto& name : source_names )
+				{
+					m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), LeftSide, "linear" ) );
+					m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), RightSide, "linear" ) );
+				}
+			}
 		}
 	}
 

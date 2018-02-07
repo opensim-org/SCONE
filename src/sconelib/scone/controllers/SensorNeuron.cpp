@@ -23,7 +23,6 @@ namespace scone
 	{
 		bool inverted = pn.get< bool >( "inverted", false );
 		par_name_ = GetNameNoSide( name ) + ( inverted ? "-." : "." ) + type_;
-		side_ = GetSideFromName( name );
 
 		ScopedParamSetPrefixer sp( par, par_name_ );
 		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );
@@ -63,6 +62,11 @@ namespace scone
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv );
 			break;
 		}
+
+		// mirror sensor gain for right side DOF sensors
+		// TODO: use more generic vestibular sensors instead
+		if ( muscle_ == nullptr && side == RightSide && !xo::str_ends_with( name, "tilt" ) )
+			sensor_gain_ *= -1;
 
 		xo_error_if( !input_, "Unknown type " + type_ );
 		source_name_ = name;
