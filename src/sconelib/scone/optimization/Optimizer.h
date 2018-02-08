@@ -37,6 +37,7 @@ namespace scone
 		}
 
 		path output_root;
+		path init_file;
 
 	protected:
 		void CreateObjectives( size_t count );
@@ -58,7 +59,6 @@ namespace scone
 		bool show_optimization_time;
 		Real min_improvement_factor_for_file_output;
 		size_t max_generations_without_file_output;
-		path init_file;
 		bool use_init_file;
 		bool output_objective_result_files;
 

@@ -17,10 +17,11 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	xo::log::stream_sink console_sink( xo::log::info_level, std::cout );
-	xo::register_file_format( "scone", xo::file_format::zml );
 
 	try
 	{
+		xo::register_file_format( "scone", xo::file_format::zml );
+
 		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', "0.1", true );
 		TCLAP::ValueArg< string > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
 		TCLAP::ValueArg< string > resArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Result file" );
