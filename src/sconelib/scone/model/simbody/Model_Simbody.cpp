@@ -782,6 +782,17 @@ namespace scone
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
 		GetOsimModel().setStateValues( GetTkState(), &m_State.GetValues()[ 0 ] );
+
+		// set locked coordinates
+		auto& cs = GetOsimModel().updCoordinateSet();
+		for ( int i = 0; i < cs.getSize(); ++i )
+		{
+			if ( cs.get( i ).getLocked( GetTkState() ) )
+			{
+				cs.get( i ).setLocked( GetTkState(), false );
+				cs.get( i ).setLocked( GetTkState(), true );
+			}
+		}
 	}
 
 	void Model_Simbody::SetState( const State& state, TimeInSeconds timestamp )
