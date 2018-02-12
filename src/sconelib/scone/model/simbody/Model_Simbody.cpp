@@ -334,7 +334,7 @@ namespace scone
 					for ( auto act : xo::make_view_if( m_Actuators, xo::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
 					{
 						SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
-						act->SetDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
+						act->SetActuatorDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
 						++usage;
 					}
 				}

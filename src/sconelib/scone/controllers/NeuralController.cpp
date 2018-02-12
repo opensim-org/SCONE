@@ -270,9 +270,21 @@ namespace scone
 				sources( xo::left_of_str( input.neuron->GetParName(), "." ), neuron->GetParName() ) += input.contribution / tot / 2.0;
 			}
 		}
-		std::ofstream( ( file + ".stats.weights.txt" ).str() ) << weights;
-		std::ofstream( ( file + ".stats.contrib.txt" ).str() ) << contribs;
-		std::ofstream( ( file + ".stats.sources.txt" ).str() ) << sources;
+
+		std::ofstream str( ( file + ".NeuralController.txt" ).str() );
+		str << weights << std::endl;
+		str << contribs << std::endl;
+		str << sources << std::endl;
+
+		// output virtual muscles
+		for ( auto& m : GetModel().GetMuscles() )
+		{
+			str << m->GetName();
+			auto mp = GetVirtualMuscles( m.get() );
+			for ( auto& par : mp )
+				str << "\t" << par.name << "\t" << par.correlation;
+			str << std::endl;
+		}
 	}
 
 	String NeuralController::GetClassSignature() const

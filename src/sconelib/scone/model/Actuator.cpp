@@ -32,7 +32,7 @@ namespace scone
 	{
 	}
 
-	void Actuator::SetDelay( TimeInSeconds d, TimeInSeconds cs )
+	void Actuator::SetActuatorDelay( TimeInSeconds d, TimeInSeconds cs )
 	{
 		m_DelaySamples = std::lround( d / cs );
 	}
