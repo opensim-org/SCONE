@@ -21,7 +21,6 @@ namespace scone
 		INIT_PROP( props, start_time, 0.0 );
 		INIT_PROP( props, end_time, 600.0 );
 		INIT_PROP( props, random_seed, 5489U );
-		position_offset = props.get< Vec3 >( "position_offset" );
 
 		std::default_random_engine rng_engine( random_seed );
 		perturbation_times.emplace_back( start_time );
