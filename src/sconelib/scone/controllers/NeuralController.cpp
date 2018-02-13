@@ -34,39 +34,46 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		auto delay_file = pn.get< path >( "delay_file", "" );
-		if ( !delay_file.empty() )
+		try
 		{
-			delays_ = load_zml( delay_file );
-			model.AddExternalResource( delay_file );
+			auto delay_file = pn.get< path >( "delay_file", "" );
+			if ( !delay_file.empty() )
+			{
+				delays_ = load_zml( delay_file );
+				model.AddExternalResource( delay_file );
+			}
+
+			INIT_PROP( pn, delay_factor_, 1.0 );
+			par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
+				{ "muscle", muscle_mode },
+				{ "dof", dof_mode },
+				{ "virtual", virtual_mode },
+				{ "virtual_dof", virtual_dof_mode },
+			} );
+
+			activation_function_ = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
+
+			// backup the current state and set all DOFs to zero
+			State org_state = model.GetState();
+			model.SetNullState();
+
+			// create sensor neuron layer
+			AddSensorNeuronLayer( pn.get_child( "SensorNeuronLayer" ), par );
+
+			// create inter neuron layers
+			for ( auto& n : pn.select( "InterNeuronLayer" ) )
+				AddInterNeuronLayer( n.second, par );
+
+			// create motor neuron layer
+			AddMotorNeuronLayer( pn.get_child( "MotorNeuronLayer" ), par );
+
+			// restore original state
+			model.SetState( org_state, 0.0 );
 		}
-
-		INIT_PROP( pn, delay_factor_, 1.0 );
-		par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
-			{ "muscle", muscle_mode },
-			{ "dof", dof_mode },
-			{ "virtual", virtual_mode },
-			{ "virtual_dof", virtual_dof_mode },
-		} );
-
-		activation_function_ = GetActivationFunction( pn.get< string >( "activation", "rectifier" ) );
-
-		// backup the current state and set all DOFs to zero
-		State org_state = model.GetState();
-		model.SetNullState();
-
-		// create sensor neuron layer
-		AddSensorNeuronLayer( pn.get_child( "SensorNeuronLayer" ), par );
-
-		// create inter neuron layers
-		for ( auto& n : pn.select( "InterNeuronLayer" ) )
-			AddInterNeuronLayer( n.second, par );
-
-		// create motor neuron layer
-		AddMotorNeuronLayer( pn.get_child( "MotorNeuronLayer" ), par );
-
-		// restore original state
-		model.SetState( org_state, 0.0 );
+		catch ( std::exception& e )
+		{
+			SCONE_THROW( string( "Could not create NeuralController: " ) + e.what() );
+		}
 	}
 
 	void NeuralController::AddSensorNeuronLayer( const PropNode& layer_pn, Params& par )
