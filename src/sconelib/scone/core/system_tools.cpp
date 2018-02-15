@@ -103,9 +103,11 @@ namespace scone
 	SCONE_API path FindFile( const path& p )
 	{
 		if ( file_exists( p ) )
-			return p; // original filename
+			return p; // original path
 		else if ( p.has_filename() && file_exists( p.filename() ) )
-			return p.filename(); // filename with no path -- in current folder
+			return p.filename(); // filename in current folder
+		else if ( p.has_filename() && file_exists( path( ".." ) / p.filename() ) )
+			return path( ".." ) / p.filename(); // filename in folder one above current folder
 		else SCONE_THROW( "Could not find " + p.string() + " in " + xo::current_path().string() );
 	}
 
