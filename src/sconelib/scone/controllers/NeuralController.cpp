@@ -1,29 +1,31 @@
-#include "../model/Joint.h"
 #include "NeuralController.h"
 
-#include "scone/core/string_tools.h"
-#include "scone/model/Locality.h"
-#include "scone/core/HasName.h"
+#include <algorithm>
+#include <numeric>
+
 #include "xo/container/container_tools.h"
-#include "SensorNeuron.h"
+#include "xo/container/table.h"
+#include "xo/string/dictionary.h"
+#include "xo/string/pattern_matcher.h"
+#include "xo/string/string_cast.h"
+#include "xo/string/string_tools.h"
+#include "xo/utility/hash.h"
+
+#include "scone/core/HasName.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/string_tools.h"
+#include "scone/model/Dof.h"
+#include "scone/model/Joint.h"
+#include "scone/model/Locality.h"
+#include "scone/model/Model.h"
+#include "scone/model/Muscle.h"
+#include "scone/model/Side.h"
+#include "scone/model/model_tools.h"
+
 #include "InterNeuron.h"
 #include "PatternNeuron.h"
-#include "xo/string/pattern_matcher.h"
-#include "../model/Model.h"
-#include "../model/Muscle.h"
-#include "../model/Dof.h"
-#include <algorithm>
+#include "SensorNeuron.h"
 #include "activation_functions.h"
-#include "xo/utility/hash.h"
-#include "xo/string/string_tools.h"
-#include "xo/container/table.h"
-#include "xo/string/string_cast.h"
-#include "../core/Profiler.h"
-#include "../model/model_tools.h"
-#include "xo/string/dictionary.h"
-#include "../model/Side.h"
-
-#include <numeric>
 
 namespace scone
 {

@@ -5,7 +5,6 @@
 
 namespace scone
 {
-
 	ExternalBalanceController::ExternalBalanceController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 	Controller( props, par, model, target_area ),
 	force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) )
