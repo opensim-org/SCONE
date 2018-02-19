@@ -15,9 +15,9 @@ namespace scone
 		virtual void Run() override { SCONE_THROW( "Please use a subclass of CmaOptimzer" ); }
 
 	protected:
-		int m_Mu;
-		int m_Lambda;
-		double m_Sigma;
+		int mu_;
+		int lambda_;
+		double sigma_;
 		size_t max_generations;
 		size_t window_size;
 		int recombination_type; // 0 = equal, 1 = linear, 2 = superlinear

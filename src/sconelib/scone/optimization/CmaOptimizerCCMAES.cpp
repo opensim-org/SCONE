@@ -48,28 +48,32 @@ namespace scone
 			GetObjective().info().set_minimize( IsMinimizing() );
 
 			// init CMA object
-			spot::cma_optimizer cma( GetObjective(), m_Lambda, random_seed );
-			m_Lambda = cma.lambda();
-			m_Mu = cma.mu();
-			m_Sigma = cma.sigma();
+			spot::cma_optimizer cma( GetObjective(), lambda_, random_seed );
+			lambda_ = cma.lambda();
+			mu_ = cma.mu();
+			sigma_ = cma.sigma();
 			cma.set_max_threads( (int)max_threads );
 			cma.enable_fitness_tracking( window_size );
 
 			// start optimization
 			xo::log::file_sink log_sink( xo::log::info_level, AcquireOutputFolder() / "optimization.log" );
-			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, m_Lambda, m_Mu );
+			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, lambda_, mu_ );
 
 			if ( GetStatusOutput() )
 			{
 				// print out some info
 				OutputStatus( "folder", AcquireOutputFolder() );
 				OutputStatus( "dim", dim );
-				OutputStatus( "sigma", m_Sigma );
-				OutputStatus( "lambda", m_Lambda );
-				OutputStatus( "mu", m_Mu );
+				OutputStatus( "sigma", sigma_ );
+				OutputStatus( "lambda", lambda_ );
+				OutputStatus( "mu", mu_ );
 				OutputStatus( "max_generations", max_generations );
 				OutputStatus( "window_size", window_size );
 			}
+
+			// setup history.txt
+			std::ofstream history_str( ( AcquireOutputFolder() / "history.txt" ).string() );
+			history_str << "Step\tBest\tAverage\tPredicted\tSlope\tOffset" << std::endl;
 
 			// optimization loop
 			xo::timer tmr;
@@ -87,7 +91,7 @@ namespace scone
 				auto current_best_it = GetObjective().info().maximize() ? std::max_element( results.begin(), results.end() ) : std::min_element( results.begin(), results.end() );
 				size_t current_best_idx = current_best_it - results.begin();
 				auto current_best = *current_best_it;
-				auto current_avg_fitness = xo::top_average( results, m_Mu );
+				auto current_avg_fitness = xo::top_average( results, mu_ );
 				auto current_med_fitness = xo::median( results );
 				auto cur_trend = cma.fitness_trend();
 
@@ -97,6 +101,11 @@ namespace scone
 
 				if ( GetStatusOutput() )
 					OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", gen, current_best, current_med_fitness, current_avg_fitness, cur_trend.offset(), cur_trend.slope() ) );
+
+				// update history
+				history_str << gen << "\t" << current_best << "\t" << current_avg_fitness << "\t" << cma.predicted_fitness( max_generations ) << "\t" << cur_trend.slope() << "\t" << cur_trend.offset() << "\n";
+				if ( gen % 10 == 9 ) // flush after 10 entries
+					history_str.flush();
 
 				bool new_best = IsBetterThan( current_best, m_BestFitness );
 				if ( new_best )
