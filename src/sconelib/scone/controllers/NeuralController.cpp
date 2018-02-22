@@ -259,6 +259,7 @@ namespace scone
 	void NeuralController::WriteResult( const path& file ) const
 	{
 		xo::table< double > weights, contribs, sources;
+		std::vector< std::pair< double, string > > contrib_vec;
 
 		for ( auto& inter_layer : m_InterNeurons )
 		{
@@ -277,12 +278,24 @@ namespace scone
 				weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 				contribs( input.neuron->GetName( false ), neuron->name_ ) = input.contribution / tot;
 				sources( xo::left_of_str( input.neuron->GetParName(), "." ), neuron->GetParName() ) += input.contribution / tot / 2.0;
+				contrib_vec.emplace_back( input.contribution, neuron->name_ + "\t" + input.neuron->GetName( false ) );
 			}
 		}
 
+		std::sort( contrib_vec.begin(), contrib_vec.end(), std::greater<>() );
+
 		std::ofstream str( ( file + ".NeuralController.txt" ).str() );
+
+		// output gains
 		str << weights << std::endl;
+
+		// output input contributions
 		str << contribs << std::endl;
+		for ( auto& c : contrib_vec )
+			str << c.second << "\t" << c.first << std::endl;
+		str << std::endl;
+
+		// output sources
 		str << sources << std::endl;
 
 		// output virtual muscles
@@ -294,6 +307,7 @@ namespace scone
 				str << "\t" << par.name << "\t" << par.correlation;
 			str << std::endl;
 		}
+
 	}
 
 	String NeuralController::GetClassSignature() const

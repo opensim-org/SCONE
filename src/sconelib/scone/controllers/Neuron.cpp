@@ -17,6 +17,7 @@
 namespace scone
 {
 	xo::dictionary< InterNeuron::connection_t > connection_dict( {
+		{ Neuron::none, "none" },
 		{ Neuron::bilateral, "bilateral" },
 		{ Neuron::monosynaptic, "monosynaptic" },
 		{ Neuron::antagonistic, "antagonistic" },
@@ -24,6 +25,7 @@ namespace scone
 		{ Neuron::synergetic, "synergetic" },
 		{ Neuron::ipsilateral, "ipsilateral" },
 		{ Neuron::contralateral, "contralateral" },
+		{ Neuron::source, "source" },
 		{ Neuron::agonistic, "protagonistic" } // backwards compatibility
 	} );
 
@@ -96,9 +98,9 @@ namespace scone
 		auto mpars = nc.GetMuscleParams( muscle_, false );
 
 		// see if there's an input
+		connection_t connect = connection_dict( pn.get< string >( "connect", pn.has_key( "source" ) ? "source" : "none" ) );
 		string input_type = pn.get< string >( "type", "*" );
-		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", "" ) );
-		connection_t connect = connection_dict( pn.get< string >( "connect", "bilateral" ) );
+		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", connect == none ? "" : "0" ) );
 		bool right_side = GetSide() == RightSide;
 
 		// check the input layer
@@ -155,6 +157,15 @@ namespace scone
 							postfix = sensor->GetParName();
 						break;
 					}
+					case InterNeuron::source:
+					{
+						auto source_name = pn.get< string >( "source" );
+						if ( GetNameNoSide( sensor->source_name_ ) == source_name )
+							postfix = sensor->GetParName();
+						break;
+					}
+					case InterNeuron::none:
+						break;
 					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 					}
 
