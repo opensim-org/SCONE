@@ -83,7 +83,7 @@ ProgressDockWidget::~ProgressDockWidget()
 
 void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 {
-	log::info( "Changing axis style to ", ast );
+	//log::info( "Changing axis style to ", ast );
 	//ui.plot->yAxis->setScaleType( Linear ? QCPAxis::stLinear : QCPAxis::stLogarithmic );
 	//ui.plot->yAxis->setScaleLogBase( log_base );
 }
