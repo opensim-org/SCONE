@@ -100,7 +100,6 @@ namespace scone
 		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
-		void ClearBodyForces();
 
 		String integration_method;
 		double integration_accuracy;

@@ -451,12 +451,6 @@ namespace scone
 		return link;
 	}
 
-	void Model_Simbody::ClearBodyForces()
-	{
-		for ( auto& bf : m_BodyForces )
-			bf->setNull();
-	}
-
 	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 	{
 		SCONE_PROFILE_FUNCTION;
@@ -478,7 +472,6 @@ namespace scone
 				}
 
 				// update actuator values
-				m_Model.ClearBodyForces();
 				m_Model.UpdateControlValues();
 
 				// update previous integration step and time
@@ -558,7 +551,6 @@ namespace scone
 				for ( int current_step = 0; current_step < number_of_steps; )
 				{
 					// update controls
-					ClearBodyForces();
 					UpdateControlValues();
 
 					// integrate

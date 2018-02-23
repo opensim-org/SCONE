@@ -3,6 +3,7 @@
 #include "OpenSim/Simulation/SimbodyEngine/SimbodyEngine.h"
 #include "OpenSim/Simulation/Model/Model.h"
 #include "OpenSim/Simulation/Model/BodySet.h"
+#include "xo/system/log.h"
 
 using SimTK::Vec3;
 
@@ -35,9 +36,19 @@ namespace OpenSim
 		setTorque( SimTK::Vec3( 0 ) );
 	}
 
+	void ConstantForce::setForce( const SimTK::Vec3& force )
+	{
+		force_ = force;
+	}
+
 	void ConstantForce::setForceAtPoint( const SimTK::Vec3& force, const SimTK::Vec3& point )
 	{
 		force_ = force;
+		point_ = point;
+	}
+
+	void ConstantForce::setPoint( const SimTK::Vec3& point )
+	{
 		point_ = point;
 	}
 

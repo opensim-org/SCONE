@@ -278,6 +278,18 @@ namespace scone
 			cf->setTorque( make_osim( torque ) );
 	}
 
+	void Body_Simbody::AddExternalForce( const Vec3& force )
+	{
+		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
+			cf->setForce( make_osim( force ) + cf->getForce() );
+	}
+
+	void Body_Simbody::AddExternalMoment( const Vec3& torque )
+	{
+		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
+			cf->setTorque( make_osim( torque ) + cf->getTorque() );
+	}
+
 	scone::Vec3 Body_Simbody::GetExternalForce() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )

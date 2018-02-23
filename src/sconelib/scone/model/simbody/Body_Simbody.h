@@ -54,6 +54,8 @@ namespace scone
 
 		virtual void SetExternalForce( const Vec3& f ) override;
 		virtual void SetExternalMoment( const Vec3& torque ) override;
+		virtual void AddExternalForce( const Vec3& f ) override;
+		virtual void AddExternalMoment( const Vec3& torque ) override;
 		virtual void SetExternalForceAtPoint( const Vec3& force, const Vec3& point ) override;
 
 		virtual Vec3 GetExternalForce() const override;

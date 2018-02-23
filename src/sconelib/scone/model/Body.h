@@ -38,6 +38,9 @@ namespace scone
 		virtual void SetExternalForce( const Vec3& force ) = 0;
 		virtual void SetExternalForceAtPoint( const Vec3& force, const Vec3& point ) = 0;
 		virtual void SetExternalMoment( const Vec3& torque ) = 0;
+		virtual void AddExternalForce( const Vec3& f ) = 0;
+		virtual void AddExternalMoment( const Vec3& torque ) = 0;
+
 
 		virtual Vec3 GetExternalForce() const = 0;
 		virtual Vec3 GetExternalForcePoint() const = 0;

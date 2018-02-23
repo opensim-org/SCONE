@@ -8,7 +8,8 @@ namespace scone
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 	Controller( props, par, model, target_area ),
 	body_( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
-	current_force( 0 )
+	current_force( 0 ),
+	active_( false )
 	{
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, force, Vec3::zero() );
@@ -30,6 +31,13 @@ namespace scone
 			while ( perturbation_times.back() < end_time )
 				perturbation_times.emplace_back( perturbation_times.back() + time_dist( rng_engine ) );
 		}
+
+		// set force point, make sure it's not set yet
+		if ( !position_offset.is_null() )
+		{
+			SCONE_THROW_IF( !body_.GetExternalForcePoint().is_null(), "Cannot apply multiple external forces at different points on one body" );
+			body_.SetExternalForceAtPoint( Vec3::zero(), position_offset );
+		}
 	}
 
 	Controller::UpdateResult PerturbationController::UpdateControls( Model& model, double timestamp )
@@ -37,12 +45,16 @@ namespace scone
 		// find closest perturbation time
 		auto it = std::upper_bound( perturbation_times.begin(), perturbation_times.end(), timestamp );
 		if ( it != perturbation_times.begin() ) --it;
-		if ( timestamp >= *it && timestamp < *it + duration )
+		bool active = ( timestamp >= *it && timestamp < *it + duration );
+
+		if ( active != active_ )
 		{
-			body_.SetExternalForceAtPoint( force, position_offset );
-			body_.SetExternalMoment( moment );
+			double s = active ? 1 : -1;
+			body_.AddExternalForce( s * force );
+			body_.AddExternalMoment( s * moment );
+
+			active_ = active;
 		}
-		else body_.ClearExternalForceAndMoment();
 
 		return Controller::SuccessfulUpdate;
 	}

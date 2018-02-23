@@ -28,6 +28,8 @@ namespace OpenSim
 		// assignment operator.
 
 		void setNull();
+		void setForce( const SimTK::Vec3& force );
+		void setPoint( const SimTK::Vec3& point );
 		void setForceAtPoint( const SimTK::Vec3& force, const SimTK::Vec3& point );
 		void setTorque( const SimTK::Vec3& torque );
 

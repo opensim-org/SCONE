@@ -34,6 +34,7 @@ namespace scone
 	private:
 		std::vector< TimeInSeconds > perturbation_times;
 
+		bool active_;
 		unsigned int random_seed;
 		Vec3 position_offset;
 		Vec3 current_force;
