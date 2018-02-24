@@ -90,6 +90,23 @@ namespace scone
 		}
 	}
 
+	bool Neuron::CheckRelation( connection_t connect, SensorNeuron* sensor, const PropNode& pn )
+	{
+		switch ( connect )
+		{
+		case InterNeuron::bilateral: return true;
+		case InterNeuron::monosynaptic: return muscle_ && sensor->source_name_ == name_;
+		case InterNeuron::antagonistic: return muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ );
+		case InterNeuron::agonistic: return muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ );
+		case InterNeuron::synergetic: return muscle_ && sensor->muscle_ && muscle_->HasSharedDofs( *sensor->muscle_ );
+		case InterNeuron::ipsilateral: return sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide;
+		case InterNeuron::contralateral: return sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide;
+		case InterNeuron::source: return GetNameNoSide( sensor->source_name_ ) == pn.get< string >( "source" );
+		case InterNeuron::none: return false;
+		default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
+		}
+	}
+
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
 		SCONE_PROFILE_FUNCTION;
