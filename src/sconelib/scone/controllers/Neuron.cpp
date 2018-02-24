@@ -112,7 +112,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// set param prefix
-		auto mpars = nc.GetMuscleParams( muscle_, false );
+		auto mpvec = nc.GetMuscleParams( muscle_, false );
 
 		// see if there's an input
 		connection_t connect = connection_dict( pn.get< string >( "connect", pn.has_key( "source" ) ? "source" : "none" ) );
@@ -130,70 +130,35 @@ namespace scone
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( xo::pattern_match( sensor->type_, input_type ) )
 				{
-					string postfix;
-					switch ( connect )
-					{
-					case InterNeuron::bilateral:
-					{
-						postfix = sensor->GetName( right_side );
-						break;
-					}
-					case InterNeuron::monosynaptic:
-					{
-						if ( sensor->source_name_ == name_ )
-							postfix = sensor->type_;
-						break;
-					}
-					case InterNeuron::antagonistic:
-					{
-						if ( muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ ) )
-							postfix = sensor->GetParName();
-						break;
-					}
-					case InterNeuron::agonistic:
-					{
-						if ( muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ ) )
-							postfix = sensor->muscle_ == muscle_ ? sensor->type_ : sensor->GetParName();
-						break;
-					}
-					case InterNeuron::synergetic:
-					{
-						if ( muscle_ && sensor->muscle_ )
-							AddSynergeticInput( sensor, pn, par, nc );
-						break;
-					}
-					case InterNeuron::ipsilateral:
-					{
-						if ( sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide )
-							postfix = sensor->GetParName();
-						break;
-					}
-					case InterNeuron::contralateral:
-					{
-						if ( sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide )
-							postfix = sensor->GetParName();
-						break;
-					}
-					case InterNeuron::source:
-					{
-						auto source_name = pn.get< string >( "source" );
-						if ( GetNameNoSide( sensor->source_name_ ) == source_name )
-							postfix = sensor->GetParName();
-						break;
-					}
-					case InterNeuron::none:
-						break;
-					default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
-					}
-
-					if ( !postfix.empty() )
+					if ( CheckRelation( connect, sensor, pn ) )
 					{
 						double gain = 0, offset = 0;
-						for ( auto& mp : mpars )
+
+						if ( sensor->muscle_ )
 						{
-							gain += mp.correlation * par.try_get( mp.name + '.' + postfix, pn, "gain", 1.0 );
-							offset += mp.correlation * par.try_get( mp.name + '.' + postfix + '0', pn, "offset", 0.0 );
+							// input sensor is a muscle, so we need to find all muscle params
+							auto spvec = nc.GetMuscleParams( sensor->muscle_, true );
+							for ( auto& mp : mpvec )
+							{
+								for ( auto& sp : spvec )
+								{
+									string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
+									auto factor = mp.correlation * sp.correlation;
+									gain += factor * par.try_get( parname, pn, "gain", 0.0 );
+									offset += factor * par.try_get( parname + '0', pn, "offset", 0.0 );
+								}
+							}
 						}
+						else
+						{
+							// input sensor is no muscle, so we need no breakdown (TODO: a little neater)
+							for ( auto& mp : mpvec )
+							{
+								gain += mp.correlation * par.try_get( mp.name + '.' + sensor->GetParName(), pn, "gain", 1.0 );
+								offset += mp.correlation * par.try_get( mp.name + '.' + sensor->GetParName() + '0', pn, "offset", 0.0 );
+							}
+						}
+
 						AddInput( sensor, gain );
 					}
 				}
@@ -230,7 +195,7 @@ namespace scone
 		else if ( pn.has_key( "offset" ) )
 		{
 			// this is a channel with only an offset -- used for backwards compatibility
-			for ( auto& mp : mpars )
+			for ( auto& mp : mpvec )
 				offset_ += mp.correlation * par.try_get( mp.name + ".C0", pn, "offset", 0.0 );
 		}
 	}
