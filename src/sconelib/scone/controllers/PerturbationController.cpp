@@ -35,7 +35,8 @@ namespace scone
 		// set force point, make sure it's not set yet
 		if ( !position_offset.is_null() )
 		{
-			SCONE_THROW_IF( !body_.GetExternalForcePoint().is_null(), "Cannot apply multiple external forces at different points on one body" );
+			if ( !body_.GetExternalForcePoint().is_null() && body_.GetExternalForcePoint() != position_offset )
+				SCONE_THROW( "Cannot apply multiple external forces at different points on one body" );
 			body_.SetExternalForceAtPoint( Vec3::zero(), position_offset );
 		}
 	}
