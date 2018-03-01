@@ -133,7 +133,6 @@ namespace scone
 					if ( CheckRelation( connect, sensor, pn ) )
 					{
 						double gain = 0, offset = 0;
-
 						if ( sensor->muscle_ )
 						{
 							// input sensor is a muscle, so we need to find all muscle params

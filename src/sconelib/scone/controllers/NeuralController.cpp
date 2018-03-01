@@ -175,6 +175,7 @@ namespace scone
 		MuscleParamList results;
 		for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 		{
+			// TODO: check if a DOF is locked
 			auto& dof = dofs[ dof_idx ];
 			auto mom = mus->GetNormalizedMomentArm( *dof );
 			auto name = GetNameNoSide( dof->GetName() ) + GetSignChar( mom );
