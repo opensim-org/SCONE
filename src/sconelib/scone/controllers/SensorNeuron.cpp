@@ -60,8 +60,8 @@ namespace scone
 		case "DPV"_hash:
 			auto kv = par.get( ".DV", 0.1, 0.01, 0, 1 );
 			Dof* root_dof = nullptr;
-			if ( auto root_name = pn.try_get< string >( "root_dof" ) )
-				root_dof = FindByName( model.GetDofs(), *root_name ).get();
+			if ( auto parent_name = pn.try_get< string >( "parent" ) )
+				root_dof = FindByName( model.GetDofs(), *parent_name ).get();
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv, root_dof );
 			break;
 		}

@@ -100,6 +100,7 @@ namespace scone
 			else if ( type == "DP" || type == "DV" || type == "DPV" )
 			{
 				source_names = FindMatchingNames( GetModel().GetDofs(), source_mask, exclude_mask );
+				SCONE_THROW_IF( source_names.empty(), "Could not find any DOF matching " + xo::quoted( source_mask ) + " excluding " + xo::quoted( exclude_mask ) );
 				for ( auto& name : source_names )
 				{
 					m_SensorNeurons.emplace_back( std::make_unique< SensorNeuron >( child_pn, par, *this, name, m_SensorNeurons.size(), LeftSide, "linear" ) );
