@@ -13,6 +13,7 @@ namespace scone
 		MuscleFiberProperties,
 		GroundReactionForce,
 		JointReactionForce,
+		JointMoment,
 		CenterOfMass,
 		SensorData,
 		ControllerData

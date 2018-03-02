@@ -135,7 +135,7 @@ namespace scone
 		{
 			const Dof_Simbody& dof_sb = dynamic_cast<const Dof_Simbody&>( dof );
 			auto moment = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
-			if ( fabs( moment ) < MOMENT_ARM_EPSILON )
+			if ( fabs( moment ) < MOMENT_ARM_EPSILON || dof_sb.GetOsCoordinate().getLocked( m_Model.GetTkState() ) )
 				moment = 0;
 			m_MomentArmCache[ &dof ] = moment;
 			return moment;

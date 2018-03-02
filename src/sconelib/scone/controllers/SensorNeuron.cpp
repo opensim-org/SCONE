@@ -29,6 +29,7 @@ namespace scone
 		sample_delay_frames_ = std::lround( delay_ / nc.GetModel().GetSimulationStepSize() );
 		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
 		sensor_gain_ = inverted ? -1 : 1;
+		Dof* dof = nullptr;
 
 		auto& model = nc.GetModel();
 
@@ -52,23 +53,24 @@ namespace scone
 			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleExcitationSensor >( *muscle_ );
 			break;
 		case "DP"_hash:
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), name ) );
+			dof = FindByName( model.GetDofs(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *dof );
 			break;
 		case "DV"_hash:
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), name ) );
+			dof = FindByName( model.GetDofs(), name ).get();
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *dof );
 			break;
 		case "DPV"_hash:
+			dof = FindByName( model.GetDofs(), name ).get();
 			auto kv = par.get( ".DV", 0.1, 0.01, 0, 1 );
-			Dof* root_dof = nullptr;
-			if ( auto parent_name = pn.try_get< string >( "parent" ) )
-				root_dof = FindByName( model.GetDofs(), *parent_name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *FindByName( model.GetDofs(), name ), kv, root_dof );
+			auto parent_name = pn.try_get< string >( "parent" );
+			Dof* root_dof = parent_name ? FindByName( model.GetDofs(), *parent_name ).get() : nullptr;
+			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *dof, kv, root_dof );
 			break;
 		}
 
-		// mirror sensor gain for right side DOF sensors
-		// TODO: use more generic vestibular sensors instead
-		if ( muscle_ == nullptr && side == RightSide && !xo::str_ends_with( name, "tilt" ) )
+		// mirror sensor gain for right side sensors of MirrorDofs
+		if ( dof && nc.IsMirrorDof( *dof ) && side == RightSide )
 			sensor_gain_ *= -1;
 
 		xo_error_if( !input_, "Unknown type " + type_ );

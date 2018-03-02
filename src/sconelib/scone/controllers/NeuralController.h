@@ -50,11 +50,13 @@ namespace scone
 		};
 
 		using MuscleParamList = std::vector< MuscleParam >;
-		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor ) const;
+		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor, bool apply_mirrorring ) const;
 		MuscleParamList GetMuscleDofs( const Muscle* mus ) const;
-		MuscleParamList GetVirtualMuscles( const Muscle* mus ) const;
+		MuscleParamList GetVirtualMuscles( const Muscle* mus, bool apply_mirrorring ) const;
 
 		double GetSimilarity( const NeuralController& other ) const;
+
+		static bool IsMirrorDof( const Dof& dof );
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -76,9 +78,9 @@ namespace scone
 		std::vector< SensorNeuronUP > m_SensorNeurons;
 		xo::flat_map< string, std::vector< InterNeuronUP > > m_InterNeurons;
 		std::vector< MotorNeuronUP > m_MotorNeurons;
-		mutable xo::memoize< MuscleParamList( const Muscle* ) > m_VirtualMuscles;
+		mutable xo::memoize< MuscleParamList( const Muscle*, bool ) > m_VirtualMusclesMemoize;
 
-		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx );
-		static MuscleParamList GetVirtualMusclesFunc( const Muscle* mus );
+		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx, bool mirror_dofs );
+		static MuscleParamList GetVirtualMusclesFunc( const Muscle* mus, bool mirror_dofs );
 	};
 }

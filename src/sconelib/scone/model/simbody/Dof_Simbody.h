@@ -19,10 +19,11 @@ namespace scone
 
 		virtual Real GetPos() const override;
 		virtual Real GetVel() const override;
+
 		virtual Real GetLimitForce() const override;
+		virtual Real GetMoment() const override;
 
 		virtual const String& GetName() const override;
-
 		const OpenSim::Coordinate& GetOsCoordinate() const { return m_osCoord; }
 
 		virtual void SetPos( Real pos, bool enforce_constraints = true ) override;

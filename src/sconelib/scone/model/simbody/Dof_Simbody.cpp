@@ -53,6 +53,12 @@ namespace scone
 		else return 0.0;
 	}
 
+	scone::Real Dof_Simbody::GetMoment() const
+	{
+		SCONE_THROW_NOT_IMPLEMENTED;
+		// m_osCoord.getMobilizerQIndex()
+	}
+
 	void Dof_Simbody::SetPos( Real pos, bool enforce_constraints )
 	{
 		if ( !m_osCoord.getLocked( m_Model.GetTkState() ) )

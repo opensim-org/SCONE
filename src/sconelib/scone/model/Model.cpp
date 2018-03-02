@@ -214,7 +214,14 @@ namespace scone
 		if ( flags( StoreDataTypes::JointReactionForce ) )
 		{
 			for ( auto& joint : GetJoints() )
-				frame[ joint->GetName() + ".jrf" ] = joint->GetLoad();
+				frame[ joint->GetName() + ".load" ] = joint->GetLoad();
+		}
+
+		// store dof data
+		if ( flags( StoreDataTypes::JointMoment ) )
+		{
+			for ( auto& d : GetDofs() )
+				frame[ d->GetName() + ".moment" ] = d->GetMoment();
 		}
 
 		// store controller data

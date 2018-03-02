@@ -32,7 +32,7 @@ namespace scone
 	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
 	Controller( pn, par, model, locality ),
 	model_( model ),
-	m_VirtualMuscles( GetVirtualMusclesFunc )
+	m_VirtualMusclesMemoize( GetVirtualMusclesFunc )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -159,13 +159,13 @@ namespace scone
 		}
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx )
+	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx, bool apply_mirroring )
 	{
 		auto& joints = mus->GetJoints();
 		if ( joint_idx >= joints.size() )
 			return MuscleParamList();
 
-		auto children = GetVirtualMusclesRecursiveFunc( mus, joint_idx + 1 );
+		auto children = GetVirtualMusclesRecursiveFunc( mus, joint_idx + 1, apply_mirroring );
 
 		auto& joint = joints[ joint_idx ];
 		auto& dofs = joint->GetDofs();
@@ -175,29 +175,34 @@ namespace scone
 		MuscleParamList results;
 		for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 		{
-			// TODO: check if a DOF is locked
 			auto& dof = dofs[ dof_idx ];
 			auto mom = mus->GetNormalizedMomentArm( *dof );
-			auto name = GetNameNoSide( dof->GetName() ) + GetSignChar( mom );
-			if ( !children.empty() )
+			if ( mom != 0 )
 			{
-				for ( auto& ch : children )
+				// swap the sign if this is a "mirror dof" (e.g. lumbar_bending) AND mirroring should be applied
+				if ( apply_mirroring && IsMirrorDof( *dof ) )
+					mom = -mom;
+				auto name = GetNameNoSide( dof->GetName() ) + GetSignChar( mom );
+				if ( !children.empty() )
 				{
-					results.push_back( { name + ch.name, abs( mom ) * ch.correlation, ch.dofs } );
-					results.back().dofs.push_back( dof );
+					for ( auto& ch : children )
+					{
+						results.push_back( { name + ch.name, abs( mom ) * ch.correlation, ch.dofs } );
+						results.back().dofs.push_back( dof );
+					}
 				}
+				else results.push_back( { name, abs( mom ), { dof } } );
 			}
-			else results.push_back( { name, abs( mom ), { dof } } );
 		}
 
 		return results;
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesFunc( const Muscle* mus )
+	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesFunc( const Muscle* mus, bool mirror_dofs )
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		auto result = GetVirtualMusclesRecursiveFunc( mus, 0 );
+		auto result = GetVirtualMusclesRecursiveFunc( mus, 0, mirror_dofs );
 
 		// square root & normalize
 		double total_gain = 0.0;
@@ -210,6 +215,11 @@ namespace scone
 		return result;
 	}
 
+	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMuscles( const Muscle* mus, bool mirror_dofs ) const
+	{
+		return m_VirtualMusclesMemoize( mus, mirror_dofs );
+	}
+
 	scone::NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus ) const
 	{
 		MuscleParamList result;
@@ -219,15 +229,10 @@ namespace scone
 			if ( mus->HasMomentArm( *dof ) )
 			{
 				auto mom = mus->GetNormalizedMomentArm( *dof );
-				result.push_back( { GetNameNoSide( dof->GetName() ) + GetSignChar( mom ), abs( mom ), { dof.get() } } );
+				result.push_back( { GetNameNoSide( dof->GetName() ) + GetSignChar( mom ), abs( mom ),{ dof.get() } } );
 			}
 		}
 		return result;
-	}
-
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMuscles( const Muscle* mus ) const
-	{
-		return m_VirtualMuscles( mus );
 	}
 
 	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
@@ -304,7 +309,7 @@ namespace scone
 		for ( auto& m : GetModel().GetMuscles() )
 		{
 			str << m->GetName();
-			auto mp = GetVirtualMuscles( m.get() );
+			auto mp = GetVirtualMuscles( m.get(), GetSideFromName( m->GetName() ) == RightSide );
 			for ( auto& par : mp )
 				str << "\t" << par.name << "\t" << par.correlation;
 			str << std::endl;
@@ -330,7 +335,7 @@ namespace scone
 		return delay_factor_ * delays_.get< double >( name );
 	}
 
-	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor ) const
+	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor, bool apply_mirrorring ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -340,8 +345,8 @@ namespace scone
 			{
 			case NeuralController::muscle_mode: return { { GetNameNoSide( mus->GetName() ), 1, {} } };
 			case NeuralController::dof_mode: return GetMuscleDofs( mus );
-			case NeuralController::virtual_mode: return GetVirtualMuscles( mus );
-			case NeuralController::virtual_dof_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus );
+			case NeuralController::virtual_mode: return GetVirtualMuscles( mus, apply_mirrorring );
+			case NeuralController::virtual_dof_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus, apply_mirrorring );
 			default: SCONE_THROW( "Unknown parameter mode" );
 			}
 		}
@@ -374,5 +379,10 @@ namespace scone
 			}
 		}
 		return 100 * fitness / samples;
+	}
+
+	bool NeuralController::IsMirrorDof( const Dof& dof )
+	{
+		return xo::str_equals_any_of( dof.GetName(), { "lumbar_bending", "lumbar_rotation" } );
 	}
 }

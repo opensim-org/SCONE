@@ -65,8 +65,8 @@ namespace scone
 		if ( common_joints > 0 )
 		{
 			double gain = 0, offset = 0;
-			auto mpvec = nc.GetMuscleParams( muscle_, false );
-			auto spvec = nc.GetMuscleParams( sensor->muscle_, true );
+			auto mpvec = nc.GetMuscleParams( muscle_, false, GetSide() == RightSide );
+			auto spvec = nc.GetMuscleParams( sensor->muscle_, true, GetSide() == RightSide );
 
 			//log::trace( muscle_->GetName(), " <-- ", sensor->GetParName() );
 			for ( auto& mp : mpvec )
@@ -111,14 +111,13 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		// set param prefix
-		auto mpvec = nc.GetMuscleParams( muscle_, false );
-
 		// see if there's an input
 		connection_t connect = connection_dict( pn.get< string >( "connect", pn.has_key( "source" ) ? "source" : "none" ) );
 		string input_type = pn.get< string >( "type", "*" );
 		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", connect == none ? "" : "0" ) );
 		bool right_side = GetSide() == RightSide;
+
+		auto mpvec = nc.GetMuscleParams( muscle_, false, right_side );
 
 		// check the input layer
 		if ( input_layer == "0" )
@@ -136,7 +135,7 @@ namespace scone
 						if ( sensor->muscle_ )
 						{
 							// input sensor is a muscle, so we need to find all muscle params
-							auto spvec = nc.GetMuscleParams( sensor->muscle_, true );
+							auto spvec = nc.GetMuscleParams( sensor->muscle_, true, right_side );
 							for ( auto& mp : mpvec )
 							{
 								for ( auto& sp : spvec )
