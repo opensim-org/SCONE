@@ -50,7 +50,7 @@ namespace scone
 			model->SetStoreData( true );
 			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties, StoreDataTypes::SensorData } );
 			model->SetSimulationEndTime( model_objective->GetDuration() );
-			log::info( "Evaluating ", filename, "; dim = ", par.size() );
+			log::info( "Evaluating ", filename );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
 
