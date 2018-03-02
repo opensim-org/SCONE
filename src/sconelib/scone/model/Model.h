@@ -147,7 +147,7 @@ namespace scone
 		Real balance_sensor_delay;
 		Vec3 GetDelayedOrientation();
 
-		void SetStoreData( bool store ) { m_StoreData = store; }
+		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
 		bool GetStoreData() const { return m_StoreData; }
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
@@ -192,6 +192,7 @@ namespace scone
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;
 		bool m_StoreData;
+		TimeInSeconds m_StoreDataInterval;
 		StoreDataFlags m_StoreDataFlags;
 
 		// thread safety stuff

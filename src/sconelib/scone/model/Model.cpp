@@ -236,7 +236,6 @@ namespace scone
 	{
 		if ( m_Data.IsEmpty() || GetTime() > m_Data.Back().GetTime() )
 			m_Data.AddFrame( GetTime() );
-
 		StoreData( m_Data.Back(), m_StoreDataFlags );
 	}
 
