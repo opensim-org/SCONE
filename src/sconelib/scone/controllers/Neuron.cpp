@@ -142,8 +142,11 @@ namespace scone
 								{
 									string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
 									auto factor = mp.correlation * sp.correlation;
-									gain += factor * par.try_get( parname, pn, "gain", 0.0 );
-									offset += factor * par.try_get( parname + '0', pn, "offset", 0.0 );
+									if ( factor >= nc.min_virtual_muscle_correlation )
+									{
+										gain += factor * par.try_get( parname, pn, "gain", 0.0 );
+										offset += factor * par.try_get( parname + '0', pn, "offset", 0.0 );
+									}
 								}
 							}
 						}

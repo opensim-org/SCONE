@@ -58,6 +58,8 @@ namespace scone
 
 		static bool IsMirrorDof( const Dof& dof );
 
+		double min_virtual_muscle_correlation;
+
 	protected:
 		virtual String GetClassSignature() const override;
 

@@ -69,7 +69,7 @@ namespace scone
 			{
 				auto init_file = optProp.get< path >( "init_file" );
 				auto result = mob->info().import_mean_std( init_file, optProp.get< bool >( "use_init_file_std", true ) );
-				log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
+				log::info( "Imported ", result.first, " of ", mob->dim(), ", ignored ", result.second, " parameters from ", init_file );
 			}
 		}
 

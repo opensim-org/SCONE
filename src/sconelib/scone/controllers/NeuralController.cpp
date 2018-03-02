@@ -36,6 +36,8 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
+		INIT_PROP( pn, min_virtual_muscle_correlation, 0 );
+
 		try
 		{
 			auto delay_file = pn.get< path >( "delay_file", "" );

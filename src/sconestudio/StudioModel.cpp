@@ -25,9 +25,10 @@ namespace scone
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
+		ParamInstance par( model_objective->info() );
 		if ( file.extension() == "par" )
-			model = model_objective->CreateModelFromParFile( file );
-		else model = model_objective->CreateModelFromParInstance( ParamInstance( model_objective->info() ) );
+			par.import_values( file );
+		model = model_objective->CreateModelFromParInstance( par );
 
 		// accept filename and clear data
 		filename = file;
@@ -49,7 +50,7 @@ namespace scone
 			model->SetStoreData( true );
 			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties, StoreDataTypes::SensorData } );
 			model->SetSimulationEndTime( model_objective->GetDuration() );
-			log::info( "Starting simulation" );
+			log::info( "Evaluating ", filename, "; dim = ", par.size() );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
 
