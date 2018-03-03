@@ -385,6 +385,6 @@ namespace scone
 
 	bool NeuralController::IsMirrorDof( const Dof& dof )
 	{
-		return xo::str_equals_any_of( dof.GetName(), { "lumbar_bending", "lumbar_rotation" } );
+		return xo::str_equals_any_of( dof.GetName(), { "lumbar_bending", "lumbar_rotation", "pelvis_list", "pelvis_rotation" } );
 	}
 }
