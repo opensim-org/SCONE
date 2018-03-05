@@ -49,6 +49,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QDataAnalysisModel.h
 		${QTFX_PATH}/QCompositeMainWindow.h
 		${QTFX_PATH}/QCompositeMainWindow.cpp
+		${QTFX_PATH}/QPropNodeItemModel.h
+		${QTFX_PATH}/QPropNodeItemModel.cpp
 		../../contrib/qcustomplot/qcustomplot.h
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)

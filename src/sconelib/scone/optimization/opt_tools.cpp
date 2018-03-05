@@ -5,7 +5,7 @@
 #include "scone/core/Profiler.h"
 
 #include "xo/time/timer.h"
-#include "xo/serialization/prop_node_tools.h"
+#include "xo/container/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
 
 using xo::timer;

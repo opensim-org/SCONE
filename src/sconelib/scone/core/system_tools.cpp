@@ -11,7 +11,7 @@
 #ifdef _MSC_VER
 #include <shlobj.h>
 #endif
-#include "xo/serialization/prop_node_tools.h"
+#include "xo/container/prop_node_tools.h"
 #include "string"
 #include "xo/utility/types.h"
 #include "xo/filesystem/filesystem.h"

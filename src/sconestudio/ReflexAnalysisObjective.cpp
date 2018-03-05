@@ -2,7 +2,7 @@
 #include "xo/utility/types.h"
 #include "xo/string/string_tools.h"
 #include <fstream>
-#include "xo/serialization/prop_node_tools.h"
+#include "xo/container/prop_node_tools.h"
 #include "scone/model/Side.h"
 #include "xo/utility/irange.h"
 
