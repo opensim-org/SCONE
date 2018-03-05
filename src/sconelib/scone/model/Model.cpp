@@ -176,6 +176,31 @@ namespace scone
 		for ( auto& m : GetMuscles() )
 			m->StoreData( frame, flags );
 
+		// store body data
+		for ( auto& b : GetBodies() )
+			b->StoreData( frame, flags );
+
+		// store joint reaction force magnitude
+		if ( flags( StoreDataTypes::JointReactionForce ) )
+		{
+			for ( auto& joint : GetJoints() )
+				frame[ joint->GetName() + ".load" ] = joint->GetLoad();
+		}
+
+		// store dof data
+		if ( flags( StoreDataTypes::JointMoment ) )
+		{
+			for ( auto& d : GetDofs() )
+				frame[ d->GetName() + ".moment" ] = d->GetMoment();
+		}
+
+		// store controller data
+		if ( flags( StoreDataTypes::ControllerData ) )
+		{
+			for ( auto& c : GetControllers() )
+				c->StoreData( frame, flags );
+		}
+
 		// store sensor data
 		if ( flags( StoreDataTypes::SensorData ) )
 		{
@@ -208,27 +233,6 @@ namespace scone
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;
 			}
 
-		}
-
-		// store joint reaction force magnitude
-		if ( flags( StoreDataTypes::JointReactionForce ) )
-		{
-			for ( auto& joint : GetJoints() )
-				frame[ joint->GetName() + ".load" ] = joint->GetLoad();
-		}
-
-		// store dof data
-		if ( flags( StoreDataTypes::JointMoment ) )
-		{
-			for ( auto& d : GetDofs() )
-				frame[ d->GetName() + ".moment" ] = d->GetMoment();
-		}
-
-		// store controller data
-		if ( flags( StoreDataTypes::ControllerData ) )
-		{
-			for ( auto& c : GetControllers() )
-				c->StoreData( frame, flags );
 		}
 	}
 

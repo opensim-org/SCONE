@@ -11,9 +11,12 @@ namespace scone
 		MuscleActivation,
 		MuscleExcitation,
 		MuscleFiberProperties,
-		GroundReactionForce,
 		JointReactionForce,
 		JointMoment,
+		BodyOriginPosition,
+		BodyComPosition,
+		BodyOrientation,
+		GroundReactionForce,
 		CenterOfMass,
 		SensorData,
 		ControllerData

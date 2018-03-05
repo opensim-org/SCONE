@@ -4,10 +4,11 @@
 #include "scone/core/Vec3.h"
 #include "scone/core/Quat.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/HasData.h"
 
 namespace scone
 {
-	class SCONE_API Body : public HasName
+	class SCONE_API Body : public HasName, HasData
 	{
 	public:
 		Body();
@@ -52,5 +53,7 @@ namespace scone
 		virtual class Model& GetModel() = 0;
 
 		virtual std::vector< path > GetDisplayGeomFileNames() const { return std::vector< path >(); }
+
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 	};
 }
