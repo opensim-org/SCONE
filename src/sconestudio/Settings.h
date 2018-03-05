@@ -11,8 +11,5 @@ namespace scone
 		virtual ~Settings() {}
 
 		int showDialog( QWidget* parent );
-		
-	protected:
-	private:
 	};
 }
