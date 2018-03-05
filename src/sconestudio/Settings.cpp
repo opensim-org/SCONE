@@ -33,7 +33,6 @@ namespace scone
 		settings.advancedTreeView->expandAll();
 
 		int ret = dlg->exec();
-
 		if ( ret == QDialog::Accepted )
 		{
 			// update settings
