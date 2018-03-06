@@ -48,7 +48,15 @@ namespace scone
 			// start evaluation
 			is_evaluating = true;
 			model->SetStoreData( true );
-			model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties, StoreDataTypes::SensorData } );
+			if ( GetSconeSettings().get< bool >( "data.muscle" ) )
+				model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
+			if ( GetSconeSettings().get< bool >( "data.body" ) )
+				model->GetStoreDataFlags().set( { StoreDataTypes::BodyOriginPosition, StoreDataTypes::BodyOrientation } );
+			if ( GetSconeSettings().get< bool >( "data.sensor" ) )
+				model->GetStoreDataFlags().set( { StoreDataTypes::SensorData } );
+			if ( GetSconeSettings().get< bool >( "data.controller" ) )
+				model->GetStoreDataFlags().set( { StoreDataTypes::ControllerData } );
+
 			model->SetSimulationEndTime( model_objective->GetDuration() );
 			log::info( "Evaluating ", filename );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis

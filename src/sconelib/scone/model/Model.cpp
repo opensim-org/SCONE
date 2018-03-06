@@ -28,7 +28,7 @@ namespace scone
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_OriSensors(),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass, StoreDataTypes::SensorData, StoreDataTypes::ControllerData } ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 		thread_safe_simulation( false )
 	{
 		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );

@@ -20,36 +20,53 @@
 namespace scone
 {
 	std::mutex g_SystemMutex;
-	PropNode g_GlobalSettings;
+	xo::settings g_Settings;
 	String g_Version;
 	path g_RootFolder;
 
-	const PropNode& GetSconeSettings()
+	void SetDefaultSconeSettings()
+	{
+		g_Settings.add( "folders.scenarios", "scenario folder", GetDataFolder(), "Default location for SCONE scenarios" );
+		g_Settings.add( "folders.results", "results folder", GetDataFolder() / "results", "Default location for optimization results" );
+		g_Settings.add( "folders.geometry", "geometry folder", GetInstallFolder() / "resources/geometry", "Default location for model geometry" );
+
+		g_Settings.add( "data.frequency", "data output frequency", 100.0, "Sample frequency of written simulation data" );
+		g_Settings.add( "data.body", "Output body position and orientation", true, "Boolean indicating whether to output body position and orientation data (0 or 1)" );
+		g_Settings.add( "data.muscle", "Output muscle parameters", true, "Boolean indicating whether to output muscle parameters (0 or 1)" );
+		g_Settings.add( "data.sensor", "Output sensor data", true, "Boolean indicating whether to output sensor data (0 or 1)" );
+		g_Settings.add( "data.controller", "Output controller data", true, "Boolean indicating whether to output controller data (0 or 1)" );
+	}
+
+	const xo::settings& GetSconeSettings()
+	{
+		return UpdateSconeSettings();
+	}
+
+	xo::settings& UpdateSconeSettings()
 	{
 		std::lock_guard< std::mutex > lock( g_SystemMutex );
-		// lazy initialization
-		if ( g_GlobalSettings.empty() )
+		if ( g_Settings.empty() )
 		{
+			SetDefaultSconeSettings();
+
 			auto settings_file = GetSettingsFolder() / "settings.ini";
 			if ( xo::file_exists( settings_file ) )
 			{
 				log::debug( "Loaded settings from ", settings_file );
-				g_GlobalSettings = xo::load_ini( settings_file );
+				g_Settings.load( settings_file );
 			}
 		}
 
-		return g_GlobalSettings;
+		return g_Settings;
 	}
 
-	void SaveSconeSettings( const PropNode& newSettings )
+	void SaveSconeSettings()
 	{
 		std::lock_guard< std::mutex > lock( g_SystemMutex );
 		auto settings_file = GetSettingsFolder() / "settings.ini";
-
-		g_GlobalSettings = newSettings;
 		xo::create_directories( xo::path( settings_file.str() ).parent_path() );
 
-		xo::save_ini( g_GlobalSettings, settings_file );
+		g_Settings.save( settings_file );
 		log::debug( "Saved settings to ", settings_file );
 	}
 
@@ -68,11 +85,9 @@ namespace scone
 		return g_RootFolder;
 	}
 
-	path GetFolder( const String& folder, const path& default_path )
+	path GetFolder( const String& folder )
 	{
-		if ( GetSconeSettings().has_key( "folders" ) )
-			return xo::path( GetSconeSettings().get_child( "folders" ).get< path >( folder, default_path ) );
-		return default_path;
+		return GetSconeSettings().get< path >( "folders." + folder );
 	}
 
 	path GetSettingsFolder()
@@ -82,7 +97,7 @@ namespace scone
 
 	path GetDataFolder()
 	{
-		return GetFolder( "scenarios", xo::get_documents_folder() / "SCONE" );
+		return xo::get_documents_folder() / "SCONE";
 	}
 
 	path GetFolder( SconeFolder folder )
@@ -90,12 +105,10 @@ namespace scone
 		switch ( folder )
 		{
 		case scone::SCONE_ROOT_FOLDER: return GetInstallFolder();
-		case scone::SCONE_DATA_FOLDER: return GetFolder( "data", GetDataFolder() );
-		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results", GetDataFolder() / "results" );
-		case scone::SCONE_MODEL_FOLDER: return GetFolder( "models", GetDataFolder() );
-		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios", GetDataFolder() );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "ui", GetInstallFolder() / "resources/geometry" );
-		case scone::SCONE_UI_RESOURCE_FOLDER: return GetFolder( "ui", GetInstallFolder()/ "resources/ui" );
+		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results" );
+		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios" );
+		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry" );
+		case scone::SCONE_UI_RESOURCE_FOLDER: return GetInstallFolder() / "resources/ui";
 		default: SCONE_THROW( "Unknown folder type" );
 		}
 	}

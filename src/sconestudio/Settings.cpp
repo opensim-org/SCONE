@@ -1,48 +1,65 @@
 #include "Settings.h"
 
 #include <QDialog>
+#include "qt_tools.h"
+#include "QPropNodeItemModel.h"
+
 #include "ui_SconeSettings.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/system_tools.h"
-#include "qt_tools.h"
 #include "xo/filesystem/path.h"
-#include "QPropNodeItemModel.h"
+#include "xo/system/type_class.h"
 
 namespace scone
 {
 	int Settings::showDialog( QWidget* parent )
 	{
-		QDialog* dlg = new QDialog( parent );
-		Ui::Settings settings;
-		settings.setupUi( dlg );
+		QDialog* dialog_window = new QDialog( parent );
+		Ui::Settings ui;
+		ui.setupUi( dialog_window );
 
 		// init settings
-		PropNode pn = GetSconeSettings();
+		auto& settings = UpdateSconeSettings();
 
-		settings.scenariosFolder->setText( make_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
-		//settings.modelsFolder->setText( make_qt( xo::path( GetFolder( SCONE_MODEL_FOLDER ) ).make_preferred() ) );
-		settings.resultsFolder->setText( make_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
-		settings.geometryFolder->setText( make_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
+		ui.scenariosFolder->setText( make_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
+		ui.resultsFolder->setText( make_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
+		ui.geometryFolder->setText( make_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
 
-		auto* test = new QListWidgetItem( "Muscle Activation" );
-		test->setCheckState( Qt::Unchecked );
-		settings.dataList->addItem( test );
+		for ( auto& item : settings.data().get_child( "data" ) )
+		{
+			if ( item.second.get< xo::type_class >( "_type_" ) == xo::boolean_type_class )
+			{
+				auto* checkbox = new QListWidgetItem( item.second.get< string >( "_label_" ).c_str() );
+				checkbox->setCheckState( item.second.get< bool >() ? Qt::Checked : Qt::Unchecked );
+				checkbox->setStatusTip( item.second.get< string >( "_info_" ).c_str() );
+				ui.dataList->addItem( checkbox );
+			}
+		}
 
-		auto* advancedModel = new QPropNodeItemModel( pn );
-		settings.advancedTreeView->setModel( advancedModel );
-		settings.advancedTreeView->expandAll();
+		auto settings_pn = settings.extract_settings();
+		auto* advancedModel = new QPropNodeItemModel( settings_pn );
+		ui.advancedTreeView->setModel( advancedModel );
+		ui.advancedTreeView->expandAll();
 
-		int ret = dlg->exec();
+		int ret = dialog_window->exec();
 		if ( ret == QDialog::Accepted )
 		{
-			// update settings
-			auto& pf = pn.get_or_add_child( "folders" );
-			pf.set( "scenarios", settings.scenariosFolder->text().toStdString() );
-			//pf.set( "models", settings.modelsFolder->text().toStdString() );
-			pf.set( "results", settings.resultsFolder->text().toStdString() );
-			pf.set( "geometry", settings.geometryFolder->text().toStdString() );
+			settings.inject_settings( settings_pn );
 
-			SaveSconeSettings( pn );
+			// update settings
+			settings.set( "folders.scenarios", ui.scenariosFolder->text().toStdString() );
+			settings.set( "folders.results", ui.resultsFolder->text().toStdString() );
+			settings.set( "folders.geometry", ui.geometryFolder->text().toStdString() );
+
+			// copy checkboxes
+			int row = 0;
+			for ( auto& item : settings.data().get_child( "data" ) )
+			{
+				if ( item.second.get< xo::type_class >( "_type_" ) == xo::boolean_type_class )
+					item.second.set< bool >( ui.dataList->item( row++ )->checkState() == Qt::Checked );
+			}
+
+			SaveSconeSettings();
 		}
 
 		return ret;
