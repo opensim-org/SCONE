@@ -10,6 +10,7 @@
 #include "Sensors.h"
 
 #include <vector>
+#include "Side.h"
 
 namespace scone
 {
@@ -58,13 +59,14 @@ namespace scone
 		virtual Real GetExcitation() const = 0;
 		virtual void SetExcitation( Real u ) = 0;
 
-		// checks if a muscle crosses a Dof. Default implementation
+		virtual Side GetSide() const;
+
 		virtual bool HasMomentArm( const Dof& dof ) const;
-		virtual Count GetJointCount() const;
 		virtual const std::vector< const Joint* >& GetJoints() const;
 		virtual bool IsAntagonist( const Muscle& other ) const;
 		virtual bool IsAgonist( const Muscle& other ) const;
 		virtual bool HasSharedDofs( const Muscle& other ) const;
+		virtual bool HasSharedBodies( const Muscle& other ) const;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

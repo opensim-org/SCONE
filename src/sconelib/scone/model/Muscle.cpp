@@ -41,18 +41,16 @@ namespace scone
 		return std::max( 0.0, vel + disp );
 	}
 
+	scone::Side Muscle::GetSide() const
+	{
+		return GetSideFromName( GetName() );
+	}
+
 	bool Muscle::HasMomentArm( const Dof& dof ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		return GetMomentArm( dof ) != 0;
-	}
-
-	scone::Count Muscle::GetJointCount() const
-	{
-		SCONE_PROFILE_FUNCTION;
-
-		return GetJoints().size();
 	}
 
 	const std::vector< const Joint* >& Muscle::GetJoints() const
@@ -106,6 +104,14 @@ namespace scone
 				return true;
 		}
 		return false;
+	}
+
+	bool Muscle::HasSharedBodies( const Muscle& other ) const
+	{
+		return &GetOriginLink() == &other.GetOriginLink()
+			|| &GetOriginLink() == &other.GetInsertionLink()
+			|| &GetInsertionLink() == &other.GetOriginLink()
+			|| &GetInsertionLink() == &other.GetInsertionLink();
 	}
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

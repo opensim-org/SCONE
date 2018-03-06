@@ -23,6 +23,7 @@ namespace scone
 		{ Neuron::antagonistic, "antagonistic" },
 		{ Neuron::agonistic, "agonistic" },
 		{ Neuron::synergetic, "synergetic" },
+		{ Neuron::synergetic_plus, "synergetic_plus" },
 		{ Neuron::ipsilateral, "ipsilateral" },
 		{ Neuron::contralateral, "contralateral" },
 		{ Neuron::source, "source" },
@@ -99,6 +100,9 @@ namespace scone
 		case InterNeuron::antagonistic: return muscle_ && sensor->muscle_ && muscle_->IsAntagonist( *sensor->muscle_ );
 		case InterNeuron::agonistic: return muscle_ && sensor->muscle_ && muscle_->IsAgonist( *sensor->muscle_ );
 		case InterNeuron::synergetic: return muscle_ && sensor->muscle_ && muscle_->HasSharedDofs( *sensor->muscle_ );
+		case InterNeuron::synergetic_plus:
+			return muscle_ && sensor->muscle_ && muscle_->GetSide() == sensor->muscle_->GetSide() &&
+				( muscle_->HasSharedBodies( *sensor->muscle_ ) || muscle_->HasSharedDofs( *sensor->muscle_ ) );
 		case InterNeuron::ipsilateral: return sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide;
 		case InterNeuron::contralateral: return sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide;
 		case InterNeuron::source: return GetNameNoSide( sensor->source_name_ ) == pn.get< string >( "source" );
