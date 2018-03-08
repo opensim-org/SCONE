@@ -68,7 +68,7 @@ scene( true )
 	addMenuAction( actionMenu, "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
 	addMenuAction( actionMenu, "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
 	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ), true );
-	addMenuAction( actionMenu, "&Test Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
 	createHelpMenu();
@@ -176,6 +176,20 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 
 void SconeStudio::start()
 {
+	if ( auto* s = getActiveScenario( false ) )
+	{
+		if ( !model || s->hasTextChanged() )
+		{
+			ui.playControl->stop();
+			requestSaveChanges( s );
+			showViewer();
+			runSimulation( s->fileName );
+			if ( model )
+				ui.playControl->play();
+		}
+		else showViewer();
+	}
+
 	ui.osgViewer->stopTimer();
 }
 
@@ -407,24 +421,21 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	return true;
 }
 
-bool SconeStudio::checkAndSaveScenario( QCodeEditor* s )
+bool SconeStudio::requestSaveChanges( QCodeEditor* s )
 {
-	if ( s == nullptr )
+	if ( s )
 	{
-		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
-		return false;
+		if ( s->hasTextChanged() )
+		{
+			QString message = "Save changes to " + s->getTitle() + "?";
+			if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
+				s->save();
+			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+			return true;
+		}
+		else return false;
 	}
-
-	if ( s->hasTextChanged() )
-	{
-		QString message = "Save changes to " + s->getTitle() + "?";
-		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
-			s->save();
-	}
-
-	ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-
-	return true;
+	else return information( "No Scenario Selected", "No Scenario open for editing" ), false;
 }
 
 int SconeStudio::getTabIndex( QCodeEditor* s )
@@ -439,8 +450,9 @@ int SconeStudio::getTabIndex( QCodeEditor* s )
 
 void SconeStudio::optimizeScenario()
 {
-	if ( checkAndSaveScenario( getActiveScenario() ) )
+	if ( auto* s = getActiveScenario( true ) )
 	{
+		requestSaveChanges( s );
 		ProgressDockWidget* pdw = new ProgressDockWidget( this, getActiveScenario()->fileName );
 		addProgressDock( pdw );
 		updateOptimizations();
@@ -449,14 +461,24 @@ void SconeStudio::optimizeScenario()
 
 void SconeStudio::runScenario()
 {
-	if ( checkAndSaveScenario( getActiveScenario() ) )
-		runSimulation( getActiveScenario()->fileName );
+	ui.playControl->stop();
+
+	if ( auto* s = getActiveScenario( false ) )
+	{
+		requestSaveChanges( s );
+		showViewer();
+		runSimulation( s->fileName );
+		if ( model )
+			ui.playControl->play();
+	}
 }
 
 void SconeStudio::optimizeScenarioMultiple()
 {
-	if ( checkAndSaveScenario( getActiveScenario() ) )
+	if ( auto* s = getActiveScenario( true ) )
 	{
+		requestSaveChanges( s );
+
 		bool ok = true;
 		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
 		if ( ok )
@@ -533,7 +555,7 @@ void SconeStudio::tabCloseRequested( int idx )
 	SCONE_ASSERT( idx > 0 && idx <= (int)scenarios.size() );
 	auto it = scenarios.begin() + ( idx - 1 );
 
-	if ( checkAndSaveScenario( *it ) )
+	if ( requestSaveChanges( *it ) )
 	{
 		scenarios.erase( it );
 		ui.tabWidget->removeTab( idx );
@@ -574,13 +596,17 @@ void SconeStudio::updateTabTitles()
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 }
 
-QCodeEditor* SconeStudio::getActiveScenario()
+QCodeEditor* SconeStudio::getActiveScenario( bool show_error )
 {
 	for ( auto edw : scenarios )
 	{
 		if ( !edw->visibleRegion().isEmpty() )
 			return edw;
 	}
+
+	if ( show_error )
+		QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
+
 	return nullptr;
 }
 
