@@ -554,12 +554,9 @@ void SconeStudio::tabCloseRequested( int idx )
 {
 	SCONE_ASSERT( idx > 0 && idx <= (int)scenarios.size() );
 	auto it = scenarios.begin() + ( idx - 1 );
-
-	if ( requestSaveChanges( *it ) )
-	{
-		scenarios.erase( it );
-		ui.tabWidget->removeTab( idx );
-	}
+	requestSaveChanges( *it );
+	scenarios.erase( it );
+	ui.tabWidget->removeTab( idx );
 }
 
 void SconeStudio::updateViewSettings()
