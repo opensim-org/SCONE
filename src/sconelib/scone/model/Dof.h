@@ -2,10 +2,11 @@
 
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
+#include "Actuator.h"
 
 namespace scone
 {
-	class SCONE_API Dof : public HasName
+	class SCONE_API Dof : public Actuator
 	{
 	public:
 		Dof( class Joint& j );

@@ -262,11 +262,20 @@ namespace scone
 
 	void Model_Simbody::CreateModelWrappers( const PropNode& pn, Params& par )
 	{
-		SCONE_ASSERT( m_pOsimModel );
-		SCONE_ASSERT( m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() );
+		SCONE_ASSERT( m_pOsimModel && m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Muscles.empty() );
+
+		// Create wrappers for bodies
+		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
+			m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) ) );
+
+		// setup hierarchy and create wrappers
+		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
+
+		// create wrappers for dofs
+		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
+			m_Dofs.emplace_back( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
 
 		// Create wrappers for actuators
-		m_Muscles.clear();
 		for ( int idx = 0; idx < m_pOsimModel->getActuators().getSize(); ++idx )
 		{
 			// OpenSim: Set<T>::get( idx ) is const but returns non-const reference, is this a bug?
@@ -276,16 +285,18 @@ namespace scone
 				m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, *osMus ) ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
+			else if ( OpenSim::CoordinateActuator* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
+			{
+				// add corresponding dof to list of actuators
+				auto& dof = dynamic_cast<Dof_Simbody&>( *FindByName( m_Dofs, osCo->getCoordinate()->getName() ) );
+				dof.SetCoordinateActuator( osCo );
+				m_Actuators.push_back( &dof );
+			}
 			else if ( OpenSim::PointActuator* osPa = dynamic_cast<OpenSim::PointActuator*>( &osAct ) )
 			{
 				// do something?
 			}
 		}
-
-		// Create wrappers for bodies
-		m_Bodies.clear();
-		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
-			m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) ) );
 
 		// Create wrappers for joints
 		//m_Joints.clear();
@@ -294,17 +305,6 @@ namespace scone
 
 		// create BodySensor
 		//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
-
-		// setup hierarchy and create wrappers
-		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
-
-		// create wrappers for dofs
-		m_Dofs.clear();
-		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
-		{
-			m_Dofs.push_back( DofUP( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) ) );
-			//m_ChannelSensors.push_back( m_Dofs.back().get() );
-		}
 
 		// create legs and connect stance_contact forces
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
@@ -344,7 +344,6 @@ namespace scone
 			}
 		}
 	}
-
 
 	void Model_Simbody::SetOpenSimParameters( const PropNode& props, Params& par )
 	{
@@ -485,15 +484,15 @@ namespace scone
 
 			// inject actuator values into controls
 			{
-				SCONE_ASSERT_MSG( controls.size() == m_Model.GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
+				//SCONE_ASSERT_MSG( controls.size() == m_Model.GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
 
 				int idx = 0;
-				for ( MuscleUP& mus : m_Model.GetMuscles() )
+				for ( auto* act : m_Model.GetActuators() )
 				{
 					// This is an optimization that only works when there are only muscles
 					// OpenSim: addInControls is rather inefficient, that's why we don't use it
 					// TODO: fix this into a generic version (i.e. work with other actuators)
-					controls[ idx++ ] += mus->GetInput();
+					controls[ idx++ ] += act->GetInput();
 				}
 			}
 		}
