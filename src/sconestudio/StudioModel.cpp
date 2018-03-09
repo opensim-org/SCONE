@@ -11,6 +11,7 @@
 
 #include "xo/time/timer.h"
 #include "xo/filesystem/filesystem.h"
+#include "simvis/color.h"
 
 namespace scone
 {
@@ -132,6 +133,8 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
+		Index force_count = 0;
+
 		// initialize visualization
 		std::unique_lock< std::mutex > simulation_lock( model->GetSimulationMutex(), std::defer_lock );
 
@@ -151,13 +154,19 @@ namespace scone
 		auto& model_bodies = model->GetBodies();
 		for ( Index i = 0; i < model_bodies.size(); ++i )
 		{
-			vis::transformf trans( model_bodies[ i ]->GetOriginPos(), model_bodies[ i ]->GetOrientation() );
-
-			auto bp = model_bodies[ i ]->GetOriginPos();
+			auto& b = model_bodies[ i ];
+			vis::transformf trans( b->GetOriginPos(), b->GetOrientation() );
 			for ( auto& bm : body_meshes[ i ] )
 				bm.transform( trans );
-
 			body_axes[ i ].transform( trans );
+
+			// external forces / moments
+			auto f = b->GetExternalForce();
+			if ( !f.is_null() )
+				UpdateForceVis( force_count++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), f );
+			auto m = b->GetExternalMoment();
+			if ( !m.is_null() )
+				UpdateForceVis( force_count++, b->GetComPos(), m );
 		}
 
 		// update muscle paths
@@ -172,26 +181,18 @@ namespace scone
 			muscles[ i ].second.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
 		}
 
-		// update forces
-		Index force_idx = 0;
+		// update ground reaction forces on legs
 		for ( Index i = 0; i < model->GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
 			model->GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
 			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
-				UpdateForceVis( force_idx++, cop, force );
+				UpdateForceVis( force_count++, cop, force );
 		}
 
-		for ( auto& b : model->GetBodies() )
-		{
-			auto f = b->GetExternalForce();
-			if ( !f.is_null() )
-				UpdateForceVis( force_idx++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), f );
-		}
-
-		if ( force_idx < forces.size() )
-			forces.resize( force_idx );
+		if ( force_count < forces.size() )
+			forces.resize( force_count );
 	}
 
 	void StudioModel::UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force )
