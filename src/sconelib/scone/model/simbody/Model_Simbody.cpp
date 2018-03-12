@@ -298,11 +298,6 @@ namespace scone
 			}
 		}
 
-		// Create wrappers for joints
-		//m_Joints.clear();
-		//for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
-		//	m_Joints.push_back( JointUP( new Joint_Simbody( *this, m_pOsimModel->getJointSet().get( idx ) ) ) );
-
 		// create BodySensor
 		//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
 
@@ -425,9 +420,7 @@ namespace scone
 		if ( osBody.hasJoint() )
 		{
 			// create a joint
-			m_Joints.push_back( JointUP( new Joint_Simbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) ) );
-			//auto itJoint = std::find_if( m_Joints.begin(), m_Joints.end(), [&]( JointUP& body ){ return dynamic_cast< Joint_Simbody& >( *body ).m_osJoint == osBody.getJoint(); } );
-			//SCONE_ASSERT( itJoint != m_Joints.end() );
+			m_Joints.emplace_back( new Joint_Simbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) );
 			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
 		}
 		else
