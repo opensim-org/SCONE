@@ -12,8 +12,8 @@ namespace scone
 	Reflex( props, par, model, area ),
 	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
 	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
-	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
-	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), "pelvis_tilt" ) ) ),
+	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source_parent", "pelvis_tilt" ) ) ) ),
+	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source_parent", "pelvis_tilt" ) ) ) ),
 	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
 	{
 		auto src_name = props.get< String >( "source" );
@@ -33,6 +33,8 @@ namespace scone
 			m_Filter = xo::make_lowpass_butterworth_2nd_order( filter_cutoff_frequency / 1000.0 ); // TODO: use actual update frequency
 
 		//log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
+		if ( auto p0pn = props.try_get< String >( "P0_source" ) )
+			m_pTargetPosSource = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByNameTrySided( model.GetDofs(), *p0pn, area.side ) );
 	}
 
 	DofReflex::~DofReflex()

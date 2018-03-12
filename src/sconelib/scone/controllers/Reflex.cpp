@@ -10,8 +10,8 @@ namespace scone
 	m_Target( *FindByName( model.GetActuators(), area.ConvertName( props.get< String >( "target" ) ) ) )
 	{
 		INIT_PARAM_REQUIRED( props, par, delay );
-		INIT_PROPERTY( props, min_control_value, REAL_LOWEST );
-		INIT_PROPERTY( props, max_control_value, REAL_MAX );
+		INIT_PROPERTY( props, min_control_value, xo::constants< Real >::lowest() );
+		INIT_PROPERTY( props, max_control_value, xo::constants< Real >::max() );
 	}
 
 	Reflex::Reflex( Actuator& target, TimeInSeconds d, Real min_val, Real max_val ) :
@@ -46,5 +46,4 @@ namespace scone
 		auto src_name = props.get< String >( "source", trg_name );
 		return ( trg_name == src_name ) ? trg_name : trg_name + "-" + src_name;
 	}
-
 }

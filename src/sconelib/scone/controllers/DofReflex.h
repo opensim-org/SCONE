@@ -29,6 +29,7 @@ namespace scone
 		String name;
 		Real u_p;
 		Real u_d;
+		SensorDelayAdapter* m_pTargetPosSource;
 		SensorDelayAdapter& m_DelayedPos;
 		SensorDelayAdapter& m_DelayedVel;
 		SensorDelayAdapter& m_DelayedRootPos; // used for world coordinates, TODO: neater
