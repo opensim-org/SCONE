@@ -10,11 +10,11 @@ namespace scone
 {
 	DofReflex::DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
-	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
-	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ) ),
-	m_DelayedRootPos( model.AcquireDelayedSensor< DofPositionSensor >( *FindByName( model.GetDofs(), props.get< String >( "source_parent", "pelvis_tilt" ) ) ) ),
-	m_DelayedRootVel( model.AcquireDelayedSensor< DofVelocitySensor >( *FindByName( model.GetDofs(), props.get< String >( "source_parent", "pelvis_tilt" ) ) ) ),
-	m_bUseRoot( m_DelayedRootPos.GetName() != m_DelayedPos.GetName() )
+	m_SourceDof( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ),
+	m_SourceParentDof( props.has_key( "source" ) ? &*FindByNameTrySided( model.GetDofs(), props.get< String >( "source_parent" ), area.side ) : nullptr ),
+	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( m_SourceDof, m_SourceParentDof ) ),
+	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) ),
+	m_pTargetPosSource( nullptr )
 	{
 		auto src_name = props.get< String >( "source" );
 		String par_name = GetParName( props );
@@ -27,12 +27,11 @@ namespace scone
 		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
 		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
 		INIT_PROP( props, condition, 0 );
-
 		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
+
 		if ( filter_cutoff_frequency != 0.0 )
 			m_Filter = xo::make_lowpass_butterworth_2nd_order( filter_cutoff_frequency / 1000.0 ); // TODO: use actual update frequency
 
-		//log::TraceF( "DofReflex TRG=%s KP=%.2f KV=%.2f C0=%.2f", m_Target.GetName().c_str(), target_pos, target_vel, constant_u );
 		if ( auto p0pn = props.try_get< String >( "P0_source" ) )
 			m_pTargetPosSource = &model.AcquireDelayedSensor< DofPositionSensor >( *FindByNameTrySided( model.GetDofs(), *p0pn, area.side ) );
 	}
@@ -45,15 +44,6 @@ namespace scone
 	{
 		Real pos = m_DelayedPos.GetValue( delay );
 		Real vel = m_DelayedVel.GetValue( delay );
-
-		if ( m_bUseRoot )
-		{
-			// TODO: Add world coordinate option to Body
-			Real root_pos = m_DelayedRootPos.GetValue( delay );
-			Real root_vel = m_DelayedRootVel.GetValue( delay );
-			pos += root_pos;
-			vel += root_vel;
-		}
 
 		if ( filter_cutoff_frequency != 0.0 )
 		{
