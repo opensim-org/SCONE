@@ -12,6 +12,7 @@
 
 namespace OpenSim
 {
+	class Object;
 	class Body;
 	class Model;
 	class Manager;
@@ -26,6 +27,11 @@ namespace SimTK
 	class TimeStepper;
 }
 
+namespace xo
+{
+	class pattern_matcher;
+}
+
 namespace scone
 {
 	class Simulation_Simbody;
@@ -35,8 +41,6 @@ namespace scone
 	{
 	public:
 		Model_Simbody( const PropNode& props, Params& par );
-
-		void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
 
 		virtual ~Model_Simbody();
 
@@ -86,6 +90,8 @@ namespace scone
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 
+		void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
+
 	private:
 		//void SetTkState( const State& s );
 		void InitStateFromTk();
@@ -96,8 +102,8 @@ namespace scone
 
 		void CreateModelWrappers( const PropNode& pn, Params& par );
 		void SetModelProperties( const PropNode &pn, Params& par );
-		void SetOpenSimParameters( const PropNode& pn, Params& par );
-		void SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par );
+		void SetOpenSimProperties( const PropNode& pn, Params& par );
+		void SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 

@@ -119,7 +119,8 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
 
 			// change model properties
-			SetOpenSimParameters( props, par );
+			if ( auto* model_pars = props.try_get_child( "OpenSimProperties" ) )
+				SetOpenSimProperties( *model_pars, par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -340,27 +341,28 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetOpenSimParameters( const PropNode& props, Params& par )
+	void Model_Simbody::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
 	{
-		if ( auto* osim_pars = props.try_get_child( "OpenSimParameters" ) )
+		for ( auto& param : osim_pars )
 		{
-			for ( auto param_it = osim_pars->begin(); param_it != osim_pars->end(); ++param_it )
+			if ( param.first == "Force" )
 			{
-				xo::pattern_matcher pm( param_it->second.get< String >( "name" ) );
-				if ( param_it->first == "Force" )
+				auto& name = param.second[ "name" ].get_value();
+				xo::pattern_matcher pm( name );
+				int count = 0;
+				for ( int i = 0; i < m_pOsimModel->updForceSet().getSize(); ++i )
 				{
-					for ( int i = 0; i < m_pOsimModel->updMuscles().getSize(); ++i )
-					{
-						auto& osMus = m_pOsimModel->updMuscles().get( i );
-						if ( pm( osMus.getName() ) )
-							SetOpenSimParameter( osMus, param_it->second, par );
-					}
+					auto& force = m_pOsimModel->updForceSet().get( i );
+					if ( pm( force.getName() ) )
+						SetOpenSimProperty( force, param.second, par ), ++count;
 				}
+				if ( count == 0 )
+					log::warning( "Could not find OpenSim Object that matches ", name );
 			}
 		}
 	}
 
-	void Model_Simbody::SetOpenSimParameter( OpenSim::Object& os, const PropNode& pn, Params& par )
+	void Model_Simbody::SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par )
 	{
 		// we have a match!
 		String prop_str = pn.get< String >( "property" );
@@ -369,7 +371,7 @@ namespace scone
 		if ( os.hasProperty( prop_str ) )
 		{
 			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();
-			prop = pn.get( "scale", false ) ? prop * value : value;
+			prop = pn.get( "factor", false ) ? prop * value : value;
 		}
 	}
 
