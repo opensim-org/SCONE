@@ -69,13 +69,6 @@ namespace scone
 		const auto& quat = mb.getBodyRotation( m_Model.GetTkState() ).convertRotationToQuaternion();
 		Quat q1( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
 
-		// OpenSim: can this be done more efficient?
-		//double dir_cos[3][3];
-		//m_osBody.getModel().getSimbodyEngine().getDirectionCosines( m_Model.GetTkState(), m_osBody, dir_cos );
-		//double a1, a2, a3;
-		//m_osBody.getModel().getSimbodyEngine().convertDirectionCosinesToAngles( dir_cos, &a1, &a2, &a3 );
-		//Quat q2 = QuatFromEuler( Radian( a1 ), Radian( a2 ), Radian( a3 ) );
-
 		return q1;
 	}
 

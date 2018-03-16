@@ -22,7 +22,7 @@ namespace scone
 	class StudioModel
 	{
 	public:
-		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, EnableShadows, ShowAxes };
+		enum ViewSettings { ShowForces, ShowMuscles, ShowGeometry, ShowAxes, ShowContactGeom, EnableShadows };
 		typedef xo::flag_set< ViewSettings > ViewFlags;
  
 		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
@@ -66,11 +66,13 @@ namespace scone
 		bool is_evaluating;
 
 		vis::group root;
-		std::vector< std::vector< vis::mesh > > body_meshes;
+		std::vector< vis::mesh > body_meshes;
 		std::vector< vis::mesh > joints;
 		std::vector< std::pair< vis::trail, vis::material > > muscles;
 		std::vector< vis::arrow > forces;
 		std::vector< vis::axes > body_axes;
+		std::vector< vis::group > bodies;
+		std::vector< vis::mesh > contact_geoms;
 		vis::mesh com;
 		void InitStateDataIndices();
 	};

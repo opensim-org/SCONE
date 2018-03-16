@@ -73,48 +73,6 @@ namespace scone
 			log::warning( "Closing model while thread is still running" );
 	}
 
-	void StudioModel::InitVis( vis::scene& scone_scene )
-	{
-		scone_scene.attach( root );
-
-		xo::timer t;
-		for ( auto& body : model->GetBodies() )
-		{
-			body_meshes.push_back( std::vector< vis::mesh >() );
-			auto geom_files = body->GetDisplayGeomFileNames();
-
-			for ( auto geom_file : geom_files )
-			{
-				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
-				try
-				{
-					if ( !xo::file_exists( geom_file ) )
-						geom_file = scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file;
-					body_meshes.back().push_back( root.add_mesh( geom_file ) );
-					body_meshes.back().back().set_material( bone_mat );
-					body_axes.push_back( vis::axes( root, vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
-				}
-				catch ( std::exception& e )
-				{
-					log::warning( "Could not load ", geom_file, ": ", e.what() );
-				}
-			}
-		}
-		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
-
-		for ( auto& muscle : model->GetMuscles() )
-		{
-			// add path
-			auto p = muscle->GetMusclePath();
-			auto vispath = vis::trail( root, p.size(), 0.005f, vis::make_red(), 0.3f );
-			auto vismat = muscle_mat.clone();
-			vispath.set_material( vismat );
-			muscles.push_back( std::make_pair( vispath, vismat ) );
-		}
-
-		ApplyViewSettings( view_flags );
-	}
-
 	void StudioModel::InitStateDataIndices()
 	{
 		// setup state_data_index (lazy init)
@@ -127,6 +85,56 @@ namespace scone
 			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
 			state_data_index[ state_idx ] = data_idx;
 		}
+	}
+
+	void StudioModel::InitVis( vis::scene& scone_scene )
+	{
+		scone_scene.attach( root );
+
+		xo::timer t;
+		for ( auto& body : model->GetBodies() )
+		{
+			bodies.push_back( root.add_group() );
+			body_axes.push_back( bodies.back().add_axes( vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+
+			auto geom_files = body->GetDisplayGeomFileNames();
+			for ( auto geom_file : geom_files )
+			{
+				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
+				try
+				{
+					if ( !xo::file_exists( geom_file ) )
+						geom_file = scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file;
+
+					body_meshes.push_back( bodies.back().add_mesh( geom_file ) );
+					body_meshes.back().set_material( bone_mat );
+				}
+				catch ( std::exception& e )
+				{
+					log::warning( "Could not load ", geom_file, ": ", e.what() );
+				}
+			}
+		}
+		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
+
+		for ( auto& cg : model->GetContactGeometries() )
+		{
+			auto idx = FindIndexByName( model->GetBodies(), cg.m_Body.GetName() );
+			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
+			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, vis::make_cyan(), 0.75f ).pos( cg.m_Pos ) );
+		}
+
+		for ( auto& muscle : model->GetMuscles() )
+		{
+			// add path
+			auto p = muscle->GetMusclePath();
+			auto vispath = root.add< vis::trail >( p.size(), 0.005f, vis::make_red(), 0.3f );
+			auto vismat = muscle_mat.clone();
+			vispath.set_material( vismat );
+			muscles.push_back( std::make_pair( vispath, vismat ) );
+		}
+
+		ApplyViewSettings( view_flags );
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
@@ -156,9 +164,7 @@ namespace scone
 		{
 			auto& b = model_bodies[ i ];
 			vis::transformf trans( b->GetOriginPos(), b->GetOrientation() );
-			for ( auto& bm : body_meshes[ i ] )
-				bm.transform( trans );
-			body_axes[ i ].transform( trans );
+			bodies[ i ].transform( trans );
 
 			// external forces / moments
 			auto f = b->GetExternalForce();
@@ -251,7 +257,7 @@ namespace scone
 			for ( auto& m : muscles ) m.first.show( value );
 			break;
 		case scone::StudioModel::ShowGeometry:
-			for ( auto& e : body_meshes ) for ( auto m : e ) m.show( value );
+			for ( auto& e : body_meshes ) e.show( value ); // for ( auto m : e ) m.show( value );
 			break;
 		case scone::StudioModel::ShowAxes:
 			for ( auto& e : body_axes ) e.show( value );
@@ -268,7 +274,8 @@ namespace scone
 		view_flags = flags;
 		for ( auto& f : forces ) f.show( view_flags.get< ShowForces >() );
 		for ( auto& m : muscles ) m.first.show( view_flags.get< ShowMuscles >() );
-		for ( auto& e : body_meshes ) for ( auto m : e ) m.show( view_flags.get< ShowGeometry >() );
+		for ( auto& e : body_meshes ) e.show( view_flags.get< ShowGeometry >() ); // for ( auto m : e ) m.show( view_flags.get< ShowGeometry >() );
 		for ( auto& e : body_axes ) e.show( view_flags.get< ShowAxes >() );
+		for ( auto& e : contact_geoms ) e.show( view_flags.get< ShowContactGeom >() );
 	}
 }

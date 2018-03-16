@@ -26,6 +26,7 @@
 
 #include <thread>
 #include <mutex>
+#include "OpenSim/Simulation/Model/ContactSphere.h"
 
 using std::cout;
 using std::endl;
@@ -267,7 +268,7 @@ namespace scone
 
 		// Create wrappers for bodies
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
-			m_Bodies.push_back( BodyUP( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) ) );
+			m_Bodies.emplace_back( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
 		// setup hierarchy and create wrappers
 		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
@@ -276,6 +277,16 @@ namespace scone
 		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
 			m_Dofs.emplace_back( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
 
+		// create contact geometries
+		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
+		{
+			if ( auto cg = dynamic_cast< OpenSim::ContactSphere* >( &m_pOsimModel->getContactGeometrySet().get( idx ) ) )
+			{
+				auto& body = *FindByName( m_Bodies, cg->getBodyName() );
+				m_ContactGeometries.emplace_back( body, ToVec3( cg->getLocation() ), cg->getRadius() );
+			}
+		}
+
 		// Create wrappers for actuators
 		for ( int idx = 0; idx < m_pOsimModel->getActuators().getSize(); ++idx )
 		{
@@ -283,7 +294,7 @@ namespace scone
 			OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
 			if ( OpenSim::Muscle* osMus = dynamic_cast<OpenSim::Muscle*>( &osAct ) )
 			{
-				m_Muscles.push_back( MuscleUP( new Muscle_Simbody( *this, *osMus ) ) );
+				m_Muscles.emplace_back( new Muscle_Simbody( *this, *osMus ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
 			else if ( OpenSim::CoordinateActuator* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
@@ -306,14 +317,14 @@ namespace scone
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
-			m_Legs.push_back( LegUP( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide ) ) );
+			m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide ) );
 			dynamic_cast<Body_Simbody&>( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
 		}
 
 		if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
 		{
 			Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
-			m_Legs.push_back( LegUP( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) ) );
+			m_Legs.emplace_back( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) );
 			dynamic_cast<Body_Simbody&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
 		}
 	}

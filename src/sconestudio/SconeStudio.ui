@@ -218,6 +218,7 @@
     <addaction name="actionShow_External_Forces"/>
     <addaction name="actionShow_Muscles"/>
     <addaction name="actionShow_Bone_Geometry"/>
+    <addaction name="actionShow_Contact_Geometry"/>
     <addaction name="actionShow_Body_Axes"/>
     <addaction name="separator"/>
     <addaction name="actionUse_Log_Scale"/>
@@ -503,6 +504,17 @@
    </property>
    <property name="text">
     <string>Use &amp;Log Scale with Optimization Progress</string>
+   </property>
+  </action>
+  <action name="actionShow_Contact_Geometry">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Contact Geometry</string>
    </property>
   </action>
  </widget>

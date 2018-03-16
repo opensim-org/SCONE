@@ -18,9 +18,16 @@ namespace scone
 	template< typename T >
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
-		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
+		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
 		SCONE_THROW_IF( it == cont.end(), "Could not find `" + name + "`" );
 		return *it;
+	}
+
+	template< typename T >
+	Index FindIndexByName( const std::vector< T >& cont, const String& name )
+	{
+		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
+		return it != cont.end() ? it - cont.begin() : NoIndex;
 	}
 
 	template< typename T >

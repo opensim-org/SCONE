@@ -17,6 +17,7 @@
 #include <type_traits>
 #include <mutex>
 #include <condition_variable>
+#include "ContactGeometry.h"
 
 namespace scone
 {
@@ -44,6 +45,9 @@ namespace scone
 
 		/// Sensor access
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
+
+		/// Contact geometries
+		std::vector< ContactGeometry > GetContactGeometries() { return m_ContactGeometries; }
 
 		/// link access
 		const Link& FindLink( const String& body_name );
@@ -112,18 +116,13 @@ namespace scone
 		virtual std::ostream& ToStream( std::ostream& str ) const;
 
 		// acquire a sensor of type SensorT with a source of type SourceT
-		template< typename SensorT, typename... Args >
-		SensorT& AcquireSensor( Args&&... args )
-		{
+		template< typename SensorT, typename... Args > SensorT& AcquireSensor( Args&&... args ) {
 			static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
-
 			// create a new sensor and see if there's an existing sensor of same type with same source name
 			SensorUP sensor = SensorUP( new SensorT( std::forward< Args >( args )... ) );
 			auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(), [&]( SensorUP& s ) {
 				return dynamic_cast<SensorT*>( s.get() ) != nullptr && s->GetName() == sensor->GetName(); } );
-
-			if ( it == m_Sensors.end() )
-			{
+			if ( it == m_Sensors.end() ) {
 				// its new, so move it to the back of the container
 				m_Sensors.push_back( std::move( sensor ) );
 				return dynamic_cast<SensorT&>( *m_Sensors.back() ); // return new sensor
@@ -176,6 +175,7 @@ namespace scone
 		std::vector< DofUP > m_Dofs;
 		std::vector< LegUP > m_Legs;
 		std::vector< ControllerUP > m_Controllers;
+		std::vector< ContactGeometry > m_ContactGeometries;
 		bool m_ShouldTerminate;
 
 		// non-owning storage

@@ -568,6 +568,7 @@ void SconeStudio::updateViewSettings()
 		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
 		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
+		f.set( StudioModel::ShowContactGeom, ui.actionShow_Contact_Geometry->isChecked() );
 		model->ApplyViewSettings( f );
 	}
 
