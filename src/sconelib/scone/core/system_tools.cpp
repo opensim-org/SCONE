@@ -26,6 +26,7 @@ namespace scone
 
 	void SetDefaultSconeSettings()
 	{
+		// TODO: move to separate settings class
 		g_Settings.add( "folders.scenarios", "scenario folder", GetDataFolder(), "Default location for SCONE scenarios" );
 		g_Settings.add( "folders.results", "results folder", GetDataFolder() / "results", "Default location for optimization results" );
 		g_Settings.add( "folders.geometry", "geometry folder", GetInstallFolder() / "resources/geometry", "Default location for model geometry" );

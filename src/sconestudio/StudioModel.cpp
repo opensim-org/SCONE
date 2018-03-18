@@ -22,7 +22,6 @@ namespace scone
 	is_evaluating( false )
 	{
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
-		store_data_downsample_stride = 10;
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
@@ -222,8 +221,13 @@ namespace scone
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
+		auto rate = model->GetData().Back().GetTime() / model->GetData().GetFrameCount();
+		auto target = GetSconeSettings().get< double >( "data.frequency" );
+		auto stride = int( std::round( rate / target ) );
+		log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
+
 		// copy data and init data
-		data = model->GetData().CopySlice( 0, 0, store_data_downsample_stride );
+		data = model->GetData().CopySlice( 0, 0, stride );
 		if ( !data.IsEmpty() )
 			InitStateDataIndices();
 
