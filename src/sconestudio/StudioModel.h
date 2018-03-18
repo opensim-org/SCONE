@@ -42,7 +42,6 @@ namespace scone
 		TimeInSeconds GetTime() const { return model->GetTime(); }
 		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
 
-		void SetViewSetting( ViewSettings e, bool value );
 		void ApplyViewSettings( const ViewFlags& f );
 
 	private:

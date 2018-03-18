@@ -221,9 +221,9 @@ namespace scone
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
-		auto rate = model->GetData().Back().GetTime() / model->GetData().GetFrameCount();
+		auto rate = ( model->GetData().GetFrameCount() - 1 ) / model->GetData().Back().GetTime();
 		auto target = GetSconeSettings().get< double >( "data.frequency" );
-		auto stride = int( std::round( rate / target ) );
+		auto stride = xo::max( 1, int( std::round( rate / target ) ) );
 		log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
 
 		// copy data and init data
@@ -246,31 +246,6 @@ namespace scone
 
 		// reset this stuff
 		is_evaluating = false;
-	}
-
-	void StudioModel::SetViewSetting( ViewSettings e, bool value )
-	{
-		view_flags.set( e, value );
-
-		switch ( e )
-		{
-		case scone::StudioModel::ShowForces:
-			for ( auto& f : forces ) f.show( value );
-			break;
-		case scone::StudioModel::ShowMuscles:
-			for ( auto& m : muscles ) m.first.show( value );
-			break;
-		case scone::StudioModel::ShowGeometry:
-			for ( auto& e : body_meshes ) e.show( value ); // for ( auto m : e ) m.show( value );
-			break;
-		case scone::StudioModel::ShowAxes:
-			for ( auto& e : body_axes ) e.show( value );
-			break;
-		case scone::StudioModel::EnableShadows:
-			break;
-		default:
-			break;
-		}
 	}
 
 	void StudioModel::ApplyViewSettings( const ViewFlags& flags )
