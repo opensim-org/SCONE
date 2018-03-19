@@ -772,6 +772,22 @@
    </hints>
   </connection>
   <connection>
+   <sender>actionShow_Contact_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
    <sender>action_Preferences</sender>
    <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
