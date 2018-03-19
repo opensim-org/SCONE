@@ -4,11 +4,11 @@
 
 namespace scone
 {
-	class Settings
+	class SettingsEditor
 	{
 	public:
-		Settings() {}
-		virtual ~Settings() {}
+		SettingsEditor() {}
+		virtual ~SettingsEditor() {}
 
 		int showDialog( QWidget* parent );
 	};

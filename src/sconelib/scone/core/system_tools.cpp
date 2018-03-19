@@ -1,5 +1,7 @@
 #include "system_tools.h"
 
+#include "Settings.h"
+
 #include "scone/core/version.h"
 
 #include <fstream>
@@ -20,56 +22,8 @@
 namespace scone
 {
 	std::mutex g_SystemMutex;
-	xo::settings g_Settings;
 	String g_Version;
 	path g_RootFolder;
-
-	void SetDefaultSconeSettings()
-	{
-		// TODO: move to separate settings class
-		g_Settings.add( "folders.scenarios", "scenario folder", GetDataFolder(), "Default location for SCONE scenarios" );
-		g_Settings.add( "folders.results", "results folder", GetDataFolder() / "results", "Default location for optimization results" );
-		g_Settings.add( "folders.geometry", "geometry folder", GetInstallFolder() / "resources/geometry", "Default location for model geometry" );
-
-		g_Settings.add( "data.frequency", "data output frequency", 100.0, "Sample frequency of written simulation data" );
-		g_Settings.add( "data.body", "Output body position and orientation", true, "Boolean indicating whether to output body position and orientation data (0 or 1)" );
-		g_Settings.add( "data.muscle", "Output muscle parameters", true, "Boolean indicating whether to output muscle parameters (0 or 1)" );
-		g_Settings.add( "data.sensor", "Output sensor data", true, "Boolean indicating whether to output sensor data (0 or 1)" );
-		g_Settings.add( "data.controller", "Output controller data", true, "Boolean indicating whether to output controller data (0 or 1)" );
-	}
-
-	const xo::settings& GetSconeSettings()
-	{
-		return UpdateSconeSettings();
-	}
-
-	xo::settings& UpdateSconeSettings()
-	{
-		std::lock_guard< std::mutex > lock( g_SystemMutex );
-		if ( g_Settings.empty() )
-		{
-			SetDefaultSconeSettings();
-
-			auto settings_file = GetSettingsFolder() / "settings.ini";
-			if ( xo::file_exists( settings_file ) )
-			{
-				log::debug( "Loaded settings from ", settings_file );
-				g_Settings.load( settings_file );
-			}
-		}
-
-		return g_Settings;
-	}
-
-	void SaveSconeSettings()
-	{
-		std::lock_guard< std::mutex > lock( g_SystemMutex );
-		auto settings_file = GetSettingsFolder() / "settings.ini";
-		xo::create_directories( xo::path( settings_file.str() ).parent_path() );
-
-		g_Settings.save( settings_file );
-		log::debug( "Saved settings to ", settings_file );
-	}
 
 	path GetInstallFolder()
 	{

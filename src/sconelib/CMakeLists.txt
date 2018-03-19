@@ -41,6 +41,8 @@ set(CORE_SYSTEM_FILES
 	scone/core/types.h
 	scone/core/system_tools.cpp
 	scone/core/system_tools.h
+	scone/core/Settings.cpp
+	scone/core/Settings.h
 )
 set(CORE_STORAGE_FILES
 	scone/core/Storage.h

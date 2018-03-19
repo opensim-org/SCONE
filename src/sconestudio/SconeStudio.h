@@ -15,7 +15,7 @@
 #include "xo/numerical/delta.h"
 #include "ProgressDockWidget.h"
 #include "QCodeEditor.h"
-#include "Settings.h"
+#include "SettingsEditor.h"
 #include "xo/system/log_sink.h"
 #include "QCompositeMainWindow.h"
 #include "QDataAnalysisView.h"
@@ -75,7 +75,6 @@ private:
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
 	QCodeEditor* getActiveScenario( bool show_error = false );
-	bool checkActiveScenario();
 	bool requestSaveChanges( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
@@ -113,7 +112,7 @@ private:
 	QDir captureImageDir;
 	void finalizeCapture();
 
-	scone::Settings settings;
+	scone::SettingsEditor settings;
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

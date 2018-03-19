@@ -1,4 +1,4 @@
-#include "Settings.h"
+#include "SettingsEditor.h"
 
 #include <QDialog>
 #include "qt_tools.h"
@@ -7,12 +7,15 @@
 #include "ui_SconeSettings.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/Settings.h"
+#include "scone/core/Log.h"
 #include "xo/filesystem/path.h"
 #include "xo/system/type_class.h"
+#include "xo/container/flat_map.h"
 
 namespace scone
 {
-	int Settings::showDialog( QWidget* parent )
+	int SettingsEditor::showDialog( QWidget* parent )
 	{
 		QDialog* dialog_window = new QDialog( parent );
 		Ui::Settings ui;
@@ -25,6 +28,7 @@ namespace scone
 		ui.resultsFolder->setText( make_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
 		ui.geometryFolder->setText( make_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
 
+		xo::flat_map< string, QListWidgetItem* > data_checkboxes;
 		for ( auto& item : settings.data().get_child( "data" ) )
 		{
 			if ( item.second.get< xo::type_class >( "_type_" ) == xo::boolean_type_class )
@@ -33,6 +37,7 @@ namespace scone
 				checkbox->setCheckState( item.second.get< bool >() ? Qt::Checked : Qt::Unchecked );
 				checkbox->setStatusTip( item.second.get< string >( "_info_" ).c_str() );
 				ui.dataList->addItem( checkbox );
+				data_checkboxes[ item.first ] = checkbox;
 			}
 		}
 
@@ -52,12 +57,8 @@ namespace scone
 			settings.set( "folders.geometry", ui.geometryFolder->text().toStdString() );
 
 			// copy checkboxes
-			int row = 0;
-			for ( auto& item : settings.data().get_child( "data" ) )
-			{
-				if ( item.second.get< xo::type_class >( "_type_" ) == xo::boolean_type_class )
-					item.second.set< bool >( ui.dataList->item( row++ )->checkState() == Qt::Checked );
-			}
+			for ( auto& item : data_checkboxes )
+				settings.set< bool >( "data." + item.first, item.second->checkState() == Qt::Checked );
 
 			SaveSconeSettings();
 		}
