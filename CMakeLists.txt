@@ -53,6 +53,10 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
     endif()
 endif()
 
+if (MSVC)
+	add_compile_options("/MP")
+endif()
+
 # Various settings
 # ----------------
 # Place build products (libraries, executables) in root
