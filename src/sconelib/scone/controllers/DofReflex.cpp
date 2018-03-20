@@ -11,7 +11,7 @@ namespace scone
 	DofReflex::DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Reflex( props, par, model, area ),
 	m_SourceDof( *FindByNameTrySided( model.GetDofs(), props.get< String >( "source" ), area.side ) ),
-	m_SourceParentDof( props.has_key( "source" ) ? &*FindByNameTrySided( model.GetDofs(), props.get< String >( "source_parent" ), area.side ) : nullptr ),
+	m_SourceParentDof( props.has_key( "source_parent" ) ? &*FindByNameTrySided( model.GetDofs(), props.get< String >( "source_parent" ), area.side ) : nullptr ),
 	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( m_SourceDof, m_SourceParentDof ) ),
 	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) ),
 	m_pTargetPosSource( nullptr )
