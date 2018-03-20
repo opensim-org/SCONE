@@ -28,6 +28,7 @@ namespace scone
 		{
 			Limit( const PropNode& props, Model& model );
 			Dof& dof;
+			Dof* parent;
 			Range< Degree > range;
 			Range< Degree > velocity_range;
 			Real squared_range_penalty;

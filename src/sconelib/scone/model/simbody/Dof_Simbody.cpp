@@ -8,10 +8,10 @@
 namespace scone
 {
 	Dof_Simbody::Dof_Simbody( Model_Simbody& model, OpenSim::Coordinate& coord ) :
-		Dof( *FindByName( model.GetJoints(), coord.getJoint().getName() ) ),
-		m_Model( model ),
-		m_osCoord( coord ),
-		m_pOsLimitForce( nullptr )
+	Dof( *FindByName( model.GetJoints(), coord.getJoint().getName() ) ),
+	m_Model( model ),
+	m_osCoord( coord ),
+	m_pOsLimitForce( nullptr )
 	{
 		// find corresponding CoordinateLimitForce
 		auto& forceSet = model.GetOsimModel().getForceSet();
@@ -29,7 +29,7 @@ namespace scone
 		}
 	}
 
-	Dof_Simbody::~Dof_Simbody() { }
+	Dof_Simbody::~Dof_Simbody() {}
 
 	scone::Real Dof_Simbody::GetPos() const
 	{

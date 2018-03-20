@@ -6,7 +6,7 @@
 namespace scone
 {
 	DofLimitMeasure::DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Measure( props, par, model, area )
+	Measure( props, par, model, area )
 	{
 		if ( const PropNode* lp = props.try_get_child( "Limits" ) )
 		{
@@ -22,8 +22,9 @@ namespace scone
 	DofLimitMeasure::~DofLimitMeasure() {}
 
 	DofLimitMeasure::Limit::Limit( const PropNode& props, Model& model ) :
-		dof( *FindByName( model.GetDofs(), props.get< String >( "dof" ) ) ),
-		penalty( Statistic<>::LinearInterpolation )
+	dof( *FindByName( model.GetDofs(), props.get< String >( "dof" ) ) ),
+	parent( props.has_key( "dof_parent" ) ? &*FindByName( model.GetDofs(), props.get< String >( "dof_parent" ) ) : nullptr ),
+	penalty( Statistic<>::LinearInterpolation )
 	{
 		range.min = Degree( props.get< Real >( "min_deg", 0.0 ) );
 		range.max = Degree( props.get< Real >( "max_deg", 0.0 ) );
@@ -45,7 +46,8 @@ namespace scone
 		{
 			if ( l.squared_range_penalty > 0 || l.abs_range_penalty > 0 )
 			{
-				double range_violation = l.range.GetRangeViolation( Radian( l.dof.GetPos() ) ).value;
+				auto value = l.dof.GetPos() + ( l.parent ? l.parent->GetPos() : 0 );
+				double range_violation = l.range.GetRangeViolation( Radian( value ) ).value;
 				double rps = l.squared_range_penalty * GetSquared( range_violation );
 				double rpa = l.abs_range_penalty * std::abs( range_violation );
 				l.penalty.AddSample( timestamp, rps + rpa );
@@ -53,7 +55,8 @@ namespace scone
 
 			if ( l.squared_velocity_range_penalty > 0 || l.abs_velocity_range_penalty > 0 )
 			{
-				double range_violation = l.velocity_range.GetRangeViolation( Radian( l.dof.GetVel() ) ).value;
+				auto value = l.dof.GetVel() + ( l.parent ? l.parent->GetVel() : 0 );
+				double range_violation = l.velocity_range.GetRangeViolation( Radian( value ) ).value;
 				double vrps = l.squared_velocity_range_penalty * GetSquared( range_violation );
 				double vrpa = l.abs_velocity_range_penalty * std::abs( range_violation );
 				l.penalty.AddSample( timestamp, vrps + vrpa );
@@ -61,7 +64,7 @@ namespace scone
 
 			if ( l.squared_force_penalty > 0 || l.abs_force_penalty > 0 )
 			{
-				double lf = l.dof.GetLimitForce();
+				double lf = l.dof.GetLimitForce() + ( l.parent ? l.parent->GetLimitForce() : 0 );
 				double fps = l.squared_force_penalty * GetSquared( lf );
 				double fpa = l.abs_force_penalty * abs( lf );
 				l.penalty.AddSample( timestamp, fps + fpa );
