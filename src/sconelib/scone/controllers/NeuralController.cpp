@@ -37,6 +37,7 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		INIT_PROP( pn, min_virtual_muscle_correlation, 0 );
+		INIT_PROP( pn, use_neutral_pose_, false );
 
 		try
 		{
@@ -59,7 +60,9 @@ namespace scone
 
 			// backup the current state and set all DOFs to zero
 			State org_state = model.GetState();
-			model.SetNullState();
+			if ( use_neutral_pose_ )
+				model.SetNeutralState();
+			else model.SetNullState();
 
 			// create sensor neuron layer
 			AddSensorNeuronLayer( pn.get_child( "SensorNeuronLayer" ), par );

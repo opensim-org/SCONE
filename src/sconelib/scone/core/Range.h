@@ -1,7 +1,8 @@
 #pragma once
 
-#include <limits>
 #include "core.h"
+#include "PropNode.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {
@@ -9,8 +10,9 @@ namespace scone
 	class Range
 	{
 	public:
-		Range( const PropNode& props ) { min = props.get< T >( "min", std::numeric_limits< T >::min() ); max = props.get< T >( "max", std::numeric_limits< T >::max() ); }
-		Range( const T& i_min = T(), const T& i_max = T() ) : min( i_min ), max( i_max ) { };
+		Range( const PropNode& props ) : min( props.get< T >( "min", xo::constants< T >::lowest() ) ), max( props.get< T >( "max", xo::constants< T >::max() ) ) {}
+		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
+		Range() : min( T() ), max( T() ) {}
 
 		// test if a value is inside the range
 		bool Test( const T& value ) { return ( value >= min ) && ( value <= max ); }
@@ -22,6 +24,8 @@ namespace scone
 			else if ( value > max ) return value - max;
 			else return T( 0 );
 		}
+
+		T GetCenter() { return ( min + max ) / 2; }
 
 		T min;
 		T max;

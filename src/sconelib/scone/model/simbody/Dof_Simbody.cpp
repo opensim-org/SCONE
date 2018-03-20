@@ -1,9 +1,9 @@
 #include "Dof_Simbody.h"
 #include "Model_Simbody.h"
 #include "Joint_Simbody.h"
+#include "scone/core/Log.h"
 
 #include <OpenSim/OpenSim.h>
-#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -74,5 +74,10 @@ namespace scone
 	Vec3 Dof_Simbody::GetRotationAxis() const
 	{
 		return m_RotationAxis;
+	}
+
+	Range< Real > Dof_Simbody::GetRange() const
+	{
+		return Range< Real >( m_osCoord.get_range( 0 ), m_osCoord.get_range( 1 ) );
 	}
 }

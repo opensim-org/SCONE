@@ -2,6 +2,7 @@
 
 #include "scone/core/HasName.h"
 #include "scone/core/Vec3.h"
+#include "scone/core/Range.h"
 #include "Actuator.h"
 
 namespace scone
@@ -23,6 +24,7 @@ namespace scone
 
 		virtual Vec3 GetRotationAxis() const = 0;
 		virtual const class Joint& GetJoint() const { return m_Joint; }
+		virtual Range< Real > GetRange() const = 0;
 
 	private:
 		class Joint& m_Joint;

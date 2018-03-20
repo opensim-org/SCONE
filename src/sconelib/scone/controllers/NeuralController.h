@@ -70,6 +70,7 @@ namespace scone
 		activation_func_t activation_function_;
 
 		enum parameter_mode_t { muscle_mode, dof_mode, virtual_mode, virtual_dof_mode } par_mode_;
+		bool use_neutral_pose_;
 
 		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
 		void AddPatternNeurons( const PropNode& pn, Params& par );

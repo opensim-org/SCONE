@@ -294,6 +294,15 @@ namespace scone
 		SetState( zero_state, 0 );
 	}
 
+	void Model::SetNeutralState()
+	{
+		for ( auto& dof : GetDofs() )
+		{
+			dof->SetPos( dof->GetRange().GetCenter() );
+			dof->SetVel( 0 );
+		}
+	}
+
 	scone::Real Model::GetTotalContactForce() const
 	{
 		Real force = 0.0;

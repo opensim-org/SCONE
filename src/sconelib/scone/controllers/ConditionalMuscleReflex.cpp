@@ -2,6 +2,7 @@
 #include "scone/model/Locality.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/Dof.h"
+#include "scone/core/Range.h"
 
 namespace scone
 {

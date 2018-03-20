@@ -1,6 +1,5 @@
 #pragma once
 
-#include "sim_simbody.h"
 #include "scone/model/Dof.h"
 
 namespace OpenSim
@@ -33,6 +32,7 @@ namespace scone
 		virtual void SetVel( Real vel ) override;
 
 		virtual Vec3 GetRotationAxis() const override;
+		virtual Range< Real > GetRange() const override;
 
 	private:
 		Model_Simbody& m_Model;
