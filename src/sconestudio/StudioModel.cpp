@@ -13,13 +13,16 @@
 #include "xo/time/timer.h"
 #include "xo/filesystem/filesystem.h"
 #include "simvis/color.h"
+#include "xo/geometry/path_alg.h"
+#include "StudioSettings.h"
 
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
-	bone_mat( vis::color( 1, 0.98, 0.95 ), 1, 15, 0, 0.5f ),
+	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
-	arrow_mat( vis::make_yellow(), 1.0, 15, 0, 0.5f ),
+	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), 0.5f, 15, 0, 0.5f ),
+	arrow_mat( GetStudioSetting< vis::color >( "viewer.forces" ), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
@@ -121,17 +124,22 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, vis::make_cyan(), 0.75f ).pos( cg.m_Pos ) );
+			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ).pos( cg.m_Pos ) );
 		}
 
 		for ( auto& muscle : model->GetMuscles() )
 		{
 			// add path
-			auto p = muscle->GetMusclePath();
-			auto vispath = root.add< vis::trail >( p.size(), 0.005f, vis::make_red(), 0.3f );
-			auto vismat = muscle_mat.clone();
-			vispath.set_material( vismat );
-			muscles.push_back( std::make_pair( vispath, vismat ) );
+			MuscleVis mv;
+			mv.ten1 = root.add< vis::trail >( 1, 0.005f, vis::make_yellow(), 0.3f );
+			mv.ten2 = root.add< vis::trail >( 1, 0.005f, vis::make_yellow(), 0.3f );
+			mv.ten1.set_material( tendon_mat );
+			mv.ten2.set_material( tendon_mat );
+
+			mv.ce = root.add< vis::trail >( 1, 0.0075f, vis::make_red(), 0.5f );
+			mv.mat = muscle_mat.clone();
+			mv.ce.set_material( mv.mat );
+			muscles.push_back( mv );
 		}
 
 		ApplyViewSettings( view_flags );
@@ -178,14 +186,7 @@ namespace scone
 		// update muscle paths
 		auto &model_muscles = model->GetMuscles();
 		for ( Index i = 0; i < model_muscles.size(); ++i )
-		{
-			auto mp = model_muscles[ i ]->GetMusclePath();
-			muscles[ i ].first.set_points( mp );
-
-			auto a = model_muscles[ i ]->GetActivation();
-			muscles[ i ].second.diffuse( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
-			muscles[ i ].second.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
-		}
+			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
 		// update ground reaction forces on legs
 		for ( Index i = 0; i < model->GetLegCount(); ++i )
@@ -210,6 +211,24 @@ namespace scone
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
 		forces[ force_idx ].pos( cop, cop + 0.001 * force );
+	}
+
+	void StudioModel::UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis )
+	{
+		auto mp = mus.GetMusclePath();
+		auto len = mus.GetLength();
+		auto tlen = mus.GetTendonLength() / 2;
+		auto a = mus.GetActivation();
+		auto p = mus.GetMusclePath();
+
+		auto i1 = insert_path_point( p, tlen );
+		auto i2 = insert_path_point( p, len - tlen );
+
+		vis.mat.diffuse( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
+		vis.mat.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
+		vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
+		vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
+		vis.ten2.set_points( p.begin() + i2, p.end() );
 	}
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
@@ -253,7 +272,7 @@ namespace scone
 	{
 		view_flags = flags;
 		for ( auto& f : forces ) f.show( view_flags.get< ShowForces >() );
-		for ( auto& m : muscles ) m.first.show( view_flags.get< ShowMuscles >() );
+		for ( auto& m : muscles ) m.ce.show( view_flags.get< ShowMuscles >() );
 		for ( auto& e : body_meshes ) e.show( view_flags.get< ShowGeometry >() ); // for ( auto m : e ) m.show( view_flags.get< ShowGeometry >() );
 		for ( auto& e : body_axes ) e.show( view_flags.get< ShowAxes >() );
 		for ( auto& e : contact_geoms ) e.show( view_flags.get< ShowContactGeom >() );

@@ -29,7 +29,6 @@ namespace scone
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
-		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
 
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
@@ -45,7 +44,17 @@ namespace scone
 		void ApplyViewSettings( const ViewFlags& f );
 
 	private:
+		struct MuscleVis
+		{
+			vis::trail ten1;
+			vis::trail ten2;
+			vis::trail ce;
+			vis::material mat;
+		};
+
 		void InitVis( vis::scene& s );
+		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
+		void UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis );
 
 		Storage<> data;
 		ModelObjectiveUP model_objective;
@@ -60,13 +69,14 @@ namespace scone
 		vis::material bone_mat;
 		vis::material arrow_mat;
 		vis::material muscle_mat;
+		vis::material tendon_mat;
 
 		bool is_evaluating;
 
 		vis::group root;
 		std::vector< vis::mesh > body_meshes;
 		std::vector< vis::mesh > joints;
-		std::vector< std::pair< vis::trail, vis::material > > muscles;
+		std::vector< MuscleVis > muscles;
 		std::vector< vis::arrow > forces;
 		std::vector< vis::axes > body_axes;
 		std::vector< vis::group > bodies;

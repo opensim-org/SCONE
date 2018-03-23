@@ -24,6 +24,8 @@
 #include "spot/file_reporter.h"
 #include "xo/filesystem/filesystem.h"
 #include "simvis/color.h"
+#include "scone/core/Settings.h"
+#include "StudioSettings.h"
 
 using namespace scone;
 using namespace std;
@@ -88,7 +90,8 @@ scene( true )
 
 	// init scene
 	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
-	scene.create_tile_floor( 64, 64, 1 );
+	scene.create_tile_floor( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
+	ui.osgViewer->setClearColor( make_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )

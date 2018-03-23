@@ -19,6 +19,8 @@ if(${Qt5Widgets_FOUND})
 		ProgressDockWidget.cpp
 		SettingsEditor.h
 		SettingsEditor.cpp
+		StudioSettings.h
+		StudioSettings.cpp
 		SconeStorageDataModel.h
 		SconeStorageDataModel.cpp
 		ResultsFileSystemModel.h
