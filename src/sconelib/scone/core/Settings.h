@@ -11,6 +11,8 @@ namespace scone
 	SCONE_API Settings& UpdateSconeSettings();
 	SCONE_API void SaveSconeSettings();
 
+	template< typename T > T GetSconeSetting( const std::string& name ) { return GetSconeSettings().get< T >( name ); }
+
 	class SCONE_API Settings : public xo::settings
 	{
 	public:
