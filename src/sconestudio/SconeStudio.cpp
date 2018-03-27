@@ -221,6 +221,7 @@ void SconeStudio::evaluate()
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
 		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
+		//log::trace( "Evaluating to ", t );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 		{
@@ -235,8 +236,10 @@ void SconeStudio::evaluate()
 	auto real_dur = real_time.seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
-
 	ui.progressBar->setValue( 100 );
+
+	QApplication::processEvents();
+
 	if ( model->IsEvaluating() )
 		model->EvaluateTo( model->GetMaxTime() );
 	model->UpdateVis( model->GetTime() );
