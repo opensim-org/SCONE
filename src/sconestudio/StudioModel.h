@@ -3,7 +3,7 @@
 #include "scone/core/system_tools.h"
 #include "scone/model/Model.h"
 #include "simvis/scene.h"
-#include "scone/objectives/SimulationObjective.h"
+#include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/Objective.h"
 
 #include "xo/container/flag_set.h"
@@ -13,7 +13,7 @@
 #include "simvis/axes.h"
 #include "scone/model/State.h"
 #include "scone/core/types.h"
-#include "scone/objectives/ModelObjective.h"
+#include "scone/optimization/ModelObjective.h"
 
 namespace scone
 {

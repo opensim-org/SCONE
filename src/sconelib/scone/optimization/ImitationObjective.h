@@ -4,11 +4,11 @@
 #include "scone/optimization/Params.h"
 #include "scone/model/Simulation.h"
 #include "scone/core/PropNode.h"
+#include "scone/measures/Measure.h"
 
-#include "Measure.h"
 #include <vector>
 #include "xo/filesystem/path.h"
-#include "../core/Storage.h"
+#include "scone/core/Storage.h"
 #include "ModelObjective.h"
 
 namespace scone

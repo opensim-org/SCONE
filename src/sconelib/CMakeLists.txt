@@ -124,40 +124,32 @@ set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/TimeStateController.cpp
 	scone/controllers/TimeStateController.h
 	)
-set(OBJECTIVES_FILES
-	scone/objectives/BalanceMeasure.cpp
-	scone/objectives/BalanceMeasure.h
-	scone/objectives/CompositeMeasure.cpp
-	scone/objectives/CompositeMeasure.h
-	scone/objectives/DofLimitMeasure.cpp
-	scone/objectives/DofLimitMeasure.h
-	scone/objectives/EffortMeasure.cpp
-	scone/objectives/EffortMeasure.h
-	scone/objectives/GaitCycleMeasure.cpp
-	scone/objectives/GaitCycleMeasure.h
-	scone/objectives/GaitMeasure.cpp
-	scone/objectives/GaitMeasure.h
-	scone/objectives/HeightMeasure.cpp
-	scone/objectives/HeightMeasure.h
-	scone/objectives/JumpMeasure.cpp
-	scone/objectives/JumpMeasure.h
-	scone/objectives/JointLoadMeasure.cpp
-	scone/objectives/JointLoadMeasure.h
-	scone/objectives/ReactionForceMeasure.cpp
-	scone/objectives/ReactionForceMeasure.h
-	scone/objectives/PointMeasure.cpp
-	scone/objectives/PointMeasure.h
-	scone/objectives/RangePenalty.h
-	scone/objectives/Measure.cpp
-	scone/objectives/Measure.h
-	scone/objectives/ModelObjective.cpp
-	scone/objectives/ModelObjective.h
-	scone/objectives/SimulationObjective.cpp
-	scone/objectives/SimulationObjective.h
-	scone/objectives/ImitationObjective.cpp
-	scone/objectives/ImitationObjective.h
-	scone/objectives/SimilarityObjective.cpp
-	scone/objectives/SimilarityObjective.h
+set(MEASURE_FILES
+	scone/measures/BalanceMeasure.cpp
+	scone/measures/BalanceMeasure.h
+	scone/measures/CompositeMeasure.cpp
+	scone/measures/CompositeMeasure.h
+	scone/measures/DofLimitMeasure.cpp
+	scone/measures/DofLimitMeasure.h
+	scone/measures/EffortMeasure.cpp
+	scone/measures/EffortMeasure.h
+	scone/measures/GaitCycleMeasure.cpp
+	scone/measures/GaitCycleMeasure.h
+	scone/measures/GaitMeasure.cpp
+	scone/measures/GaitMeasure.h
+	scone/measures/HeightMeasure.cpp
+	scone/measures/HeightMeasure.h
+	scone/measures/JumpMeasure.cpp
+	scone/measures/JumpMeasure.h
+	scone/measures/JointLoadMeasure.cpp
+	scone/measures/JointLoadMeasure.h
+	scone/measures/ReactionForceMeasure.cpp
+	scone/measures/ReactionForceMeasure.h
+	scone/measures/PointMeasure.cpp
+	scone/measures/PointMeasure.h
+	scone/measures/RangePenalty.h
+	scone/measures/Measure.cpp
+	scone/measures/Measure.h
 	)
 
 set(OPT_API_FILES
@@ -177,6 +169,14 @@ set(OPT_API_FILES
 #	scone/optimization/ParamInfo.h
 #	scone/optimization/ParamSet.cpp
 	scone/optimization/Params.h
+	scone/optimization/ModelObjective.cpp
+	scone/optimization/ModelObjective.h
+	scone/optimization/SimulationObjective.cpp
+	scone/optimization/SimulationObjective.h
+	scone/optimization/ImitationObjective.cpp
+	scone/optimization/ImitationObjective.h
+	scone/optimization/SimilarityObjective.cpp
+	scone/optimization/SimilarityObjective.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h
     )
@@ -262,7 +262,7 @@ set (SCONELIB_FILES
 	${CS_CONTROLLERS_REFLEX_FILES}
 	${CS_CONTROLLERS_STATE_FILES}
     ${CS_FUNCTIONS_FILES}
-	${OBJECTIVES_FILES}
+	${MEASURE_FILES}
 	${CS_SYSTEM_FILES} 
     ${CS_TOOLS_FILES}
 	
@@ -307,7 +307,7 @@ source_group("controllers\\Neural Control" FILES ${CS_CONTROLLERS_NC_FILES})
 source_group("controllers" FILES ${CS_SYSTEM_FILES})
 source_group("controllers\\Meta Reflex Control" FILES ${CS_CONTROLLERS_MRC_FILES})
 
-source_group("objectives" FILES ${OBJECTIVES_FILES})
+source_group("measures" FILES ${MEASURE_FILES})
 
 source_group("optimization" FILES ${OPT_API_FILES})
 source_group("optimization" FILES ${OPT_SYSTEM_FILES})

@@ -4,7 +4,7 @@
 #include "xo/container/prop_node_tools.h"
 #include "xo/filesystem/path.h"
 #include "PerturbationController.h"
-#include "scone/objectives/SimulationObjective.h"
+#include "scone/optimization/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
 #include "xo/filesystem/filesystem.h"

@@ -12,7 +12,7 @@ namespace scone
 		CmaOptimizer& operator=( const CmaOptimizer& ) = delete;
 		virtual ~CmaOptimizer();
 
-		virtual void Run() override { SCONE_THROW( "Please use a subclass of CmaOptimzer" ); }
+		virtual void Run() override;
 
 	protected:
 		int mu_;

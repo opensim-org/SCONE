@@ -64,7 +64,7 @@ namespace scone
 		double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
-		GetReport().set( "total", m_Energy.GetTotal() );
+		//GetReport().set( "total", m_Energy.GetTotal() );
 
 		if ( use_cost_of_transport )
 		{

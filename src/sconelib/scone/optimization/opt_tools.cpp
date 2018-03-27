@@ -1,7 +1,7 @@
 #include "opt_tools.h"
 #include "scone/core/types.h"
 #include "scone/core/Factories.h"
-#include "scone/objectives/SimulationObjective.h"
+#include "scone/optimization/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 
 #include "xo/time/timer.h"

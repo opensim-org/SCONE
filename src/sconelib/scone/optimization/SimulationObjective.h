@@ -5,7 +5,7 @@
 #include "scone/model/Simulation.h"
 #include "scone/core/PropNode.h"
 
-#include "Measure.h"
+#include "scone/measures/Measure.h"
 #include <vector>
 #include "xo/filesystem/path.h"
 #include "ModelObjective.h"
