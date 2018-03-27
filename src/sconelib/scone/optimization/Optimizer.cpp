@@ -40,15 +40,13 @@ namespace scone
 		INIT_PROPERTY( props, output_objective_result_files, false );
 
 		m_BestFitness = maximize_objective ? REAL_LOWEST : REAL_MAX;
-
-		// create at least one objective from props, so that all nodes are properly flagged
-		CreateObjectives( 1 );
+		m_Objective = CreateObjective( m_ObjectiveProps );
 	}
 
 	Optimizer::~Optimizer()
 	{}
 
-	void Optimizer::InitOutputFolder()
+	void Optimizer::InitOutputFolder() const
 	{
 		auto output_base = output_root / GetSignature();
 		m_OutputFolder = output_base;
@@ -57,10 +55,9 @@ namespace scone
 			m_OutputFolder = output_base + stringf( " (%d)", i );
 
 		xo::create_directories( xo::path( m_OutputFolder.str() ) );
-		m_OutputFolder;
 	}
 
-	const path& Optimizer::AcquireOutputFolder()
+	const path& Optimizer::AcquireOutputFolder() const
 	{
 		if ( m_OutputFolder.empty() )
 			InitOutputFolder();
@@ -76,14 +73,7 @@ namespace scone
 		return s;
 	}
 
-	void Optimizer::CreateObjectives( size_t count )
-	{
-		// create at least one objective instance (required for finding number of parameters)
-		while ( m_Objectives.size() < count )
-			m_Objectives.push_back( CreateObjective( m_ObjectiveProps ) );
-	}
-
-	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files )
+	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files ) const
 	{
 		m_OutputFiles.push_back( std::make_pair( fitness, files ) );
 		if ( m_OutputFiles.size() >= 3 )

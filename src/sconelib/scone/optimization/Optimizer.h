@@ -13,44 +13,29 @@ namespace scone
 		Optimizer( const PropNode& props );
 		virtual ~Optimizer();
 
-		Objective& GetObjective() { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
-		const Objective& GetObjective() const { SCONE_ASSERT( m_Objectives.size() > 0 ); return *m_Objectives[ 0 ]; }
+		Objective& GetObjective() { return *m_Objective; }
+		const Objective& GetObjective() const { return *m_Objective; }
 		virtual void Run() = 0;
 
 		/// get the results output folder (creates it if it doesn't exist)
-		const path& AcquireOutputFolder();
+		const path& AcquireOutputFolder() const;
 
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		bool IsMinimizing() { return !maximize_objective; }
 
-		std::vector< double > Evaluate( std::vector< Params >& parsets );
-
 		double GetBestFitness() { return m_BestFitness; }
 
 		void SetConsoleOutput( bool output ) { console_output = output; }
-		bool GetProgressOutput() { return console_output && !status_output; }
+		bool GetProgressOutput() const { return console_output && !status_output; }
 		bool GetStatusOutput() const { return status_output; }
 		void SetStatusOutput( bool s ) { status_output = s; }
-		template< typename T > void OutputStatus( const String& key, const T& value ) {
+		template< typename T > void OutputStatus( const String& key, const T& value ) const {
 			if ( GetStatusOutput() )
 				std::cout << std::endl << "*" << key << "=" << value << std::endl;
 		}
 
 		path output_root;
 		path init_file;
-
-	protected:
-		void CreateObjectives( size_t count );
-		const PropNode& m_ObjectiveProps;
-		std::vector< ObjectiveUP > m_Objectives;
-		void ManageFileOutput( double fitness, const std::vector< path >& files );
-		virtual String GetClassSignature() const override;
-
-		// current status
-		double m_BestFitness;
-		bool console_output;
-		bool status_output;
-		size_t m_LastFileOutputGen;
 
 		// properties
 		size_t max_threads;
@@ -61,19 +46,27 @@ namespace scone
 		size_t max_generations_without_file_output;
 		bool use_init_file;
 		bool output_objective_result_files;
+		mutable size_t m_LastFileOutputGen;
+
+		void ManageFileOutput( double fitness, const std::vector< path >& files ) const;
+
+	protected:
+		const PropNode& m_ObjectiveProps;
+		ObjectiveUP m_Objective;
+		virtual String GetClassSignature() const override;
+
+		// current status
+		double m_BestFitness;
+		bool console_output;
+		bool status_output;
 
 	private:
-#if 0
-		std::vector< double > EvaluateSingleThreaded( std::vector< ParamInstance >& parsets );
-		std::vector< double > EvaluateMultiThreaded( std::vector< ParamInstance >& parsets );
-		static void EvaluateFunc( Objective* obj, ParamInstance& par, double* fitness, int priority );
-#endif
-		void InitOutputFolder();
+		void InitOutputFolder() const;
 		static void SetThreadPriority( int priority );
 
 		String m_Name;
-		path m_OutputFolder;
-		std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
+		mutable path m_OutputFolder;
+		mutable std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
 
 	private: // non-copyable and non-assignable
 		Optimizer( const Optimizer& );

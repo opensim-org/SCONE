@@ -30,6 +30,7 @@
 #include "scone/optimization/ImitationObjective.h"
 #include "scone/measures/BalanceMeasure.h"
 #include "scone/optimization/SimilarityObjective.h"
+#include "../optimization/CmaOptimizerSpot.h"
 
 namespace scone
 {
@@ -122,6 +123,7 @@ namespace scone
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
+			g_OptimizerFactory.register_class< CmaOptimizerSpot >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}

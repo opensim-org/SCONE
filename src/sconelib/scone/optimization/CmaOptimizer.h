@@ -12,15 +12,13 @@ namespace scone
 		CmaOptimizer& operator=( const CmaOptimizer& ) = delete;
 		virtual ~CmaOptimizer();
 
-		virtual void Run() override;
+		virtual void Run() override { SCONE_THROW( "Please use a subclass of CmaOptimzer" ); }
 
-	protected:
 		int mu_;
 		int lambda_;
 		double sigma_;
 		size_t max_generations;
 		size_t window_size;
-		int recombination_type; // 0 = equal, 1 = linear, 2 = superlinear
 
 		double global_std_factor;
 		double global_std_offset;

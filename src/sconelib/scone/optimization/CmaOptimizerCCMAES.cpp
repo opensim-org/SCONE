@@ -23,16 +23,9 @@ namespace scone
 		try
 		{
 			// make sure there is at least 1 objective and get info
-			CreateObjectives( 1 );
 			size_t dim = GetObjective().dim();
 
 			SCONE_ASSERT( dim > 0 );
-
-			// init random seed
-			if ( random_seed == 0 ) {
-				std::random_device rd;
-				random_seed = rd();
-			}
 
 			// initialize settings from file
 			if ( use_init_file && !init_file.empty() )
