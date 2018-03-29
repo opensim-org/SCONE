@@ -14,6 +14,7 @@
 #include "xo/system/log_sink.h"
 #include "xo/system/system_tools.h"
 #include "scone/core/string_tools.h"
+#include "xo/filesystem/filesystem.h"
 
 int main( int argc, char *argv[] )
 {
@@ -23,10 +24,8 @@ int main( int argc, char *argv[] )
 	QApplication::style()->setProperty( "margin", 50 );
 
 	// init logging
-	QDir().mkdir( make_qt( scone::GetSettingsFolder() ) );
-	QDir().mkdir( make_qt( scone::GetSettingsFolder() / "log" ) );
-
-	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y-%m-%d_%H%M%S" ) + ".txt" );
+	xo::create_directories( scone::GetSettingsFolder() / "log" );
+	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
 	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
 	xo::register_file_format( "scone", xo::file_format::zml );
 
