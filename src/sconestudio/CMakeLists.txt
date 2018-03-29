@@ -80,10 +80,7 @@ if(${Qt5Widgets_FOUND})
 
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
 	
-	set_target_properties(sconestudio PROPERTIES
-		PROJECT_LABEL "sconestudio"
-		OUTPUT_NAME sconestudio
-		)
+	set_target_properties(sconestudio PROPERTIES PROJECT_LABEL "sconestudio" OUTPUT_NAME sconestudio )
 		
 	# setup OpenSceneGraph stuff
 	set(OSG_DIR "" CACHE PATH "Installation directory of OpenSceneGraph")
@@ -123,8 +120,13 @@ if(${Qt5Widgets_FOUND})
 	
 	# Try to add simvis
 	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
+
+	if (MSVC)
+		add_custom_command(TARGET sconestudio POST_BUILD COMMAND "${CMAKE_SOURCE_DIR}/install.bat" )
+	endif()
 	
-	if(WIN32)
+	if(MSVC)
+		# copy dlls
 		# get the VS version, the shabby cmake way.
 		string(SUBSTRING ${CMAKE_VS_PLATFORM_TOOLSET} 1 3 VS_PLATFORM_TOOLSET_NUMBER)
 
