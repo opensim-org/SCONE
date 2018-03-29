@@ -13,8 +13,9 @@
 
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
+#include "scone/measures/Measure.h"
+
 #include "xo/container/container_tools.h"
-#include "../objectives/Measure.h"
 #include "xo/string/string_tools.h"
 
 using std::endl;
