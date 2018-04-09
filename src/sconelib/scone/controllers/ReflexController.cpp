@@ -39,7 +39,7 @@ namespace scone
 		if ( !reflex_file.empty() && !delay_file.empty() )
 		{
 			auto str = xo::char_stream( reflex_file );
-			auto delay_pn = load_zml( delay_file );
+			auto delay_pn = load_file( delay_file, "zml" );
 			while ( str.good() )
 			{
 				String name;

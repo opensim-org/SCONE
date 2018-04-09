@@ -9,7 +9,7 @@ void propnode_stream_test()
 	auto p1 = scone::load_file_with_include( xo::path( p1path.string() ) );
 
 	auto p2path = xo::temp_directory_path() / p1path.filename();
-	save_xml( p1, xo::path( p2path.string() ) );
+	save_file( p1, xo::path( p2path.string() ), "xml" );
 	
 	auto p2 = scone::load_file_with_include( xo::path( p2path.string() ) );
 

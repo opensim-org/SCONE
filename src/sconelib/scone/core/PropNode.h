@@ -15,9 +15,7 @@
 namespace scone
 {
 	using PropNode = xo::prop_node;
-	using xo::load_xml;
+	using xo::load_file;
 	using xo::load_file_with_include;
-	using xo::save_xml;
-	using xo::load_ini;
-	using xo::save_ini;
+	using xo::save_file;
 }

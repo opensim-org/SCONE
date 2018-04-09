@@ -15,6 +15,7 @@
 #include "xo/system/system_tools.h"
 #include "scone/core/string_tools.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
 
 int main( int argc, char *argv[] )
 {
@@ -27,7 +28,7 @@ int main( int argc, char *argv[] )
 	xo::create_directories( scone::GetSettingsFolder() / "log" );
 	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
 	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
-	xo::register_file_format( "scone", xo::file_format::zml );
+	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 
 	if ( !file_sink.good() )
 	{

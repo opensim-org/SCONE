@@ -10,6 +10,7 @@
 #include "spot/optimization_pool.h"
 #include <xutility>
 #include "xo/serialization/serialize.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
 
 using namespace scone;
 using namespace std;
@@ -20,7 +21,7 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		xo::register_file_format( "scone", xo::file_format::zml );
+		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 
 		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', "0.1", true );
 		TCLAP::ValueArg< string > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
