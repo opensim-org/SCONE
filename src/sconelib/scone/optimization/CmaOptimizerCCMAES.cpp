@@ -22,11 +22,6 @@ namespace scone
 	{
 		try
 		{
-			// make sure there is at least 1 objective and get info
-			size_t dim = GetObjective().dim();
-
-			SCONE_ASSERT( dim > 0 );
-
 			// initialize settings from file
 			if ( use_init_file && !init_file.empty() )
 			{
@@ -36,6 +31,10 @@ namespace scone
 
 			if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
 				GetObjective().info().set_global_std( global_std_factor, global_std_offset );
+
+			// get objective dim (after static params are handled)
+			size_t dim = GetObjective().dim();
+			SCONE_ASSERT( dim > 0 );
 
 			//xo::function_objective obj( dim, []( const xo::param_vec_t& p ) -> xo::fitness_t { xo_error( "No objective defined" ); return 0.0; } );
 			GetObjective().info().set_minimize( IsMinimizing() );
