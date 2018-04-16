@@ -105,11 +105,13 @@ namespace scone
 		case InterNeuron::synergetic_dof:
 			return muscle_ && sensor->muscle_ && muscle_->HasSharedDofs( *sensor->muscle_ );
 		case InterNeuron::synergetic_plus:
-			return muscle_ && sensor->muscle_ && muscle_->GetSide() == sensor->muscle_->GetSide() &&
-				( muscle_->HasSharedBodies( *sensor->muscle_ ) || muscle_->HasSharedDofs( *sensor->muscle_ ) );
+			return muscle_ && sensor->muscle_ && muscle_->GetSide() == sensor->muscle_->GetSide()
+				&& ( muscle_->HasSharedBodies( *sensor->muscle_ ) || muscle_->HasSharedDofs( *sensor->muscle_ ) );
 		case InterNeuron::ipsilateral: return sensor->GetSide() == GetSide() || sensor->GetSide() == NoSide;
 		case InterNeuron::contralateral: return sensor->GetSide() != GetSide() || sensor->GetSide() == NoSide;
-		case InterNeuron::source: return GetNameNoSide( sensor->source_name_ ) == pn.get< string >( "source" );
+		case InterNeuron::source:
+			return GetNameNoSide( sensor->source_name_ ) == pn.get< string >( "source" )
+				&& ( muscle_->GetSide() == sensor->GetSide() || sensor->GetSide() == NoSide );
 		case InterNeuron::none: return false;
 		default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 		}
@@ -123,6 +125,9 @@ namespace scone
 		case scone::Neuron::antagonistic:
 		case scone::Neuron::agonistic:
 		case scone::Neuron::synergetic_dof:
+			// checks if mp and sp have at least one dof in common
+			// this is done to make sure only relevant virtual muscle parameters are used
+			// not sure if this is the best way to do it, though.
 			return 0 < xo::count_if( mp.dofs, [&]( auto& e ) { return xo::find( sp.dofs, e ) != sp.dofs.end(); } );
 		default:
 			return true;
@@ -164,7 +169,8 @@ namespace scone
 								{
 									string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
 									auto factor = mp.correlation * sp.correlation;
-									bool relation_ok = CheckMuscleParamRelation( connect, mp, sp );
+									// TODO: this whole relation thing should be reconsidered
+									bool relation_ok = nc.GetParMode() == NeuralController::muscle_mode || CheckMuscleParamRelation( connect, mp, sp );
 									if ( relation_ok && factor >= nc.min_virtual_muscle_correlation )
 									{
 										gain += factor * par.try_get( parname, pn, "gain", 0.0 );

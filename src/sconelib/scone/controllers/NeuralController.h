@@ -50,6 +50,8 @@ namespace scone
 		};
 
 		using MuscleParamList = std::vector< MuscleParam >;
+		enum parameter_mode_t { muscle_mode, dof_mode, virtual_mode, virtual_dof_mode };
+		parameter_mode_t GetParMode() const { return par_mode_; }
 		MuscleParamList GetMuscleParams( const Muscle* mus, bool is_sensor, bool apply_mirrorring ) const;
 		MuscleParamList GetMuscleDofs( const Muscle* mus ) const;
 		MuscleParamList GetVirtualMuscles( const Muscle* mus, bool apply_mirrorring ) const;
@@ -69,7 +71,7 @@ namespace scone
 		TimeInSeconds delay_factor_;
 		activation_func_t activation_function_;
 
-		enum parameter_mode_t { muscle_mode, dof_mode, virtual_mode, virtual_dof_mode } par_mode_;
+		parameter_mode_t par_mode_;
 		bool use_neutral_pose_;
 
 		void AddSensorNeuronLayer( const PropNode& pn, Params& par );
