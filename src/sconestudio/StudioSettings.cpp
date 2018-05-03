@@ -1,5 +1,6 @@
 #include "StudioSettings.h"
 #include "simvis/color.h"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
@@ -16,6 +17,7 @@ namespace scone
 			s.add( "viewer.tendon", "Tendon color", vis::make_from_hsv( 35.0f, 0.02f, 1.0f ) );
 			s.add( "viewer.forces", "Force color", vis::make_from_hsv( 60.0f, 0.75f, 1.0f ) );
 			s.add( "viewer.contact", "Contact geometry color", vis::make_from_hsv( 180.0f, 0.75f, 0.75f ) );
+			s.add( "tools.path_to_ffmpeg", "Path to ffmpeg.exe, required for generating videos", xo::path() );
 		}
 
 		return s;
