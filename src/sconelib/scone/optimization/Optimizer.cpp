@@ -15,13 +15,14 @@
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
 #endif
+#include "xo/system/system_tools.h"
 
 namespace scone
 {
 	Optimizer::Optimizer( const PropNode& props ) :
 	HasSignature( props ),
 	max_threads( 1 ),
-	thread_priority( 0 ),
+	thread_priority( (int)xo::thread_priority::lowest ),
 	m_ObjectiveProps( props.get_child( "Objective" ) ),
 	console_output( true ),
 	status_output( false ),
@@ -29,7 +30,7 @@ namespace scone
 	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
 		INIT_PROPERTY( props, max_threads, size_t( 32 ) );
-		INIT_PROPERTY( props, thread_priority, -2 );
+		INIT_PROPERTY( props, thread_priority, (int)xo::thread_priority::lowest );
 		INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
 		INIT_PROPERTY( props, maximize_objective, false );
 		INIT_PROPERTY( props, show_optimization_time, false );

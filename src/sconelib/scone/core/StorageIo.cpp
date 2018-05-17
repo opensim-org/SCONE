@@ -53,7 +53,7 @@ namespace scone
 
 	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		xo::char_stream str = xo::load_char_stream( xo::path( file ) );
+		auto str = xo::char_stream( xo::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageSto( storage, str );
 	}
@@ -71,7 +71,7 @@ namespace scone
 
 	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file )
 	{
-		xo::char_stream str = xo::load_char_stream( xo::path( file ) );
+		auto str = xo::char_stream( xo::path( file ) );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
 		ReadStorageTxt( storage, str );
 	}
