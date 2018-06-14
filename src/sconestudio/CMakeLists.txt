@@ -40,6 +40,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QOsgViewer.cpp
 		${QTFX_PATH}/QCodeEditor.h
 		${QTFX_PATH}/QCodeEditor.cpp
+		${QTFX_PATH}/QCodeHighlighter.h
+		${QTFX_PATH}/QCodeHighlighter.cpp
 		${QTFX_PATH}/QPlayControl.h
 		${QTFX_PATH}/QPlayControl.cpp
 		${QTFX_PATH}/QFileBrowser.h
