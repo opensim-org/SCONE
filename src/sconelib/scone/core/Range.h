@@ -10,7 +10,7 @@ namespace scone
 	class Range
 	{
 	public:
-		Range( const PropNode& props ) : min( props.get< T >( "min", xo::lowest<T>() ) ), max( props.get< T >( "max", xo::max<T>() ) ) {}
+		Range( const PropNode& props ) : min( props.get< T >( "min", xo::const_lowest<T>() ) ), max( props.get< T >( "max", xo::const_max<T>() ) ) {}
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
 		Range() : min( T() ), max( T() ) {}
 
