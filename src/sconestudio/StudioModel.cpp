@@ -124,7 +124,8 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ).pos( cg.m_Pos ) );
+			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ) );
+			contact_geoms.back().pos( cg.m_Pos );
 		}
 
 		for ( auto& muscle : model->GetMuscles() )

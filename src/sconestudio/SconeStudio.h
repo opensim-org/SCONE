@@ -21,6 +21,7 @@
 #include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
 #include "StudioModel.h"
+#include "simvis/plane.h"
 
 using scone::TimeInSeconds;
 
@@ -83,6 +84,7 @@ private:
 	QStringList recentFiles;
 
 	vis::scene scene;
+	vis::plane ground_plane;
 	std::unique_ptr< scone::StudioModel > model;
 
 	bool createModel( const String& par_file, bool force_evaluation = false );

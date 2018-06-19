@@ -10,6 +10,7 @@
 #include <QTextStream>
 
 #include "simvis/osg_tools.h"
+#include "simvis/plane.h"
 #include "scone/optimization/opt_tools.h"
 #include "xo/system/system_tools.h"
 #include "qt_tools.h"
@@ -90,7 +91,9 @@ scene( true )
 
 	// init scene
 	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
-	scene.create_tile_floor( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
+	ground_plane = scene.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
+
+	//scene.create_tile_floor( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
 	ui.osgViewer->setClearColor( make_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
 }
 
