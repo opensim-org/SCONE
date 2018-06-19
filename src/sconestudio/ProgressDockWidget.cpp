@@ -36,13 +36,18 @@ state( StartingState )
 
 	ui.setupUi( this );
 
-	ui.plot->xAxis->setLabel( "Generation" );
-	ui.plot->xAxis->setLabelPadding( 1 );
-	ui.plot->xAxis->setTickLabelPadding( 3 );
+	//ui.plot->xAxis->setLabel( "Generation" );
+	ui.plot->xAxis->setLabelPadding( 0 );
+	ui.plot->xAxis->setTickLabelPadding( 2 );
 	ui.plot->yAxis->setLabel( "Fitness" );
 	ui.plot->yAxis->setLabelPadding( 1 );
-	ui.plot->yAxis->setTickLabelPadding( 3 );
-	ui.plot->setContentsMargins( 2, 2, 2, 2 );
+	ui.plot->yAxis->setTickLabelPadding( 2 );
+	ui.plot->setContentsMargins( 0, 0, 0, 0 );
+	ui.plot->xAxis->marginSideToAxisType( QCP::msNone );
+	QFont font = ui.plot->font();
+	font.setPointSize( 7 );
+	ui.plot->xAxis->setTickLabelFont( font );
+	ui.plot->yAxis->setTickLabelFont( font );
 
 	ui.plot->addGraph();
 	ui.plot->graph( 0 )->setPen( QPen( QColor( 0, 100, 255 ) ) );
@@ -226,7 +231,7 @@ void ProgressDockWidget::updateText()
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		s = QString().sprintf( "Gen %d of %d. Best=%.3f (Gen %d) P=%.3f", generation, max_generations, best, best_gen, cur_pred );
+		s = QString().sprintf( "Gen %d of %d Best=%.3f (Gen %d)", generation, max_generations, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
 		s = QString().sprintf( "Optimization finished. Best=%.3f (Gen %d)", best, best_gen );

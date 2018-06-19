@@ -384,14 +384,16 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	// organize into columns
 	if ( optimizations.size() >= 3 )
 	{ 
-		auto tab_count = std::min<int>( 3, ( optimizations.size() + 3 ) / 4 );
+		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
 		for ( size_t i = 0; i < optimizations.size(); ++ i )
 		{
 			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
-			if ( i != 0 )
-				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
-				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Vertical );
-			else splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
+			if ( i == 0 )
+				splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
+			else if ( i < columns )
+				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+			else
+				splitDockWidget( optimizations[ i - columns ], optimizations[ i ], Qt::Vertical );
 		}
 	}
 }
