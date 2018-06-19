@@ -113,7 +113,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( scene.osg_group().asNode() );
-	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
+	//ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
@@ -388,9 +388,10 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 		for ( size_t i = 0; i < optimizations.size(); ++ i )
 		{
 			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
-			if ( i % tab_count != 0 )
+			if ( i != 0 )
 				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
-				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Vertical );
+			else splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
 		}
 	}
 }
