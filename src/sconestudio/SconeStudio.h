@@ -83,7 +83,7 @@ private:
 	void updateRecentFilesMenu();
 	QStringList recentFiles;
 
-	vis::scene scene;
+	vis::scene scene_;
 	vis::plane ground_plane;
 	std::unique_ptr< scone::StudioModel > model;
 

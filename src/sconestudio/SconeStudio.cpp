@@ -39,7 +39,7 @@ close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr ),
-scene( true )
+scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
@@ -90,10 +90,9 @@ scene( true )
 	tabifyDockWidget( ui.messagesDock, adw );
 
 	// init scene
-	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
+	scene_.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
 	//ground_plane = scene.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
-	ground_plane = scene.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png" );
-
+	ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
 	ui.osgViewer->setClearColor( make_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
 }
 
@@ -112,7 +111,8 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	ui.osgViewer->setScene( scene.osg_group().asNode() );
+	ui.osgViewer->setScene( &scene_ );
+	ui.osgViewer->setHud( GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "scone_logo.png" );
 	//ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
@@ -423,7 +423,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	try
 	{
 		model.reset();
-		model = StudioModelUP( new StudioModel( scene, path( par_file ), force_evaluation ) );
+		model = StudioModelUP( new StudioModel( scene_, path( par_file ), force_evaluation ) );
 	}
 	catch ( std::exception& e )
 	{
