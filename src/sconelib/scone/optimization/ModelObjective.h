@@ -12,14 +12,15 @@ namespace scone
 		virtual ~ModelObjective() {}
 
 		virtual fitness_t evaluate( const ParamInstance& point ) const override;
-		virtual fitness_t EvaluateModel( Model& m ) const;
 
+		virtual fitness_t EvaluateModel( Model& m ) const;
 		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const = 0;
+
 		virtual fitness_t GetResult( Model& m ) const = 0;
 		virtual PropNode GetReport( Model& m ) const = 0;
 
 		virtual TimeInSeconds GetDuration() const = 0;
-		ModelUP CreateModelFromParInstance( const ParamInstance& par ) const;
+		virtual ModelUP CreateModelFromParams( Params& point ) const;
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
 		
 	protected:

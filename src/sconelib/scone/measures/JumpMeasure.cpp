@@ -16,6 +16,7 @@ namespace scone
 		INIT_PROPERTY( props, terminate_on_peak, true );
 		INIT_PROPERTY( props, negate_result, false );
 		INIT_PROPERTY( props, jump_type, int( HighJump ) );
+		INIT_PROPERTY( props, minimize, false ); // defaults to false
 
 		if ( props.has_key( "target_body" ) )
 			target_body = FindByName( model.GetBodies(), props.get< String >( "target_body" ) ).get();

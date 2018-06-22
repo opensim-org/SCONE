@@ -131,11 +131,16 @@ namespace scone
 		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
+	void Model::SetMeasure( MeasureUP m )
+	{
+		SCONE_THROW_IF( m_Measure, "Only one measure allowed" );
+		m_Measure = m.get();
+		m_Controllers.push_back( std::move( m ) );
+	}
+
 	void Model::CreateControllers( const PropNode& pn, Params& par )
 	{
 		SCONE_PROFILE_FUNCTION;
-
-		MeasureUP measure;
 
 		// add controller (new style)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
@@ -143,7 +148,7 @@ namespace scone
 
 		// add measure (new style)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
-			measure = CreateMeasure( *cprops, par, *this, Locality( NoSide ) );
+			SetMeasure( CreateMeasure( *cprops, par, *this, Locality( NoSide ) ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
@@ -153,16 +158,10 @@ namespace scone
 				if ( it->first == "Controller" )
 					m_Controllers.push_back( CreateController( it->second, par, *this, Locality( NoSide ) ) );
 				else if ( it->first == "Measure" )
-					measure = CreateMeasure( it->second, par, *this, Locality( NoSide ) );
+					SetMeasure( CreateMeasure( it->second, par, *this, Locality( NoSide ) ) );
 				else xo_error( "Unknown type " + it->first );
 			}
 		}
-		if ( measure )
-		{
-			m_Measure = measure.get();
-			m_Controllers.push_back( std::move( measure ) );
-		}
-
 	}
 
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

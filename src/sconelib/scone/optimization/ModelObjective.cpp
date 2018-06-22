@@ -11,7 +11,7 @@ namespace scone
 
 	scone::fitness_t ModelObjective::evaluate( const ParamInstance& point ) const
 	{
-		auto model = CreateModel( m_ModelPropsCopy, ParamInstance( point ) );
+		auto model = CreateModelFromParams( ParamInstance( point ) );
 		return EvaluateModel( *model );
 	}
 
@@ -22,13 +22,13 @@ namespace scone
 		return GetResult( m );
 	}
 
-	scone::ModelUP ModelObjective::CreateModelFromParInstance( const ParamInstance& par ) const
+	scone::ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
-		return CreateModel( m_ModelPropsCopy, ParamInstance( par ) );
+		return CreateModel( m_ModelPropsCopy, par );
 	}
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
 	{
-		return CreateModel( m_ModelPropsCopy, ParamInstance( info_, parfile ) );
+		return CreateModelFromParams( ParamInstance( info_, parfile ) );
 	}
 }

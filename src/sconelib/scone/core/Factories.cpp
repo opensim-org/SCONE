@@ -141,7 +141,7 @@ namespace scone
 		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
 		if ( g_OptimizerFactory.empty() )
 		{
-			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
+			g_OptimizerFactory.register_class< CmaOptimizerSpot >( "CmaOptimizer" );
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 			g_OptimizerFactory.register_class< CmaOptimizerSpot >();
 		}

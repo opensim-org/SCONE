@@ -27,11 +27,14 @@ namespace scone
 		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure().GetResult( m ); }
 		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure().GetReport(); }
 
+		virtual ModelUP CreateModelFromParams( Params& point ) const override;
+
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
 		String signature_;
 		std::vector< path > external_files_;
+		PropNode m_MeasurePropsCopy;
 	};
 }

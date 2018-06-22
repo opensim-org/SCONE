@@ -20,6 +20,7 @@ namespace scone
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }
 		Real GetOffset() { return offset; }
+		bool GetMinimize() { return minimize; }
 
 		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override final;
 		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override final { return Controller::NoUpdate; }
@@ -34,5 +35,6 @@ namespace scone
 		Real weight;
 		Real threshold;
 		Real offset;
+		bool minimize;
 	};
 }

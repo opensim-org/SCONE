@@ -158,6 +158,7 @@ namespace scone
 		std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
 
 		Measure& GetMeasure() { return *m_Measure; }
+		void SetMeasure( MeasureUP m );
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -177,8 +178,8 @@ namespace scone
 		std::vector< LegUP > m_Legs;
 		std::vector< ControllerUP > m_Controllers;
 		std::vector< ContactGeometry > m_ContactGeometries;
-		Measure* m_Measure;
 		bool m_ShouldTerminate;
+		Measure* m_Measure;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;

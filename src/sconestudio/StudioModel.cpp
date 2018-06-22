@@ -32,7 +32,7 @@ namespace scone
 		ParamInstance par( model_objective->info() );
 		if ( file.extension() == "par" )
 			par.import_values( file );
-		model = model_objective->CreateModelFromParInstance( par );
+		model = model_objective->CreateModelFromParams( par );
 
 		// accept filename and clear data
 		filename = file;

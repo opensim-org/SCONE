@@ -9,6 +9,7 @@ namespace scone
 		INIT_PROPERTY( props, weight, 1.0 );
 		INIT_PROPERTY( props, threshold, 0.0 );
 		INIT_PROPERTY( props, offset, 0.0 );
+		INIT_PROPERTY( props, minimize, true );
 	}
 
 	scone::Controller::UpdateResult Measure::UpdateAnalysis( const Model& model, double timestamp )
