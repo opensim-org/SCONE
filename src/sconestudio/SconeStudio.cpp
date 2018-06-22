@@ -27,6 +27,7 @@
 #include "simvis/color.h"
 #include "scone/core/Settings.h"
 #include "StudioSettings.h"
+#include "QTabWidget"
 
 using namespace scone;
 using namespace std;
@@ -42,6 +43,8 @@ captureProcess( nullptr ),
 scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
+	//setStyleSheet( "QFrame { border: 1px solid red }" );
+
 	ui.setupUi( this );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
@@ -81,6 +84,7 @@ scene_( true )
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
 	setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+	//setTabPosition( Qt::AllDockWidgetAreas, QTabWidget::North );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
 	registerDockWidget( ui.resultsDock, "Optimization &Results" );
@@ -106,6 +110,8 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.resultsBrowser->setModel( resultsModel );
 	ui.resultsBrowser->setNumColumns( 1 );
 	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par" );
+	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
+
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -140,7 +146,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	recentFiles = cfg.value( "recentFiles" ).toStringList();
 
 	updateRecentFilesMenu();
-
 	ui.messagesDock->raise();
 
 	return true;

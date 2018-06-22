@@ -30,16 +30,13 @@
 #include "scone/optimization/ImitationObjective.h"
 #include "scone/measures/BalanceMeasure.h"
 #include "scone/optimization/SimilarityObjective.h"
-#include "../optimization/CmaOptimizerSpot.h"
+#include "scone/optimization/CmaOptimizerSpot.h"
 
 namespace scone
 {
-	static xo::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
-	static xo::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
-	static xo::factory< Function, const PropNode&, Params& > g_FunctionFactory;
-
 	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
+		static xo::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
 		if ( g_ControllerFactory.empty() )
 		{
 			// register controllers
@@ -69,8 +66,30 @@ namespace scone
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
+	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Locality& target_area )
+	{
+		static xo::factory< Measure, const PropNode&, Params&, Model&, const Locality& > g_MeasureFactory;
+		if ( g_MeasureFactory.empty() )
+		{
+			// register measures
+			g_MeasureFactory.register_class< HeightMeasure >();
+			g_MeasureFactory.register_class< GaitMeasure >();
+			g_MeasureFactory.register_class< GaitCycleMeasure >();
+			g_MeasureFactory.register_class< EffortMeasure >();
+			g_MeasureFactory.register_class< DofLimitMeasure >();
+			g_MeasureFactory.register_class< CompositeMeasure >();
+			g_MeasureFactory.register_class< JumpMeasure >();
+			g_MeasureFactory.register_class< JointLoadMeasure >();
+			g_MeasureFactory.register_class< ReactionForceMeasure >();
+			g_MeasureFactory.register_class< PointMeasure >();
+			g_MeasureFactory.register_class< BalanceMeasure >();
+		}
+		return g_MeasureFactory( props.get< String >( "type" ), props, par, model, target_area );
+	}
+
 	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Locality& target_area )
 	{
+		static xo::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
 		if ( g_ReflexFactory.empty() )
 		{
 			g_ReflexFactory.register_class< MuscleReflex >();
@@ -82,6 +101,7 @@ namespace scone
 
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par )
 	{
+		static xo::factory< Function, const PropNode&, Params& > g_FunctionFactory;
 		if ( g_FunctionFactory.empty() )
 		{
 			g_FunctionFactory.register_class< PieceWiseConstantFunction >();
@@ -91,9 +111,9 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
 	{
+		static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 		if ( g_ModelFactory.empty() )
 		{
 			g_ModelFactory.register_class< Model_Simbody >( "Simbody" );
@@ -101,9 +121,9 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	static xo::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
 	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Locality& a )
 	{
+		static xo::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
 		if ( g_SensorFactory.empty() )
 		{
 			g_SensorFactory.register_class< MuscleForceSensor >();
@@ -116,9 +136,9 @@ namespace scone
 		return g_SensorFactory( props.get< String >( "type" ), props, par, m, a );
 	}
 
-	static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
 	{
+		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >( "CmaOptimizer" );
@@ -128,9 +148,9 @@ namespace scone
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	static xo::factory< Objective, const PropNode& > g_ObjectiveFactory;
 	SCONE_API xo::factory< Objective, const PropNode& >& GetObjectiveFactory()
 	{
+		static xo::factory< Objective, const PropNode& > g_ObjectiveFactory;
 		if ( g_ObjectiveFactory.empty() )
 		{
 			g_ObjectiveFactory.register_class< SimulationObjective >();

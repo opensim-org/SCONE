@@ -14,6 +14,7 @@
 namespace scone
 {
 	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par );
 
