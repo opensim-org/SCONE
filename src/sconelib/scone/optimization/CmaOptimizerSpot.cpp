@@ -24,7 +24,7 @@ namespace scone
 
 		if ( global_std_offset != 0.0 || global_std_factor != 0.0 )
 			GetObjective().info().set_global_std( global_std_factor, global_std_offset );
-		GetObjective().info().set_minimize( IsMinimizing() );
+		//GetObjective().info().set_minimize( IsMinimizing() );
 
 		lambda_ = lambda();
 		mu_ = mu();

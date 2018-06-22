@@ -21,7 +21,7 @@ namespace scone
 		const path& AcquireOutputFolder() const;
 
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
-		bool IsMinimizing() { return !maximize_objective; }
+		virtual bool IsMinimizing() const { return m_Objective->info().minimize(); }
 
 		double GetBestFitness() { return m_BestFitness; }
 
@@ -40,7 +40,7 @@ namespace scone
 		// properties
 		size_t max_threads;
 		int thread_priority;
-		bool maximize_objective;
+		//bool maximize_objective;
 		bool show_optimization_time;
 		Real min_improvement_factor_for_file_output;
 		size_t max_generations_without_file_output;
