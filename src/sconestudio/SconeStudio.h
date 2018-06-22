@@ -49,7 +49,7 @@ public slots:
 	void fileSave();
 	void fileSaveAs();
 	void fileExit();
-	void showViewer() { ui.tabWidget->setCurrentIndex( 0 ); }
+	void showViewer() {}// { ui.tabWidget->setCurrentIndex( 0 ); }
 	void helpAbout() {}
 	void runScenario();
 	void optimizeScenario();
@@ -83,7 +83,7 @@ private:
 	void updateRecentFilesMenu();
 	QStringList recentFiles;
 
-	vis::scene scene;
+	vis::scene scene_;
 	vis::plane ground_plane;
 	std::unique_ptr< scone::StudioModel > model;
 

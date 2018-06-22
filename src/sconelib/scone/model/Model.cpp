@@ -23,14 +23,15 @@ using std::endl;
 namespace scone
 {
 	Model::Model( const PropNode& props, Params& par ) :
-		HasSignature( props ),
-		m_ShouldTerminate( false ),
-		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
-		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
-		m_OriSensors(),
-		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
-		thread_safe_simulation( false )
+	HasSignature( props ),
+	m_ShouldTerminate( false ),
+	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
+	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
+	m_OriSensors(),
+	m_StoreData( false ),
+	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
+	thread_safe_simulation( false ),
+	m_Measure( nullptr )
 	{
 		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
 		INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
@@ -93,18 +94,6 @@ namespace scone
 			m_OriSensors[ 2 ]->GetValue( balance_sensor_delay ) );
 	}
 
-	Measure* Model::GetMeasure()
-	{
-		// find measure controller
-		const auto& is_measure = [&]( ControllerUP& c ) { return dynamic_cast< Measure* >( c.get() ) != nullptr; };
-		auto measureIter = xo::find_if( GetControllers(), is_measure );
-
-		SCONE_THROW_IF( measureIter == GetControllers().end(), "Could not find a measure" );
-		SCONE_THROW_IF( std::find_if( measureIter + 1, GetControllers().end(), is_measure ) != GetControllers().end(), "More than one measure was found" );
-
-		return dynamic_cast< Measure* >( measureIter->get() );
-	}
-
 	String Model::GetClassSignature() const
 	{
 		auto sig = GetName();
@@ -146,20 +135,34 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
+		MeasureUP measure;
+
 		// add controller (new style)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
 			m_Controllers.push_back( CreateController( *cprops, par, *this, Locality( NoSide ) ) );
 
 		// add measure (new style)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
-			m_Controllers.push_back( CreateController( *cprops, par, *this, Locality( NoSide ) ) );
+			measure = CreateMeasure( *cprops, par, *this, Locality( NoSide ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
 		{
-			for ( auto iter = cprops->begin(); iter != cprops->end(); ++iter )
-				m_Controllers.push_back( CreateController( iter->second, par, *this, Locality( NoSide ) ) );
+			for ( auto it = cprops->begin(); it != cprops->end(); ++it )
+			{
+				if ( it->first == "Controller" )
+					m_Controllers.push_back( CreateController( it->second, par, *this, Locality( NoSide ) ) );
+				else if ( it->first == "Measure" )
+					measure = CreateMeasure( it->second, par, *this, Locality( NoSide ) );
+				else xo_error( "Unknown type " + it->first );
+			}
 		}
+		if ( measure )
+		{
+			m_Measure = measure.get();
+			m_Controllers.push_back( std::move( measure ) );
+		}
+
 	}
 
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
@@ -233,7 +236,6 @@ namespace scone
 				frame[ leg->GetName() + ".grf_y" ] = grf.y;
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;
 			}
-
 		}
 	}
 

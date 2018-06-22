@@ -66,7 +66,7 @@ namespace scone
 
 		// collect statistics
 		PropNode statistics;
-		statistics.set( "result", model->GetMeasure()->GetReport() );
+		statistics.set( "result", model->GetMeasure().GetReport() );
 		statistics.set( "simulation time", model->GetTime() );
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 

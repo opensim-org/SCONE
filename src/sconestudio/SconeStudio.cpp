@@ -27,6 +27,7 @@
 #include "simvis/color.h"
 #include "scone/core/Settings.h"
 #include "StudioSettings.h"
+#include "QTabWidget"
 
 using namespace scone;
 using namespace std;
@@ -39,9 +40,11 @@ close_all( false ),
 capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr ),
-scene( true )
+scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
+	//setStyleSheet( "QFrame { border: 1px solid red }" );
+
 	ui.setupUi( this );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
@@ -81,6 +84,7 @@ scene( true )
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
 	setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+	//setTabPosition( Qt::AllDockWidgetAreas, QTabWidget::North );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
 	registerDockWidget( ui.resultsDock, "Optimization &Results" );
@@ -90,10 +94,9 @@ scene( true )
 	tabifyDockWidget( ui.messagesDock, adw );
 
 	// init scene
-	scene.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
+	scene_.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
 	//ground_plane = scene.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
-	ground_plane = scene.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile128.png" );
-
+	ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
 	ui.osgViewer->setClearColor( make_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
 }
 
@@ -107,13 +110,16 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.resultsBrowser->setModel( resultsModel );
 	ui.resultsBrowser->setNumColumns( 1 );
 	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par" );
+	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
+
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	ui.osgViewer->setScene( scene.osg_group().asNode() );
-	ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
+	ui.osgViewer->setScene( &scene_ );
+	ui.osgViewer->setHud( GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "scone_hud.png" );
+	//ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
@@ -140,7 +146,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	recentFiles = cfg.value( "recentFiles" ).toStringList();
 
 	updateRecentFilesMenu();
-
 	ui.messagesDock->raise();
 
 	return true;
@@ -384,13 +389,16 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	// organize into columns
 	if ( optimizations.size() >= 3 )
 	{ 
-		auto tab_count = std::min<int>( 3, ( optimizations.size() + 3 ) / 4 );
+		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
 		for ( size_t i = 0; i < optimizations.size(); ++ i )
 		{
 			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
-			if ( i % tab_count != 0 )
-				//splitDockWidget( optimizations[ i / tab_count * tab_count ], optimizations[ i ] );
+			if ( i == 0 )
+				splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
+			else if ( i < columns )
 				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+			else
+				splitDockWidget( optimizations[ i - columns ], optimizations[ i ], Qt::Vertical );
 		}
 	}
 }
@@ -420,7 +428,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	try
 	{
 		model.reset();
-		model = StudioModelUP( new StudioModel( scene, path( par_file ), force_evaluation ) );
+		model = StudioModelUP( new StudioModel( scene_, path( par_file ), force_evaluation ) );
 	}
 	catch ( std::exception& e )
 	{

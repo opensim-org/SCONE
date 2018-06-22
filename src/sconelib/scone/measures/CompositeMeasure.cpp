@@ -39,9 +39,7 @@ namespace scone
 				Term t( it->second );
 
 				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast<Measure*>( CreateController( it->second.get_child( "Measure" ), par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				t.measure = MeasureUP( m );
+				t.measure = CreateMeasure( it->second.get_child( "Measure" ), par, model, area );
 				m_Terms.push_back( std::move( t ) ); // use std::move because Term has a unique_ptr member
 			}
 		}
@@ -52,9 +50,7 @@ namespace scone
 			for ( auto it = mprops->begin(); it != mprops->end(); ++it )
 			{
 				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				Measure* m = dynamic_cast<Measure*>( CreateController( it->second, par, model, area ).release() );
-				SCONE_THROW_IF( m == nullptr, "Could not cast Controller* to Measure*" );
-				m_Measures.push_back( MeasureUP( m ) );
+				m_Measures.push_back( CreateMeasure( it->second, par, model, area ) );
 			}
 		}
 	}

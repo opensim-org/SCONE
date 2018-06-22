@@ -24,8 +24,8 @@ namespace scone
 		virtual TimeInSeconds GetDuration() const override { return max_duration; }
 
 		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
-		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure()->GetResult( m ); }
-		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure()->GetReport(); }
+		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure().GetResult( m ); }
+		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure().GetReport(); }
 
 	protected:
 		virtual String GetClassSignature() const override;
