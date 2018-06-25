@@ -204,20 +204,25 @@ namespace scone
 			}
 
 			// update state variables if they are being optimized
-			if ( auto iso = props.try_get_child( "state_init_optimization" ) )
+			auto sio = props.try_get_child( "state_init_optimization" );
+			auto offset = sio ? sio->try_get_child( "offset" ) : props.try_get_child( "initial_state_offset" );
+			if ( offset )
 			{
-				bool symmetric = iso->get< bool >( "symmetric", false );
-				auto inc_pat = xo::pattern_matcher( iso->get< String >( "include_states", "*" ), ";" );
-				auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
+				bool symmetric = sio ? sio->get( "symmetric", false ) : props.get( "initial_state_offset_symmetric", false );
+				auto inc_pat = xo::pattern_matcher( sio ? sio->get< String >( "include_states", "*" ) : props.get< String >( "initial_state_offset_include", "*" ), ";" );
+				auto ex_pat = xo::pattern_matcher(
+					( sio ? sio->get< String >( "exclude_states", "" ) : props.get< String >( "initial_state_offset_exclude", "" ) ) + ";*.activation;*.fiber_length", ";" );
+				//auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
 				for ( Index i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
 					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
 					{
 						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-						if ( iso->has_key( "offset" ) )
-							m_State[ i ] += par.get( par_name + ".offset", iso->get_child( "offset" ) );
-						else m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
+						m_State[ i ] += par.get( par_name + ".offset", *offset );
+						//if ( iso->has_key( "offset" ) )
+						//	m_State[ i ] += par.get( par_name + ".offset", iso->get_child( "offset" ) );
+						//else m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
 					}
 				}
 			}
