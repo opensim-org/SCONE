@@ -100,12 +100,14 @@
    </widget>
    <widget class="QMenu" name="menu_Optimize">
     <property name="title">
-     <string>&amp;Optimize</string>
+     <string>&amp;Scenario</string>
     </property>
     <addaction name="action_Optimize_Scenario"/>
     <addaction name="actionStart_Multiple_Optimizations"/>
     <addaction name="separator"/>
     <addaction name="actionTerminate_Running_Optimizations"/>
+    <addaction name="separator"/>
+    <addaction name="action_Test_Scenario"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_View"/>
@@ -446,7 +448,7 @@
   </action>
   <action name="action_Optimize_Scenario">
    <property name="text">
-    <string>Run &amp;Optimization</string>
+    <string>&amp;Optimize Scenario</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
@@ -553,6 +555,14 @@
    </property>
    <property name="text">
     <string>Show &amp;Contact Geometry</string>
+   </property>
+  </action>
+  <action name="action_Test_Scenario">
+   <property name="text">
+    <string>&amp;Test Scenario</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+T</string>
    </property>
   </action>
  </widget>
@@ -905,6 +915,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_Test_Scenario</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>runScenario()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
@@ -931,5 +957,6 @@
   <slot>viewResults(bool)</slot>
   <slot>viewMessages(bool)</slot>
   <slot>fixViewCheckboxes()</slot>
+  <slot>runScenario()</slot>
  </slots>
 </ui>

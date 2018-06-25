@@ -55,10 +55,10 @@ scene_( true )
 	analysisView->setMinSeriesInterval( 0 );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
-	addMenuAction( toolsMenu, "Capture &Video", this, &SconeStudio::createVideo );
-	addMenuAction( toolsMenu, "Capture &Image", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
-	addMenuAction( toolsMenu, "Perform &Reflex Analysis", this, &SconeStudio::performReflexAnalysis, QKeySequence(), true );
-	addMenuAction( toolsMenu, "&Preferences", this, &SconeStudio::showSettingsDialog );
+	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
+	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
+	//addMenuAction( toolsMenu, "Perform &Reflex Analysis", this, &SconeStudio::performReflexAnalysis, QKeySequence(), true );
+	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
@@ -74,7 +74,7 @@ scene_( true )
 	addMenuAction( actionMenu, "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
 	addMenuAction( actionMenu, "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
 	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ), true );
-	addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	//addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	createWindowMenu();
 	createHelpMenu();
