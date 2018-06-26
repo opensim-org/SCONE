@@ -569,8 +569,9 @@ void SconeStudio::updateOptimizations()
 
 void SconeStudio::tabCloseRequested( int idx )
 {
-	SCONE_ASSERT( idx > 0 && idx <= (int)scenarios.size() );
-	auto it = scenarios.begin() + ( idx - 1 );
+	auto it = xo::find( scenarios, (QCodeEditor*)ui.tabWidget->widget( idx ) );
+	SCONE_THROW_IF( it == scenarios.end(), "Could not find scenarion for tab " + to_str( idx ) );
+
 	requestSaveChanges( *it );
 	scenarios.erase( it );
 	ui.tabWidget->removeTab( idx );
