@@ -105,7 +105,9 @@ namespace scone
 		if ( g_FunctionFactory.empty() )
 		{
 			g_FunctionFactory.register_class< PieceWiseConstantFunction >();
+			g_FunctionFactory.register_class< PieceWiseConstantFunction >( "PieceWiseConstant" );
 			g_FunctionFactory.register_class< PieceWiseLinearFunction >();
+			g_FunctionFactory.register_class< PieceWiseLinearFunction >( "PieceWiseLinear" );
 			g_FunctionFactory.register_class< Polynomial >();
 		}
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
