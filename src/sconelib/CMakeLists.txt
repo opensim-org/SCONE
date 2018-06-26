@@ -22,7 +22,6 @@ set(CORE_MATH_FILES
 	scone/core/PieceWiseFunction.h
 	scone/core/PieceWiseLinearFunction.cpp
 	scone/core/PieceWiseLinearFunction.h
-	scone/core/PolynomialFunction.h	
 	scone/core/Polynomial.h	
 	scone/core/Polynomial.cpp
 )
