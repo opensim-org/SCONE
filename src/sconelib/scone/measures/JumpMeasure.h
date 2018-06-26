@@ -25,6 +25,7 @@ namespace scone
 		double GetHighJumpResult( const Model& m );
 		double GetLongJumpResult( const Model& m );
 		static double GetLandingDist( const Vec3& pos, const Vec3& vel, double floor_height = 0.0 );
+		Vec3 GetTargetPos( const Model& m ) const;
 
 		State state;
 		Body* target_body;

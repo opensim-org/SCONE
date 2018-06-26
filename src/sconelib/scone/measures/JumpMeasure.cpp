@@ -18,10 +18,10 @@ namespace scone
 		INIT_PROPERTY( props, jump_type, int( HighJump ) );
 		INIT_PROPERTY( props, minimize, false ); // defaults to false
 
-		if ( props.has_key( "target_body" ) )
-			target_body = FindByName( model.GetBodies(), props.get< String >( "target_body" ) ).get();
+		if ( auto body = props.try_get< String >( "body" ) )
+			target_body = FindByName( model.GetBodies(), *body ).get();
 
-		prepare_com = init_com = model.GetComPos();
+		prepare_com = init_com = GetTargetPos( model );
 		peak_height = init_com.y;
 
 		for ( auto& body : model.GetBodies() )
@@ -29,6 +29,11 @@ namespace scone
 	}
 
 	JumpMeasure::~JumpMeasure() { }
+
+	scone::Vec3 JumpMeasure::GetTargetPos( const Model& m ) const
+	{
+		return target_body ? target_body->GetComPos() : m.GetComPos();
+	}
 
 	double JumpMeasure::GetResult( Model& model )
 	{
@@ -58,7 +63,7 @@ namespace scone
 			return RequestTermination;
 		}
 
-		Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
+		Vec3 pos = GetTargetPos( model );
 		peak_height = xo::max( peak_height, pos.y );
 
 		switch ( state )
@@ -141,7 +146,7 @@ namespace scone
 
 	double JumpMeasure::GetHighJumpResult( const Model& model )
 	{
-		Vec3 pos = target_body ? target_body->GetComPos() : model.GetComPos();
+		Vec3 pos = GetTargetPos( model );
 		peak_height = xo::max( peak_height, pos.y );
 
 		double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
