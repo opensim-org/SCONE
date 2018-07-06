@@ -48,12 +48,12 @@ namespace scone
 		// create objective
 		m_Objective = CreateObjective( m_ObjectiveProps );
 
-		//// initialize parameters from file
-		//if ( use_init_file && !init_file.empty() )
-		//{
-		//	auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
-		//	log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
-		//}
+		// initialize parameters from file
+		if ( use_init_file && !init_file.empty() )
+		{
+			auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
+			log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
+		}
 
 		m_BestFitness = m_Objective->info().worst_fitness();
 	}

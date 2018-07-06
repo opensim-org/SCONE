@@ -22,13 +22,6 @@ namespace scone
 	{
 		try
 		{
-			// initialize settings from file
-			if ( use_init_file && !init_file.empty() )
-			{
-				auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
-				log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
-			}
-
 			// get objective dim (after static params are handled)
 			size_t dim = GetObjective().dim();
 			SCONE_ASSERT( dim > 0 );
