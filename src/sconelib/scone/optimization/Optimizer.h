@@ -35,16 +35,21 @@ namespace scone
 		}
 
 		path output_root;
-		path init_file;
 
 		// properties
 		size_t max_threads;
 		int thread_priority;
-		//bool maximize_objective;
 		bool show_optimization_time;
 		Real min_improvement_factor_for_file_output;
 		size_t max_generations_without_file_output;
+
+		// init file
+		path init_file;
 		bool use_init_file;
+		bool use_init_file_std;
+		double init_file_std_factor;
+		double init_file_std_offset;
+
 		bool output_objective_result_files;
 		mutable size_t m_LastFileOutputGen;
 

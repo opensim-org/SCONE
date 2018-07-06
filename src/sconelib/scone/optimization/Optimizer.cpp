@@ -29,18 +29,32 @@ namespace scone
 	m_LastFileOutputGen( 0 ),
 	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
+		INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
+
 		INIT_PROPERTY( props, max_threads, size_t( 32 ) );
 		INIT_PROPERTY( props, thread_priority, (int)xo::thread_priority::lowest );
-		INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
-		//INIT_PROPERTY( props, maximize_objective, false );
 		INIT_PROPERTY( props, show_optimization_time, false );
-		INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
-		INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
+
 		INIT_PROPERTY( props, init_file, path( "" ) );
 		INIT_PROPERTY( props, use_init_file, true );
-		INIT_PROPERTY( props, output_objective_result_files, false );
+		INIT_PROPERTY( props, init_file_std_factor, 1.0 );
+		INIT_PROPERTY( props, init_file_std_offset, 0.0 );
+		INIT_PROPERTY( props, use_init_file_std, true );
 
+		INIT_PROPERTY( props, output_objective_result_files, false );
+		INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
+		INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
+
+		// create objective
 		m_Objective = CreateObjective( m_ObjectiveProps );
+
+		//// initialize parameters from file
+		//if ( use_init_file && !init_file.empty() )
+		//{
+		//	auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
+		//	log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
+		//}
+
 		m_BestFitness = m_Objective->info().worst_fitness();
 	}
 
