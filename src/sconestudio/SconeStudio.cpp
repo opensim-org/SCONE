@@ -28,6 +28,7 @@
 #include "scone/core/Settings.h"
 #include "StudioSettings.h"
 #include "QTabWidget"
+#include "xo/utility/types.h"
 
 using namespace scone;
 using namespace std;
@@ -390,16 +391,35 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	if ( optimizations.size() >= 3 )
 	{ 
 		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
-		for ( size_t i = 0; i < optimizations.size(); ++ i )
+		auto rows = ( optimizations.size() + columns - 1 ) / columns;
+		log::info( "Reorganizing windows, columns=", columns, " rows=", rows );
+
+		// first column
+		splitDockWidget( ui.viewerDock, optimizations[ 0 ], Qt::Horizontal );
+		for ( index_t r = 1; r < rows; ++r )
+			splitDockWidget( optimizations[ ( r - 1 ) * columns ], optimizations[ r * columns ], Qt::Vertical );
+
+		// remaining columns
+		for ( index_t c = 1; c < columns; ++c )
 		{
-			addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
-			if ( i == 0 )
-				splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
-			else if ( i < columns )
-				splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
-			else
-				splitDockWidget( optimizations[ i - columns ], optimizations[ i ], Qt::Vertical );
+			for ( index_t r = 0; r < rows; ++r )
+			{
+				index_t i = r * columns + c;
+				if ( i < optimizations.size() )
+					splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
+			}
 		}
+
+		//for ( size_t i = 0; i < optimizations.size(); ++ i )
+		//{
+		//	addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
+		//	if ( i == 0 )
+		//		splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
+		//	else if ( i < columns )
+		//		splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Vertical );
+		//	else
+		//		splitDockWidget( optimizations[ i - columns ], optimizations[ i ], Qt::Horizontal );
+		//}
 	}
 }
 

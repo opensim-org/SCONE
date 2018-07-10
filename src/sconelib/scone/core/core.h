@@ -12,6 +12,7 @@
 
 #include <cstddef>
 #include <string>
+#include "xo/utility/types.h"
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
@@ -34,6 +35,7 @@ namespace scone
 	// index type
 	typedef size_t Index;
 	typedef size_t Count;
+	using xo::index_t;
 	typedef std::string String;
 	using std::string;
 	const Index NoIndex = size_t( -1 );
