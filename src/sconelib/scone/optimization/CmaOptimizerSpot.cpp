@@ -34,7 +34,6 @@ namespace scone
 		// stop conditions
 		add_stop_condition< spot::max_steps_condition >( max_generations );
 		add_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
-
 	}
 
 	void CmaOptimizerSpot::Run()
