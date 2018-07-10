@@ -12,7 +12,7 @@
 
 namespace scone
 {
-	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, Index idx, Side side, const String& act_func ) :
+	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, index_t idx, Side side, const String& act_func ) :
 	Neuron( pn, idx, side, act_func ),
 	input_(),
 	sensor_gain_( 1.0 ),

@@ -164,7 +164,7 @@ namespace scone
 		}
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx, bool apply_mirroring )
+	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, index_t joint_idx, bool apply_mirroring )
 	{
 		auto& joints = mus->GetJoints();
 		if ( joint_idx >= joints.size() )
@@ -178,7 +178,7 @@ namespace scone
 			return children;
 
 		MuscleParamList results;
-		for ( Index dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
+		for ( index_t dof_idx = 0; dof_idx < dofs.size(); ++dof_idx )
 		{
 			auto& dof = dofs[ dof_idx ];
 			auto mom = mus->GetNormalizedMomentArm( *dof );

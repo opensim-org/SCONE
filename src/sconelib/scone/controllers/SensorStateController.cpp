@@ -81,7 +81,7 @@ namespace scone
 			m_StateDist[ idx ] = m_States[ idx ].GetDistance( model, timestamp );
 
 		auto min_it = std::min_element( m_StateDist.begin(), m_StateDist.end() );
-		Index min_idx = min_it - m_StateDist.begin();
+		index_t min_idx = min_it - m_StateDist.begin();
 		return min_idx;
 	}
 

@@ -15,7 +15,7 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron( const PropNode& pn, Index idx, Side s, const String& act_func );
+		Neuron( const PropNode& pn, index_t idx, Side s, const String& act_func );
 		virtual ~Neuron() {}
 		virtual activation_t GetOutput( double offset = 0.0 ) const;
 		virtual string GetName( bool mirrored = false ) const { return mirrored ? GetMirroredName( name_ ) : name_; }
@@ -37,7 +37,7 @@ namespace scone
 		const std::vector< Input >& GetInputs() const { return inputs_; }
 
 		Side side_;
-		Index index_;
+		index_t index_;
 		string name_;
 		Muscle* muscle_;
 

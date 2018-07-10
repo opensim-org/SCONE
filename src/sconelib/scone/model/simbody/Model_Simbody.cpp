@@ -213,7 +213,7 @@ namespace scone
 				auto ex_pat = xo::pattern_matcher(
 					( sio ? sio->get< String >( "exclude_states", "" ) : props.get< String >( "initial_state_offset_exclude", "" ) ) + ";*.activation;*.fiber_length", ";" );
 				//auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
-				for ( Index i = 0; i < m_State.GetSize(); ++i )
+				for ( index_t i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
 					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
@@ -706,7 +706,7 @@ namespace scone
 		// for all storage channels, check if there's a matching state
 		for ( int i = 0; i < storeLabels.getSize(); i++ )
 		{
-			Index idx = m_State.GetIndex( storeLabels[ i ] );
+			index_t idx = m_State.GetIndex( storeLabels[ i ] );
 			if ( idx != NoIndex )
 				m_State[ idx ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
 		}

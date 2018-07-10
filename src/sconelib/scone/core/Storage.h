@@ -28,19 +28,19 @@ namespace scone
 
 			TimeT GetTime() const { return m_Time; }
 
-			ValueT& operator[]( Index idx ) { return m_Values[ idx ]; }
+			ValueT& operator[]( index_t idx ) { return m_Values[ idx ]; }
 
-			const ValueT& operator[]( Index idx ) const { return m_Values[ idx ]; }
+			const ValueT& operator[]( index_t idx ) const { return m_Values[ idx ]; }
 
 			ValueT& operator[]( const String& label ) {
-				Index idx = m_Store.GetChannelIndex( label );
+				index_t idx = m_Store.GetChannelIndex( label );
 				if ( idx == NoIndex )
 					idx = m_Store.AddChannel( label );
 				return m_Values[ idx ];
 			}
 
 			const ValueT& operator[]( const String& label ) const {
-				Index idx = m_Store.GetChannelIndex( label );
+				index_t idx = m_Store.GetChannelIndex( label );
 				SCONE_ASSERT( idx != NoIndex );
 				return m_Values[ idx ];
 			}
@@ -107,19 +107,19 @@ namespace scone
 		Frame& Back() { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
 		const Frame& Back() const { SCONE_ASSERT( !m_Data.empty() ); return *m_Data.back(); }
 
-		Frame& GetFrame( Index frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
-		const Frame& GetFrame( Index frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
+		Frame& GetFrame( index_t frame_idx ) { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
+		const Frame& GetFrame( index_t frame_idx ) const { SCONE_ASSERT( frame_idx < m_Data.size() ); return *m_Data[ frame_idx ]; }
 
-		std::vector< ValueT > GetChannelData( Index idx ) const {
+		std::vector< ValueT > GetChannelData( index_t idx ) const {
 			std::vector< ValueT > result( GetFrameCount() );
-			for ( Index f = 0; f < GetFrameCount(); ++f )
+			for ( index_t f = 0; f < GetFrameCount(); ++f )
 				result[ f ] = GetFrame( f )[ idx ];
 			return result;
 		}
 
 		size_t GetFrameCount() const { return m_Data.size(); }
 
-		Index AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
+		index_t AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
 			m_Labels.push_back( label );
 			m_LabelIndexMap[ label ] = m_Labels.size() - 1;
@@ -128,7 +128,7 @@ namespace scone
 			return m_Labels.size() - 1;
 		}
 
-		Index GetChannelIndex( const String& label ) const {
+		index_t GetChannelIndex( const String& label ) const {
 			auto it = m_LabelIndexMap.find( label );
 			if ( it == m_LabelIndexMap.end() )
 				return NoIndex;
@@ -139,7 +139,7 @@ namespace scone
 		const std::vector< String >& GetLabels() const { return m_Labels; }
 		const std::vector< FrameUP >& GetData() const { return m_Data; }
 
-		ValueT GetInterpolatedValue( TimeT time, Index idx ) const {
+		ValueT GetInterpolatedValue( TimeT time, index_t idx ) const {
 			SCONE_ASSERT( !m_Data.empty() );
 			return GetInterpolatedFrame( time ).value( idx );
 		}
@@ -147,13 +147,13 @@ namespace scone
 	private:
 		std::vector< String > m_Labels;
 		std::vector< std::unique_ptr< Frame > > m_Data;
-		std::unordered_map< String, Index > m_LabelIndexMap;
+		std::unordered_map< String, index_t > m_LabelIndexMap;
 
 		// interpolation related stuff
 		struct InterpolatedFrame {
 			double upper_weight;
 			typename std::vector< FrameUP >::const_iterator upper_frame, lower_frame;
-			ValueT value( Index channel_idx ) const { return upper_weight * (**upper_frame)[ channel_idx ] + ( 1.0 - upper_weight ) * (**lower_frame)[ channel_idx ]; }
+			ValueT value( index_t channel_idx ) const { return upper_weight * (**upper_frame)[ channel_idx ] + ( 1.0 - upper_weight ) * (**lower_frame)[ channel_idx ]; }
 		};
 
 	public:

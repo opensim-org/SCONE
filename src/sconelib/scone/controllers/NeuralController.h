@@ -28,7 +28,7 @@ namespace scone
 		virtual ~NeuralController() {}
 
 		size_t GetLayerSize( const string& layer ) const { return ( layer == "0" ) ? m_SensorNeurons.size() : m_InterNeurons[ layer ].size(); }
-		Neuron* GetNeuron( const string& layer, Index idx ) { return ( layer == "0" ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer ][ idx ].get() ); }
+		Neuron* GetNeuron( const string& layer, index_t idx ) { return ( layer == "0" ) ? dynamic_cast< Neuron* >( m_SensorNeurons[ idx ].get() ) : dynamic_cast< Neuron* >( m_InterNeurons[ layer ][ idx ].get() ); }
 
 		const Model& GetModel() const { return model_; }
 		Model& GetModel() { return model_; }
@@ -85,7 +85,7 @@ namespace scone
 		std::vector< MotorNeuronUP > m_MotorNeurons;
 		mutable xo::memoize< MuscleParamList( const Muscle*, bool ) > m_VirtualMusclesMemoize;
 
-		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, Index joint_idx, bool mirror_dofs );
+		static MuscleParamList GetVirtualMusclesRecursiveFunc( const Muscle* mus, index_t joint_idx, bool mirror_dofs );
 		static MuscleParamList GetVirtualMusclesFunc( const Muscle* mus, bool mirror_dofs );
 	};
 }

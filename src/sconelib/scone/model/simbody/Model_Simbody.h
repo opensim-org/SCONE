@@ -83,7 +83,7 @@ namespace scone
 		void StoreCurrentFrame() override;
 		void UpdateOsimStorage();
 
-		OpenSim::ConstantForce* GetOsimBodyForce( Index idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
+		OpenSim::ConstantForce* GetOsimBodyForce( index_t idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
 		virtual State& GetState() override { return m_State; }

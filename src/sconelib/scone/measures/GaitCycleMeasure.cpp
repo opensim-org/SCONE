@@ -37,7 +37,7 @@ namespace scone
 			if ( use_half_cycle )
 			{
 				auto trg = GetMirroredStateNameAndSign( name );
-				Index trg_idx = FindIndex( state.GetNames(), trg.first );
+				index_t trg_idx = FindIndex( state.GetNames(), trg.first );
 				SCONE_ASSERT( trg_idx != NoIndex ); // make sure the target state name exists
 				diff = abs( m_InitState[ idx ] - trg.second * state[ trg_idx ] );
 			}

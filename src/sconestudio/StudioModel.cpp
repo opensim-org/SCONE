@@ -150,7 +150,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		Index force_count = 0;
+		index_t force_count = 0;
 
 		// initialize visualization
 		std::unique_lock< std::mutex > simulation_lock( model->GetSimulationMutex(), std::defer_lock );
@@ -159,7 +159,7 @@ namespace scone
 		{
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
-			for ( Index i = 0; i < model_state.GetSize(); ++i )
+			for ( index_t i = 0; i < model_state.GetSize(); ++i )
 				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
 			model->SetState( model_state, time );
 		}
@@ -169,7 +169,7 @@ namespace scone
 
 		// update bodies
 		auto& model_bodies = model->GetBodies();
-		for ( Index i = 0; i < model_bodies.size(); ++i )
+		for ( index_t i = 0; i < model_bodies.size(); ++i )
 		{
 			auto& b = model_bodies[ i ];
 			vis::transformf trans( b->GetOriginPos(), b->GetOrientation() );
@@ -186,11 +186,11 @@ namespace scone
 
 		// update muscle paths
 		auto &model_muscles = model->GetMuscles();
-		for ( Index i = 0; i < model_muscles.size(); ++i )
+		for ( index_t i = 0; i < model_muscles.size(); ++i )
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
 		// update ground reaction forces on legs
-		for ( Index i = 0; i < model->GetLegCount(); ++i )
+		for ( index_t i = 0; i < model->GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
 			model->GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
@@ -203,7 +203,7 @@ namespace scone
 			forces.resize( force_count );
 	}
 
-	void StudioModel::UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force )
+	void StudioModel::UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force )
 	{
 		while ( forces.size() <= force_idx )
 		{

@@ -33,12 +33,10 @@ namespace scone
 #endif
 
 	// index type
-	typedef size_t Index;
-	typedef size_t Count;
 	using xo::index_t;
 	typedef std::string String;
 	using std::string;
-	const Index NoIndex = size_t( -1 );
+	const index_t NoIndex = size_t( -1 );
 
 	typedef double TimeInSeconds;
 	typedef double Frequency;

@@ -32,7 +32,7 @@ namespace scone
 		{ Neuron::agonistic, "protagonistic" } // backwards compatibility
 	} );
 
-	Neuron::Neuron( const PropNode& pn, Index idx, Side s, const String& default_activation ) :
+	Neuron::Neuron( const PropNode& pn, index_t idx, Side s, const String& default_activation ) :
 	output_(),
 	offset_(),
 	index_( idx ),
@@ -151,7 +151,7 @@ namespace scone
 		{
 			// connection from sensor neurons
 			size_t input_layer_size = nc.GetLayerSize( input_layer );
-			for ( Index idx = 0; idx < input_layer_size; ++idx )
+			for ( index_t idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto sensor = nc.GetSensorNeurons()[ idx ].get();
 				if ( xo::pattern_match( sensor->type_, input_type ) )
@@ -198,7 +198,7 @@ namespace scone
 		{
 			// connection from previous interneuron layer
 			size_t input_layer_size = nc.GetLayerSize( input_layer );
-			for ( Index idx = 0; idx < input_layer_size; ++idx )
+			for ( index_t idx = 0; idx < input_layer_size; ++idx )
 			{
 				auto input = nc.GetNeuron( input_layer, idx );
 				switch ( connect )

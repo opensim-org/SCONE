@@ -42,5 +42,5 @@ namespace scone
 		String m_Name;
 	};
 
-	inline Index GetLegIndex( Index idx, bool mirrored ) { return mirrored ? ( idx ^ 1 ) : idx; }
+	inline index_t GetLegIndex( index_t idx, bool mirrored ) { return mirrored ? ( idx ^ 1 ) : idx; }
 }

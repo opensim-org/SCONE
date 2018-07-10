@@ -18,7 +18,7 @@ namespace scone
 		{
 			// special case because we need to add postfixes to the channel names
 			m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + ".0" );
-			for ( Index idx = 1; idx < source.GetChannelCount(); ++idx )
+			for ( index_t idx = 1; idx < source.GetChannelCount(); ++idx )
 				m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + to_str( idx ) );
 		}
 		else
@@ -35,7 +35,7 @@ namespace scone
 		return GetValue( m_Delay );
 	}
 
-	scone::Real SensorDelayAdapter::GetValue( Index idx ) const
+	scone::Real SensorDelayAdapter::GetValue( index_t idx ) const
 	{
 		return GetValue( m_StorageIdx + idx, m_Delay );
 	}
@@ -45,7 +45,7 @@ namespace scone
 		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx );
 	}
 
-	scone::Real SensorDelayAdapter::GetValue( Index idx, Real delay ) const
+	scone::Real SensorDelayAdapter::GetValue( index_t idx, Real delay ) const
 	{
 		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx + idx );
 	}
@@ -68,11 +68,11 @@ namespace scone
 		SCONE_ASSERT( !storage.IsEmpty() && storage.Back().GetTime() == m_Model.GetTime() );
 
 		// add the new value(s)
-		for ( Index idx = 0; idx < GetChannelCount(); ++idx )
+		for ( index_t idx = 0; idx < GetChannelCount(); ++idx )
 			storage.Back()[ m_StorageIdx + idx ] = m_InputSensor.GetValue( idx );
 	}
 
-	scone::Count SensorDelayAdapter::GetChannelCount()
+	size_t SensorDelayAdapter::GetChannelCount()
 	{
 		return m_InputSensor.GetChannelCount();
 	}

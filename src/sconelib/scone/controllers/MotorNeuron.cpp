@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	MotorNeuron::MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& muscle, Index idx, Side side, const string& act_func ) :
+	MotorNeuron::MotorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const string& muscle, index_t idx, Side side, const string& act_func ) :
 	Neuron( pn, idx, side, act_func )
 	{
 		name_ = muscle;

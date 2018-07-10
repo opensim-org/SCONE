@@ -58,5 +58,5 @@ namespace scone
 		MapType m_Map;
 	};
 
-	typedef StringMap< Index > StringIndexMap;
+	typedef StringMap< index_t > StringIndexMap;
 }

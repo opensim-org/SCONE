@@ -409,17 +409,6 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 					splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Horizontal );
 			}
 		}
-
-		//for ( size_t i = 0; i < optimizations.size(); ++ i )
-		//{
-		//	addDockWidget( Qt::RightDockWidgetArea, optimizations[ i ] );
-		//	if ( i == 0 )
-		//		splitDockWidget( ui.viewerDock, optimizations[ i ], Qt::Horizontal );
-		//	else if ( i < columns )
-		//		splitDockWidget( optimizations[ i - 1 ], optimizations[ i ], Qt::Vertical );
-		//	else
-		//		splitDockWidget( optimizations[ i - columns ], optimizations[ i ], Qt::Horizontal );
-		//}
 	}
 }
 

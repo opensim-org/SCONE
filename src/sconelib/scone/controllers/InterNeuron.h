@@ -6,7 +6,7 @@ namespace scone
 {
 	struct InterNeuron : public Neuron
 	{
-		InterNeuron( const PropNode& pn, Params& par, const string& layer, Index idx, Side side, const string& act_func );
+		InterNeuron( const PropNode& pn, Params& par, const string& layer, index_t idx, Side side, const string& act_func );
 		double GetOutput( double offset = 0.0 ) const override;
 
 		double width_;

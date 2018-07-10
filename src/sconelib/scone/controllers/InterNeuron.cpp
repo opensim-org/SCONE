@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& layer, Index idx, Side side, const string& act_func ) :
+	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& layer, index_t idx, Side side, const string& act_func ) :
 	Neuron( pn, idx, side, act_func )
 	{
 		ScopedParamSetPrefixer ps( par, layer + stringf( "_%d.", idx ) );

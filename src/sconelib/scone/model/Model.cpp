@@ -208,7 +208,7 @@ namespace scone
 		if ( flags( StoreDataTypes::SensorData ) )
 		{
 			auto sf = m_SensorDelayStorage.Back();
-			for ( Index i = 0; i < m_SensorDelayStorage.GetChannelCount(); ++i )
+			for ( index_t i = 0; i < m_SensorDelayStorage.GetChannelCount(); ++i )
 				frame[ m_SensorDelayStorage.GetLabels()[ i ] ] = sf[ i ];
 		}
 
@@ -287,7 +287,7 @@ namespace scone
 	void Model::SetNullState()
 	{
 		State zero_state = GetState();
-		for ( Index i = 0; i < zero_state.GetSize(); ++i )
+		for ( index_t i = 0; i < zero_state.GetSize(); ++i )
 		{
 			if ( !xo::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
 				 !xo::str_ends_with( zero_state.GetName( i ), ".activation" ) )

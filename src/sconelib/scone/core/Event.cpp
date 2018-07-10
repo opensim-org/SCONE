@@ -7,10 +7,10 @@ namespace scone
 		std::vector< Event > e;
 
 		// find GRF channels
-		Index right_idx = s.GetChannelIndex( "leg1_r.grf_y" );
+		index_t right_idx = s.GetChannelIndex( "leg1_r.grf_y" );
 
 		// detect events
-		for ( Index frame_idx = 1; frame_idx < s.GetFrameCount(); ++frame_idx )
+		for ( index_t frame_idx = 1; frame_idx < s.GetFrameCount(); ++frame_idx )
 		{
 			TimeInSeconds time = s.GetFrame( frame_idx ).GetTime();
 			Real grf = s.GetFrame( frame_idx )[ right_idx ];
@@ -25,7 +25,7 @@ namespace scone
 		// filter events
 		if ( e.size() > 2 )
 		{
-			for ( Index i = 0; i < e.size() - 2; ++i )
+			for ( index_t i = 0; i < e.size() - 2; ++i )
 			{
 				if ( e[ i ].event == Event::RightHeelStrike )
 				{

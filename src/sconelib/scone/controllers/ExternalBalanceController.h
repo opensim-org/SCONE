@@ -26,7 +26,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		Index state_idx;
+		index_t state_idx;
 		Body& force_body;
 	};
 }

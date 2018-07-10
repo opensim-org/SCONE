@@ -20,7 +20,7 @@ namespace scone
 
 		for ( Side s : { LeftSide, RightSide } )
 		{
-			for ( Index idx = 0; idx < data.GetChannelCount(); ++idx )
+			for ( index_t idx = 0; idx < data.GetChannelCount(); ++idx )
 			{
 				auto label = data.GetLabels()[ idx ];
 				auto mus_label = xo::left_of_str( label, "." );
@@ -40,11 +40,11 @@ namespace scone
 
 		// define parameters
 		auto sym_mus = muscle_count() / 2;
-		for ( Index i = 0; i < sym_mus; ++i )
+		for ( index_t i = 0; i < sym_mus; ++i )
 			info().add( excitations_.get_label( i ), 0.05, 0.01 );
-		for ( Index si = 0; si < sensors_.channel_size(); ++si )
+		for ( index_t si = 0; si < sensors_.channel_size(); ++si )
 		{
-			for ( Index mi = 0; mi < sym_mus; ++mi )
+			for ( index_t mi = 0; mi < sym_mus; ++mi )
 				info().add( excitations_.get_label( mi ) + "-" + sensors_.get_label( si ), 0.0, 0.01 );
 		}
 
@@ -56,12 +56,12 @@ namespace scone
 	{
 		for ( auto& p : pn )
 		{
-			for ( Index idx : xo::make_irange( excitations_.channel_size() ) )
+			for ( index_t idx : xo::make_irange( excitations_.channel_size() ) )
 			{
 				if ( str_begins_with( excitations_.get_label( idx ), p.first ) )
 					muscle_delay[ idx ] = p.second.get< double >();
 			}
-			for ( Index idx : xo::make_irange( sensors_.channel_size() ) )
+			for ( index_t idx : xo::make_irange( sensors_.channel_size() ) )
 			{
 				if ( str_begins_with( sensors_.get_label( idx ), p.first ) )
 					sensor_delay[ idx ] = p.second.get< double >();
@@ -74,21 +74,21 @@ namespace scone
 		double value = 0.0;
 		auto sym_mus_count = muscle_count() / 2;
 		size_t frame_count = excitations_.frame_size();
-		for ( Index fi = frame_rate; fi < frame_count; ++fi ) // skip first second
+		for ( index_t fi = frame_rate; fi < frame_count; ++fi ) // skip first second
 		{
-			for ( Index mi = 0; mi < sym_mus_count; ++mi )
+			for ( index_t mi = 0; mi < sym_mus_count; ++mi )
 			{
 				double feedback = point[ mi ];
 				int delay = static_cast< int >( frame_rate * delay_multiplier * muscle_delay[ mi ] );
 
 				// feedback for left muscles
-				for ( Index si = 0; si < sensor_count(); ++si )
+				for ( index_t si = 0; si < sensor_count(); ++si )
 					feedback += point[ sym_mus_count + si * sym_mus_count + mi ] * sensors_( fi - delay, si );
 				value += xo::squared( excitations_( fi, mi ) - feedback );
 
 				// mirrored feedback for right muscles
 				double mir_feedback = point[ mi ];
-				for ( Index si = 0; si < sensor_count(); ++si )
+				for ( index_t si = 0; si < sensor_count(); ++si )
 				{
 					auto inv_si = ( si + sensor_count() / 2 ) % sensor_count();
 					mir_feedback += point[ sym_mus_count + inv_si * sym_mus_count + mi ] * sensors_( fi - delay, si );

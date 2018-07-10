@@ -33,7 +33,7 @@ namespace scone
 	private:
 		Storage<> m_Storage;
 		String m_Signature;
-		std::vector< Index > m_ExcitationChannels;
-		std::vector< Index > m_SensorChannels;
+		std::vector< index_t > m_ExcitationChannels;
+		std::vector< index_t > m_SensorChannels;
 	};
 }

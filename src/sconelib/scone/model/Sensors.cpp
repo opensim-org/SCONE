@@ -166,7 +166,7 @@ namespace scone
 
 	const char* g_BodyChannelNames[] = { "X", "Y", "Z" };
 
-	scone::Real BodyOriSensor::GetValue( Index idx ) const
+	scone::Real BodyOriSensor::GetValue( index_t idx ) const
 	{
 		return xo::rotation_vector_from_quat( m_Body.GetOrientation() )[ idx ];
 	}
@@ -176,7 +176,7 @@ namespace scone
 		return m_Body.GetName() + ".Ori";
 	}
 
-	scone::Real BodyAngVelSensor::GetValue( Index idx ) const
+	scone::Real BodyAngVelSensor::GetValue( index_t idx ) const
 	{
 		return m_Body.GetAngVel()[ idx ];
 	}

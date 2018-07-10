@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	Index State::AddVariable( const String& name, Real value )
+	index_t State::AddVariable( const String& name, Real value )
 	{
 		names_.push_back( name );
 		values_.push_back( value );
@@ -31,7 +31,7 @@ namespace scone
 	//	std::copy( other.GetValues().begin(), other.GetValues().end(), values_.begin() + other.parent_idx_ );
 	//}
 
-	Index State::GetIndex( const String& name ) const
+	index_t State::GetIndex( const String& name ) const
 	{
 		auto it = std::find( names_.begin(), names_.end(), name );
 		if ( it != names_.end() )

@@ -33,7 +33,7 @@ namespace scone
 		// make sure data and model are compatible
 		auto state = model->GetState();
 		SCONE_THROW_IF( state.GetSize() > m_Storage.GetChannelCount(), "File and model are incompatible for ImitationObjective" );
-		for ( Index i = 0; i < state.GetSize(); ++i )
+		for ( index_t i = 0; i < state.GetSize(); ++i )
 			SCONE_THROW_IF( state.GetName( i ) != m_Storage.GetLabels()[ i ], "File and model are incompatible for ImitationObjective" );
 
 		// find excitation channels
@@ -47,7 +47,7 @@ namespace scone
 		// find sensor channels
 		auto& ds = model->GetSensorDelayStorage();
 		m_SensorChannels.reserve( ds.GetChannelCount() );
-		for ( Index ds_idx = 0; ds_idx < ds.GetChannelCount(); ++ds_idx )
+		for ( index_t ds_idx = 0; ds_idx < ds.GetChannelCount(); ++ds_idx )
 		{
 			auto& sensor_name = ds.GetLabels()[ ds_idx ];
 			m_SensorChannels.push_back( m_Storage.GetChannelIndex( sensor_name ) );
@@ -70,29 +70,29 @@ namespace scone
 
 			// add sensor data
 			auto& ds = model.GetSensorDelayStorage();
-			for ( Index fidx = 1; fidx < m_Storage.GetFrameCount(); ++fidx )
+			for ( index_t fidx = 1; fidx < m_Storage.GetFrameCount(); ++fidx )
 			{
 				auto sf = m_Storage.GetFrame( fidx );
 				ds.AddFrame( sf.GetTime() );
-				for ( Index cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
+				for ( index_t cidx = 0; cidx < m_SensorChannels.size(); ++cidx )
 					ds.Back()[ cidx ] = sf[ m_SensorChannels[ cidx ] ];
 			}
 		}
 
 		// compute result
 		double result = 0.0;
-		Index frame_start = model.GetUserData().get< Index >( "IM_fra" );
-		Index frame_count = 0;
+		index_t frame_start = model.GetUserData().get< index_t >( "IM_fra" );
+		index_t frame_count = 0;
 
 		{
 			SCONE_PROFILE_SCOPE( "ComputeSimularity" );
-			for ( Index idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
+			for ( index_t idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
 			{
 				auto f = m_Storage.GetFrame( idx );
 
 				// set state and compare output
 				model.SetStateValues( f.GetValues(), f.GetTime() );
-				for ( Index idx = 0; idx < m_ExcitationChannels.size(); ++idx )
+				for ( index_t idx = 0; idx < m_ExcitationChannels.size(); ++idx )
 					result += abs( model.GetMuscles()[ idx ]->GetExcitation() - f[ m_ExcitationChannels[ idx ] ] );
 				++frame_count;
 			}
@@ -109,7 +109,7 @@ namespace scone
 
 	scone::fitness_t ImitationObjective::GetResult( Model& m ) const
 	{
-		return m.GetUserData().get< fitness_t >( "IM_res" ) / ( m.GetUserData().get< Index >( "IM_fra" ) );
+		return m.GetUserData().get< fitness_t >( "IM_res" ) / ( m.GetUserData().get< index_t >( "IM_fra" ) );
 	}
 
 	PropNode ImitationObjective::GetReport( Model& m ) const

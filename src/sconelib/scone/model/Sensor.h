@@ -16,7 +16,7 @@ namespace scone
 		virtual String GetName() const = 0;
 
 		// special case for multichannel sensors
-		virtual Count GetChannelCount() { return 1; }
-		virtual Real GetValue( Index idx ) const { SCONE_ASSERT( idx == 0 ); return GetValue(); }
+		virtual size_t GetChannelCount() { return 1; }
+		virtual Real GetValue( index_t idx ) const { SCONE_ASSERT( idx == 0 ); return GetValue(); }
 	};
 }

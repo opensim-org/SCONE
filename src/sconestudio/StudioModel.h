@@ -53,7 +53,7 @@ namespace scone
 		};
 
 		void InitVis( vis::scene& s );
-		void UpdateForceVis( Index force_idx, Vec3 cop, Vec3 force );
+		void UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force );
 		void UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis );
 
 		Storage<> data;

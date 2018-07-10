@@ -131,8 +131,8 @@ namespace scone
 	public:
 		BodyOriSensor( Body& body ) : BodySensor( body ) {}
 		virtual String GetName() const override;
-		virtual Count GetChannelCount() override { return 3; }
-		virtual Real GetValue( Index idx ) const override;
+		virtual size_t GetChannelCount() override { return 3; }
+		virtual Real GetValue( index_t idx ) const override;
 	};
 
 	class SCONE_API BodyAngVelSensor : public BodySensor
@@ -140,8 +140,8 @@ namespace scone
 	public:
 		BodyAngVelSensor( Body& body ) : BodySensor( body ) {}
 		virtual String GetName() const override;
-		virtual Count GetChannelCount() override { return 3; }
-		virtual Real GetValue( Index idx ) const override;
+		virtual size_t GetChannelCount() override { return 3; }
+		virtual Real GetValue( index_t idx ) const override;
 	};
 
 	// Sensor to measure the sagittal orientation of a body in world coordinates

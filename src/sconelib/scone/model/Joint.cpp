@@ -18,7 +18,7 @@ namespace scone
 
 	bool Joint::HasDof( const String& dof_name ) const
 	{
-		for ( Index i = 0; i < GetDofCount(); ++i )
+		for ( index_t i = 0; i < GetDofCount(); ++i )
 		{
 			if ( GetDofName( i ) == dof_name )
 				return true;

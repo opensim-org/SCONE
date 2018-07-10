@@ -16,17 +16,17 @@ namespace scone
 		const std::vector< String >& GetNames() const { return names_; }
 		const std::vector< Real >& GetValues() const { return values_; }
 
-		Real GetValue( Index i ) const { return values_[ i ]; }
+		Real GetValue( index_t i ) const { return values_[ i ]; }
 		Real GetValue( const String& i ) const;
 
-		const Real& operator[]( Index i ) const { return values_[ i ]; }
-		Real& operator[]( Index i ) { return values_[ i ]; }
+		const Real& operator[]( index_t i ) const { return values_[ i ]; }
+		Real& operator[]( index_t i ) { return values_[ i ]; }
 
-		Index GetIndex( const String& name ) const;
-		const String& GetName( Index i ) const { return names_[ i ]; }
+		index_t GetIndex( const String& name ) const;
+		const String& GetName( index_t i ) const { return names_[ i ]; }
 
-		Index AddVariable( const String& name, Real value = Real( 0 ) );
-		void SetValue( Index i, Real value ) { values_.at( i ) = value; }
+		index_t AddVariable( const String& name, Real value = Real( 0 ) );
+		void SetValue( index_t i, Real value ) { values_.at( i ) = value; }
 		void SetValues( const std::vector< Real >& v );
 
 		//void AddChildState( State& other );
