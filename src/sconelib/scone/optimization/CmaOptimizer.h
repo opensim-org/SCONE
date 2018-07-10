@@ -17,7 +17,7 @@ namespace scone
 		int mu_;
 		int lambda_;
 		double sigma_;
-		size_t max_generations;
+
 		size_t window_size;
 
 		size_t num_elitists;

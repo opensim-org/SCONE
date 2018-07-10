@@ -178,6 +178,7 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		else if ( kvp.first == "finished" )
 		{
 			state = FinishedState;
+			errorMsg = make_qt( kvp.second );
 			updateText();
 		}
 		else
@@ -234,7 +235,7 @@ void ProgressDockWidget::updateText()
 		s = QString().sprintf( "Gen %d of %d Best=%.3f (Gen %d)", generation, max_generations, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
-		s = QString().sprintf( "Optimization finished. Best=%.3f (Gen %d)", best, best_gen );
+		s = QString().sprintf( "Finished. Best=%.3f (Gen %d)", best, best_gen ) + "\n" + errorMsg;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;

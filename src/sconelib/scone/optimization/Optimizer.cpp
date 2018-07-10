@@ -45,6 +45,11 @@ namespace scone
 		INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
 		INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
 
+		INIT_PROPERTY( props, max_generations, size_t( 3000 ) );
+		INIT_PROPERTY( props, min_progress, 0.0 );
+		INIT_PROPERTY( props, min_progress_samples, 200 );
+
+
 		// create objective
 		m_Objective = CreateObjective( m_ObjectiveProps );
 

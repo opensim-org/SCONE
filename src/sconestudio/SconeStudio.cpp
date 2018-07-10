@@ -695,8 +695,8 @@ void SconeStudio::performReflexAnalysis()
 	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
 	spot::cma_optimizer cma( reflex_objective );
 	cma.set_max_threads( 32 );
-	cma.add_reporter( std::make_shared< spot::console_reporter >( 0, 2 ) );
-	cma.add_reporter( std::make_shared< spot::file_reporter >( par_file.replace_extension( "analysis" ) ) );
+	cma.add_reporter< spot::console_reporter >( 0, 2 );
+	cma.add_reporter< spot::file_reporter >( par_file.replace_extension( "analysis" ) );
 	cma.run( 1000 );
 	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best_point() );
 }

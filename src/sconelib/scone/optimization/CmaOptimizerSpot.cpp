@@ -1,6 +1,9 @@
 #include "CmaOptimizerSpot.h"
 
 #include <random>
+#include "spot/stop_condition.h"
+#include "spot/file_reporter.h"
+#include "spot/console_reporter.h"
 
 namespace scone
 {
@@ -9,7 +12,8 @@ namespace scone
 
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn ) :
 	CmaOptimizer( pn ),
-	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
+	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed ),
+	log_sink_( xo::log::info_level, AcquireOutputFolder() / "optimization.log" )
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
@@ -20,15 +24,25 @@ namespace scone
 		set_max_threads( ( int )max_threads );
 		enable_fitness_tracking( window_size );
 
-		add_reporter( std::make_shared< CmaOptimizerReporter >() );
+		// reporters
+		add_reporter< CmaOptimizerReporter >();
+		auto& rep = add_reporter< spot::file_reporter >( AcquireOutputFolder() );
+		rep.min_improvement_factor_for_file_output = min_improvement_factor_for_file_output;
+		if ( GetProgressOutput() )
+			add_reporter< spot::console_reporter >();
+
+		// stop conditions
+		add_stop_condition< spot::max_steps_condition >( max_generations );
+		add_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
+
 	}
 
 	void CmaOptimizerSpot::Run()
 	{
-		run( max_generations );
+		run();
 	}
 
-	void CmaOptimizerReporter::start( const optimizer& opt )
+	void CmaOptimizerReporter::on_start( const optimizer& opt )
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 
@@ -45,45 +59,41 @@ namespace scone
 			cma.OutputStatus( "max_generations", cma.max_generations );
 			cma.OutputStatus( "window_size", cma.window_size );
 		}
+
+		// setup history.txt
+		history_ = std::ofstream( ( cma.AcquireOutputFolder() / "history.txt" ).string() );
+		history_ << "Step\tBest\tAverage\tPredicted\tSlope\tOffset\tProgress" << std::endl;
 	}
 
-	void CmaOptimizerReporter::finish( const optimizer& opt )
+	void CmaOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
-
-		if ( cma.GetProgressOutput() )
-			cout << "Optimization finished" << endl;
 
 		if ( cma.GetStatusOutput() )
-			cma.OutputStatus( "finished", 1 );
+			cma.OutputStatus( "finished", s.what() );
 	}
 
-	void CmaOptimizerReporter::evaluate_population_start( const optimizer& opt, const search_point_vec& pop )
+	void CmaOptimizerReporter::on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop )
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
-		if ( cma.GetProgressOutput() )
-			printf( "%04d (S=%.3f):", int( opt.current_step() ), cma.sigma() ); // MSVC2013 doesn't support %zu
 	}
 
-	void CmaOptimizerReporter::evaluate_population_finish( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, index_t best_idx, bool new_best )
+	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, index_t best_idx, bool new_best )
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 
 		// report results
-		if ( cma.GetProgressOutput() )
-			printf( " A=%.3f O=%.3f S=%.3f", cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() );
-
 		if ( cma.GetStatusOutput() )
 			cma.OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", cma.current_step(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
 
 		if ( new_best )
 		{
-			if ( cma.GetProgressOutput() )
-				printf( " B=%.3f", cma.best_fitness() );
 			if ( cma.GetStatusOutput() )
 				cma.OutputStatus( "best", cma.best_fitness() );
 		}
 
+#if 0
+		// output file
 		if ( new_best || ( cma.current_step() - cma.m_LastFileOutputGen > cma.max_generations_without_file_output ) )
 		{
 			// copy best solution to par
@@ -105,8 +115,18 @@ namespace scone
 				cma.ManageFileOutput( cma.current_step_best(), outputFiles );
 		}
 
-		// show time if needed
-		if ( cma.GetProgressOutput() )
-			printf( new_best ? "\n" : "\r" ); // only start newline if there's been a new best
+		// update history
+		auto cur_trend = opt.fitness_trend();
+		auto max_steps = opt.find_stop_condition< spot::max_steps_condition >().max_steps_;
+		history_ << opt.current_step()
+			<< "\t" << opt.current_step_best()
+			<< "\t" << opt.current_step_average()
+			<< "\t" << opt.predicted_fitness( max_steps )
+			<< "\t" << cur_trend.slope()
+			<< "\t" << cur_trend.offset()
+			<< "\t" << opt.progress() << "\n";
+		if ( opt.current_step() % 10 == 9 ) // flush every 10 entries
+			history_.flush();
+#endif
 	}
 }

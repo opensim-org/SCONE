@@ -40,8 +40,6 @@ namespace scone
 		size_t max_threads;
 		int thread_priority;
 		bool show_optimization_time;
-		Real min_improvement_factor_for_file_output;
-		size_t max_generations_without_file_output;
 
 		// init file
 		path init_file;
@@ -50,8 +48,16 @@ namespace scone
 		double init_file_std_factor;
 		double init_file_std_offset;
 
+		// file output
+		Real min_improvement_factor_for_file_output;
+		size_t max_generations_without_file_output;
 		bool output_objective_result_files;
 		mutable size_t m_LastFileOutputGen;
+
+		// stop conditions
+		size_t max_generations;
+		double min_progress;
+		size_t min_progress_samples;
 
 		void ManageFileOutput( double fitness, const std::vector< path >& files ) const;
 
