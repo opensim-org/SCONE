@@ -62,7 +62,9 @@ namespace scone
 			break;
 		case "DPV"_hash:
 			dof = FindByName( model.GetDofs(), name ).get();
-			auto kv = par.get( ".DV", 0.1, 0.01, 0, 1 );
+			auto kv = pn.has_key( "velocity_gain" ) ?
+				par.try_get( ".DV", pn, "velocity_gain", 0.1 ) :
+				par.get( ".DV", 0.1, 0.01, 0, 1 ); // this is for backwards compatibility (<1845)
 			auto parent_name = pn.try_get_any< string >( { "parent", "source_parent" } );
 			Dof* root_dof = parent_name ? FindByName( model.GetDofs(), *parent_name ).get() : nullptr;
 			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *dof, kv, root_dof );
