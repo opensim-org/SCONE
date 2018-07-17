@@ -232,10 +232,10 @@ void ProgressDockWidget::updateText()
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		s = QString().sprintf( "Gen %d of %d Best=%.3f (Gen %d)", generation, max_generations, best, best_gen, cur_pred );
+		s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", generation, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
-		s = QString().sprintf( "Finished. Best=%.3f (Gen %d)", best, best_gen ) + "\n" + errorMsg;
+		s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", generation, best, best_gen ) + "\n" + errorMsg;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
