@@ -173,7 +173,6 @@ void SconeStudio::runSimulation( const QString& filename )
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
-	showViewer();
 	ui.playControl->reset();
 	runSimulation( currentParFile );
 	if ( model )
@@ -188,20 +187,6 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 
 void SconeStudio::start()
 {
-	if ( auto* s = getActiveScenario( false ) )
-	{
-		if ( !model || s->hasTextChanged() )
-		{
-			ui.playControl->stop();
-			requestSaveChanges( s );
-			showViewer();
-			runSimulation( s->fileName );
-			if ( model )
-				ui.playControl->play();
-		}
-		else showViewer();
-	}
-
 	ui.osgViewer->stopTimer();
 }
 
@@ -492,7 +477,6 @@ void SconeStudio::runScenario()
 	if ( auto* s = getActiveScenario( false ) )
 	{
 		requestSaveChanges( s );
-		showViewer();
 		runSimulation( s->fileName );
 		if ( model )
 			ui.playControl->play();

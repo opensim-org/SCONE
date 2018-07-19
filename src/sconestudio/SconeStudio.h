@@ -49,7 +49,6 @@ public slots:
 	void fileSave();
 	void fileSaveAs();
 	void fileExit();
-	void showViewer() {}// { ui.tabWidget->setCurrentIndex( 0 ); }
 	void helpAbout() {}
 	void runScenario();
 	void optimizeScenario();
