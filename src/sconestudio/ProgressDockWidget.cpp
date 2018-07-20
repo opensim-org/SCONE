@@ -106,7 +106,6 @@ void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange 
 	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( cur_gen, min_view_gens ) );
 
 	ui.plot->xAxis->blockSignals( true );
-	log::info( "Fixing X range to ", view_first_gen, " - ", view_last_gen );
 	ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
 	ui.plot->xAxis->blockSignals( false );
 
