@@ -13,14 +13,15 @@ using namespace scone;
 ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& extra_args ) :
 studio( s ),
 process( nullptr ),
-generation( 0 ),
+cur_gen( 0 ),
 max_generations( 0 ),
 best( 0.0f ),
 best_gen( 0 ),
 highest( 0 ),
 lowest( 0 ),
 cur_pred( 0 ),
-state( StartingState )
+state( StartingState ),
+view_first_gen( 0 )
 {
 	QString program = make_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
@@ -37,6 +38,10 @@ state( StartingState )
 	ui.setupUi( this );
 
 	//ui.plot->xAxis->setLabel( "Generation" );
+	ui.plot->setInteraction( QCP::iRangeZoom, true );
+	ui.plot->axisRect()->setRangeZoom( Qt::Horizontal );
+	ui.plot->setInteraction( QCP::iRangeDrag, true );
+	ui.plot->axisRect()->setRangeDrag( Qt::Horizontal );
 	ui.plot->xAxis->setLabelPadding( 0 );
 	ui.plot->xAxis->setTickLabelPadding( 2 );
 	ui.plot->yAxis->setLabel( "Fitness" );
@@ -67,11 +72,13 @@ state( StartingState )
 	ui.plot->graph( 2 )->setName( "Trend" );
 	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
 
-	ui.plot->xAxis->setRange( 0, 8 );
-	ui.plot->xAxis->setAutoTickCount( 7 );
+	ui.plot->xAxis->setRange( 0, min_view_gens );
+	ui.plot->xAxis->setAutoTickCount( 6 );
 	ui.plot->yAxis->setAutoTickCount( 3 );
 	ui.plot->replot();
 	ui.plot->hide();
+
+	connect( ui.plot->xAxis, SIGNAL( rangeChanged( const QCPRange&, const QCPRange& ) ), this, SLOT( rangeChanged( const QCPRange&, const QCPRange& ) ) );
 
 	updateText();
 }
@@ -91,6 +98,20 @@ void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 	//log::info( "Changing axis style to ", ast );
 	//ui.plot->yAxis->setScaleType( Linear ? QCPAxis::stLinear : QCPAxis::stLogarithmic );
 	//ui.plot->yAxis->setScaleLogBase( log_base );
+}
+
+void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange &oldRange )
+{
+	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( cur_gen - min_view_gens, 0 ) );
+	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( cur_gen, min_view_gens ) );
+
+	ui.plot->xAxis->blockSignals( true );
+	log::info( "Fixing X range to ", view_first_gen, " - ", view_last_gen );
+	ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
+	ui.plot->xAxis->blockSignals( false );
+
+	auto bestminmax = std::minmax_element( bestvec.begin() + view_first_gen, bestvec.end() );
+	ui.plot->yAxis->setRange( *bestminmax.first, *bestminmax.second );
 }
 
 ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
@@ -139,11 +160,11 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 		}
 		else if ( kvp.first == "generation" )
 		{
-			xo::scan_str( kvp.second, generation, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
+			xo::scan_str( kvp.second, cur_gen, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
 			avgvec.push_back( cur_avg );
 			bestvec.push_back( cur_best );
 			medvec.push_back( cur_med );
-			genvec.push_back( generation );
+			genvec.push_back( cur_gen );
 			highest = std::max( highest, std::max( cur_best, cur_avg ) );
 			lowest = std::min( lowest, std::min( cur_best, cur_avg ) );
 			cur_pred = cur_reg( float( max_generations ) );
@@ -152,19 +173,17 @@ ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
 			ui.plot->graph( 1 )->setData( genvec, avgvec );
 			ui.plot->graph( 2 )->clearData();
-			auto start = std::max( 0, generation - window_size );
+			auto start = std::max( 0, cur_gen - window_size );
 			ui.plot->graph( 2 )->addData( start, cur_reg( start ) );
-			ui.plot->graph( 2 )->addData( generation, cur_reg( float( generation ) ) );
-			ui.plot->xAxis->setRange( 0, std::max( 8, generation ) );
-			ui.plot->xAxis->setAutoTickCount( 7 );
+			ui.plot->graph( 2 )->addData( cur_gen, cur_reg( float( cur_gen ) ) );
 
-			ui.plot->yAxis->setRange( lowest, highest );
+			ui.plot->xAxis->setRange( view_first_gen, cur_gen );
 			ui.plot->replot();
 		}
 		else if ( kvp.first == "best" )
 		{
 			best = xo::from_str< float >( kvp.second );
-			best_gen = generation;
+			best_gen = cur_gen;
 			updateText();
 		}
 		else if ( kvp.first == "error" )
@@ -232,10 +251,10 @@ void ProgressDockWidget::updateText()
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", generation, best, best_gen, cur_pred );
+		s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", cur_gen, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
-		s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", generation, best, best_gen ) + "\n" + errorMsg;
+		s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", cur_gen, best, best_gen ) + "\n" + errorMsg;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;

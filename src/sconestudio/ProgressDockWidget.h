@@ -13,6 +13,8 @@ class SconeStudio;
 
 class ProgressDockWidget : public QDockWidget
 {
+	Q_OBJECT
+
 public:
 	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
 	virtual ~ProgressDockWidget();
@@ -38,7 +40,12 @@ public:
 	float cur_med;
 	float cur_pred;
 	xo::linear_function< float > cur_reg;
-	int generation;
+	int cur_gen;
+
+	int view_first_gen;
+	int view_last_gen;
+	int min_view_gens = 20;
+
 	int max_generations;
 	int window_size;
 	QVector< double > bestvec;
@@ -53,8 +60,13 @@ public:
 	UpdateResult updateProgress();
 	bool readyForDestruction();
 
+public slots:
+	void rangeChanged( const QCPRange &newRange, const QCPRange &oldRange );
+
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
+
+
 private:
 	void updateText();
 };
