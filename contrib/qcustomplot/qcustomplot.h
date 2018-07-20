@@ -1093,7 +1093,7 @@ public:
   QCPAxisRect *axisRect() const { return mAxisRect; }
   ScaleType scaleType() const { return mScaleType; }
   double scaleLogBase() const { return mScaleLogBase; }
-  const QCPRange range() const { return mRange; }
+  const QCPRange& range() const { return mRange; } //TG: added reference
   bool rangeReversed() const { return mRangeReversed; }
   bool autoTicks() const { return mAutoTicks; }
   int autoTickCount() const { return mAutoTickCount; }
