@@ -111,7 +111,10 @@ void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange 
 	ui.plot->xAxis->blockSignals( false );
 
 	auto bestminmax = std::minmax_element( bestvec.begin() + view_first_gen, bestvec.end() );
-	ui.plot->yAxis->setRange( *bestminmax.first, *bestminmax.second );
+	auto avgminmax = std::minmax_element( avgvec.begin() + view_first_gen, avgvec.end() );
+	auto lower = xo::min( *bestminmax.first, *avgminmax.first, 0.0 );
+	auto upper = xo::max( *bestminmax.second, *avgminmax.second, 0.0 );
+	ui.plot->yAxis->setRange( lower, upper );
 }
 
 ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
