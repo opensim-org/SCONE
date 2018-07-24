@@ -23,8 +23,6 @@ namespace scone
 			leg_load += leg->GetContactForce().length() / model.GetBW();
 
 		load_penalty.AddSample( timestamp, leg_load );
-		if ( load_penalty.GetLatest() > 0 )
-			log::trace( timestamp, ": ", load_penalty.GetLatest() );
 
 		return false;
 	}
