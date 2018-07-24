@@ -169,7 +169,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			genvec.push_back( cur_gen );
 			highest = std::max( highest, std::max( cur_best, cur_avg ) );
 			lowest = std::min( lowest, std::min( cur_best, cur_avg ) );
-			cur_pred = cur_reg( float( max_generations ) );
+			cur_pred = cur_reg( float( cur_gen + window_size ) );
 			updateText();
 
 			ui.plot->graph( 0 )->setData( genvec, bestvec );
