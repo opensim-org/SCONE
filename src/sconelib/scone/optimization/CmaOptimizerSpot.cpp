@@ -58,10 +58,6 @@ namespace scone
 			cma.OutputStatus( "max_generations", cma.max_generations );
 			cma.OutputStatus( "window_size", cma.window_size );
 		}
-
-		// setup history.txt
-		history_ = std::ofstream( ( cma.AcquireOutputFolder() / "history.txt" ).string() );
-		history_ << "Step\tBest\tAverage\tPredicted\tSlope\tOffset\tProgress" << std::endl;
 	}
 
 	void CmaOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )

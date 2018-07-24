@@ -29,6 +29,5 @@ namespace scone
 		virtual void on_stop( const optimizer& opt, const spot::stop_condition& s ) override;
 		virtual void on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop ) override;
 		virtual void on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, index_t best_idx, bool new_best ) override;
-		std::ofstream history_;
 	};
 }
