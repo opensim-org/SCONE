@@ -44,7 +44,7 @@ namespace scone
 		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~GaitStateController();
 
-		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
+		virtual bool UpdateControls( Model& model, double timestamp ) override;
 
 		virtual String GetClassSignature() const override;
 

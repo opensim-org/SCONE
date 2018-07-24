@@ -92,7 +92,7 @@ namespace scone
 	{
 	}
 
-	MetaReflexController::UpdateResult MetaReflexController::UpdateControls( Model& model, double timestamp )
+	bool MetaReflexController::UpdateControls( Model& model, double timestamp )
 	{
 		// get balance
 		Vec3 global_balance = model.GetDelayedOrientation();
@@ -109,7 +109,7 @@ namespace scone
 			mrmus->UpdateControls();
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	String MetaReflexController::GetClassSignature() const

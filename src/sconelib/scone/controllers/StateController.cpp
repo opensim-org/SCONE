@@ -86,7 +86,7 @@ namespace scone
 		}
 	}
 
-	StateController::UpdateResult StateController::UpdateControls( Model& model, double timestamp )
+	bool StateController::UpdateControls( Model& model, double timestamp )
 	{
 		// adjust current state if needed
 		UpdateCurrentState( model, timestamp );
@@ -98,7 +98,7 @@ namespace scone
 				cc.second->UpdateControls( model, timestamp - cc.first.is_active_since );
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	void StateController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

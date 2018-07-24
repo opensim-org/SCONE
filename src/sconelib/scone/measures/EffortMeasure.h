@@ -15,7 +15,7 @@ namespace scone
 		enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
 		static StringMap< EnergyMeasureType > m_MeasureNames;
 
-		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
 		EnergyMeasureType measure_type;

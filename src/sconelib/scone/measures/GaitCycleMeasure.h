@@ -16,7 +16,7 @@ namespace scone
 		bool use_half_cycle;
 
 	protected:
-		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override { return Controller::NoUpdate; }
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) override { return false; }
 
 	private:
 		Real GetStateSimilarity( const State& state );

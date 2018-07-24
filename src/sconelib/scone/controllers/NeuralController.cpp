@@ -240,14 +240,14 @@ namespace scone
 		return result;
 	}
 
-	scone::Controller::UpdateResult NeuralController::UpdateControls( Model& model, double timestamp )
+	bool NeuralController::UpdateControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
 		for ( auto& n : m_MotorNeurons )
 			n->UpdateActuator();
 
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	void NeuralController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

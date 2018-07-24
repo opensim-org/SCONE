@@ -22,11 +22,11 @@ namespace scone
 		Real GetOffset() { return offset; }
 		bool GetMinimize() { return minimize; }
 
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) override final;
-		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override final { return Controller::NoUpdate; }
+		virtual bool UpdateAnalysis( const Model& model, double timestamp ) override final;
+		virtual bool UpdateControls( Model& model, double timestamp ) override final { return false; }
 
 	protected:
-		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) = 0;
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;
 		virtual bool IsActive( const Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
 
 		TimeInSeconds start_time;

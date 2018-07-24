@@ -116,7 +116,7 @@ void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange 
 	ui.plot->yAxis->setRange( lower, upper );
 }
 
-ProgressDockWidget::UpdateResult ProgressDockWidget::updateProgress()
+ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 {
 	SCONE_ASSERT( process );
 

@@ -95,7 +95,7 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult GaitStateController::UpdateControls( Model& model, double timestamp )
+	bool GaitStateController::UpdateControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -115,7 +115,7 @@ namespace scone
 			}
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	void GaitStateController::UpdateLegStates( Model& model, double timestamp )

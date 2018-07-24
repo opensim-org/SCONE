@@ -41,7 +41,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult PerturbationController::UpdateControls( Model& model, double timestamp )
+	bool PerturbationController::UpdateControls( Model& model, double timestamp )
 	{
 		// find closest perturbation time
 		auto it = std::upper_bound( perturbation_times.begin(), perturbation_times.end(), timestamp );
@@ -57,7 +57,7 @@ namespace scone
 			active_ = active;
 		}
 
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	String PerturbationController::GetClassSignature() const

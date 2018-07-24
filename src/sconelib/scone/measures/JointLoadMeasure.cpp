@@ -17,12 +17,12 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult JointLoadMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool JointLoadMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		joint_load = joint.GetLoad();
 		load_penalty.AddSample( timestamp, joint_load );
 
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	scone::String JointLoadMeasure::GetClassSignature() const

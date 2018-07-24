@@ -14,15 +14,11 @@ namespace scone
 		Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~Controller();
 
-		enum UpdateResult { SuccessfulUpdate, NoUpdate, RequestTermination };
+		/// Called each attempted integration step, returns true on termination request
+		virtual bool UpdateControls( Model& model, double timestamp ) { return false; }
 
-		/// Called each attempted integration step
-		// TODO: use Result< UpdateResult > or bool
-		virtual UpdateResult UpdateControls( Model& model, double timestamp ) { return NoUpdate; }
-
-		/// Called after each successful integration step
-		// TODO: use Result< UpdateResult > or bool
-		virtual UpdateResult UpdateAnalysis( const Model& model, double timestamp ) { return NoUpdate; }
+		/// Called after each successful integration step, returns true on termination request
+		virtual bool UpdateAnalysis( const Model& model, double timestamp ) { return false; }
 
 		// default implementation doesn't store anything
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}

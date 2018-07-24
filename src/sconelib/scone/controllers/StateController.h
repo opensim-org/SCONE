@@ -14,7 +14,7 @@ namespace scone
 		StateController( const StateController& other ) = delete;
 		StateController& operator=( const StateController& other ) = delete;
 
-		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
+		virtual bool UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:

@@ -59,7 +59,7 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult ReflexController::UpdateControls( Model& model, double timestamp )
+	bool ReflexController::UpdateControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -67,7 +67,7 @@ namespace scone
 		for ( ReflexUP& r : m_Reflexes )
 			r->ComputeControls( timestamp );
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	scone::String ReflexController::GetClassSignature() const

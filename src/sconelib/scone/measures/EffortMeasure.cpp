@@ -46,7 +46,7 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -56,7 +56,7 @@ namespace scone
 		double current_effort = GetEnergy( model );
 		m_Energy.AddSample( timestamp, current_effort );
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	double EffortMeasure::GetResult( Model& model )

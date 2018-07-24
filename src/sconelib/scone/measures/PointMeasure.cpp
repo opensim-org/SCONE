@@ -40,7 +40,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult PointMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool PointMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -89,7 +89,7 @@ namespace scone
 			penalty.AddSample( timestamp, arps + arpa );
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	double PointMeasure::GetResult( Model& model )

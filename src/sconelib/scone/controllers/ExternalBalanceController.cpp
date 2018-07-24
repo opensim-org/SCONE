@@ -24,9 +24,9 @@ namespace scone
 		frame[ name + ".pv" ] = pitch_vel;
 	}
 
-	scone::Controller::UpdateResult ExternalBalanceController::UpdateControls( Model& model, double timestamp )
+	bool ExternalBalanceController::UpdateControls( Model& model, double timestamp )
 	{
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	String ExternalBalanceController::GetClassSignature() const

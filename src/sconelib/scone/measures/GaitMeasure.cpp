@@ -44,7 +44,7 @@ namespace scone
 	{
 	}
 
-	Controller::UpdateResult GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -67,9 +67,9 @@ namespace scone
 		if ( terminate )
 		{
 			log::TraceF( "%.3f: Terminating simulation", timestamp );
-			return RequestTermination;
+			return true;
 		}
-		else return SuccessfulUpdate;
+		else return false;
 	}
 
 	double GaitMeasure::GetResult( Model& model )

@@ -12,7 +12,7 @@ namespace scone
 		HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~HeightMeasure() { };
 
-		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
 	protected:

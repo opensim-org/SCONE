@@ -56,8 +56,8 @@ public:
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	State state;
 
-	enum UpdateResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
-	UpdateResult updateProgress();
+	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
+	ProgressResult updateProgress();
 	bool readyForDestruction();
 
 public slots:

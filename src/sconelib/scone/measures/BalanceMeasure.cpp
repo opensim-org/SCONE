@@ -12,16 +12,16 @@ namespace scone
 		m_InitialHeight = model.GetComPos()[ 1 ];
 	}
 
-	scone::Controller::UpdateResult BalanceMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool BalanceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		double pos = model.GetComPos()[ 1 ];
 		double vel = model.GetComVel()[ 1 ];
 
 		// check if the height is still high enough
 		if ( pos < termination_height * m_InitialHeight )
-			return RequestTermination;
+			return true;
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	double BalanceMeasure::GetResult( Model& model )

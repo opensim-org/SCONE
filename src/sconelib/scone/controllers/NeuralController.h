@@ -35,7 +35,7 @@ namespace scone
 
 		std::vector< SensorNeuronUP >& GetSensorNeurons() { return m_SensorNeurons; }
 
-		virtual UpdateResult UpdateControls( Model& model, double timestamp ) override;
+		virtual bool UpdateControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 		virtual void WriteResult( const path& file ) const override;

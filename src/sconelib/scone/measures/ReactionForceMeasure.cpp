@@ -16,15 +16,17 @@ namespace scone
 		return load_penalty.GetAverage();
 	}
 
-	scone::Controller::UpdateResult ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		Real leg_load = 0.0f;
 		for ( auto& leg : model.GetLegs() )
 			leg_load += leg->GetContactForce().length() / model.GetBW();
 
 		load_penalty.AddSample( timestamp, leg_load );
+		if ( load_penalty.GetLatest() > 0 )
+			log::trace( timestamp, ": ", load_penalty.GetLatest() );
 
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

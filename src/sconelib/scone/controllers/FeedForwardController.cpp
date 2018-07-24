@@ -75,7 +75,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult FeedForwardController::UpdateControls( Model& model, double time )
+	bool FeedForwardController::UpdateControls( Model& model, double time )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -103,7 +103,7 @@ namespace scone
 			}
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	scone::String FeedForwardController::GetClassSignature() const

@@ -257,7 +257,7 @@ namespace scone
 		// update all controllers
 		bool terminate = false;
 		for ( ControllerUP& con : GetControllers() )
-			terminate |= con->UpdateControls( *this, GetTime() ) == Controller::RequestTermination;
+			terminate |= con->UpdateControls( *this, GetTime() ) == true;
 
 		//log::TraceF( "Controls updated for Int=%03d time=%.6f", GetIntegrationStep(), GetTime() );
 
@@ -271,7 +271,7 @@ namespace scone
 
 		bool terminate = false;
 		for ( ControllerUP& con : GetControllers() )
-			terminate |= con->UpdateAnalysis( *this, GetTime() ) == Controller::RequestTermination;
+			terminate |= con->UpdateAnalysis( *this, GetTime() ) == true;
 
 		if ( terminate )
 			SetTerminationRequest();

@@ -12,10 +12,10 @@ namespace scone
 		INIT_PROPERTY( props, minimize, true );
 	}
 
-	scone::Controller::UpdateResult Measure::UpdateAnalysis( const Model& model, double timestamp )
+	bool Measure::UpdateAnalysis( const Model& model, double timestamp )
 	{
 		if ( IsActive( model, timestamp ) )
 			return UpdateMeasure( model, timestamp );
-		else return Controller::NoUpdate;
+		else return false;
 	}
 }

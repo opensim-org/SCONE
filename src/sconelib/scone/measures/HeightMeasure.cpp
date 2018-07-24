@@ -32,7 +32,7 @@ namespace scone
 		m_InitialHeight = m_pTargetBody ? m_pTargetBody->GetComPos()[ 1 ] : model.GetComPos()[ 1 ];
 	}
 
-	Controller::UpdateResult HeightMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool HeightMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -44,7 +44,7 @@ namespace scone
 
 		// check if the height is still high enough
 		if ( pos < termination_height * m_Height.GetInitial() )
-			return RequestTermination;
+			return true;
 
 		// update the state
 		if ( timestamp > ignore_time )
@@ -57,7 +57,7 @@ namespace scone
 				else if ( vel >= upward_velocity_threshold )
 				{
 					if ( require_downward_movement )
-						return RequestTermination; // moving up too soon
+						return true; // moving up too soon
 					else m_JumpState = UpState;
 				}
 				break;
@@ -67,12 +67,12 @@ namespace scone
 				break;
 			case UpState:
 				if ( terminate_on_peak && vel < 0.0 )
-					return RequestTermination;
+					return true;
 				break;
 			}
 		}
 
-		return SuccessfulUpdate;
+		return false;
 	}
 
 	double HeightMeasure::GetResult( Model& model )

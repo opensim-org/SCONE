@@ -66,7 +66,7 @@ namespace scone
 
 	CompositeMeasure::~CompositeMeasure() { }
 
-	Controller::UpdateResult CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -74,13 +74,13 @@ namespace scone
 
 		// update Terms (obsolete)
 		for ( Term& t : m_Terms )
-			terminate |= t.measure->UpdateAnalysis( model, timestamp ) == RequestTermination;
+			terminate |= t.measure->UpdateAnalysis( model, timestamp ) == true;
 
 		// update Measures
 		for ( MeasureUP& m : m_Measures )
-			terminate |= m->UpdateAnalysis( model, timestamp ) == RequestTermination;
+			terminate |= m->UpdateAnalysis( model, timestamp ) == true;
 
-		return terminate ? RequestTermination : SuccessfulUpdate;
+		return terminate ? true : false;
 	}
 
 	double CompositeMeasure::GetResult( Model& model )

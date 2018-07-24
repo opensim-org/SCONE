@@ -51,7 +51,7 @@ namespace scone
 		}
 	}
 
-	Controller::UpdateResult JumpMeasure::UpdateMeasure( const Model& model, double timestamp )
+	bool JumpMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		Vec3 com_pos = model.GetComPos();
 		Vec3 com_vel = model.GetComVel();
@@ -60,7 +60,7 @@ namespace scone
 		if ( com_pos.y < termination_height * init_com.y )
 		{
 			log::trace( timestamp, ": Terminating, com_pos=", com_pos );
-			return RequestTermination;
+			return true;
 		}
 
 		Vec3 pos = GetTargetPos( model );
@@ -93,7 +93,7 @@ namespace scone
 				log::trace( timestamp, ": State changed to Recover, com_pos=", com_pos );
 
 				if ( terminate_on_peak )
-					return RequestTermination;
+					return true;
 			}
 			break;
 
@@ -106,7 +106,7 @@ namespace scone
 				log::trace( timestamp, ": State changed to Landing, com_pos=", com_pos );
 
 				if ( terminate_on_peak )
-					return RequestTermination;
+					return true;
 			}
 			break;
 
@@ -125,11 +125,11 @@ namespace scone
 			recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
 
 			if ( timestamp - recover_start_time >= recover_time )
-				return RequestTermination;
+				return true;
 			break;
 		}
 
-		return Controller::SuccessfulUpdate;
+		return false;
 	}
 
 	scone::String JumpMeasure::GetClassSignature() const

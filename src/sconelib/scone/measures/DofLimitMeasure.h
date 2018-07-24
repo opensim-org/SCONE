@@ -21,7 +21,7 @@ namespace scone
 	protected:
 		virtual String GetClassSignature() const override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
-		virtual UpdateResult UpdateMeasure( const Model& model, double timestamp ) override;
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
 	private:
 		struct Limit
