@@ -16,7 +16,7 @@ namespace scone
 		INIT_PROPERTY( props, lambda_, 0 );
 		INIT_PROPERTY( props, mu_, 0 );
 		INIT_PROPERTY( props, sigma_, 1.0 );
-		INIT_PROPERTY( props, window_size, size_t( 500 ) );
+		INIT_PROPERTY( props, window_size, size_t( 300 ) );
 		INIT_PROPERTY( props, random_seed, DEFAULT_RANDOM_SEED );
 	}
 
