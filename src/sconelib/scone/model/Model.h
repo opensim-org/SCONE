@@ -157,7 +157,7 @@ namespace scone
 		std::mutex& GetSimulationMutex() { return simulation_mutex; }
 		std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
 
-		Measure& GetMeasure() { return *m_Measure; }
+		Measure* GetMeasure() { return m_Measure; }
 		void SetMeasure( MeasureUP m );
 
 	protected:

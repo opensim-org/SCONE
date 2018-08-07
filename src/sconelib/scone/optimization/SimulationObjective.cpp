@@ -17,13 +17,10 @@ namespace scone
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( props.get_child( "Model" ), info_ );
-		if ( auto mp = props.try_get_child( "Measure" ) )
-		{
-			m_MeasurePropsCopy = *mp;
-			model->SetMeasure( CreateMeasure( *mp, info_, *model, Locality( NoSide ) ) );
-		}
 
-		info_.set_minimize( model->GetMeasure().GetMinimize() );
+		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined" );
+
+		info_.set_minimize( model->GetMeasure()->GetMinimize() );
 		signature_ = model->GetSignature() + stringf( ".D%.0f", max_duration );
 		AddExternalResources( model->GetExternalResources() );
 	}
@@ -35,7 +32,7 @@ namespace scone
 	{
 		m.SetSimulationEndTime( GetDuration() );
 		AdvanceModel( m, GetDuration() );
-		return m.GetMeasure().GetResult( m );
+		return m.GetMeasure()->GetResult( m );
 	}
 
 	void SimulationObjective::AdvanceModel( Model& m, TimeInSeconds t ) const
@@ -46,8 +43,6 @@ namespace scone
 	scone::ModelUP SimulationObjective::CreateModelFromParams( Params& point ) const
 	{
 		auto model = CreateModel( m_ModelPropsCopy, point );
-		if ( !m_MeasurePropsCopy.empty() )
-			model->SetMeasure( CreateMeasure( m_MeasurePropsCopy, point, *model, Locality( NoSide ) ) );
 		return model;
 	}
 

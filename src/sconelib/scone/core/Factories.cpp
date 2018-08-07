@@ -31,6 +31,7 @@
 #include "scone/measures/BalanceMeasure.h"
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/CmaOptimizerSpot.h"
+#include "scone/controllers/CompositeController.h"
 
 namespace scone
 {
@@ -49,6 +50,7 @@ namespace scone
 			g_ControllerFactory.register_class< SensorStateController >();
 			g_ControllerFactory.register_class< MirrorController >();
 			g_ControllerFactory.register_class< NeuralController >();
+			g_ControllerFactory.register_class< CompositeController >();
 
 			// register measures
 			g_ControllerFactory.register_class< HeightMeasure >();

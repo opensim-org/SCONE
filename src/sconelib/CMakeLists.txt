@@ -123,6 +123,10 @@ set(CS_CONTROLLERS_STATE_FILES
 	scone/controllers/TimeStateController.cpp
 	scone/controllers/TimeStateController.h
 	)
+set(CS_CONTROLLERS_COMPOSITE_FILES
+	scone/controllers/CompositeController.cpp
+	scone/controllers/CompositeController.h
+	)
 set(MEASURE_FILES
 	scone/measures/BalanceMeasure.cpp
 	scone/measures/BalanceMeasure.h
@@ -262,6 +266,8 @@ set (SCONELIB_FILES
 	${CS_CONTROLLERS_NC_FILES}
 	${CS_CONTROLLERS_REFLEX_FILES}
 	${CS_CONTROLLERS_STATE_FILES}
+	${CS_CONTROLLERS_COMPOSITE_FILES}
+
     ${CS_FUNCTIONS_FILES}
 	${MEASURE_FILES}
 	${CS_SYSTEM_FILES} 
@@ -303,6 +309,7 @@ source_group("core\\storage" FILES ${CORE_STORAGE_FILES})
 
 source_group("controllers" FILES ${CS_CONTROLLERS_FILES} )
 source_group("controllers\\State Control" FILES ${CS_CONTROLLERS_STATE_FILES} )
+source_group("controllers\\Composite Control" FILES ${CS_CONTROLLERS_COMPOSITE_FILES} )
 source_group("controllers\\Reflex Control" FILES ${CS_CONTROLLERS_REFLEX_FILES})
 source_group("controllers\\Neural Control" FILES ${CS_CONTROLLERS_NC_FILES})
 source_group("controllers" FILES ${CS_SYSTEM_FILES})
