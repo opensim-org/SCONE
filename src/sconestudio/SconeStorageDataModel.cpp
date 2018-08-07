@@ -9,19 +9,19 @@ void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 	storage = s;
 }
 
-size_t SconeStorageDataModel::getSeriesCount() const
+size_t SconeStorageDataModel::seriesCount() const
 {
 	if ( storage ) return storage->GetChannelCount();
 	else return 0;
 }
 
-QString SconeStorageDataModel::getLabel( int idx ) const
+QString SconeStorageDataModel::label( int idx ) const
 {
 	SCONE_ASSERT( storage );
 	return QString( storage->GetLabels()[ idx ].c_str() );
 }
 
-double SconeStorageDataModel::getValue( int idx, double time ) const
+double SconeStorageDataModel::value( int idx, double time ) const
 {
 	SCONE_ASSERT( storage );
 	double reltime = time / storage->Back().GetTime();
@@ -34,7 +34,7 @@ std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int i
 	SCONE_ASSERT( storage );
 	std::vector< std::pair< float, float > > series;
 	series.reserve( storage->GetFrameCount() ); // this may be a little much, but ensures no reallocation
-	double last_time = getTimeStart() - 2 * min_interval;
+	double last_time = timeStart() - 2 * min_interval;
 	for ( size_t i = 0; i < storage->GetFrameCount(); ++i )
 	{
 		auto& f = storage->GetFrame( i );
@@ -47,12 +47,12 @@ std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int i
 	return series;
 }
 
-double SconeStorageDataModel::getTimeFinish() const
+double SconeStorageDataModel::timeFinish() const
 {
 	return storage && !storage->IsEmpty() ? storage->Back().GetTime() : 0.0;
 }
 
-double SconeStorageDataModel::getTimeStart() const
+double SconeStorageDataModel::timeStart() const
 {
 	return 0.0;
 }

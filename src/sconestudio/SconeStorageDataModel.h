@@ -10,14 +10,14 @@ public:
 	virtual ~SconeStorageDataModel() {}
 
 	void setStorage( const scone::Storage<>* s );
-	virtual size_t getSeriesCount() const override;
-	virtual QString getLabel( int idx ) const override;
+	virtual size_t seriesCount() const override;
+	virtual QString label( int idx ) const override;
 
-	virtual double getValue( int idx, double time ) const override;
+	virtual double value( int idx, double time ) const override;
 
 	virtual std::vector< std::pair< float, float > > getSeries( int idx, double min_interval = 0.0 ) const override;
-	virtual double getTimeFinish() const override;
-	virtual double getTimeStart() const override;
+	virtual double timeFinish() const override;
+	virtual double timeStart() const override;
 
 private:
 	const scone::Storage<>* storage;
