@@ -75,7 +75,7 @@ namespace scone
 		}
 	}
 
-	bool FeedForwardController::UpdateControls( Model& model, double time )
+	bool FeedForwardController::ComputeControls( Model& model, double time )
 	{
 		SCONE_PROFILE_FUNCTION;
 

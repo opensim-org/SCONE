@@ -11,7 +11,7 @@ namespace scone
 		MetaReflexController( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~MetaReflexController();
 
-		virtual bool UpdateControls( Model& model, double timestamp ) override;
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
 
 		const std::vector< MetaReflexDofUP >& GetReflexDofs() const { return m_ReflexDofs; }
 		const std::vector< MetaReflexVirtualMuscleUP >& GetVirtualMuscles() const { return m_VirtualMuscles; }

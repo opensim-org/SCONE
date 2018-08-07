@@ -58,7 +58,7 @@ namespace scone
 
 	// TODO: move to elsewhere
 	template< typename T >
-	index_t FindIndex( const std::vector< T > cont, const T& item )
+	index_t FindIndex( const std::vector< T >& cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
 		return it != cont.end() ? static_cast< index_t >( it - cont.begin() ) : NoIndex;
@@ -66,7 +66,7 @@ namespace scone
 
 	// TODO: move to elsewhere
 	template< typename T >
-	index_t FindIndexOrThrow( const std::vector< T > cont, const T& item )
+	index_t FindIndexOrThrow( const std::vector< T >& cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
 		SCONE_THROW_IF( it == cont.end(), "Could not find " + to_str( item ) );

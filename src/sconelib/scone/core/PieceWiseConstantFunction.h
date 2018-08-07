@@ -15,12 +15,6 @@ namespace scone
 		virtual ~PieceWiseConstantFunction();
 
 		virtual Real GetValue( Real x ) override;
-
-		/// Piece wise functions
-		virtual void AddPoint( Real x, Real y ) override;
-		virtual Real GetX( size_t index ) override;
-		virtual Real GetY( size_t index ) override;
-
 		OpenSim::PiecewiseConstantFunction& GetOsFunc() { return m_osFunc; }
 
 		// a signature describing the function

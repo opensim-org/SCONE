@@ -49,9 +49,9 @@ namespace scone
 		virtual Vec3 GetComAcc() const override;
 		virtual Real GetTotalEnergyConsumption() const override;
 
-		virtual Real GetMass() const override { return m_Mass; }
-		virtual Real GetBW() const override { return m_BW; }
-		virtual Vec3 GetGravity() const override;
+		virtual Real GetMass() const override final { return m_Mass; }
+		virtual Real GetBW() const override final { return m_BW; }
+		virtual Vec3 GetGravity() const override final;
 
 		virtual bool AdvanceSimulationTo( double time ) override;
 

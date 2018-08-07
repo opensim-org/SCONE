@@ -24,7 +24,7 @@ namespace scone
 		frame[ name + ".pv" ] = pitch_vel;
 	}
 
-	bool ExternalBalanceController::UpdateControls( Model& model, double timestamp )
+	bool ExternalBalanceController::ComputeControls( Model& model, double timestamp )
 	{
 		return false;
 	}

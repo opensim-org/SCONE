@@ -5,11 +5,6 @@
 
 namespace scone
 {
-	CompositeMeasure::Term::Term() :
-		measure( nullptr )
-	{
-	}
-
 	CompositeMeasure::Term::Term( const PropNode& pn ) :
 		measure( nullptr ) // should be initialized by CompositeMeasure
 	{

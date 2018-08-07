@@ -38,7 +38,8 @@ namespace scone
 	index_( idx ),
 	side_( s ),
 	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) ),
-	muscle_( nullptr )
+	muscle_( nullptr ),
+	input_()
 	{}
 
 	scone::activation_t Neuron::GetOutput( double offset ) const

@@ -16,7 +16,6 @@ namespace scone
 
 		struct Term
 		{
-			Term();
 			Term( const PropNode& pn );
 			Term( Term&& other );
 			String name;

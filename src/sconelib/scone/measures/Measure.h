@@ -22,14 +22,11 @@ namespace scone
 		Real GetOffset() { return offset; }
 		bool GetMinimize() { return minimize; }
 
-		virtual bool UpdateAnalysis( const Model& model, double timestamp ) override final;
-		virtual bool UpdateControls( Model& model, double timestamp ) override final { return false; }
-
 	protected:
+		virtual bool ComputeControls( Model& model, double timestamp ) override final { return false; }
+		virtual bool PerformAnalysis( const Model& model, double timestamp ) override final;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;
-		virtual bool IsActive( const Model& model, TimeInSeconds timestamp ) const { return timestamp >= start_time; }
 
-		TimeInSeconds start_time;
 		PropNode report;
 		String name;
 		Real weight;

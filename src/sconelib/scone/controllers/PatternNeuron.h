@@ -13,7 +13,6 @@ namespace scone
 		virtual string GetName( bool mirrored ) const override { return name_ + ( mirrored_ ? "_r" : "_l" ); }
 
 		bool mirrored_;
-		string name_;
 
 	private:
 		double width_;

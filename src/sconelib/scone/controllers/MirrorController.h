@@ -28,14 +28,14 @@ namespace scone
 			c1->StoreData( frame, flags );
 		}
 
-		virtual bool UpdateAnalysis( const Model& model, double timestamp ) override
+		virtual bool PerformAnalysis( const Model& model, double timestamp ) override
 		{
 			c0->UpdateAnalysis( model, timestamp );
 			return c1->UpdateAnalysis( model, timestamp );
 		}
 
 
-		virtual bool UpdateControls( Model& model, double timestamp ) override
+		virtual bool ComputeControls( Model& model, double timestamp ) override
 		{
 			c0->UpdateControls( model, timestamp );
 			return c1->UpdateControls( model, timestamp );

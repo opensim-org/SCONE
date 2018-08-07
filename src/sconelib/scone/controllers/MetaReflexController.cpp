@@ -92,7 +92,7 @@ namespace scone
 	{
 	}
 
-	bool MetaReflexController::UpdateControls( Model& model, double timestamp )
+	bool MetaReflexController::ComputeControls( Model& model, double timestamp )
 	{
 		// get balance
 		Vec3 global_balance = model.GetDelayedOrientation();

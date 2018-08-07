@@ -59,7 +59,7 @@ namespace scone
 	{
 	}
 
-	bool ReflexController::UpdateControls( Model& model, double timestamp )
+	bool ReflexController::ComputeControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

@@ -14,7 +14,7 @@ namespace scone
 {
 	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, index_t idx, Side side, const String& act_func ) :
 	Neuron( pn, idx, side, act_func ),
-	input_(),
+	input_sensor_(),
 	sensor_gain_( 1.0 ),
 	type_( pn.get< string >( "type" ) ),
 	sample_delay_frames_( 0 ),
@@ -37,28 +37,28 @@ namespace scone
 		{
 		case "F"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *muscle_ );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< MuscleForceSensor >( *muscle_ );
 			break;
 		case "L"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *muscle_ );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< MuscleLengthSensor >( *muscle_ );
 			break;
 		case "S"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *muscle_ );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< MuscleSpindleSensor >( *muscle_ );
 			use_sample_delay_ = true;
 			break;
 		case "U"_hash:
 			muscle_ = FindByName( model.GetMuscles(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< MuscleExcitationSensor >( *muscle_ );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< MuscleExcitationSensor >( *muscle_ );
 			break;
 		case "DP"_hash:
 			dof = FindByName( model.GetDofs(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *dof );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< DofPositionSensor >( *dof );
 			break;
 		case "DV"_hash:
 			dof = FindByName( model.GetDofs(), name ).get();
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *dof );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< DofVelocitySensor >( *dof );
 			break;
 		case "DPV"_hash:
 			dof = FindByName( model.GetDofs(), name ).get();
@@ -67,7 +67,7 @@ namespace scone
 				par.get( ".DV", 0.1, 0.01, 0, 1 ); // this is for backwards compatibility (<1845)
 			auto parent_name = pn.try_get_any< string >( { "parent", "source_parent" } );
 			Dof* root_dof = parent_name ? FindByName( model.GetDofs(), *parent_name ).get() : nullptr;
-			input_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *dof, kv, root_dof );
+			input_sensor_ = &nc.GetModel().AcquireDelayedSensor< DofPosVelSensor >( *dof, kv, root_dof );
 			break;
 		}
 
@@ -75,13 +75,13 @@ namespace scone
 		if ( dof && nc.IsMirrorDof( *dof ) && side == RightSide )
 			sensor_gain_ *= -1;
 
-		xo_error_if( !input_, "Unknown type " + type_ );
+		xo_error_if( !input_sensor_, "Unknown type " + type_ );
 		source_name_ = name;
 	}
 
 	double SensorNeuron::GetOutput( double offset ) const
 	{
-		auto input = use_sample_delay_ ? input_->GetAverageValue( sample_delay_frames_, sample_delay_window_ ) : input_->GetValue( delay_ );
+		auto input = use_sample_delay_ ? input_sensor_->GetAverageValue( sample_delay_frames_, sample_delay_window_ ) : input_sensor_->GetValue( delay_ );
 		return output_ = activation_function( sensor_gain_ * ( input - offset_ - offset ) );
 	}
 

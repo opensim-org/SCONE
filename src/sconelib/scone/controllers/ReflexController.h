@@ -14,7 +14,7 @@ namespace scone
 		ReflexController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~ReflexController();
 
-		virtual bool UpdateControls( Model& model, double timestamp ) override;
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

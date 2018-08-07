@@ -14,11 +14,17 @@ namespace scone
 		Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~Controller();
 
-		/// Called each attempted integration step, returns true on termination request
-		virtual bool UpdateControls( Model& model, double timestamp ) { return false; }
+		/// Called each step, returns true on termination request, checks IsActive() first
+		bool UpdateControls( Model& model, double timestamp );
 
 		/// Called after each successful integration step, returns true on termination request
-		virtual bool UpdateAnalysis( const Model& model, double timestamp ) { return false; }
+		bool UpdateAnalysis( const Model& model, double timestamp );
+
+		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
+		virtual bool IsActive( const Model& model, double time ) { return time >= start_time_ && time < stop_time_ && !disabled_; }
+
+		/// Sets or clears the Controller's 'disabled' state
+		void SetDisabled( bool d ) { disabled_ = d; }
 
 		// default implementation doesn't store anything
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
@@ -26,7 +32,12 @@ namespace scone
 		// default implementation doesn't store anything
 		virtual void WriteResult( const path& file ) const {}
 
-	private:
-		bool m_TerminationRequest;
+	protected:
+		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }
+		virtual bool PerformAnalysis( const Model& model, double timestamp ) { return false; }
+
+		double start_time_;
+		double stop_time_;
+		bool disabled_;
 	};
 }

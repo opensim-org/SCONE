@@ -98,7 +98,7 @@ namespace scone
 	{
 	public:
 		DofPosVelSensor( Dof& dof, double kv, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ), m_KV( kv ) {}
-		DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
+		DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 		double m_KV;

@@ -95,7 +95,7 @@ namespace scone
 	{
 	}
 
-	bool GaitStateController::UpdateControls( Model& model, double timestamp )
+	bool GaitStateController::ComputeControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

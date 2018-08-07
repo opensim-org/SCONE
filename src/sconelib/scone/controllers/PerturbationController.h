@@ -26,7 +26,7 @@ namespace scone
 		TimeInSeconds end_time;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
-		virtual bool UpdateControls( Model& model, double timestamp ) override;
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

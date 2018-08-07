@@ -10,7 +10,7 @@ namespace scone
 		virtual string GetName( bool mirrored ) const override;
 		virtual string GetParName() const override;
 
-		SensorDelayAdapter* input_;
+		SensorDelayAdapter* input_sensor_;
 		TimeInSeconds delay_;
 		bool use_sample_delay_;
 		int sample_delay_frames_;

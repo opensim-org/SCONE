@@ -41,7 +41,7 @@ namespace scone
 		}
 	}
 
-	bool PerturbationController::UpdateControls( Model& model, double timestamp )
+	bool PerturbationController::ComputeControls( Model& model, double timestamp )
 	{
 		// find closest perturbation time
 		auto it = std::upper_bound( perturbation_times.begin(), perturbation_times.end(), timestamp );

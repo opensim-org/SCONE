@@ -15,11 +15,6 @@ namespace scone
 		virtual ~PieceWiseLinearFunction();
 
 		virtual Real GetValue( Real x ) override;
-
-		virtual void AddPoint( Real x, Real y ) override;
-		virtual Real GetX( size_t index ) override;
-		virtual Real GetY( size_t index ) override;
-
 		OpenSim::PiecewiseLinearFunction& GetOsFunc() { return m_osFunc; }
 
 		// a signature describing the function

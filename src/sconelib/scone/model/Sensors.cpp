@@ -61,6 +61,13 @@ namespace scone
 		return m_Dof.GetName() + ".DV";
 	}
 
+	DofPosVelSensor::DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	DofSensor( pn, par, model, target_area )
+	{
+		m_pRootDof = nullptr;
+		INIT_PARAM_NAMED( pn, par, m_KV, "kv", 0.0 );
+	}
+
 	Real DofPosVelSensor::GetValue() const
 	{
 		// TODO: get rid of this if statement and use a "constant" Dof?

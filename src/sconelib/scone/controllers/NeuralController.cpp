@@ -240,7 +240,7 @@ namespace scone
 		return result;
 	}
 
-	bool NeuralController::UpdateControls( Model& model, double timestamp )
+	bool NeuralController::ComputeControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 

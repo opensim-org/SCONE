@@ -1,14 +1,31 @@
 #include "Controller.h"
+#include "spot/par_tools.h"
 
 namespace scone
 {
 	Controller::Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
-		HasSignature( props ),
-		m_TerminationRequest( false )
+	HasSignature( props )
 	{
+		INIT_PAR( props, par, start_time_, 0.0 );
+		INIT_PAR( props, par, stop_time_, 1e12 ); // automatically stops after ~31000 years
+		INIT_PROP( props, disabled_, false );
 	}
 
 	Controller::~Controller()
 	{
+	}
+
+	bool Controller::UpdateControls( Model& model, double timestamp )
+	{
+		if ( IsActive( model, timestamp ) )
+			return ComputeControls( model, timestamp );
+		else return false;
+	}
+
+	bool Controller::UpdateAnalysis( const Model& model, double timestamp )
+	{
+		if ( IsActive( model, timestamp ) )
+			return PerformAnalysis( model, timestamp );
+		else return false;
 	}
 }

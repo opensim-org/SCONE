@@ -86,7 +86,7 @@ namespace scone
 		}
 	}
 
-	bool StateController::UpdateControls( Model& model, double timestamp )
+	bool StateController::ComputeControls( Model& model, double timestamp )
 	{
 		// adjust current state if needed
 		UpdateCurrentState( model, timestamp );
