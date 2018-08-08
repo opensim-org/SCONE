@@ -146,6 +146,8 @@ set(MEASURE_FILES
 	scone/measures/JumpMeasure.h
 	scone/measures/JointLoadMeasure.cpp
 	scone/measures/JointLoadMeasure.h
+	scone/measures/MimicMeasure.cpp
+	scone/measures/MimicMeasure.h
 	scone/measures/ReactionForceMeasure.cpp
 	scone/measures/ReactionForceMeasure.h
 	scone/measures/PointMeasure.cpp
