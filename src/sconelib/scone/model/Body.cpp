@@ -23,9 +23,9 @@ namespace scone
 		if ( flags( StoreDataTypes::BodyComPosition ) )
 		{
 			auto pos = GetComPos();
-			frame[ name + ".com_x" ] = pos.x;
-			frame[ name + ".com_y" ] = pos.y;
-			frame[ name + ".com_z" ] = pos.z;
+			frame[ name + ".com_pos_x" ] = pos.x;
+			frame[ name + ".com_pos_y" ] = pos.y;
+			frame[ name + ".com_pos_z" ] = pos.z;
 			auto lin_vel = GetComVel();
 			frame[ name + ".lin_vel_x" ] = lin_vel.x;
 			frame[ name + ".lin_vel_y" ] = lin_vel.y;

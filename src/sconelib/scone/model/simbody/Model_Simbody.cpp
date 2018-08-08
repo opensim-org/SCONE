@@ -26,7 +26,6 @@
 
 #include <thread>
 #include <mutex>
-#include "OpenSim/Simulation/Model/ContactSphere.h"
 
 using std::cout;
 using std::endl;
