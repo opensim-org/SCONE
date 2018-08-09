@@ -11,8 +11,12 @@ void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 
 size_t SconeStorageDataModel::seriesCount() const
 {
-	if ( storage ) return storage->GetChannelCount();
-	else return 0;
+	return storage ? storage->GetChannelCount() : 0;
+}
+
+size_t SconeStorageDataModel::samplesCount() const
+{
+	return storage ? storage->GetFrameCount() : 0;
 }
 
 QString SconeStorageDataModel::label( int idx ) const
@@ -23,10 +27,7 @@ QString SconeStorageDataModel::label( int idx ) const
 
 double SconeStorageDataModel::value( int idx, double time ) const
 {
-	SCONE_ASSERT( storage );
-	double reltime = time / storage->Back().GetTime();
-	int frame_idx = xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ), 0, storage->GetFrameCount() - 1 );
-	return storage->GetFrame( frame_idx )[ idx ];
+	return storage->GetFrame( timeIndex( time ) )[ idx ];
 }
 
 std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int idx, double min_interval ) const
@@ -55,4 +56,16 @@ double SconeStorageDataModel::timeFinish() const
 double SconeStorageDataModel::timeStart() const
 {
 	return 0.0;
+}
+
+xo::index_t SconeStorageDataModel::timeIndex( double time ) const
+{
+	SCONE_ASSERT( storage );
+	double reltime = time / storage->Back().GetTime();
+	return xo::index_t( xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ), 0, storage->GetFrameCount() - 1 ) );
+}
+
+double SconeStorageDataModel::timeValue( xo::index_t idx ) const
+{
+	return storage->GetFrame( idx ).GetTime();
 }
