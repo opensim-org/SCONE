@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Measure.h"
+#include "../core/Statistic.h"
 
 namespace scone
 {
@@ -17,6 +18,7 @@ namespace scone
 		virtual String GetClassSignature() const override;
 		Storage<> storage_;
 		xo::path motion_file_;
+		Statistic<> result_;
 
 	protected:
 	private:
