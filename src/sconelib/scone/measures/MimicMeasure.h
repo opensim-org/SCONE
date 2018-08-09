@@ -2,6 +2,7 @@
 
 #include "Measure.h"
 #include "../core/Statistic.h"
+#include "xo/string/pattern_matcher.h"
 
 namespace scone
 {
@@ -13,12 +14,17 @@ namespace scone
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		virtual String GetClassSignature() const override;
 		Storage<> storage_;
-		xo::path motion_file_;
+		xo::path file_;
 		Statistic<> result_;
+		std::vector< std::pair< index_t, index_t > > state_storage_map_;
+		std::vector< std::pair< String, double > > channel_errors_;
+		xo::pattern_matcher include_states_;
+		xo::pattern_matcher exclude_states_;
 
 	protected:
 	private:

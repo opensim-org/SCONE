@@ -32,6 +32,7 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/controllers/CompositeController.h"
+#include "../measures/MimicMeasure.h"
 
 namespace scone
 {
@@ -85,6 +86,7 @@ namespace scone
 			g_MeasureFactory.register_class< ReactionForceMeasure >();
 			g_MeasureFactory.register_class< PointMeasure >();
 			g_MeasureFactory.register_class< BalanceMeasure >();
+			g_MeasureFactory.register_class< MimicMeasure >();
 		}
 		return g_MeasureFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
