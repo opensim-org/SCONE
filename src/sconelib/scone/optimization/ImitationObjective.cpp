@@ -28,7 +28,7 @@ namespace scone
 
 		// prepare data
 		m_Signature = model->GetSignature();
-		ReadStorageSto( m_Storage, file_.str() );
+		ReadStorageSto( m_Storage, file_ );
 
 		// make sure data and model are compatible
 		auto state = model->GetState();

@@ -15,6 +15,8 @@ namespace scone
 
 	protected:
 		virtual String GetClassSignature() const override;
+		Storage<> storage_;
+		xo::path motion_file_;
 
 	protected:
 	private:

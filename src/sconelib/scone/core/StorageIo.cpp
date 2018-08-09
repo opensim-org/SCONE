@@ -23,10 +23,10 @@ namespace scone
 		}
 	}
 
-	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const String& file )
+	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
-		std::ofstream ofs( file );
-		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file );
+		std::ofstream ofs( file.string() );
+		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.string() );
 		WriteStorageTxt( storage, ofs );
 	}
 
@@ -47,14 +47,14 @@ namespace scone
 	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name )
 	{
 		std::ofstream str( file.str() );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
 		WriteStorageSto( storage, str, name );
 	}
 
-	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const String& file )
+	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
-		auto str = xo::char_stream( xo::path( file ) );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
+		auto str = xo::char_stream( file );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
 		ReadStorageSto( storage, str );
 	}
 
@@ -69,10 +69,10 @@ namespace scone
 			ReadStorageTxt( storage, str ); // read as txt once we have found the header
 	}
 
-	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const String& file )
+	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
-		auto str = xo::char_stream( xo::path( file ) );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file );
+		auto str = xo::char_stream( file );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
 		ReadStorageTxt( storage, str );
 	}
 

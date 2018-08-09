@@ -43,7 +43,7 @@ namespace scone
 		{
 			xo::timer t;
 			log::info( "Reading ", sto_file.string() );
-			ReadStorageSto( data, sto_file.string() );
+			ReadStorageSto( data, sto_file );
 			InitStateDataIndices();
 			log::trace( "File read in ", t.seconds(), " seconds" );
 		}
