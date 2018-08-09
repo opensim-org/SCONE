@@ -18,6 +18,13 @@ namespace scone
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( props.get_child( "Model" ), info_ );
 
+		// create a measure that's defined OUTSIDE the model prop_node
+		if ( auto mp = props.try_get_child( "Measure" ) )
+		{
+			m_MeasurePropsCopy = *mp;
+			model->SetMeasure( CreateMeasure( *mp, info_, *model, Locality( NoSide ) ) );
+		}
+
 		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined" );
 
 		info_.set_minimize( model->GetMeasure()->GetMinimize() );
@@ -43,6 +50,9 @@ namespace scone
 	scone::ModelUP SimulationObjective::CreateModelFromParams( Params& point ) const
 	{
 		auto model = CreateModel( m_ModelPropsCopy, point );
+
+		if ( !m_MeasurePropsCopy.empty() ) // A measure was defined OUTSIDE the model prop_node
+			model->SetMeasure( CreateMeasure( m_MeasurePropsCopy, point, *model, Locality( NoSide ) ) );
 		return model;
 	}
 
