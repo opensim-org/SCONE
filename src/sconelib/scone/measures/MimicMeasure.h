@@ -25,6 +25,7 @@ namespace scone
 		std::vector< std::pair< String, double > > channel_errors_;
 		xo::pattern_matcher include_states_;
 		xo::pattern_matcher exclude_states_;
+		bool match_pose_;
 
 	protected:
 	private:
