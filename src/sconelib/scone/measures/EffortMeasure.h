@@ -24,6 +24,7 @@ namespace scone
 		Real muscle_density;
 		Real default_muscle_slow_twitch_ratio;
 		bool use_symmetric_fiber_ratios;
+		Real min_distance;
 
 	protected:
 		virtual String GetClassSignature() const override;

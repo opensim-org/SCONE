@@ -24,6 +24,7 @@ namespace scone
 		INIT_PROPERTY( props, muscle_density, 1059.7 );
 		INIT_PROPERTY( props, default_muscle_slow_twitch_ratio, 0.5 );
 		INIT_PROPERTY( props, use_symmetric_fiber_ratios, true );
+		INIT_PROPERTY( props, min_distance, 1.0 );
 
 		// precompute some stuff
 		m_Wang2012BasalEnergy = 1.51 * model.GetMass();
@@ -61,7 +62,7 @@ namespace scone
 
 	double EffortMeasure::GetResult( Model& model )
 	{
-		double distance = std::max( 0.01, model.GetComPos().x - m_InitComPos.x );
+		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
 
 		//GetReport().set( "total", m_Energy.GetTotal() );
