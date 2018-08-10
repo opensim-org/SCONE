@@ -14,7 +14,7 @@ namespace scone
 		name_ = muscle;
 		muscle_ = FindByName( nc.GetModel().GetMuscles(), muscle ).get();
 
-		ScopedParamSetPrefixer ps( par, GetNameNoSide( muscle ) + "." );
+		ScopedParamSetPrefixer ps( par, GetParName() + "." );
 		offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 	}
 

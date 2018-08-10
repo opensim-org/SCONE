@@ -19,7 +19,7 @@ namespace scone
 		virtual ~Neuron() {}
 		virtual activation_t GetOutput( double offset = 0.0 ) const;
 		virtual string GetName( bool mirrored = false ) const { return mirrored ? GetMirroredName( name_ ) : name_; }
-		virtual string GetParName() const { return GetNameNoSide( name_ ); }
+		virtual string GetParName() const { return symmetric_ ? GetNameNoSide( name_ ) : name_; }
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
 		enum connection_t { none, bilateral, monosynaptic, antagonistic, agonistic, synergetic, synergetic_dof, synergetic_plus, ipsilateral, contralateral, source };
@@ -45,6 +45,7 @@ namespace scone
 		mutable double output_;
 		mutable double input_;
 		activation_func_t activation_function;
+		bool symmetric_;
 
 		std::vector< Input > inputs_;
 

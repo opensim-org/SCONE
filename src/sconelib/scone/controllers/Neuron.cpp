@@ -40,7 +40,9 @@ namespace scone
 	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) ),
 	muscle_( nullptr ),
 	input_()
-	{}
+	{
+		INIT_PROP( pn, symmetric_, true );
+	}
 
 	scone::activation_t Neuron::GetOutput( double offset ) const
 	{
