@@ -13,7 +13,7 @@ namespace scone
 		INIT_PROP_REQUIRED( props, file_ );
 		INIT_PROP( props, include_states_, xo::pattern_matcher( "*" ) );
 		INIT_PROP( props, exclude_states_, xo::pattern_matcher( "" ) );
-		INIT_PROP( props, match_pose_, false );
+		INIT_PROP( props, use_best_match_, false );
 
 		ReadStorageSto( storage_, FindFile( file_ ) );
 
@@ -58,7 +58,7 @@ namespace scone
 
 	double MimicMeasure::GetResult( Model& model )
 	{
-		return match_pose_ ? result_.GetLowest() : result_.GetAverage();
+		return use_best_match_ ? result_.GetLowest() : result_.GetAverage();
 	}
 
 	void MimicMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
