@@ -22,11 +22,16 @@ namespace scone
 		Real min_velocity;
 		Real max_velocity;
 		Real load_threshold;
+		Real min_step_duration;
+		int initiation_step_count;
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
+		std::vector< Real > m_StepDurations;
+		std::vector< Real > m_StepLengths;
+
 		// settings
 		std::vector< Body* > m_GaitBodies;
 		Real GetGaitDist( const Model &model );
@@ -41,8 +46,6 @@ namespace scone
 
 		PropNode m_Report;
 
-		Statistic<> m_MinVelocityMeasure;
-		int m_nSteps;
-		double m_TotStepSize;
+		Statistic<> m_VelocityMeasure;
 	};
 }
