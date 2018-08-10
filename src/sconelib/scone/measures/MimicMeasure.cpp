@@ -38,7 +38,8 @@ namespace scone
 
 	bool MimicMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		if ( timestamp > storage_.Back().GetTime() )
+		// when using a full motion, terminate when there's no more data
+		if ( !use_best_match_ && timestamp > storage_.Back().GetTime() )
 			return true;
 
 		auto& s = model.GetState();
