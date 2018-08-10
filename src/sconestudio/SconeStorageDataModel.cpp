@@ -62,7 +62,7 @@ xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 {
 	SCONE_ASSERT( storage );
 	double reltime = time / storage->Back().GetTime();
-	return xo::index_t( xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ), 0, storage->GetFrameCount() - 1 ) );
+	return xo::index_t( xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ) + 0.5, 0, storage->GetFrameCount() - 1 ) );
 }
 
 double SconeStorageDataModel::timeValue( xo::index_t idx ) const
