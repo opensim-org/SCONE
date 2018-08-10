@@ -1,5 +1,3 @@
-#include <set>
-
 #include "GaitMeasure.h"
 #include "scone/model/Model.h"
 #include "scone/model/Body.h"
@@ -7,6 +5,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Range.h"
+#include "xo/container/sorted_vector.h"
 
 namespace scone
 {
@@ -115,14 +114,13 @@ namespace scone
 	scone::Real GaitMeasure::GetGaitDist( const Model &model )
 	{
 		// compute average of feet and Com (smallest 2 values)
-		std::set< double > distances;
+		xo::sorted_vector< double > distances;
 		for ( const LegUP& leg : model.GetLegs() )
 			distances.insert( leg->GetFootLink().GetBody().GetComPos().x );
 		distances.insert( model.GetComPos().x );
 
 		SCONE_ASSERT( distances.size() >= 2 );
-		auto iter = distances.begin();
-		return ( *iter + *( ++iter ) ) / 2;
+		return ( distances[ 0 ] + distances[ 1 ] ) / 2;
 	}
 
 	String GaitMeasure::GetClassSignature() const
