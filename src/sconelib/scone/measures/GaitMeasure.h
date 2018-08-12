@@ -24,6 +24,10 @@ namespace scone
 		Real load_threshold;
 		Real min_step_duration;
 		int initiation_step_count;
+		String upper_body;
+		String base_bodies;
+
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -33,7 +37,8 @@ namespace scone
 		std::vector< Real > m_StepLengths;
 
 		// settings
-		std::vector< Body* > m_GaitBodies;
+		Body* m_UpperBody;
+		std::vector< Body* > m_BaseBodies;
 		Real GetGaitDist( const Model &model );
 
 		bool HasNewFootContact( const Model& model );
@@ -43,6 +48,7 @@ namespace scone
 		Vec3 m_InitialComPos;
 		Real m_InitGaitDist;
 		Real m_PrevGaitDist;
+		Real m_GaitDist;
 
 		PropNode m_Report;
 

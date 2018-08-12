@@ -21,19 +21,17 @@ namespace scone
 		INIT_PROPERTY( props, min_step_duration, 0.1 );
 		INIT_PROPERTY( props, initiation_step_count, 3 );
 
-		// get string of gait bodies
-		String gait_bodies;
-		INIT_PROPERTY( props, gait_bodies, String() );
+		INIT_PROPERTY( props, upper_body, "torso" );
+		INIT_PROPERTY( props, base_bodies, "toes_l toes_r" );
+
+		m_UpperBody = &( *FindByName( model.GetBodies(), upper_body ) );
 
 		// extract individual body names from gait_bodies string
-		auto tokens = xo::split_str( gait_bodies, ", " );
+		auto tokens = xo::split_str( base_bodies, ";, " );
 		for ( const String& t : tokens )
-		{
-			Body& b = *FindByName( model.GetBodies(), t );
-			m_GaitBodies.push_back( &b );
-		}
+			m_BaseBodies.push_back( &( *FindByName( model.GetBodies(), t ) ) );
 
-		m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
+		m_GaitDist = m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
 		m_InitialComPos = model.GetComPos();
 
 		// add an initial sample to m_MinVelocityMeasure because the first sample is ignored with NoInterpolation
@@ -55,6 +53,9 @@ namespace scone
 		bool terminate = false;
 		terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
 
+		// store gaitdist
+		m_GaitDist = GetGaitDist( model );
+
 		// update min_velocity measure on new step
 		if ( HasNewFootContact( model ) )
 			UpdateVelocityMeasure( model, timestamp );
@@ -70,15 +71,15 @@ namespace scone
 
 	double GaitMeasure::GetResult( Model& model )
 	{
+		// add final step and penalty to min_velocity measure
+		// TODO: only when not at the end of the simulation?
+		UpdateVelocityMeasure( model, model.GetTime() );
+
 		// precompute some values
 		double distance = GetGaitDist( model ) - m_InitGaitDist;
 		double speed = distance / model.GetTime();
 		double duration = model.GetSimulationEndTime();
 		size_t step_count = m_StepLengths.size();
-
-		// add final step and penalty to min_velocity measure
-		// TODO: get rid of this? it's not a full step
-		UpdateVelocityMeasure( model, model.GetTime() );
 
 		// compute measure based on step data
 		double alt_measure = 0.0;
@@ -88,7 +89,7 @@ namespace scone
 		{
 			double step_vel = m_StepLengths[ step ] / m_StepDurations[ step ];
 			double range_error = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
-			double norm_vel = std::max( 0.0, 1.0 - ( fabs( range_error ) / min_velocity ) );
+			double norm_vel = xo::clamped( 1.0 - ( fabs( range_error ) / min_velocity ), -1.0, 1.0 );
 
 			log::TraceF( "%.3f: step=%d step_velocity=%.3f (%.3f/%.3f) range_error=%.3f norm_vel=%.3f",
 				step_time, step, step_vel, m_StepLengths[ step ], m_StepDurations[ step ], range_error, norm_vel );
@@ -118,6 +119,11 @@ namespace scone
 #endif
 	}
 
+	void GaitMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		frame[ "GaitDist" ] = m_GaitDist;
+	}
+
 	void GaitMeasure::UpdateVelocityMeasure( const Model &model, double timestamp )
 	{
 		double gait_dist = GetGaitDist( model );
@@ -129,12 +135,12 @@ namespace scone
 			m_StepDurations.push_back( dt );
 
 			double step_vel = step_length / dt;
-			double penalty = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
-			double norm_vel = std::max( 0.0, 1.0 - ( fabs( penalty ) / min_velocity ) );
+			double range_error = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
+			double norm_vel = xo::clamped( 1.0 - ( fabs( range_error ) / min_velocity ), -1.0, 1.0 );
 
 			m_VelocityMeasure.AddSample( timestamp, norm_vel );
-			log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) penalty=%.3f norm_vel=%.3f",
-				timestamp, step_vel, step_length, dt, penalty, norm_vel );
+			log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) range_error=%.3f norm_vel=%.3f",
+				timestamp, step_vel, step_length, dt, range_error, norm_vel );
 		}
 		m_PrevGaitDist = gait_dist;
 	}
@@ -143,13 +149,17 @@ namespace scone
 	{
 		// compute average of feet and Com (smallest 2 values)
 		// TODO: make body name configurable and find it in the constructor
-		xo::sorted_vector< double > distances;
-		for ( const LegUP& leg : model.GetLegs() )
-			distances.insert( leg->GetFootLink().GetChild( 0 ).GetBody().GetComPos().x );
-		distances.insert( model.GetComPos().x );
-
-		SCONE_ASSERT( distances.size() >= 2 );
+		auto com_x = model.GetComPos().x;
+		auto upper_x = m_UpperBody ? m_UpperBody->GetComPos().x : com_x;
+		auto base1_x = m_BaseBodies[ 0 ]->GetComPos().x;
+		auto base2_x = m_BaseBodies[ 1 ]->GetComPos().x;
+#if 0
+		xo::sorted_vector< double > distances{ com_x, toe1_x, toe2_x };
 		return ( distances[ 0 ] + distances[ 1 ] ) / 2;
+#else
+		auto front_toe = xo::max( base1_x, base2_x );
+		return xo::min( upper_x, front_toe );
+#endif
 	}
 
 	String GaitMeasure::GetClassSignature() const
