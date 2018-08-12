@@ -142,6 +142,7 @@ namespace scone
 	scone::Real GaitMeasure::GetGaitDist( const Model &model )
 	{
 		// compute average of feet and Com (smallest 2 values)
+		// TODO: make body name configurable and find it in the constructor
 		xo::sorted_vector< double > distances;
 		for ( const LegUP& leg : model.GetLegs() )
 			distances.insert( leg->GetFootLink().GetChild( 0 ).GetBody().GetComPos().x );
