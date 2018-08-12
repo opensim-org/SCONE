@@ -153,8 +153,8 @@ namespace scone
 		auto upper_x = m_UpperBody ? m_UpperBody->GetComPos().x : com_x;
 		auto base1_x = m_BaseBodies[ 0 ]->GetComPos().x;
 		auto base2_x = m_BaseBodies[ 1 ]->GetComPos().x;
-#if 0
-		xo::sorted_vector< double > distances{ com_x, toe1_x, toe2_x };
+#if 1
+		xo::sorted_vector< double > distances{ com_x, base1_x, base2_x };
 		return ( distances[ 0 ] + distances[ 1 ] ) / 2;
 #else
 		auto front_toe = xo::max( base1_x, base2_x );
