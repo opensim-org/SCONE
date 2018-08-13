@@ -11,15 +11,14 @@
 namespace scone
 {
 	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area ),
-	m_VelocityMeasure( Statistic<>::NoInterpolation )
+	Measure( props, par, model, area )
 	{
 		INIT_PROPERTY( props, termination_height, 0.5 );
 		INIT_PROPERTY( props, min_velocity, 0.5 );
 		INIT_PROPERTY( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
 		INIT_PROPERTY( props, load_threshold, 0.1 );
 		INIT_PROPERTY( props, min_step_duration, 0.1 );
-		INIT_PROPERTY( props, initiation_step_count, 3 );
+		INIT_PROPERTY( props, initiation_steps, 2 );
 
 		INIT_PROPERTY( props, upper_body, "torso" );
 		INIT_PROPERTY( props, base_bodies, "toes_l toes_r" );
@@ -31,11 +30,8 @@ namespace scone
 		for ( const String& t : tokens )
 			m_BaseBodies.push_back( &( *FindByName( model.GetBodies(), t ) ) );
 
-		m_GaitDist = m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
+		m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
 		m_InitialComPos = model.GetComPos();
-
-		// add an initial sample to m_MinVelocityMeasure because the first sample is ignored with NoInterpolation
-		m_VelocityMeasure.AddSample( 0.0, 0.0 );
 	}
 
 	GaitMeasure::~GaitMeasure()
@@ -50,113 +46,90 @@ namespace scone
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
 		// check termination
-		bool terminate = false;
-		terminate |= model.GetComPos().y < termination_height * m_InitialComPos.y; // COM too low
-
-		// store gaitdist
-		m_GaitDist = GetGaitDist( model );
+		if ( model.GetComPos().y < termination_height * m_InitialComPos.y )
+			return true;
 
 		// update min_velocity measure on new step
-		if ( HasNewFootContact( model ) )
-			UpdateVelocityMeasure( model, timestamp );
+		bool new_contact = HasNewFootContact( model );
+		TimeInSeconds dt = steps_.empty() ? timestamp : timestamp - steps_.back().time;
+		if ( new_contact && dt > min_step_duration )
+			AddStep( model, timestamp );
 
-		// handle termination
-		if ( terminate )
-		{
-			log::TraceF( "%.3f: Terminating simulation", timestamp );
-			return true;
-		}
-		else return false;
+		return false;
 	}
 
 	double GaitMeasure::GetResult( Model& model )
 	{
 		// add final step and penalty to min_velocity measure
 		// TODO: only when not at the end of the simulation?
-		UpdateVelocityMeasure( model, model.GetTime() );
+		AddStep( model, model.GetTime() );
 
 		// precompute some values
 		double distance = GetGaitDist( model ) - m_InitGaitDist;
 		double speed = distance / model.GetTime();
 		double duration = model.GetSimulationEndTime();
-		size_t step_count = m_StepLengths.size();
+		size_t step_count = steps_.size();
 
 		// compute measure based on step data
-		double alt_measure = 0.0;
-		int start_step = xo::clamped( int( step_count ) - initiation_step_count, 0, initiation_step_count );
-		TimeInSeconds step_time = 0.0;
-		for ( int step = start_step; step < step_count; ++step )
+		double step_measure = 0.0;
+		double step_dist = 0.0;
+		double step_time = 0.0;
+		int start_step = xo::clamped( int( step_count ) - initiation_steps, 0, initiation_steps );
+		for ( int step = 0; step < step_count; ++step )
 		{
-			double step_vel = m_StepLengths[ step ] / m_StepDurations[ step ];
-			double range_error = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
-			double norm_vel = xo::clamped( 1.0 - ( fabs( range_error ) / min_velocity ), -1.0, 1.0 );
+			double dt = step > 0 ? steps_[ step ].time - steps_[ step - 1 ].time : steps_[ step ].time;
+			double step_vel = steps_[ step ].length / dt;
+			double step_penalty = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
+			double norm_vel = xo::clamped( 1.0 - ( fabs( step_penalty ) / min_velocity ), -1.0, 1.0 );
 
-			log::TraceF( "%.3f: step=%d step_velocity=%.3f (%.3f/%.3f) range_error=%.3f norm_vel=%.3f",
-				step_time, step, step_vel, m_StepLengths[ step ], m_StepDurations[ step ], range_error, norm_vel );
+			log::TraceF( "%.3f: step=%d vel=%.3f (%.3f/%.3f) penalty=%.3f norm_vel=%.3f %s",
+				steps_[ step ].time, step, step_vel, steps_[ step ].length, dt, step_penalty, norm_vel, step < start_step ? "" : "*" );
 
-			alt_measure += m_StepDurations[ step ] * norm_vel;
-			step_time += m_StepDurations[ step ];
+			if ( step >= start_step )
+			{
+				step_measure += dt * norm_vel;
+				step_time += dt;
+				step_dist += steps_[ step ].length;
+			}
 		}
 
-		// add penalty for falling early
 		if ( model.GetTime() < duration )
-		{
-			m_VelocityMeasure.AddSample( duration, 0 );
 			step_time += duration - model.GetTime();
-		}
 
+		// set results
 		GetReport().set( "speed", speed );
 		GetReport().set( "step_count", step_count );
-		GetReport().set( "step_length", xo::average( m_StepLengths ) );
-		GetReport().set( "step_duration", xo::average( m_StepDurations ) );
+		GetReport().set( "step_length", step_dist / ( step_dist - start_step ) );
+		GetReport().set( "step_duration", steps_.empty() ? 0 : ( steps_.back().time - steps_[ start_step ].time ) / ( step_dist - start_step ) );
 
-#if 0
-		GetReport().set( "alt_result", 1.0 - alt_measure / step_time );
-		return 1.0 - m_VelocityMeasure.GetAverage();
-#else
-		GetReport().set( "org_result", 1.0 - m_VelocityMeasure.GetAverage() );
-		return 1.0 - alt_measure / step_time;
-#endif
+		return 1.0 - step_measure / step_time;
 	}
 
 	void GaitMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ "GaitDist" ] = m_GaitDist;
+		frame[ "step_length" ] = steps_.empty() ? 0 : steps_.back().length;
 	}
 
-	void GaitMeasure::UpdateVelocityMeasure( const Model &model, double timestamp )
+	void GaitMeasure::AddStep( const Model &model, double timestamp )
 	{
 		double gait_dist = GetGaitDist( model );
 		double step_length = gait_dist - m_PrevGaitDist;
-		double dt = model.GetTime() - m_VelocityMeasure.GetPrevTime();
-		if ( dt > min_step_duration )
-		{
-			m_StepLengths.push_back( step_length );
-			m_StepDurations.push_back( dt );
 
-			double step_vel = step_length / dt;
-			double range_error = Range< double >( min_velocity, max_velocity ).GetRangeViolation( step_vel );
-			double norm_vel = xo::clamped( 1.0 - ( fabs( range_error ) / min_velocity ), -1.0, 1.0 );
-
-			m_VelocityMeasure.AddSample( timestamp, norm_vel );
-			log::TraceF( "%.3f: step_velocity=%.3f (%.3f/%.3f) range_error=%.3f norm_vel=%.3f",
-				timestamp, step_vel, step_length, dt, range_error, norm_vel );
-		}
+		steps_.emplace_back( Step{ model.GetTime(), step_length } );
 		m_PrevGaitDist = gait_dist;
 	}
 
 	scone::Real GaitMeasure::GetGaitDist( const Model &model )
 	{
 		// compute average of feet and Com (smallest 2 values)
-		// TODO: make body name configurable and find it in the constructor
 		auto com_x = model.GetComPos().x;
-		auto upper_x = m_UpperBody ? m_UpperBody->GetComPos().x : com_x;
 		auto base1_x = m_BaseBodies[ 0 ]->GetComPos().x;
 		auto base2_x = m_BaseBodies[ 1 ]->GetComPos().x;
 #if 1
 		xo::sorted_vector< double > distances{ com_x, base1_x, base2_x };
 		return ( distances[ 0 ] + distances[ 1 ] ) / 2;
 #else
+		auto upper_x = m_UpperBody ? m_UpperBody->GetComPos().x : com_x;
 		auto front_toe = xo::max( base1_x, base2_x );
 		return xo::min( upper_x, front_toe );
 #endif
@@ -181,11 +154,7 @@ namespace scone
 		for ( size_t idx = 0; idx < model.GetLegCount(); ++idx )
 		{
 			bool contact = model.GetLeg( idx ).GetLoad() >= load_threshold;
-			if ( contact && !m_PrevContactState[ idx ] )
-			{
-				has_new_contact = true;
-				//log::TraceF( "%.3f: Step detected for leg %d", model.GetTime(), idx );
-			}
+			has_new_contact |= contact && !m_PrevContactState[ idx ];
 			m_PrevContactState[ idx ] = contact;
 		}
 

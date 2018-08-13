@@ -13,7 +13,7 @@ namespace scone
 		virtual ~GaitMeasure();
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		void UpdateVelocityMeasure( const Model &model, double timestamp );
+		void AddStep( const Model &model, double timestamp );
 
 		virtual double GetResult( Model& model ) override;
 
@@ -23,7 +23,7 @@ namespace scone
 		Real max_velocity;
 		Real load_threshold;
 		Real min_step_duration;
-		int initiation_step_count;
+		int initiation_steps;
 		String upper_body;
 		String base_bodies;
 
@@ -33,8 +33,11 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< Real > m_StepDurations;
-		std::vector< Real > m_StepLengths;
+		struct Step {
+			TimeInSeconds time;
+			Real length;
+		};
+		std::vector< Step > steps_;
 
 		// settings
 		Body* m_UpperBody;
@@ -42,16 +45,12 @@ namespace scone
 		Real GetGaitDist( const Model &model );
 
 		bool HasNewFootContact( const Model& model );
-
 		std::vector< bool > m_PrevContactState;
 
 		Vec3 m_InitialComPos;
 		Real m_InitGaitDist;
 		Real m_PrevGaitDist;
-		Real m_GaitDist;
 
 		PropNode m_Report;
-
-		Statistic<> m_VelocityMeasure;
 	};
 }
