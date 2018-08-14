@@ -64,7 +64,6 @@ public slots:
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void fixViewCheckboxes();
 	void updateTabTitles();
-	void performReflexAnalysis();
 
 public:
 	bool close_all;
@@ -88,7 +87,6 @@ private:
 
 	bool createModel( const String& par_file, bool force_evaluation = false );
 
-	//scone::StudioScene manager;
 	Ui::SconeStudioClass ui;
 
 	QTimer backgroundUpdateTimer;

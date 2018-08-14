@@ -58,7 +58,6 @@ scene_( true )
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
-	//addMenuAction( toolsMenu, "Perform &Reflex Analysis", this, &SconeStudio::performReflexAnalysis, QKeySequence(), true );
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	// create window menu
@@ -203,24 +202,21 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
-	ui.playControl->reset();
-	ui.abortButton->setChecked( false );
-	ui.progressBar->setValue( 0 );
-	ui.progressBar->setFormat( " Evaluating (%p%)" );
-	ui.stackedWidget->setCurrentIndex( 1 );
+	SCONE_ASSERT( model );
+
+	QProgressDialog* dlg = new QProgressDialog( ( "Evaluating " + model->GetFileName().string() ).c_str(), "Abort", 0, 1000, this );
+	dlg->setWindowModality( Qt::WindowModal );
 
 	const double step_size = 0.05;
 	int vis_step = 0;
 	xo::timer real_time;
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
-		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
-		//log::trace( "Evaluating to ", t );
-		QApplication::processEvents();
-		if ( ui.abortButton->isChecked() )
+		dlg->setValue( int( 1000 * t / model->GetMaxTime() ) );
+		if ( dlg->wasCanceled() )
 		{
 			model->FinalizeEvaluation( false );
-			ui.stackedWidget->setCurrentIndex( 0 );
+			delete dlg;
 			return;
 		}
 		setTime( t, vis_step++ % 5 == 0 );
@@ -230,19 +226,20 @@ void SconeStudio::evaluate()
 	auto real_dur = real_time.seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
-	ui.progressBar->setValue( 100 );
-
-	QApplication::processEvents();
+	dlg->setValue( 1000 );
 
 	if ( model->IsEvaluating() )
 		model->EvaluateTo( model->GetMaxTime() );
 	model->UpdateVis( model->GetTime() );
 
-	ui.stackedWidget->setCurrentIndex( 0 );
+	delete dlg;
 }
 
 void SconeStudio::createVideo()
 {
+	if ( !model )
+		return error( "No Scenario", "There is no scenario open" );
+
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 	if ( captureFilename.isEmpty() )
 		return;
@@ -422,6 +419,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	try
 	{
 		model.reset();
+		storageModel.setStorage( nullptr );
 		model = StudioModelUP( new StudioModel( scene_, path( par_file ), force_evaluation ) );
 	}
 	catch ( std::exception& e )
@@ -664,23 +662,4 @@ void SconeStudio::closeEvent( QCloseEvent *e )
 	cfg.setValue( "recentFiles", recentFiles );
 
 	QMainWindow::closeEvent( e );
-}
-
-void SconeStudio::performReflexAnalysis()
-{
-	if ( !model || model->IsEvaluating() )
-		return ( void )QMessageBox::information( this, "Cannot perform analysis", "No model evaluated" );
-
-	path par_file( currentParFile.toStdString() );
-
-	ReflexAnalysisObjective reflex_objective( model->GetData(), "use_force=1;use_length=0;use_velocity=0" );
-	reflex_objective.set_delays( "neural_delays.pn" );
-	
-	spot::file_reporter frep( par_file.replace_extension( "analysis" ) );
-	spot::cma_optimizer cma( reflex_objective );
-	cma.set_max_threads( 32 );
-	cma.add_reporter< spot::console_reporter >( 0, 2 );
-	cma.add_reporter< spot::file_reporter >( par_file.replace_extension( "analysis" ) );
-	cma.run( 1000 );
-	reflex_objective.save_report( par_file.replace_extension( "reflex_analysis" ), cma.best_point() );
 }

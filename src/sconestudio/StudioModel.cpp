@@ -45,7 +45,7 @@ namespace scone
 			log::info( "Reading ", sto_file.string() );
 			ReadStorageSto( data, sto_file );
 			InitStateDataIndices();
-			log::trace( "File read in ", t.seconds(), " seconds" );
+			log::trace( "Read ", sto_file.string(), " in ", t.seconds(), " seconds" );
 		}
 		else
 		{
@@ -71,10 +71,7 @@ namespace scone
 	}
 
 	StudioModel::~StudioModel()
-	{
-		if ( is_evaluating )
-			log::warning( "Closing model while thread is still running" );
-	}
+	{}
 
 	void StudioModel::InitStateDataIndices()
 	{
@@ -245,7 +242,7 @@ namespace scone
 		auto rate = ( model->GetData().GetFrameCount() - 1 ) / model->GetData().Back().GetTime();
 		auto target = GetSconeSettings().get< double >( "data.frequency" );
 		auto stride = xo::max( 1, int( std::round( rate / target ) ) );
-		log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
+		//log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
 
 		// copy data and init data
 		data = model->GetData().CopySlice( 0, 0, stride );

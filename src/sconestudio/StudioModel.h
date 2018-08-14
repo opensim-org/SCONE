@@ -42,6 +42,7 @@ namespace scone
 		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
 
 		void ApplyViewSettings( const ViewFlags& f );
+		const path& GetFileName() { return filename; }
 
 	private:
 		struct MuscleVis
