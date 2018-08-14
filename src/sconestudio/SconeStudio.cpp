@@ -204,35 +204,34 @@ void SconeStudio::evaluate()
 {
 	SCONE_ASSERT( model );
 
-	QProgressDialog* dlg = new QProgressDialog( ( "Evaluating " + model->GetFileName().string() ).c_str(), "Abort", 0, 1000, this );
-	dlg->setWindowModality( Qt::WindowModal );
+	QProgressDialog dlg( ( "Evaluating " + model->GetFileName().string() ).c_str(), "Abort", 0, 1000, this );
+	dlg.setWindowModality( Qt::WindowModal );
 
 	const double step_size = 0.05;
 	int vis_step = 0;
 	xo::timer real_time;
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
-		dlg->setValue( int( 1000 * t / model->GetMaxTime() ) );
-		if ( dlg->wasCanceled() )
+		dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
+		if ( dlg.wasCanceled() )
 		{
 			model->FinalizeEvaluation( false );
-			delete dlg;
-			return;
+			break;
 		}
 		setTime( t, vis_step++ % 5 == 0 );
 	}
+
+	// make sure evaluation is finished
+	if ( model->IsEvaluating() )
+		model->EvaluateTo( model->GetMaxTime() );
 
 	// report duration
 	auto real_dur = real_time.seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
-	dlg->setValue( 1000 );
 
-	if ( model->IsEvaluating() )
-		model->EvaluateTo( model->GetMaxTime() );
+	dlg.setValue( 1000 );
 	model->UpdateVis( model->GetTime() );
-
-	delete dlg;
 }
 
 void SconeStudio::createVideo()
