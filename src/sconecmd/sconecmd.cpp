@@ -7,7 +7,7 @@
 #include <thread>
 #include "xo/system/log_sink.h"
 #include "xo/container/prop_node_tools.h"
-#include "spot/optimization_pool.h"
+#include "spot/optimizer_pool.h"
 #include <xutility>
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
@@ -56,16 +56,16 @@ int main(int argc, char* argv[])
 			{
 				// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
 				XO_NOT_IMPLEMENTED;
-				spot::optimization_pool op( promiseWindowArg.getValue() );
-				for ( int i = 0; i < multiArg.getValue(); ++i )
-				{
-					OptimizerUP o = PrepareOptimization( props, scenario_file );
-					o->SetConsoleOutput( !quietOutput.getValue() );
-					o->SetStatusOutput( statusOutput.getValue() );
-					if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
-					// TODO: op.push_back( std::move( o ) );
-				}
-				op.run();
+				//spot::optimizer_pool op( promiseWindowArg.getValue() );
+				//for ( int i = 0; i < multiArg.getValue(); ++i )
+				//{
+				//	OptimizerUP o = PrepareOptimization( props, scenario_file );
+				//	o->SetConsoleOutput( !quietOutput.getValue() );
+				//	o->SetStatusOutput( statusOutput.getValue() );
+				//	if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+				//	// TODO: op.push_back( std::move( o ) );
+				//}
+				//op.run();
 			}
 			else
 			{

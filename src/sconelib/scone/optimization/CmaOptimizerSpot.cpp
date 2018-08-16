@@ -79,7 +79,7 @@ namespace scone
 
 		// report results
 		if ( cma.GetStatusOutput() )
-			cma.OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", cma.current_step(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
+			cma.OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", cma.step_count(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
 
 		if ( new_best )
 		{
