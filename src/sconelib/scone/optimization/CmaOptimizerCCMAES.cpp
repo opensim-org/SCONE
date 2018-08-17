@@ -82,7 +82,7 @@ namespace scone
 					printf( " A=%.3f O=%.3f S=%.3f", current_avg_fitness, cur_trend.offset(), cur_trend.slope() );
 
 				if ( GetStatusOutput() )
-					OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", gen, current_best, current_med_fitness, current_avg_fitness, cur_trend.offset(), cur_trend.slope() ) );
+					OutputStatus( "generation", xo::stringf( "%d %g %g %g %g %g", gen, current_best, current_med_fitness, current_avg_fitness, cur_trend.offset(), cur_trend.slope() ) );
 
 				// update history
 				history_str << gen << "\t" << current_best << "\t" << current_avg_fitness << "\t" << cma.predicted_fitness( max_generations ) << "\t" << cur_trend.slope() << "\t" << cur_trend.offset() << "\n";
