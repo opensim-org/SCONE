@@ -44,6 +44,7 @@ namespace scone
 
 		std::vector< FunctionUP > m_Functions;
 		std::vector< ActInfo > m_ActInfos;
+		bool symmetric;
 
 	private: // non-copyable and non-assignable
 		FeedForwardController( const FeedForwardController& );

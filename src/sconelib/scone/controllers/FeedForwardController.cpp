@@ -14,7 +14,7 @@ namespace scone
 	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 		Controller( props, par, model, target_area )
 	{
-		DECLARE_AND_INIT( props, bool, symmetric, true );
+		INIT_PROPERTY( props, symmetric, true );
 		INIT_PROPERTY( props, number_of_modes, size_t( 0 ) );
 
 		// setup actuator info
