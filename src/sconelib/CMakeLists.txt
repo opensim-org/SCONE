@@ -19,7 +19,6 @@ set(CORE_MATH_FILES
 	scone/core/Function.h
 	scone/core/PieceWiseConstantFunction.cpp
 	scone/core/PieceWiseConstantFunction.h
-	scone/core/PieceWiseFunction.h
 	scone/core/PieceWiseLinearFunction.cpp
 	scone/core/PieceWiseLinearFunction.h
 	scone/core/Polynomial.h	

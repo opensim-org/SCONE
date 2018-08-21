@@ -1,27 +1,24 @@
 #pragma once
 
 #include "Function.h"
-#include "OpenSim/Common/PiecewiseLinearFunction.h"
-#include "PieceWiseFunction.h"
 #include "scone/core/string_tools.h"
 
 namespace scone
 {
-	class SCONE_API PieceWiseLinearFunction : public PieceWiseFunction
+	class SCONE_API PieceWiseLinearFunction : public Function
 	{
 	public:
-		PieceWiseLinearFunction( bool flatExtrapolation );
 		PieceWiseLinearFunction( const PropNode& props, Params& par );
 		virtual ~PieceWiseLinearFunction();
 
 		virtual Real GetValue( Real x ) override;
-		OpenSim::PiecewiseLinearFunction& GetOsFunc() { return m_osFunc; }
 
 		// a signature describing the function
-		virtual String GetSignature() override { return stringf( "L%d", m_osFunc.getSize() ); }
+		virtual String GetSignature() override;
 
 	private:
-		OpenSim::PiecewiseLinearFunction m_osFunc;
+		struct Impl;
+		u_ptr< Impl > m_pImpl;
 		bool flat_extrapolation;
 	};
 }
