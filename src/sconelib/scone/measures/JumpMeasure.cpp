@@ -10,13 +10,13 @@ namespace scone
 		init_min_x( 10000.0 ),
 		recover_start_time( 0 )
 	{
-		INIT_PROPERTY( props, termination_height, 0.5 );
-		INIT_PROPERTY( props, prepare_time, 0.2 );
-		INIT_PROPERTY( props, recover_time, 1.0 );
-		INIT_PROPERTY( props, terminate_on_peak, true );
-		INIT_PROPERTY( props, negate_result, false );
-		INIT_PROPERTY( props, jump_type, int( HighJump ) );
-		INIT_PROPERTY( props, minimize, false ); // defaults to false
+		INIT_PROP( props, termination_height, 0.5 );
+		INIT_PROP( props, prepare_time, 0.2 );
+		INIT_PROP( props, recover_time, 1.0 );
+		INIT_PROP( props, terminate_on_peak, true );
+		INIT_PROP( props, negate_result, false );
+		INIT_PROP( props, jump_type, int( HighJump ) );
+		INIT_PROP( props, minimize, false ); // defaults to false
 
 		if ( auto body = props.try_get< String >( "body" ) )
 			target_body = FindByName( model.GetBodies(), *body ).get();

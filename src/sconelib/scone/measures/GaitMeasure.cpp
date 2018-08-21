@@ -13,15 +13,15 @@ namespace scone
 	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Measure( props, par, model, area )
 	{
-		INIT_PROPERTY( props, termination_height, 0.5 );
-		INIT_PROPERTY( props, min_velocity, 0.5 );
-		INIT_PROPERTY( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
-		INIT_PROPERTY( props, load_threshold, 0.1 );
-		INIT_PROPERTY( props, min_step_duration, 0.1 );
-		INIT_PROPERTY( props, initiation_steps, 2 );
+		INIT_PROP( props, termination_height, 0.5 );
+		INIT_PROP( props, min_velocity, 0.5 );
+		INIT_PROP( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
+		INIT_PROP( props, load_threshold, 0.1 );
+		INIT_PROP( props, min_step_duration, 0.1 );
+		INIT_PROP( props, initiation_steps, 2 );
 
-		INIT_PROPERTY( props, upper_body, "torso" );
-		INIT_PROPERTY( props, base_bodies, "toes_l toes_r" );
+		INIT_PROP( props, upper_body, "torso" );
+		INIT_PROP( props, base_bodies, "toes_l toes_r" );
 
 		m_UpperBody = &( *FindByName( model.GetBodies(), upper_body ) );
 

@@ -70,19 +70,19 @@ namespace scone
 		double pre_control_simulation_time;
 		double initial_leg_load;
 
-		INIT_PROPERTY( props, integration_accuracy, 0.001 );
-		INIT_PROPERTY( props, integration_method, String( "RungeKuttaMerson" ) );
-		INIT_PROPERTY( props, max_step_size, 0.001 );
-		INIT_PROPERTY( props, fixed_control_step_size, 0.001 );
-		INIT_PROPERTY( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
+		INIT_PROP( props, integration_accuracy, 0.001 );
+		INIT_PROP( props, integration_method, String( "RungeKuttaMerson" ) );
+		INIT_PROP( props, max_step_size, 0.001 );
+		INIT_PROP( props, fixed_control_step_size, 0.001 );
+		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
 
-		INIT_PROPERTY_REQUIRED( props, model_file );
-		INIT_PROPERTY( props, state_init_file, path() );
-		INIT_PROPERTY( props, probe_class, String() );
-		INIT_PROPERTY( props, pre_control_simulation_time, 0.0 );
-		INIT_PROPERTY( props, initial_leg_load, 0.2 );
+		INIT_PROP_REQUIRED( props, model_file );
+		INIT_PROP( props, state_init_file, path() );
+		INIT_PROP( props, probe_class, String() );
+		INIT_PROP( props, pre_control_simulation_time, 0.0 );
+		INIT_PROP( props, initial_leg_load, 0.2 );
 
-		INIT_PROPERTY( props, create_body_forces, false );
+		INIT_PROP( props, create_body_forces, false );
 
 		// always set create_body_forces when there's a PerturbationController
 		// TODO: think of a nicer, more generic way of dealing with this issue

@@ -30,12 +30,12 @@ namespace scone
 		range.max = Degree( props.get< Real >( "max_deg", 0.0 ) );
 		velocity_range.min = Degree( props.get< Real >( "min_deg_s", 0.0 ) );
 		velocity_range.max = Degree( props.get< Real >( "max_deg_s", 0.0 ) );
-		INIT_PROPERTY( props, squared_range_penalty, 0 );
-		INIT_PROPERTY( props, abs_range_penalty, 0 );
-		INIT_PROPERTY( props, squared_velocity_range_penalty, 0 );
-		INIT_PROPERTY( props, abs_velocity_range_penalty, 0 );
-		INIT_PROPERTY( props, squared_force_penalty, 0 );
-		INIT_PROPERTY( props, abs_force_penalty, 0 );
+		INIT_PROP( props, squared_range_penalty, 0 );
+		INIT_PROP( props, abs_range_penalty, 0 );
+		INIT_PROP( props, squared_velocity_range_penalty, 0 );
+		INIT_PROP( props, abs_velocity_range_penalty, 0 );
+		INIT_PROP( props, squared_force_penalty, 0 );
+		INIT_PROP( props, abs_force_penalty, 0 );
 	}
 
 	bool DofLimitMeasure::UpdateMeasure( const Model& model, double timestamp )

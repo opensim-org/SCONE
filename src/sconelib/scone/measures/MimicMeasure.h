@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Measure.h"
-#include "../core/Statistic.h"
+#include "scone/core/Statistic.h"
 #include "xo/string/pattern_matcher.h"
 
 namespace scone

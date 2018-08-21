@@ -13,7 +13,7 @@ namespace scone
 	SimulationObjective::SimulationObjective( const PropNode& props ) :
 	ModelObjective( props )
 	{
-		INIT_PROPERTY( props, max_duration, 6000.0 );
+		INIT_PROP( props, max_duration, 6000.0 );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( props.get_child( "Model" ), info_ );

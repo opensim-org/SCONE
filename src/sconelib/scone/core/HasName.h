@@ -4,6 +4,7 @@
 #include "Exception.h"
 #include <algorithm>
 #include <vector>
+#include "types.h"
 
 namespace scone
 {

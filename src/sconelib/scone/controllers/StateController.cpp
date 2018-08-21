@@ -2,6 +2,7 @@
 
 #include "scone/core/Factories.h"
 #include "scone/core/string_tools.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {

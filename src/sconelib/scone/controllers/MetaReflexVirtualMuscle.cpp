@@ -62,11 +62,11 @@ namespace scone
 
 			bal_mrp.Init( balprops, par, model );
 
-			INIT_PARAM_NAMED( balprops, par, body_angvel_sensor_gain, "KAV", model.balance_sensor_ori_vel_gain );
+			INIT_PAR_NAMED( balprops, par, body_angvel_sensor_gain, "KAV", model.balance_sensor_ori_vel_gain );
 		}
 
 		// TODO: move to muscle
-		INIT_PROPERTY_REQUIRED( props, delay );
+		INIT_PROP_REQUIRED( props, delay );
 	}
 
 	void MetaReflexVirtualMuscle::UpdateLocalBalance( const Vec3& global_balance )

@@ -8,8 +8,8 @@ namespace scone
 		max_simulation_time( 0.0 ),
 		integration_accuracy( 0.0 )
 	{
-		INIT_PROPERTY( props, integration_accuracy, 0.00001 );
-		INIT_PROPERTY( props, max_simulation_time, 10000.0 );
+		INIT_PROP( props, integration_accuracy, 0.00001 );
+		INIT_PROP( props, max_simulation_time, 10000.0 );
 	}
 
 	Simulation::~Simulation()

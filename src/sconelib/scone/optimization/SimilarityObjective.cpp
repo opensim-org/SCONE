@@ -1,10 +1,10 @@
 #include "SimilarityObjective.h"
-#include "../core/Factories.h"
+#include "scone/core/Factories.h"
 #include "xo/container/prop_node_tools.h"
 #include "../controllers/cs_tools.h"
 #include "spot/search_point.h"
 #include "../controllers/NeuralController.h"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {

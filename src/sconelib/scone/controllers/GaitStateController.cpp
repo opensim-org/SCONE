@@ -36,13 +36,13 @@ namespace scone
 		Controller( props, par, model, target_area )
 	{
 		// TODO: move contact_force_threshold to leg?
-		INIT_PARAM( props, par, stance_load_threshold, 0.1 );
-		INIT_PARAM( props, par, swing_load_threshold, stance_load_threshold );
-		INIT_PARAM( props, par, landing_threshold, 0.0 );
-		INIT_PARAM( props, par, late_stance_threshold, 0.0 );
-		INIT_PARAM( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
-		INIT_PROPERTY( props, leg_load_sensor_delay, 0.0 );
-		INIT_PROPERTY( props, override_leg_length, 0.0 );
+		INIT_PAR( props, par, stance_load_threshold, 0.1 );
+		INIT_PAR( props, par, swing_load_threshold, stance_load_threshold );
+		INIT_PAR( props, par, landing_threshold, 0.0 );
+		INIT_PAR( props, par, late_stance_threshold, 0.0 );
+		INIT_PAR( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
+		INIT_PROP( props, leg_load_sensor_delay, 0.0 );
+		INIT_PROP( props, override_leg_length, 0.0 );
 
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )

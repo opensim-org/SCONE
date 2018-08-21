@@ -2,6 +2,8 @@
 
 #include "scone/core/PropNode.h"
 #include "scone/optimization/Params.h"
+#include "scone/core/Exception.h"
+#include "scone/core/types.h"
 
 namespace scone
 {

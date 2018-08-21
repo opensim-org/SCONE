@@ -7,11 +7,11 @@
 #include "scone/core/string_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Factories.h"
-#include "../core/StorageIo.h"
+#include "scone/core/StorageIo.h"
 #include "scone/model/Muscle.h"
 #include <vector>
 #include "xo/container/prop_node.h"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "xo/container/container_tools.h"
 
 namespace scone

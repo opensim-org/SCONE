@@ -5,6 +5,7 @@
 #include "scone/core/HasData.h"
 #include "scone/model/State.h"
 #include "scone/optimization/Params.h"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
@@ -30,7 +31,7 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 		// default implementation doesn't store anything
-		virtual void WriteResult( const path& file ) const {}
+		virtual void WriteResult( const xo::path& file ) const {}
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }

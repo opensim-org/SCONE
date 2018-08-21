@@ -3,7 +3,7 @@
 #include "scone/model/Actuator.h"
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
-#include "../core/HasName.h"
+#include "scone/core/HasName.h"
 #include "NeuralController.h"
 
 namespace scone

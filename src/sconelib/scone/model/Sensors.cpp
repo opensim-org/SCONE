@@ -65,7 +65,7 @@ namespace scone
 	DofSensor( pn, par, model, target_area )
 	{
 		m_pRootDof = nullptr;
-		INIT_PARAM_NAMED( pn, par, m_KV, "kv", 0.0 );
+		INIT_PAR_NAMED( pn, par, m_KV, "kv", 0.0 );
 	}
 
 	Real DofPosVelSensor::GetValue() const
@@ -129,8 +129,8 @@ namespace scone
 		else log::warning( "Could not find Dof for balance sensor: " + String( g_PelvisNames[ m_Plane ] ) );
 
 		ScopedParamSetPrefixer prefixer( par, GetName() );
-		INIT_PARAM_NAMED( pn, par, m_PosGain, "kp", 1.0 );
-		INIT_PARAM_NAMED( pn, par, m_VelGain, "kd", 0.0 );
+		INIT_PAR_NAMED( pn, par, m_PosGain, "kp", 1.0 );
+		INIT_PAR_NAMED( pn, par, m_VelGain, "kd", 0.0 );
 	}
 
 	OrientationSensor::OrientationSensor( Model& model, Plane plane, Real posgain, Real velgain ) :

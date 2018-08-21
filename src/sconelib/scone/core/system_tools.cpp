@@ -18,6 +18,7 @@
 #include "xo/utility/types.h"
 #include "xo/filesystem/filesystem.h"
 #include <mutex>
+#include "Exception.h"
 
 namespace scone
 {

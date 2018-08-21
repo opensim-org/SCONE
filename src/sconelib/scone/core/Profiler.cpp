@@ -2,6 +2,7 @@
 #include "string_tools.h"
 
 #include <algorithm>
+#include "Exception.h"
 
 namespace scone
 {

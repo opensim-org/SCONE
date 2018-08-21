@@ -10,16 +10,16 @@ namespace scone
 		Measure( props, par, model, area ),
 		m_pTargetBody( nullptr )
 	{
-		INIT_PROPERTY_REQUIRED( props, body );
-		INIT_PROPERTY( props, offset, Vec3::zero() );
-		INIT_PROPERTY_REQUIRED( props, axes_to_measure );
-		INIT_PROPERTY( props, relative_to_model_com, false );
-		INIT_PROPERTY( props, squared_range_penalty, 0.0 );
-		INIT_PROPERTY( props, abs_range_penalty, 0.0 );
-		INIT_PROPERTY( props, squared_velocity_range_penalty, 0.0 );
-		INIT_PROPERTY( props, abs_velocity_range_penalty, 0.0 );
-		INIT_PROPERTY( props, squared_acceleration_range_penalty, 0.0 );
-		INIT_PROPERTY( props, abs_acceleration_range_penalty, 0.0 );
+		INIT_PROP_REQUIRED( props, body );
+		INIT_PROP( props, offset, Vec3::zero() );
+		INIT_PROP_REQUIRED( props, axes_to_measure );
+		INIT_PROP( props, relative_to_model_com, false );
+		INIT_PROP( props, squared_range_penalty, 0.0 );
+		INIT_PROP( props, abs_range_penalty, 0.0 );
+		INIT_PROP( props, squared_velocity_range_penalty, 0.0 );
+		INIT_PROP( props, abs_velocity_range_penalty, 0.0 );
+		INIT_PROP( props, squared_acceleration_range_penalty, 0.0 );
+		INIT_PROP( props, abs_acceleration_range_penalty, 0.0 );
 
 		// find target body
 		if ( !body.empty() )

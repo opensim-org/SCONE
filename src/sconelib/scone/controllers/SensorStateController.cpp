@@ -53,8 +53,8 @@ namespace scone
 		INIT_PROP_REQUIRED( pn, name );
 
 		ScopedParamSetPrefixer pfx( par, name + "." );
-		INIT_PARAM( pn, par, load_delta, 0.0 );
-		INIT_PARAM( pn, par, sag_delta, 0.0 );
+		INIT_PAR( pn, par, load_delta, 0.0 );
+		INIT_PAR( pn, par, sag_delta, 0.0 );
 
 		if ( a.mirrored ) name += "_mirrored";
 		mirrored = a.mirrored;

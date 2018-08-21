@@ -4,6 +4,7 @@
 #include "spot/stop_condition.h"
 #include "spot/file_reporter.h"
 #include "spot/console_reporter.h"
+#include "scone/core/Exception.h"
 
 namespace scone
 {

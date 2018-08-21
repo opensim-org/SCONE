@@ -13,10 +13,10 @@ namespace scone
 	public:
 		RangePenalty( const PropNode& prop )
 		{
-			INIT_PROPERTY_NAMED( prop, range.min, "min", T( 0 ) );
-			INIT_PROPERTY_NAMED( prop, range.max, "max", T( 0 ) );
-			INIT_PROPERTY( prop, abs_range_penalty, T( 0 ) );
-			INIT_PROPERTY( prop, squared_range_penalty, T( 0 ) );
+			INIT_PROP_NAMED( prop, range.min, "min", T( 0 ) );
+			INIT_PROP_NAMED( prop, range.max, "max", T( 0 ) );
+			INIT_PROP( prop, abs_range_penalty, T( 0 ) );
+			INIT_PROP( prop, squared_range_penalty, T( 0 ) );
 		}
 
 		void AddSample( TimeInSeconds timestamp, const T& value )

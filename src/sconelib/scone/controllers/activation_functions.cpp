@@ -1,5 +1,5 @@
 #include "activation_functions.h"
-#include "../core/Exception.h"
+#include "scone/core/Exception.h"
 
 namespace scone
 {

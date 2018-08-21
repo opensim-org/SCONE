@@ -33,9 +33,9 @@ namespace scone
 	thread_safe_simulation( false ),
 	m_Measure( nullptr )
 	{
-		INIT_PROPERTY( props, sensor_delay_scaling_factor, 1.0 );
-		INIT_PARAM( props, par, balance_sensor_delay, 0.0 );
-		INIT_PARAM( props, par, balance_sensor_ori_vel_gain, 0.0 );
+		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
+		INIT_PAR( props, par, balance_sensor_delay, 0.0 );
+		INIT_PAR( props, par, balance_sensor_ori_vel_gain, 0.0 );
 	}
 
 	Model::~Model()

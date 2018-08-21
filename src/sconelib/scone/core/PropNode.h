@@ -2,12 +2,6 @@
 
 #include "core.h"
 
-#include <memory>
-#include <vector>
-#include <sstream>
-
-#include "Exception.h"
-
 #include "xo/container/prop_node.h"
 #include "xo/container/prop_node_tools.h"
 #include "xo/serialization/serialize.h"

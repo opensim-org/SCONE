@@ -2,6 +2,7 @@
 #include "core.h"
 #include <vector>
 #include "Storage.h"
+#include "types.h"
 
 namespace scone
 {

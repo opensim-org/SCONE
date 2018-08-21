@@ -268,7 +268,7 @@ namespace scone
 		}
 	}
 
-	void NeuralController::WriteResult( const path& file ) const
+	void NeuralController::WriteResult( const xo::path& file ) const
 	{
 		xo::table< double > weights, contribs, sources;
 		std::vector< std::pair< double, string > > contrib_vec;

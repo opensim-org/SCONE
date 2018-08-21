@@ -10,15 +10,15 @@ namespace scone
 		m_pTargetBody( nullptr ),
 		m_JumpState( InitialState )
 	{
-		INIT_PROPERTY( props, target_body, String( "" ) );
-		INIT_PROPERTY( props, use_average_height, false );
-		INIT_PROPERTY( props, terminate_on_peak, true );
-		INIT_PROPERTY( props, termination_height, 0.5 );
-		INIT_PROPERTY( props, max_admitted_counter_height, 0.0 );
-		INIT_PROPERTY( props, ignore_time, 0.05 );
-		INIT_PROPERTY( props, upward_velocity_threshold, 0.05 );
-		INIT_PROPERTY( props, downward_velocity_threshold, -0.05 );
-		INIT_PROPERTY( props, require_downward_movement, false );
+		INIT_PROP( props, target_body, String( "" ) );
+		INIT_PROP( props, use_average_height, false );
+		INIT_PROP( props, terminate_on_peak, true );
+		INIT_PROP( props, termination_height, 0.5 );
+		INIT_PROP( props, max_admitted_counter_height, 0.0 );
+		INIT_PROP( props, ignore_time, 0.05 );
+		INIT_PROP( props, upward_velocity_threshold, 0.05 );
+		INIT_PROP( props, downward_velocity_threshold, -0.05 );
+		INIT_PROP( props, require_downward_movement, false );
 
 		m_Upward = false;
 		m_Height.Reset();

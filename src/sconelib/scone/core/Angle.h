@@ -2,6 +2,7 @@
 
 #include "core.h"
 #include "xo/geometry/angle.h"
+#include "types.h"
 
 namespace scone
 {

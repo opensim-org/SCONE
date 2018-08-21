@@ -11,6 +11,7 @@
 #include <xutility>
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
+#include "scone/core/Exception.h"
 
 using namespace scone;
 using namespace std;

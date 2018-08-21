@@ -1,5 +1,5 @@
 #include "ModelObjective.h"
-#include "../core/Factories.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {

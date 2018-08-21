@@ -29,25 +29,25 @@ namespace scone
 	m_LastFileOutputGen( 0 ),
 	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
-		INIT_PROPERTY_NAMED( props, m_Name, "name", String() );
+		INIT_PROP_NAMED( props, m_Name, "name", String() );
 
-		INIT_PROPERTY( props, max_threads, size_t( 32 ) );
-		INIT_PROPERTY( props, thread_priority, (int)xo::thread_priority::lowest );
-		INIT_PROPERTY( props, show_optimization_time, false );
+		INIT_PROP( props, max_threads, size_t( 32 ) );
+		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
+		INIT_PROP( props, show_optimization_time, false );
 
-		INIT_PROPERTY( props, init_file, path( "" ) );
-		INIT_PROPERTY( props, use_init_file, true );
-		INIT_PROPERTY( props, init_file_std_factor, 1.0 );
-		INIT_PROPERTY( props, init_file_std_offset, 0.0 );
-		INIT_PROPERTY( props, use_init_file_std, true );
+		INIT_PROP( props, init_file, path( "" ) );
+		INIT_PROP( props, use_init_file, true );
+		INIT_PROP( props, init_file_std_factor, 1.0 );
+		INIT_PROP( props, init_file_std_offset, 0.0 );
+		INIT_PROP( props, use_init_file_std, true );
 
-		INIT_PROPERTY( props, output_objective_result_files, false );
-		INIT_PROPERTY( props, min_improvement_factor_for_file_output, 1.05 );
-		INIT_PROPERTY( props, max_generations_without_file_output, size_t( 500u ) );
+		INIT_PROP( props, output_objective_result_files, false );
+		INIT_PROP( props, min_improvement_factor_for_file_output, 1.05 );
+		INIT_PROP( props, max_generations_without_file_output, size_t( 500u ) );
 
-		INIT_PROPERTY( props, max_generations, size_t( 5000 ) );
-		INIT_PROPERTY( props, min_progress, 1e-6 );
-		INIT_PROPERTY( props, min_progress_samples, 200 );
+		INIT_PROP( props, max_generations, size_t( 5000 ) );
+		INIT_PROP( props, min_progress, 1e-6 );
+		INIT_PROP( props, min_progress_samples, 200 );
 
 
 		// create objective

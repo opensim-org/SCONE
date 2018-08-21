@@ -1,6 +1,6 @@
 #include "CompositeController.h"
 
-#include "../core/Factories.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {
@@ -33,7 +33,7 @@ namespace scone
 			c->StoreData( frame, flags );
 	}
 
-	void CompositeController::WriteResult( const path& file ) const
+	void CompositeController::WriteResult( const xo::path& file ) const
 	{
 		for ( auto& c : controllers_ )
 			c->WriteResult( file );

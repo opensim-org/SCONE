@@ -9,7 +9,7 @@
 #include "scone/model/Actuator.h"
 #include "scone/model/Side.h"
 #include "scone/model/Dof.h"
-#include "../core/Profiler.h"
+#include "scone/core/Profiler.h"
 #include "../model/Link.h"
 #include "../model/Joint.h"
 #include "../model/model_tools.h"

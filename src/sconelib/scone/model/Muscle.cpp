@@ -6,8 +6,8 @@
 #include "xo/numerical/math.h"
 #include "Body.h"
 #include "Model.h"
-#include "../core/math.h"
-#include "../core/Profiler.h"
+#include "scone/core/math.h"
+#include "scone/core/Profiler.h"
 
 #pragma warning( disable: 4355 )
 

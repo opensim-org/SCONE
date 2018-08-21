@@ -8,8 +8,8 @@ namespace scone
 {
 	HasSignature::HasSignature( const PropNode& pn )
 	{
-		INIT_PROPERTY( pn, signature_prefix, String("") );
-		INIT_PROPERTY( pn, signature_postfix, String("") );
+		INIT_PROP( pn, signature_prefix, String("") );
+		INIT_PROP( pn, signature_postfix, String("") );
 
 		// replace DATE_TIME tag with (yes, indeed) DATE and TIME
 		xo::replace_str( signature_prefix, "DATE_TIME", GetDateTimeAsString() );

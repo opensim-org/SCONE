@@ -3,6 +3,7 @@
 #include "scone/core/core.h"
 #include "scone/core/memory_tools.h"
 #include <vector>
+#include "scone/core/types.h"
 
 namespace scone
 {

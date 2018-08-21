@@ -23,10 +23,10 @@ namespace scone
 
 	TimeStateController::TimeState::TimeState( const PropNode& pn, Params& par )
 	{
-		INIT_PROPERTY_REQUIRED( pn, name );
+		INIT_PROP_REQUIRED( pn, name );
 		ScopedParamSetPrefixer prefixer( par, name + "." );
 
-		INIT_PARAM_REQUIRED( pn, par, start_time );
+		INIT_PAR( pn, par, start_time, 0 );
 	}
 
 	scone::String TimeStateController::GetClassSignature() const

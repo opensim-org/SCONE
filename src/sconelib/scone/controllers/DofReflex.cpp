@@ -21,11 +21,11 @@ namespace scone
 		name = GetReflexName( m_Target.GetName(), src_name );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
-		INIT_PARAM_NAMED( props, par, target_pos, "P0", 0.0 );
-		INIT_PARAM_NAMED( props, par, target_vel, "V0", 0.0 );
-		INIT_PARAM_NAMED( props, par, pos_gain, "KP", 0.0 );
-		INIT_PARAM_NAMED( props, par, vel_gain, "KV", 0.0 );
-		INIT_PARAM_NAMED( props, par, constant_u, "C0", 0.0 );
+		INIT_PAR_NAMED( props, par, target_pos, "P0", 0.0 );
+		INIT_PAR_NAMED( props, par, target_vel, "V0", 0.0 );
+		INIT_PAR_NAMED( props, par, pos_gain, "KP", 0.0 );
+		INIT_PAR_NAMED( props, par, vel_gain, "KV", 0.0 );
+		INIT_PAR_NAMED( props, par, constant_u, "C0", 0.0 );
 		INIT_PROP( props, condition, 0 );
 		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
 

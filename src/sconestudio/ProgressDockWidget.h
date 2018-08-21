@@ -6,6 +6,7 @@
 #include "scone/core/memory_tools.h"
 #include "scone/core/PropNode.h"
 #include "xo/numerical/polynomial.h"
+#include "scone/core/types.h"
 
 using scone::String;
 using scone::PropNode;

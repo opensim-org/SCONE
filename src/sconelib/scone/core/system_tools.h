@@ -5,6 +5,7 @@
 #include "xo/system/version.h"
 #include "xo/filesystem/path.h"
 #include "xo/system/settings.h"
+#include "types.h"
 
 namespace scone
 {

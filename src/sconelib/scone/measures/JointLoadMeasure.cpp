@@ -9,7 +9,7 @@ namespace scone
 		joint( *FindByName( model.GetJoints(), props.get< String >( "joint" ) ) ),
 		load_penalty( props )
 	{
-		INIT_PROPERTY( props, method, 1 );
+		INIT_PROP( props, method, 1 );
 	}
 
 	double JointLoadMeasure::GetResult( Model& model )

@@ -8,7 +8,7 @@ namespace scone
 	GaitCycleMeasure::GaitCycleMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 		Measure( props, par, model, area )
 	{
-		INIT_PROPERTY( props, use_half_cycle, false );
+		INIT_PROP( props, use_half_cycle, false );
 
 		m_InitState = model.GetState();
 	}

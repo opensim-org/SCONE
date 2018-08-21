@@ -2,6 +2,8 @@
 
 #include "Function.h"
 #include "scone/core/string_tools.h"
+#include "PropNode.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {

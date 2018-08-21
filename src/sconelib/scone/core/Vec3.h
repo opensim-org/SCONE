@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core.h"
+#include "types.h"
 #include <xo/geometry/vec3.h>
 
 namespace scone

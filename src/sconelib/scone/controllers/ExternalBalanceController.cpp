@@ -10,10 +10,10 @@ namespace scone
 	force_body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) )
 	{
 		INIT_PROP_REQUIRED( props, name );
-		INIT_PARAM( props, par, angular_velocity_gain, 0.0 );
-		INIT_PARAM( props, par, angular_velocity_target, 0.0 );
-		INIT_PARAM( props, par, angular_position_gain, 0.0 );
-		INIT_PARAM( props, par, angular_position_target, 0.0 );
+		INIT_PAR( props, par, angular_velocity_gain, 0.0 );
+		INIT_PAR( props, par, angular_velocity_target, 0.0 );
+		INIT_PAR( props, par, angular_position_gain, 0.0 );
+		INIT_PAR( props, par, angular_position_target, 0.0 );
 	}
 
 	void ExternalBalanceController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

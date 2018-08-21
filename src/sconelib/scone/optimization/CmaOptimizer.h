@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Optimizer.h"
+#include "scone/core/Exception.h"
 
 namespace scone
 {

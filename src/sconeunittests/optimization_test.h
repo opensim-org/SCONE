@@ -14,7 +14,7 @@ class TestObjective : public scone::Objective
 public:
 	TestObjective( const PropNode& props ) : Objective( props ), num_params( 0 ), is_evaluating( false )
 	{
-		INIT_PROPERTY( props, num_params, 0 );
+		INIT_PROP( props, num_params, 0 );
 		for ( size_t i = 0; i < num_params; ++i )
 			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
 	}

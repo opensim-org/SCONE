@@ -8,10 +8,10 @@ namespace scone
 	CompositeMeasure::Term::Term( const PropNode& pn ) :
 		measure( nullptr ) // should be initialized by CompositeMeasure
 	{
-		INIT_PROPERTY_REQUIRED( pn, name );
-		INIT_PROPERTY_REQUIRED( pn, weight );
-		INIT_PROPERTY( pn, threshold, 0.0 );
-		INIT_PROPERTY( pn, offset, 0.0 );
+		INIT_PROP_REQUIRED( pn, name );
+		INIT_PROP_REQUIRED( pn, weight );
+		INIT_PROP( pn, threshold, 0.0 );
+		INIT_PROP( pn, offset, 0.0 );
 	}
 
 	CompositeMeasure::Term::Term( Term&& other ) :

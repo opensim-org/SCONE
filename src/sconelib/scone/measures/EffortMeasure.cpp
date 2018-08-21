@@ -19,12 +19,12 @@ namespace scone
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
 		measure_type = m_MeasureNames.GetValue( props.get< String >( "measure_type" ) );
-		INIT_PROPERTY( props, use_cost_of_transport, false );
-		INIT_PROPERTY( props, specific_tension, 0.25e6 );
-		INIT_PROPERTY( props, muscle_density, 1059.7 );
-		INIT_PROPERTY( props, default_muscle_slow_twitch_ratio, 0.5 );
-		INIT_PROPERTY( props, use_symmetric_fiber_ratios, true );
-		INIT_PROPERTY( props, min_distance, 1.0 );
+		INIT_PROP( props, use_cost_of_transport, false );
+		INIT_PROP( props, specific_tension, 0.25e6 );
+		INIT_PROP( props, muscle_density, 1059.7 );
+		INIT_PROP( props, default_muscle_slow_twitch_ratio, 0.5 );
+		INIT_PROP( props, use_symmetric_fiber_ratios, true );
+		INIT_PROP( props, min_distance, 1.0 );
 
 		// precompute some stuff
 		m_Wang2012BasalEnergy = 1.51 * model.GetMass();

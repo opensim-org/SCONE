@@ -1,6 +1,8 @@
 #pragma once
 
 #include "scone/core/memory_tools.h"
+#include "xo/utility/types.h"
+#include <string>
 
 namespace scone
 {
@@ -34,10 +36,24 @@ namespace scone
 	SCONE_DECLARE_CLASS_AND_PTR( Leg );
 	SCONE_DECLARE_CLASS_AND_PTR( Sensor );
 	SCONE_DECLARE_CLASS_AND_PTR( SensorDelayAdapter );
-
-	// forward declarations
 	SCONE_DECLARE_CLASS_AND_PTR( Optimizer );
 	SCONE_DECLARE_CLASS_AND_PTR( Objective );
-	//SCONE_DECLARE_CLASS_AND_PTR( Param );
-	//SCONE_DECLARE_CLASS_AND_PTR( ParamSet );
+
+	// types
+#ifdef SCONE_SINGLE_PRECISION_FLOAT
+	typedef float Real;
+#else
+	typedef double Real;
+#endif
+
+	using String = std::string;
+
+	// index type
+	using xo::index_t;
+	typedef std::string String;
+	using std::string;
+	const index_t NoIndex = size_t( -1 );
+
+	typedef double TimeInSeconds;
+	typedef double Frequency;
 }

@@ -2,6 +2,7 @@
 
 #include "scone/core/core.h"
 #include "xo/system/settings.h"
+#include "scone/core/types.h"
 
 namespace scone
 {

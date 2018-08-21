@@ -12,7 +12,7 @@ namespace scone
 	m_pImpl( new Impl )
 	{
 		size_t control_points;
-		INIT_PROPERTY( props, control_points, size_t( 0 ) );
+		INIT_PROP( props, control_points, size_t( 0 ) );
 
 		for ( int cpidx = 0; cpidx < control_points; ++cpidx )
 		{

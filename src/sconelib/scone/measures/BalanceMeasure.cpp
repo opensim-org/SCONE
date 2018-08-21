@@ -7,7 +7,7 @@ namespace scone
 	BalanceMeasure::BalanceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Measure( props, par, model, area )
 	{
-		INIT_PROPERTY( props, termination_height, 0.5 );
+		INIT_PROP( props, termination_height, 0.5 );
 
 		m_InitialHeight = model.GetComPos()[ 1 ];
 	}
