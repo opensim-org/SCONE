@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 
 #include "xo/container/prop_node.h"
 #include "xo/container/prop_node_tools.h"

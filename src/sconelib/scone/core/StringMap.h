@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <map>
-#include "core.h"
+#include "platform.h"
 #include "string_tools.h"
 
 

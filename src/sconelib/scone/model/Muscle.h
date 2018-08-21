@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/types.h"
 #include "scone/core/HasData.h"
 #include "scone/core/Vec3.h"

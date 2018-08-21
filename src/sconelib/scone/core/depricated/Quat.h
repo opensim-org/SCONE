@@ -3,7 +3,7 @@
 #include "math.h"
 
 #if 0
-#include "core.h"
+#include "platform.h"
 #include "math.h"
 #include "Vec3.h"
 

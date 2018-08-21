@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include "types.h"
 
 #include "xo/string/string_tools.h"

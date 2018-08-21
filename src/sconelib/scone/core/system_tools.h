@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include "PropNode.h"
 #include "xo/system/version.h"
 #include "xo/filesystem/path.h"

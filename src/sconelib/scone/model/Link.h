@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/Exception.h"
 #include "scone/core/types.h"
 #include "memory_tools.h"

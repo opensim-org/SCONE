@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/memory_tools.h"

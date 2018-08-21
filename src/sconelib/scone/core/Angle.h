@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include "xo/geometry/angle.h"
 #include "types.h"
 

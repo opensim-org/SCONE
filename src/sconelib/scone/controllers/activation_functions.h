@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <functional>
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/types.h"
 
 namespace scone

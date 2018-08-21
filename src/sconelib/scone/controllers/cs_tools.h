@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/core/system_tools.h"
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/types.h"
 

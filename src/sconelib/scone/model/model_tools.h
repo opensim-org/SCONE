@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/Vec3.h"
 #include "scone/core/math.h"
 

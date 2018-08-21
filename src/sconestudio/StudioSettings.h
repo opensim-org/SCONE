@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "xo/system/settings.h"
 #include "scone/core/types.h"
 

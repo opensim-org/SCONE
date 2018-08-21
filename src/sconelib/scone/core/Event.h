@@ -1,5 +1,5 @@
 #pragma once
-#include "core.h"
+#include "platform.h"
 #include <vector>
 #include "Storage.h"
 #include "types.h"

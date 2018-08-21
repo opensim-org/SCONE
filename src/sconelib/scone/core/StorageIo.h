@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include "Storage.h"
 #include <fstream>
 #include "xo/serialization/char_stream.h"

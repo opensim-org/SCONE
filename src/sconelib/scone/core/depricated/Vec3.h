@@ -3,7 +3,7 @@
 #include "math.h"
 
 #if 0
-#include "core.h"
+#include "platform.h"
 #include <iostream>
 
 namespace scone

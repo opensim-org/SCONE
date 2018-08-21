@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include <vector>
 #include "xo/filesystem/path.h"
 

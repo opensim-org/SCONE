@@ -1,7 +1,7 @@
 #include "Model.h"
 #include "SensorDelayAdapter.h"
 #include "Sensor.h"
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/core/Storage.h"
 #include "scone/core/string_tools.h"
 #include <algorithm>

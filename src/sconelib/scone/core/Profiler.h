@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.h"
+#include "platform.h"
 #include "PropNode.h"
 #include "scone/core/string_tools.h"
 #include "xo/time/timer.h"

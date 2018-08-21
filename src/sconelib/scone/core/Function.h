@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scone/core/core.h"
+#include "scone/core/platform.h"
 #include "scone/optimization/Params.h"
 #include "scone/core/HasName.h"
 
