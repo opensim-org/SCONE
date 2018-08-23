@@ -49,7 +49,6 @@ namespace scone
 		INIT_PROP( props, min_progress, 1e-6 );
 		INIT_PROP( props, min_progress_samples, 200 );
 
-
 		// create objective
 		m_Objective = CreateObjective( m_ObjectiveProps );
 

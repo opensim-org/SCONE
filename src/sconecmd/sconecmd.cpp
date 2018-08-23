@@ -28,8 +28,9 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< string > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
 		TCLAP::ValueArg< string > resArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Result file" );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
-		TCLAP::ValueArg< int > multiArg( "p", "pool", "The number of optimizations to run in parallel", false, 1, "1-99", cmd );
-		TCLAP::ValueArg< int > promiseWindowArg( "w", "window", "Window size to determine most promising optimization of pool", false, 400, "2-...", cmd );
+		//TCLAP::ValueArg< int > multiArg( "p", "pool", "The number of optimizations to run in parallel", false, 1, "1-99", cmd );
+		//TCLAP::ValueArg< int > promiseWindowArg( "pw", "pool-window", "Window size to determine most promising optimization of pool", false, 200, "2-...", cmd );
+		//TCLAP::ValueArg< int > promiseWindowArg( "ps", "pool-min-steps", "Minimum number of steps before pool predictions are deemed valid", false, 200, "2-...", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
@@ -53,22 +54,22 @@ int main(int argc, char* argv[])
 			}
 
 			// create optimizer
-			if ( multiArg.isSet() )
-			{
-				// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
-				XO_NOT_IMPLEMENTED;
-				//spot::optimizer_pool op( promiseWindowArg.getValue() );
-				//for ( int i = 0; i < multiArg.getValue(); ++i )
-				//{
-				//	OptimizerUP o = PrepareOptimization( props, scenario_file );
-				//	o->SetConsoleOutput( !quietOutput.getValue() );
-				//	o->SetStatusOutput( statusOutput.getValue() );
-				//	if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
-				//	// TODO: op.push_back( std::move( o ) );
-				//}
-				//op.run();
-			}
-			else
+			//if ( multiArg.isSet() )
+			//{
+			//	// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
+			//	OptimizerUP base_opt = PrepareOptimization( props, scenario_file );
+			//	auto op = spot::optimizer_pool( base_opt->GetObjective(), promiseWindowArg.getValue(),  );
+			//	for ( int i = 0; i < multiArg.getValue(); ++i )
+			//	{
+			//		OptimizerUP o = PrepareOptimization( props, scenario_file );
+			//		o->SetConsoleOutput( !quietOutput.getValue() );
+			//		o->SetStatusOutput( statusOutput.getValue() );
+			//		if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
+			//		// TODO: op.push_back( std::move( o ) );
+			//	}
+			//	op.run();
+			//}
+			//else
 			{
 				OptimizerUP o = PrepareOptimization( props, scenario_file );
 				o->SetConsoleOutput( !quietOutput.getValue() );

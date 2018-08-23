@@ -4,6 +4,9 @@
 #include "scone/core/HasSignature.h"
 #include "scone/core/types.h"
 #include "Params.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
+#include "xo/system/error_code.h"
+#include <iostream>
 
 namespace scone
 {
@@ -29,9 +32,15 @@ namespace scone
 		bool GetProgressOutput() const { return console_output && !status_output; }
 		bool GetStatusOutput() const { return status_output; }
 		void SetStatusOutput( bool s ) { status_output = s; }
+
 		template< typename T > void OutputStatus( const String& key, const T& value ) const {
-			if ( GetStatusOutput() )
-				std::cout << std::endl << "*" << key << "=" << value << std::endl;
+			std::cout << std::endl << "*" << key << "=" << value << std::endl;
+		}
+
+		void SetStatus( PropNode& pn ) const {
+			pn[ "id" ] = m_Name;
+			xo::error_code ec;
+			std::cout << "*" << xo::prop_node_serializer_zml_concise( pn, &ec ) << std::endl;
 		}
 
 		path output_root;
@@ -80,7 +89,7 @@ namespace scone
 		mutable std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
 
 	private: // non-copyable and non-assignable
-		Optimizer( const Optimizer& );
-		Optimizer& operator=( const Optimizer& );
+		Optimizer( const Optimizer& ) = delete;
+		Optimizer& operator=( const Optimizer& ) = delete;
 	};
 }
