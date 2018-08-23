@@ -35,6 +35,7 @@ namespace scone
 		// stop conditions
 		add_stop_condition< spot::max_steps_condition >( max_generations );
 		add_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
+		find_stop_condition< spot::flat_fitness_condition >().epsilon_ = flat_fitness_epsilon_;
 	}
 
 	void CmaOptimizerSpot::Run()
@@ -80,7 +81,7 @@ namespace scone
 
 		// report results
 		if ( cma.GetStatusOutput() )
-			cma.OutputStatus( "generation", xo::stringf( "%d %f %f %f %f %f", cma.step_count(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
+			cma.OutputStatus( "generation", xo::stringf( "%d %g %g %g %g %g", cma.current_step(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
 
 		if ( new_best )
 		{

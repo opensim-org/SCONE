@@ -86,7 +86,7 @@ namespace scone
 					OutputStatus( "generation", xo::stringf( "%d %g %g %g %g %g", gen, current_best, current_med_fitness, current_avg_fitness, cur_trend.offset(), cur_trend.slope() ) );
 
 				// update history
-				history_str << gen << "\t" << current_best << "\t" << current_avg_fitness << "\t" << cma.predicted_fitness( max_generations ) << "\t" << cur_trend.slope() << "\t" << cur_trend.offset() << "\n";
+				history_str << gen << "\t" << current_best << "\t" << current_avg_fitness << "\t" << cma.predicted_fitness( max_generations - cma.current_step() ) << "\t" << cur_trend.slope() << "\t" << cur_trend.offset() << "\n";
 				if ( gen % 10 == 9 ) // flush after 10 entries
 					history_str.flush();
 

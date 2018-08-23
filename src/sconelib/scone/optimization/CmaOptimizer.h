@@ -24,6 +24,7 @@ namespace scone
 		size_t num_elitists;
 		int max_attempts;
 		long random_seed;
+		double flat_fitness_epsilon_;
 
 	private: // non-copyable and non-assignable
 		virtual String GetClassSignature() const override;

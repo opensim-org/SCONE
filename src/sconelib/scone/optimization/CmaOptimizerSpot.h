@@ -19,6 +19,7 @@ namespace scone
 		CmaOptimizerSpot( const PropNode& pn );
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
+
 		xo::log::file_sink log_sink_;
 	};
 
