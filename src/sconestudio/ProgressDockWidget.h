@@ -53,6 +53,7 @@ public:
 	QVector< double > avgvec;
 	QVector< double > medvec;
 	QVector< double > genvec;
+	PropNode status_;
 
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	State state;

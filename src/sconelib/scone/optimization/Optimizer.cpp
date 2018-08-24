@@ -24,12 +24,11 @@ namespace scone
 	max_threads( 1 ),
 	thread_priority( (int)xo::thread_priority::lowest ),
 	m_ObjectiveProps( props.get_child( "Objective" ) ),
-	console_output( true ),
-	status_output( false ),
+	output_mode_( no_output ),
 	m_LastFileOutputGen( 0 ),
 	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
-		INIT_PROP_NAMED( props, m_Name, "name", String() );
+		INIT_PROP_NAMED( props, id_, "name", String() );
 
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
@@ -65,22 +64,15 @@ namespace scone
 	Optimizer::~Optimizer()
 	{}
 
-	void Optimizer::InitOutputFolder() const
-	{
-		auto output_base = output_root / GetSignature();
-		m_OutputFolder = output_base;
-
-		for ( int i = 1; xo::exists( xo::path( m_OutputFolder.str() ) ); ++i )
-			m_OutputFolder = output_base + stringf( " (%d)", i );
-
-		xo::create_directories( xo::path( m_OutputFolder.str() ) );
-	}
-
 	const path& Optimizer::AcquireOutputFolder() const
 	{
-		if ( m_OutputFolder.empty() )
-			InitOutputFolder();
-		return m_OutputFolder;
+		if ( output_folder_.empty() )
+		{
+			output_folder_ = xo::create_unique_folder( output_root / GetSignature() );
+			id_ = output_folder_.filename().string();
+		}
+
+		return output_folder_;
 	}
 
 	scone::String Optimizer::GetClassSignature() const

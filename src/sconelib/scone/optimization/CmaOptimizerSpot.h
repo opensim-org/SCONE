@@ -17,6 +17,7 @@ namespace scone
 	{
 	public:
 		CmaOptimizerSpot( const PropNode& pn );
+		virtual void SetOutputMode( OutputMode m ) override;
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
 

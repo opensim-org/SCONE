@@ -7,6 +7,7 @@
 #include "xo/string/string_tools.h"
 #include "studio_config.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
 
 using namespace scone;
 
@@ -136,33 +137,48 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 
 	while ( process->canReadLine() )
 	{
-		std::string s = xo::trim_str( QString::fromLocal8Bit( process->readLine() ).toStdString() );
-		//if ( !s.empty() ) log::trace( name, ": ", s );
+		char buf[ 1024 ];
+		process->readLine( buf, 1023 );
+		string s( buf );
+		log::info( s );
+		continue;
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
 
-		auto kvp = xo::make_key_value_str( s.substr( 1 ) );
-		if ( kvp.first == "folder" )
+		std::stringstream str( s.substr( 1 ) );
+		xo::prop_node pn;
+		xo::error_code ec;
+
+		str >> xo::prop_node_serializer_zml( pn, &ec );
+
+		if ( ec.bad() )
 		{
-			name = make_qt( path( kvp.second ).filename() );
+			log::warning( "Error parsing message: ", s );
+			continue;
+		}
+
+		if ( auto v = pn.try_get< path >( "folder" ) )
+		{
+			name = make_qt( pn.get< string >( "id" ) );
 			state = RunningState;
 			ui.plot->show();
 			setWindowTitle( name );
 			log::debug( "Initialized optimization ", name.toStdString() );
 		}
-		else if ( kvp.first == "max_generations" )
-		{
-			max_generations = xo::from_str< int >( kvp.second );
+
+		if ( pn.try_get( max_generations, "max_generations" ) )
 			updateText();
-		}
-		else if ( kvp.first == "window_size" )
+
+		pn.try_get( window_size, "window_size" );
+
+		if ( pn.try_get( cur_gen, "step" ) )
 		{
-			window_size = xo::from_str< int >( kvp.second );
-		}
-		else if ( kvp.first == "generation" )
-		{
-			xo::scan_str( kvp.second, cur_gen, cur_best, cur_med, cur_avg, cur_reg[ 0 ], cur_reg[ 1 ] );
+			pn.try_get( cur_best, "step_best" );
+			pn.try_get( cur_med, "step_median" );
+			pn.try_get( cur_avg, "step_average" );
+			pn.try_get( cur_reg.offset(), "trend_offset" );
+			pn.try_get( cur_reg.slope(), "trend_slope" );
 			avgvec.push_back( cur_avg );
 			bestvec.push_back( cur_best );
 			medvec.push_back( cur_med );
@@ -182,35 +198,29 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			ui.plot->xAxis->setRange( view_first_gen, cur_gen );
 			ui.plot->replot();
 		}
-		else if ( kvp.first == "best" )
+
+		if ( pn.try_get( best, "best" ) )
 		{
-			best = xo::from_str< float >( kvp.second );
 			best_gen = cur_gen;
 			updateText();
 		}
-		else if ( kvp.first == "error" )
+
+		if ( pn.try_get( errorMsg, "error" ) )
 		{
-			errorMsg = make_qt( kvp.second );
 			state = ErrorState;
 			updateText();
 			log::error( "Error optimizing ", fileName.toStdString(), ": ", errorMsg.toStdString() );
 			return ShowErrorResult;
 		}
-		else if ( kvp.first == "finished" )
+		else if ( pn.try_get( errorMsg, "finished" ) )
 		{
 			state = FinishedState;
-			errorMsg = make_qt( kvp.second );
 			updateText();
 		}
-		else
-		{
-			// if this key has a value, keep it and display it as a tooltip
-			if ( !kvp.second.empty() )
-			{
-				tooltipText += make_qt( ( tooltipText.isEmpty() ? "" : "\n" ) + kvp.first + " = " + kvp.second );
-				ui.text->setToolTip( tooltipText );
-			}
-		}
+
+		status_.merge( pn );
+		tooltipText = make_qt( to_str( status_ ) );
+		ui.text->setToolTip( tooltipText );
 	}
 
 	return OkResult;
