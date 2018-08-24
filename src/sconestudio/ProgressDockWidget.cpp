@@ -123,7 +123,6 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 
 	if ( !process->isOpen() )
 	{
-		log::trace( "process is closed" );
 		close();
 		return IsClosedResult;
 	}
@@ -140,8 +139,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		char buf[ 1024 ];
 		process->readLine( buf, 1023 );
 		string s( buf );
-		log::info( s );
-		continue;
+		//log::info( s );
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
@@ -149,7 +147,6 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		std::stringstream str( s.substr( 1 ) );
 		xo::prop_node pn;
 		xo::error_code ec;
-
 		str >> xo::prop_node_serializer_zml( pn, &ec );
 
 		if ( ec.bad() )
