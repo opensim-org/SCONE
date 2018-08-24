@@ -14,13 +14,6 @@ using namespace scone;
 ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& extra_args ) :
 studio( s ),
 process( nullptr ),
-cur_gen( 0 ),
-max_generations( 0 ),
-best( 0.0f ),
-best_gen( 0 ),
-highest( 0 ),
-lowest( 0 ),
-cur_pred( 0 ),
 state( StartingState ),
 view_first_gen( 0 )
 {
@@ -88,7 +81,7 @@ ProgressDockWidget::~ProgressDockWidget()
 {
 	if ( state != ClosedState )
 	{
-		log::critical( "Deleting Progress Dock that is not closed: ", name.toStdString() );
+		log::critical( "Deleting Progress Dock that is not closed: ", getIdentifier().toStdString() );
 		if ( process )
 			delete process;
 	}
@@ -103,18 +96,54 @@ void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 
 void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange &oldRange )
 {
-	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( cur_gen - min_view_gens, 0 ) );
-	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( cur_gen, min_view_gens ) );
+	auto& opt = optimizations.front();
+	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( opt.cur_gen - min_view_gens, 0 ) );
+	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( opt.cur_gen, min_view_gens ) );
 
 	ui.plot->xAxis->blockSignals( true );
 	ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
 	ui.plot->xAxis->blockSignals( false );
 
-	auto bestminmax = std::minmax_element( bestvec.begin() + view_first_gen, bestvec.end() );
-	auto avgminmax = std::minmax_element( avgvec.begin() + view_first_gen, avgvec.end() );
+	auto bestminmax = std::minmax_element( opt.bestvec.begin() + view_first_gen, opt.bestvec.end() );
+	auto avgminmax = std::minmax_element( opt.avgvec.begin() + view_first_gen, opt.avgvec.end() );
 	auto lower = xo::min( *bestminmax.first, *avgminmax.first, 0.0 );
 	auto upper = xo::max( *bestminmax.second, *avgminmax.second, 0.0 );
 	ui.plot->yAxis->setRange( lower, upper );
+}
+
+void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockWidget& wdg )
+{
+	if ( pn.try_get( max_generations, "max_generations" ) )
+		wdg.updateText();
+
+	pn.try_get( window_size, "window_size" );
+
+	if ( pn.try_get( cur_gen, "step" ) )
+	{
+		pn.try_get( cur_reg.offset(), "trend_offset" );
+		pn.try_get( cur_reg.slope(), "trend_slope" );
+		avgvec.push_back( pn.get< double >( "step_average" ) );
+		bestvec.push_back( pn.get< double >( "step_best" ) );
+		genvec.push_back( cur_gen );
+		cur_pred = cur_reg( float( cur_gen + window_size ) );
+		wdg.updateText();
+
+		wdg.ui.plot->graph( 0 )->setData( genvec, bestvec );
+		wdg.ui.plot->graph( 1 )->setData( genvec, avgvec );
+		wdg.ui.plot->graph( 2 )->clearData();
+		auto start_gen = std::max( 0, cur_gen - window_size );
+		wdg.ui.plot->graph( 2 )->addData( start_gen, cur_reg( start_gen ) );
+		wdg.ui.plot->graph( 2 )->addData( cur_gen, cur_reg( float( cur_gen ) ) );
+
+		wdg.ui.plot->xAxis->setRange( wdg.view_first_gen, cur_gen );
+		wdg.ui.plot->replot();
+	}
+
+	if ( pn.try_get( best, "best" ) )
+	{
+		best_gen = cur_gen;
+		wdg.updateText();
+	}
 }
 
 ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
@@ -155,51 +184,25 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			continue;
 		}
 
-		if ( auto v = pn.try_get< path >( "folder" ) )
+		if ( auto id = pn.try_get< string >( "id" ) )
 		{
-			name = make_qt( pn.get< string >( "id" ) );
-			state = RunningState;
-			ui.plot->show();
-			setWindowTitle( name );
-			log::debug( "Initialized optimization ", name.toStdString() );
-		}
+			auto it = xo::find_if( optimizations, [&]( auto& o ) { return o.name == *id; } );
+			if ( it == optimizations.end() )
+			{
+				Optimization new_opt;
+				new_opt.idx = optimizations.size();
+				new_opt.name = *id;
+				new_opt.Update( pn, *this );
 
-		if ( pn.try_get( max_generations, "max_generations" ) )
-			updateText();
+				optimizations.push_back( std::move( new_opt ) );
 
-		pn.try_get( window_size, "window_size" );
+				setWindowTitle( make_qt( *id ) );
+				log::debug( "Initialized optimization ", *id );
+				ui.plot->show();
 
-		if ( pn.try_get( cur_gen, "step" ) )
-		{
-			pn.try_get( cur_best, "step_best" );
-			pn.try_get( cur_med, "step_median" );
-			pn.try_get( cur_avg, "step_average" );
-			pn.try_get( cur_reg.offset(), "trend_offset" );
-			pn.try_get( cur_reg.slope(), "trend_slope" );
-			avgvec.push_back( cur_avg );
-			bestvec.push_back( cur_best );
-			medvec.push_back( cur_med );
-			genvec.push_back( cur_gen );
-			highest = std::max( highest, std::max( cur_best, cur_avg ) );
-			lowest = std::min( lowest, std::min( cur_best, cur_avg ) );
-			cur_pred = cur_reg( float( cur_gen + window_size ) );
-			updateText();
-
-			ui.plot->graph( 0 )->setData( genvec, bestvec );
-			ui.plot->graph( 1 )->setData( genvec, avgvec );
-			ui.plot->graph( 2 )->clearData();
-			auto start = std::max( 0, cur_gen - window_size );
-			ui.plot->graph( 2 )->addData( start, cur_reg( start ) );
-			ui.plot->graph( 2 )->addData( cur_gen, cur_reg( float( cur_gen ) ) );
-
-			ui.plot->xAxis->setRange( view_first_gen, cur_gen );
-			ui.plot->replot();
-		}
-
-		if ( pn.try_get( best, "best" ) )
-		{
-			best_gen = cur_gen;
-			updateText();
+				state = RunningState;
+			}
+			else it->Update( pn, *this );
 		}
 
 		if ( pn.try_get( errorMsg, "error" ) )
@@ -215,8 +218,8 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			updateText();
 		}
 
-		status_.merge( pn );
-		tooltipText = make_qt( to_str( status_ ) );
+		tooltipProps.merge( pn );
+		tooltipText = make_qt( to_str( tooltipProps ) );
 		ui.text->setToolTip( tooltipText );
 	}
 
@@ -233,7 +236,7 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 	if ( !studio->close_all && !( state == FinishedState || state == ErrorState ) )
 	{
 		// allow user to cancel close
-		QString message = "Are you sure you want to abort optimization " + name;
+		QString message = "Are you sure you want to abort optimization " + getIdentifier();
 		if ( QMessageBox::warning( this, "Abort Optimization", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Cancel )
 		{
 			e->ignore();
@@ -260,10 +263,10 @@ void ProgressDockWidget::updateText()
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", cur_gen, best, best_gen, cur_pred );
+		//s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", cur_gen, best, best_gen, cur_pred );
 		break;
 	case ProgressDockWidget::FinishedState:
-		s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", cur_gen, best, best_gen ) + "\n" + errorMsg;
+		//s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", cur_gen, best, best_gen ) + "\n" + errorMsg;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
