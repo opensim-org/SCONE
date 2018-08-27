@@ -177,6 +177,8 @@ set(OPT_API_FILES
 	scone/optimization/ModelObjective.h
 	scone/optimization/SimulationObjective.cpp
 	scone/optimization/SimulationObjective.h
+	scone/optimization/TestObjective.cpp
+	scone/optimization/TestObjective.h
 	scone/optimization/ImitationObjective.cpp
 	scone/optimization/ImitationObjective.h
 	scone/optimization/SimilarityObjective.cpp

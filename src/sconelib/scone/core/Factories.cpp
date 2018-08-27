@@ -34,6 +34,7 @@
 #include "scone/controllers/CompositeController.h"
 #include "../measures/MimicMeasure.h"
 #include "../optimization/CmaPoolOptimizer.h"
+#include "../optimization/TestObjective.h"
 
 namespace scone
 {
@@ -164,6 +165,7 @@ namespace scone
 			g_ObjectiveFactory.register_class< SimulationObjective >();
 			g_ObjectiveFactory.register_class< ImitationObjective >();
 			g_ObjectiveFactory.register_class< SimilarityObjective >();
+			g_ObjectiveFactory.register_class< TestObjective >();
 		}
 		return g_ObjectiveFactory;
 	}
