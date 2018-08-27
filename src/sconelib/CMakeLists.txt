@@ -157,6 +157,8 @@ set(OPT_API_FILES
 	scone/optimization/CmaOptimizer.h
 	scone/optimization/CmaOptimizerSpot.cpp
 	scone/optimization/CmaOptimizerSpot.h
+	scone/optimization/CmaPoolOptimizer.cpp
+	scone/optimization/CmaPoolOptimizer.h
 #	scone/optimization/CmaOptimizerShark2.cpp
 #	scone/optimization/CmaOptimizerShark2.h
 #	scone/optimization/CmaOptimizerShark3.cpp
