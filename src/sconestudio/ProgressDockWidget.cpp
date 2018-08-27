@@ -15,7 +15,7 @@ ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_fi
 studio( s ),
 process( nullptr ),
 state( StartingState ),
-min_view_gens( 3 ),
+min_view_gens( 20 ),
 view_first_gen( 0 ),
 view_last_gen( min_view_gens )
 {

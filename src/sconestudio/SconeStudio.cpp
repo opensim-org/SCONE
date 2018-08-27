@@ -133,7 +133,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 
 	// start timer for viewer
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
-	backgroundUpdateTimer.start( 1000 );
+	backgroundUpdateTimer.start( 500 );
 
 	// only do this after the ui has been initialized
 	xo::log::add_sink( ui.outputText );
