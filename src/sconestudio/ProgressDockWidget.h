@@ -53,7 +53,6 @@ public:
 
 		QVector< double > bestvec;
 		QVector< double > avgvec;
-		QVector< double > medvec;
 		QVector< double > genvec;
 
 		void Update( const PropNode& pn, ProgressDockWidget& wdg );
@@ -70,6 +69,7 @@ public:
 
 public slots:
 	void rangeChanged( const QCPRange &newRange, const QCPRange &oldRange );
+	void fixRangeY();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

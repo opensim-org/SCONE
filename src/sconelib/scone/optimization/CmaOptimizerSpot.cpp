@@ -62,8 +62,7 @@ namespace scone
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 
-		log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", cma.dim(), cma.lambda(), cma.mu() );
-
+		log::info( "Starting optimization ", cma.id(), " dim=", cma.dim(), " lambda=", cma.lambda(), " mu=", cma.mu() );
 		if ( cma.GetStatusOutput() )
 		{
 			PropNode pn = cma.GetStatusPropNode();
@@ -82,6 +81,7 @@ namespace scone
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 		cma.OutputStatus( "finished", s.what() );
+		log::info( "Optimization ", cma.id(), " finished: ", s.what() );
 	}
 
 	void CmaOptimizerReporter::on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop )

@@ -28,8 +28,6 @@ namespace scone
 	m_LastFileOutputGen( 0 ),
 	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
 	{
-		INIT_PROP_NAMED( props, id_, "name", String() );
-
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
 		INIT_PROP( props, show_optimization_time, false );
@@ -59,6 +57,8 @@ namespace scone
 		}
 
 		m_BestFitness = m_Objective->info().worst_fitness();
+
+		// prepare output folder
 	}
 
 	Optimizer::~Optimizer()

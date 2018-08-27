@@ -56,7 +56,7 @@ int main(int argc, char* argv[])
 			if ( statusOutput.getValue() )
 				o->SetOutputMode( Optimizer::status_output );
 			else o->SetOutputMode( quietOutput.getValue() ? Optimizer::no_output : Optimizer::console_output );
-			o->OutputStatus( "scenario", optArg.getValue() );
+			//o->OutputStatus( "scenario", optArg.getValue() );
 			o->Run();
 		}
 		else if ( resArg.isSet() )

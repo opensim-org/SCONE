@@ -27,4 +27,11 @@ namespace scone
 	{
 		run();
 	}
+
+	void CmaPoolOptimizer::SetOutputMode( OutputMode m )
+	{
+		output_mode_ = m;
+		for ( auto& o : optimizers_ )
+			dynamic_cast<Optimizer&>( *o ).SetOutputMode( m );
+	}
 }

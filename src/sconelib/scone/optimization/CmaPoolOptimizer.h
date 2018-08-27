@@ -12,6 +12,7 @@ namespace scone
 		virtual ~CmaPoolOptimizer() {}
 
 		virtual void Run() override;
+		virtual void SetOutputMode( OutputMode m ) override;
 
 	protected:
 		std::vector< PropNode > props_;

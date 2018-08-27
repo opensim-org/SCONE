@@ -15,7 +15,8 @@ ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_fi
 studio( s ),
 process( nullptr ),
 state( StartingState ),
-view_first_gen( 0 )
+view_first_gen( 0 ),
+view_last_gen( min_view_gens )
 {
 	QString program = make_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
@@ -48,24 +49,6 @@ view_first_gen( 0 )
 	ui.plot->xAxis->setTickLabelFont( font );
 	ui.plot->yAxis->setTickLabelFont( font );
 
-	ui.plot->addGraph();
-	ui.plot->graph( 0 )->setPen( QPen( QColor( 0, 100, 255 ) ) );
-	ui.plot->graph( 0 )->setLineStyle( QCPGraph::lsLine );
-	ui.plot->graph( 0 )->setName( "Best fitness" );
-	//opt.ui.plot->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-
-	ui.plot->addGraph();
-	ui.plot->graph( 1 )->setPen( QPen( QColor( 255, 100, 0 ), 1, Qt::DashLine ) );
-	ui.plot->graph( 1 )->setLineStyle( QCPGraph::lsLine );
-	ui.plot->graph( 1 )->setName( "Average fitness" );
-	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-
-	ui.plot->addGraph();
-	ui.plot->graph( 2 )->setPen( QPen( QColor( 50, 50, 50 ), 1, Qt::SolidLine ) );
-	ui.plot->graph( 2 )->setLineStyle( QCPGraph::lsLine );
-	ui.plot->graph( 2 )->setName( "Trend" );
-	//opt.ui.plot->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssDisc, 5));
-
 	ui.plot->xAxis->setRange( 0, min_view_gens );
 	ui.plot->xAxis->setAutoTickCount( 6 );
 	ui.plot->yAxis->setAutoTickCount( 3 );
@@ -96,18 +79,27 @@ void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 
 void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange &oldRange )
 {
-	auto& opt = optimizations.front();
-	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( opt.cur_gen - min_view_gens, 0 ) );
-	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( opt.cur_gen, min_view_gens ) );
+	auto it = std::max_element( optimizations.begin(), optimizations.end(), [&]( auto& a, auto& b ) { return a.cur_gen < b.cur_gen; } );
+
+	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( it->cur_gen - min_view_gens, 0 ) );
+	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( it->cur_gen, min_view_gens ) );
 
 	ui.plot->xAxis->blockSignals( true );
 	ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
 	ui.plot->xAxis->blockSignals( false );
 
-	auto bestminmax = std::minmax_element( opt.bestvec.begin() + view_first_gen, opt.bestvec.end() );
-	auto avgminmax = std::minmax_element( opt.avgvec.begin() + view_first_gen, opt.avgvec.end() );
-	auto lower = xo::min( *bestminmax.first, *avgminmax.first, 0.0 );
-	auto upper = xo::max( *bestminmax.second, *avgminmax.second, 0.0 );
+	fixRangeY();
+}
+
+void ProgressDockWidget::fixRangeY()
+{
+	double upper = 0.0, lower = 0.0;
+	for ( auto& o : optimizations )
+	{
+		auto bestminmax = std::minmax_element( o.bestvec.begin() + view_first_gen, o.bestvec.end() );
+		xo::set_if_smaller( lower, *bestminmax.first );
+		xo::set_if_bigger( upper, *bestminmax.second );
+	}
 	ui.plot->yAxis->setRange( lower, upper );
 }
 
@@ -126,17 +118,6 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockW
 		bestvec.push_back( pn.get< double >( "step_best" ) );
 		genvec.push_back( cur_gen );
 		cur_pred = cur_reg( float( cur_gen + window_size ) );
-		wdg.updateText();
-
-		wdg.ui.plot->graph( 0 )->setData( genvec, bestvec );
-		wdg.ui.plot->graph( 1 )->setData( genvec, avgvec );
-		wdg.ui.plot->graph( 2 )->clearData();
-		auto start_gen = std::max( 0, cur_gen - window_size );
-		wdg.ui.plot->graph( 2 )->addData( start_gen, cur_reg( start_gen ) );
-		wdg.ui.plot->graph( 2 )->addData( cur_gen, cur_reg( float( cur_gen ) ) );
-
-		wdg.ui.plot->xAxis->setRange( wdg.view_first_gen, cur_gen );
-		wdg.ui.plot->replot();
 	}
 
 	if ( pn.try_get( best, "best" ) )
@@ -190,19 +171,44 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			if ( it == optimizations.end() )
 			{
 				Optimization new_opt;
-				new_opt.idx = optimizations.size();
+				auto idx = optimizations.size();
+
+				new_opt.idx = idx;
 				new_opt.name = *id;
 				new_opt.Update( pn, *this );
 
-				optimizations.push_back( std::move( new_opt ) );
+				// add graphds
+				ui.plot->addGraph();
 
-				setWindowTitle( make_qt( *id ) );
-				log::debug( "Initialized optimization ", *id );
+				ui.plot->graph( idx )->setPen( QPen( make_qt( vis::make_unique_color( idx ) ) ) );
+				ui.plot->graph( idx )->setLineStyle( QCPGraph::lsLine );
+				ui.plot->addGraph();
+				//ui.plot->graph( idx * 2 + 1 )->setPen( QPen( make_qt( vis::make_unique_color( idx ) ), 1, Qt::DashLine ) );
+				//ui.plot->graph( idx * 2 + 1 )->setLineStyle( QCPGraph::lsLine );
 				ui.plot->show();
+
+				optimizations.push_back( std::move( new_opt ) );
+				setWindowTitle( make_qt( *id ) );
+				log::info( "Initialized optimization ", *id );
 
 				state = RunningState;
 			}
-			else it->Update( pn, *this );
+			else
+			{
+				it->Update( pn, *this );
+				updateText();
+
+				// update graphs
+				ui.plot->graph( it->idx )->setData( it->genvec, it->bestvec );
+				//ui.plot->graph( it->idx * 2 + 1 )->clearData();
+				//auto start_gen = std::max( 0, it->cur_gen - it->window_size );
+				//ui.plot->graph( it->idx * 2 + 1 )->addData( start_gen, it->cur_reg( start_gen ) );
+				//ui.plot->graph( it->idx * 2 + 1 )->addData( it->cur_gen, it->cur_reg( float( it->cur_gen ) ) );
+
+				ui.plot->xAxis->setRange( view_first_gen, std::max( it->cur_gen, view_last_gen ) );
+				fixRangeY();
+				ui.plot->replot();
+			}
 		}
 
 		if ( pn.try_get( errorMsg, "error" ) )

@@ -46,6 +46,8 @@ namespace scone
 			OutputStatus( pn );
 		}
 
+		const String& id() const { return id_; }
+
 		path output_root;
 
 		// properties
