@@ -2,6 +2,7 @@
 
 #include "test/test_functions.h"
 #include "xo/string/string_tools.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {
@@ -19,11 +20,16 @@ namespace scone
 		INIT_PROP( pn, dim_, 10 );
 
 		for ( index_t i = 0; i < dim_; ++i )
-			info_.add( xo::stringf( "P%d", i ), 0, 250, -500, 500 );
+			info_.add( stringf( "P%d", i ), 0, 250, -500, 500 );
 	}
 
 	scone::fitness_t TestObjective::evaluate( const ParamInstance& point ) const
 	{
 		return schwefel( point.values() );
+	}
+
+	String TestObjective::GetClassSignature() const
+	{
+		return stringf( "T%d", dim_ );
 	}
 }

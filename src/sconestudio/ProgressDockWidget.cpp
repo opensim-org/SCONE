@@ -131,6 +131,8 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockW
 		best_gen = cur_gen;
 		wdg.updateText();
 	}
+
+	has_update_flag = true;
 }
 
 ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
@@ -209,23 +211,9 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			{
 				it->Update( pn, *this );
 				updateText();
-
-				// update graphs
-#ifdef SCONE_SHOW_TREND_LINES
-				ui.plot->graph( it->idx * 2 )->setData( it->genvec, it->bestvec );
-				ui.plot->graph( it->idx * 2 + 1 )->clearData();
-				auto start_gen = std::max( 0, it->cur_gen - it->window_size );
-				ui.plot->graph( it->idx * 2 + 1 )->addData( start_gen, it->cur_reg( start_gen ) );
-				ui.plot->graph( it->idx * 2 + 1 )->addData( it->cur_gen, it->cur_reg( float( it->cur_gen ) ) );
-#else
-				ui.plot->graph( it->idx )->setData( it->genvec, it->bestvec );
-#endif
-
-				// update range and replot
-				ui.plot->xAxis->setRange( view_first_gen, std::max( it->cur_gen, view_last_gen ) );
-				fixRangeY();
-				ui.plot->replot();
+				tooltipProps.merge( pn );
 			}
+
 		}
 
 		if ( pn.try_get( errorMsg, "error" ) )
@@ -240,11 +228,33 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			state = FinishedState;
 			updateText();
 		}
-
-		tooltipProps.merge( pn );
-		tooltipText = make_qt( to_str( tooltipProps ) );
-		ui.text->setToolTip( tooltipText );
 	}
+
+	for ( index_t idx = 0; idx < optimizations.size(); ++idx )
+	{
+		auto& o = optimizations[ idx ];
+		if ( o.has_update_flag )
+		{
+			o.has_update_flag = false;
+
+			// update graphs
+#ifdef SCONE_SHOW_TREND_LINES
+			ui.plot->graph( idx * 2 )->setData( o.genvec, o.bestvec );
+			auto start_gen = std::max( 0, o.cur_gen - o.window_size );
+			ui.plot->graph( idx * 2 + 1 )->setData( QVector< double >{ start_gen, o.cur_gen }, QVector< double >{ o.cur_reg( start_gen ), o.cur_reg( float( o.cur_gen ) ); } );
+#else
+			ui.plot->graph( idx )->setData( o.genvec, o.bestvec );
+#endif
+
+			// update range and replot
+			ui.plot->xAxis->setRange( view_first_gen, std::max( o.cur_gen, view_last_gen ) );
+			fixRangeY();
+			ui.plot->replot();
+		}
+	}
+
+	tooltipText = make_qt( to_str( tooltipProps ) );
+	ui.text->setToolTip( tooltipText );
 
 	return OkResult;
 }

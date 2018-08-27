@@ -8,7 +8,7 @@ namespace scone
 	optimizer_pool( *m_Objective )
 	{
 		INIT_PROP( pn, prediction_window_size_, 200 );
-		INIT_PROP( pn, prediction_window_min_size_, 100 );
+		INIT_PROP( pn, prediction_start_, prediction_window_size_ );
 		INIT_PROP( pn, max_concurrent_optimizations_, 200 );
 
 		INIT_PROP( pn, random_seed_, 1 );

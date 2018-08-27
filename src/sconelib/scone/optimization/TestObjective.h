@@ -14,5 +14,7 @@ namespace scone
 
 	protected:
 		size_t dim_;
+		virtual String GetClassSignature() const override;
+
 	};
 }

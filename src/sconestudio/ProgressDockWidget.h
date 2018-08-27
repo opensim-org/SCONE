@@ -56,6 +56,7 @@ public:
 		QVector< double > genvec;
 
 		void Update( const PropNode& pn, ProgressDockWidget& wdg );
+		bool has_update_flag = false;
 	};
 
 	int min_view_gens;
