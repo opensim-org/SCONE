@@ -24,7 +24,7 @@ namespace scone
 		// copy original and write resolved config files
 		xo::path outdir( o->AcquireOutputFolder() );
 		xo::copy_file( scenario_file.filename(), outdir / path( "config_original" ).replace_extension( scenario_file.extension() ), true );
-		xo::save_file( props, outdir / "config.xml" );
+		xo::save_file( props, outdir / "config.scone" );
 		xo::copy_file( scenario_file.parent_path() / o->init_file, outdir / o->init_file.filename(), true );
 
 		// copy all objective resources to output folder
@@ -40,7 +40,8 @@ namespace scone
 
 	PropNode SCONE_API SimulateObjective( const path& filename )
 	{
-		xo::path config_path = filename.parent_path() / "config.xml";
+		auto folder = filename.parent_path();
+		auto config_path = xo::find_file( { folder / "config.xml", folder / "config.scone" } );
 		if ( config_path.has_parent_path() )
 		{
 			current_path( config_path.parent_path() );

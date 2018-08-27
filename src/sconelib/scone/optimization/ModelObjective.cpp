@@ -36,7 +36,8 @@ namespace scone
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& file )
 	{
 		bool is_par_file = file.extension() == "par";
-		path scenario_file = is_par_file ? file.parent_path() / "config.xml" : file;
+		auto dir = file.parent_path();
+		path scenario_file = is_par_file ? xo::find_file( { dir / "config.xml", dir / "config.scone" } ) : file;
 
 		// set current path to scenario path
 		xo::current_path( scenario_file.parent_path() );
