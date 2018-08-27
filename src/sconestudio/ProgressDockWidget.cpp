@@ -15,6 +15,7 @@ ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_fi
 studio( s ),
 process( nullptr ),
 state( StartingState ),
+min_view_gens( 3 ),
 view_first_gen( 0 ),
 view_last_gen( min_view_gens )
 {
@@ -84,6 +85,7 @@ void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange 
 	view_first_gen = xo::clamped( static_cast<int>( newRange.lower ), 0, xo::max( it->cur_gen - min_view_gens, 0 ) );
 	view_last_gen = xo::clamped( static_cast<int>( newRange.upper ), min_view_gens, xo::max( it->cur_gen, min_view_gens ) );
 
+	//log::info( "setting x-range to ", view_first_gen, " ", view_last_gen );
 	ui.plot->xAxis->blockSignals( true );
 	ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
 	ui.plot->xAxis->blockSignals( false );
@@ -100,6 +102,7 @@ void ProgressDockWidget::fixRangeY()
 		xo::set_if_smaller( lower, *bestminmax.first );
 		xo::set_if_bigger( upper, *bestminmax.second );
 	}
+	//log::info( "setting y-range to ", lower, " ", upper );
 	ui.plot->yAxis->setRange( lower, upper );
 }
 
@@ -177,14 +180,20 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				new_opt.name = *id;
 				new_opt.Update( pn, *this );
 
-				// add graphds
+				// add graphs
+				QColor c = make_qt( vis::make_unique_color( idx ) );
+#ifdef SCONE_SHOW_TREND_LINES
 				ui.plot->addGraph();
-
-				ui.plot->graph( idx )->setPen( QPen( make_qt( vis::make_unique_color( idx ) ) ) );
+				ui.plot->graph( idx * 2 )->setPen( QPen( c ) );
+				ui.plot->graph( idx * 2 )->setLineStyle( QCPGraph::lsLine );
+				ui.plot->addGraph();
+				ui.plot->graph( idx * 2 + 1 )->setPen( QPen( c.lighter(), 1, Qt::DashLine ) );
+				ui.plot->graph( idx * 2 + 1 )->setLineStyle( QCPGraph::lsLine );
+#else
+				ui.plot->addGraph();
+				ui.plot->graph( idx )->setPen( QPen( c ) );
 				ui.plot->graph( idx )->setLineStyle( QCPGraph::lsLine );
-				ui.plot->addGraph();
-				//ui.plot->graph( idx * 2 + 1 )->setPen( QPen( make_qt( vis::make_unique_color( idx ) ), 1, Qt::DashLine ) );
-				//ui.plot->graph( idx * 2 + 1 )->setLineStyle( QCPGraph::lsLine );
+#endif
 				ui.plot->show();
 
 				optimizations.push_back( std::move( new_opt ) );
@@ -199,12 +208,17 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				updateText();
 
 				// update graphs
+#ifdef SCONE_SHOW_TREND_LINES
+				ui.plot->graph( it->idx * 2 )->setData( it->genvec, it->bestvec );
+				ui.plot->graph( it->idx * 2 + 1 )->clearData();
+				auto start_gen = std::max( 0, it->cur_gen - it->window_size );
+				ui.plot->graph( it->idx * 2 + 1 )->addData( start_gen, it->cur_reg( start_gen ) );
+				ui.plot->graph( it->idx * 2 + 1 )->addData( it->cur_gen, it->cur_reg( float( it->cur_gen ) ) );
+#else
 				ui.plot->graph( it->idx )->setData( it->genvec, it->bestvec );
-				//ui.plot->graph( it->idx * 2 + 1 )->clearData();
-				//auto start_gen = std::max( 0, it->cur_gen - it->window_size );
-				//ui.plot->graph( it->idx * 2 + 1 )->addData( start_gen, it->cur_reg( start_gen ) );
-				//ui.plot->graph( it->idx * 2 + 1 )->addData( it->cur_gen, it->cur_reg( float( it->cur_gen ) ) );
+#endif
 
+				// update range and replot
 				ui.plot->xAxis->setRange( view_first_gen, std::max( it->cur_gen, view_last_gen ) );
 				fixRangeY();
 				ui.plot->replot();

@@ -58,9 +58,9 @@ public:
 		void Update( const PropNode& pn, ProgressDockWidget& wdg );
 	};
 
+	int min_view_gens;
 	int view_first_gen;
 	int view_last_gen;
-	int min_view_gens = 20;
 
 	std::vector< Optimization > optimizations;
 
