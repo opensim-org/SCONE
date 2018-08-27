@@ -98,9 +98,12 @@ void ProgressDockWidget::fixRangeY()
 	double upper = 0.0, lower = 0.0;
 	for ( auto& o : optimizations )
 	{
-		auto bestminmax = std::minmax_element( o.bestvec.begin() + view_first_gen, o.bestvec.end() );
-		xo::set_if_smaller( lower, *bestminmax.first );
-		xo::set_if_bigger( upper, *bestminmax.second );
+		if ( view_first_gen < o.bestvec.size() )
+		{
+			auto bestminmax = std::minmax_element( o.bestvec.begin() + view_first_gen, o.bestvec.end() );
+			xo::set_if_smaller( lower, *bestminmax.first );
+			xo::set_if_bigger( upper, *bestminmax.second );
+		}
 	}
 	//log::info( "setting y-range to ", lower, " ", upper );
 	ui.plot->yAxis->setRange( lower, upper );
