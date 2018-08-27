@@ -7,7 +7,6 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/Settings.h"
 #include "scone/core/math.h"
-#include "scone/controllers/cs_tools.h"
 #include "scone/model/Muscle.h"
 
 #include "xo/time/timer.h"

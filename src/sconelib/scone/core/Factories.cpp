@@ -33,6 +33,7 @@
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/controllers/CompositeController.h"
 #include "../measures/MimicMeasure.h"
+#include "../optimization/CmaPoolOptimizer.h"
 
 namespace scone
 {
@@ -150,6 +151,7 @@ namespace scone
 			g_OptimizerFactory.register_class< CmaOptimizerSpot >( "CmaOptimizer" );
 			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 			g_OptimizerFactory.register_class< CmaOptimizerSpot >();
+			g_OptimizerFactory.register_class< CmaPoolOptimizer >();
 		}
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}

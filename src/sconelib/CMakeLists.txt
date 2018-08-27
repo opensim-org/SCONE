@@ -32,7 +32,7 @@ set(CORE_SYSTEM_FILES
 	scone/core/Profiler.cpp
     scone/core/Profiler.h
 	scone/core/Exception.h
-	scone/core/core.h
+	scone/core/platform.h
 	scone/core/Log.cpp
 	scone/core/Log.h
 	scone/core/version.h
@@ -65,10 +65,6 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/ExternalBalanceController.cpp
 	scone/controllers/ExternalBalanceController.h
 	scone/controllers/MirrorController.h
-	)
-set(CS_SYSTEM_FILES
-	scone/controllers/cs_tools.cpp
-	scone/controllers/cs_tools.h
 	)
 set(CS_CONTROLLERS_MRC_FILES
 	scone/controllers/MetaReflexParams.cpp
@@ -271,7 +267,6 @@ set (SCONELIB_FILES
 
     ${CS_FUNCTIONS_FILES}
 	${MEASURE_FILES}
-	${CS_SYSTEM_FILES} 
     ${CS_TOOLS_FILES}
 	
 	${OPT_API_FILES}

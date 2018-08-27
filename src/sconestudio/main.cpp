@@ -7,7 +7,6 @@
     #include <QtGui/QApplication>
 #endif
 
-#include "scone/controllers/cs_tools.h"
 #include "scone/model/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
 #include "qt_tools.h"

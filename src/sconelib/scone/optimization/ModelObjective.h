@@ -26,4 +26,6 @@ namespace scone
 	protected:
 		PropNode m_ModelPropsCopy;
 	};
+
+	ModelObjectiveUP SCONE_API CreateModelObjective( const path& config_file );
 }
