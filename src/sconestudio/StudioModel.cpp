@@ -21,7 +21,7 @@ namespace scone
 	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), 1, 15, 0, 0.5f ),
 	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
 	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), 0.5f, 15, 0, 0.5f ),
-	arrow_mat( GetStudioSetting< vis::color >( "viewer.forces" ), 1.0, 15, 0, 0.5f ),
+	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );

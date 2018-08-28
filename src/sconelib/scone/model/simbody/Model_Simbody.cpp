@@ -71,7 +71,7 @@ namespace scone
 		double initial_leg_load;
 
 		INIT_PROP( props, integration_accuracy, 0.001 );
-		INIT_PROP( props, integration_method, String( "RungeKuttaMerson" ) );
+		INIT_PROP( props, integration_method, String( "SemiExplicitEuler2" ) );
 		INIT_PROP( props, max_step_size, 0.001 );
 		INIT_PROP( props, fixed_control_step_size, 0.001 );
 		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );

@@ -1,0 +1,53 @@
+folders {
+	scenarios { 
+		type = folder
+		label = "Scenario folder"
+		default = ""
+		description = "Default location for SCONE scenarios"
+	}
+	results { 
+		type = folder
+		label = "Results folder"
+		default = ""
+		description = "Default location for optimization results"
+	}
+	geometry { 
+		type = folder
+		label = "Geometry folder"
+		default = ""
+		description = "Default location for model geometry"
+	}
+}
+
+data {
+	frequency {
+		type = float
+		label = "Data output frequency"
+		default = 100
+		range = 10..10000
+	}
+	body {
+		type = bool
+		label = "Output body data"
+		default = 1
+		description = "Boolean indicating whether to output body position and orientation data (0 or 1)"
+	}
+	muscle {
+		type = bool
+		label = "Output muscle data"
+		default = 1
+		description = "Boolean indicating whether to output muscle data"
+	}
+	sensor {
+		type = bool
+		label = "Output sensor data"
+		default = 1
+		description = "Boolean indicating whether to output sensor data"
+	}
+	controller {
+		type = bool
+		default = 1
+		label = "Output controller data"
+		description = "Boolean indicating whether to output controller data"
+	}
+}
