@@ -12,6 +12,7 @@
 #include "xo/filesystem/path.h"
 #include "xo/system/type_class.h"
 #include "xo/container/flat_map.h"
+#include "StudioSettings.h"
 
 namespace scone
 {
@@ -22,7 +23,8 @@ namespace scone
 		ui.setupUi( &dialog_window );
 
 		// init settings
-		auto& settings = GetSconeSettings();
+		auto& sconecfg = GetSconeSettings();
+		auto& studiocfg = GetStudioSettings();
 
 		// folders
 		ui.scenariosFolder->setText( make_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
@@ -31,38 +33,46 @@ namespace scone
 
 		// data checkboxes
 		xo::flat_map< string, QListWidgetItem* > data_checkboxes;
-		for ( auto& item : settings.schema().get_child( "data" ) )
+		for ( auto& item : sconecfg.schema().get_child( "data" ) )
 		{
 			if ( item.second.get<string>( "type" ) == "bool" )
 			{
 				auto* checkbox = new QListWidgetItem( item.second.get< string >( "description" ).c_str() );
-				checkbox->setCheckState( settings.get< bool >( "data." + item.first ) ? Qt::Checked : Qt::Unchecked );
+				checkbox->setCheckState( sconecfg.get< bool >( "data." + item.first ) ? Qt::Checked : Qt::Unchecked );
 				ui.dataList->addItem( checkbox );
 				data_checkboxes[ item.first ] = checkbox;
 			}
 		}
 
 		// advanced settings
-		auto settings_pn = settings.data();
-		auto* advancedModel = new QPropNodeItemModel( settings_pn );
-		ui.advancedTreeView->setModel( advancedModel );
-		ui.advancedTreeView->expandAll();
+		auto scone_pn = sconecfg.data();
+		auto* advancedModel = new QPropNodeItemModel( scone_pn );
+		ui.advancedTree->setModel( advancedModel );
+		ui.advancedTree->expandAll();
+
+		// studio settings
+		auto studio_pn = studiocfg.data();
+		auto* studioModel = new QPropNodeItemModel( studio_pn );
+		ui.studioTree->setModel( studioModel );
+		ui.studioTree->expandAll();
 
 		int ret = dialog_window.exec();
 		if ( ret == QDialog::Accepted )
 		{
-			settings.set( settings_pn );
+			sconecfg.set( scone_pn );
+			studiocfg.set( studio_pn );
 
 			// update settings
-			settings.set( "folders.scenarios", ui.scenariosFolder->text().toStdString() );
-			settings.set( "folders.results", ui.resultsFolder->text().toStdString() );
-			settings.set( "folders.geometry", ui.geometryFolder->text().toStdString() );
+			sconecfg.set( "folders.scenarios", ui.scenariosFolder->text().toStdString() );
+			sconecfg.set( "folders.results", ui.resultsFolder->text().toStdString() );
+			sconecfg.set( "folders.geometry", ui.geometryFolder->text().toStdString() );
 
 			// copy checkboxes
 			for ( auto& item : data_checkboxes )
-				settings.set< bool >( "data." + item.first, item.second->checkState() == Qt::Checked );
+				sconecfg.set< bool >( "data." + item.first, item.second->checkState() == Qt::Checked );
 
-			SaveSconeSettings();
+			GetSconeSettings().save();
+			GetStudioSettings().save();
 		}
 
 		return ret;

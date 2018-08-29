@@ -9,7 +9,7 @@ namespace scone
 	xo::settings& GetSconeSettings()
 	{
 		static auto settings = xo::settings(
-			GetInstallFolder() / "resources/scone-settings-schema.zml",
+			load_file( GetInstallFolder() / "resources/scone-settings-schema.zml" ),
 			GetSettingsFolder() / "scone-settings.zml" );
 
 		// set default paths if they don't exist

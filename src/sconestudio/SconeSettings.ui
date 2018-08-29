@@ -94,7 +94,17 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <widget class="QTreeView" name="advancedTreeView"/>
+        <widget class="QTreeView" name="advancedTree"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_4">
+      <attribute name="title">
+       <string>User Interface</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_5">
+       <item>
+        <widget class="QTreeView" name="studioTree"/>
        </item>
       </layout>
      </widget>

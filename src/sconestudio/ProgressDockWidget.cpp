@@ -8,6 +8,7 @@
 #include "studio_config.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
+#include "StudioSettings.h"
 
 using namespace scone;
 
@@ -189,14 +190,14 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				QColor c = make_qt( vis::make_unique_color( idx ) );
 #ifdef SCONE_SHOW_TREND_LINES
 				ui.plot->addGraph();
-				ui.plot->graph( idx * 2 )->setPen( QPen( c ) );
+				ui.plot->graph( idx * 2 )->setPen( QPen( c, GetStudioSetting< float >( "progress.line_width" ) ) );
 				ui.plot->graph( idx * 2 )->setLineStyle( QCPGraph::lsLine );
 				ui.plot->addGraph();
 				ui.plot->graph( idx * 2 + 1 )->setPen( QPen( c.lighter(), 1, Qt::DashLine ) );
 				ui.plot->graph( idx * 2 + 1 )->setLineStyle( QCPGraph::lsLine );
 #else
 				ui.plot->addGraph();
-				ui.plot->graph( idx )->setPen( QPen( c ) );
+				ui.plot->graph( idx )->setPen( QPen( c, GetStudioSetting< float >( "progress.line_width" ) ) );
 				ui.plot->graph( idx )->setLineStyle( QCPGraph::lsLine );
 #endif
 				ui.plot->show();
