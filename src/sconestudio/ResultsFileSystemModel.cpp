@@ -15,8 +15,8 @@ ResultsFileSystemModel::~ResultsFileSystemModel()
 
 ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi ) const
 {
-	Status stat{ 0, 0 };
-	if ( !fi.isDir() && fi.suffix() == "par" )
+	Status stat{ -1, 0 };
+	if ( fi.isFile() && fi.suffix() == "par" )
 	{
 		auto split = fi.completeBaseName().split( "_" );
 		if ( split.size() > 0 )
@@ -36,10 +36,14 @@ ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi 
 		for ( QDirIterator dir_it( fi.absoluteFilePath() ); dir_it.hasNext(); )
 		{
 			QFileInfo fileinf = QFileInfo( dir_it.next() );
-			if ( !fileinf.isDir() )
+			if ( fileinf.isFile() )
 			{
 				auto fs = getStatus( fileinf );
 				if ( fs.gen > stat.gen ) stat = fs;
+			}
+			else if ( fileinf.fileName() != ".." && fileinf.fileName() != "." )
+			{
+				// do something?
 			}
 		}
 		stat.modified = fi.lastModified();
@@ -75,7 +79,7 @@ QVariant ResultsFileSystemModel::data( const QModelIndex &idx, int role ) const
 	if ( role == Qt::DisplayRole )
 	{
 		auto stat = getStatus( fileInfo( idx ) );
-		if ( stat.gen == 0 && stat.best == 0.0 )
+		if ( stat.gen < 0 )
 			return QVariant( QString( "" ) );
 
 		switch ( idx.column() - QFileSystemModel::columnCount() )
