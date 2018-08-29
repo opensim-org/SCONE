@@ -367,19 +367,24 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 {
 	optimizations.push_back( pdw );
 
-	if ( optimizations.size() < 3 )
+	if ( optimizations.size() < 4 )
 	{
-		addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::LeftDockWidgetArea, pdw );
+		// stack below results
+		addDockWidget( Qt::LeftDockWidgetArea, pdw );
+		for ( index_t r = 0; r < optimizations.size(); ++r )
+			splitDockWidget( r == 0 ? ui.resultsDock : optimizations[ r - 1 ], optimizations[ r ], Qt::Vertical );
 	}
-	// organize into columns
-	if ( optimizations.size() >= 3 )
+	else
 	{ 
+		// organize into columns
+		addDockWidget( Qt::LeftDockWidgetArea, pdw );
+
 		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
 		auto rows = ( optimizations.size() + columns - 1 ) / columns;
 		log::info( "Reorganizing windows, columns=", columns, " rows=", rows );
 
 		// first column
-		splitDockWidget( ui.viewerDock, optimizations[ 0 ], Qt::Horizontal );
+		splitDockWidget( optimizations[ 0 ], ui.resultsDock, Qt::Horizontal );
 		for ( index_t r = 1; r < rows; ++r )
 			splitDockWidget( optimizations[ ( r - 1 ) * columns ], optimizations[ r * columns ], Qt::Vertical );
 

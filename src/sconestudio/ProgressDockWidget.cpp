@@ -206,6 +206,10 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				ui.plot->show();
 
 				optimizations.push_back( std::move( new_opt ) );
+
+				if ( scenario.empty() )
+					setWindowTitle( make_qt( scenario = *id ) );
+
 				log::info( "Initialized optimization ", *id );
 
 				state = RunningState;
