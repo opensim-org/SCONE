@@ -324,15 +324,29 @@ namespace scone
 
 	String NeuralController::GetClassSignature() const
 	{
-		size_t c = 0;
-		for ( auto& layer : m_InterNeurons )
-			for ( auto& neuron : layer.second )
-				c += neuron->GetInputs().size();
-
+		auto m = 0, a = 0, b = 0, i = 0;
 		for ( auto& neuron : m_MotorNeurons )
-			c += neuron->GetInputs().size();
+		{
+			for ( auto& input : neuron->GetInputs() )
+			{
+				if ( auto* sensor = dynamic_cast<SensorNeuron*>( input.neuron ) )
+				{
+					if ( sensor->muscle_ == neuron->muscle_ )
+						++m;
+					else if ( sensor->muscle_ )
+						++a;
+					else ++b;
+				}
+				else ++i;
+			}
+		}
 
-		return xo::stringf( "N%d", c );
+		string str = "N";
+		if ( m > 0 ) str += stringf( "M%d", m / 2 );
+		if ( a > 0 ) str += stringf( "A%d", a / 2 );
+		if ( b > 0 ) str += stringf( "B%d", b / 2 );
+
+		return str;
 	}
 
 	TimeInSeconds NeuralController::GetDelay( const string& name )

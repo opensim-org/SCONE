@@ -144,7 +144,7 @@ namespace scone
 		// see if there's an input
 		connection_t connect = connection_dict( pn.get< string >( "connect", pn.has_key( "source" ) ? "source" : "none" ) );
 		string input_type = pn.get< string >( "type", "*" );
-		string input_layer = NeuralController::FixLayerName( pn.get< string >( "input_layer", connect == none ? "" : "0" ) );
+		string input_layer = pn.get< string >( "input_layer", connect == none ? "" : "0" );
 		bool right_side = GetSide() == RightSide;
 
 		auto mpvec = nc.GetMuscleParams( muscle_, false, right_side );
