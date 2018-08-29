@@ -18,7 +18,8 @@ process( nullptr ),
 state( StartingState ),
 min_view_gens( 20 ),
 view_first_gen( 0 ),
-view_last_gen( min_view_gens )
+view_last_gen( min_view_gens ),
+best_idx( -1 )
 {
 	QString program = make_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
@@ -112,10 +113,9 @@ void ProgressDockWidget::fixRangeY()
 
 void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockWidget& wdg )
 {
-	if ( pn.try_get( max_generations, "max_generations" ) )
-		wdg.updateText();
-
+	pn.try_get( max_generations, "max_generations" );
 	pn.try_get( window_size, "window_size" );
+	pn.try_get( is_minimizing, "minimize" );
 
 	if ( pn.try_get( cur_gen, "step" ) )
 	{
@@ -127,11 +127,14 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockW
 		cur_pred = cur_reg( float( cur_gen + window_size ) );
 	}
 
-	if ( pn.try_get( best, "best" ) )
-	{
-		best_gen = cur_gen;
-		wdg.updateText();
-	}
+	pn.try_get( best, "best" );
+	pn.try_get( best_gen, "best_gen" );
+
+	if ( pn.try_get( finished, "finished" ) )
+		log::info( "Optimization ", name, " finished: ", finished );
+
+	if ( pn.try_get( error, "error" ) )
+		log::info( "Optimization ", name, " error: ", error );
 
 	has_update_flag = true;
 }
@@ -203,7 +206,6 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				ui.plot->show();
 
 				optimizations.push_back( std::move( new_opt ) );
-				setWindowTitle( make_qt( *id ) );
 				log::info( "Initialized optimization ", *id );
 
 				state = RunningState;
@@ -213,21 +215,30 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				it->Update( pn, *this );
 				updateText();
 				tooltipProps.merge( pn );
+
+				if ( best_idx == -1 )
+					best_idx = it->idx;
+				else if ( it->is_minimizing ? it->best < optimizations[ best_idx ].best : it->best > optimizations[ best_idx ].best )
+					best_idx = it->idx;
 			}
-
 		}
+		else // generic message
+		{
+			if ( pn.try_get( scenario, "scenario" ) )
+				setWindowTitle( make_qt( scenario ) );
 
-		if ( pn.try_get( errorMsg, "error" ) )
-		{
-			state = ErrorState;
-			updateText();
-			log::error( "Error optimizing ", fileName.toStdString(), ": ", errorMsg.toStdString() );
-			return ShowErrorResult;
-		}
-		else if ( pn.try_get( errorMsg, "finished" ) )
-		{
-			state = FinishedState;
-			updateText();
+			if ( pn.try_get( message, "error" ) )
+			{
+				state = ErrorState;
+				updateText();
+				log::error( "Error optimizing ", fileName.toStdString(), ": ", message.toStdString() );
+				return ShowErrorResult;
+			}
+			else if ( pn.try_get( message, "finished" ) )
+			{
+				state = FinishedState;
+				updateText();
+			}
 		}
 	}
 
@@ -291,21 +302,26 @@ void ProgressDockWidget::updateText()
 {
 	QString s;
 
+	auto* opt = ( best_idx != -1 ) ? &optimizations[ best_idx ] : nullptr;
+
 	switch ( state )
 	{
 	case ProgressDockWidget::StartingState:
 		s = "Initializing optimization...";
 		break;
 	case ProgressDockWidget::RunningState: 
-		//s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", cur_gen, best, best_gen, cur_pred );
+		if ( opt )
+			s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", opt->cur_gen, opt->best, opt->best_gen, opt->cur_pred );
+		else s = "Waiting for first evaluation...";
 		break;
 	case ProgressDockWidget::FinishedState:
-		//s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", cur_gen, best, best_gen ) + "\n" + errorMsg;
+		if ( opt )
+			s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
 	case ProgressDockWidget::ErrorState:
-		s = errorMsg;
+		s = message;
 		break;
 	default:
 		break;

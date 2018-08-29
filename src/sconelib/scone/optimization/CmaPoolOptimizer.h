@@ -19,4 +19,11 @@ namespace scone
 		size_t optimization_count_;
 		long random_seed_;
 	};
+
+	class SCONE_API CmaPoolOptimizerReporter : public spot::reporter
+	{
+	public:
+		virtual void on_start( const spot::optimizer& opt ) override;
+		virtual void on_stop( const spot::optimizer& opt, const spot::stop_condition& s ) override;
+	};
 }

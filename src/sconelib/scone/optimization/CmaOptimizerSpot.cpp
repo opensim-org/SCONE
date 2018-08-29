@@ -72,6 +72,7 @@ namespace scone
 			pn.set( "lambda", cma.lambda() );
 			pn.set( "mu", cma.mu() );
 			pn.set( "max_generations", cma.max_generations );
+			pn.set( "minimize", cma.IsMinimizing() );
 			pn.set( "window_size", cma.window_size );
 			cma.OutputStatus( pn );
 		}
@@ -102,7 +103,10 @@ namespace scone
 		pn.set( "trend_offset", cma.fitness_trend().offset() );
 		pn.set( "trend_slope", cma.fitness_trend().slope() );
 		if ( new_best )
+		{
 			pn.set( "best", cma.best_fitness() );
+			pn.set( "best_gen", cma.current_step() );
+		}
 
 		cma.OutputStatus( pn );
 

@@ -366,8 +366,11 @@ void SconeStudio::fileExit()
 void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 {
 	optimizations.push_back( pdw );
-	addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::RightDockWidgetArea, pdw );
 
+	if ( optimizations.size() < 3 )
+	{
+		addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::LeftDockWidgetArea, pdw );
+	}
 	// organize into columns
 	if ( optimizations.size() >= 3 )
 	{ 
@@ -549,7 +552,7 @@ void SconeStudio::updateOptimizations()
 		if ( o->updateProgress() == ProgressDockWidget::ShowErrorResult )
 		{
 			QString title = "Error optimizing " + o->fileName;
-			QString msg = o->errorMsg;
+			QString msg = o->message;
 			o->close();
 			QMessageBox::critical( this, title, msg );
 			return; // must return here because close invalidates the iterator

@@ -33,7 +33,7 @@ namespace scone
 		bool GetProgressOutput() const { return output_mode_ == console_output; }
 		bool GetStatusOutput() const { return output_mode_ == status_output; }
 
-		PropNode GetStatusPropNode() const { PropNode pn; pn[ "id" ] = id_; return pn; }
+		PropNode GetStatusPropNode() const { PropNode pn; if ( !id_.empty() ) pn[ "id" ] = id_; return pn; }
 
 		void OutputStatus( const PropNode& pn ) const {
 			xo::error_code ec;

@@ -21,6 +21,7 @@ namespace scone
 			props_.back().set( "type", "CmaOptimizer" );
 			push_back( std::make_unique< CmaOptimizerSpot >( props_.back() ) );
 		}
+		add_reporter< CmaPoolOptimizerReporter >();
 	}
 
 	void CmaPoolOptimizer::Run()
@@ -33,5 +34,17 @@ namespace scone
 		output_mode_ = m;
 		for ( auto& o : optimizers_ )
 			dynamic_cast<Optimizer&>( *o ).SetOutputMode( m );
+	}
+
+	void CmaPoolOptimizerReporter::on_start( const optimizer& opt )
+	{
+		auto& cma = dynamic_cast<const CmaPoolOptimizer&>( opt );
+		cma.OutputStatus( "scenario", cma.GetSignature() );
+	}
+
+	void CmaPoolOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
+	{
+		auto& cma = dynamic_cast<const CmaPoolOptimizer&>( opt );
+		cma.OutputStatus( "finished", s.what() );
 	}
 }

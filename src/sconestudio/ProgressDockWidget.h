@@ -34,7 +34,7 @@ public:
 	Ui::ProgressDockWidget ui;
 	QString fileName;
 	State state;
-	QString errorMsg;
+	QString message;
 	PropNode tooltipProps;
 	QString tooltipText;
 
@@ -42,8 +42,11 @@ public:
 	{
 		int idx;
 		String name;
+		String finished;
+		String error;
 		int max_generations;
 		int window_size;
+		bool is_minimizing;
 
 		int best_gen = 0;
 		float best = 0.0f;
@@ -62,6 +65,10 @@ public:
 	int min_view_gens;
 	int view_first_gen;
 	int view_last_gen;
+
+	int best_idx;
+	bool minimize;
+	String scenario;
 
 	std::vector< Optimization > optimizations;
 
