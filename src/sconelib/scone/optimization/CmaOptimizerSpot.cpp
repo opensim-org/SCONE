@@ -90,16 +90,15 @@ namespace scone
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 	}
 
-	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, index_t best_idx, bool new_best )
+	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, bool new_best )
 	{
 		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
 
 		// report results
 		auto pn = cma.GetStatusPropNode();
 		pn.set( "step", cma.current_step() );
-		pn.set( "step_best", cma.current_step_best() );
-		pn.set( "step_median", cma.current_step_median() );
-		pn.set( "step_average", cma.current_step_average() );
+		pn.set( "step_best", cma.current_step_best_fitness() );
+		pn.set( "step_median", xo::median( cma.current_step_fitnesses() ) );
 		pn.set( "trend_offset", cma.fitness_trend().offset() );
 		pn.set( "trend_slope", cma.fitness_trend().slope() );
 		if ( new_best )

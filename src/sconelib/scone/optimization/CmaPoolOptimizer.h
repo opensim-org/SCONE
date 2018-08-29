@@ -16,7 +16,7 @@ namespace scone
 
 	protected:
 		std::vector< PropNode > props_;
-		size_t optimization_count_;
+		size_t optimizations_;
 		long random_seed_;
 	};
 

@@ -1,5 +1,6 @@
 #include "CmaPoolOptimizer.h"
 #include "CmaOptimizerSpot.h"
+#include "spot/file_reporter.h"
 
 namespace scone
 {
@@ -9,19 +10,26 @@ namespace scone
 	{
 		INIT_PROP( pn, prediction_window_size_, 200 );
 		INIT_PROP( pn, prediction_start_, prediction_window_size_ );
-		INIT_PROP( pn, max_concurrent_optimizations_, 200 );
 
 		INIT_PROP( pn, random_seed_, 1 );
-		INIT_PROP( pn, optimization_count_, 6 );
+		INIT_PROP( pn, optimizations_, 6 );
+		INIT_PROP( pn, max_concurrent_optimizations_, 200 );
 
-		for ( int i = 0; i < optimization_count_; ++i )
+		for ( int i = 0; i < optimizations_; ++i )
 		{
 			props_.push_back( pn ); // we're reusing the props from CmaPoolOptimizer
 			props_.back().set( "random_seed", random_seed_ + i );
 			props_.back().set( "type", "CmaOptimizer" );
+			props_.back().set( "output_root", AcquireOutputFolder() );
 			push_back( std::make_unique< CmaOptimizerSpot >( props_.back() ) );
 		}
+
+		auto& rep = add_reporter< spot::file_reporter >( AcquireOutputFolder() );
+		rep.min_improvement_factor_for_file_output = min_improvement_factor_for_file_output;
 		add_reporter< CmaPoolOptimizerReporter >();
+
+		// reset the id, so that the ProgressDock can interpret OutputStatus() as a general message
+		id_.clear();
 	}
 
 	void CmaPoolOptimizer::Run()

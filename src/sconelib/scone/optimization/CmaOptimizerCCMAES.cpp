@@ -67,8 +67,8 @@ namespace scone
 					printf( "%04d (S=%.3f):", int( gen ), cma.sigma() ); // MSVC2013 doesn't support %zu
 
 				// sample parameter sets
-				auto& pop = cma.sample_population();
-				auto results = cma.evaluate( pop );
+				cma.step();
+				auto results = cma.current_step_fitnesses();
 
 				// analyze results
 				auto current_best_it = GetObjective().info().maximize() ? std::max_element( results.begin(), results.end() ) : std::min_element( results.begin(), results.end() );
@@ -106,7 +106,7 @@ namespace scone
 					// copy best solution to par
 					ParamInfo parinf( GetObjective().info() );
 					parinf.set_mean_std( cma.current_mean(), cma.current_std() );
-					ParamInstance par( parinf, pop[ current_best_idx ].values() );
+					ParamInstance par( parinf, cma.current_step_best_point().values() );
 
 					m_LastFileOutputGen = gen;
 

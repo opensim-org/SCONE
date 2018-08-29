@@ -25,9 +25,10 @@ namespace scone
 	thread_priority( (int)xo::thread_priority::lowest ),
 	m_ObjectiveProps( props.get_child( "Objective" ) ),
 	output_mode_( no_output ),
-	m_LastFileOutputGen( 0 ),
-	output_root( GetFolder( SCONE_RESULTS_FOLDER ) )
+	m_LastFileOutputGen( 0 )
 	{
+		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
+
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
 		INIT_PROP( props, show_optimization_time, false );

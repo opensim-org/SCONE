@@ -55,7 +55,7 @@ public:
 		xo::linear_function< float > cur_reg;
 
 		QVector< double > bestvec;
-		QVector< double > avgvec;
+		QVector< double > medvec;
 		QVector< double > genvec;
 
 		void Update( const PropNode& pn, ProgressDockWidget& wdg );

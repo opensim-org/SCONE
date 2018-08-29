@@ -121,7 +121,7 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockW
 	{
 		pn.try_get( cur_reg.offset(), "trend_offset" );
 		pn.try_get( cur_reg.slope(), "trend_slope" );
-		avgvec.push_back( pn.get< double >( "step_average" ) );
+		medvec.push_back( pn.get< double >( "step_median" ) );
 		bestvec.push_back( pn.get< double >( "step_best" ) );
 		genvec.push_back( cur_gen );
 		cur_pred = cur_reg( float( cur_gen + window_size ) );
