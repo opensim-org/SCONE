@@ -20,19 +20,6 @@ namespace scone
 		INIT_PROP( props, window_size, size_t( 400 ) );
 		INIT_PROP( props, random_seed, DEFAULT_RANDOM_SEED );
 		INIT_PROP( props, flat_fitness_epsilon_, 1e-6 );
-
-		auto outdir = AcquireOutputFolder();
-
-		// write config and copy init
-		PropNode pn;
-		pn[ "Optimizer" ] = props;
-		xo::save_file( pn, AcquireOutputFolder() / "config.scone" );
-		if ( use_init_file && !init_file.empty() )
-			xo::copy_file( init_file, AcquireOutputFolder() / init_file.filename(), true );
-
-		// copy all objective resources to output folder
-		for ( auto& f : GetObjective().GetExternalResources() )
-			xo::copy_file( f, outdir / f.filename(), true );
 	}
 
 	scone::String CmaOptimizer::GetClassSignature() const

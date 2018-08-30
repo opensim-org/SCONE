@@ -54,6 +54,7 @@ scene_( true )
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
 	analysisView->setMinSeriesInterval( 0 );
+	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );

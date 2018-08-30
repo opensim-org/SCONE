@@ -24,10 +24,13 @@ namespace scone
 	max_threads( 1 ),
 	thread_priority( (int)xo::thread_priority::lowest ),
 	m_ObjectiveProps( props.get_child( "Objective" ) ),
+	m_Objective( CreateObjective( m_ObjectiveProps ) ),
+	m_BestFitness( m_Objective->info().worst_fitness() ),
 	output_mode_( no_output ),
 	m_LastFileOutputGen( 0 )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
+		INIT_PROP( props, log_level_, xo::log::info_level );
 
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
@@ -47,32 +50,20 @@ namespace scone
 		INIT_PROP( props, min_progress, 1e-6 );
 		INIT_PROP( props, min_progress_samples, 200 );
 
-		// create objective
-		m_Objective = CreateObjective( m_ObjectiveProps );
-
 		// initialize parameters from file
 		if ( use_init_file && !init_file.empty() )
 		{
 			auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
 			log::info( "Imported ", result.first, ", skipped ", result.second, " parameters from ", init_file );
 		}
-
-		m_BestFitness = m_Objective->info().worst_fitness();
-
-		// prepare output folder
 	}
 
 	Optimizer::~Optimizer()
 	{}
 
-	const path& Optimizer::AcquireOutputFolder() const
+	const path& Optimizer::GetOutputFolder() const
 	{
-		if ( output_folder_.empty() )
-		{
-			output_folder_ = xo::create_unique_folder( output_root / GetSignature() );
-			id_ = output_folder_.filename().string();
-		}
-
+		SCONE_ASSERT( !output_folder_.empty() );
 		return output_folder_;
 	}
 
@@ -83,6 +74,30 @@ namespace scone
 			s += ".I";
 
 		return s;
+	}
+
+	void Optimizer::CreateOutputFolder( const PropNode& props )
+	{
+		SCONE_ASSERT( output_folder_.empty() );
+
+		output_folder_ = xo::create_unique_folder( output_root / GetSignature() );
+		id_ = output_folder_.filename().string();
+
+		// create log sink if enabled
+		if ( log_level_ < xo::log::never_log_level )
+			log_sink_ = std::make_unique< xo::log::file_sink >( log_level_, GetOutputFolder() / "optimization.log" );
+
+		// prepare output folder, and initialize
+		auto outdir = GetOutputFolder();
+		PropNode pn;
+		pn[ "Optimizer" ] = props;
+		xo::save_file( pn, GetOutputFolder() / "config.scone" );
+		if ( use_init_file && !init_file.empty() )
+			xo::copy_file( init_file, GetOutputFolder() / init_file.filename(), true );
+
+		// copy all objective resources to output folder
+		for ( auto& f : GetObjective().GetExternalResources() )
+			xo::copy_file( f, outdir / f.filename(), true );
 	}
 
 	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files ) const

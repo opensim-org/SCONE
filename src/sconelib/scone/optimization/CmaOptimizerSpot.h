@@ -20,8 +20,6 @@ namespace scone
 		virtual void SetOutputMode( OutputMode m ) override;
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
-
-		xo::log::file_sink log_sink_;
 	};
 
 	class SCONE_API CmaOptimizerReporter : public spot::reporter

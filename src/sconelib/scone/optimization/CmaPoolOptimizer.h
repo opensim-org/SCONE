@@ -2,6 +2,7 @@
 
 #include "Optimizer.h"
 #include "spot/optimizer_pool.h"
+#include "xo/system/log_sink.h"
 
 namespace scone
 {

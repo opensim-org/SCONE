@@ -7,6 +7,7 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "xo/system/error_code.h"
 #include <iostream>
+#include "xo/system/log_sink.h"
 
 namespace scone
 {
@@ -21,7 +22,7 @@ namespace scone
 		virtual void Run() = 0;
 
 		/// get the results output folder (creates it if it doesn't exist)
-		const path& AcquireOutputFolder() const;
+		const path& GetOutputFolder() const;
 
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		virtual bool IsMinimizing() const { return m_Objective->info().minimize(); }
@@ -80,12 +81,17 @@ namespace scone
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 
+		void CreateOutputFolder( const PropNode& props );
+
 		// current status
 		double m_BestFitness;
 		OutputMode output_mode_;
 
 		mutable path output_folder_;
 		mutable String id_;
+
+		xo::log::level log_level_;
+		u_ptr< xo::log::file_sink > log_sink_;
 
 	private:
 		static void SetThreadPriority( int priority );

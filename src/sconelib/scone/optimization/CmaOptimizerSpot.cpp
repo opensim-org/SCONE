@@ -13,8 +13,7 @@ namespace scone
 
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn ) :
 	CmaOptimizer( pn ),
-	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed ),
-	log_sink_( xo::log::info_level, AcquireOutputFolder() / "optimization.log" )
+	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
@@ -25,8 +24,11 @@ namespace scone
 		set_max_threads( ( int )max_threads );
 		enable_fitness_tracking( window_size );
 
+		// create output folder
+		CreateOutputFolder( pn );
+
 		// reporters
-		auto& rep = add_reporter< spot::file_reporter >( AcquireOutputFolder() );
+		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );
 		rep.min_improvement_factor_for_file_output = min_improvement_factor_for_file_output;
 
 		// stop conditions
@@ -66,7 +68,7 @@ namespace scone
 		if ( cma.GetStatusOutput() )
 		{
 			PropNode pn = cma.GetStatusPropNode();
-			pn.set( "folder", cma.AcquireOutputFolder() );
+			pn.set( "folder", cma.GetOutputFolder() );
 			pn.set( "dim", cma.dim() );
 			pn.set( "sigma", cma.sigma() );
 			pn.set( "lambda", cma.lambda() );
