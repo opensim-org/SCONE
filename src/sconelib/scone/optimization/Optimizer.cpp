@@ -44,9 +44,9 @@ namespace scone
 
 		INIT_PROP( props, output_objective_result_files, false );
 		INIT_PROP( props, min_improvement_factor_for_file_output, 1.05 );
-		INIT_PROP( props, max_generations_without_file_output, size_t( 500u ) );
+		INIT_PROP( props, max_generations_without_file_output, 1000 );
 
-		INIT_PROP( props, max_generations, size_t( 5000 ) );
+		INIT_PROP( props, max_generations, 10000 );
 		INIT_PROP( props, min_progress, 1e-6 );
 		INIT_PROP( props, min_progress_samples, 200 );
 

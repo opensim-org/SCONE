@@ -27,7 +27,6 @@ namespace scone
 		auto str = Optimizer::GetClassSignature();
 		if ( random_seed != DEFAULT_RANDOM_SEED )
 			str += xo::stringf( ".R%d", random_seed );
-		//str += "/" + Optimizer::GetClassSignature() + xo::stringf( ".R%d", random_seed );
 		return str;
 	}
 
