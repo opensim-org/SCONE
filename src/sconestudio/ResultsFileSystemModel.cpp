@@ -6,6 +6,7 @@
 #include "xo/container/prop_node_tools.h"
 #include "xo/system/error_code.h"
 #include "scone/core/Log.h"
+#include "xo/string/string_cast.h"
 
 ResultsFileSystemModel::ResultsFileSystemModel( QObject* parent ) : QFileSystemModel( parent )
 {}
@@ -20,9 +21,9 @@ ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi 
 	{
 		auto split = fi.completeBaseName().split( "_" );
 		if ( split.size() > 0 )
-			stat.gen = split[ 0 ].toInt();
+			stat.gen = xo::from_str<int>( split[ 0 ].toStdString(), -1 );
 		if ( split.size() > 2 )
-			stat.best = split[ 2 ].toDouble();
+			stat.best = xo::from_str<double>( split[ 2 ].toStdString(), 0.0 );
 	}
 	else
 	{

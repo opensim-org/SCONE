@@ -85,7 +85,7 @@ namespace scone
 		auto build = GetSconeBuildNumber();
 		int build_nr = 0;
 		if ( build != "UNKNOWN" )
-			build_nr = xo::from_str< int >( build );
+			build_nr = xo::from_str< int >( build, 0 );
 		return version( SCONE_VERSION_MAJOR, SCONE_VERSION_MINOR, SCONE_VERSION_PATCH, build_nr, SCONE_VERSION_POSTFIX );
 
 	}
