@@ -13,7 +13,7 @@
 namespace scone
 {
 	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, index_t idx, Side side, const String& act_func ) :
-	Neuron( pn, idx, side, act_func ),
+	Neuron( pn, name, idx, side, act_func ),
 	input_sensor_(),
 	sensor_gain_( 1.0 ),
 	type_( pn.get< string >( "type" ) ),
@@ -21,14 +21,10 @@ namespace scone
 	sample_delay_window_( 21 ),
 	use_sample_delay_( false )
 	{
-		bool inverted = pn.get< bool >( "inverted", false );
-		par_name_ = GetNameNoSide( name ) + ( inverted ? "-." : "." ) + type_;
-
-		ScopedParamSetPrefixer sp( par, par_name_ );
+		ScopedParamSetPrefixer sp( par, GetParName() );
 		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );
 		sample_delay_frames_ = std::lround( delay_ / nc.GetModel().GetSimulationStepSize() );
-		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : ( inverted ? 1 : 0 ) );
-		sensor_gain_ = inverted ? -1 : 1;
+		offset_ = par.try_get( "0", pn, "offset", type_ == "L" ? 1 : 0 );
 		Dof* dof = nullptr;
 
 		auto& model = nc.GetModel();
@@ -94,6 +90,6 @@ namespace scone
 
 	string SensorNeuron::GetParName() const
 	{
-		return par_name_;
+		return Neuron::GetParName() + '.' + type_;
 	}
 }

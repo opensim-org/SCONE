@@ -8,7 +8,7 @@
 namespace scone
 {
 	PatternNeuron::PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc, int index, bool mirrored ) :
-	Neuron( pn, index, mirrored ? RightSide : LeftSide, "linear" ),
+	Neuron( pn, stringf( "CPG%d", index ), index, mirrored ? RightSide : LeftSide, "linear" ),
 	model_( nc.GetModel() ),
 	mirrored_( mirrored )
 	{
@@ -17,7 +17,6 @@ namespace scone
 		period_ = par.get( "CPG.period", pn[ "period" ] );
 		auto amount = pn.get< int >( "amount" );
 
-		name_ = stringf( "CPG%d", index );
 		ScopedParamSetPrefixer pf( par, "CPG." );
 
 		auto tname = "t" + to_str( index );

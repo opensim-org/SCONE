@@ -18,6 +18,5 @@ namespace scone
 		double sensor_gain_;
 		string source_name_;
 		string type_;
-		string par_name_;
 	};
 }

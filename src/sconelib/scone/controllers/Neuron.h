@@ -15,11 +15,11 @@ namespace scone
 
 	struct Neuron
 	{
-		Neuron( const PropNode& pn, index_t idx, Side s, const String& act_func );
+		Neuron( const PropNode& pn, const String& name, index_t idx, Side s, const String& act_func );
 		virtual ~Neuron() {}
 		virtual activation_t GetOutput( double offset = 0.0 ) const;
 		virtual string GetName( bool mirrored = false ) const { return mirrored ? GetMirroredName( name_ ) : name_; }
-		virtual string GetParName() const { return symmetric_ ? GetNameNoSide( name_ ) : name_; }
+		virtual string GetParName() const;
 		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
 
 		enum connection_t { none, bilateral, monosynaptic, antagonistic, agonistic, synergetic, synergetic_dof, synergetic_plus, ipsilateral, contralateral, source };

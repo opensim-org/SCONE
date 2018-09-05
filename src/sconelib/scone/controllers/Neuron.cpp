@@ -14,6 +14,7 @@
 #include "../model/Joint.h"
 #include "../model/model_tools.h"
 #include "xo/container/container_tools.h"
+#include "../model/MuscleId.h"
 
 namespace scone
 {
@@ -32,9 +33,10 @@ namespace scone
 		{ Neuron::agonistic, "protagonistic" } // backwards compatibility
 	} );
 
-	Neuron::Neuron( const PropNode& pn, index_t idx, Side s, const String& default_activation ) :
+	Neuron::Neuron( const PropNode& pn, const String& name, index_t idx, Side s, const String& default_activation ) :
 	output_(),
 	offset_(),
+	name_( name ),
 	index_( idx ),
 	side_( s ),
 	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) ),
@@ -55,6 +57,12 @@ namespace scone
 		}
 		input_ = value;
 		return output_ = activation_function( value );
+	}
+
+	scone::string Neuron::GetParName() const
+	{
+		auto id = MuscleId( name_ );
+		return symmetric_ ? id.base_ : id.base_ + id.side_name();
 	}
 
 	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )

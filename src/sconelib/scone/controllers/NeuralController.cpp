@@ -26,6 +26,7 @@
 #include "PatternNeuron.h"
 #include "SensorNeuron.h"
 #include "activation_functions.h"
+#include "../model/MuscleId.h"
 
 namespace scone
 {
@@ -362,7 +363,7 @@ namespace scone
 		{
 			switch ( par_mode_ )
 			{
-			case NeuralController::muscle_mode: return { { GetNameNoSide( mus->GetName() ), 1, {} } };
+			case NeuralController::muscle_mode: return { { MuscleId( mus->GetName() ).base_, 1, {} } };
 			case NeuralController::dof_mode: return GetMuscleDofs( mus );
 			case NeuralController::virtual_mode: return GetVirtualMuscles( mus, apply_mirrorring );
 			case NeuralController::virtual_dof_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus, apply_mirrorring );

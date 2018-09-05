@@ -14,10 +14,9 @@
 namespace scone
 {
 	InterNeuron::InterNeuron( const PropNode& pn, Params& par, const string& layer, index_t idx, Side side, const string& act_func ) :
-	Neuron( pn, idx, side, act_func )
+	Neuron( pn, GetSidedName( layer + stringf( "_%d", idx ), side ), idx, side, act_func )
 	{
 		ScopedParamSetPrefixer ps( par, layer + stringf( "_%d.", idx ) );
-		name_ = GetSidedName( layer + stringf( "_%d", idx ), side );
 
 		INIT_PAR( pn, par, width_, 0.0 );
 		use_distance_ = act_func == "gaussian"; // TODO: neater
