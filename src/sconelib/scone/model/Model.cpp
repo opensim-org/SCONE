@@ -8,7 +8,6 @@
 
 #include "scone/core/Profiler.h"
 #include "scone/core/Log.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/core/Factories.h"
 
 #include "SensorDelayAdapter.h"

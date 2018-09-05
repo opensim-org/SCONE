@@ -1,6 +1,5 @@
 #include "PieceWiseLinearFunction.h"
 #include "OpenSim/Common/PiecewiseLinearFunction.h"
-#include "scone/core/propnode_tools.h"
 
 namespace scone
 {

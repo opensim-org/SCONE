@@ -2,7 +2,6 @@
 #include "scone/model/Model.h"
 #include "scone/model/Leg.h"
 #include "scone/model/Muscle.h"
-#include "scone/core/propnode_tools.h"
 
 #include "scone/model/Body.h"
 #include "scone/core/Log.h"

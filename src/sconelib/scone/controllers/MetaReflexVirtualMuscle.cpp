@@ -1,6 +1,5 @@
 #include "MetaReflexVirtualMuscle.h"
 #include "scone/model/Model.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/model/Muscle.h"
 #include "scone/core/Exception.h"
 #include "scone/model/Joint.h"

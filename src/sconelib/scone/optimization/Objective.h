@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Params.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/core/HasSignature.h"
 #include "spot/objective.h"
 #include "scone/core/system_tools.h"

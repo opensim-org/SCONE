@@ -46,8 +46,6 @@ set(CORE_STORAGE_FILES
 	scone/core/Storage.h
 	scone/core/StorageIo.h
 	scone/core/StorageIo.cpp
-	scone/core/propnode_tools.h
-	scone/core/propnode_tools.cpp
 	scone/core/PropNode.h
 	scone/core/StringMap.h
 )

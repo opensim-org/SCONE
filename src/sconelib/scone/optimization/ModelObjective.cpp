@@ -1,5 +1,7 @@
 #include "ModelObjective.h"
+
 #include "scone/core/Factories.h"
+#include "scone/core/Log.h"
 #include "xo/filesystem/filesystem.h"
 
 namespace scone
@@ -62,7 +64,7 @@ namespace scone
 		}
 
 		// report unused parameters
-		LogUntouched( objProp );
+		xo::log_unaccessed( objProp );
 
 		return mob;
 	}

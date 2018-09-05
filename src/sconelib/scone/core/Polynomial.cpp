@@ -1,5 +1,4 @@
 #include "Polynomial.h"
-#include "scone/core/propnode_tools.h"
 
 namespace scone
 {

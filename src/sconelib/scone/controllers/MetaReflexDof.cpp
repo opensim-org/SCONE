@@ -1,7 +1,6 @@
 #include "MetaReflexDof.h"
 #include "scone/model/Locality.h"
 #include "scone/model/Dof.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Link.h"
 #include "scone/model/Joint.h"

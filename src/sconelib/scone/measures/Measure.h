@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scone/core/propnode_tools.h"
 #include "scone/model/Controller.h"
 #include "scone/core/HasName.h"
 

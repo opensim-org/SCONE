@@ -1,5 +1,4 @@
 #include "Reflex.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Locality.h"
 #include "scone/core/math.h"

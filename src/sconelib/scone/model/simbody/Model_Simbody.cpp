@@ -1,6 +1,5 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/core/Factories.h"
 #include "scone/core/StorageIo.h"
 

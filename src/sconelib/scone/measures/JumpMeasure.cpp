@@ -1,5 +1,6 @@
 #include "JumpMeasure.h"
 #include "scone/model/Locality.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {

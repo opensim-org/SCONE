@@ -9,6 +9,7 @@
 #include "xo/system/log_sink.h"
 #include "xo/system/log.h"
 #include "scone/core/Exception.h"
+#include "scone/core/Log.h"
 
 using std::cout;
 using std::endl;

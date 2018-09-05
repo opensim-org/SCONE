@@ -57,7 +57,7 @@ void optimization_test()
 	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test" );
 	const PropNode pn = load_file( "rosenbrock_50_test.xml" );
 	OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
-	LogUntouched( pn );
+	xo::log_unaccessed( pn );
 	o->Run();
 
 	XO_TEST( o->GetBestFitness() < 0.1 );

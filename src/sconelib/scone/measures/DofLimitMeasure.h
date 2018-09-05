@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Measure.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/core/Range.h"
 #include "scone/core/Angle.h"
 #include "scone/core/Statistic.h"

@@ -1,7 +1,5 @@
 #include "FeedForwardController.h"
 
-#include "scone/core/propnode_tools.h"
-
 #include "scone/model/Controller.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Locality.h"

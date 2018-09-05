@@ -1,5 +1,4 @@
 #include "PieceWiseConstantFunction.h"
-#include "scone/core/propnode_tools.h"
 #include "OpenSim/Common/PiecewiseConstantFunction.h"
 
 namespace scone

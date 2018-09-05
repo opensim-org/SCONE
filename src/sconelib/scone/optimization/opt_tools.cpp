@@ -17,7 +17,7 @@ namespace scone
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_file.parent_path() ); // external resources are copied from current path
 		OptimizerUP o = CreateOptimizer( props.get_child( "Optimizer" ) );
-		LogUntouched( props );
+		xo::log_unaccessed( props );
 
 		//// copy original and write resolved config files
 		//xo::path outdir( o->AcquireOutputFolder() );
@@ -52,7 +52,7 @@ namespace scone
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
 		// report unused parameters
-		LogUntouched( objProp );
+		xo::log_unaccessed( objProp );
 
 		// set data storage
 		auto model = so.CreateModelFromParFile( filename );

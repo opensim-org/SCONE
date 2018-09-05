@@ -2,7 +2,6 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Locality.h"
 #include "scone/model/Dof.h"
-#include "scone/core/propnode_tools.h"
 
 namespace scone
 {

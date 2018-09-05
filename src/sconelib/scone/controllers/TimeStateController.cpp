@@ -1,5 +1,4 @@
 #include "TimeStateController.h"
-#include "scone/core/propnode_tools.h"
 
 namespace scone
 {

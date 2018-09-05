@@ -7,12 +7,14 @@
     #include <QtGui/QApplication>
 #endif
 
-#include "scone/model/simbody/sim_simbody.h"
 #include "scone/core/system_tools.h"
+#include "scone/core/string_tools.h"
+#include "scone/core/Log.h"
+
 #include "qt_tools.h"
+
 #include "xo/system/log_sink.h"
 #include "xo/system/system_tools.h"
-#include "scone/core/string_tools.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 

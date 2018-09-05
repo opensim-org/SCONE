@@ -1,7 +1,6 @@
 #include "Optimizer.h"
 
 #include "scone/core/Log.h"
-#include "scone/core/propnode_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/Factories.h"

@@ -1,7 +1,5 @@
 #include "Simulation.h"
 
-#include "scone/core/propnode_tools.h"
-
 namespace scone
 {
 	Simulation::Simulation( const PropNode& props ) :
