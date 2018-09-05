@@ -55,7 +55,13 @@ namespace scone
 	void CmaPoolOptimizerReporter::on_start( const optimizer& opt )
 	{
 		auto& cma = dynamic_cast<const CmaPoolOptimizer&>( opt );
-		cma.OutputStatus( "scenario", cma.GetSignature() );
+		auto pn = cma.GetStatusPropNode();
+		pn.set( "scenario", cma.GetSignature() );
+		pn.set( "folder", cma.GetOutputFolder() );
+		pn.set( "dim", cma.GetObjective().dim() );
+		pn.set( "minimize", cma.IsMinimizing() );
+		pn.set( "prediction_window", cma.prediction_window_ );
+
 	}
 
 	void CmaPoolOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
