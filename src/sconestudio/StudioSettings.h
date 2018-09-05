@@ -6,6 +6,6 @@
 
 namespace scone
 {
-	xo::settings GetStudioSettings();
+	xo::settings& GetStudioSettings();
 	template< typename T > T GetStudioSetting( const String& key ) { return GetStudioSettings().get< T >( key ); }
 }

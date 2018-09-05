@@ -7,6 +7,7 @@
 #include "scone/core/PropNode.h"
 #include "xo/numerical/polynomial.h"
 #include "scone/core/types.h"
+#include "qt_tools.h"
 
 using scone::String;
 using scone::PropNode;
@@ -17,52 +18,66 @@ class ProgressDockWidget : public QDockWidget
 	Q_OBJECT
 
 public:
+	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
+	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
+
 	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
 	virtual ~ProgressDockWidget();
 
-	QString& getIdentifier() { return name.isEmpty() ? fileName : name; }
+	QString getIdentifier() { return optimizations.empty() ? "" : make_qt( optimizations.front().name ); }
 
 	enum AxisScaleType { Linear, Logarithmic };
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
 
 	SconeStudio* studio;
-	QString name;
-	QString fileName;
-	QString errorMsg;
-	QString tooltipText;
 	QProcess* process;
 	Ui::ProgressDockWidget ui;
-	int best_gen;
-	float best;
-	float highest;
-	float lowest;
-	float cur_best;
-	float cur_avg;
-	float cur_med;
-	float cur_pred;
-	xo::linear_function< float > cur_reg;
-	int cur_gen;
+	QString fileName;
+	State state;
+	QString message;
+	PropNode tooltipProps;
+	QString tooltipText;
 
+	struct Optimization
+	{
+		int idx;
+		String name;
+		String finished;
+		String error;
+		int max_generations;
+		int window_size;
+		bool is_minimizing;
+
+		int best_gen = 0;
+		float best = 0.0f;
+		int cur_gen = 0;
+		float cur_pred = 0.0f;
+		xo::linear_function< float > cur_reg;
+
+		QVector< double > bestvec;
+		QVector< double > medvec;
+		QVector< double > genvec;
+
+		void Update( const PropNode& pn, ProgressDockWidget& wdg );
+		bool has_update_flag = false;
+	};
+
+	int min_view_gens;
 	int view_first_gen;
 	int view_last_gen;
-	int min_view_gens = 20;
 
-	int max_generations;
-	int window_size;
-	QVector< double > bestvec;
-	QVector< double > avgvec;
-	QVector< double > medvec;
-	QVector< double > genvec;
+	int best_idx;
+	bool minimize;
+	String scenario;
 
-	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
-	State state;
+	std::vector< Optimization > optimizations;
 
-	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
 	ProgressResult updateProgress();
 	bool readyForDestruction();
 
 public slots:
 	void rangeChanged( const QCPRange &newRange, const QCPRange &oldRange );
+	void fixRangeY();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;

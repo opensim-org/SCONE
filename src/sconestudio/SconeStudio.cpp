@@ -54,6 +54,7 @@ scene_( true )
 	analysisView = new QDataAnalysisView( &storageModel, this );
 	analysisView->setObjectName( "Analysis" );
 	analysisView->setMinSeriesInterval( 0 );
+	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
@@ -133,7 +134,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 
 	// start timer for viewer
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
-	backgroundUpdateTimer.start( 1000 );
+	backgroundUpdateTimer.start( 500 );
 
 	// only do this after the ui has been initialized
 	xo::log::add_sink( ui.outputText );
@@ -366,17 +367,25 @@ void SconeStudio::fileExit()
 void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 {
 	optimizations.push_back( pdw );
-	addDockWidget( optimizations.size() < 3 ? Qt::BottomDockWidgetArea : Qt::RightDockWidgetArea, pdw );
 
-	// organize into columns
-	if ( optimizations.size() >= 3 )
+	if ( optimizations.size() < 4 )
+	{
+		// stack below results
+		addDockWidget( Qt::LeftDockWidgetArea, pdw );
+		for ( index_t r = 0; r < optimizations.size(); ++r )
+			splitDockWidget( r == 0 ? ui.resultsDock : optimizations[ r - 1 ], optimizations[ r ], Qt::Vertical );
+	}
+	else
 	{ 
+		// organize into columns
+		addDockWidget( Qt::LeftDockWidgetArea, pdw );
+
 		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
 		auto rows = ( optimizations.size() + columns - 1 ) / columns;
 		log::info( "Reorganizing windows, columns=", columns, " rows=", rows );
 
 		// first column
-		splitDockWidget( ui.viewerDock, optimizations[ 0 ], Qt::Horizontal );
+		splitDockWidget( optimizations[ 0 ], ui.resultsDock, Qt::Horizontal );
 		for ( index_t r = 1; r < rows; ++r )
 			splitDockWidget( optimizations[ ( r - 1 ) * columns ], optimizations[ r * columns ], Qt::Vertical );
 
@@ -549,7 +558,7 @@ void SconeStudio::updateOptimizations()
 		if ( o->updateProgress() == ProgressDockWidget::ShowErrorResult )
 		{
 			QString title = "Error optimizing " + o->fileName;
-			QString msg = o->errorMsg;
+			QString msg = o->message;
 			o->close();
 			QMessageBox::critical( this, title, msg );
 			return; // must return here because close invalidates the iterator

@@ -1,5 +1,6 @@
 #include "CmaOptimizer.h"
 #include "xo/string/string_tools.h"
+#include "xo/filesystem/filesystem.h"
 
 namespace scone
 {
@@ -23,7 +24,10 @@ namespace scone
 
 	scone::String CmaOptimizer::GetClassSignature() const
 	{
-		return Optimizer::GetClassSignature() + ( random_seed != DEFAULT_RANDOM_SEED ? xo::stringf( ".R%d", random_seed ) : "" );
+		auto str = Optimizer::GetClassSignature();
+		if ( random_seed != DEFAULT_RANDOM_SEED )
+			str += xo::stringf( ".R%d", random_seed );
+		return str;
 	}
 
 	CmaOptimizer::~CmaOptimizer()

@@ -7,6 +7,7 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "xo/system/error_code.h"
 #include <iostream>
+#include "xo/system/log_sink.h"
 
 namespace scone
 {
@@ -21,27 +22,32 @@ namespace scone
 		virtual void Run() = 0;
 
 		/// get the results output folder (creates it if it doesn't exist)
-		const path& AcquireOutputFolder() const;
+		const path& GetOutputFolder() const;
 
 		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		virtual bool IsMinimizing() const { return m_Objective->info().minimize(); }
 
 		double GetBestFitness() { return m_BestFitness; }
 
-		void SetConsoleOutput( bool output ) { console_output = output; }
-		bool GetProgressOutput() const { return console_output && !status_output; }
-		bool GetStatusOutput() const { return status_output; }
-		void SetStatusOutput( bool s ) { status_output = s; }
+		enum OutputMode { no_output, console_output, status_output };
+		virtual void SetOutputMode( OutputMode m ) { output_mode_ = m; }
+		bool GetProgressOutput() const { return output_mode_ == console_output; }
+		bool GetStatusOutput() const { return output_mode_ == status_output; }
 
-		template< typename T > void OutputStatus( const String& key, const T& value ) const {
-			std::cout << std::endl << "*" << key << "=" << value << std::endl;
-		}
+		PropNode GetStatusPropNode() const { PropNode pn; if ( !id_.empty() ) pn[ "id" ] = id_; return pn; }
 
-		void SetStatus( PropNode& pn ) const {
-			pn[ "id" ] = m_Name;
+		void OutputStatus( const PropNode& pn ) const {
 			xo::error_code ec;
 			std::cout << "*" << xo::prop_node_serializer_zml_concise( pn, &ec ) << std::endl;
 		}
+
+		template< typename T > void OutputStatus( const String& key, const T& value ) const {
+			PropNode pn = GetStatusPropNode();
+			pn.set( key, value );
+			OutputStatus( pn );
+		}
+
+		const String& id() const { return id_; }
 
 		path output_root;
 
@@ -75,17 +81,21 @@ namespace scone
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 
+		void CreateOutputFolder( const PropNode& props );
+
 		// current status
 		double m_BestFitness;
-		bool console_output;
-		bool status_output;
+		OutputMode output_mode_;
+
+		mutable path output_folder_;
+		mutable String id_;
+
+		xo::log::level log_level_;
+		u_ptr< xo::log::file_sink > log_sink_;
 
 	private:
-		void InitOutputFolder() const;
 		static void SetThreadPriority( int priority );
 
-		String m_Name;
-		mutable path m_OutputFolder;
 		mutable std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
 
 	private: // non-copyable and non-assignable

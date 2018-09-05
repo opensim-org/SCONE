@@ -6,6 +6,7 @@
 #include "xo/filesystem/path.h"
 
 #include "xo/diagnose/test_framework.h"
+#include "xo/filesystem/filesystem.h"
 
 using namespace scone;
 
@@ -53,10 +54,10 @@ void optimization_test()
 {
 	GetObjectiveFactory().register_class< TestObjective >();
 
-	const PropNode pn = load_file( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test/rosenbrock_50_test.xml" );
+	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test" );
+	const PropNode pn = load_file( "rosenbrock_50_test.xml" );
 	OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
 	LogUntouched( pn );
-	o->SetConsoleOutput( false );
 	o->Run();
 
 	XO_TEST( o->GetBestFitness() < 0.1 );

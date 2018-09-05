@@ -32,7 +32,7 @@ set(CORE_SYSTEM_FILES
 	scone/core/Profiler.cpp
     scone/core/Profiler.h
 	scone/core/Exception.h
-	scone/core/core.h
+	scone/core/platform.h
 	scone/core/Log.cpp
 	scone/core/Log.h
 	scone/core/version.h
@@ -65,10 +65,6 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/ExternalBalanceController.cpp
 	scone/controllers/ExternalBalanceController.h
 	scone/controllers/MirrorController.h
-	)
-set(CS_SYSTEM_FILES
-	scone/controllers/cs_tools.cpp
-	scone/controllers/cs_tools.h
 	)
 set(CS_CONTROLLERS_MRC_FILES
 	scone/controllers/MetaReflexParams.cpp
@@ -161,6 +157,8 @@ set(OPT_API_FILES
 	scone/optimization/CmaOptimizer.h
 	scone/optimization/CmaOptimizerSpot.cpp
 	scone/optimization/CmaOptimizerSpot.h
+	scone/optimization/CmaPoolOptimizer.cpp
+	scone/optimization/CmaPoolOptimizer.h
 #	scone/optimization/CmaOptimizerShark2.cpp
 #	scone/optimization/CmaOptimizerShark2.h
 #	scone/optimization/CmaOptimizerShark3.cpp
@@ -179,6 +177,8 @@ set(OPT_API_FILES
 	scone/optimization/ModelObjective.h
 	scone/optimization/SimulationObjective.cpp
 	scone/optimization/SimulationObjective.h
+	scone/optimization/TestObjective.cpp
+	scone/optimization/TestObjective.h
 	scone/optimization/ImitationObjective.cpp
 	scone/optimization/ImitationObjective.h
 	scone/optimization/SimilarityObjective.cpp
@@ -271,7 +271,6 @@ set (SCONELIB_FILES
 
     ${CS_FUNCTIONS_FILES}
 	${MEASURE_FILES}
-	${CS_SYSTEM_FILES} 
     ${CS_TOOLS_FILES}
 	
 	${OPT_API_FILES}

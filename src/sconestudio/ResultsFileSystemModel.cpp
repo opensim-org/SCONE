@@ -6,6 +6,7 @@
 #include "xo/container/prop_node_tools.h"
 #include "xo/system/error_code.h"
 #include "scone/core/Log.h"
+#include "xo/string/string_cast.h"
 
 ResultsFileSystemModel::ResultsFileSystemModel( QObject* parent ) : QFileSystemModel( parent )
 {}
@@ -15,14 +16,14 @@ ResultsFileSystemModel::~ResultsFileSystemModel()
 
 ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi ) const
 {
-	Status stat{ 0, 0 };
-	if ( !fi.isDir() && fi.suffix() == "par" )
+	Status stat{ -1, 0 };
+	if ( fi.isFile() && fi.suffix() == "par" )
 	{
 		auto split = fi.completeBaseName().split( "_" );
 		if ( split.size() > 0 )
-			stat.gen = split[ 0 ].toInt();
+			stat.gen = xo::from_str<int>( split[ 0 ].toStdString(), -1 );
 		if ( split.size() > 2 )
-			stat.best = split[ 2 ].toDouble();
+			stat.best = xo::from_str<double>( split[ 2 ].toStdString(), 0.0 );
 	}
 	else
 	{
@@ -36,10 +37,14 @@ ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi 
 		for ( QDirIterator dir_it( fi.absoluteFilePath() ); dir_it.hasNext(); )
 		{
 			QFileInfo fileinf = QFileInfo( dir_it.next() );
-			if ( !fileinf.isDir() )
+			if ( fileinf.isFile() )
 			{
 				auto fs = getStatus( fileinf );
 				if ( fs.gen > stat.gen ) stat = fs;
+			}
+			else if ( fileinf.fileName() != ".." && fileinf.fileName() != "." )
+			{
+				// do something?
 			}
 		}
 		stat.modified = fi.lastModified();
@@ -75,7 +80,7 @@ QVariant ResultsFileSystemModel::data( const QModelIndex &idx, int role ) const
 	if ( role == Qt::DisplayRole )
 	{
 		auto stat = getStatus( fileInfo( idx ) );
-		if ( stat.gen == 0 && stat.best == 0.0 )
+		if ( stat.gen < 0 )
 			return QVariant( QString( "" ) );
 
 		switch ( idx.column() - QFileSystemModel::columnCount() )

@@ -1,6 +1,5 @@
 #include "scone/core/Log.h"
 #include "scone/optimization/opt_tools.h"
-#include "scone/controllers/cs_tools.h"
 #include "scone/model/simbody/sim_simbody.h"
 #include "xo/system/system_tools.h"
 #include <tclap/CmdLine.h>
@@ -53,31 +52,12 @@ int main(int argc, char* argv[])
 				props.set_delimited( kvp.first, kvp.second, '.' );
 			}
 
-			// create optimizer
-			//if ( multiArg.isSet() )
-			//{
-			//	// pool optimization, REQUIRES scone::Optimizer to be derived from spot::optimizer
-			//	OptimizerUP base_opt = PrepareOptimization( props, scenario_file );
-			//	auto op = spot::optimizer_pool( base_opt->GetObjective(), promiseWindowArg.getValue(),  );
-			//	for ( int i = 0; i < multiArg.getValue(); ++i )
-			//	{
-			//		OptimizerUP o = PrepareOptimization( props, scenario_file );
-			//		o->SetConsoleOutput( !quietOutput.getValue() );
-			//		o->SetStatusOutput( statusOutput.getValue() );
-			//		if ( o->GetStatusOutput() ) o->OutputStatus( "scenario", optArg.getValue() );
-			//		// TODO: op.push_back( std::move( o ) );
-			//	}
-			//	op.run();
-			//}
-			//else
-			{
-				OptimizerUP o = PrepareOptimization( props, scenario_file );
-				o->SetConsoleOutput( !quietOutput.getValue() );
-				o->SetStatusOutput( statusOutput.getValue() );
-				if ( o->GetStatusOutput() )
-					o->OutputStatus( "scenario", optArg.getValue() );
-				o->Run();
-			}
+			OptimizerUP o = PrepareOptimization( props, scenario_file );
+			if ( statusOutput.getValue() )
+				o->SetOutputMode( Optimizer::status_output );
+			else o->SetOutputMode( quietOutput.getValue() ? Optimizer::no_output : Optimizer::console_output );
+			//o->OutputStatus( "scenario", optArg.getValue() );
+			o->Run();
 		}
 		else if ( resArg.isSet() )
 		{
@@ -87,13 +67,13 @@ int main(int argc, char* argv[])
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen
 	}
-	catch (std::exception& e)
+	catch ( std::exception& e )
 	{
 		log::Critical( e.what() );
-		cout << std::endl << "*error=" << e.what() << endl;
+
+		cout << std::endl << "*error=" << xo::try_quoted( e.what() ) << std::endl;
 		cout.flush();
 
-		// sleep some time for the error message to sink in...
 		std::this_thread::sleep_for( std::chrono::seconds( 5 ) );
 	}
 	catch (TCLAP::ExitException& e )

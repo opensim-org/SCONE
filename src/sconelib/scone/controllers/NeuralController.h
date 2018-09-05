@@ -40,7 +40,7 @@ namespace scone
 
 		virtual void WriteResult( const xo::path& file ) const override;
 
-		static string FixLayerName( string str ) { return xo::from_str< int >( str ) > 0 ? "N" + str : str; }
+		static string FixLayerName( string str ) { return xo::from_str< int >( str, 0 ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );
 
 		struct MuscleParam {

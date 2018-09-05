@@ -17,6 +17,7 @@ namespace scone
 {
 	CmaOptimizerCCMAES::CmaOptimizerCCMAES( const PropNode& props ) : CmaOptimizer( props )
 	{
+		CreateOutputFolder( props );
 	}
 
 	void CmaOptimizerCCMAES::Run()
@@ -39,13 +40,13 @@ namespace scone
 			cma.enable_fitness_tracking( window_size );
 
 			// start optimization
-			xo::log::file_sink log_sink( xo::log::info_level, AcquireOutputFolder() / "optimization.log" );
+			xo::log::file_sink log_sink( xo::log::info_level, GetOutputFolder() / "optimization.log" );
 			log::InfoF( "Starting optimization, dim=%d, lambda=%d, mu=%d", dim, lambda_, mu_ );
 
 			if ( GetStatusOutput() )
 			{
 				// print out some info
-				OutputStatus( "folder", AcquireOutputFolder() );
+				OutputStatus( "folder", GetOutputFolder() );
 				OutputStatus( "dim", dim );
 				OutputStatus( "sigma", sigma_ );
 				OutputStatus( "lambda", lambda_ );
@@ -55,7 +56,7 @@ namespace scone
 			}
 
 			// setup history.txt
-			std::ofstream history_str( ( AcquireOutputFolder() / "history.txt" ).string() );
+			std::ofstream history_str( ( GetOutputFolder() / "history.txt" ).string() );
 			history_str << "Step\tBest\tAverage\tPredicted\tSlope\tOffset" << std::endl;
 
 			// optimization loop
@@ -67,8 +68,8 @@ namespace scone
 					printf( "%04d (S=%.3f):", int( gen ), cma.sigma() ); // MSVC2013 doesn't support %zu
 
 				// sample parameter sets
-				auto& pop = cma.sample_population();
-				auto results = cma.evaluate( pop );
+				cma.step();
+				auto results = cma.current_step_fitnesses();
 
 				// analyze results
 				auto current_best_it = GetObjective().info().maximize() ? std::max_element( results.begin(), results.end() ) : std::min_element( results.begin(), results.end() );
@@ -106,13 +107,13 @@ namespace scone
 					// copy best solution to par
 					ParamInfo parinf( GetObjective().info() );
 					parinf.set_mean_std( cma.current_mean(), cma.current_std() );
-					ParamInstance par( parinf, pop[ current_best_idx ].values() );
+					ParamInstance par( parinf, cma.current_step_best_point().values() );
 
 					m_LastFileOutputGen = gen;
 
 					// write .par file
 					String ind_name = xo::stringf( "%04d_%.3f_%.3f", gen, current_avg_fitness, current_best );
-					auto file_base = AcquireOutputFolder() / ind_name;
+					auto file_base = GetOutputFolder() / ind_name;
 					std::vector< path > outputFiles;
 					std::ofstream( ( file_base + ".par" ).str() ) << par;
 					outputFiles.push_back( file_base + ".par" );
