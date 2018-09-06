@@ -35,6 +35,12 @@ namespace scone
 		return CreateModelFromParams( ParamInstance( info_, parfile ) );
 	}
 
+	std::vector<path> ModelObjective::WriteResults( const path & file_base )
+	{
+		// this does not work because we don't have a model member in Objective
+		SCONE_THROW_NOT_IMPLEMENTED;
+	}
+
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& file )
 	{
 		bool is_par_file = file.extension() == "par";

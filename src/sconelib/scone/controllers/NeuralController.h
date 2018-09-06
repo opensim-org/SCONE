@@ -38,7 +38,7 @@ namespace scone
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
-		virtual void WriteResult( const xo::path& file ) const override;
+		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const override;
 
 		static string FixLayerName( string str ) { return xo::from_str< int >( str, 0 ) > 0 ? "N" + str : str; }
 		TimeInSeconds GetDelay( const string& name );

@@ -254,8 +254,7 @@ namespace scone
 			log::info( "fitness = ", fitness );
 			PropNode results;
 			results.push_back( "result", model_objective->GetReport( *model ) );
-			model->WriteResult( filename );
-			//WriteStorageSto( data, path( filename ).replace_extension ( "sto" ), ( filename.parent_path().filename() / filename.stem() ).str() );
+			model->WriteResults( filename );
 
 			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );

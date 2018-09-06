@@ -22,7 +22,9 @@ namespace scone
 		virtual TimeInSeconds GetDuration() const = 0;
 		virtual ModelUP CreateModelFromParams( Params& point ) const;
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
-		
+
+		virtual std::vector<path> WriteResults( const path& file_base ) override;
+
 	protected:
 		PropNode m_ModelPropsCopy;
 	};

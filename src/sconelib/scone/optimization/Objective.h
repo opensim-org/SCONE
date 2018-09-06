@@ -17,6 +17,6 @@ namespace scone
 		virtual ~Objective();
 
 		// write results and return all files written
-		virtual std::vector< String > WriteResults( const String& file_base ) { return std::vector< String >(); }
+		virtual std::vector< path > WriteResults( const path& file_base ) { return std::vector< path >(); }
 	};
 }

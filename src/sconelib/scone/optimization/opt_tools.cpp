@@ -52,7 +52,7 @@ namespace scone
 		log::info( statistics );
 
 		// write results
-		auto files = obj->WriteResults( output_base.string() );
+		auto files = model->WriteResults( output_base );
 		log::info( "Results written to " + output_base.string() + "*" );
 
 		return statistics;

@@ -1,6 +1,7 @@
 #include "CompositeController.h"
 
 #include "scone/core/Factories.h"
+#include "xo/container/container_tools.h"
 
 namespace scone
 {
@@ -33,10 +34,12 @@ namespace scone
 			c->StoreData( frame, flags );
 	}
 
-	void CompositeController::WriteResult( const xo::path& file ) const
+	std::vector<xo::path> CompositeController::WriteResults( const xo::path& file ) const
 	{
+		std::vector<xo::path> files;
 		for ( auto& c : controllers_ )
-			c->WriteResult( file );
+			xo::append( files, c->WriteResults( file ) );
+		return files;
 	}
 
 	String CompositeController::GetClassSignature() const

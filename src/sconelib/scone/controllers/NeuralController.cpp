@@ -269,8 +269,9 @@ namespace scone
 		}
 	}
 
-	void NeuralController::WriteResult( const xo::path& file ) const
+	std::vector<xo::path> NeuralController::WriteResults( const xo::path& file ) const
 	{
+		std::vector<xo::path> files;
 		xo::table< double > weights, contribs, sources;
 		std::vector< std::pair< double, string > > contrib_vec;
 
@@ -298,6 +299,7 @@ namespace scone
 		std::sort( contrib_vec.begin(), contrib_vec.end(), std::greater<>() );
 
 		std::ofstream str( ( file + ".NeuralController.txt" ).str() );
+		files.emplace_back( file + ".NeuralController.txt" );
 
 		// output gains
 		str << weights << std::endl;
@@ -321,6 +323,7 @@ namespace scone
 			str << std::endl;
 		}
 
+		return files;
 	}
 
 	String NeuralController::GetClassSignature() const

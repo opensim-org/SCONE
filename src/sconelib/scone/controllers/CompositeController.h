@@ -12,7 +12,7 @@ namespace scone
 		
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
-		virtual void WriteResult( const xo::path& file ) const override;
+		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const override;
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

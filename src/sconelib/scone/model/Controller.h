@@ -31,7 +31,7 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 		// default implementation doesn't store anything
-		virtual void WriteResult( const xo::path& file ) const {}
+		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const { return std::vector<xo::path>(); }
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }
