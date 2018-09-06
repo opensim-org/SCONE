@@ -163,6 +163,11 @@ namespace scone
 		}
 	}
 
+	bool Model::GetStoreData() const
+	{
+		return m_StoreData && ( m_Data.IsEmpty() || xo::greater_or_equal( GetTime() - m_Data.Back().GetTime(), m_StoreDataInterval, 1e-6 ) );
+	}
+
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		SCONE_PROFILE_FUNCTION;

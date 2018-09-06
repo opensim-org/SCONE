@@ -391,8 +391,7 @@ namespace scone
 
 	String Model_Simbody::WriteResult( const path& file ) const
 	{
-		//WriteStorageSto( m_Data, ( file + ".sto" ).str(), ( file.parent_path().filename() / file.stem() ).str() );
-		// write results
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
 		for ( auto& c : GetControllers() )
 			c->WriteResult( file );
 
@@ -754,12 +753,6 @@ namespace scone
 		else
 			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
-
-	//void Model_Simbody::SetTkState( const State& s )
-	//{
-	//	for ( Index i = 0; i < s.GetSize(); ++i )
-	//		GetOsimModel().setStateVariable( GetTkState(), s.GetName( i ), s.GetValue( i ) );
-	//}
 
 	void Model_Simbody::InitStateFromTk()
 	{

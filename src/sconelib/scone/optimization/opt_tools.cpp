@@ -12,42 +12,22 @@ using xo::timer;
 
 namespace scone
 {
-	SCONE_API OptimizerUP PrepareOptimization( const PropNode& props, const path& scenario_file )
+	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_file )
 	{
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_file.parent_path() ); // external resources are copied from current path
-		OptimizerUP o = CreateOptimizer( props.get_child( "Optimizer" ) );
-		xo::log_unaccessed( props );
-
-		//// copy original and write resolved config files
-		//xo::path outdir( o->AcquireOutputFolder() );
-		//xo::copy_file( scenario_file.filename(), outdir / path( "config_original" ).replace_extension( scenario_file.extension() ), true );
-		//xo::save_file( props, outdir / "config.scone" );
-		//xo::copy_file( scenario_file.parent_path() / o->init_file, outdir / o->init_file.filename(), true );
-
-		//// copy all objective resources to output folder
-		//for ( auto& f : o->GetObjective().GetExternalResources() )
-		//	xo::copy_file( f, outdir / f.filename(), true );
-
-		// set current path to output folder
-		//xo::current_path( outdir );
+		OptimizerUP o = CreateOptimizer( scenario_pn.get_child( "Optimizer" ) );
+		xo::log_unaccessed( scenario_pn );
 
 		// return created optimizer
 		return std::move( o );
 	}
 
-	PropNode SCONE_API SimulateObjective( const path& filename )
+	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base, double data_resolution )
 	{
-		auto folder = filename.parent_path();
-		auto config_path = xo::find_file( { folder / "config.xml", folder / "config.scone" } );
-		if ( config_path.has_parent_path() )
-		{
-			current_path( config_path.parent_path() );
-			log::info( "Path set to ", config_path.parent_path() );
-		}
+		current_path( par_file.parent_path() );
 
-		const PropNode configProp = xo::load_file_with_include( path( config_path.string() ), "INCLUDE" );
-		const PropNode& objProp = configProp[ "Optimizer" ][ "Objective" ];
+		const PropNode& objProp = scenario_pn[ "Optimizer" ][ "Objective" ];
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
@@ -55,8 +35,8 @@ namespace scone
 		xo::log_unaccessed( objProp );
 
 		// set data storage
-		auto model = so.CreateModelFromParFile( filename );
-		model->SetStoreData( true );
+		auto model = so.CreateModelFromParFile( par_file );
+		model->SetStoreData( true, data_resolution );
 		Profiler::GetGlobalInstance().Reset();
 
 		timer tmr;
@@ -72,8 +52,18 @@ namespace scone
 		log::info( statistics );
 
 		// write results
-		obj->WriteResults( path( filename ).replace_extension().str() );
+		obj->WriteResults( output_base.string() );
 
 		return statistics;
+	}
+
+	SCONE_API path FindScenario( const path& scenario_or_par_file )
+	{
+		if ( scenario_or_par_file.extension() == "par" )
+		{
+			auto folder = scenario_or_par_file.parent_path();
+			return xo::find_file( { folder / "config.scone" / folder / "config.xml" } );
+		}
+		else return scenario_or_par_file;
 	}
 }

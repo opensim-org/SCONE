@@ -37,20 +37,20 @@ namespace scone
 		filename = file;
 
 		// see if we can load a matching .sto file
-		auto sto_file = xo::path( file.str() ).replace_extension( "sto" );
-		if ( !force_evaluation && xo::exists( sto_file ) && filename.extension() == "par" )
+		auto sto_file = xo::try_find_file( { file + ".sto", path( file ).replace_extension( ".sto" ) } );
+		if ( !force_evaluation && sto_file && filename.extension() == "par" )
 		{
 			xo::timer t;
-			log::info( "Reading ", sto_file.string() );
-			ReadStorageSto( data, sto_file );
+			log::info( "Reading ", *sto_file );
+			ReadStorageSto( data, *sto_file );
 			InitStateDataIndices();
-			log::trace( "Read ", sto_file.string(), " in ", t.seconds(), " seconds" );
+			log::trace( "Read ", sto_file, " in ", t.seconds(), " seconds" );
 		}
 		else
 		{
 			// start evaluation
 			is_evaluating = true;
-			model->SetStoreData( true );
+			model->SetStoreData( true, 1.0 / GetSconeSettings().get< double >( "data.frequency" ) );
 			if ( GetSconeSettings().get< bool >( "data.muscle" ) )
 				model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
 			if ( GetSconeSettings().get< bool >( "data.body" ) )
@@ -244,7 +244,7 @@ namespace scone
 		//log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
 
 		// copy data and init data
-		data = model->GetData().CopySlice( 0, 0, stride );
+		data = model->GetData();
 		if ( !data.IsEmpty() )
 			InitStateDataIndices();
 
@@ -254,8 +254,8 @@ namespace scone
 			log::info( "fitness = ", fitness );
 			PropNode results;
 			results.push_back( "result", model_objective->GetReport( *model ) );
-			model->WriteResult( path( filename ).replace_extension() );
-			WriteStorageSto( data, path( filename ).replace_extension ( "sto" ), ( filename.parent_path().filename() / filename.stem() ).str() );
+			model->WriteResult( filename );
+			//WriteStorageSto( data, path( filename ).replace_extension ( "sto" ), ( filename.parent_path().filename() / filename.stem() ).str() );
 
 			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
 			log::info( results );

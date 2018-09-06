@@ -24,46 +24,49 @@ int main(int argc, char* argv[])
 		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 
 		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', "0.1", true );
-		TCLAP::ValueArg< string > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
-		TCLAP::ValueArg< string > resArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Result file" );
+		TCLAP::ValueArg< String > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
+		TCLAP::ValueArg< String > parArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Parameter file" );
+		TCLAP::ValueArg< String > outArg( "r", "output", "Output file for evaluation result", false, "", "Result file" );
+		TCLAP::ValueArg< double > freqArg( "f", "frequency", "Output file data frequency", false, 100, "Frequency" );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
-		//TCLAP::ValueArg< int > multiArg( "p", "pool", "The number of optimizations to run in parallel", false, 1, "1-99", cmd );
-		//TCLAP::ValueArg< int > promiseWindowArg( "pw", "pool-window", "Window size to determine most promising optimization of pool", false, 200, "2-...", cmd );
-		//TCLAP::ValueArg< int > promiseWindowArg( "ps", "pool-min-steps", "Minimum number of steps before pool predictions are deemed valid", false, 200, "2-...", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
-		cmd.xorAdd( optArg, resArg );
+		cmd.xorAdd( optArg, parArg );
 		cmd.parse( argc, argv );
 
+		SCONE_THROW_IF( optArg.isSet() == parArg.isSet(), "Use either -o or -e" );
+
+		// load scenario and add additional properties
+		path scenario_file = FindScenario( path( optArg.isSet() ? optArg.getValue() : parArg.getValue() ) );
+		PropNode scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
+
+		// apply command line settings (parameter 2 and further)
+		for ( auto kvstring : propArg )
+		{
+			auto kvp = xo::make_key_value_str( kvstring );
+			scenario_pn.set_query( kvp.first, kvp.second, '.' );
+		}
+
+		// set log level (optimization defaults to info, evaluation defaults to trace)
+		console_sink.set_log_level( xo::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : optArg.isSet() ? log::InfoLevel : log::TraceLevel ) );
+
+		// do optimization or evaluation
 		if ( optArg.isSet() )
 		{
-			// set log level
-			console_sink.set_log_level( xo::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::InfoLevel ) );
-			auto scenario_file = path( optArg.getValue() );
-
-			// load properties
-			PropNode props = xo::load_file_with_include( scenario_file, "INCLUDE" );
-
-			// apply command line settings (parameter 2 and further)
-			for ( auto kvstring : propArg )
-			{
-				auto kvp = xo::make_key_value_str( kvstring );
-				props.set_delimited( kvp.first, kvp.second, '.' );
-			}
-
-			OptimizerUP o = PrepareOptimization( props, scenario_file );
+			OptimizerUP o = PrepareOptimization( scenario_pn, scenario_file );
 			if ( statusOutput.getValue() )
 				o->SetOutputMode( Optimizer::status_output );
 			else o->SetOutputMode( quietOutput.getValue() ? Optimizer::no_output : Optimizer::console_output );
-			//o->OutputStatus( "scenario", optArg.getValue() );
 			o->Run();
 		}
-		else if ( resArg.isSet() )
+		else if ( parArg.isSet() )
 		{
 			// set log level
-			console_sink.set_log_level( xo::log::level( logArg.isSet() ? log::Level( logArg.getValue() ) : log::TraceLevel ) );
-			SimulateObjective( path( resArg.getValue() ) );
+			EvaluateScenario( scenario_pn,
+				path( parArg.getValue() ),
+				path( outArg.isSet() ? outArg.getValue() : parArg.getValue() ),
+				1.0 / freqArg.getValue() );
 		}
 		else SCONE_THROW( "Unexpected error parsing program arguments" ); // This should never happen
 	}

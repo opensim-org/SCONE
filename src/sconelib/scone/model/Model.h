@@ -148,7 +148,7 @@ namespace scone
 		Vec3 GetDelayedOrientation();
 
 		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
-		bool GetStoreData() const { return m_StoreData; }
+		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
