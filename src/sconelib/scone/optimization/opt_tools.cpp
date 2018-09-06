@@ -52,7 +52,8 @@ namespace scone
 		log::info( statistics );
 
 		// write results
-		obj->WriteResults( output_base.string() );
+		auto files = obj->WriteResults( output_base.string() );
+		log::info( "Results written to " + output_base.string() + "*" );
 
 		return statistics;
 	}
@@ -62,7 +63,7 @@ namespace scone
 		if ( scenario_or_par_file.extension() == "par" )
 		{
 			auto folder = scenario_or_par_file.parent_path();
-			return xo::find_file( { folder / "config.scone" / folder / "config.xml" } );
+			return xo::find_file( { folder / "config.scone", folder / "config.xml" } );
 		}
 		else return scenario_or_par_file;
 	}
