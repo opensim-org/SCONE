@@ -111,7 +111,7 @@ void ProgressDockWidget::fixRangeY()
 	ui.plot->yAxis->setRange( lower, upper );
 }
 
-void ProgressDockWidget::Optimization::Update( const PropNode& pn, ProgressDockWidget& wdg )
+void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 {
 	pn.try_get( max_generations, "max_generations" );
 	pn.try_get( window_size, "window_size" );
@@ -161,7 +161,6 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		char buf[ 1024 ];
 		process->readLine( buf, 1023 );
 		string s( buf );
-		//log::info( s );
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
@@ -187,7 +186,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 
 				new_opt.idx = idx;
 				new_opt.name = *id;
-				new_opt.Update( pn, *this );
+				new_opt.Update( pn );
 
 				// add graphs
 				QColor c = make_qt( vis::make_unique_color( idx ) );
@@ -216,7 +215,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			}
 			else
 			{
-				it->Update( pn, *this );
+				it->Update( pn );
 				updateText();
 				tooltipProps.merge( pn );
 

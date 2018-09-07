@@ -58,7 +58,7 @@ public:
 		QVector< double > medvec;
 		QVector< double > genvec;
 
-		void Update( const PropNode& pn, ProgressDockWidget& wdg );
+		void Update( const PropNode& pn );
 		bool has_update_flag = false;
 	};
 
