@@ -11,7 +11,6 @@ namespace scone
 	current_force( 0 ),
 	active_( false )
 	{
-		INIT_PROP( props, name, "" );
 		INIT_PROP( props, force, Vec3::zero() );
 		INIT_PROP( props, moment, Vec3::zero() );
 		INIT_PROP( props, position_offset, Vec3::zero() );
@@ -19,8 +18,6 @@ namespace scone
 		INIT_PROP( props, interval_min, interval );
 		INIT_PROP( props, interval_max, interval );
 		INIT_PROP( props, duration, 0.1 );
-		INIT_PROP( props, start_time, 0.0 );
-		INIT_PROP( props, end_time, 600.0 );
 		INIT_PROP( props, random_seed, 5489 );
 
 		std::default_random_engine rng_engine( random_seed );
@@ -28,7 +25,7 @@ namespace scone
 		if ( interval_min != 0.0 && interval_max != 0.0 )
 		{
 			auto time_dist = std::uniform_real_distribution< TimeInSeconds >( interval_min, interval_max );
-			while ( perturbation_times.back() < end_time )
+			while ( perturbation_times.back() < stop_time )
 				perturbation_times.emplace_back( perturbation_times.back() + time_dist( rng_engine ) );
 		}
 

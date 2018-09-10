@@ -22,23 +22,24 @@ namespace scone
 		bool UpdateAnalysis( const Model& model, double timestamp );
 
 		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
-		virtual bool IsActive( const Model& model, double time ) { return time >= start_time_ && time < stop_time_ && !disabled_; }
+		virtual bool IsActive( const Model& model, double time ) { return time >= start_time && time < stop_time && !disabled_; }
 
 		/// Sets or clears the Controller's 'disabled' state
 		void SetDisabled( bool d ) { disabled_ = d; }
 
-		// default implementation doesn't store anything
+		/// default implementation doesn't store anything
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
-		// default implementation doesn't store anything
+		/// default implementation doesn't store anything
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const { return std::vector<xo::path>(); }
+
+		double start_time; ///< Time at which Controller becomes active
+		double stop_time; ///< Time at which Controller becomes inactive
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) { return false; }
 
-		double start_time_;
-		double stop_time_;
 		bool disabled_;
 	};
 }

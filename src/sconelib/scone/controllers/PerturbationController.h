@@ -15,15 +15,12 @@ namespace scone
 		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
-		String name;
-		Vec3 force;
-		Vec3 moment;
-		TimeInSeconds interval;
-		TimeInSeconds interval_min;
-		TimeInSeconds interval_max;
-		TimeInSeconds duration;
-		TimeInSeconds start_time;
-		TimeInSeconds end_time;
+		Vec3 force; ///< Perturbation force to apply
+		Vec3 moment; ///< Perturbation moment to apply
+		TimeInSeconds interval; ///< Time between two perturbations (fixed)
+		TimeInSeconds interval_min; ///< Minimum time between two perturbations (random)
+		TimeInSeconds interval_max; ///< Maximum time between two perturbations (random)
+		TimeInSeconds duration; ///< Perturbation duration
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
