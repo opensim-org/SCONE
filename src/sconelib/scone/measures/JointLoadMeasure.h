@@ -8,7 +8,7 @@
 namespace scone
 {
 	// Class: JointLoadMeasure
-	class SCONE_API JointLoadMeasure : public Measure
+	class JointLoadMeasure : public Measure
 	{
 	public:
 		JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
@@ -16,8 +16,10 @@ namespace scone
 
 		// Prop: min
 		// Minimum
+
 		// Prop: max
 		// Maximum
+
 		// Prop: abs_range_penalty
 		// Absolute range penalty
 
