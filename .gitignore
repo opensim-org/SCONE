@@ -1,6 +1,7 @@
 bin/
 build/
 ignore/
+doc/
 tutorials/*.sto
 .version
 *.log
