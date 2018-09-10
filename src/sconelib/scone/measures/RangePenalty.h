@@ -26,16 +26,21 @@ namespace scone
 			penalty.AddSample( timestamp, pen );
 		}
 
+		/// Range, set through parameters 'min' and 'max'
+		Range< T > range;
+
+		/// Absolute range penalty
+		Real abs_range_penalty = 0;
+
+		/// Squared range penalty
+		Real squared_range_penalty = 0;
+
 		T GetAverage() const { return penalty.GetAverage(); }
 		T GetLatest() const { return penalty.GetLatest(); }
 
 		virtual ~RangePenalty() {}
 		
 	private:
-		Real abs_range_penalty;
-		Real squared_range_penalty;
-
-		Range< T > range;
 		Statistic< T > penalty;
 	};
 }

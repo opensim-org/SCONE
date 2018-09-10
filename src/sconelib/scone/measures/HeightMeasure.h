@@ -12,6 +12,22 @@ namespace scone
 		HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~HeightMeasure() { };
 
+		/// Body for which to measure the height, leave empty to use COM
+		String target_body;
+
+		/// Use average height instead of peak hight for measure
+		bool use_average_height;
+
+		/// Terminate simulation when a peak is detected
+		bool terminate_on_peak;
+
+		/// Relative height of COM at which to terminate the simulation
+		double termination_height;
+		double max_admitted_counter_height;
+		double ignore_time;
+		double upward_velocity_threshold;
+		double downward_velocity_threshold;
+
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
@@ -20,15 +36,6 @@ namespace scone
 
 	private:
 		enum { InitialState, DownState, UpState } m_JumpState;
-		String target_body;
-		bool use_average_height;
-		bool terminate_on_peak;
-		double termination_height;
-		double max_admitted_counter_height;
-		double ignore_time;
-		double upward_velocity_threshold;
-		double downward_velocity_threshold;
-
 		Body* m_pTargetBody; // non-owning pointer
 		Statistic< double > m_Height;
 		bool m_Upward;

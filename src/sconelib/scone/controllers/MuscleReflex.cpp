@@ -22,35 +22,35 @@ namespace scone
 		name = GetReflexName( m_Target.GetName(), source.GetName() );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
-		INIT_PAR_NAMED( props, par, length_gain, "KL", 0.0 );
-		INIT_PAR_NAMED( props, par, length_ofs, "L0", 1.0 );
-		INIT_PROP_NAMED( props, length_allow_negative, "allow_neg_L", true );
+		INIT_PAR_NAMED( props, par, KL, "KL", 0.0 );
+		INIT_PAR_NAMED( props, par, K0, "L0", 1.0 );
+		INIT_PROP_NAMED( props, allow_neg_L, "allow_neg_L", true );
 
-		INIT_PAR_NAMED( props, par, velocity_gain, "KV", 0.0 );
-		INIT_PAR_NAMED( props, par, velocity_ofs, "V0", 0.0 );
-		INIT_PROP_NAMED( props, velocity_allow_negative, "allow_neg_V", false );
+		INIT_PAR_NAMED( props, par, KV, "KV", 0.0 );
+		INIT_PAR_NAMED( props, par, V0, "V0", 0.0 );
+		INIT_PROP_NAMED( props, allow_neg_V, "allow_neg_V", false );
 
-		INIT_PAR_NAMED( props, par, force_gain, "KF", 0.0 );
-		INIT_PAR_NAMED( props, par, force_ofs, "F0", 0.0 );
-		INIT_PROP_NAMED( props, force_allow_negative, "allow_neg_F", true );
+		INIT_PAR_NAMED( props, par, KF, "KF", 0.0 );
+		INIT_PAR_NAMED( props, par, F0, "F0", 0.0 );
+		INIT_PROP_NAMED( props, allow_neg_F, "allow_neg_F", true );
 
-		INIT_PAR_NAMED( props, par, spindle_gain, "KS", 0.0 );
-		INIT_PAR_NAMED( props, par, spindle_ofs, "S0", 0.0 );
-		INIT_PROP_NAMED( props, spinde_allow_negative, "allow_neg_S", false );
+		INIT_PAR_NAMED( props, par, KS, "KS", 0.0 );
+		INIT_PAR_NAMED( props, par, S0, "S0", 0.0 );
+		INIT_PROP_NAMED( props, allow_neg_S, "allow_neg_S", false );
 
-		INIT_PAR_NAMED( props, par, u_constant, "C0", 0.0 );
+		INIT_PAR_NAMED( props, par, C0, "C0", 0.0 );
 
 		// create delayed sensors
-		if ( force_gain != 0.0 )
+		if ( KF != 0.0 )
 			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
 
-		if ( length_gain != 0.0 )
+		if ( KL != 0.0 )
 			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( source );
 
-		if ( velocity_gain != 0.0 )
+		if ( KV != 0.0 )
 			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
 
-		if ( spindle_gain!= 0.0 )
+		if ( KS!= 0.0 )
 			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
 
 		//log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
@@ -63,23 +63,23 @@ namespace scone
 	void MuscleReflex::ComputeControls( double timestamp )
 	{
 		// add stretch reflex
-		u_l = m_pLengthSensor ? length_gain * ( m_pLengthSensor->GetValue( delay ) - length_ofs ) : 0;
-		if ( !length_allow_negative && u_l < 0.0 ) u_l = 0.0;
+		u_l = m_pLengthSensor ? KL * ( m_pLengthSensor->GetValue( delay ) - K0 ) : 0;
+		if ( !allow_neg_L && u_l < 0.0 ) u_l = 0.0;
 
 		// add velocity reflex
-		u_v = m_pVelocitySensor ? velocity_gain * ( m_pVelocitySensor->GetValue( delay ) - velocity_ofs ) : 0;
-		if ( !velocity_allow_negative && u_v < 0.0 ) u_v = 0.0;
+		u_v = m_pVelocitySensor ? KV * ( m_pVelocitySensor->GetValue( delay ) - V0 ) : 0;
+		if ( !allow_neg_V && u_v < 0.0 ) u_v = 0.0;
 
 		// add force reflex
-		u_f = m_pForceSensor ? force_gain * ( m_pForceSensor->GetValue( delay ) - force_ofs ) : 0;
-		if ( !force_allow_negative && u_f < 0.0 ) u_f = 0.0;
+		u_f = m_pForceSensor ? KF * ( m_pForceSensor->GetValue( delay ) - F0 ) : 0;
+		if ( !allow_neg_F && u_f < 0.0 ) u_f = 0.0;
 
 		// add spindle reflex
-		u_s = m_pSpindleSensor ? spindle_gain * ( m_pSpindleSensor->GetValue( delay ) - spindle_ofs ) : 0;
-		if ( !spinde_allow_negative && u_s < 0.0 ) u_s = 0.0;
+		u_s = m_pSpindleSensor ? KS * ( m_pSpindleSensor->GetValue( delay ) - S0 ) : 0;
+		if ( !allow_neg_S && u_s < 0.0 ) u_s = 0.0;
 
 		// sum it up
-		u_total = u_l + u_v + u_f + u_s + u_constant;
+		u_total = u_l + u_v + u_f + u_s + C0;
 		AddTargetControlValue( u_total );
 	}
 

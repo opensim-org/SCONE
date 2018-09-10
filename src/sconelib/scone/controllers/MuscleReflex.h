@@ -14,34 +14,34 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp ) override;
 
+		Real KL; ///< Length feedback gain
+		Real K0; ///< Length feedback offset
+		bool allow_neg_L; ///< Allow this reflex to be negative
+
+		Real KV; ///< Velocity feedback gain
+		Real V0; ///< Velocity feedback offset
+		bool allow_neg_V; ///< Allow this reflex to be negative
+
+		Real KF; ///< Force feedback gain
+		Real F0; ///< Force feedback offset
+		bool allow_neg_F; ///< Allow this reflex to be negative
+
+		Real KS; ///< Muscle spindle feedback gain
+		Real S0; ///< Muscle spindle feedback offset
+		bool allow_neg_S; ///< Allow this reflex to be negative
+
+		Real C0; ///< Constant actuation added to reflex results
+
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
+
+	protected:
+
 		String name;
-
-		// Reflex parameters
-		Real length_gain;
-		Real length_ofs;
-		bool length_allow_negative;
-
-		Real velocity_gain;
-		Real velocity_ofs;
-		bool velocity_allow_negative;
-
-		Real force_gain;
-		Real force_ofs;
-		bool force_allow_negative;
-
-		Real spindle_gain;
-		Real spindle_ofs;
-		bool spinde_allow_negative;
-
-		Real u_constant;
-
 		Real u_l = 0;
 		Real u_v = 0;
 		Real u_f = 0;
 		Real u_s = 0;
 		Real u_total = 0;
-
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		SensorDelayAdapter* m_pForceSensor;

@@ -13,14 +13,14 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp );
 
-		// Reflex parameters
-		Real target_pos;
-		Real target_vel;
-		Real pos_gain;
-		Real vel_gain;
-		Real constant_u;
-		Real filter_cutoff_frequency;
-		int condition; // 1 = pos, -1 = neg, 0 = always
+		String source; ///< Reflex sensor dof
+		Real P0; ///< Target position for sensor dof
+		Real V0; ///< Target velocity for sensor dof
+		Real KP; ///< Position gain
+		Real KV; ///< Velocity gain
+		Real C0; ///< Constant actuation
+		Real filter_cutoff_frequency; ///< Cut-off frequency of optional low-pass filter, no filtering if zero
+		int condition; ///< Apply this reflex only depending on the sign of the result: 1 = pos, -1 = neg, 0 = always
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 

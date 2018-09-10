@@ -134,7 +134,6 @@ namespace scone
 				for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
 				{
 					OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
-					//double mass = mus.getOptimalFiberLength() * mus.getMaxIsometricForce() / 23500.0; // Wronlgy derived from [Wang2012], should be 235?
 					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
 					probe->addMuscle( mus.getName(), 0.5 );
 				}
@@ -210,7 +209,6 @@ namespace scone
 				auto inc_pat = xo::pattern_matcher( sio ? sio->get< String >( "include_states", "*" ) : props.get< String >( "initial_state_offset_include", "*" ), ";" );
 				auto ex_pat = xo::pattern_matcher(
 					( sio ? sio->get< String >( "exclude_states", "" ) : props.get< String >( "initial_state_offset_exclude", "" ) ) + ";*.activation;*.fiber_length", ";" );
-				//auto ex_pat = xo::pattern_matcher( iso->get< String >( "exclude_states", "" ) + ";*.activation;*.fiber_length", ";" );
 				for ( index_t i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
@@ -218,9 +216,6 @@ namespace scone
 					{
 						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
 						m_State[ i ] += par.get( par_name + ".offset", *offset );
-						//if ( iso->has_key( "offset" ) )
-						//	m_State[ i ] += par.get( par_name + ".offset", iso->get_child( "offset" ) );
-						//else m_State[ i ] += par.get( par_name + ".offset", iso->get< Real >( "init_mean", 0.0 ), iso->get< Real >( "init_std" ), iso->get< Real >( "min", -1000 ), iso->get< Real >( "max", 1000 ) );
 					}
 				}
 			}

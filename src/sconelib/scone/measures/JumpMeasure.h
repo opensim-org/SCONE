@@ -14,13 +14,29 @@ namespace scone
 		JumpMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~JumpMeasure();
 
+		enum JumpType { NoJumpType, HighJump, LongJump };
+
+		/// Type of jump
+		JumpType jump_type;
+
+		/// Relative COM height on which to terminate simulation
+		Real termination_height;
+
+		/// Terminate when peak height is detected
+		bool terminate_on_peak;
+
+		/// Time to prepare for jump
+		Real prepare_time;
+
+		/// Time to recover from jump
+		Real recover_time;
+
 		virtual double GetResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
 	private:
 		enum State { Prepare, Takeoff, Flight, Landing, Recover };
-		enum JumpType { NoJumpType, HighJump, LongJump };
 
 		double GetHighJumpResult( const Model& m );
 		double GetLongJumpResult( const Model& m );
@@ -29,8 +45,6 @@ namespace scone
 
 		State state;
 		Body* target_body;
-		Real termination_height;
-		bool terminate_on_peak;
 		Vec3 init_com;
 		double init_min_x;
 		Vec3 prepare_com;
@@ -39,10 +53,7 @@ namespace scone
 		double peak_height;
 		Vec3 recover_com;
 		TimeInSeconds recover_start_time;
-		Real prepare_time;
-		Real recover_time;
 		Real recover_cop_dist = 1000.0;
 		bool negate_result;
-		int jump_type;
 	};
 }

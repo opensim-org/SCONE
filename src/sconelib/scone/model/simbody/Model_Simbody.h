@@ -41,8 +41,25 @@ namespace scone
 	{
 	public:
 		Model_Simbody( const PropNode& props, Params& par );
-
 		virtual ~Model_Simbody();
+
+		/// File containing the OpenSim model
+		String model_file;
+
+		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2, RungeKutta2, RungeKutta3, RungeKuttaMerson
+		String integration_method = "SemiExplicitEuler2";
+
+		/// Accuracy parameter for integration
+		double integration_accuracy = 0.001;
+
+		/// Maximum integration step size
+		double max_step_size = 0.001;
+
+		/// Use fixed step size for controllers
+		bool use_fixed_control_step_size = true;
+
+		/// Step size used for controllers
+		double fixed_control_step_size = 0.001;
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
@@ -107,12 +124,6 @@ namespace scone
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
 
-		String integration_method;
-		double integration_accuracy;
-		double max_step_size;
-		bool use_fixed_control_step_size;
-		double fixed_control_step_size;
-		String model_file;
 		bool create_body_forces;
 
 		int m_PrevIntStep;

@@ -7,13 +7,21 @@
 
 namespace scone
 {
+	// Class: JointLoadMeasure
 	class SCONE_API JointLoadMeasure : public Measure
 	{
 	public:
 		JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~JointLoadMeasure() {}
 
-		enum Method { NoMethod, JointReactionForce };
+		// Prop: min
+		// Minimum
+		// Prop: max
+		// Maximum
+		// Prop: abs_range_penalty
+		// Absolute range penalty
+
+		RangePenalty< Real > load_penalty;
 
 		virtual double GetResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
@@ -23,9 +31,9 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
+		enum Method { NoMethod, JointReactionForce };
 		int method;
 		Real joint_load;
-		RangePenalty< Real > load_penalty;
 		Joint& joint;
 	};
 }

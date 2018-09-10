@@ -11,13 +11,13 @@
 
 namespace scone
 {
-	StringMap< GaitStateController::LegState::GaitState > GaitStateController::LegState::m_StateNames = StringMap< GaitStateController::LegState::GaitState >(
-		GaitStateController::LegState::UnknownState, "Unknown",
-		GaitStateController::LegState::EarlyStanceState, "EarlyStance",
-		GaitStateController::LegState::LateStanceState, "LateStance",
-		GaitStateController::LegState::LiftoffState, "Liftoff",
-		GaitStateController::LegState::SwingState, "Swing",
-		GaitStateController::LegState::LandingState, "Landing"
+	StringMap< GaitStateController::GaitState > GaitStateController::m_StateNames = StringMap< GaitStateController::GaitState >(
+		GaitStateController::UnknownState, "Unknown",
+		GaitStateController::EarlyStanceState, "EarlyStance",
+		GaitStateController::LateStanceState, "LateStance",
+		GaitStateController::LiftoffState, "Liftoff",
+		GaitStateController::SwingState, "Swing",
+		GaitStateController::LandingState, "Landing"
 		);
 
 	GaitStateController::LegState::LegState( Leg& l ) :
@@ -69,8 +69,8 @@ namespace scone
 					ConditionalController& cc = *m_ConditionalControllers.back();
 
 					// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
-					for ( int i = 0; i < LegState::StateCount; ++i )
-						cc.state_mask.set( i, instance_states.find( LegState::m_StateNames.GetString( LegState::GaitState( i ) ) ) != String::npos );
+					for ( int i = 0; i < StateCount; ++i )
+						cc.state_mask.set( i, instance_states.find( m_StateNames.GetString( GaitState( i ) ) ) != String::npos );
 					SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
 
 						// initialize leg index
@@ -140,71 +140,71 @@ namespace scone
 		{
 			LegState& ls = *m_LegStates[ idx ];
 			LegState& mir_ls = *m_LegStates[ idx ^ 1 ];
-			LegState::GaitState new_state = ls.state;
+			GaitState new_state = ls.state;
 
 			switch ( ls.state )
 			{
-			case LegState::UnknownState:
+			case UnknownState:
 				// initialize state
 				if ( ls.allow_stance_transition )
 				{
 					if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
-						new_state = LegState::LiftoffState;
+						new_state = LiftoffState;
 					else if ( ls.allow_late_stance_transition )
-						new_state = LegState::LateStanceState;
-					else new_state = LegState::EarlyStanceState;
+						new_state = LateStanceState;
+					else new_state = EarlyStanceState;
 				}
 				else
 				{
 					if ( ls.allow_landing_transition )
-						new_state = LegState::LandingState;
-					else new_state = LegState::SwingState;
+						new_state = LandingState;
+					else new_state = SwingState;
 				}
 				break;
 
-			case LegState::EarlyStanceState:
+			case EarlyStanceState:
 				// --> liftoff if other leg is eligible for stance and before this leg
 				// --> late stance if a position threshold has passed
 				if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
-					new_state = LegState::LiftoffState;
+					new_state = LiftoffState;
 				else if ( ls.allow_late_stance_transition )
-					new_state = LegState::LateStanceState;
+					new_state = LateStanceState;
 				break;
 
-			case LegState::LateStanceState:
+			case LateStanceState:
 				// --> liftoff if other leg is eligible for stance and before this leg
 				// --> liftoff if position is beyond swing_threshold
 				if ( mir_ls.allow_stance_transition && ls.sagittal_pos < mir_ls.sagittal_pos )
-					new_state = LegState::LiftoffState;
+					new_state = LiftoffState;
 				else if ( ls.allow_liftoff_transition )
-					new_state = LegState::LiftoffState;
+					new_state = LiftoffState;
 				break;
 
-			case LegState::LiftoffState:
+			case LiftoffState:
 				// --> swing if leg load is below threshold
 				if ( ls.allow_swing_transition )
-					new_state = LegState::SwingState;
+					new_state = SwingState;
 				break;
 
-			case LegState::SwingState:
+			case SwingState:
 				// --> early stance if leg load is above threshold
 				// --> landing if position is beyond landing_threshold
 				if ( ls.allow_stance_transition && ls.sagittal_pos > mir_ls.sagittal_pos )
-					new_state = LegState::EarlyStanceState;
+					new_state = EarlyStanceState;
 				if ( !ls.allow_stance_transition && ls.allow_landing_transition )
-					new_state = LegState::LandingState;
+					new_state = LandingState;
 				break;
 
-			case LegState::LandingState:
+			case LandingState:
 				// --> early stance if leg load is beyond threshold
 				if ( ls.allow_stance_transition )
-					new_state = LegState::EarlyStanceState;
+					new_state = EarlyStanceState;
 				break;
 			}
 
 			if ( new_state != ls.state )
 			{
-				//log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), LegState::m_StateNames.GetString( new_state ).c_str() );
+				//log::TraceF( "%.3f: Leg %d state changed from %s to %s", timestamp, idx, ls.GetStateName().c_str(), m_StateNames.GetString( new_state ).c_str() );
 				ls.state = new_state;
 			}
 		}
@@ -263,10 +263,10 @@ namespace scone
 	scone::String GaitStateController::GetConditionName( const ConditionalController& cc ) const
 	{
 		String s = m_LegStates[ cc.leg_index ]->leg.GetName();
-		for ( int i = 0; i < LegState::StateCount; ++i )
+		for ( int i = 0; i < StateCount; ++i )
 		{
 			if ( cc.state_mask.test( i ) )
-				s += "-" + LegState::m_StateNames.GetString( LegState::GaitState( i ) );
+				s += "-" + m_StateNames.GetString( GaitState( i ) );
 		}
 		return s;
 	}

@@ -9,14 +9,21 @@
 
 namespace scone
 {
+	// Class: PerturbationController
 	class SCONE_API PerturbationController : public Controller
 	{
 	public:
 		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
-		Vec3 force; ///< Perturbation force to apply
-		Vec3 moment; ///< Perturbation moment to apply
+		// Property: force
+		// Perturbation force to apply
+		Vec3 force;
+
+		// Property: moment
+		// Perturbation moment to apply
+		Vec3 moment;
+
 		TimeInSeconds interval; ///< Time between two perturbations (fixed)
 		TimeInSeconds interval_min; ///< Minimum time between two perturbations (random)
 		TimeInSeconds interval_max; ///< Maximum time between two perturbations (random)

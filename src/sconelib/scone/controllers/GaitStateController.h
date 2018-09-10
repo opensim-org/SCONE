@@ -13,6 +13,25 @@ namespace scone
 	class SCONE_API GaitStateController : public Controller
 	{
 	public:
+		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		virtual ~GaitStateController();
+		GaitStateController( const GaitStateController& ) = delete;
+		GaitStateController& operator=( const GaitStateController& ) = delete;
+
+		enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
+		Real landing_threshold;
+		Real late_stance_threshold;
+		Real liftoff_threshold;
+		Real override_leg_length;
+		Real leg_load_sensor_delay;
+		Real stance_load_threshold;
+		Real swing_load_threshold;
+
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
+		virtual String GetClassSignature() const override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
+
+	protected:
 		struct LegState
 		{
 			LegState( Leg& l );
@@ -22,9 +41,7 @@ namespace scone
 			SensorDelayAdapter& load_sensor;
 
 			// current state
-			enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
 			const String& GetStateName() { return m_StateNames.GetString( state ); }
-			static StringMap< GaitState > m_StateNames;
 			TimedValue< GaitState > state;
 
 			// current status
@@ -41,22 +58,10 @@ namespace scone
 			Real leg_length;
 		};
 
-		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
-		virtual ~GaitStateController();
-
-		virtual bool ComputeControls( Model& model, double timestamp ) override;
-
-		virtual String GetClassSignature() const override;
-
-		// public parameters
-		Real stance_load_threshold;
-		Real swing_load_threshold;
-
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
-
-	protected:
 		virtual void UpdateLegStates( Model& model, double timestamp );
 		void UpdateControllerStates( Model& model, double timestamp );
+
+		static StringMap< GaitState > m_StateNames;
 
 	private:
 		typedef std::unique_ptr< LegState > LegStateUP;
@@ -68,22 +73,14 @@ namespace scone
 		{
 			ConditionalController() : leg_index( NoIndex ), active( false ), active_since( 0.0 ) { };
 			size_t leg_index;
-			std::bitset< LegState::StateCount > state_mask;
+			std::bitset< StateCount > state_mask;
 			bool active;
 			double active_since;
 			ControllerUP controller;
 			String GetConditionName() const { return stringf( "L%dS%s", leg_index, state_mask.to_string().c_str() ); }
-			bool TestLegPhase( size_t leg_idx, LegState::GaitState state ) { return state_mask.test( size_t( state ) ); }
+			bool TestLegPhase( size_t leg_idx, GaitState state ) { return state_mask.test( size_t( state ) ); }
 		};
 		String GetConditionName( const ConditionalController& cc ) const;
 		std::vector< ConditionalControllerUP > m_ConditionalControllers;
-		Real landing_threshold;
-		Real late_stance_threshold;
-		Real liftoff_threshold;
-		Real override_leg_length;
-
-		Real leg_load_sensor_delay;
-		GaitStateController( const GaitStateController& );
-		GaitStateController& operator=( const GaitStateController& );
 	};
 }

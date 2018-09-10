@@ -6,25 +6,44 @@
 
 namespace scone
 {
+	// Class: EffortMeasure
 	class EffortMeasure : public Measure
 	{
 	public:
 		EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~EffortMeasure();
 
+		// Enum: EnergyMeasureType
+		//   TotalForce - Total muscle force
+		//   Wang2012 - Use metabolic energy measure as defined in [Wang et al. 2016]
+		//   Uchida2016 - Use metabolic energy measure as defined in [Uchida et al. 2016]
 		enum EnergyMeasureType { UnknownMeasure, TotalForce, Wang2012, Constant, Uchida2016 };
-		static StringMap< EnergyMeasureType > m_MeasureNames;
+
+		// Prop: measure_type
+		// Energy model to be used, can be: TotalForce, Wang2012, Uchida2016, or Constant
+		EnergyMeasureType measure_type; 
+
+		// Prop: use_cost_of_transport
+		// Flag indicating to use (energy / distance) as a result
+		bool use_cost_of_transport = false;
+
+		/// Value to use for specific tension
+		Real specific_tension = 0.1;
+
+		/// Value to use for muscle density
+		Real muscle_density; 
+
+		/// slow-twitch ratio, if not defined per-muscle
+		Real default_muscle_slow_twitch_ratio;
+
+		/// fiber ratios are the same for left and right
+		bool use_symmetric_fiber_ratios;
+
+		/// Minimum distance used for cost of transport computation
+		Real min_distance;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
-
-		EnergyMeasureType measure_type;
-		bool use_cost_of_transport;
-		Real specific_tension;
-		Real muscle_density;
-		Real default_muscle_slow_twitch_ratio;
-		bool use_symmetric_fiber_ratios;
-		Real min_distance;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -35,6 +54,7 @@ namespace scone
 		Real m_Uchida2016BasalEnergy;
 		Real m_AerobicFactor;
 		Statistic< double > m_Energy;
+		static StringMap< EnergyMeasureType > m_MeasureNames;
 		Vec3 m_InitComPos;
 		PropNode m_Report;
 		std::vector< Real > m_SlowTwitchFiberRatios;
