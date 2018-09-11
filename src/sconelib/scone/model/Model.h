@@ -3,7 +3,7 @@
 #include "scone/core/platform.h"
 #include "scone/core/types.h"
 
-#include "Controller.h"
+#include "scone/controllers/Controller.h"
 #include "Link.h"
 #include "Leg.h"
 

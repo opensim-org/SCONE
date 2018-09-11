@@ -2,7 +2,7 @@
 
 #include "scone/core/types.h"
 #include "scone/core/PropNode.h"
-#include "scone/model/Controller.h"
+#include "scone/controllers/Controller.h"
 #include "xo/utility/types.h"
 #include "MotorNeuron.h"
 #include "SensorNeuron.h"

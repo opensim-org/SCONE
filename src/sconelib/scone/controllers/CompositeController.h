@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../model/Controller.h"
+#include "scone/controllers/Controller.h"
 
 namespace scone
 {

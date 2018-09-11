@@ -6,7 +6,8 @@
 
 namespace scone
 {
-	class SCONE_API MuscleReflex : public Reflex
+	// class: MuscleReflex
+	class  MuscleReflex : public Reflex
 	{
 	public:
 		MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area );
@@ -14,23 +15,41 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp ) override;
 
-		Real KL; ///< Length feedback gain
-		Real K0; ///< Length feedback offset
-		bool allow_neg_L; ///< Allow this reflex to be negative
+		// props: Muscle length reflexes
+		// KL - Length feedback gain. Default = 0.
+		// K0 - Length feedback offset. Default = 1.
+		// allow_neg_L - Allow this reflex to be negative. Default = 1.
+		Real KL;
+		Real K0;
+		bool allow_neg_L;
 
-		Real KV; ///< Velocity feedback gain
-		Real V0; ///< Velocity feedback offset
-		bool allow_neg_V; ///< Allow this reflex to be negative
+		// props: Muscle velocity reflexes
+		// KV - Velocity feedback gain. Default = 0.
+		// V0 - Velocity feedback offset. Default = 0.
+		// allow_neg_V - Allow this reflex to be negative. Default = 1.
+		Real KV;
+		Real V0;
+		bool allow_neg_V;
 
-		Real KF; ///< Force feedback gain
-		Real F0; ///< Force feedback offset
-		bool allow_neg_F; ///< Allow this reflex to be negative
+		// props: Muscle force reflexes
+		// KF - Velocity feedback gain. Default = 0.
+		// F0 - Velocity feedback offset. Default = 0.
+		// allow_neg_F - Allow this reflex to be negative. Default = 1.
+		Real KF;
+		Real F0;
+		bool allow_neg_F;
 
-		Real KS; ///< Muscle spindle feedback gain
-		Real S0; ///< Muscle spindle feedback offset
-		bool allow_neg_S; ///< Allow this reflex to be negative
+		// props: Muscle spindle reflexes
+		// KS - Spindle feedback gain. Default = 0.
+		// S0 - Spindle feedback offset. Default = 0.
+		// allow_neg_S - Allow this reflex to be negative. Default = 1.
+		Real KS;
+		Real S0;
+		bool allow_neg_S;
 
-		Real C0; ///< Constant actuation added to reflex results
+		// prop: C0
+		// Constant actuation added to reflex output
+		Real C0;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

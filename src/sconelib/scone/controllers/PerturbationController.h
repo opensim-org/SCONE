@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scone/core/types.h"
-#include "scone/model/Controller.h"
+#include "scone/controllers/Controller.h"
 #include "scone/core/PropNode.h"
 #include "scone/optimization/Params.h"
 #include "scone/core/Vec3.h"
@@ -16,18 +16,25 @@ namespace scone
 		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
-		// Prop: force
-		// Perturbation force to apply. Default = [ 0 0 0 ]
+		// prop: force
+		// Perturbation force to apply. Default = [ 0 0 0 ].
 		Vec3 force;
 
-		// Prop: moment
-		// Perturbation moment to apply. Default = [ 0 0 0 ]
+		// prop: moment
+		// Perturbation moment to apply. Default = [ 0 0 0 ].
 		Vec3 moment;
 
-		TimeInSeconds interval; ///< Time between two perturbations (fixed)
-		TimeInSeconds interval_min; ///< Minimum time between two perturbations (random)
-		TimeInSeconds interval_max; ///< Maximum time between two perturbations (random)
-		TimeInSeconds duration; ///< Perturbation duration
+		// props: Interval between two perturbations
+		// interval - Fixed time between two perturbations
+		// interval_min - Lower bounds of random interval between perturbations
+		// interval_max - Upper bounds of random interval between perturbations
+		TimeInSeconds interval;
+		TimeInSeconds interval_min;
+		TimeInSeconds interval_max;
+
+		// prop: duration
+		// Duration of the perturbation. Default = 0.
+		TimeInSeconds duration;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

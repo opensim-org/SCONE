@@ -7,15 +7,27 @@
 
 namespace scone
 {
-	class SCONE_API Reflex : public HasData
+	// class: Reflex
+	class Reflex : public HasData
 	{
 	public:
 		Reflex( const PropNode& props, Params& par, Model& model, const Locality& area );
 		Reflex( Actuator& target, TimeInSeconds d, Real min_val = REAL_LOWEST, Real max_val = REAL_MAX );
 		virtual ~Reflex();
 
-		virtual void ComputeControls( double timestamp );
+		// var: min_control_value
+		// Minimum output for this reflex
+		Real min_control_value;
+
+		// var: max_control_value
+		// Maximum output for this reflex
+		Real max_control_value;
+
+		// prop: delay
+		// Neuromuscular delay used for this reflex (in s).
 		TimeInSeconds delay;
+
+		virtual void ComputeControls( double timestamp );
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
@@ -25,9 +37,5 @@ namespace scone
 		Actuator& m_Target;
 		static String GetReflexName( const String& target, const String& source );
 		static String GetParName( const PropNode& props );
-
-	private:
-		Real min_control_value;
-		Real max_control_value;
 	};
 }

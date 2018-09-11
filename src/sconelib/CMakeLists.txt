@@ -56,6 +56,8 @@ set(CORE_TOOL_FILES
 	scone/core/string_tools.h
 )
 set(CS_CONTROLLERS_FILES
+	scone/controllers/Controller.cpp
+	scone/controllers/Controller.h
 	scone/controllers/FeedForwardController.cpp
 	scone/controllers/FeedForwardController.h
 	scone/controllers/PerturbationController.cpp
@@ -213,8 +215,6 @@ set(SIM_SENSORSANDACTUATORS_FILES
     scone/model/Sensors.h
     )
 set(SIM_SIMULATIONANDCONTROL_FILES
-    scone/model/Controller.cpp
-    scone/model/Controller.h
     scone/model/Simulation.cpp
     scone/model/Simulation.h
     )

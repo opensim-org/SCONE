@@ -8,18 +8,13 @@
 # Project Information
 # ------------------------------------------------------------------------
 
+Title: SCONE
+Subtitle: Simulating Biological Motion
+
+Copyright: © 2014-2018 Thomas Geijtenbeek
+
+
 # This is where you specify general information about your project.
-#
-# Title: [text]
-#    The name of your project.  (R) and (TM) will be converted to their
-#    respective symbols.
-#
-# Subtitle: [text]
-#    A subtitle for your project.
-#
-# Copyright: [text]
-#    The copyright notice for your project.  (C) will be converted to the
-#    copyright symbol.
 #
 # Timestamp: [text]
 #    Text explaining when the documentation was generated.  The following

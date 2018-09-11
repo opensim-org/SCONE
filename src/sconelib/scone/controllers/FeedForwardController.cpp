@@ -1,6 +1,6 @@
 #include "FeedForwardController.h"
 
-#include "scone/model/Controller.h"
+#include "scone/controllers/Controller.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Locality.h"
 
