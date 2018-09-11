@@ -2,7 +2,8 @@ if(${Qt5Widgets_FOUND})
 	# http://doc.qt.io/qt-5/cmake-manual.html
 	
 	# set CMP0043 to get rid of cryptic CMake warnings
-	cmake_policy( SET CMP0043 OLD )
+	# cmake_policy( SET CMP0043 OLD )
+	cmake_policy( SET CMP0071 OLD )
 
 	set(CMAKE_AUTOMOC ON)
 	set(CMAKE_INCLUDE_CURRENT_DIR ON)

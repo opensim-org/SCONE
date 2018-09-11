@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.10.0)
 # 2.8.11 is required for how we use Qt5.
 
 project(scone)
@@ -32,26 +32,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src/sconelib)
 
 # Add TCLAP
 include_directories(${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
-
-# Compiler flags.
-# ---------------
-# Must compile with C++14 with gcc/clang.
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" OR
-   ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
-    if(APPLE)
-        if(XCODE)
-            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
-            set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-        else()
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-            if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-                set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-            endif()
-        endif()
-    else()
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-    endif()
-endif()
 
 if (MSVC)
 	add_compile_options("/MP")
