@@ -14,7 +14,7 @@ namespace OpenSim
 
 namespace scone
 {
-	class SCONE_API FeedForwardController : public Controller
+	class FeedForwardController : public Controller
 	{
 	public:
 		FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area );

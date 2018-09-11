@@ -2,6 +2,7 @@
 
 #include <stdarg.h>
 #include "xo/system/log_sink.h"
+#include <iostream>
 
 #ifdef WIN32
 #	pragma warning( disable: 4996 ) // we don't need to push/pop because it's not a header

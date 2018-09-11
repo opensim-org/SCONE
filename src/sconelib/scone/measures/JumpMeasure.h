@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	class SCONE_API JumpMeasure : public Measure
+	class JumpMeasure : public Measure
 	{
 	public:
 		JumpMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );

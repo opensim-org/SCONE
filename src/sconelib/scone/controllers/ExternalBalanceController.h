@@ -8,7 +8,7 @@
 
 namespace scone
 {
-	class SCONE_API ExternalBalanceController : public Controller
+	class ExternalBalanceController : public Controller
 	{
 	public:
 		ExternalBalanceController( const PropNode& props, Params& par, Model& model, const Locality& target_area );

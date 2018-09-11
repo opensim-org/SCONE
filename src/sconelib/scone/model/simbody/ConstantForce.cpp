@@ -1,8 +1,10 @@
 #include "ConstantForce.h"
+
 #include "SimTKcommon/SmallMatrix.h"
 #include "OpenSim/Simulation/SimbodyEngine/SimbodyEngine.h"
 #include "OpenSim/Simulation/Model/Model.h"
 #include "OpenSim/Simulation/Model/BodySet.h"
+
 #include "xo/system/log.h"
 
 using SimTK::Vec3;

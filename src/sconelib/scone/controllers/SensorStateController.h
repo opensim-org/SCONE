@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	class SCONE_API SensorStateController : public StateController
+	class SensorStateController : public StateController
 	{
 	public:
 		SensorStateController( const PropNode& props, Params& par, Model& model, const Locality& area );

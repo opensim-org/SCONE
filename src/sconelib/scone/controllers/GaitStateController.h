@@ -10,7 +10,7 @@
 
 namespace scone
 {
-	class SCONE_API GaitStateController : public Controller
+	class GaitStateController : public Controller
 	{
 	public:
 		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );

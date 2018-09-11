@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	class SCONE_API DofReflex : public Reflex
+	class DofReflex : public Reflex
 	{
 	public:
 		DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area );

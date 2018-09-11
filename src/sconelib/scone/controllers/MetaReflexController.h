@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	class SCONE_API MetaReflexController : public Controller
+	class MetaReflexController : public Controller
 	{
 	public:
 		MetaReflexController( const PropNode& props, Params& par, Model& model, const Locality& area );

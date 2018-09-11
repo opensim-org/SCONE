@@ -279,6 +279,9 @@ use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} )
 
+set_property(TARGET sconelib PROPERTY CXX_STANDARD 17)
+set_property(TARGET sconelib PROPERTY CXX_STANDARD_REQUIRED ON)
+
 target_link_libraries(sconelib xo spot ${OPENSIMSIMBODY_LIBRARIES})
 
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )

@@ -13,6 +13,8 @@
 #include <sstream>
 #include <cstdarg>
 #include <chrono>
+#include <iostream>
+#include <ctime>
 
 using std::cout;
 using std::endl;

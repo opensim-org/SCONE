@@ -4,7 +4,7 @@
 
 namespace scone
 {
-	class SCONE_API TimeStateController : public StateController
+	class TimeStateController : public StateController
 	{
 	public:
 		TimeStateController( const PropNode& props, Params& par, Model& model, const Locality& area );

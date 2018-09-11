@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	class SCONE_API StateController : public Controller
+	class StateController : public Controller
 	{
 	public:
 		StateController( const PropNode& props, Params& par, Model& model, const Locality& area );

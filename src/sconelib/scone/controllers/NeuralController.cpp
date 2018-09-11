@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <fstream>
 
 #include "xo/container/container_tools.h"
 #include "xo/container/table.h"
