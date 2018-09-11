@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "xo/string/string_tools.h"
+#include "xo/string/string_cast.h"
 
 namespace scone
 {
