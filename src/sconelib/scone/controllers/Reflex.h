@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	// class: Reflex
+	/// Base class for simulating reflexes. Requires use of ReflexController.
 	class Reflex : public HasData
 	{
 	public:

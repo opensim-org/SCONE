@@ -8,22 +8,11 @@
 namespace scone
 {
 	// Class: JointLoadMeasure
-	class JointLoadMeasure : public Measure
+	class JointLoadMeasure : public Measure, RangePenalty< Real >
 	{
 	public:
 		JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~JointLoadMeasure() {}
-
-		// Prop: min
-		// Minimum
-
-		// Prop: max
-		// Maximum
-
-		// Prop: abs_range_penalty
-		// Absolute range penalty
-
-		RangePenalty< Real > load_penalty;
 
 		virtual double GetResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;

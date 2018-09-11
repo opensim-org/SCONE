@@ -5,25 +5,23 @@
 
 namespace scone
 {
-	// Class: Measure
+	/// Base class for Measures
 	class SCONE_API Measure : public Controller, public HasName
 	{
 	public:
 		Measure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~Measure() { };
 
-		// Prop: name
-		// Name of the Measure
+		/// Name of the Measure, to be used in reporting.
 		String name;
 
-		// Prop: weight
-		// Weight at which to apply the measure
+		/// Weighting factor applied to the result of the measure; default = 1.
 		Real weight;
 
-		/// Threshold below which the measure becomes zero
+		/// Threshold below which the measure becomes zero; default = 0.
 		Real threshold;
 
-		/// Offset added to measure result
+		/// Offset added to measure result; default = 0.
 		Real offset;
 
 		/// Indicate whether this measure should be minimized

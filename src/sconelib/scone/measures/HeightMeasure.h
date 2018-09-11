@@ -12,16 +12,16 @@ namespace scone
 		HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~HeightMeasure() { };
 
-		/// Body for which to measure the height, leave empty to use COM
+		/// Body for which to measure the height, leave empty to use COM (default).
 		String target_body;
 
-		/// Use average height instead of peak hight for measure
+		/// Use average height instead of peak hight for measure; default = false.
 		bool use_average_height;
 
-		/// Terminate simulation when a peak is detected
+		/// Terminate simulation when a peak is detected; default = true.
 		bool terminate_on_peak;
 
-		/// Relative height of COM at which to terminate the simulation
+		/// Relative height of COM at which to terminate the simulation; default = 0.5.
 		double termination_height;
 		double max_admitted_counter_height;
 		double ignore_time;

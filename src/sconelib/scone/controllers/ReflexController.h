@@ -8,7 +8,8 @@
 
 namespace scone
 {
-	class SCONE_API ReflexController : public Controller
+	// Class supporting control through reflexes.
+	class ReflexController : public Controller
 	{
 	public:
 		ReflexController( const PropNode& props, Params& par, Model& model, const Locality& target_area );

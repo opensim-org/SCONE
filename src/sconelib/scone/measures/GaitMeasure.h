@@ -7,36 +7,30 @@
 namespace scone
 {
 	// Class: GaitMeasure
-	// Measure for efficient locomotion at a predefined speed
+	/// Measure for efficient locomotion at a predefined speed.
 	class GaitMeasure : public Measure
 	{
 	public:
 		GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~GaitMeasure();
 
-		// prop: termination_height
-		// Relative COM height (wrt initial position) at which to stop the simulation
-		Real termination_height = 0.5;
+		/// Relative COM height (wrt initial position) at which to stop the simulation; default = 0.5.
+		Real termination_height;
 
-		// prop: min_velocity
-		// Minimum velocity (m/s). Default = 0 m/s.
+		/// Minimum velocity [m/s]; default = 0 m/s.
 		Real min_velocity;
 
-		// prop: max_velocity
-		// Maximum velocity (m/s). Default = 299792458 m/s (speed of light)
-		Real max_velocity = 299792458.0;
+		/// Maximum velocity [m/s]; default = 299792458 m/s.
+		Real max_velocity;
 
-		// prop: load_threshold
-		// Load threshold for step detection
-		Real load_threshold = 0.1;
+		/// Load threshold for step detection; default = 0.1.
+		Real load_threshold;
 
-		// prop: min_step_duration
-		// Minimum duration (in seconds) of a step, used for step detection. Default = 0.1
-		Real min_step_duration = 0.1;
+		/// Minimum duration [s] of a step, used for step detection; default = 0.1.
+		Real min_step_duration;
 
-		// prop: initiation_steps
-		// Number of initial steps of which the velocity is disregarded in the final measure. Default = 2.
-		int initiation_steps = 2;
+		/// Number of initial steps of which the velocity is disregarded in the final measure; default = 2.
+		int initiation_steps;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		void AddStep( const Model &model, double timestamp );

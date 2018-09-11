@@ -159,19 +159,12 @@ set(OPT_API_FILES
 	scone/optimization/CmaOptimizerSpot.h
 	scone/optimization/CmaPoolOptimizer.cpp
 	scone/optimization/CmaPoolOptimizer.h
-#	scone/optimization/CmaOptimizerShark2.cpp
-#	scone/optimization/CmaOptimizerShark2.h
-#	scone/optimization/CmaOptimizerShark3.cpp
-#	scone/optimization/CmaOptimizerShark3.h
 	scone/optimization/CmaOptimizerCCMAES.cpp
 	scone/optimization/CmaOptimizerCCMAES.h
 	scone/optimization/Objective.cpp
 	scone/optimization/Objective.h
 	scone/optimization/Optimizer.cpp
 	scone/optimization/Optimizer.h
-#	scone/optimization/ParamInfo.cpp
-#	scone/optimization/ParamInfo.h
-#	scone/optimization/ParamSet.cpp
 	scone/optimization/Params.h
 	scone/optimization/ModelObjective.cpp
 	scone/optimization/ModelObjective.h
@@ -185,9 +178,6 @@ set(OPT_API_FILES
 	scone/optimization/SimilarityObjective.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h
-    )
-set(OPT_SYSTEM_FILES
-#	scone/optimization/SharkHelperClasses.h
     )
 	
 set(SIM_MODELCOMPONENTS_FILES
@@ -272,7 +262,6 @@ set (SCONELIB_FILES
     ${CS_TOOLS_FILES}
 	
 	${OPT_API_FILES}
-	${OPT_SYSTEM_FILES}
 	
 	${SIM_MODELCOMPONENTS_FILES}
 	${SIM_SENSORSANDACTUATORS_FILES}

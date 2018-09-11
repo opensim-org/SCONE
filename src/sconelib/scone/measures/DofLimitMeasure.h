@@ -10,8 +10,8 @@
 namespace scone
 {
 	// Class: DofLimitMeasure
-	// Measure for penalizing when DOFs go out of a specific range.
-	// Supports penalties based on DOF position, DOF velocity, and restitution force
+	/// Measure for penalizing when DOFs go out of a specific range.
+	/// Supports penalties based on DOF position, DOF velocity, and restitution force.
 	class DofLimitMeasure : public Measure
 	{
 	public:

@@ -30,10 +30,10 @@ namespace scone
 		Range< T > range;
 
 		/// Absolute range penalty
-		Real abs_range_penalty = 0;
+		Real abs_range_penalty;
 
 		/// Squared range penalty
-		Real squared_range_penalty = 0;
+		Real squared_range_penalty;
 
 		T GetAverage() const { return penalty.GetAverage(); }
 		T GetLatest() const { return penalty.GetLatest(); }
