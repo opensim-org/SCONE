@@ -14,7 +14,7 @@ namespace scone
 	Measure( props, par, model, area )
 	{
 		INIT_PROP( props, termination_height, 0.5 );
-		INIT_PROP( props, min_velocity, 0.5 );
+		INIT_PROP( props, min_velocity, 0 );
 		INIT_PROP( props, max_velocity, 299792458.0 ); // default max velocity = speed of light
 		INIT_PROP( props, load_threshold, 0.1 );
 		INIT_PROP( props, min_step_duration, 0.1 );

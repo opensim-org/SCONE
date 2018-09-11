@@ -9,13 +9,15 @@
 
 namespace scone
 {
-	class SCONE_API Controller : public HasSignature, public HasData
+	// Class: Controller
+	class Controller : public HasSignature, public HasData
 	{
 	public:
 		Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~Controller();
 
-		/// Called each step, returns true on termination request, checks IsActive() first
+		// Method: UpdateControls
+		// Called each step, returns true on termination request, checks IsActive() first
 		bool UpdateControls( Model& model, double timestamp );
 
 		/// Called after each successful integration step, returns true on termination request
@@ -33,8 +35,13 @@ namespace scone
 		/// default implementation doesn't store anything
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const { return std::vector<xo::path>(); }
 
-		double start_time; ///< Time at which Controller becomes active
-		double stop_time; ///< Time at which Controller becomes inactive
+		// Prop: start_time
+		// Time at which Controller becomes active
+		double start_time;
+
+		// Prop: stop_time
+		// Time at which Controller becomes inactive
+		double stop_time;
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }

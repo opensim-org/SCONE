@@ -5,7 +5,8 @@
 
 namespace scone
 {
-	class SCONE_API GaitCycleMeasure : public Measure
+	// Class: GaitCycleMeasure
+	class GaitCycleMeasure : public Measure
 	{
 	public:
 		GaitCycleMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );

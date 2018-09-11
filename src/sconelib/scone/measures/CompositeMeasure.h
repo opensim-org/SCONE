@@ -5,7 +5,9 @@
 
 namespace scone
 {
-	class SCONE_API CompositeMeasure : public Measure
+	// Class: CompositeMeasure
+	// Measure made up of different weighted Measures
+	class CompositeMeasure : public Measure
 	{
 	public:
 		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
@@ -16,18 +18,8 @@ namespace scone
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
-		struct Term
-		{
-			Term( const PropNode& pn );
-			Term( Term&& other );
-			String name;
-			double weight;
-			double threshold;
-			double offset;
-			MeasureUP measure;
-		private:
-			Term( const Term& other );
-		};
+		// Prop: Measures
+		// Group in which all child Measures can be stored
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
@@ -35,7 +27,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< Term > m_Terms;
 		std::vector< MeasureUP > m_Measures;
 	};
 }

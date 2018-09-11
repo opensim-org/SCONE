@@ -2,6 +2,7 @@ bin/
 build/
 ignore/
 doc/
+config/NaturalDocs/Working Data/
 tutorials/*.sto
 .version
 *.log
