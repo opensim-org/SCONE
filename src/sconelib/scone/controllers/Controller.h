@@ -31,10 +31,10 @@ namespace scone
 		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
 		virtual bool IsActive( const Model& model, double time ) { return time >= start_time && time < stop_time && !disabled_; }
 
-		/// default implementation doesn't store anything
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
+		/// Set the disabled state of the controller, this is checked in IsActive().
+		void SetDisabled( bool disabled ) { disabled_ = disabled; }
 
-		/// default implementation doesn't store anything
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const { return std::vector<xo::path>(); }
 
 	protected:

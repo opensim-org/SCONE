@@ -6,17 +6,11 @@
 namespace scone
 {
 	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area )
+	Measure( props, par, model, area ),
+	Measures( props.get_child( "Measures" ) )
 	{
-		// get Measures
-		if ( const PropNode* mprops = props.try_get_child( "Measures" ) )
-		{
-			for ( auto it = mprops->begin(); it != mprops->end(); ++it )
-			{
-				// cast a ControllerUP to a Measure* using release(), because we don't have a CreateMeasure() factory
-				m_Measures.push_back( CreateMeasure( it->second, par, model, area ) );
-			}
-		}
+		for ( auto it = Measures.begin(); it != Measures.end(); ++it )
+			m_Measures.push_back( CreateMeasure( it->second, par, model, area ) );
 	}
 
 	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

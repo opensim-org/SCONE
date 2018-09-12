@@ -6,7 +6,7 @@
 
 namespace scone
 {
-	// class: MuscleReflex
+	/// Reflex based on muscle length, muscle velocity, muscle force, or muscle spindle sensor.
 	class  MuscleReflex : public Reflex
 	{
 	public:
@@ -15,41 +15,36 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp ) override;
 
-		// props: Muscle length reflexes
-		// KL - Length feedback gain. Default = 0.
-		// K0 - Length feedback offset. Default = 1.
-		// allow_neg_L - Allow this reflex to be negative. Default = 1.
-		Real KL;
-		Real K0;
-		bool allow_neg_L;
+		/// Constant actuation added to reflex output; default = 0.
+		Real C0;
 
-		// props: Muscle velocity reflexes
-		// KV - Velocity feedback gain. Default = 0.
-		// V0 - Velocity feedback offset. Default = 0.
-		// allow_neg_V - Allow this reflex to be negative. Default = 1.
-		Real KV;
-		Real V0;
-		bool allow_neg_V;
-
-		// props: Muscle force reflexes
-		// KF - Velocity feedback gain. Default = 0.
-		// F0 - Velocity feedback offset. Default = 0.
-		// allow_neg_F - Allow this reflex to be negative. Default = 1.
+		/// Velocity feedback gain; default = 0.
 		Real KF;
+		/// Velocity feedback offset; default = 0.
 		Real F0;
+		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_F;
 
-		// props: Muscle spindle reflexes
-		// KS - Spindle feedback gain. Default = 0.
-		// S0 - Spindle feedback offset. Default = 0.
-		// allow_neg_S - Allow this reflex to be negative. Default = 1.
-		Real KS;
-		Real S0;
-		bool allow_neg_S;
+		/// Length feedback gain; default = 0.
+		Real KL;
+		/// Length feedback offset; default = 1.
+		Real K0;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_L;
 
-		// prop: C0
-		// Constant actuation added to reflex output
-		Real C0;
+		/// Velocity feedback gain; default = 0.
+		Real KV;
+		/// Velocity feedback offset; default = 0.
+		Real V0;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_V;
+
+		/// Spindle feedback gain; default = 0.
+		Real KS;
+		/// Spindle feedback offset; default = 0.
+		Real S0;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_S;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

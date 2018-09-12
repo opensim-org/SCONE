@@ -11,8 +11,6 @@ namespace scone
 		virtual ~SequentialController() {}
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
-		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
-		virtual void WriteResult( const path& file ) const override;
 
 	protected:
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;

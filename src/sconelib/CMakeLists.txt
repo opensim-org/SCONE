@@ -66,18 +66,6 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/ExternalBalanceController.h
 	scone/controllers/MirrorController.h
 	)
-set(CS_CONTROLLERS_MRC_FILES
-	scone/controllers/MetaReflexParams.cpp
-	scone/controllers/MetaReflexParams.h
-	scone/controllers/MetaReflexController.cpp
-	scone/controllers/MetaReflexController.h
-    scone/controllers/MetaReflexDof.cpp
-    scone/controllers/MetaReflexDof.h
-    scone/controllers/MetaReflexMuscle.cpp
-    scone/controllers/MetaReflexMuscle.h
-    scone/controllers/MetaReflexVirtualMuscle.cpp
-    scone/controllers/MetaReflexVirtualMuscle.h
-	)
 set(CS_CONTROLLERS_NC_FILES
 	scone/controllers/NeuralController.cpp
 	scone/controllers/NeuralController.h
@@ -121,6 +109,8 @@ set(CS_CONTROLLERS_STATE_FILES
 set(CS_CONTROLLERS_COMPOSITE_FILES
 	scone/controllers/CompositeController.cpp
 	scone/controllers/CompositeController.h
+	scone/controllers/SequentialController.cpp
+	scone/controllers/SequentialController.h
 	)
 set(MEASURE_FILES
 	scone/measures/BalanceMeasure.cpp

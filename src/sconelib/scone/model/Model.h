@@ -21,6 +21,7 @@
 
 namespace scone
 {
+	/// Simulation model.
 	class SCONE_API Model : public HasName, public HasSignature, public HasData, public HasExternalResources
 	{
 	public:

@@ -9,7 +9,6 @@
 
 namespace scone
 {
-	// Class: DofLimitMeasure
 	/// Measure for penalizing when DOFs go out of a specific range.
 	/// Supports penalties based on DOF position, DOF velocity, and restitution force.
 	class DofLimitMeasure : public Measure
@@ -25,7 +24,6 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
-		// Properties: Dof Limit Ranges
 		// min_deg - Minimum DoF value in degrees
 		// max_deg - Minimum DoF value in degrees
 		// min_deg_s - Minimum DoF velocity in degrees / s

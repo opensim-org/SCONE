@@ -15,20 +15,16 @@ namespace scone
 		Reflex( Actuator& target, TimeInSeconds d, Real min_val = REAL_LOWEST, Real max_val = REAL_MAX );
 		virtual ~Reflex();
 
-		// var: min_control_value
-		// Minimum output for this reflex
+		/// Minimum output for this reflex; default = 0.
 		Real min_control_value;
 
-		// var: max_control_value
-		// Maximum output for this reflex
+		/// Maximum output for this reflex; default = 0.
 		Real max_control_value;
 
-		// prop: delay
-		// Neuromuscular delay used for this reflex (in s).
+		/// Neuromuscular delay [s] used for this reflex; default = 0.
 		TimeInSeconds delay;
 
 		virtual void ComputeControls( double timestamp );
-
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 
 	protected:

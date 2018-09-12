@@ -8,6 +8,7 @@
 
 namespace scone
 {
+	/// Measure for jumping, supports both high-jump and long-jump. *Work in progress!*
 	class JumpMeasure : public Measure
 	{
 	public:

@@ -6,7 +6,6 @@
 
 namespace scone
 {
-	// Class: GaitMeasure
 	/// Measure for efficient locomotion at a predefined speed.
 	class GaitMeasure : public Measure
 	{

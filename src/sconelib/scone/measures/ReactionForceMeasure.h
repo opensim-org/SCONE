@@ -5,14 +5,12 @@
 
 namespace scone
 {
-	class ReactionForceMeasure : public Measure
+	/// Measure that penalizes ground reaction forces above a certain threshold.
+	class ReactionForceMeasure : public Measure, RangePenalty< Real >
 	{
 	public:
 		ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~ReactionForceMeasure() {}
-
-		/// Penalty for reaction force
-		RangePenalty< Real > load_penalty;
 
 		virtual double GetResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;

@@ -5,6 +5,7 @@
 
 namespace scone
 {
+	/// Reflex based on the value of a specific DoF
 	class DofReflex : public Reflex
 	{
 	public:
@@ -13,20 +14,27 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp );
 
-		/// Reflex sensor dof
+		/// Reflex sensor dof.
 		String source;
-		/// Target position for sensor dof
+
+		/// Target position for sensor dof; default = 0.
 		Real P0; 
-		/// Target velocity for sensor dof
+
+		/// Target velocity for sensor dof; default = 0.
 		Real V0; 
-		/// Position gain
+
+		/// Position gain; default = 0.
 		Real KP; 
-		/// Velocity gain
+
+		/// Velocity gain; default = 0.
 		Real KV;
-		/// Constant actuation
-		Real C0; 
+
+		/// Constant actuation added to the reflex; default = 0.
+		Real C0;
+
 		/// Cut-off frequency of optional low-pass filter, no filtering if zero
 		Real filter_cutoff_frequency; 
+
 		/// Apply this reflex only depending on the sign of the result: 1 = pos, -1 = neg, 0 = always
 		int condition; 
 

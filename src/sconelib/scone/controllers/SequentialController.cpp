@@ -31,18 +31,6 @@ namespace scone
 		return controllers_[ GetActiveIdx( timestamp ) ]->UpdateAnalysis( model, timestamp );
 	}
 
-	void SequentialController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
-	{
-		for ( auto& c : controllers_ )
-			c->StoreData( frame, flags );
-	}
-
-	void SequentialController::WriteResult( const path& file ) const
-	{
-		for ( auto& c : controllers_ )
-			c->WriteResult( file );
-	}
-
 	xo::index_t SequentialController::GetActiveIdx( double timestamp )
 	{
 		auto it = std::upper_bound( transition_times_.begin(), transition_times_.end(), timestamp );

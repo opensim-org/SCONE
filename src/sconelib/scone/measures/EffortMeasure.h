@@ -6,7 +6,6 @@
 
 namespace scone
 {
-	// Class: EffortMeasure
 	/// Measures the energy consumption of a model during simulation, according to various models.
 	/// Can also be used to minimize cost-of-transfer, i.e. energy / distance.
 	class EffortMeasure : public Measure
@@ -15,7 +14,6 @@ namespace scone
 		EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
 		virtual ~EffortMeasure();
 
-		// Enum: EnergyMeasureType
 		/// Model for measuring energy
 		enum EnergyMeasureType {
 			UnknownMeasure,
@@ -25,31 +23,24 @@ namespace scone
 			Uchida2016 ///< Use metabolic energy measure as defined in [Uchida et al. 2016].
 		};
 
-		// var: measure_type
 		/// Energy model to be used, can be: TotalForce, Wang2012, Uchida2016, or Constant; default = UnknownMeasure.
 		EnergyMeasureType measure_type; 
 
-		// bool: use_cost_of_transport
 		/// Flag indicating to use (energy / distance) as a result; default = 0.
 		bool use_cost_of_transport;
 
-		// var: specific_tension
 		/// Value to use for specific tension; default = 0.25e6.
 		Real specific_tension;
 
-		// var: muscle_density
 		/// Value to use for muscle density; default = 1059.7.
 		Real muscle_density; 
 
-		// var: default_muscle_slow_twitch_ratio
-		/// slow / twitch ratio, if not defined per muscle; default = 0.5.
+		/// Default slow / twitch ratio, if not defined per muscle; default = 0.5.
 		Real default_muscle_slow_twitch_ratio;
 
-		// var: use_symmetric_fiber_ratios
-		/// indicate if fiber ratios are the same for left and right; default = true.
+		/// Indicate if fiber ratios are the same for left and right; default = true.
 		bool use_symmetric_fiber_ratios;
 
-		// var: min_distance
 		/// Minimum distance used for cost of transport computation; default = 1.0.
 		Real min_distance;
 

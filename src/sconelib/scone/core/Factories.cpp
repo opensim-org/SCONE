@@ -5,7 +5,6 @@
 #include "scone/controllers/PerturbationController.h"
 #include "scone/controllers/FeedForwardController.h"
 #include "scone/controllers/ReflexController.h"
-#include "scone/controllers/MetaReflexController.h"
 #include "scone/measures/GaitMeasure.h"
 #include "scone/measures/GaitCycleMeasure.h"
 #include "scone/measures/CompositeMeasure.h"
@@ -35,6 +34,7 @@
 #include "../measures/MimicMeasure.h"
 #include "../optimization/CmaPoolOptimizer.h"
 #include "../optimization/TestObjective.h"
+#include "../controllers/SequentialController.h"
 
 namespace scone
 {
@@ -48,12 +48,12 @@ namespace scone
 			g_ControllerFactory.register_class< GaitStateController >();
 			g_ControllerFactory.register_class< ReflexController >();
 			g_ControllerFactory.register_class< TimeStateController >();
-			g_ControllerFactory.register_class< MetaReflexController >();
 			g_ControllerFactory.register_class< PerturbationController >();
 			g_ControllerFactory.register_class< SensorStateController >();
 			g_ControllerFactory.register_class< MirrorController >();
 			g_ControllerFactory.register_class< NeuralController >();
 			g_ControllerFactory.register_class< CompositeController >();
+			g_ControllerFactory.register_class< SequentialController >();
 
 			// register measures
 			g_ControllerFactory.register_class< HeightMeasure >();

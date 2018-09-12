@@ -6,6 +6,7 @@
 
 namespace scone
 {
+	/// Measure for optimizing height, such as in jumping tasks.
 	class HeightMeasure : public Measure
 	{
 	public:

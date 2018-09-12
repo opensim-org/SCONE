@@ -37,29 +37,30 @@ namespace scone
 	class Simulation_Simbody;
 	class ControllerDispatcher;
 
+	/// Model of type Simbody.
 	class SCONE_API Model_Simbody : public Model
 	{
 	public:
 		Model_Simbody( const PropNode& props, Params& par );
 		virtual ~Model_Simbody();
 
-		/// File containing the OpenSim model
+		/// File containing the OpenSim model.
 		String model_file;
 
-		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2, RungeKutta2, RungeKutta3, RungeKuttaMerson
-		String integration_method = "SemiExplicitEuler2";
+		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2 (default), RungeKutta2, RungeKutta3, RungeKuttaMerson.
+		String integration_method;
 
-		/// Accuracy parameter for integration
-		double integration_accuracy = 0.001;
+		/// Accuracy parameter for integration; default = 0.001.
+		double integration_accuracy;
 
-		/// Maximum integration step size
-		double max_step_size = 0.001;
+		/// Maximum integration step size; default = 0.001.
+		double max_step_size;
 
-		/// Use fixed step size for controllers
-		bool use_fixed_control_step_size = true;
+		/// Use fixed step size for controllers; default = true.
+		bool use_fixed_control_step_size;
 
-		/// Step size used for controllers
-		double fixed_control_step_size = 0.001;
+		/// Step size used for controllers; default = 0.001.
+		double fixed_control_step_size;
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;

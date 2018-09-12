@@ -6,22 +6,21 @@
 
 namespace scone
 {
-	
 	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Measure( props, par, model, area )
 	{
-		INIT_PROP_REQUIRED( props, file_ );
-		INIT_PROP( props, include_states_, xo::pattern_matcher( "*" ) );
-		INIT_PROP( props, exclude_states_, xo::pattern_matcher( "" ) );
-		INIT_PROP( props, use_best_match_, false );
+		INIT_PROP_REQUIRED( props, file );
+		INIT_PROP( props, include_states, xo::pattern_matcher( "*" ) );
+		INIT_PROP( props, exclude_states, xo::pattern_matcher( "" ) );
+		INIT_PROP( props, use_best_match, false );
 
-		ReadStorageSto( storage_, FindFile( file_ ) );
+		ReadStorageSto( storage_, FindFile( file ) );
 
 		auto& s = model.GetState();
 		for ( index_t state_idx = 0; state_idx < s.GetSize(); ++state_idx )
 		{
 			auto& name = s.GetName( state_idx );
-			if ( include_states_( name ) && !exclude_states_( name ) )
+			if ( include_states( name ) && !exclude_states( name ) )
 			{
 				index_t sto_idx = storage_.GetChannelIndex( name );
 				if ( sto_idx != NoIndex )
@@ -31,15 +30,15 @@ namespace scone
 				}
 			}
 		}
-		SCONE_THROW_IF( state_storage_map_.empty(), "No matching states found in " + file_.string() );
+		SCONE_THROW_IF( state_storage_map_.empty(), "No matching states found in " + file.string() );
 
-		model.AddExternalResource( file_ );
+		model.AddExternalResource( file );
 	}
 
 	bool MimicMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		// when using a full motion, terminate when there's no more data
-		if ( !use_best_match_ && timestamp > storage_.Back().GetTime() )
+		if ( !use_best_match && timestamp > storage_.Back().GetTime() )
 			return true;
 
 		auto& s = model.GetState();
@@ -59,7 +58,7 @@ namespace scone
 
 	double MimicMeasure::GetResult( Model& model )
 	{
-		return use_best_match_ ? result_.GetLowest() : result_.GetAverage();
+		return use_best_match ? result_.GetLowest() : result_.GetAverage();
 	}
 
 	void MimicMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

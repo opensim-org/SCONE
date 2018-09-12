@@ -5,8 +5,7 @@
 
 namespace scone
 {
-	// Class: CompositeMeasure
-	// Measure made up of different weighted Measures
+	/// Measure made up of different weighted Measures
 	class CompositeMeasure : public Measure
 	{
 	public:
@@ -18,8 +17,9 @@ namespace scone
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
-		// Prop: Measures
-		// Group in which all child Measures can be stored
+		// Child node in which all child Measures are stored.
+		const PropNode& Measures;
+
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

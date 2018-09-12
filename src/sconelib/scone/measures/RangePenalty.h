@@ -6,9 +6,8 @@
 
 namespace scone
 {
-	/// Helper class to compute penalty if a value is outside a specific range
-	template< typename T >
-	class RangePenalty
+	/// Helper class to compute penalty if a value is outside a specific range.
+	template< typename T > class RangePenalty
 	{
 	public:
 		RangePenalty( const PropNode& prop )
@@ -26,13 +25,13 @@ namespace scone
 			penalty.AddSample( timestamp, pen );
 		}
 
-		/// Range, set through parameters 'min' and 'max'
+		/// Range, set through parameters 'min' and 'max'.
 		Range< T > range;
 
-		/// Absolute range penalty
+		/// Absolute penalty factor when value is out of range; default = 0.
 		Real abs_range_penalty;
 
-		/// Squared range penalty
+		/// Squared penalty factor when value out of range; default = 0.
 		Real squared_range_penalty;
 
 		T GetAverage() const { return penalty.GetAverage(); }

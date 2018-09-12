@@ -5,7 +5,8 @@
 
 namespace scone
 {
-	// Class: GaitCycleMeasure
+	/// Measure how well a single gait cycle is performed.
+	/// For gait optimization, it is recommended to use GaitMeasure instead
 	class GaitCycleMeasure : public Measure
 	{
 	public:
@@ -14,6 +15,7 @@ namespace scone
 
 		virtual double GetResult( Model& model ) override;
 
+		/// Use half gait cycle instead of full cycle; default = false.
 		bool use_half_cycle;
 
 	protected:

@@ -18,14 +18,15 @@ using namespace xo;
 namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Controller( props, par, model, area )
+	Controller( props, par, model, area ),
+	Reflexes( props.try_get_child( "Reflexes" ) )
 	{
-		bool symmetric = props.get< bool >( "symmetric", true );
+		INIT_PROP( props, symmetric, true );
 
 		// create normal reflexes
-		if ( const PropNode* reflexvec = props.try_get_child( "Reflexes" ) )
+		if ( Reflexes )
 		{
-			for ( const auto& item : *reflexvec )
+			for ( const auto& item : *Reflexes )
 			{
 				// todo: handle "targets" tag? or create a new class for groups of monosynaptic reflexes?
 				m_Reflexes.push_back( CreateReflex( item.second, par, model, area ) );

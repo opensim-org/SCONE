@@ -7,7 +7,7 @@
 
 namespace scone
 {
-	// Class: JointLoadMeasure
+	/// Measure for penalizing joint load, if above a specific treashold.
 	class JointLoadMeasure : public Measure, RangePenalty< Real >
 	{
 	public:
