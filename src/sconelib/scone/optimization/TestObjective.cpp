@@ -20,10 +20,10 @@ namespace scone
 		INIT_PROP( pn, dim_, 10 );
 
 		for ( index_t i = 0; i < dim_; ++i )
-			info_.add( stringf( "P%d", i ), 0, 250, -500, 500 );
+			info_.add( ParInfo( stringf( "P%d", i ), 0, 250, -500, 500 ) );
 	}
 
-	scone::fitness_t TestObjective::evaluate( const ParamInstance& point ) const
+	scone::fitness_t TestObjective::evaluate( const SearchPoint& point ) const
 	{
 		return schwefel( point.values() );
 	}

@@ -106,9 +106,9 @@ namespace scone
 				if ( new_best || ( gen - m_LastFileOutputGen > max_generations_without_file_output ) )
 				{
 					// copy best solution to par
-					ParamInfo parinf( GetObjective().info() );
+					ObjectiveInfo parinf( GetObjective().info() );
 					parinf.set_mean_std( cma.current_mean(), cma.current_std() );
-					ParamInstance par( parinf, cma.current_step_best_point().values() );
+					SearchPoint par( parinf, cma.current_step_best_point().values() );
 
 					m_LastFileOutputGen = gen;
 

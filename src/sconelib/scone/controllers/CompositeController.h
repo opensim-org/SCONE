@@ -4,6 +4,8 @@
 
 namespace scone
 {
+	/// Controller consisting of multiple child controllers.
+	/// Children can be inserted through an additional 'Controller' tag.
 	class CompositeController : public Controller
 	{
 	public:

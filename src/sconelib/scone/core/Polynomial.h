@@ -7,12 +7,17 @@
 
 namespace scone
 {
+	/// Parameterizable polynomial function. For each coefficient, the parameter can be defined
+	/// through coefficient0, coefficient1, etc.
 	class SCONE_API Polynomial : public Function
 	{
 	public:
 		Polynomial( size_t degree );
 		Polynomial( const PropNode& props, Params& par );
 		virtual ~Polynomial();
+
+		/// Degree of the polynomial, coefficients are parameterized through coefficient0, coefficient1, etc.
+		size_t degree;
 
 		virtual Real GetValue( Real x ) override;
 		virtual void SetCoefficient( size_t idx, Real value );

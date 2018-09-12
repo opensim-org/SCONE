@@ -9,7 +9,7 @@ namespace scone
 		if ( auto p = props.try_get_child( "Parameters" ) )
 		{
 			for ( auto& par : *p )
-				info().add( par.first, par.second );
+				info().add( ParInfo( par.first, par.second ) );
 		}
 	}
 

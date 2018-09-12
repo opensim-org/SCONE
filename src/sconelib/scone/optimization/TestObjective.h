@@ -10,7 +10,7 @@ namespace scone
 		TestObjective( const PropNode& pn );
 		virtual ~TestObjective() {}
 		
-		virtual fitness_t evaluate( const ParamInstance& point ) const override;
+		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 
 	protected:
 		size_t dim_;

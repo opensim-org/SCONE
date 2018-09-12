@@ -17,7 +17,7 @@ public:
 	{
 		INIT_PROP( props, num_params, 0 );
 		for ( size_t i = 0; i < num_params; ++i )
-			info().add( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 );
+			info().add( ParInfo( stringf( "Param%d", i ), 1.0, 0.1, -1000.0, 1000.0 ) );
 	}
 
 	double Rosenbrock( const spot::par_vec& v ) const
@@ -31,7 +31,7 @@ public:
 	}
 
 protected:
-	virtual double evaluate( const ParamInstance& values ) const override
+	virtual double evaluate( const SearchPoint& values ) const override
 	{
 		SCONE_ASSERT( is_evaluating == false ); // thread safety check
 

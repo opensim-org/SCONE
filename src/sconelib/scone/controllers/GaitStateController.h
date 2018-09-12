@@ -10,6 +10,7 @@
 
 namespace scone
 {
+	/// Finite State Machine (FSM) controller that detects different phases of gait.
 	class GaitStateController : public Controller
 	{
 	public:
@@ -18,13 +19,28 @@ namespace scone
 		GaitStateController( const GaitStateController& ) = delete;
 		GaitStateController& operator=( const GaitStateController& ) = delete;
 
+		/// Gait states that can be detected by the controller
 		enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
+
+		/// Sagittal distance [m] of the swing foot used for detecting LandingState.
 		Real landing_threshold;
+
+		/// Sagittal distance [m] of the stance foot used for detecting LateStanceState.
 		Real late_stance_threshold;
+
+		/// Sagittal distance [m] of the stance foot used for detecting LiftoffState.
 		Real liftoff_threshold;
+
+		/// Use custom leg length instead of deriving from model; default = false.
 		Real override_leg_length;
+
+		/// Neural delay [s] used for load sensors; default = 0.
 		Real leg_load_sensor_delay;
+
+		/// Threshold load [bw] for detecting stance phase; default = 0.
 		Real stance_load_threshold;
+
+		/// Threshold load [bw] for detecting stance phase; default = stance_load_threshold.
 		Real swing_load_threshold;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

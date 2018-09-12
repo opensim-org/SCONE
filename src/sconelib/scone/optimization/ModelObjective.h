@@ -11,7 +11,7 @@ namespace scone
 		ModelObjective( const PropNode& props );
 		virtual ~ModelObjective() {}
 
-		virtual fitness_t evaluate( const ParamInstance& point ) const override;
+		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 
 		virtual fitness_t EvaluateModel( Model& m ) const;
 		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const = 0;

@@ -28,7 +28,7 @@ namespace scone
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
-		ParamInstance par( model_objective->info() );
+		SearchPoint par( model_objective->info() );
 		if ( file.extension() == "par" )
 			par.import_values( file );
 		model = model_objective->CreateModelFromParams( par );

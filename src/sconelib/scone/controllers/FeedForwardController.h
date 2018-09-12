@@ -14,22 +14,23 @@ namespace OpenSim
 
 namespace scone
 {
+	/// Controller that produces a function-based feed-forward signal for each actuator.
 	class FeedForwardController : public Controller
 	{
 	public:
 		FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~FeedForwardController() { };
 
-		virtual bool ComputeControls( Model& model, double timestamp ) override;
-		bool UseModes() { return number_of_modes > 0; }
+		/// Parameterizable Function to be used as feed-forward signal; see Function.
+		const PropNode& Function;
 
-		// a signature describing the controller
+		/// Bool indicating if function should be the same for left and right; default = true.
+		bool symmetric;
+
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
 	private:
-		// mode settings
-		size_t number_of_modes;
-
 		// muscle info
 		struct ActInfo
 		{
@@ -44,7 +45,6 @@ namespace scone
 
 		std::vector< FunctionUP > m_Functions;
 		std::vector< ActInfo > m_ActInfos;
-		bool symmetric;
 
 	private: // non-copyable and non-assignable
 		FeedForwardController( const FeedForwardController& );

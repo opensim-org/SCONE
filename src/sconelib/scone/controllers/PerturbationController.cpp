@@ -7,7 +7,7 @@ namespace scone
 {
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
 	Controller( props, par, model, target_area ),
-	body_( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
+	body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
 	current_force( 0 ),
 	active_( false )
 	{
@@ -32,9 +32,9 @@ namespace scone
 		// set force point, make sure it's not set yet
 		if ( !position_offset.is_null() )
 		{
-			if ( !body_.GetExternalForcePoint().is_null() && body_.GetExternalForcePoint() != position_offset )
+			if ( !body.GetExternalForcePoint().is_null() && body.GetExternalForcePoint() != position_offset )
 				SCONE_THROW( "Cannot apply multiple external forces at different points on one body" );
-			body_.SetExternalForceAtPoint( Vec3::zero(), position_offset );
+			body.SetExternalForceAtPoint( Vec3::zero(), position_offset );
 		}
 	}
 
@@ -48,8 +48,8 @@ namespace scone
 		if ( active != active_ )
 		{
 			double s = active ? 1 : -1;
-			body_.AddExternalForce( s * force );
-			body_.AddExternalMoment( s * moment );
+			body.AddExternalForce( s * force );
+			body.AddExternalMoment( s * moment );
 
 			active_ = active;
 		}

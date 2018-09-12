@@ -12,9 +12,9 @@ namespace scone
 	{
 	}
 
-	scone::fitness_t ModelObjective::evaluate( const ParamInstance& point ) const
+	scone::fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
 	{
-		auto model = CreateModelFromParams( ParamInstance( point ) );
+		auto model = CreateModelFromParams( SearchPoint( point ) );
 		return EvaluateModel( *model );
 	}
 
@@ -32,7 +32,7 @@ namespace scone
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
 	{
-		return CreateModelFromParams( ParamInstance( info_, parfile ) );
+		return CreateModelFromParams( SearchPoint( info_, parfile ) );
 	}
 
 	std::vector<path> ModelObjective::WriteResults( const path & file_base )

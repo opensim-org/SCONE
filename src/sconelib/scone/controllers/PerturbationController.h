@@ -9,31 +9,38 @@
 
 namespace scone
 {
-	// Class: PerturbationController
+	/// Controller that generates external perturbations to a specific body.
 	class PerturbationController : public Controller
 	{
 	public:
 		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 		virtual ~PerturbationController() {}
 
-		// prop: force
-		// Perturbation force to apply. Default = [ 0 0 0 ].
+		/// Name of the body to which to apply the external perturbation to.
+		Body& body;
+
+		/// Local position at which to apply the perturbation; default = [ 0 0 0 ].
+		Vec3 position_offset;
+
+		// Perturbation force to apply; default = [ 0 0 0 ].
 		Vec3 force;
 
-		// prop: moment
-		// Perturbation moment to apply. Default = [ 0 0 0 ].
+		/// Perturbation moment to apply; default = [ 0 0 0 ].
 		Vec3 moment;
 
-		// props: Interval between two perturbations
-		// interval - Fixed time between two perturbations
-		// interval_min - Lower bounds of random interval between perturbations
-		// interval_max - Upper bounds of random interval between perturbations
+		/// Random seed used for the perturbation sequence; default = 5489.
+		unsigned int random_seed;
+
+		/// Fixed time [s] between two perturbations; default 2.
 		TimeInSeconds interval;
+
+		/// Lower bounds of random interval between perturbations; default = interval.
 		TimeInSeconds interval_min;
+
+		/// Upper bounds of random interval between perturbations; default = interval.
 		TimeInSeconds interval_max;
 
-		// prop: duration
-		// Duration of the perturbation. Default = 0.
+		/// Duration of the perturbation; default = 0.
 		TimeInSeconds duration;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
@@ -46,11 +53,8 @@ namespace scone
 		std::vector< TimeInSeconds > perturbation_times;
 
 		bool active_;
-		unsigned int random_seed;
-		Vec3 position_offset;
 		Vec3 current_force;
 		Vec3 current_moment;
 		TimeInSeconds next_perturbation;
-		Body& body_;
 	};
 }

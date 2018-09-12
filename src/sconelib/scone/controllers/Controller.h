@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	// Class: Controller
+	/// Base Controller class -- see derived classes for specific functionality
 	class Controller : public HasSignature, public HasData
 	{
 	public:

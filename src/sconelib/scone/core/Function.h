@@ -6,7 +6,7 @@
 
 namespace scone
 {
-	/// Parameterizable function
+	/// Abstract parameterizable function, see subclasses for actual implementations.
 	class SCONE_API Function
 	{
 	public:

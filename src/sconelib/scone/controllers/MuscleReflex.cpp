@@ -87,14 +87,12 @@ namespace scone
 	{
 		if ( m_pLengthSensor )
 			frame[ name + ".RL" ] = u_l;
-
 		if ( m_pVelocitySensor )
 			frame[ name + ".RV" ] = u_v;
-
 		if ( m_pForceSensor )
 			frame[ name + ".RF" ] = u_f;
-
 		if ( m_pSpindleSensor )
 			frame[ name + ".RS" ] = u_s;
+		frame[ name + ".R" ] = u_total;
 	}
 }

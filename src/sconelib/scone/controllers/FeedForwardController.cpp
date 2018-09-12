@@ -10,10 +10,10 @@
 namespace scone
 {
 	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
-		Controller( props, par, model, target_area )
+	Controller( props, par, model, target_area ),
+	Function( props.get_child( "Function" ) )
 	{
 		INIT_PROP( props, symmetric, true );
-		INIT_PROP( props, number_of_modes, size_t( 0 ) );
 
 		// setup actuator info
 		for ( size_t idx = 0; idx < model.GetMuscles().size(); ++idx )
@@ -27,17 +27,6 @@ namespace scone
 			// see if this muscle is on the right side
 			if ( target_area.side == NoSide || target_area.side == ai.side )
 				m_ActInfos.push_back( ai );
-		}
-
-		// create functions
-		if ( UseModes() )
-		{
-			// create mode functions
-			for ( size_t idx = 0; idx < number_of_modes; ++idx )
-			{
-				ScopedParamSetPrefixer prefixer( par, stringf( "Mode%d.", idx ) );
-				m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
-			}
 		}
 
 		for ( ActInfo& ai : m_ActInfos )
@@ -54,22 +43,11 @@ namespace scone
 				}
 			}
 
-			if ( UseModes() )
-			{
-				// set mode weights
-				ai.mode_weights.resize( number_of_modes );
-				String prefix = symmetric ? ai.name : ai.full_name;
-				for ( size_t mode = 0; mode < number_of_modes; ++mode )
-					ai.mode_weights[ mode ] = par.get( prefix + stringf( ".Mode%d", mode ), props[ "mode_weight" ] );
-			}
-			else
-			{
-				// create a new function
-				String prefix = symmetric ? ai.name : ai.full_name;
-				ScopedParamSetPrefixer prefixer( par, prefix + "." );
-				m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
-				ai.function_idx = m_Functions.size() - 1;
-			}
+			// create a new function
+			String prefix = symmetric ? ai.name : ai.full_name;
+			ScopedParamSetPrefixer prefixer( par, prefix + "." );
+			m_Functions.push_back( FunctionUP( scone::CreateFunction( props.get_child( "Function" ), par ) ) );
+			ai.function_idx = m_Functions.size() - 1;
 		}
 	}
 
@@ -85,20 +63,8 @@ namespace scone
 		// apply results to all actuators
 		for ( ActInfo& ai : m_ActInfos )
 		{
-			if ( UseModes() )
-			{
-				Real val = 0.0;
-				for ( size_t mode = 0; mode < number_of_modes; ++mode )
-					val += ai.mode_weights[ mode ] * funcresults[ mode ];
-
-				// add control value
-				model.GetMuscles()[ ai.muscle_idx ]->AddInput( val );
-			}
-			else
-			{
-				// apply results directly to control value
-				model.GetMuscles()[ ai.muscle_idx ]->AddInput( funcresults[ ai.function_idx ] );
-			}
+			// apply results directly to control value
+			model.GetMuscles()[ ai.muscle_idx ]->AddInput( funcresults[ ai.function_idx ] );
 		}
 
 		return false;
@@ -107,8 +73,6 @@ namespace scone
 	scone::String FeedForwardController::GetClassSignature() const
 	{
 		String s = "F" + m_Functions.front()->GetSignature();
-		if ( number_of_modes > 0 )
-			s += stringf( "M%d", number_of_modes );
 
 		return s;
 	}
