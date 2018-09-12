@@ -60,14 +60,17 @@ Controller = {
 				Reflexes = {
 					; F+ VAS
 					Reflex = {
-						type = MuscleReflex
+						type = ConditionalMuscleReflex
 						target = vasti
 						delay = 0.010
 						KF = "~1.15<-10,10>" ; G_VAS
 						C0 = "~0.09<0,1>" ; S_0,VAS
+						dof = knee_angle
+						pos_max = -10
+						pos_min = -180
 					}
 					; VAS inhibition when knee angle > -10 degrees
-					Reflex = {
+					/*					Reflex = {
 						type = DofReflex
 						target = vasti
 						source = knee_angle
@@ -76,7 +79,7 @@ Controller = {
 						KP = "~2<-10,10>" ; k_p
 						KV = 0
 						P0 = "-0.175" ; knee angle
-					}
+					}*/
 					
 					; Root stability
 					Reflex = {

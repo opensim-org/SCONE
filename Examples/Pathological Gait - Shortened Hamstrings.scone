@@ -1,0 +1,23 @@
+Optimizer {
+	type = CmaOptimizer
+	signature_prefix = DATE_TIME
+	Objective {
+		type = SimulationObjective
+		signature_postfix = ""
+		max_duration = 10
+		Model {
+			type = Simbody
+			model_file = models/f0914m.osim
+			state_init_file = data/f0914_init_walk_S12.sto
+			initial_state_offset =	"0~0.01[-0.5,0.5]"
+			initial_state_exclude = "*_tx;*_ty;*_u"
+			
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			fixed_control_step_size = 0.001
+			
+			#include "data/ControllerGeyerHerr2010.scone"
+			#include "data/GaitMeasure.scone"
+		}
+	}
+}

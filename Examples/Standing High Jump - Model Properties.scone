@@ -1,0 +1,41 @@
+Optimizer {
+	type = CmaOptimizerSpot
+	signature_prefix = SCONE_BUILD
+	min_progress = 0.0001
+	
+	Objective {
+		type = SimulationObjective
+		max_duration = 2
+
+		Model {
+			type = Simbody
+			model_file = models/f0914m.osim
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			fixed_control_step_size = 0.001
+			
+			Properties {
+				Muscle {
+					name = iliopsoas*
+					force_factor = 10
+					tendon_length_factor = 0.9
+				}
+			}
+
+			Controller {
+				Function {
+					type = PieceWiseConstant
+					control_points = 2
+					control_point_y { mean = 0.3 std = 0.01 min = 0.0 max = 1 }
+					control_point_dt { mean = 0.1 std = 0.01 min = 0.0 max = 1 }
+				}
+			}
+		}
+		
+		Measure {
+			type = JumpMeasure
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}
