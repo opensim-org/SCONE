@@ -24,7 +24,7 @@ namespace scone
 		/// Offset added to measure result; default = 0.
 		Real offset;
 
-		/// Indicate whether this measure should be minimized
+		/// Indicate whether this measure should be minimized; is set correctly by default.
 		bool minimize;
 
 		virtual double GetResult( Model& model ) = 0;
