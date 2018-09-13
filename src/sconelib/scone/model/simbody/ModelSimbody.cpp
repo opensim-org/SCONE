@@ -36,7 +36,7 @@ namespace scone
 	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
 	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
 
-	/// Simbody controller that calls scone controllers
+	// Simbody controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
 	{
 	public:
@@ -49,7 +49,7 @@ namespace scone
 		ModelSimbody& m_Model;
 	};
 
-	/// Constructor
+	// Constructor
 	ModelSimbody::ModelSimbody( const PropNode& props, Params& par ) :
 		Model( props, par ),
 		m_pOsimModel( nullptr ),

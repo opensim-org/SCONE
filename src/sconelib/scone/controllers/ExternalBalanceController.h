@@ -14,10 +14,10 @@ namespace scone
 		ExternalBalanceController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
 
 		String name;
-		double angular_velocity_gain;
-		double angular_velocity_target;
-		double angular_position_gain;
-		double angular_position_target;
+		Real angular_velocity_gain;
+		Real angular_velocity_target;
+		Real angular_position_gain;
+		Real angular_position_target;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;

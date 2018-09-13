@@ -9,7 +9,6 @@
 
 namespace scone
 {
-	/// Simple struct to allow tree hierarchy
 	class SCONE_API Link
 	{
 	public:

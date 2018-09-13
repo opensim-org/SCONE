@@ -12,15 +12,15 @@ namespace scone
 	m_pConditionalDofVel( nullptr ),
 	dof( *FindByName( model.GetDofs(), area.ConvertName( props.get< String >( "dof" ) ) ) )
 	{
+		INIT_PAR( props, par, pos_max, 180 );
+		INIT_PAR( props, par, pos_min, 180 );
+
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 
 		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "-" + props.get< String >( "dof" ) + "." );
-
-		m_ConditionalPosRange.max = Degree( par.try_get( "pos_max", props, "pos_max", 180.0 ) );
-		m_ConditionalPosRange.min = Degree( par.try_get( "pos_min", props, "pos_min", -180.0 ) );
-
-		//log::TraceF( "ConditionalMuscleReflex DOF=%s min=%.2f max=%.2f", dof.GetName().c_str(), m_ConditionalPosRange.min, m_ConditionalPosRange.max );
+		m_ConditionalPosRange.max = pos_max;
+		m_ConditionalPosRange.min = pos_min;
 	}
 
 	ConditionalMuscleReflex::~ConditionalMuscleReflex()

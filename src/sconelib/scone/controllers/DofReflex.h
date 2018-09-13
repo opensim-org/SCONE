@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	/// Reflex based on the value of a specific DoF
+	/// Reflex based on the value of a specific DOF.
 	class DofReflex : public Reflex
 	{
 	public:
@@ -14,28 +14,28 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp );
 
-		/// Reflex sensor dof.
+		/// Name of the DOF that is the source of this Reflex.
 		String source;
 
-		/// Target position for sensor dof; default = 0.
+		/// Target position for sensor DOF; default = 0.
 		Real P0; 
 
-		/// Target velocity for sensor dof; default = 0.
+		/// Target velocity for sensor DOF; default = 0.
 		Real V0; 
 
-		/// Position gain; default = 0.
+		/// Position feedback gain; default = 0.
 		Real KP; 
 
-		/// Velocity gain; default = 0.
+		/// Velocity feedback gain; default = 0.
 		Real KV;
 
 		/// Constant actuation added to the reflex; default = 0.
 		Real C0;
 
-		/// Cut-off frequency of optional low-pass filter, no filtering if zero
+		/// Cut-off frequency of optional low-pass filter, no filtering if zero; default = 0.
 		Real filter_cutoff_frequency; 
 
-		/// Apply this reflex only depending on the sign of the result: 1 = pos, -1 = neg, 0 = always
+		/// Apply this reflex only depending on the sign of the result: 1 = pos, -1 = neg, 0 = always.
 		int condition; 
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;

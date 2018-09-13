@@ -20,7 +20,7 @@ namespace scone
 		/// Indicate if reflexes should be the same for left and right; default = true.
 		bool symmetric;
 
-		/// Child node containing all reflexes
+		/// Child node containing all reflexes.
 		const PropNode* Reflexes;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

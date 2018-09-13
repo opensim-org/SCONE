@@ -17,10 +17,10 @@ namespace scone
 		virtual ~Controller();
 
 		/// Time [s] at which Controller becomes active; default = 0.
-		double start_time;
+		TimeInSeconds start_time;
 
 		/// Time [s] at which Controller becomes inactive; default = 1e12 (+/-31000 years).
-		double stop_time;
+		TimeInSeconds stop_time;
 
 		/// Called each step, returns true on termination request, checks IsActive() first
 		bool UpdateControls( Model& model, double timestamp );

@@ -10,13 +10,13 @@ namespace scone
 		SCONE_THROW_IF( controllers_.empty(), "No Controllers defined in SequentialController" );
 
 		double time = 0.0;
-		transition_times_.push_back( time );
+		transition_times.push_back( time );
 		if ( auto time_pn = props.try_get_child( "transition_intervals" ) )
 		{
 			for ( index_t idx = 0; idx < time_pn->size(); ++idx )
 			{
 				time += par.get( xo::stringf( "dt%d", idx + 1 ), time_pn[ idx ] );
-				transition_times_.push_back( time );
+				transition_times.push_back( time );
 			}
 		}
 	}
@@ -33,8 +33,8 @@ namespace scone
 
 	xo::index_t SequentialController::GetActiveIdx( double timestamp )
 	{
-		auto it = std::upper_bound( transition_times_.begin(), transition_times_.end(), timestamp );
-		return index_t( xo::clamped<int>( int( it - transition_times_.begin() - 1 ), 0, int( controllers_.size() ) - 1 ) );
+		auto it = std::upper_bound( transition_times.begin(), transition_times.end(), timestamp );
+		return index_t( xo::clamped<int>( int( it - transition_times.begin() - 1 ), 0, int( controllers_.size() ) - 1 ) );
 	}
 
 	String SequentialController::GetClassSignature() const

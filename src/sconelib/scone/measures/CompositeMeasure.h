@@ -5,7 +5,9 @@
 
 namespace scone
 {
-	/// Measure made up of different weighted Measures
+	/// Measure made up of different weighted Measures.
+	/// Individual child measures should be added to the Measures group. Each measure is evaluated
+	/// and added together respecting their individual weight, threshold and offset parameters (see Measure).
 	class CompositeMeasure : public Measure
 	{
 	public:
@@ -17,7 +19,7 @@ namespace scone
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double GetResult( Model& model ) override;
 
-		// Child node in which all child Measures are stored.
+		/// Child node containing all Measures.
 		const PropNode& Measures;
 
 

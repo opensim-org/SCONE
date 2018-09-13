@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	/// Muscle reflex that is only active when a specific dof is within a specific range.
+	/// MuscleReflex that is only active when a specific DOF is within a specific range.
 	class ConditionalMuscleReflex : public MuscleReflex
 	{
 	public:
@@ -15,11 +15,11 @@ namespace scone
 		/// Name of the DoF used for the condition.
 		Dof& dof;
 
-		/// Maximum dof position [rad] for this reflex to be active.
-		ParInfo pos_max;
+		/// Maximum dof position [deg] for this reflex to be active; default = 180.
+		Degree pos_max;
 
-		/// Minimum dof position [rad] for this reflex to be active.
-		ParInfo pos_min;
+		/// Minimum dof position [deg] for this reflex to be active; default = -180.
+		Degree pos_min;
 
 		virtual void ComputeControls( double timestamp ) override;
 
