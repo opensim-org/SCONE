@@ -1,13 +1,13 @@
-#include "Dof_Simbody.h"
-#include "Model_Simbody.h"
-#include "Joint_Simbody.h"
+#include "DofSimbody.h"
+#include "ModelSimbody.h"
+#include "JointSimbody.h"
 #include "scone/core/Log.h"
 
 #include <OpenSim/OpenSim.h>
 
 namespace scone
 {
-	Dof_Simbody::Dof_Simbody( Model_Simbody& model, OpenSim::Coordinate& coord ) :
+	DofSimbody::DofSimbody( ModelSimbody& model, OpenSim::Coordinate& coord ) :
 	Dof( *FindByName( model.GetJoints(), coord.getJoint().getName() ) ),
 	m_Model( model ),
 	m_osCoord( coord ),
@@ -29,54 +29,54 @@ namespace scone
 		}
 	}
 
-	Dof_Simbody::~Dof_Simbody() {}
+	DofSimbody::~DofSimbody() {}
 
-	scone::Real Dof_Simbody::GetPos() const
+	scone::Real DofSimbody::GetPos() const
 	{
 		return m_osCoord.getValue( m_Model.GetTkState() );
 	}
 
-	scone::Real Dof_Simbody::GetVel() const
+	scone::Real DofSimbody::GetVel() const
 	{
 		return m_osCoord.getSpeedValue( m_Model.GetTkState() );
 	}
 
-	const String& Dof_Simbody::GetName() const
+	const String& DofSimbody::GetName() const
 	{
 		return m_osCoord.getName();
 	}
 
-	scone::Real Dof_Simbody::GetLimitForce() const
+	scone::Real DofSimbody::GetLimitForce() const
 	{
 		if ( m_pOsLimitForce )
 			return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );
 		else return 0.0;
 	}
 
-	scone::Real Dof_Simbody::GetMoment() const
+	scone::Real DofSimbody::GetMoment() const
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
 		// m_osCoord.getMobilizerQIndex()
 	}
 
-	void Dof_Simbody::SetPos( Real pos, bool enforce_constraints )
+	void DofSimbody::SetPos( Real pos, bool enforce_constraints )
 	{
 		if ( !m_osCoord.getLocked( m_Model.GetTkState() ) )
 			m_osCoord.setValue( m_Model.GetTkState(), pos, enforce_constraints );
 	}
 
-	void Dof_Simbody::SetVel( Real vel )
+	void DofSimbody::SetVel( Real vel )
 	{
 		if ( !m_osCoord.getLocked( m_Model.GetTkState() ) )
 			m_osCoord.setSpeedValue( m_Model.GetTkState(), vel );
 	}
 
-	Vec3 Dof_Simbody::GetRotationAxis() const
+	Vec3 DofSimbody::GetRotationAxis() const
 	{
 		return m_RotationAxis;
 	}
 
-	Range< Real > Dof_Simbody::GetRange() const
+	Range< Real > DofSimbody::GetRange() const
 	{
 		return Range< Real >( m_osCoord.get_range( 0 ), m_osCoord.get_range( 1 ) );
 	}

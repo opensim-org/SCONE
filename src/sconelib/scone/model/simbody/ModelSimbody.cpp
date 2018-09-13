@@ -3,12 +3,12 @@
 #include "scone/core/Factories.h"
 #include "scone/core/StorageIo.h"
 
-#include "Model_Simbody.h"
-#include "Body_Simbody.h"
-#include "Muscle_Simbody.h"
-#include "Simulation_Simbody.h"
-#include "Joint_Simbody.h"
-#include "Dof_Simbody.h"
+#include "ModelSimbody.h"
+#include "BodySimbody.h"
+#include "MuscleSimbody.h"
+#include "SimulationSimbody.h"
+#include "JointSimbody.h"
+#include "DofSimbody.h"
 #include "simbody_tools.h"
 
 #include <OpenSim/OpenSim.h>
@@ -40,17 +40,17 @@ namespace scone
 	class ControllerDispatcher : public OpenSim::Controller
 	{
 	public:
-		ControllerDispatcher( Model_Simbody& model ) : m_Model( model ) { };
+		ControllerDispatcher( ModelSimbody& model ) : m_Model( model ) { };
 		virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override;
 		virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
 		virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
 
 	private:
-		Model_Simbody& m_Model;
+		ModelSimbody& m_Model;
 	};
 
 	/// Constructor
-	Model_Simbody::Model_Simbody( const PropNode& props, Params& par ) :
+	ModelSimbody::ModelSimbody( const PropNode& props, Params& par ) :
 		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
@@ -258,22 +258,22 @@ namespace scone
 		log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 	}
 
-	Model_Simbody::~Model_Simbody() {}
+	ModelSimbody::~ModelSimbody() {}
 
-	void Model_Simbody::CreateModelWrappers( const PropNode& pn, Params& par )
+	void ModelSimbody::CreateModelWrappers( const PropNode& pn, Params& par )
 	{
 		SCONE_ASSERT( m_pOsimModel && m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Muscles.empty() );
 
 		// Create wrappers for bodies
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
-			m_Bodies.emplace_back( new Body_Simbody( *this, m_pOsimModel->getBodySet().get( idx ) ) );
+			m_Bodies.emplace_back( new BodySimbody( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
 		// setup hierarchy and create wrappers
 		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
 		// create wrappers for dofs
 		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
-			m_Dofs.emplace_back( new Dof_Simbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
+			m_Dofs.emplace_back( new DofSimbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
 
 		// create contact geometries
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
@@ -292,13 +292,13 @@ namespace scone
 			OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
 			if ( OpenSim::Muscle* osMus = dynamic_cast<OpenSim::Muscle*>( &osAct ) )
 			{
-				m_Muscles.emplace_back( new Muscle_Simbody( *this, *osMus ) );
+				m_Muscles.emplace_back( new MuscleSimbody( *this, *osMus ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
 			else if ( OpenSim::CoordinateActuator* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
 			{
 				// add corresponding dof to list of actuators
-				auto& dof = dynamic_cast<Dof_Simbody&>( *FindByName( m_Dofs, osCo->getCoordinate()->getName() ) );
+				auto& dof = dynamic_cast<DofSimbody&>( *FindByName( m_Dofs, osCo->getCoordinate()->getName() ) );
 				dof.SetCoordinateActuator( osCo );
 				m_Actuators.push_back( &dof );
 			}
@@ -316,18 +316,18 @@ namespace scone
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
 			m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide ) );
-			dynamic_cast<Body_Simbody&>( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
+			dynamic_cast<BodySimbody&>( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
 		}
 
 		if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
 		{
 			Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
 			m_Legs.emplace_back( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) );
-			dynamic_cast<Body_Simbody&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
+			dynamic_cast<BodySimbody&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
 		}
 	}
 
-	void Model_Simbody::SetModelProperties( const PropNode &pn, Params& par )
+	void ModelSimbody::SetModelProperties( const PropNode &pn, Params& par )
 	{
 		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
 		{
@@ -350,7 +350,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
+	void ModelSimbody::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
 	{
 		for ( auto& param : osim_pars )
 		{
@@ -371,7 +371,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par )
+	void ModelSimbody::SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par )
 	{
 		// we have a match!
 		String prop_str = pn.get< String >( "property" );
@@ -384,7 +384,7 @@ namespace scone
 		}
 	}
 
-	std::vector<path> Model_Simbody::WriteResults( const path& file ) const
+	std::vector<path> ModelSimbody::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
 		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
@@ -394,44 +394,44 @@ namespace scone
 		return files;
 	}
 
-	Vec3 Model_Simbody::GetComPos() const
+	Vec3 ModelSimbody::GetComPos() const
 	{
 		return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 	}
 
-	Vec3 Model_Simbody::GetComVel() const
+	Vec3 ModelSimbody::GetComVel() const
 	{
 		return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 	}
 
-	Vec3 Model_Simbody::GetComAcc() const
+	Vec3 ModelSimbody::GetComAcc() const
 	{
 		return ToVec3( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
-	scone::Vec3 Model_Simbody::GetGravity() const
+	scone::Vec3 ModelSimbody::GetGravity() const
 	{
 		return ToVec3( m_pOsimModel->getGravity() );
 	}
 
 	bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
 	{
-		return dynamic_cast<Body_Simbody&>( *body ).m_osBody == osBody;
+		return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody;
 	}
 
-	scone::LinkUP Model_Simbody::CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent )
+	scone::LinkUP ModelSimbody::CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent )
 	{
 		LinkUP link;
 
 		// find the Body
-		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return dynamic_cast<Body_Simbody&>( *body ).m_osBody == osBody; } );
+		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
 		SCONE_ASSERT( itBody != m_Bodies.end() );
 
 		// find the Joint (if any)
 		if ( osBody.hasJoint() )
 		{
 			// create a joint
-			m_Joints.emplace_back( new Joint_Simbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) );
+			m_Joints.emplace_back( new JointSimbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) );
 			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
 		}
 		else
@@ -443,7 +443,7 @@ namespace scone
 		// add children
 		for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
 		{
-			Body_Simbody& childBody = dynamic_cast<Body_Simbody&>( **iter );
+			BodySimbody& childBody = dynamic_cast<BodySimbody&>( **iter );
 			if ( childBody.m_osBody.hasJoint() && childBody.m_osBody.getJoint().getParentBody() == osBody )
 			{
 				// create child link
@@ -511,7 +511,7 @@ namespace scone
 	}
 
 
-	void Model_Simbody::StoreCurrentFrame()
+	void ModelSimbody::StoreCurrentFrame()
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -519,7 +519,7 @@ namespace scone
 		Model::StoreCurrentFrame();
 	}
 
-	bool Model_Simbody::AdvanceSimulationTo( double final_time )
+	bool ModelSimbody::AdvanceSimulationTo( double final_time )
 	{
 		SCONE_PROFILE_FUNCTION;
 		SCONE_ASSERT( m_pOsimManager );
@@ -621,33 +621,33 @@ namespace scone
 		return true;
 	}
 
-	void Model_Simbody::SetTerminationRequest()
+	void ModelSimbody::SetTerminationRequest()
 	{
 		Model::SetTerminationRequest();
 		m_pOsimManager->halt();
 	}
 
-	double Model_Simbody::GetTime() const
+	double ModelSimbody::GetTime() const
 	{
 		return GetTkState().getTime();
 	}
 
-	int Model_Simbody::GetIntegrationStep() const
+	int ModelSimbody::GetIntegrationStep() const
 	{
 		return GetTkIntegrator().getNumStepsTaken();
 	}
 
-	int Model_Simbody::GetPreviousIntegrationStep() const
+	int ModelSimbody::GetPreviousIntegrationStep() const
 	{
 		return m_PrevIntStep;
 	}
 
-	double Model_Simbody::GetPreviousTime() const
+	double ModelSimbody::GetPreviousTime() const
 	{
 		return m_PrevTime;
 	}
 
-	std::ostream& Model_Simbody::ToStream( std::ostream& str ) const
+	std::ostream& ModelSimbody::ToStream( std::ostream& str ) const
 	{
 		Model::ToStream( str );
 
@@ -666,30 +666,30 @@ namespace scone
 		return str;
 	}
 
-	scone::Real Model_Simbody::GetTotalEnergyConsumption() const
+	scone::Real ModelSimbody::GetTotalEnergyConsumption() const
 	{
 		if ( m_pProbe )
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];
 		else return 0.0;
 	}
 
-	double Model_Simbody::GetSimulationEndTime() const
+	double ModelSimbody::GetSimulationEndTime() const
 	{
 		return m_pOsimManager->getFinalTime();
 	}
 
-	void Model_Simbody::SetSimulationEndTime( double t )
+	void ModelSimbody::SetSimulationEndTime( double t )
 	{
 		m_pOsimManager->setFinalTime( t );
 		m_pTkIntegrator->setFinalTime( t );
 	}
 
-	const String& Model_Simbody::GetName() const
+	const String& ModelSimbody::GetName() const
 	{
 		return GetOsimModel().getName();
 	}
 
-	void Model_Simbody::ReadState( const path& file )
+	void ModelSimbody::ReadState( const path& file )
 	{
 		// create a copy of the storage
 		auto store = g_StorageCache( file );
@@ -705,7 +705,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::FixTkState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
+	void ModelSimbody::FixTkState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
 	{
 		const String state_name = "pelvis_ty";
 		const Real step_size = 0.1;
@@ -750,7 +750,7 @@ namespace scone
 			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
 
-	void Model_Simbody::InitStateFromTk()
+	void ModelSimbody::InitStateFromTk()
 	{
 		SCONE_ASSERT( GetState().GetSize() == 0 );
 		auto osnames = GetOsimModel().getStateVariableNames();
@@ -759,7 +759,7 @@ namespace scone
 			GetState().AddVariable( osnames[ i ], osvalues[ i ] );
 	}
 
-	void Model_Simbody::CopyStateFromTk()
+	void ModelSimbody::CopyStateFromTk()
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
 		auto osvalues = GetOsimModel().getStateValues( GetTkState() );
@@ -767,7 +767,7 @@ namespace scone
 			m_State.SetValue( i, osvalues[ i ] );
 	}
 
-	void Model_Simbody::CopyStateToTk()
+	void ModelSimbody::CopyStateToTk()
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
 		GetOsimModel().setStateValues( GetTkState(), &m_State.GetValues()[ 0 ] );
@@ -784,7 +784,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::SetState( const State& state, TimeInSeconds timestamp )
+	void ModelSimbody::SetState( const State& state, TimeInSeconds timestamp )
 	{
 		m_State.SetValues( state.GetValues() );
 		CopyStateToTk();
@@ -793,7 +793,7 @@ namespace scone
 		UpdateControlValues();
 	}
 
-	void Model_Simbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
+	void ModelSimbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
 	{
 		m_State.SetValues( state );
 		CopyStateToTk();
@@ -805,13 +805,13 @@ namespace scone
 			StoreCurrentFrame();
 	}
 
-	TimeInSeconds Model_Simbody::GetSimulationStepSize()
+	TimeInSeconds ModelSimbody::GetSimulationStepSize()
 	{
 		SCONE_ASSERT( use_fixed_control_step_size );
 		return fixed_control_step_size;
 	}
 
-	void Model_Simbody::ValidateDofAxes()
+	void ModelSimbody::ValidateDofAxes()
 	{
 		SimTK::Matrix jsmat;
 		m_pOsimModel->getMatterSubsystem().calcSystemJacobian( GetTkState(), jsmat );
@@ -819,7 +819,7 @@ namespace scone
 		// extract axes from system Jacobian
 		for ( auto coIdx = 0u; coIdx < m_Dofs.size(); ++coIdx )
 		{
-			Dof_Simbody& dof = static_cast<Dof_Simbody&>( *m_Dofs[ coIdx ] );
+			DofSimbody& dof = static_cast<DofSimbody&>( *m_Dofs[ coIdx ] );
 			auto mbIdx = dof.GetOsCoordinate().getJoint().getBody().getIndex();
 
 			for ( auto j = 0; j < 3; ++j )
@@ -827,7 +827,7 @@ namespace scone
 		}
 	}
 
-	void Model_Simbody::UpdateOsimStorage()
+	void ModelSimbody::UpdateOsimStorage()
 	{
 		OpenSim::Array<double> stateValues;
 		m_pOsimModel->getStateValues( GetTkState(), stateValues );
@@ -836,11 +836,11 @@ namespace scone
 		m_pOsimManager->getStateStorage().append( vec );
 	}
 
-	void Model_Simbody::InitializeOpenSimMuscleActivations( double override_activation )
+	void ModelSimbody::InitializeOpenSimMuscleActivations( double override_activation )
 	{
 		for ( auto iter = GetMuscles().begin(); iter != GetMuscles().end(); ++iter )
 		{
-			OpenSim::Muscle& osmus = dynamic_cast<Muscle_Simbody*>( iter->get() )->GetOsMuscle();
+			OpenSim::Muscle& osmus = dynamic_cast<MuscleSimbody*>( iter->get() )->GetOsMuscle();
 			auto a = override_activation != 0.0 ? override_activation : ( *iter )->GetInput();
 			osmus.setActivation( GetOsimModel().updWorkingState(), a );
 		}

@@ -2,7 +2,7 @@
 
 #include "sim_simbody.h"
 #include "scone/model/Body.h"
-#include "Model_Simbody.h"
+#include "ModelSimbody.h"
 
 namespace OpenSim
 {
@@ -11,11 +11,11 @@ namespace OpenSim
 
 namespace scone
 {
-	class SCONE_API Body_Simbody : public Body
+	class SCONE_API BodySimbody : public Body
 	{
 	public:
-		Body_Simbody( class Model_Simbody& model, OpenSim::Body& body );
-		virtual ~Body_Simbody() { };
+		BodySimbody( class ModelSimbody& model, OpenSim::Body& body );
+		virtual ~BodySimbody() { };
 
 		virtual Vec3 GetOriginPos() const override;
 		virtual Vec3 GetComPos() const override;
@@ -39,7 +39,7 @@ namespace scone
 		virtual Vec3 GetContactMoment() const override;
 
 		OpenSim::Body& m_osBody;
-		class Model_Simbody& m_Model;
+		class ModelSimbody& m_Model;
 
 		// connect a specific stance_contact force to this body
 		void ConnectContactForce( const String& force_name );

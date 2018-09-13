@@ -11,11 +11,11 @@ namespace OpenSim
 
 namespace scone
 {
-	class SCONE_API Dof_Simbody : public Dof
+	class SCONE_API DofSimbody : public Dof
 	{
 	public:
-		Dof_Simbody( class Model_Simbody& model, OpenSim::Coordinate& coord );
-		virtual ~Dof_Simbody();
+		DofSimbody( class ModelSimbody& model, OpenSim::Coordinate& coord );
+		virtual ~DofSimbody();
 
 		virtual Real GetPos() const override;
 		virtual Real GetVel() const override;
@@ -35,12 +35,12 @@ namespace scone
 		virtual Range< Real > GetRange() const override;
 
 	private:
-		Model_Simbody& m_Model;
+		ModelSimbody& m_Model;
 		OpenSim::Coordinate& m_osCoord;
 		const OpenSim::CoordinateLimitForce* m_pOsLimitForce;
 		const OpenSim::CoordinateActuator* m_OsCoordAct;
 		Vec3 m_RotationAxis;
 
-		friend class Model_Simbody;
+		friend class ModelSimbody;
 	};
 }

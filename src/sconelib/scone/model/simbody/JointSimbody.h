@@ -10,11 +10,11 @@ namespace OpenSim
 
 namespace scone
 {
-	class SCONE_API Joint_Simbody : public Joint
+	class SCONE_API JointSimbody : public Joint
 	{
 	public:
-		Joint_Simbody( Body& body, Joint* parent, class Model_Simbody& model, OpenSim::Joint& osJoint );
-		virtual ~Joint_Simbody();
+		JointSimbody( Body& body, Joint* parent, class ModelSimbody& model, OpenSim::Joint& osJoint );
+		virtual ~JointSimbody();
 
 		virtual const String& GetName() const;
 
@@ -23,7 +23,7 @@ namespace scone
 		virtual Real GetDofValue( size_t index = 0 ) const override;
 		virtual const String& GetDofName( size_t index = 0 ) const override;
 
-		class Model_Simbody& m_Model;
+		class ModelSimbody& m_Model;
 		OpenSim::Joint& m_osJoint;
 
 		virtual Vec3 GetReactionForce() const override;

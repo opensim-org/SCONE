@@ -3,8 +3,8 @@
 #include "sim_simbody.h"
 #include "scone/model/Model.h"
 
-#include "Body_Simbody.h"
-#include "Muscle_Simbody.h"
+#include "BodySimbody.h"
+#include "MuscleSimbody.h"
 
 #include <memory>
 #include <map>
@@ -34,15 +34,15 @@ namespace xo
 
 namespace scone
 {
-	class Simulation_Simbody;
+	class SimulationSimbody;
 	class ControllerDispatcher;
 
 	/// Model of type Simbody.
-	class SCONE_API Model_Simbody : public Model
+	class SCONE_API ModelSimbody : public Model
 	{
 	public:
-		Model_Simbody( const PropNode& props, Params& par );
-		virtual ~Model_Simbody();
+		ModelSimbody( const PropNode& props, Params& par );
+		virtual ~ModelSimbody();
 
 		/// File containing the OpenSim model.
 		String model_file;

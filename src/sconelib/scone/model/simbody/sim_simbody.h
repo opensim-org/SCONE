@@ -5,5 +5,5 @@
 
 namespace scone
 {
-	SCONE_DECLARE_CLASS_AND_PTR( Simulation_Simbody );
+	SCONE_DECLARE_CLASS_AND_PTR( SimulationSimbody );
 }

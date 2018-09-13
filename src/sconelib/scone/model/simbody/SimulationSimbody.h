@@ -5,11 +5,11 @@
 
 namespace scone
 {
-	class SCONE_API Simulation_Simbody : public Simulation
+	class SCONE_API SimulationSimbody : public Simulation
 	{
 	public:
-		Simulation_Simbody( const PropNode& props );
-		virtual ~Simulation_Simbody() { };
+		SimulationSimbody( const PropNode& props );
+		virtual ~SimulationSimbody() { };
 
 		virtual void AdvanceSimulationTo( double time ) override;
 	};

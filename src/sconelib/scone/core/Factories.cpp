@@ -20,7 +20,7 @@
 #include "scone/core/PieceWiseConstantFunction.h"
 #include "scone/core/PieceWiseLinearFunction.h"
 #include "scone/core/Polynomial.h"
-#include "scone/model/simbody/Model_Simbody.h"
+#include "scone/model/simbody/ModelSimbody.h"
 #include "scone/optimization/CmaOptimizerCCMAES.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
@@ -124,7 +124,7 @@ namespace scone
 		static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 		if ( g_ModelFactory.empty() )
 		{
-			g_ModelFactory.register_class< Model_Simbody >( "Simbody" );
+			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
 		}
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}

@@ -213,18 +213,18 @@ set(SIM_TOPOLOGY_FILES
     )
 	
 set(SIMBODY_FILES
-    scone/model/simbody/Body_Simbody.cpp
-    scone/model/simbody/Body_Simbody.h
-    scone/model/simbody/Dof_Simbody.cpp
-    scone/model/simbody/Dof_Simbody.h
-    scone/model/simbody/Joint_Simbody.cpp
-    scone/model/simbody/Joint_Simbody.h
-    scone/model/simbody/Model_Simbody.cpp
-    scone/model/simbody/Model_Simbody.h
-    scone/model/simbody/Muscle_Simbody.cpp
-    scone/model/simbody/Muscle_Simbody.h
-    scone/model/simbody/Simulation_Simbody.cpp
-    scone/model/simbody/Simulation_Simbody.h
+    scone/model/simbody/BodySimbody.cpp
+    scone/model/simbody/BodySimbody.h
+    scone/model/simbody/DofSimbody.cpp
+    scone/model/simbody/DofSimbody.h
+    scone/model/simbody/JointSimbody.cpp
+    scone/model/simbody/JointSimbody.h
+    scone/model/simbody/ModelSimbody.cpp
+    scone/model/simbody/ModelSimbody.h
+    scone/model/simbody/MuscleSimbody.cpp
+    scone/model/simbody/MuscleSimbody.h
+    scone/model/simbody/SimulationSimbody.cpp
+    scone/model/simbody/SimulationSimbody.h
     scone/model/simbody/ConstantForce.cpp
     scone/model/simbody/ConstantForce.h
     scone/model/simbody/sim_simbody.cpp

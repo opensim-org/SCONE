@@ -1,14 +1,14 @@
-#include "Joint_Simbody.h"
+#include "JointSimbody.h"
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
-#include "Model_Simbody.h"
+#include "ModelSimbody.h"
 
 #include <OpenSim/OpenSim.h>
 #include "simbody_tools.h"
 
 namespace scone
 {
-	Joint_Simbody::Joint_Simbody( Body& body, Joint* parent, class Model_Simbody& model, OpenSim::Joint& osJoint ) :
+	JointSimbody::JointSimbody( Body& body, Joint* parent, class ModelSimbody& model, OpenSim::Joint& osJoint ) :
 		Joint( body, parent ),
 		m_osJoint( osJoint ),
 		m_Model( model )
@@ -16,31 +16,31 @@ namespace scone
 		//log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 	}
 
-	Joint_Simbody::~Joint_Simbody()
+	JointSimbody::~JointSimbody()
 	{
 	}
 
-	const String& Joint_Simbody::GetName() const
+	const String& JointSimbody::GetName() const
 	{
 		return m_osJoint.getName();
 	}
 
-	size_t Joint_Simbody::GetDofCount() const
+	size_t JointSimbody::GetDofCount() const
 	{
 		return m_osJoint.numCoordinates();
 	}
 
-	scone::Real Joint_Simbody::GetDofValue( size_t index /*= 0 */ ) const
+	scone::Real JointSimbody::GetDofValue( size_t index /*= 0 */ ) const
 	{
 		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
 	}
 
-	const String& Joint_Simbody::GetDofName( size_t index /*= 0 */ ) const
+	const String& JointSimbody::GetDofName( size_t index /*= 0 */ ) const
 	{
 		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getName();
 	}
 
-	scone::Vec3 Joint_Simbody::GetReactionForce() const
+	scone::Vec3 JointSimbody::GetReactionForce() const
 	{
 		auto& model = m_osJoint.getModel();
 		auto& matter = model.getMatterSubsystem();
@@ -69,7 +69,7 @@ namespace scone
 #endif
 	}
 
-	Vec3 Joint_Simbody::GetPos() const
+	Vec3 JointSimbody::GetPos() const
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
 

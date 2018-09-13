@@ -13,13 +13,13 @@ namespace OpenSim
 
 namespace scone
 {
-	class Model_Simbody;
+	class ModelSimbody;
 
-	class SCONE_API Muscle_Simbody : public Muscle
+	class SCONE_API MuscleSimbody : public Muscle
 	{
 	public:
-		Muscle_Simbody( Model_Simbody& model, OpenSim::Muscle& mus );
-		virtual ~Muscle_Simbody();
+		MuscleSimbody( ModelSimbody& model, OpenSim::Muscle& mus );
+		virtual ~MuscleSimbody();
 
 		// access to bodies
 		virtual const Link& GetOriginLink() const override;
@@ -67,7 +67,7 @@ namespace scone
 
 	private:
 		OpenSim::Muscle& m_osMus;
-		Model_Simbody& m_Model;
+		ModelSimbody& m_Model;
 		mutable xo::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }
