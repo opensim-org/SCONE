@@ -6,6 +6,7 @@
 
 namespace scone
 {
+	/// Multiple CMA-ES optimizations than run in a prioritized fashion, based on their predicted fitness.
 	class CmaPoolOptimizer : public Optimizer, public spot::optimizer_pool
 	{
 	public:

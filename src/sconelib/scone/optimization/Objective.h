@@ -10,6 +10,7 @@ namespace scone
 {
 	using spot::fitness_t;
 
+	/// Base class for Objectives.
 	class SCONE_API Objective : public HasSignature, public HasExternalResources, public spot::objective
 	{
 	public:

@@ -5,6 +5,7 @@
 
 namespace scone
 {
+	/// Base class for Objectives that involve Models.
 	class SCONE_API ModelObjective : public Objective
 	{
 	public:

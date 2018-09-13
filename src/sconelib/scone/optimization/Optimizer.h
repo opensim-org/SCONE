@@ -11,6 +11,7 @@
 
 namespace scone
 {
+	/// Base class for Optimizers.
 	class SCONE_API Optimizer : public HasSignature
 	{
 	public:

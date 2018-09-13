@@ -12,6 +12,7 @@
 
 namespace scone
 {
+	/// Objective in which a simulation is run.
 	class SCONE_API SimulationObjective : public ModelObjective
 	{
 	public:

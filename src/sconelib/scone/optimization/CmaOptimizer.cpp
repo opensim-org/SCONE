@@ -11,7 +11,6 @@ namespace scone
 		mu_( 0 ),
 		lambda_( 0 ),
 		sigma_( 1.0 ),
-		num_elitists( 0 ),
 		max_attempts( 100 )
 	{
 		INIT_PROP( props, lambda_, 0 );
