@@ -19,8 +19,8 @@ namespace scone
 	ImitationObjective::ImitationObjective( const PropNode& pn ) :
 	ModelObjective( pn )
 	{
-		INIT_PROP_REQUIRED( pn, file_ );
-		INIT_PROP( pn, frame_delta_, 1 );
+		INIT_PROP_REQUIRED( pn, file );
+		INIT_PROP( pn, frame_delta, 1 );
 
 		// create model to flag unused model props and create par_info_
 		auto model = CreateModel( pn.get_child( "Model" ), info_ );
@@ -28,7 +28,7 @@ namespace scone
 
 		// prepare data
 		m_Signature = model->GetSignature();
-		ReadStorageSto( m_Storage, file_ );
+		ReadStorageSto( m_Storage, file );
 
 		// make sure data and model are compatible
 		auto state = model->GetState();
@@ -86,7 +86,7 @@ namespace scone
 
 		{
 			SCONE_PROFILE_SCOPE( "ComputeSimularity" );
-			for ( index_t idx = frame_start * frame_delta_; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta_ )
+			for ( index_t idx = frame_start * frame_delta; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta )
 			{
 				auto f = m_Storage.GetFrame( idx );
 

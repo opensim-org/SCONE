@@ -13,23 +13,23 @@ namespace scone
 	SimulationObjective::SimulationObjective( const PropNode& props ) :
 	ModelObjective( props )
 	{
-		INIT_PROP( props, max_duration, 6000.0 );
+		INIT_PROP( props, max_duration, 1e12 );
 
 		// create model to flag unused model props and create par_info_
-		auto model = CreateModel( props.get_child( "Model" ), info_ );
+		auto m = CreateModel( model, info_ );
 
 		// create a measure that's defined OUTSIDE the model prop_node
-		if ( auto mp = props.try_get_child( "Measure" ) )
+		if ( auto mp = props.try_get_any_child( { "Measure", "measure" } ) )
 		{
-			m_MeasurePropsCopy = *mp;
-			model->SetMeasure( CreateMeasure( *mp, info_, *model, Locality( NoSide ) ) );
+			measure = *mp;
+			m->SetMeasure( CreateMeasure( *mp, info_, *m, Locality( NoSide ) ) );
 		}
 
-		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined" );
+		SCONE_THROW_IF( !m->GetMeasure(), "No Measure defined" );
 
-		info_.set_minimize( model->GetMeasure()->GetMinimize() );
-		signature_ = model->GetSignature() + stringf( ".D%.0f", max_duration );
-		AddExternalResources( model->GetExternalResources() );
+		info_.set_minimize( m->GetMeasure()->GetMinimize() );
+		signature_ = m->GetSignature() + stringf( ".D%.0f", max_duration );
+		AddExternalResources( m->GetExternalResources() );
 	}
 
 	SimulationObjective::~SimulationObjective()
@@ -49,11 +49,11 @@ namespace scone
 
 	scone::ModelUP SimulationObjective::CreateModelFromParams( Params& point ) const
 	{
-		auto model = CreateModel( m_ModelPropsCopy, point );
+		auto m = CreateModel( model, point );
 
-		if ( !m_MeasurePropsCopy.empty() ) // A measure was defined OUTSIDE the model prop_node
-			model->SetMeasure( CreateMeasure( m_MeasurePropsCopy, point, *model, Locality( NoSide ) ) );
-		return model;
+		if ( !measure.empty() ) // A measure was defined OUTSIDE the model prop_node
+			m->SetMeasure( CreateMeasure( measure, point, *m, Locality( NoSide ) ) );
+		return m;
 	}
 
 	String SimulationObjective::GetClassSignature() const

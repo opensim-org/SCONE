@@ -8,7 +8,7 @@ namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props ) :
 	Objective( props ),
-	m_ModelPropsCopy( props.get_child( "Model" ) )
+	model( props.get_any_child( { "Model", "model" } ) )
 	{
 	}
 
@@ -27,7 +27,7 @@ namespace scone
 
 	scone::ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
-		return CreateModel( m_ModelPropsCopy, par );
+		return CreateModel( model, par );
 	}
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const

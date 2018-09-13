@@ -19,7 +19,11 @@ namespace scone
 		SimulationObjective( const PropNode& props );
 		virtual ~SimulationObjective();
 
+		/// Maximum duration after which the evaluation is terminated; default = 1e12 (+/-31000 years)
 		double max_duration;
+
+		/// Measure to be used for the Objective.
+		PropNode measure;
 
 		virtual fitness_t EvaluateModel( Model& m ) const override;
 		virtual TimeInSeconds GetDuration() const override { return max_duration; }
@@ -36,6 +40,5 @@ namespace scone
 	private:
 		String signature_;
 		std::vector< path > external_files_;
-		PropNode m_MeasurePropsCopy;
 	};
 }

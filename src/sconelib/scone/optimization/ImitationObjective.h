@@ -13,19 +13,24 @@
 
 namespace scone
 {
+	/// Objective that attempts to imitate the results of an existing simulation, without having to perform a new a simulation.
 	class SCONE_API ImitationObjective : public ModelObjective
 	{
 	public:
 		ImitationObjective( const PropNode& props );
 		virtual ~ImitationObjective();
 
+		/// File containing the existing simulation results (.sto).
+		path file;
+
+		/// Number of frames to skip during each evaluation step; default = 1.
+		size_t frame_delta;
+
+
 		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
 		virtual TimeInSeconds GetDuration() const override { return m_Storage.Back().GetTime(); }
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
-
-		path file_;
-		size_t frame_delta_;
 
 	protected:
 		virtual String GetClassSignature() const override;

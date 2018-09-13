@@ -12,6 +12,9 @@ namespace scone
 		ModelObjective( const PropNode& props );
 		virtual ~ModelObjective() {}
 
+		/// Model to be used for the simulation.
+		PropNode model;
+
 		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 
 		virtual fitness_t EvaluateModel( Model& m ) const;
@@ -25,9 +28,6 @@ namespace scone
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
 
 		virtual std::vector<path> WriteResults( const path& file_base ) override;
-
-	protected:
-		PropNode m_ModelPropsCopy;
 	};
 
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& config_file );
