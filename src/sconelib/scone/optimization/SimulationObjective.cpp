@@ -15,8 +15,8 @@ namespace scone
 	{
 		INIT_PROP( props, max_duration, 1e12 );
 
-		// create model to flag unused model props and create par_info_
-		auto m = CreateModel( model, info_ );
+		// create model using the ORIGINAL porp_node to flag unused model props and create par_info_
+		auto m = CreateModel( props.get_any_child( { "Model", "model" } ), info_ );
 
 		// create a measure that's defined OUTSIDE the model prop_node
 		if ( auto mp = props.try_get_any_child( { "Measure", "measure" } ) )
