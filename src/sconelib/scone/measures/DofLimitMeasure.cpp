@@ -44,7 +44,7 @@ namespace scone
 
 		for ( Limit& l : m_Limits )
 		{
-			if ( l.squared_range_penalty > 0 || l.abs_range_penalty > 0 )
+			if ( l.squared_range_penalty != 0 || l.abs_range_penalty != 0 )
 			{
 				auto value = l.dof.GetPos() + ( l.parent ? l.parent->GetPos() : 0 );
 				double range_violation = l.range.GetRangeViolation( Radian( value ) ).value;
@@ -53,7 +53,7 @@ namespace scone
 				l.penalty.AddSample( timestamp, rps + rpa );
 			}
 
-			if ( l.squared_velocity_range_penalty > 0 || l.abs_velocity_range_penalty > 0 )
+			if ( l.squared_velocity_range_penalty != 0 || l.abs_velocity_range_penalty != 0 )
 			{
 				auto value = l.dof.GetVel() + ( l.parent ? l.parent->GetVel() : 0 );
 				double range_violation = l.velocity_range.GetRangeViolation( Radian( value ) ).value;
@@ -62,7 +62,7 @@ namespace scone
 				l.penalty.AddSample( timestamp, vrps + vrpa );
 			}
 
-			if ( l.squared_force_penalty > 0 || l.abs_force_penalty > 0 )
+			if ( l.squared_force_penalty != 0 || l.abs_force_penalty != 0 )
 			{
 				double lf = l.dof.GetLimitForce() + ( l.parent ? l.parent->GetLimitForce() : 0 );
 				double fps = l.squared_force_penalty * GetSquared( lf );
