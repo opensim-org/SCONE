@@ -28,9 +28,10 @@ namespace scone
 		bool minimize;
 
 		virtual double GetResult( Model& model ) = 0;
+		double GetWeightedResult( Model& model );
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
-
+	
 		virtual const String& GetName() const override { return name; }
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }

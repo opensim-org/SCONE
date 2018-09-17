@@ -51,10 +51,7 @@ namespace scone
 		for ( MeasureUP& m : m_Measures )
 		{
 			double res_org = m->GetResult( model );
-			double res_ofs = res_org + m->GetOffset();
-			double res_thresh = ( minimize && res_ofs <= m->GetThreshold() ) || ( !minimize && res_ofs >= m->GetThreshold() ) ? 0.0 : res_ofs;
-			double res_final = m->GetWeight() * res_thresh;
-
+			double res_final = m->GetWeightedResult( model );
 			total += res_final;
 
 			GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", res_final, m->GetWeight(), res_org, m->GetOffset(), m->GetThreshold() ) );

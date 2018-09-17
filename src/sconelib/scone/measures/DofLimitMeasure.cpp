@@ -16,7 +16,11 @@ namespace scone
 
 		// see if we have a limit defined internally
 		if ( props.try_get_child( "dof" ) )
+		{
 			m_Limits.push_back( Limit( props, model ) );
+			if ( name.empty() )
+				name = m_Limits.back().dof.GetName();
+		}
 	}
 
 	DofLimitMeasure::~DofLimitMeasure() {}
