@@ -50,14 +50,14 @@ namespace scone
 		double total = 0.0;
 		for ( MeasureUP& m : m_Measures )
 		{
-			double org_result = m->GetResult( model );
-			double ofset_result = org_result + m->GetOffset();
-			double thresh_result = ofset_result <= m->GetThreshold() ? 0.0 : ofset_result;
-			double weighted_result = m->GetWeight() * thresh_result;
+			double res_org = m->GetResult( model );
+			double res_ofs = res_org + m->GetOffset();
+			double res_thresh = ( minimize && res_ofs <= m->GetThreshold() ) || ( !minimize && res_ofs >= m->GetThreshold() ) ? 0.0 : res_ofs;
+			double res_final = m->GetWeight() * res_thresh;
 
-			total += weighted_result;
+			total += res_final;
 
-			GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", weighted_result, m->GetWeight(), org_result, m->GetOffset(), m->GetThreshold() ) );
+			GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", res_final, m->GetWeight(), res_org, m->GetOffset(), m->GetThreshold() ) );
 		}
 
 		GetReport().set_value( total );

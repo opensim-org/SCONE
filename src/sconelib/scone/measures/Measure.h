@@ -18,7 +18,7 @@ namespace scone
 		/// Weighting factor applied to the result of the measure; default = 1.
 		Real weight;
 
-		/// Threshold below which the measure becomes zero; default = 0.
+		/// Threshold above / below which the measure becomes zero; default = 0.
 		Real threshold;
 
 		/// Offset added to measure result; default = 0.
