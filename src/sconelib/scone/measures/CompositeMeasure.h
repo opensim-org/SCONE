@@ -20,7 +20,7 @@ namespace scone
 		virtual double GetResult( Model& model ) override;
 
 		/// Child node containing all Measures.
-		const PropNode& Measures;
+		const PropNode* Measures;
 
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;

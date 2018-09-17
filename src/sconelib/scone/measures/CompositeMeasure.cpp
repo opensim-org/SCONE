@@ -1,3 +1,4 @@
+
 #include "CompositeMeasure.h"
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
@@ -7,10 +8,20 @@ namespace scone
 {
 	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
 	Measure( props, par, model, area ),
-	Measures( props.get_child( "Measures" ) )
+	Measures( props.try_get_child( "Measures" ) )
 	{
-		for ( auto it = Measures.begin(); it != Measures.end(); ++it )
-			m_Measures.push_back( CreateMeasure( it->second, par, model, area ) );
+		if ( Measures ) // old style, with special group
+		{
+			for ( auto& m : *Measures )
+				m_Measures.push_back( CreateMeasure( m.second, par, model, area ) );
+		}
+
+		// add any Measure
+		for ( auto& m : props.select( "Measure" ) )
+			m_Measures.push_back( CreateMeasure( m.second, par, model, area ) );
+
+		// copy minimize flag from
+		INIT_PROP( props, minimize, !m_Measures.empty() ? m_Measures.front()->minimize : true );
 	}
 
 	void CompositeMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
