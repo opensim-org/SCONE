@@ -4,7 +4,7 @@ namespace scone
 {
 	Measure::Measure( const PropNode& props, Params& par, Model& model, const Locality& area ) : Controller( props, par, model, area )
 	{
-		INIT_PROP( props, name, String( "" ) );
+		INIT_PROP( props, name, props.get< string >( "type" ) );
 		INIT_PROP( props, weight, 1.0 );
 		INIT_PROP( props, threshold, 0.0 );
 		INIT_PROP( props, offset, 0.0 );
