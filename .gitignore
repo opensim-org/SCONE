@@ -1,8 +1,10 @@
 bin/
 build/
 ignore/
-doc/
-config/NaturalDocs/Working Data/
+doc/dokuwiki/
+doc/html/
+doc/xml/
+doc/config/NaturalDocs/Working Data/
 tutorials/*.sto
 .version
 *.log
