@@ -1,6 +1,10 @@
 #pragma once
 
-#define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 15
-#define SCONE_VERSION_PATCH 0
-#define SCONE_VERSION_POSTFIX "BETA"
+#include "xo/system/version.h"
+#include "platform.h"
+
+namespace scone
+{
+	using xo::version;
+	SCONE_API const version& GetSconeVersion();
+}

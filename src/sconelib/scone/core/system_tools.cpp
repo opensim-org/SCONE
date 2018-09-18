@@ -79,41 +79,4 @@ namespace scone
 			return path( ".." ) / p.filename(); // filename in folder one above current folder
 		else SCONE_THROW( "Could not find " + p.string() + " in " + xo::current_path().string() );
 	}
-
-	xo::version GetSconeVersion()
-	{
-		auto build = GetSconeBuildNumber();
-		int build_nr = 0;
-		if ( build != "UNKNOWN" )
-			build_nr = xo::from_str< int >( build, 0 );
-		return version( SCONE_VERSION_MAJOR, SCONE_VERSION_MINOR, SCONE_VERSION_PATCH, build_nr, SCONE_VERSION_POSTFIX );
-
-	}
-
-	String GetSconeBuildNumber()
-	{
-		if ( g_Version.empty() )
-		{
-			xo::path versionpath( xo::get_application_folder() );
-
-			// look for .version file, up to three levels from application folder
-			for ( int level = 0; level <= 3; ++level )
-			{
-				if ( xo::exists( versionpath / ".version" ) )
-				{
-					// .version file found, read its contents
-					std::ifstream ifstr( ( versionpath / ".version" ).string() );
-					ifstr >> g_Version;
-					break;
-
-				}
-				else versionpath = versionpath / "..";
-			}
-
-			if ( g_Version.empty() ) 
-				g_Version = "UNKNOWN"; // reading has failed, version unknown
-		}
-
-		return g_Version;
-	}
 }

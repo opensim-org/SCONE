@@ -11,8 +11,6 @@ namespace scone
 {
 	using xo::version;
 	using xo::path;
-	SCONE_API version GetSconeVersion();
-	SCONE_API String GetSconeBuildNumber();
 
 	enum SconeFolder { SCONE_ROOT_FOLDER, SCONE_DATA_FOLDER, SCONE_RESULTS_FOLDER, SCONE_MODEL_FOLDER, SCONE_SCENARIO_FOLDER, SCONE_GEOMETRY_FOLDER, SCONE_UI_RESOURCE_FOLDER };
 	SCONE_API path GetSettingsFolder();

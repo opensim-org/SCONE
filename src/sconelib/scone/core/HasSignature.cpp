@@ -2,6 +2,7 @@
 #include "string_tools.h"
 #include "xo/string/string_tools.h"
 #include "system_tools.h"
+#include "version.h"
 
 namespace scone
 {
@@ -15,8 +16,8 @@ namespace scone
 		xo::replace_str( signature_postfix, "DATE_TIME", GetDateTimeAsString() );
 		xo::replace_str( signature_prefix, "DATE_TIME_EXACT", GetDateTimeExactAsString() );
 		xo::replace_str( signature_postfix, "DATE_TIME_EXACT", GetDateTimeExactAsString() );
-		xo::replace_str( signature_prefix, "SCONE_BUILD", GetSconeBuildNumber() );
-		xo::replace_str( signature_postfix, "SCONE_BUILD", GetSconeBuildNumber() );
+		xo::replace_str( signature_prefix, "SCONE_BUILD", to_str( GetSconeVersion().build ) );
+		xo::replace_str( signature_postfix, "SCONE_BUILD", to_str( GetSconeVersion().build ) );
 
 		// add dots if they aren't there
 		if ( !signature_postfix.empty() && signature_postfix.find_first_of( "._-" ) != 0 )

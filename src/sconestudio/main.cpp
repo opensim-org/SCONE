@@ -17,6 +17,7 @@
 #include "xo/system/system_tools.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
+#include "scone/core/version.h"
 
 int main( int argc, char *argv[] )
 {
