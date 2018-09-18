@@ -1,9 +1,6 @@
 Optimizer {
 	type = CmaOptimizer
-	signature_prefix = SCONE_BUILD
-	min_progress = 0.01
-	optimizations = 6
-	concurrent_optimizations = 3
+	signature_prefix = DATE_TIME
 	
 	Objective {
 		type = SimulationObjective
@@ -11,10 +8,7 @@ Optimizer {
 		
 		Model {
 			type = Simbody
-			model_file = models/f0914m.osim
-			integration_method = SemiExplicitEuler2
-			integration_accuracy = 0.001
-			fixed_control_step_size = 0.001
+			model_file = data/f0914m.osim
 			
 			Controller {
 				type = FeedForwardController
@@ -22,8 +16,8 @@ Optimizer {
 				Function {
 					type = PieceWiseConstant
 					control_points = 2
-					control_point_y { mean = 0.3 std = 0.01 min = 0.0 max = 1 }
-					control_point_dt { mean = 0.1 std = 0.01 min = 0.0 max = 1 }
+					control_point_y = 0.3~0.01<0,1>
+					control_point_dt = 0.2~0.01<0,1>
 				}
 			}
 		}

@@ -7,7 +7,7 @@ Optimizer {
 		max_duration = 10
 		Model {
 			type = Simbody
-			model_file = models/f0914m.osim
+			model_file = data/f0914m.osim
 			state_init_file = data/f0914_init_walk_S12.sto
 			initial_state_offset =	"0~0.01[-0.5,0.5]"
 			initial_state_exclude = "*_tx;*_ty;*_u"

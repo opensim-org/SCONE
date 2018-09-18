@@ -1,0 +1,34 @@
+Optimizer {
+	type = CmaOptimizer
+	signature_prefix = DATE_TIME
+	
+	Objective {
+		type = SimulationObjective
+		max_duration = 2
+		
+		Model {
+			type = Simbody
+			model_file = data/f0914m.osim
+			
+			// Controller definition
+			Controller {
+				type = FeedForwardController
+				symmetric = 1
+				// Parameterizable function defining the excitation signals
+				Function {
+					type = PieceWiseLinear
+					control_points = 4
+					control_point_y = 0.3~0.01<0,1>
+					control_point_dt = 0.05
+				}
+			}
+		}
+		
+		// Objective measure
+		Measure {
+			type = JumpMeasure
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}
