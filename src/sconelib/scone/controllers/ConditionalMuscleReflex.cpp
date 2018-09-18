@@ -12,13 +12,12 @@ namespace scone
 	m_pConditionalDofVel( nullptr ),
 	dof( *FindByName( model.GetDofs(), area.ConvertName( props.get< String >( "dof" ) ) ) )
 	{
-		INIT_PAR( props, par, pos_max, 180 );
-		INIT_PAR( props, par, pos_min, 180 );
-
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 
 		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "-" + props.get< String >( "dof" ) + "." );
+		INIT_PAR( props, par, pos_max, 180 );
+		INIT_PAR( props, par, pos_min, -180 );
 		m_ConditionalPosRange.max = pos_max;
 		m_ConditionalPosRange.min = pos_min;
 	}
