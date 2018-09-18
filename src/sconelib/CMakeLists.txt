@@ -35,6 +35,7 @@ set(CORE_SYSTEM_FILES
 	scone/core/platform.h
 	scone/core/Log.cpp
 	scone/core/Log.h
+	scone/core/version.cpp
 	scone/core/version.h
 	scone/core/types.h
 	scone/core/system_tools.cpp
