@@ -9,15 +9,15 @@ namespace scone
 	class MirrorController : public Controller
 	{
 	public:
-		MirrorController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Controller( props, par, model, area )
+		MirrorController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		Controller( props, par, model, loc )
 		{
 			for ( auto& pn : props )
 			{
 				if ( pn.first == "Controller" )
 				{
-					c0 = CreateController( pn.second, par, model, area );
-					c1 = CreateController( pn.second, par, model, MakeMirrored( area ) );
+					c0 = CreateController( pn.second, par, model, loc );
+					c1 = CreateController( pn.second, par, model, MakeMirrored( loc ) );
 				}
 			}
 		}

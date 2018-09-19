@@ -4,8 +4,8 @@
 
 namespace scone
 {
-	SequentialController::SequentialController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	CompositeController( props, par, model, area )
+	SequentialController::SequentialController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	CompositeController( props, par, model, loc )
 	{
 		SCONE_THROW_IF( controllers_.empty(), "No Controllers defined in SequentialController" );
 

@@ -9,7 +9,7 @@ namespace scone
 	class CompositeController : public Controller
 	{
 	public:
-		CompositeController( const PropNode& props, Params& par, Model& model, const Locality& area );
+		CompositeController( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~CompositeController() {}
 		
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;

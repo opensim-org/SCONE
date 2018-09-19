@@ -9,7 +9,7 @@ namespace scone
 	class Measure : public Controller, public HasName
 	{
 	public:
-		Measure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		Measure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~Measure() { };
 
 		/// Name of the Measure, to be used in reporting.

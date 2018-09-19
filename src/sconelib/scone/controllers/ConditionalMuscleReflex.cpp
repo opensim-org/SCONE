@@ -1,16 +1,16 @@
 #include "ConditionalMuscleReflex.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/Dof.h"
 #include "scone/core/Range.h"
 
 namespace scone
 {
-	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	MuscleReflex( props, par, model, area ),
+	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	MuscleReflex( props, par, model, loc ),
 	m_pConditionalDofPos( nullptr ),
 	m_pConditionalDofVel( nullptr ),
-	dof( *FindByName( model.GetDofs(), area.ConvertName( props.get< String >( "dof" ) ) ) )
+	dof( *FindByName( model.GetDofs(), loc.ConvertName( props.get< String >( "dof" ) ) ) )
 	{
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );

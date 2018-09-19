@@ -5,8 +5,8 @@
 
 namespace scone
 {
-	HeightMeasure::HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Measure( props, par, model, area ),
+	HeightMeasure::HeightMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		Measure( props, par, model, loc ),
 		m_pTargetBody( nullptr ),
 		m_JumpState( InitialState )
 	{

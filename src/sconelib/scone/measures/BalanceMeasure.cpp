@@ -4,8 +4,8 @@
 namespace scone
 {
 	
-	BalanceMeasure::BalanceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area )
+	BalanceMeasure::BalanceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Measure( props, par, model, loc )
 	{
 		INIT_PROP( props, termination_height, 0.5 );
 

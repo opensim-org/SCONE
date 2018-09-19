@@ -10,8 +10,8 @@
 
 namespace scone
 {
-	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area )
+	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Measure( props, par, model, loc )
 	{
 		INIT_PROP( props, termination_height, 0.5 );
 		INIT_PROP( props, min_velocity, 0 );

@@ -1,25 +1,24 @@
 #include "MuscleReflex.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "scone/model/Dof.h"
 
 namespace scone
 {
-	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Reflex( props, par, model, area ),
+	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Reflex( props, par, model, loc ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr )
 	{
-		auto trg_name = props.get< String >( "target" );
-		auto src_name = props.get< String >( "source", trg_name );
-		auto muscle_name = area.ConvertName( src_name );
-		Muscle& source = *FindByName( model.GetMuscles(), muscle_name );
+		INIT_PROP( props, source, target );
+
+		Muscle& src_mus = *FindByName( model.GetMuscles(), loc.ConvertName( source ) );
 
 		// init names
 		String par_name = GetParName( props );
-		name = GetReflexName( m_Target.GetName(), source.GetName() );
+		name = GetReflexName( m_Target.GetName(), src_mus.GetName() );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PAR_NAMED( props, par, KL, "KL", 0.0 );
@@ -42,16 +41,16 @@ namespace scone
 
 		// create delayed sensors
 		if ( KF != 0.0 )
-			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
+			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( src_mus );
 
 		if ( KL != 0.0 )
-			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( source );
+			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( src_mus );
 
 		if ( KV != 0.0 )
-			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
+			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( src_mus );
 
 		if ( KS!= 0.0 )
-			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
+			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( src_mus );
 
 		//log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}

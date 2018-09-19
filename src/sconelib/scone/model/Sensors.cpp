@@ -1,7 +1,7 @@
 #include "Sensors.h"
 #include "Model.h"
 #include "Muscle.h"
-#include "Locality.h"
+#include "Location.h"
 #include "Body.h"
 #include "Dof.h"
 #include "scone/core/string_tools.h"
@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	MuscleSensor::MuscleSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	MuscleSensor::MuscleSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Muscle( *FindByName( model.GetMuscles(), pn.get< String >( "muscle" ) ) )
 	{}
@@ -29,7 +29,7 @@ namespace scone
 	Real MuscleExcitationSensor::GetValue() const { return m_Muscle.GetExcitation(); }
 	String MuscleExcitationSensor::GetName() const { return m_Muscle.GetName() + ".excitation"; }
 
-	DofSensor::DofSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	DofSensor::DofSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Dof( *FindByName( model.GetDofs(), pn.get< String >( "dof" ) ) ),
 		m_pRootDof( pn.has_key( "root_dof" ) ? FindByName( model.GetDofs(), pn.get< String >( "root_dof" ) ).get() : nullptr )
@@ -61,7 +61,7 @@ namespace scone
 		return m_Dof.GetName() + ".DV";
 	}
 
-	DofPosVelSensor::DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	DofPosVelSensor::DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 	DofSensor( pn, par, model, target_area )
 	{
 		m_pRootDof = nullptr;
@@ -81,7 +81,7 @@ namespace scone
 		return m_Dof.GetName() + ".DPV";
 	}
 
-	LegLoadSensor::LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	LegLoadSensor::LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Leg( *FindBySide( model.GetLegs(), target_area.side ) )
 	{}
@@ -101,7 +101,7 @@ namespace scone
 	static const char* g_PlaneNames[] = { "Sagittal", "Coronal", "Transverse" };
 
 	// TODO: get rid of hard-coded dof names
-	OrientationSensor::OrientationSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	OrientationSensor::OrientationSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Plane( Invalid ),
 		m_Pelvis( nullptr ),
@@ -166,7 +166,7 @@ namespace scone
 		return String( "Ori." ) + g_PlaneNames[ m_Plane ];
 	}
 
-	BodySensor::BodySensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) :
+	BodySensor::BodySensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) :
 		Sensor( pn, par, model, target_area ),
 		m_Body( *FindByName( model.GetBodies(), pn.get< String >( "body" ) ) )
 	{}

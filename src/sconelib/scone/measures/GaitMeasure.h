@@ -10,7 +10,7 @@ namespace scone
 	class GaitMeasure : public Measure
 	{
 	public:
-		GaitMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		GaitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~GaitMeasure();
 
 		/// Relative COM height (wrt initial position) at which to stop the simulation; default = 0.5.

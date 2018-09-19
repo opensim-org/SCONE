@@ -14,7 +14,7 @@ namespace scone
 	class GaitStateController : public Controller
 	{
 	public:
-		GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		GaitStateController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~GaitStateController();
 		GaitStateController( const GaitStateController& ) = delete;
 		GaitStateController& operator=( const GaitStateController& ) = delete;

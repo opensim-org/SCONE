@@ -24,7 +24,7 @@ namespace scone
 	class NeuralController : public Controller
 	{
 	public:
-		NeuralController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		NeuralController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~NeuralController() {}
 
 		size_t GetLayerSize( const string& layer ) const { return ( layer == "0" ) ? m_SensorNeurons.size() : m_InterNeurons[ layer ].size(); }

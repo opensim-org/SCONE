@@ -8,7 +8,7 @@ namespace scone
 	class SimpleMuscleReflex : public Reflex
 	{
 	public:
-		SimpleMuscleReflex( const String& target, const String& source, double mean, double stdev, TimeInSeconds delay, Model& model, Params& par, const Locality& area );
+		SimpleMuscleReflex( const String& target, const String& source, double mean, double stdev, TimeInSeconds delay, Model& model, Params& par, const Location& loc );
 		virtual ~SimpleMuscleReflex() {}
 
 		virtual void ComputeControls( double timestamp ) override;

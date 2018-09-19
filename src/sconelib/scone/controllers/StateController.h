@@ -10,7 +10,7 @@ namespace scone
 	class StateController : public Controller
 	{
 	public:
-		StateController( const PropNode& props, Params& par, Model& model, const Locality& area );
+		StateController( const PropNode& props, Params& par, Model& model, const Location& loc );
 		StateController( const StateController& other ) = delete;
 		StateController& operator=( const StateController& other ) = delete;
 
@@ -35,7 +35,7 @@ namespace scone
 		typedef std::pair< ConditionalControllerState, ControllerUP > ConditionalController;
 		std::vector< ConditionalController > m_ConditionalControllers;
 
-		void CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Locality& area );
+		void CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Location& loc );
 		void UpdateCurrentState( Model& model, TimeInSeconds timestamp );
 
 		StateIndex m_CurrentState;

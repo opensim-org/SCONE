@@ -6,8 +6,8 @@
 
 namespace scone
 {
-	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area )
+	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Measure( props, par, model, loc )
 	{
 		INIT_PROP_REQUIRED( props, file );
 		INIT_PROP( props, include_states, xo::pattern_matcher( "*" ) );

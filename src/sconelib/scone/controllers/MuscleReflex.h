@@ -10,10 +10,13 @@ namespace scone
 	class  MuscleReflex : public Reflex
 	{
 	public:
-		MuscleReflex( const PropNode& props, Params& par, Model& model, const Locality& area );
+		MuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~MuscleReflex();
 
 		virtual void ComputeControls( double timestamp ) override;
+
+		/// Name of the source muscle (without side), leave empty for monosynaptic reflexes (default).
+		String source;
 
 		/// Constant actuation added to reflex output; default = 0.
 		Real C0;

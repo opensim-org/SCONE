@@ -8,7 +8,7 @@ namespace scone
 	class SequentialController : public CompositeController
 	{
 	public:
-		SequentialController( const PropNode& props, Params& par, Model& model, const Locality& area );
+		SequentialController( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~SequentialController() {}
 
 		std::vector< TimeInSeconds > transition_times;

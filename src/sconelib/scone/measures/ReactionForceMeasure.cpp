@@ -5,8 +5,8 @@
 
 namespace scone
 {
-	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area ),
+	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Measure( props, par, model, loc ),
 	RangePenalty< Real >( props )
 	{}
 

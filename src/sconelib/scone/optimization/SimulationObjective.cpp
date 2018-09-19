@@ -22,7 +22,7 @@ namespace scone
 		if ( auto mp = props.try_get_any_child( { "Measure", "measure" } ) )
 		{
 			measure = *mp;
-			m->SetMeasure( CreateMeasure( *mp, info_, *m, Locality( NoSide ) ) );
+			m->SetMeasure( CreateMeasure( *mp, info_, *m, Location( NoSide ) ) );
 		}
 
 		SCONE_THROW_IF( !m->GetMeasure(), "No Measure defined" );
@@ -52,7 +52,7 @@ namespace scone
 		auto m = CreateModel( model, point );
 
 		if ( !measure.empty() ) // A measure was defined OUTSIDE the model prop_node
-			m->SetMeasure( CreateMeasure( measure, point, *m, Locality( NoSide ) ) );
+			m->SetMeasure( CreateMeasure( measure, point, *m, Location( NoSide ) ) );
 		return m;
 	}
 

@@ -6,8 +6,8 @@
 
 namespace scone
 {
-	PointMeasure::PointMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Measure( props, par, model, area ),
+	PointMeasure::PointMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		Measure( props, par, model, loc ),
 		m_pTargetBody( nullptr )
 	{
 		INIT_PROP_REQUIRED( props, body );

@@ -6,16 +6,15 @@
 
 namespace scone
 {
-	StateController::StateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Controller( props, par, model, area ),
+	StateController::StateController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Controller( props, par, model, loc ),
 	m_CurrentState( NoIndex )
 	{
 	}
 
-	void StateController::CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Locality& area )
+	void StateController::CreateConditionalControllers( const PropNode& props, Params& par, Model& model, const Location& loc )
 	{
 		// create instances for each controller
-		log::trace( "Creating Conditional Controllers for " + area.GetName() );
 		const PropNode& ccProps = props.get_child( "ConditionalControllers" );
 		for ( PropNode::const_iterator ccIt = ccProps.begin(); ccIt != ccProps.end(); ++ccIt )
 		{
@@ -25,7 +24,7 @@ namespace scone
 			for ( String controller_state_name : state_tokens )
 			{
 				// fix name for mirrored case -- yes, this is pretty nasty
-				if ( area.mirrored )
+				if ( loc.mirrored )
 					controller_state_name += "_mirrored";
 
 				// create new conditional controller
@@ -54,7 +53,7 @@ namespace scone
 				// create controller
 				const PropNode& cprops = ccIt->second.get_child( "Controller" );
 				ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
-				cc.second = CreateController( cprops, par, model, area );
+				cc.second = CreateController( cprops, par, model, loc );
 			}
 		}
 	}

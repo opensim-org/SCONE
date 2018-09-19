@@ -38,9 +38,9 @@
 
 namespace scone
 {
-	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Locality& target_area )
+	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Controller, const PropNode&, Params&, Model&, const Locality& > g_ControllerFactory;
+		static xo::factory< Controller, const PropNode&, Params&, Model&, const Location& > g_ControllerFactory;
 		if ( g_ControllerFactory.empty() )
 		{
 			// register controllers
@@ -71,9 +71,9 @@ namespace scone
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Locality& target_area )
+	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Measure, const PropNode&, Params&, Model&, const Locality& > g_MeasureFactory;
+		static xo::factory< Measure, const PropNode&, Params&, Model&, const Location& > g_MeasureFactory;
 		if ( g_MeasureFactory.empty() )
 		{
 			// register measures
@@ -93,9 +93,9 @@ namespace scone
 		return g_MeasureFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Locality& target_area )
+	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Reflex, const PropNode&, Params&, Model&, const Locality& > g_ReflexFactory;
+		static xo::factory< Reflex, const PropNode&, Params&, Model&, const Location& > g_ReflexFactory;
 		if ( g_ReflexFactory.empty() )
 		{
 			g_ReflexFactory.register_class< MuscleReflex >();
@@ -129,9 +129,9 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Locality& a )
+	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Location& a )
 	{
-		static xo::factory< Sensor, const PropNode&, Params&, Model&, const Locality& > g_SensorFactory;
+		static xo::factory< Sensor, const PropNode&, Params&, Model&, const Location& > g_SensorFactory;
 		if ( g_SensorFactory.empty() )
 		{
 			g_SensorFactory.register_class< MuscleForceSensor >();

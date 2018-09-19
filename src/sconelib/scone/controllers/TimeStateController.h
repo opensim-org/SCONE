@@ -7,7 +7,7 @@ namespace scone
 	class TimeStateController : public StateController
 	{
 	public:
-		TimeStateController( const PropNode& props, Params& par, Model& model, const Locality& area );
+		TimeStateController( const PropNode& props, Params& par, Model& model, const Location& loc );
 
 		virtual size_t GetStateCount() const override { return m_States.size(); }
 		virtual const String& GetStateName( StateIndex i ) const override { return m_States[ i ].name; }

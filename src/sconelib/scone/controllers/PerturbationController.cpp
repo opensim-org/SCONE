@@ -5,7 +5,7 @@
 
 namespace scone
 {
-	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
+	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 	Controller( props, par, model, target_area ),
 	body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
 	current_force( 0 ),

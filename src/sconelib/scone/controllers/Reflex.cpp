@@ -1,12 +1,13 @@
 #include "Reflex.h"
 #include "scone/model/Actuator.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "scone/core/math.h"
 
 namespace scone
 {
-	Reflex::Reflex( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	m_Target( *FindByName( model.GetActuators(), area.ConvertName( props.get< String >( "target" ) ) ) )
+	Reflex::Reflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	target( props.get< String >( "target" ) ),
+	m_Target( *FindByName( model.GetActuators(), loc.ConvertName( target ) ) )
 	{
 		INIT_PAR( props, par, delay, 0 );
 		INIT_PROP( props, min_control_value, xo::const_lowest<Real>() );

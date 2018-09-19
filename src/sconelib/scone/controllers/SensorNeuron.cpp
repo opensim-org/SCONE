@@ -1,6 +1,6 @@
 #include "SensorNeuron.h"
 #include "spot/par_tools.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "scone/model/Model.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/SensorDelayAdapter.h"

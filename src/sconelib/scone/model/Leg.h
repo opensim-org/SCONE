@@ -4,7 +4,7 @@
 #include "memory_tools.h"
 #include "scone/core/HasName.h"
 #include "Body.h"
-#include "Locality.h"
+#include "Location.h"
 
 namespace scone
 {
@@ -35,7 +35,7 @@ namespace scone
 		Real MeasureLength() const;
 		Real m_LegLength;
 		size_t m_Index;
-		Side m_Side; // TODO: use area instead of side
+		Side m_Side; // TODO: use loc instead of side
 		size_t m_Rank;
 		Link& m_Foot;
 		Link& m_Upper;

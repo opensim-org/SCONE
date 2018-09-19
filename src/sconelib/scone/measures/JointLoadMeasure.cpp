@@ -4,8 +4,8 @@
 
 namespace scone
 {
-	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Measure( props, par, model, area ),
+	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		Measure( props, par, model, loc ),
 		RangePenalty( props ),
 		joint( *FindByName( model.GetJoints(), props.get< String >( "joint" ) ) )
 	{

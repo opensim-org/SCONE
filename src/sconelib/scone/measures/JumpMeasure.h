@@ -12,7 +12,7 @@ namespace scone
 	class JumpMeasure : public Measure
 	{
 	public:
-		JumpMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		JumpMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~JumpMeasure();
 
 		enum JumpType { NoJumpType, HighJump, LongJump };

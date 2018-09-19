@@ -10,7 +10,7 @@ namespace scone
 	class MimicMeasure : public Measure
 	{
 	public:
-		MimicMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		MimicMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~MimicMeasure() { };
 
 		/// Filename of storage (sto).

@@ -11,9 +11,12 @@ namespace scone
 	class Reflex : public HasData
 	{
 	public:
-		Reflex( const PropNode& props, Params& par, Model& model, const Locality& area );
+		Reflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 		Reflex( Actuator& target, TimeInSeconds d, Real min_val = REAL_LOWEST, Real max_val = REAL_MAX );
 		virtual ~Reflex();
+
+		/// Name of the target muscle.
+		String target;
 
 		/// Minimum output for this reflex; default = 0.
 		Real min_control_value;

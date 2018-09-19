@@ -7,7 +7,7 @@ namespace scone
 	class SensorStateController : public StateController
 	{
 	public:
-		SensorStateController( const PropNode& props, Params& par, Model& model, const Locality& area );
+		SensorStateController( const PropNode& props, Params& par, Model& model, const Location& loc );
 
 		virtual size_t GetStateCount() const override { return m_States.size(); }
 		virtual const String& GetStateName( StateIndex i ) const override { return m_States[ i ].name; }
@@ -19,7 +19,7 @@ namespace scone
 
 		struct SensorState
 		{
-			SensorState( const PropNode& pn, Params& par, const Locality& a );
+			SensorState( const PropNode& pn, Params& par, const Location& a );
 			double GetDistance( Model& model, double timestamp );
 			String name;
 			bool mirrored;

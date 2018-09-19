@@ -6,7 +6,7 @@
 
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 
 #include "MuscleReflex.h"
 #include <tuple>
@@ -17,8 +17,8 @@ using namespace xo;
 
 namespace scone
 {
-	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Controller( props, par, model, area ),
+	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Controller( props, par, model, loc ),
 	Reflexes( props.try_get_child( "Reflexes" ) )
 	{
 		INIT_PROP( props, symmetric, true );
@@ -29,35 +29,13 @@ namespace scone
 			for ( const auto& item : *Reflexes )
 			{
 				// todo: handle "targets" tag? or create a new class for groups of monosynaptic reflexes?
-				m_Reflexes.push_back( CreateReflex( item.second, par, model, area ) );
-			}
-		}
-
-		// load reflexes from file
-		path reflex_file = props.get< path >( "reflex_file", "" );
-		path delay_file = props.get< path >( "delay_file", "" );
-		if ( !reflex_file.empty() && !delay_file.empty() )
-		{
-			auto str = xo::char_stream( reflex_file );
-			auto delay_pn = load_file( delay_file, "zml" );
-			while ( str.good() )
-			{
-				String name;
-				double value, mean, std;
-				str >> name >> value >> mean >> std;
-				auto names = split_str( name, "-" );
-				auto delay = delay_pn.get< double >( GetNameNoSide( names[ 0 ] ), 0.0 );
-				mean = props.get< double >( "mean", mean );
-				std = props.get< double >( "std", std );
-				m_Reflexes.push_back( std::make_unique< SimpleMuscleReflex >( names[ 0 ], names.size() > 1 ? names[ 1 ] : "", mean, std, 2 * delay, model, par, area ) );
-				m_Reflexes.push_back( std::make_unique< SimpleMuscleReflex >( names[ 0 ], names.size() > 1 ? names[ 1 ] : "", mean, std, 2 * delay, model, par, MakeMirrored( area ) ) );
+				m_Reflexes.push_back( CreateReflex( item.second, par, model, loc ) );
 			}
 		}
 	}
 
 	ReflexController::~ReflexController()
-	{
-	}
+	{}
 
 	bool ReflexController::ComputeControls( Model& model, double timestamp )
 	{

@@ -13,7 +13,7 @@ namespace scone
 	class PerturbationController : public Controller
 	{
 	public:
-		PerturbationController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		PerturbationController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~PerturbationController() {}
 
 		/// Name of the body to which to apply the external perturbation to.

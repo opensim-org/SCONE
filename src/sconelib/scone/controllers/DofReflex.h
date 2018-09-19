@@ -9,7 +9,7 @@ namespace scone
 	class DofReflex : public Reflex
 	{
 	public:
-		DofReflex( const PropNode& props, Params& par, Model& model, const Locality& area );
+		DofReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~DofReflex();
 
 		virtual void ComputeControls( double timestamp );

@@ -17,7 +17,7 @@
 #include "scone/core/string_tools.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Joint.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Side.h"
@@ -31,7 +31,7 @@
 
 namespace scone
 {
-	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Locality& locality ) :
+	NeuralController::NeuralController( const PropNode& pn, Params& par, Model& model, const Location& locality ) :
 	Controller( pn, par, model, locality ),
 	model_( model ),
 	m_VirtualMusclesMemoize( GetVirtualMusclesFunc )

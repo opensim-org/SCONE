@@ -8,7 +8,7 @@ namespace scone
 	class BalanceMeasure : public Measure
 	{
 	public:
-		BalanceMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		BalanceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~BalanceMeasure() { };
 
 		/// Relative COM height (factor of initial COM height) at which to stop the simulation; default = 0.5.

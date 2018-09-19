@@ -11,7 +11,7 @@ namespace scone
 	class EffortMeasure : public Measure
 	{
 	public:
-		EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		EffortMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~EffortMeasure();
 
 		/// Model for measuring energy

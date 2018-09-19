@@ -6,19 +6,19 @@
 
 namespace scone
 {
-	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Measure( props, par, model, area ),
+	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Measure( props, par, model, loc ),
 	Measures( props.try_get_child( "Measures" ) )
 	{
 		if ( Measures ) // old style, with special group
 		{
 			for ( auto& m : *Measures )
-				m_Measures.push_back( CreateMeasure( m.second, par, model, area ) );
+				m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
 		}
 
 		// add any Measure
 		for ( auto& m : props.select( "Measure" ) )
-			m_Measures.push_back( CreateMeasure( m.second, par, model, area ) );
+			m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
 
 		// copy minimize flag from
 		INIT_PROP( props, minimize, !m_Measures.empty() ? m_Measures.front()->minimize : true );

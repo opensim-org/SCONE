@@ -14,8 +14,8 @@ namespace scone
 		EffortMeasure::Uchida2016, "Uchida2016"
 		);
 
-	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		Measure( props, par, model, area ),
+	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		Measure( props, par, model, loc ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
 		measure_type = m_MeasureNames.GetValue( props.get< String >( "measure_type" ) );

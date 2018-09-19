@@ -64,7 +64,7 @@ namespace scone
 		/// leg access
 		size_t GetLegCount() const { return m_Legs.size(); }
 		const Leg& GetLeg( size_t idx ) const { return *m_Legs[ idx ]; }
-		const Leg& GetLeg( const Locality& loc ) const { for ( auto& l : m_Legs ) if ( l->GetSide() == loc.GetSide() ) return *l; xo_error( "Could not find leg" ); }
+		const Leg& GetLeg( const Location& loc ) const { for ( auto& l : m_Legs ) if ( l->GetSide() == loc.GetSide() ) return *l; xo_error( "Could not find leg" ); }
 		std::vector< LegUP >& GetLegs() { return m_Legs; }
 		const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 
@@ -133,8 +133,8 @@ namespace scone
 		}
 
 		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, Params& par, const Locality& area );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, Params& par, const Locality& area );
+		Sensor& AcquireSensor( const PropNode& pn, Params& par, const Location& loc );
+		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, Params& par, const Location& loc );
 
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );

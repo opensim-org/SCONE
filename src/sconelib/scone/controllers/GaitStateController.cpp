@@ -31,7 +31,7 @@ namespace scone
 		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) )
 	{ }
 
-	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
+	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 		Controller( props, par, model, target_area )
 	{
 		// TODO: move contact_force_threshold to leg?
@@ -76,8 +76,8 @@ namespace scone
 						// initialize leg index
 						cc.leg_index = legIdx;
 
-					// TODO: allow neater definition of target area instead of just taking the leg side
-					Locality a = Locality( model.GetLeg( cc.leg_index ).GetSide() );
+					// TODO: allow neater definition of target loc instead of just taking the leg side
+					Location a = Location( model.GetLeg( cc.leg_index ).GetSide() );
 
 					// create controller
 					log::trace( "Creating controllers for " + GetConditionName( cc ) );

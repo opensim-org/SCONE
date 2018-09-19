@@ -1,7 +1,7 @@
 #include "InterNeuron.h"
 
 #include "scone/core/string_tools.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 #include "spot/par_tools.h"
 #include "NeuralController.h"
 #include "../model/Model.h"

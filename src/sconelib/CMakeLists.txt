@@ -204,8 +204,8 @@ set(SIM_SYSTEM_FILES
     scone/model/model_tools.h
     )
 set(SIM_TOPOLOGY_FILES
-    scone/model/Locality.cpp
-    scone/model/Locality.h
+    scone/model/Location.cpp
+    scone/model/Location.h
     scone/model/Leg.cpp
     scone/model/Leg.h
     scone/model/Link.cpp

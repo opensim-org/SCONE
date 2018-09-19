@@ -10,15 +10,15 @@ using namespace xo;
 
 namespace scone
 {
-	SimpleMuscleReflex::SimpleMuscleReflex( const String& target, const String& source, double mean, double stdev, TimeInSeconds delay, Model& model, Params& par, const Locality& area ) :
-	Reflex( *FindByName( model.GetActuators(), area.ConvertName( target ) ), delay ),
+	SimpleMuscleReflex::SimpleMuscleReflex( const String& target, const String& source, double mean, double stdev, TimeInSeconds delay, Model& model, Params& par, const Location& loc ) :
+	Reflex( *FindByName( model.GetActuators(), loc.ConvertName( target ) ), delay ),
 	m_Source( nullptr )
 	{
 		if ( !source.empty() )
 		{
 			auto src_name = left_of_str( source, "." );
 			auto src_type = right_of_str( source, "." );
-			Muscle& src_act = *FindByName( model.GetMuscles(), area.ConvertName( src_name ) );
+			Muscle& src_act = *FindByName( model.GetMuscles(), loc.ConvertName( src_name ) );
 			if ( src_type == "fiber_force" )
 				m_Source = &model.AcquireDelayedSensor< MuscleForceSensor >( src_act );
 			else if ( src_type == "fiber_length" )

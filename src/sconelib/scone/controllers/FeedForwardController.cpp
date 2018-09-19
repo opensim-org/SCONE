@@ -2,14 +2,14 @@
 
 #include "scone/controllers/Controller.h"
 #include "scone/model/Muscle.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
 
 namespace scone
 {
-	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
+	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 	Controller( props, par, model, target_area ),
 	Function( props.get_child( "Function" ) )
 	{

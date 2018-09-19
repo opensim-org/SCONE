@@ -6,28 +6,28 @@
 
 namespace scone
 {
-	SensorStateController::SensorStateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	StateController( props, par, model, area )
+	SensorStateController::SensorStateController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	StateController( props, par, model, loc )
 	{
 		INIT_PROP( props, create_mirrored_state, true );
-		mirrored = area.mirrored;
+		mirrored = loc.mirrored;
 
 		// create states
 		const PropNode& states_pn = props.get_child( "SensorStates" );
 		for ( auto it = states_pn.begin(); it != states_pn.end(); ++it )
 		{
-			m_States.push_back( SensorState( it->second, par, area ) );
+			m_States.push_back( SensorState( it->second, par, loc ) );
 			if ( create_mirrored_state )
-				m_States.push_back( SensorState( it->second, par, MakeMirrored( area ) ) );
+				m_States.push_back( SensorState( it->second, par, MakeMirrored( loc ) ) );
 		}
 
 		SCONE_ASSERT( m_States.size() >= 1 );
 		m_StateDist.resize( m_States.size() );
 
 		// create conditional controllers
-		CreateConditionalControllers( props, par, model, area );
+		CreateConditionalControllers( props, par, model, loc );
 		if ( create_mirrored_state )
-			CreateConditionalControllers( props, par, model, MakeMirrored( area ) );
+			CreateConditionalControllers( props, par, model, MakeMirrored( loc ) );
 
 		// init initial state
 		UpdateCurrentState( model, 0.0 );
@@ -48,7 +48,7 @@ namespace scone
 		}
 	}
 
-	SensorStateController::SensorState::SensorState( const PropNode& pn, Params& par, const Locality& a )
+	SensorStateController::SensorState::SensorState( const PropNode& pn, Params& par, const Location& a )
 	{
 		INIT_PROP_REQUIRED( pn, name );
 

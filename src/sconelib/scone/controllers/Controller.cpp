@@ -3,7 +3,7 @@
 
 namespace scone
 {
-	Controller::Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area ) :
+	Controller::Controller( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 	HasSignature( props )
 	{
 		INIT_PAR( props, par, start_time, 0.0 );

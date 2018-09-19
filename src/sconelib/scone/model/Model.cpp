@@ -49,10 +49,10 @@ namespace scone
 		return str;
 	}
 
-	Sensor& Model::AcquireSensor( const PropNode& pn, Params& par, const Locality& area )
+	Sensor& Model::AcquireSensor( const PropNode& pn, Params& par, const Location& loc )
 	{
 		// create the sensor first, so we can use its name to find it
-		SensorUP sensor = CreateSensor( pn, par, *this, area );
+		SensorUP sensor = CreateSensor( pn, par, *this, loc );
 
 		// see if there's a sensor with the same name (should be unique)
 		auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(), [&]( SensorUP& s ) { return s->GetName() == sensor->GetName(); } );
@@ -79,10 +79,10 @@ namespace scone
 		else return **it;
 	}
 
-	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, Params& par, const Locality& area )
+	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, Params& par, const Location& loc )
 	{
 		// acquire sensor first
-		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, area ) );
+		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, loc ) );
 	}
 
 	Vec3 Model::GetDelayedOrientation()
@@ -143,11 +143,11 @@ namespace scone
 
 		// add controller (new style)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
-			m_Controllers.push_back( CreateController( *cprops, par, *this, Locality( NoSide ) ) );
+			m_Controllers.push_back( CreateController( *cprops, par, *this, Location( NoSide ) ) );
 
 		// add measure (new style)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
-			SetMeasure( CreateMeasure( *cprops, par, *this, Locality( NoSide ) ) );
+			SetMeasure( CreateMeasure( *cprops, par, *this, Location( NoSide ) ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
@@ -155,9 +155,9 @@ namespace scone
 			for ( auto it = cprops->begin(); it != cprops->end(); ++it )
 			{
 				if ( it->first == "Controller" )
-					m_Controllers.push_back( CreateController( it->second, par, *this, Locality( NoSide ) ) );
+					m_Controllers.push_back( CreateController( it->second, par, *this, Location( NoSide ) ) );
 				else if ( it->first == "Measure" )
-					SetMeasure( CreateMeasure( it->second, par, *this, Locality( NoSide ) ) );
+					SetMeasure( CreateMeasure( it->second, par, *this, Location( NoSide ) ) );
 				else xo_error( "Unknown type " + it->first );
 			}
 		}

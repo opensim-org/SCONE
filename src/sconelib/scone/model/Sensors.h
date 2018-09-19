@@ -10,7 +10,7 @@ namespace scone
 	{
 	public:
 		MuscleSensor( Muscle& m ) : m_Muscle( m ) {}
-		MuscleSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		MuscleSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 	protected:
 		Muscle& m_Muscle;
 	};
@@ -20,7 +20,7 @@ namespace scone
 	{
 	public:
 		MuscleForceSensor( Muscle& m ) : MuscleSensor( m ) {}
-		MuscleForceSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+		MuscleForceSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -30,7 +30,7 @@ namespace scone
 	{
 	public:
 		MuscleLengthSensor( Muscle& m ) : MuscleSensor( m ) {}
-		MuscleLengthSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+		MuscleLengthSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -40,7 +40,7 @@ namespace scone
 	{
 	public:
 		MuscleVelocitySensor( Muscle& m ) : MuscleSensor( m ) {}
-		MuscleVelocitySensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+		MuscleVelocitySensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -50,7 +50,7 @@ namespace scone
 	{
 	public:
 		MuscleSpindleSensor( Muscle& m ) : MuscleSensor( m ) {}
-		MuscleSpindleSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+		MuscleSpindleSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -60,7 +60,7 @@ namespace scone
 	{
 	public:
 		MuscleExcitationSensor( Muscle& m ) : MuscleSensor( m ) {}
-		MuscleExcitationSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
+		MuscleExcitationSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : MuscleSensor( pn, par, model, target_area ) { };
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -70,7 +70,7 @@ namespace scone
 	{
 	public:
 		DofSensor( Dof& dof, Dof* root_dof ) : m_Dof( dof ), m_pRootDof( root_dof ) {}
-		DofSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		DofSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 	protected:
 		Dof& m_Dof;
 		Dof* m_pRootDof;
@@ -80,7 +80,7 @@ namespace scone
 	{
 	public:
 		DofPositionSensor( Dof& dof, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ) {}
-		DofPositionSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
+		DofPositionSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -89,7 +89,7 @@ namespace scone
 	{
 	public:
 		DofVelocitySensor( Dof& dof, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ) {}
-		DofVelocitySensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
+		DofVelocitySensor( const PropNode& pn, Params& par, Model& model, const Location& target_area ) : DofSensor( pn, par, model, target_area ) { m_pRootDof = nullptr; }
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	};
@@ -98,7 +98,7 @@ namespace scone
 	{
 	public:
 		DofPosVelSensor( Dof& dof, double kv, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ), m_KV( kv ) {}
-		DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		DofPosVelSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 		double m_KV;
@@ -109,7 +109,7 @@ namespace scone
 	{
 	public:
 		LegLoadSensor( const Leg& leg ) : m_Leg( leg ) {}
-		LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		LegLoadSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;
 	protected:
@@ -121,7 +121,7 @@ namespace scone
 	{
 	public:
 		BodySensor( Body& body ) : m_Body( body ) {}
-		BodySensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		BodySensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 	protected:
 		Body& m_Body;
 	};
@@ -149,7 +149,7 @@ namespace scone
 	{
 	public:
 		enum Plane { Invalid = -1, Sagittal, Coronal, Transverse };
-		OrientationSensor( const PropNode& pn, Params& par, Model& model, const Locality& target_area );
+		OrientationSensor( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 		OrientationSensor( Model& model, Plane plane, Real posgain = 1.0, Real velgain = 0.0 );
 		virtual Real GetValue() const override;
 		virtual String GetName() const override;

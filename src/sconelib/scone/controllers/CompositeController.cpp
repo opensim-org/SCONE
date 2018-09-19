@@ -5,11 +5,11 @@
 
 namespace scone
 {
-	CompositeController::CompositeController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-	Controller( props, par, model, area )
+	CompositeController::CompositeController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	Controller( props, par, model, loc )
 	{
 		for ( auto& cpn : props.select( "Controller" ) )
-			controllers_.emplace_back( CreateController( cpn.second, par, model, area ) );
+			controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
 	}
 
 	bool CompositeController::ComputeControls( Model& model, double timestamp )

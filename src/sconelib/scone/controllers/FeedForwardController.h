@@ -18,7 +18,7 @@ namespace scone
 	class FeedForwardController : public Controller
 	{
 	public:
-		FeedForwardController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~FeedForwardController() { };
 
 		/// Parameterizable Function to be used as feed-forward signal; see Function.

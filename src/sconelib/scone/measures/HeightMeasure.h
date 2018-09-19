@@ -10,7 +10,7 @@ namespace scone
 	class HeightMeasure : public Measure
 	{
 	public:
-		HeightMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		HeightMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~HeightMeasure() { };
 
 		/// Body for which to measure the height, leave empty to use COM (default).

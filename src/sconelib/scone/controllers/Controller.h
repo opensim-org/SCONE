@@ -13,7 +13,7 @@ namespace scone
 	class Controller : public HasSignature, public HasData
 	{
 	public:
-		Controller( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		Controller( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~Controller();
 
 		/// Time [s] at which Controller becomes active; default = 0.

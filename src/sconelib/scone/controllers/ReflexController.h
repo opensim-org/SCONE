@@ -4,7 +4,7 @@
 #include "scone/core/PropNode.h"
 #include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
-#include "scone/model/Locality.h"
+#include "scone/model/Location.h"
 
 namespace scone
 {
@@ -12,7 +12,7 @@ namespace scone
 	class ReflexController : public Controller
 	{
 	public:
-		ReflexController( const PropNode& props, Params& par, Model& model, const Locality& target_area );
+		ReflexController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		ReflexController( const ReflexController& other ) = delete;
 		ReflexController operator=( const ReflexController& other ) = delete;
 		virtual ~ReflexController();

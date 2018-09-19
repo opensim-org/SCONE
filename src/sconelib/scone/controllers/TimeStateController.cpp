@@ -2,8 +2,8 @@
 
 namespace scone
 {
-	TimeStateController::TimeStateController( const PropNode& props, Params& par, Model& model, const Locality& area ) :
-		StateController( props, par, model, area )
+	TimeStateController::TimeStateController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+		StateController( props, par, model, loc )
 	{
 		// create states
 		const PropNode& states_pn = props.get_child( "TimeStates" );
@@ -14,7 +14,7 @@ namespace scone
 		SCONE_ASSERT( m_States.size() >= 1 );
 
 		// create conditional controllers
-		CreateConditionalControllers( props, par, model, area );
+		CreateConditionalControllers( props, par, model, loc );
 
 		// init initial state
 		UpdateCurrentState( model, 0.0 );

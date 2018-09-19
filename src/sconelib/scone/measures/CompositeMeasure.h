@@ -11,7 +11,7 @@ namespace scone
 	class CompositeMeasure : public Measure
 	{
 	public:
-		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Locality& area );
+		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~CompositeMeasure();
 		CompositeMeasure( CompositeMeasure& other ) = delete;
 		CompositeMeasure& operator=( CompositeMeasure& other ) = delete;
