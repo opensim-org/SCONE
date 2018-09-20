@@ -65,7 +65,7 @@ namespace scone
 
 	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ name + ".RP" ] = u_p;
-		frame[ name + ".RD" ] = u_d;
+		frame[ name + ".RDP" ] = u_p;
+		frame[ name + ".RDV" ] = u_d;
 	}
 }
