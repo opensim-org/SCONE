@@ -218,7 +218,6 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				if ( scenario.empty() )
 				{
 					setWindowTitle( make_qt( scenario = *id ) );
-					tooltipProps.merge( pn, true );
 					updateText();
 				}
 
@@ -232,20 +231,18 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				{
 					state = it->state;
 					message = it->message;
-					tooltipProps.merge( pn, true );
 				}
 
 				if ( best_idx == -1 )
 					best_idx = it->idx;
 				else if ( ( it->is_minimizing && it->best < optimizations[ best_idx ].best ) || ( !it->is_minimizing && it->best > optimizations[ best_idx ].best ) )
 					best_idx = it->idx;
+
 				updateText();
 			}
 		}
 		else // generic message
 		{
-			tooltipProps.merge( pn, true );
-
 			if ( pn.try_get( scenario, "scenario" ) )
 				setWindowTitle( make_qt( scenario ) );
 
@@ -262,6 +259,9 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				updateText();
 			}
 		}
+
+		// always merge data into tooltip
+		tooltipProps.merge( pn, true );
 	}
 
 	for ( index_t idx = 0; idx < optimizations.size(); ++idx )
