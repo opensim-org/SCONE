@@ -257,7 +257,6 @@ namespace scone
 
 		if ( use_cost_of_transport )
 			s += "C";
-		else s += "A";
 
 		switch ( measure_type )
 		{
