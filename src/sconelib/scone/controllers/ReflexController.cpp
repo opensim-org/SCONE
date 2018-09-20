@@ -19,18 +19,19 @@ namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Controller( props, par, model, loc ),
-	Reflexes( props.try_get_child( "Reflexes" ) )
+	Reflexes( props.has_key( "Reflexes" ) ? props.get_child( "Reflexes" ) : props )
 	{
-		INIT_PROP( props, symmetric, true );
+		INIT_PROP( props, symmetric, loc.symmetric );
 
-		// create normal reflexes
-		if ( Reflexes )
+		for ( const auto& item : Reflexes.select( "Reflex" ) )
 		{
-			for ( const auto& item : *Reflexes )
+			if ( loc.side == NoSide )
 			{
-				// todo: handle "targets" tag? or create a new class for groups of monosynaptic reflexes?
-				m_Reflexes.push_back( CreateReflex( item.second, par, model, loc ) );
+				// create reflexes for both sides
+				for ( auto side : { LeftSide, RightSide } )
+					m_Reflexes.push_back( CreateReflex( item.second, par, model, Location( side, symmetric ) ) );
 			}
+			else m_Reflexes.push_back( CreateReflex( item.second, par, model, Location( loc.side, symmetric ) ) );
 		}
 	}
 
