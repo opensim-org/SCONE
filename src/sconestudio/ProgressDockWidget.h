@@ -42,8 +42,8 @@ public:
 	{
 		int idx;
 		String name;
-		String finished;
-		String error;
+		QString message;
+		State state;
 		int max_generations;
 		int window_size;
 		bool is_minimizing;

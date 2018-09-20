@@ -13,7 +13,7 @@ namespace scone
 		INIT_PROP( pn, prediction_look_ahead_, prediction_window_ );
 
 		INIT_PROP( pn, random_seed_, 1 );
-		INIT_PROP( pn, optimizations_, 6 );
+		INIT_PROP( pn, optimizations_, 3 );
 		INIT_PROP( pn, concurrent_optimizations_, optimizations_ );
 
 		// create output folder

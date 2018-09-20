@@ -130,11 +130,17 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 	pn.try_get( best, "best" );
 	pn.try_get( best_gen, "best_gen" );
 
-	if ( pn.try_get( finished, "finished" ) )
-		log::info( "Optimization ", name, " finished: ", finished );
+	if ( pn.try_get( message, "finished" ) )
+	{
+		state = FinishedState;
+		log::info( "Optimization ", name, " finished: ", message.toStdString() );
+	}
 
-	if ( pn.try_get( error, "error" ) )
-		log::info( "Optimization ", name, " error: ", error );
+	if ( pn.try_get( message, "error" ) )
+	{
+		state = ErrorState;
+		log::info( "Optimization ", name, " error: ", message.toStdString() );
+	}
 
 	has_update_flag = true;
 }
@@ -164,6 +170,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 
 		if ( s.empty() || s[ 0 ] != '*' )
 			continue; // this is no message for us
+		//log::trace( s );
 
 		std::stringstream str( s.substr( 1 ) );
 		xo::prop_node pn;
@@ -187,6 +194,8 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				new_opt.idx = idx;
 				new_opt.name = *id;
 				new_opt.Update( pn );
+				new_opt.state = RunningState;
+				state = RunningState;
 
 				// add graphs
 				QColor c = make_qt( vis::make_unique_color( idx ) );
@@ -207,26 +216,36 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				optimizations.push_back( std::move( new_opt ) );
 
 				if ( scenario.empty() )
+				{
 					setWindowTitle( make_qt( scenario = *id ) );
+					tooltipProps.merge( pn, true );
+					updateText();
+				}
 
 				log::info( "Initialized optimization ", *id );
-
-				state = RunningState;
 			}
 			else
 			{
 				it->Update( pn );
-				updateText();
-				tooltipProps.merge( pn );
+
+				if ( optimizations.size() == 1 )
+				{
+					state = it->state;
+					message = it->message;
+					tooltipProps.merge( pn, true );
+				}
 
 				if ( best_idx == -1 )
 					best_idx = it->idx;
-				else if ( it->is_minimizing ? it->best < optimizations[ best_idx ].best : it->best > optimizations[ best_idx ].best )
+				else if ( ( it->is_minimizing && it->best < optimizations[ best_idx ].best ) || ( !it->is_minimizing && it->best > optimizations[ best_idx ].best ) )
 					best_idx = it->idx;
+				updateText();
 			}
 		}
 		else // generic message
 		{
+			tooltipProps.merge( pn, true );
+
 			if ( pn.try_get( scenario, "scenario" ) )
 				setWindowTitle( make_qt( scenario ) );
 
