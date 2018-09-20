@@ -24,8 +24,10 @@ namespace scone
 			for ( String controller_state_name : state_tokens )
 			{
 				// fix name for mirrored case -- yes, this is pretty nasty
-				if ( loc.mirrored )
-					controller_state_name += "_mirrored";
+				SCONE_THROW_NOT_IMPLEMENTED;
+				// TODO: implement this
+				//if ( loc.mirrored )
+				//	controller_state_name += "_mirrored";
 
 				// create new conditional controller
 				m_ConditionalControllers.push_back( ConditionalController() );

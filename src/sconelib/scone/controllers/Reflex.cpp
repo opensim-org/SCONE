@@ -7,7 +7,7 @@ namespace scone
 {
 	Reflex::Reflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	target( props.get< String >( "target" ) ),
-	m_Target( *FindByName( model.GetActuators(), loc.ConvertName( target ) ) )
+	m_Target( *FindByLocation( model.GetActuators(), target, loc ) )
 	{
 		INIT_PAR( props, par, delay, 0 );
 		INIT_PROP( props, min_control_value, xo::const_lowest<Real>() );

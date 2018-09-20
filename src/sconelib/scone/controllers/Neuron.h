@@ -20,7 +20,7 @@ namespace scone
 		virtual activation_t GetOutput( double offset = 0.0 ) const;
 		virtual string GetName( bool mirrored = false ) const { return mirrored ? GetMirroredName( name_ ) : name_; }
 		virtual string GetParName() const;
-		Side GetSide( bool mirrored = false ) { return mirrored ? GetMirroredSide( side_ ) : side_; }
+		Side GetSide( bool mirrored = false ) { return mirrored ? GetOppositeSide( side_ ) : side_; }
 
 		enum connection_t { none, bilateral, monosynaptic, antagonistic, agonistic, synergetic, synergetic_dof, synergetic_plus, ipsilateral, contralateral, source };
 		void AddInput( Neuron* input, double gain, double offset = 0.0 ) { inputs_.emplace_back( input, gain, offset ); }

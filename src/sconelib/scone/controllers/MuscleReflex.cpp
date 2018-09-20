@@ -14,7 +14,7 @@ namespace scone
 	{
 		INIT_PROP( props, source, target );
 
-		Muscle& src_mus = *FindByName( model.GetMuscles(), loc.ConvertName( source ) );
+		Muscle& src_mus = *FindByLocation( model.GetMuscles(), source, loc );
 
 		// init names
 		String par_name = GetParName( props );

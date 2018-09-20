@@ -16,8 +16,8 @@ namespace scone
 			{
 				if ( pn.first == "Controller" )
 				{
-					c0 = CreateController( pn.second, par, model, loc );
-					c1 = CreateController( pn.second, par, model, MakeMirrored( loc ) );
+					c0 = CreateController( pn.second, par, model, Location( RightSide, loc.symmetric ) );
+					c1 = CreateController( pn.second, par, model, Location( LeftSide, loc.symmetric ) );
 				}
 			}
 		}

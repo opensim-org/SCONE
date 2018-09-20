@@ -10,7 +10,10 @@ namespace scone
 	StateController( props, par, model, loc )
 	{
 		INIT_PROP( props, create_mirrored_state, true );
-		mirrored = loc.mirrored;
+
+		// TODO: reimplement how to handle mirrored states
+		SCONE_THROW_NOT_IMPLEMENTED;
+		mirrored = false;
 
 		// create states
 		const PropNode& states_pn = props.get_child( "SensorStates" );
@@ -18,7 +21,7 @@ namespace scone
 		{
 			m_States.push_back( SensorState( it->second, par, loc ) );
 			if ( create_mirrored_state )
-				m_States.push_back( SensorState( it->second, par, MakeMirrored( loc ) ) );
+				m_States.push_back( SensorState( it->second, par, loc.GetOpposite() ) );
 		}
 
 		SCONE_ASSERT( m_States.size() >= 1 );
@@ -27,7 +30,7 @@ namespace scone
 		// create conditional controllers
 		CreateConditionalControllers( props, par, model, loc );
 		if ( create_mirrored_state )
-			CreateConditionalControllers( props, par, model, MakeMirrored( loc ) );
+			CreateConditionalControllers( props, par, model, loc.GetOpposite() );
 
 		// init initial state
 		UpdateCurrentState( model, 0.0 );
@@ -56,8 +59,9 @@ namespace scone
 		INIT_PAR( pn, par, load_delta, 0.0 );
 		INIT_PAR( pn, par, sag_delta, 0.0 );
 
-		if ( a.mirrored ) name += "_mirrored";
-		mirrored = a.mirrored;
+		SCONE_THROW_NOT_IMPLEMENTED; // TODO: fix mirrored handling
+		//if ( a.mirrored ) name += "_mirrored";
+		//mirrored = a.mirrored;
 	}
 
 	double SensorStateController::SensorState::GetDistance( Model& model, double timestamp )
