@@ -51,7 +51,7 @@ namespace scone
 
 	scone::String ReflexController::GetClassSignature() const
 	{
-		return "R";
+		return "R" + to_str( m_Reflexes.size() );
 	}
 
 	void ReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

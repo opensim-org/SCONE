@@ -12,6 +12,7 @@
 #include "xo/container/flat_map.h"
 #include "xo/string/string_tools.h"
 #include "xo/utility/memoize.h"
+#include "xo/filesystem/path.h"
 
 namespace scone
 {
@@ -60,6 +61,9 @@ namespace scone
 
 		static bool IsMirrorDof( const Dof& dof );
 
+		PropNode neural_delays;
+		xo::path delay_file;
+
 		double min_virtual_muscle_correlation;
 
 	protected:
@@ -67,7 +71,6 @@ namespace scone
 
 	private:
 		Model& model_;
-		PropNode delays_;
 		TimeInSeconds delay_factor_;
 		activation_func_t activation_function_;
 

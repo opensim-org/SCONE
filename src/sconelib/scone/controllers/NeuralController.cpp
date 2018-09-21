@@ -41,16 +41,23 @@ namespace scone
 		INIT_PROP( pn, min_virtual_muscle_correlation, 0 );
 		INIT_PROP( pn, use_neutral_pose_, false );
 
+		INIT_PROP( pn, delay_factor_, 1.0 );
+		INIT_PROP( pn, delay_file, "" );
+
+		if ( auto* node = pn.try_get_child( "neural_delays" ) )
+		{
+			node->set_accessed_recursively( true );
+			neural_delays = *node;
+		}
+		else if ( !delay_file.empty() )
+		{
+			neural_delays = load_file( FindFile( delay_file ), "zml" );
+			model.AddExternalResource( delay_file );
+		}
+
 		try
 		{
-			auto delay_file = pn.get< path >( "delay_file", "" );
-			if ( !delay_file.empty() )
-			{
-				delays_ = load_file( FindFile( delay_file ), "zml" );
-				model.AddExternalResource( delay_file );
-			}
 
-			INIT_PROP( pn, delay_factor_, 1.0 );
 			par_mode_ = xo::lookup< parameter_mode_t >( pn.get< string >( "par_mode", "muscle" ), {
 				{ "muscle", muscle_mode },
 				{ "dof", dof_mode },
@@ -356,7 +363,7 @@ namespace scone
 
 	TimeInSeconds NeuralController::GetDelay( const string& name )
 	{
-		return delay_factor_ * delays_.get< double >( name );
+		return delay_factor_ * neural_delays.get< double >( name );
 	}
 
 	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor, bool apply_mirrorring ) const
