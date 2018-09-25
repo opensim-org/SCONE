@@ -18,6 +18,7 @@ namespace scone
 		INIT_PROP( props, negate_result, false );
 		INIT_PROP( props, jump_type, int( HighJump ) );
 		INIT_PROP( props, minimize, false ); // defaults to false
+		INIT_PROP( props, offset, Vec3::zero() );
 
 		if ( auto body = props.try_get< String >( "body" ) )
 			target_body = FindByName( model.GetBodies(), *body ).get();
@@ -33,7 +34,7 @@ namespace scone
 
 	scone::Vec3 JumpMeasure::GetTargetPos( const Model& m ) const
 	{
-		return target_body ? target_body->GetComPos() : m.GetComPos();
+		return target_body ? target_body->GetPosOfPointOnBody( offset ) : m.GetComPos();
 	}
 
 	double JumpMeasure::ComputeResult( Model& model )
