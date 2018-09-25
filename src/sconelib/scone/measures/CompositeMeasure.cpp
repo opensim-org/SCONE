@@ -51,15 +51,12 @@ namespace scone
 
 	double CompositeMeasure::ComputeResult( Model& model )
 	{
-		log::trace( "Getting results of ", GetName() );
 		double total = 0.0;
 		for ( MeasureUP& m : m_Measures )
 		{
-			log::trace( "Getting Composite results of ", m->GetName() );
 			double res_org = m->GetResult( model );
 			double res_final = m->GetWeightedResult( model );
 			total += res_final;
-
 			GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", res_final, m->GetWeight(), res_org, m->GetOffset(), m->GetThreshold() ) );
 		}
 
