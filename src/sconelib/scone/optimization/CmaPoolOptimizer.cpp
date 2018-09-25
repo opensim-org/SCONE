@@ -8,13 +8,12 @@ namespace scone
 	Optimizer( pn ),
 	optimizer_pool( *m_Objective )
 	{
-		INIT_PROP( pn, prediction_window_, 200 );
-		INIT_PROP( pn, prediction_start_, prediction_window_ );
+		INIT_PROP( pn, prediction_window_, 400 );
+		INIT_PROP( pn, prediction_start_, 100 );
 		INIT_PROP( pn, prediction_look_ahead_, 1000 );
-
-		INIT_PROP( pn, random_seed_, 1 );
 		INIT_PROP( pn, optimizations_, 3 );
 		INIT_PROP( pn, concurrent_optimizations_, optimizations_ );
+		INIT_PROP( pn, random_seed_, 1 );
 
 		// create output folder
 		CreateOutputFolder( pn );

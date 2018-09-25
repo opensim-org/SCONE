@@ -10,8 +10,6 @@ namespace scone
 {
 	// import string tools from xo
 	using xo::stringf;
-	using xo::get_filename_ext;
-	using xo::get_filename_without_ext;
 	using xo::to_str;
 	using xo::from_str;
 	using xo::quoted;

@@ -75,7 +75,7 @@ namespace scone
 		return false;
 	}
 
-	double HeightMeasure::GetResult( Model& model )
+	double HeightMeasure::ComputeResult( Model& model )
 	{
 		if ( m_JumpState == InitialState )
 			return 100 * ( termination_height - 1 ) * m_InitialHeight; // same score as just falling

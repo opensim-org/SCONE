@@ -60,7 +60,7 @@ namespace scone
 		return false;
 	}
 
-	double EffortMeasure::GetResult( Model& model )
+	double EffortMeasure::ComputeResult( Model& model )
 	{
 		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );

@@ -36,7 +36,7 @@ namespace scone
 		return target_body ? target_body->GetComPos() : m.GetComPos();
 	}
 
-	double JumpMeasure::GetResult( Model& model )
+	double JumpMeasure::ComputeResult( Model& model )
 	{
 		switch ( jump_type )
 		{

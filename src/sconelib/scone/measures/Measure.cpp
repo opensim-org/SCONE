@@ -11,12 +11,21 @@ namespace scone
 		INIT_PROP( props, minimize, true );
 	}
 
+	double Measure::GetResult( Model& model )
+	{
+		if ( !result )
+			result = ComputeResult( model );
+		return *result;
+	}
+
 	double Measure::GetWeightedResult( Model& model )
 	{
-		double result = GetResult( model ) + GetOffset();
-		if ( minimize && GetThreshold() != 0 && result < GetThreshold() )
+		if ( !result )
+			result = ComputeResult( model );
+
+		if ( minimize && GetThreshold() != 0 && ( *result + GetOffset() ) < GetThreshold() )
 			return 0;
-		else return result * GetWeight();
+		else return GetWeight() * ( *result + GetOffset() );
 	}
 
 	bool Measure::PerformAnalysis( const Model& model, double timestamp )

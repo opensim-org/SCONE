@@ -15,7 +15,7 @@ namespace scone
 		double termination_height;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

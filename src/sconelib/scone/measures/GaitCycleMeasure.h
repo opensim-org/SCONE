@@ -13,7 +13,7 @@ namespace scone
 		GaitCycleMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~GaitCycleMeasure();
 
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 
 		/// Use half gait cycle instead of full cycle; default = false.
 		bool use_half_cycle;

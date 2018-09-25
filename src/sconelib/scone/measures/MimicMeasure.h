@@ -26,7 +26,7 @@ namespace scone
 		xo::pattern_matcher exclude_states;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:

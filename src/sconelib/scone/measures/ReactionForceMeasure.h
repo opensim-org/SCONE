@@ -12,7 +12,7 @@ namespace scone
 		ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~ReactionForceMeasure() {}
 
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
 	protected:

@@ -120,6 +120,10 @@ set(MEASURE_FILES
 	scone/measures/CompositeMeasure.h
 	scone/measures/DofLimitMeasure.cpp
 	scone/measures/DofLimitMeasure.h
+	scone/measures/DofMeasure.cpp
+	scone/measures/DofMeasure.h
+	scone/measures/SymmetricMeasure.cpp
+	scone/measures/SymmetricMeasure.h
 	scone/measures/EffortMeasure.cpp
 	scone/measures/EffortMeasure.h
 	scone/measures/GaitCycleMeasure.cpp

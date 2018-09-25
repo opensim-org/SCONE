@@ -17,7 +17,7 @@ namespace scone
 	{
 	}
 
-	double GaitCycleMeasure::GetResult( Model& model )
+	double GaitCycleMeasure::ComputeResult( Model& model )
 	{
 		return GetStateSimilarity( model.GetState() );
 	}

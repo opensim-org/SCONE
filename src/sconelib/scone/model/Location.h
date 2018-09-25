@@ -27,6 +27,6 @@ namespace scone
 				return *it; // object has name without side
 			else return FindByName( cont, loc.GetSidedName( name ) ); // must have sided name
 		}
-		else return FindByName( cont, loc.GetSidedName( name ) );
+		else return FindByName( cont, name ); // name already has a side
 	}
 }

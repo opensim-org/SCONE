@@ -11,13 +11,14 @@ namespace scone
 {
 	/// Measure for penalizing when DOFs go out of a specific range.
 	/// Supports penalties based on DOF position, DOF velocity, and restitution force.
+	/// WARNING: deprecated.
 	class DofLimitMeasure : public Measure
 	{
 	public:
 		DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~DofLimitMeasure();
 
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

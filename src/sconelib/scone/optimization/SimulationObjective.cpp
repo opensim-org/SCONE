@@ -39,7 +39,7 @@ namespace scone
 	{
 		m.SetSimulationEndTime( GetDuration() );
 		AdvanceModel( m, GetDuration() );
-		return m.GetMeasure()->GetResult( m );
+		return m.GetMeasure()->GetWeightedResult( m );
 	}
 
 	void SimulationObjective::AdvanceModel( Model& m, TimeInSeconds t ) const

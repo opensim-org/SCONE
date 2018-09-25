@@ -12,7 +12,7 @@ namespace scone
 		INIT_PROP( props, method, 1 );
 	}
 
-	double JointLoadMeasure::GetResult( Model& model )
+	double JointLoadMeasure::ComputeResult( Model& model )
 	{
 		return GetAverage();
 	}

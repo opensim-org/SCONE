@@ -58,7 +58,7 @@ namespace scone
 		return false;
 	}
 
-	double GaitMeasure::GetResult( Model& model )
+	double GaitMeasure::ComputeResult( Model& model )
 	{
 		// add final step and penalty to min_velocity measure
 		// TODO: only when not at the end of the simulation?

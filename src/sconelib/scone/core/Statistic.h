@@ -57,7 +57,7 @@ namespace scone
 
 		void Reset()
 		{
-			m_PrevValue = m_Total = m_Highest = m_Lowest = 0.0;
+			m_PrevValue = m_Total = m_Highest = m_Lowest = T(0);
 			m_PrevTime = 0.0;
 			m_nSamples = 0;
 		}
@@ -67,7 +67,7 @@ namespace scone
 		T GetAverage() const
 		{
 			if ( m_nSamples == 0 )
-				return 0.0;
+				return T(0);
 			if ( m_nSamples == 1 || m_PrevTime == m_StartTime )
 				return m_Initial; // only one sample was added or there was no dt
 			else return m_Total / ( m_PrevTime - m_StartTime );

@@ -56,7 +56,7 @@ namespace scone
 		return false;
 	}
 
-	double MimicMeasure::GetResult( Model& model )
+	double MimicMeasure::ComputeResult( Model& model )
 	{
 		return use_best_match ? result_.GetLowest() : result_.GetAverage();
 	}

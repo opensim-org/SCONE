@@ -24,7 +24,7 @@ namespace scone
 		return false;
 	}
 
-	double BalanceMeasure::GetResult( Model& model )
+	double BalanceMeasure::ComputeResult( Model& model )
 	{
 		return std::max( 0.0, ( model.GetSimulationEndTime() - model.GetTime() ) / model.GetSimulationEndTime() );
 	}

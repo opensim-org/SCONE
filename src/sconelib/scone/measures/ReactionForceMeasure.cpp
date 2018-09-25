@@ -10,7 +10,7 @@ namespace scone
 	RangePenalty< Real >( props )
 	{}
 
-	double ReactionForceMeasure::GetResult( Model& model )
+	double ReactionForceMeasure::ComputeResult( Model& model )
 	{
 		return GetAverage();
 	}

@@ -78,7 +78,7 @@ namespace scone
 		return false;
 	}
 
-	double DofLimitMeasure::GetResult( Model& model )
+	double DofLimitMeasure::ComputeResult( Model& model )
 	{
 		double result = 0.0;
 		for ( Limit& l : m_Limits )

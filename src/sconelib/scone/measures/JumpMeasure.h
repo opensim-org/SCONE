@@ -32,7 +32,7 @@ namespace scone
 		/// Time to recover from jump
 		Real recover_time;
 
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 

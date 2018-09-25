@@ -1,8 +1,8 @@
-
 #include "CompositeMeasure.h"
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -10,15 +10,21 @@ namespace scone
 	Measure( props, par, model, loc ),
 	Measures( props.try_get_child( "Measures" ) )
 	{
-		if ( Measures ) // old style, with special group
-		{
-			for ( auto& m : *Measures )
-				m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
-		}
+		INIT_PROP( props, symmetric, false );
+
+		if ( !Measures )
+			Measures = &props;
 
 		// add any Measure
-		for ( auto& m : props.select( "Measure" ) )
-			m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
+		for ( auto& m : Measures->select( "Measure" ) )
+		{
+			if ( symmetric )
+			{
+				m_Measures.push_back( CreateMeasure( m.second, par, model, Location( LeftSide, true ) ) );
+				m_Measures.push_back( CreateMeasure( m.second, par, model, Location( RightSide, true ) ) );
+			}
+			else m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
+		}
 
 		// copy minimize flag from
 		INIT_PROP( props, minimize, !m_Measures.empty() ? m_Measures.front()->minimize : true );
@@ -37,19 +43,19 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		bool terminate = false;
-
-		// update Measures
 		for ( MeasureUP& m : m_Measures )
 			terminate |= m->UpdateAnalysis( model, timestamp ) == true;
 
 		return terminate ? true : false;
 	}
 
-	double CompositeMeasure::GetResult( Model& model )
+	double CompositeMeasure::ComputeResult( Model& model )
 	{
+		log::trace( "Getting results of ", GetName() );
 		double total = 0.0;
 		for ( MeasureUP& m : m_Measures )
 		{
+			log::trace( "Getting Composite results of ", m->GetName() );
 			double res_org = m->GetResult( model );
 			double res_final = m->GetWeightedResult( model );
 			total += res_final;
@@ -64,10 +70,9 @@ namespace scone
 
 	scone::String CompositeMeasure::GetClassSignature() const
 	{
-		String str;
+		std::set< String > strset;
 		for ( auto& m : m_Measures )
-			str += m->GetSignature();
-
-		return str;
+			strset.insert( m->GetSignature() );
+		return xo::concatenate_str( strset );
 	}
 }

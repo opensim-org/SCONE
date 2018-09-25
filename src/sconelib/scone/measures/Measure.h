@@ -27,8 +27,9 @@ namespace scone
 		/// Indicate whether this measure should be minimized; is set correctly by default.
 		bool minimize;
 
-		virtual double GetResult( Model& model ) = 0;
+		double GetResult( Model& model );
 		double GetWeightedResult( Model& model );
+
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
 	
@@ -39,10 +40,12 @@ namespace scone
 		bool GetMinimize() { return minimize; }
 
 	protected:
+		virtual double ComputeResult( Model& model ) = 0;
 		virtual bool ComputeControls( Model& model, double timestamp ) override final { return false; }
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override final;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;
 
 		PropNode report;
+		xo::optional< double > result;
 	};
 }

@@ -17,11 +17,13 @@ namespace scone
 		CompositeMeasure& operator=( CompositeMeasure& other ) = delete;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 
 		/// Child node containing all Measures.
 		const PropNode* Measures;
 
+		/// Create symmetric measures for both sides; default = false.
+		bool symmetric;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

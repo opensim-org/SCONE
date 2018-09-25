@@ -45,7 +45,7 @@ namespace scone
 		Real min_distance;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double GetResult( Model& model ) override;
+		virtual double ComputeResult( Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

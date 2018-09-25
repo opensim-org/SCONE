@@ -92,7 +92,7 @@ namespace scone
 		return false;
 	}
 
-	double PointMeasure::GetResult( Model& model )
+	double PointMeasure::ComputeResult( Model& model )
 	{
 		return penalty.GetAverage();
 	}
