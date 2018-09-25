@@ -23,8 +23,8 @@ namespace scone
 		if ( auto body = props.try_get< String >( "body" ) )
 			target_body = FindByName( model.GetBodies(), *body ).get();
 
-		prepare_com = init_com = GetTargetPos( model );
-		peak_height = init_com.y;
+		prepare_com = init_com = model.GetComPos();
+		peak_height = GetTargetPos( model ).y;
 
 		for ( auto& body : model.GetBodies() )
 			init_min_x = std::min( init_min_x, body->GetComPos().x );
@@ -58,6 +58,7 @@ namespace scone
 		Vec3 com_pos = model.GetComPos();
 		Vec3 com_vel = model.GetComVel();
 		double grf = model.GetTotalContactForce();
+		log::trace( "GRF = ", grf );
 
 		if ( com_pos.y < termination_height * init_com.y )
 		{
@@ -123,7 +124,6 @@ namespace scone
 			break;
 
 		case Recover:
-			log::trace( "com_vel=", com_vel.x );
 			recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
 
 			if ( timestamp - recover_start_time >= recover_time )
