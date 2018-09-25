@@ -174,7 +174,7 @@ namespace scone
 			// external forces / moments
 			auto f = b->GetExternalForce();
 			if ( !f.is_null() )
-				UpdateForceVis( force_count++, b->GetPosOfPointFixedOnBody( b->GetExternalForcePoint() ), f );
+				UpdateForceVis( force_count++, b->GetPosOfPointOnBody( b->GetExternalForcePoint() ), f );
 			auto m = b->GetExternalMoment();
 			if ( !m.is_null() )
 				UpdateForceVis( force_count++, b->GetComPos(), m );

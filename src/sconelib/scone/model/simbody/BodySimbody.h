@@ -21,17 +21,17 @@ namespace scone
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetLocalComPos() const override;
 		virtual Quat GetOrientation() const override;
-		virtual Vec3 GetPosOfPointFixedOnBody( Vec3 point ) const override;
+		virtual Vec3 GetPosOfPointOnBody( Vec3 point ) const override;
 
 		virtual Vec3 GetComVel() const override;
 		virtual Vec3 GetOriginVel() const override;
 		virtual Vec3 GetAngVel() const override;
-		virtual Vec3 GetLinVelOfPointFixedOnBody( Vec3 point ) const override;
+		virtual Vec3 GetLinVelOfPointOnBody( Vec3 point ) const override;
 
 		virtual Vec3 GetComAcc() const override;
 		virtual Vec3 GetOriginAcc() const override;
 		virtual Vec3 GetAngAcc() const override;
-		virtual Vec3 GetLinAccOfPointFixedOnBody( Vec3 point ) const override;
+		virtual Vec3 GetLinAccOfPointOnBody( Vec3 point ) const override;
 
 		virtual const String& GetName() const override;
 

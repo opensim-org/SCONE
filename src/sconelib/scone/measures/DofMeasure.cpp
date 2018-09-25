@@ -29,19 +29,19 @@ namespace scone
 		{
 			penalty += position.GetAverage();
 			if ( range_count > 1 )
-				GetReport().set( dof.GetName() + ".pos_limit" , stringf( "%g", position.GetAverage() ) );
+				GetReport().set( name + ".pos_limit" , stringf( "%g", position.GetAverage() ) );
 		}
 		if ( !velocity.IsNull() )
 		{
 			penalty += velocity.GetAverage();
 			if ( range_count > 1 )
-				GetReport().set( dof.GetName() + ".vel_limit", stringf( "%g", velocity.GetAverage() ) );
+				GetReport().set( name + ".vel_limit", stringf( "%g", velocity.GetAverage() ) );
 		}
 		if ( !force.IsNull() )
 		{
 			penalty += force.GetAverage();
 			if ( range_count > 1 )
-				GetReport().set( dof.GetName() + ".force_limit", stringf( "%g", force.GetAverage() ) );
+				GetReport().set( name + ".force_limit", stringf( "%g", force.GetAverage() ) );
 		}
 
 		return  penalty;

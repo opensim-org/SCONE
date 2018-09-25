@@ -47,8 +47,8 @@ namespace scone
 		if ( squared_range_penalty > 0.0 || abs_range_penalty > 0.0 )
 		{
 			Vec3 vec_pos;
-			if ( !relative_to_model_com ) vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody( offset );
-			else vec_pos = m_pTargetBody->GetPosOfPointFixedOnBody( offset ) - model.GetComPos();
+			if ( !relative_to_model_com ) vec_pos = m_pTargetBody->GetPosOfPointOnBody( offset );
+			else vec_pos = m_pTargetBody->GetPosOfPointOnBody( offset ) - model.GetComPos();
 
 			for ( int i = 0; i < 2; ++i ) {
 				vec_pos[ i ] = vec_pos[ i ] * axes_to_measure[ i ];
@@ -62,8 +62,8 @@ namespace scone
 		if ( squared_velocity_range_penalty > 0 || abs_velocity_range_penalty > 0 )
 		{
 			Vec3 vec_vel;
-			if ( !relative_to_model_com ) vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody( offset );
-			else vec_vel = m_pTargetBody->GetLinVelOfPointFixedOnBody( offset ) - model.GetComVel();
+			if ( !relative_to_model_com ) vec_vel = m_pTargetBody->GetLinVelOfPointOnBody( offset );
+			else vec_vel = m_pTargetBody->GetLinVelOfPointOnBody( offset ) - model.GetComVel();
 
 			for ( int i = 0; i < 2; ++i ) {
 				vec_vel[ i ] = vec_vel[ i ] * axes_to_measure[ i ];
@@ -77,8 +77,8 @@ namespace scone
 		if ( squared_acceleration_range_penalty > 0 || abs_acceleration_range_penalty > 0 )
 		{
 			Vec3 vec_acc;
-			if ( !relative_to_model_com ) vec_acc = m_pTargetBody->GetLinAccOfPointFixedOnBody( offset );
-			else vec_acc = m_pTargetBody->GetLinAccOfPointFixedOnBody( offset ) - model.GetComAcc();
+			if ( !relative_to_model_com ) vec_acc = m_pTargetBody->GetLinAccOfPointOnBody( offset );
+			else vec_acc = m_pTargetBody->GetLinAccOfPointOnBody( offset ) - model.GetComAcc();
 
 			for ( int i = 0; i < 2; ++i ) {
 				vec_acc[ i ] = vec_acc[ i ] * axes_to_measure[ i ];
@@ -92,7 +92,7 @@ namespace scone
 		return false;
 	}
 
-	double PointMeasure::ComputeResult( Model& model )
+	double PointMeasure::GetResult( Model& model )
 	{
 		return penalty.GetAverage();
 	}

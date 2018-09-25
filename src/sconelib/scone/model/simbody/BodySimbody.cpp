@@ -73,7 +73,7 @@ namespace scone
 		return q1;
 	}
 
-	scone::Vec3 scone::BodySimbody::GetPosOfPointFixedOnBody( Vec3 point ) const
+	scone::Vec3 scone::BodySimbody::GetPosOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
@@ -124,7 +124,7 @@ namespace scone
 		return ToVec3( mb.getBodyAngularVelocity( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodySimbody::GetLinVelOfPointFixedOnBody( Vec3 point ) const
+	scone::Vec3 scone::BodySimbody::GetLinVelOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
@@ -175,7 +175,7 @@ namespace scone
 		return ToVec3( mb.getBodyAngularAcceleration( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodySimbody::GetLinAccOfPointFixedOnBody( Vec3 point ) const
+	scone::Vec3 scone::BodySimbody::GetLinAccOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
