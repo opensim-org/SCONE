@@ -31,7 +31,7 @@ namespace scone
 
 		// reporters
 		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );
-		rep.min_improvement_factor_for_file_output = min_improvement_factor_for_file_output;
+		rep.min_improvement_for_file_output = min_improvement_for_file_output;
 		rep.max_steps_without_file_output = max_generations_without_file_output;
 
 		// stop conditions

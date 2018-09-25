@@ -42,7 +42,7 @@ namespace scone
 		INIT_PROP( props, use_init_file_std, true );
 
 		INIT_PROP( props, output_objective_result_files, false );
-		INIT_PROP( props, min_improvement_factor_for_file_output, 1.05 );
+		INIT_PROP( props, min_improvement_for_file_output, 0.05 );
 		INIT_PROP( props, max_generations_without_file_output, 1000 );
 
 		INIT_PROP( props, max_generations, 10000 );
@@ -110,7 +110,7 @@ namespace scone
 			double imp2 = ( testIt + 1 )->first / testIt->first;
 			if ( IsMinimizing() ) { imp1 = 1.0 / imp1; imp2 = 1.0 / imp2; }
 
-			if ( imp1 < min_improvement_factor_for_file_output && imp2 < min_improvement_factor_for_file_output )
+			if ( imp1 < min_improvement_for_file_output && imp2 < min_improvement_for_file_output )
 			{
 				// delete the file(s)
 				bool ok = true;

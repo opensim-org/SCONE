@@ -49,10 +49,10 @@ namespace scone
 		/// Minimum number of samples after which progress is measured; default = 200.
 		size_t min_progress_samples;
 
-		/// The minimum improvement factor needed for file output, default = 1.05.
-		Real min_improvement_factor_for_file_output;
+		/// The minimum relative improvement needed for file output; default = 0.05.
+		Real min_improvement_for_file_output;
 
-		/// The maximum number of iterations without file output, default = 1000.
+		/// The maximum number of iterations without file output; default = 1000.
 		size_t max_generations_without_file_output;
 
 		Objective& GetObjective() { return *m_Objective; }
