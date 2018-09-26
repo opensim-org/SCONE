@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	/// Base Controller class -- see derived classes for specific functionality
+	/// Base class for SCONE Controllers. See derived classes for specific functionality.
 	class Controller : public HasSignature, public HasData
 	{
 	public:
@@ -19,7 +19,7 @@ namespace scone
 		/// Time [s] at which Controller becomes active; default = 0.
 		TimeInSeconds start_time;
 
-		/// Time [s] at which Controller becomes inactive; default = 1e12 (+/-31000 years).
+		/// Time [s] at which Controller becomes inactive; default = until simulation ends.
 		TimeInSeconds stop_time;
 
 		/// Called each step, returns true on termination request, checks IsActive() first
@@ -29,7 +29,7 @@ namespace scone
 		bool UpdateAnalysis( const Model& model, double timestamp );
 
 		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
-		virtual bool IsActive( const Model& model, double time ) { return time >= start_time && time < stop_time && !disabled_; }
+		virtual bool IsActive( const Model& model, double time ) { return time >= start_time && ( stop_time == 0.0 || time < stop_time ) && !disabled_; }
 
 		/// Set the disabled state of the controller, this is checked in IsActive().
 		void SetDisabled( bool disabled ) { disabled_ = disabled; }

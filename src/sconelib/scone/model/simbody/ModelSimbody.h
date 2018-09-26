@@ -62,6 +62,9 @@ namespace scone
 		/// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
 
+		/// Boolean that must be set before external forces can be added to the model; default = 0.
+		bool create_body_forces;
+
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
 		virtual Vec3 GetComAcc() const override;
@@ -111,7 +114,6 @@ namespace scone
 		void InitializeOpenSimMuscleActivations( double override_activation = 0.0 );
 
 	private:
-		//void SetTkState( const State& s );
 		void InitStateFromTk();
 		void CopyStateFromTk();
 		void CopyStateToTk();
@@ -124,8 +126,6 @@ namespace scone
 		void SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );
-
-		bool create_body_forces;
 
 		int m_PrevIntStep;
 		double m_PrevTime;

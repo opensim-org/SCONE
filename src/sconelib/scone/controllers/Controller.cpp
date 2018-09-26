@@ -7,7 +7,7 @@ namespace scone
 	HasSignature( props )
 	{
 		INIT_PAR( props, par, start_time, 0.0 );
-		INIT_PAR( props, par, stop_time, 1e12 ); // automatically stops after ~31000 years
+		INIT_PAR( props, par, stop_time, 0.0 ); // automatically stops after ~31000 years
 		INIT_PROP( props, disabled_, false );
 	}
 

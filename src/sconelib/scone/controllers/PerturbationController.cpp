@@ -2,6 +2,7 @@
 #include "scone/model/Model.h"
 #include "scone/core/string_tools.h"
 #include "xo/numerical/math.h"
+#include "../core/Log.h"
 
 namespace scone
 {
@@ -24,8 +25,9 @@ namespace scone
 		perturbation_times.emplace_back( start_time );
 		if ( interval_min != 0.0 && interval_max != 0.0 )
 		{
+			// TODO: use objective simulation end time somehow
 			auto time_dist = std::uniform_real_distribution< TimeInSeconds >( interval_min, interval_max );
-			while ( perturbation_times.back() < stop_time )
+			while ( perturbation_times.back() < xo::min( model.GetSimulationEndTime(), stop_time ) )
 				perturbation_times.emplace_back( perturbation_times.back() + time_dist( rng_engine ) );
 		}
 
@@ -47,6 +49,7 @@ namespace scone
 
 		if ( active != active_ )
 		{
+			log::trace( timestamp, ": Changing perturbation state to ", active );
 			double s = active ? 1 : -1;
 			body.AddExternalForce( s * force );
 			body.AddExternalMoment( s * moment );

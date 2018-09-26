@@ -85,9 +85,9 @@ namespace scone
 
 		// always set create_body_forces when there's a PerturbationController
 		// TODO: think of a nicer, more generic way of dealing with this issue
-		if ( auto* controllers = props.try_get_child( "Controllers" ) )
+		if ( auto* controller = props.try_get_child( "Controller" ) )
 		{
-			for ( auto& cprops : *controllers )
+			for ( auto& cprops : controller->select( "Controller" ) )
 				create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
 		}
 
