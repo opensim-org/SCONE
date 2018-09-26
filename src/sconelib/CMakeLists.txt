@@ -116,6 +116,8 @@ set(CS_CONTROLLERS_COMPOSITE_FILES
 set(MEASURE_FILES
 	scone/measures/BalanceMeasure.cpp
 	scone/measures/BalanceMeasure.h
+	scone/measures/BodyMeasure.cpp
+	scone/measures/BodyMeasure.h
 	scone/measures/CompositeMeasure.cpp
 	scone/measures/CompositeMeasure.h
 	scone/measures/DofLimitMeasure.cpp
