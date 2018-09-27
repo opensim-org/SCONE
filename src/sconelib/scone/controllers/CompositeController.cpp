@@ -47,6 +47,6 @@ namespace scone
 		std::set< String > strset;
 		for ( auto& m : controllers_ )
 			strset.insert( m->GetSignature() );
-		return xo::concatenate_str( strset );
+		return xo::to_str( strset, "." );
 	}
 }
