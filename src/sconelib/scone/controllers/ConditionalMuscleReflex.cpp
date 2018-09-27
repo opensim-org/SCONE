@@ -16,8 +16,8 @@ namespace scone
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 
 		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "-" + props.get< String >( "dof" ) + "." );
-		INIT_PAR( props, par, pos_max, 180 );
-		INIT_PAR( props, par, pos_min, -180 );
+		INIT_PAR( props, par, pos_max, 1e12 );
+		INIT_PAR( props, par, pos_min, -1e12 );
 		m_ConditionalPosRange.max = pos_max;
 		m_ConditionalPosRange.min = pos_min;
 	}
@@ -29,11 +29,11 @@ namespace scone
 	{
 		// check the condition
 		bool suppress = false;
-		Degree dofpos = Radian( m_pConditionalDofPos->GetValue( delay ) );
+		auto dofpos = m_pConditionalDofPos->GetValue( delay );
 		if ( !m_ConditionalPosRange.Test( dofpos ) )
 		{
 			// check if the sign of the violation is equal to the sign of the velocity
-			Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos ).value;
+			Real violation = m_ConditionalPosRange.GetRangeViolation( dofpos );
 			Real dofvel = m_pConditionalDofVel->GetValue( delay );
 			if ( std::signbit( violation ) == std::signbit( dofvel ) )
 			{

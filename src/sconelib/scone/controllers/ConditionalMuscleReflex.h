@@ -15,17 +15,17 @@ namespace scone
 		/// Name of the DoF used for the condition.
 		Dof& dof;
 
-		/// Maximum dof position [deg] for this reflex to be active; default = 180.
-		Degree pos_max;
+		/// Maximum dof position [rad or m] for this reflex to be active; default = 1e12.
+		Real pos_max;
 
-		/// Minimum dof position [deg] for this reflex to be active; default = -180.
-		Degree pos_min;
+		/// Minimum dof position [rad or m] for this reflex to be active; default = -1e12.
+		Real pos_min;
 
 		virtual void ComputeControls( double timestamp ) override;
 
 	protected:
 		SensorDelayAdapter* m_pConditionalDofPos;
 		SensorDelayAdapter* m_pConditionalDofVel;
-		Range< Degree > m_ConditionalPosRange;
+		Range< Real > m_ConditionalPosRange;
 	};
 }
