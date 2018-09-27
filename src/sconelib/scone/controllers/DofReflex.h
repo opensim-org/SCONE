@@ -17,10 +17,10 @@ namespace scone
 		/// Name of the DOF that is the source of this Reflex.
 		String source;
 
-		/// Target position for sensor DOF; default = 0.
+		/// Target position [rad or m] for sensor DOF; default = 0.
 		Real P0; 
 
-		/// Target velocity for sensor DOF; default = 0.
+		/// Target velocity [rad or m] for sensor DOF; default = 0.
 		Real V0; 
 
 		/// Position feedback gain; default = 0.
