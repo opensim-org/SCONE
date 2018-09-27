@@ -114,7 +114,7 @@ SectionEnd
 Section "Examples" SecTutorials
 	; scenarios
 	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\Examples"
-	File /r "..\scenarios\Examples\*.scone"
+	File /r "..\scenarios\Examples\*.*"
 SectionEnd
 
 ; Set section to read-only
