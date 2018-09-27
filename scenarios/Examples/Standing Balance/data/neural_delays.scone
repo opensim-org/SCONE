@@ -1,0 +1,66 @@
+// Neural delays based on [Frijns et al. 1997]
+neural_delays {
+	// Vestibular delays
+	pelvis_tilt = 0.100
+	pelvis_list = 0.100
+	pelvis_rotation = 0.100
+	lumbar_extension = 0.100
+	lumbar_bending = 0.100
+	lumbar_rotation = 0.100
+
+	// Neural delays for 2D model
+	hamstrings = 0.010
+	glut_max = 0.010
+	iliopsoas = 0.010
+	vasti = 0.020
+	bifemsh = 0.020
+	gastroc = 0.035
+	soleus = 0.035
+
+	// Additional neural delays for 3D model
+	ercspn = 0.010
+	intobl = 0.010
+	extobl = 0.010
+	glut_med1 = 0.010
+	glut_med2 = 0.010
+	glut_med3 = 0.010
+	glut_min1 = 0.010
+	glut_min2 = 0.010
+	glut_min3 = 0.010
+	glut_max1 = 0.010
+	glut_max2 = 0.010
+	glut_max3 = 0.010
+	semimem = 0.010
+	semiten = 0.010
+	bifemlh = 0.010
+	bifemsh = 0.020
+	sar = 0.010
+	add_long = 0.010
+	add_brev = 0.010
+	add_mag1 = 0.010
+	add_mag2 = 0.010
+	add_mag3 = 0.010
+	tfl = 0.010
+	pect = 0.010
+	grac = 0.010
+	iliacus = 0.010
+	psoas = 0.010
+	quad_fem = 0.010
+	gem = 0.010
+	peri = 0.010
+	rect_fem = 0.010
+	vas_med = 0.020
+	vas_int = 0.020
+	vas_lat = 0.020
+	med_gas = 0.035
+	lat_gas = 0.035
+	tib_post = 0.035
+	flex_dig = 0.035
+	flex_hal = 0.035
+	tib_ant = 0.035
+	per_brev = 0.035
+	per_long = 0.035
+	per_tert = 0.035
+	ext_dig = 0.035
+	ext_hal = 0.035
+}

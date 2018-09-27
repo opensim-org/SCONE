@@ -1,9 +1,6 @@
 Optimizer {
 	type = CmaOptimizer
-	signature_prefix = SCONE_BUILD
-	min_progress = 0.01
-	optimizations = 6
-	concurrent_optimizations = 3
+	signature_prefix = DATE_TIME
 	
 	Objective {
 		type = SimulationObjective
@@ -11,10 +8,7 @@ Optimizer {
 		
 		Model {
 			type = Simbody
-			model_file = models/f0914m.osim
-			integration_method = SemiExplicitEuler2
-			integration_accuracy = 0.001
-			fixed_control_step_size = 0.001
+			model_file = Jumping/data/f0916m.osim
 			
 			Controller {
 				type = FeedForwardController
