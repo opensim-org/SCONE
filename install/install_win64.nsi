@@ -88,21 +88,19 @@ Section "Program Files" SecMain
 	File "${BIN_FOLDER}\platforms\*.dll"
 	
 	; resource files
-	SetOutPath "$INSTDIR\resources\ui"
-	File "..\resources\ui\*.*"
-	SetOutPath "$INSTDIR\resources\geometry"
-	File "..\resources\geometry\*.*"
+	SetOutPath "$INSTDIR\resources"
+	File /r "..\resources\*.*"
 
-	;Store installation folder
+	; Store installation folder
 	WriteRegStr HKCU "Software\SCONE\INSTDIR" "" $INSTDIR
 	WriteRegStr HKCU "Software\SCONE\DOCDIR" "" ${SCONE_DOCUMENTS_FOLDER}
 
-	;Create uninstaller
+	; Create uninstaller
 	WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 	!insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 
-	;Create shortcuts
+	; Create shortcuts
 	CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
 	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\SCONE.lnk" "$INSTDIR\bin\sconestudio.exe"
 	CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall SCONE.lnk" "$INSTDIR\Uninstall.exe"
@@ -113,15 +111,7 @@ Section "Program Files" SecMain
 	!insertmacro MUI_STARTMENU_WRITE_END
 SectionEnd
 
-;Section "Example Models" SecModels
-	; models
-;	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models"
-;	File "..\models\*.osim"
-;	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\models\geometry"
-;	File "..\models\geometry\*.*"
-;SectionEnd
-
-Section "Tutorials" SecTutorials
+Section "Examples" SecTutorials
 	; scenarios
 	SetOutPath "${SCONE_DOCUMENTS_FOLDER}\Examples"
 	File /r "..\scenarios\Examples\*.scone"
