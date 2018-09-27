@@ -6,6 +6,8 @@
 #include "scone/optimization/Params.h"
 #include "scone/core/Vec3.h"
 #include <random>
+#include "xo/numerical/bounds.h"
+#include "xo/numerical/random.h"
 
 namespace scone
 {
@@ -32,25 +34,33 @@ namespace scone
 		unsigned int random_seed;
 
 		/// Fixed time [s] between two perturbations; default 2.
-		TimeInSeconds interval;
-
-		/// Lower bounds of random interval between perturbations; default = interval.
-		TimeInSeconds interval_min;
-
-		/// Upper bounds of random interval between perturbations; default = interval.
-		TimeInSeconds interval_max;
+		xo::bounds< TimeInSeconds > interval;
 
 		/// Duration of the perturbation; default = 0.
-		TimeInSeconds duration;
+		xo::bounds< TimeInSeconds > duration;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
+
+		// must be active even before start_time / after stop_time, so that perturbations can be turned off
+		virtual bool IsActive( const Model& model, double time ) override { return !disabled_; }
 
 	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
-		std::vector< TimeInSeconds > perturbation_times;
+		struct Perturbation {
+			TimeInSeconds start;
+			TimeInSeconds stop;
+			Vec3 force;
+			Vec3 moment;
+			bool is_active( TimeInSeconds t ) const { return t >= start && t < stop; }
+		};
+
+		void AddPerturbation();
+		std::vector< Perturbation > perturbations;
+
+		xo::random_number_generator rng_;
 
 		bool active_;
 		Vec3 current_force;

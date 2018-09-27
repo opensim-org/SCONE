@@ -207,19 +207,33 @@ void SconeStudio::evaluate()
 
 	QProgressDialog dlg( ( "Evaluating " + model->GetFileName().string() ).c_str(), "Abort", 0, 1000, this );
 	dlg.setWindowModality( Qt::WindowModal );
+	dlg.show();
+	QApplication::processEvents();
 
-	const double step_size = 0.05;
-	int vis_step = 0;
+	const double step_size = 0.01;
 	xo::timer real_time;
+
+	const xo::seconds_t visual_update = 0.5;
+	xo::seconds_t prev_visual_time = -visual_update;
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
-		dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
-		if ( dlg.wasCanceled() )
+		auto rt = real_time.seconds();
+		if ( rt - prev_visual_time >= visual_update )
 		{
-			model->FinalizeEvaluation( false );
-			break;
+			// update 3D visuals
+			setTime( t, true );
+
+			// update progress bar
+			dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
+			//QApplication::processEvents();
+			if ( dlg.wasCanceled() ) {
+				model->FinalizeEvaluation( false );
+				break;
+			}
+
+			prev_visual_time = rt;
 		}
-		setTime( t, vis_step++ % 5 == 0 );
+		else setTime( t, false );
 	}
 
 	// make sure evaluation is finished

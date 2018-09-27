@@ -10,26 +10,19 @@ namespace scone
 	Controller( props, par, model, target_area ),
 	body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
 	current_force( 0 ),
-	active_( false )
+	active_( false ),
+	random_seed( props.get( "random_seed", 5489 ) ),
+	rng_( random_seed )
 	{
 		INIT_PROP( props, force, Vec3::zero() );
 		INIT_PROP( props, moment, Vec3::zero() );
 		INIT_PROP( props, position_offset, Vec3::zero() );
-		INIT_PROP( props, interval, 2.0 );
-		INIT_PROP( props, interval_min, interval );
-		INIT_PROP( props, interval_max, interval );
+		INIT_PROP( props, interval, 0 );
 		INIT_PROP( props, duration, 0.1 );
-		INIT_PROP( props, random_seed, 5489 );
 
-		std::default_random_engine rng_engine( random_seed );
-		perturbation_times.emplace_back( start_time );
-		if ( interval_min != 0.0 && interval_max != 0.0 )
-		{
-			// TODO: use objective simulation end time somehow
-			auto time_dist = std::uniform_real_distribution< TimeInSeconds >( interval_min, interval_max );
-			while ( perturbation_times.back() < xo::min( model.GetSimulationEndTime(), stop_time ) )
-				perturbation_times.emplace_back( perturbation_times.back() + time_dist( rng_engine ) );
-		}
+		SCONE_THROW_IF( !interval.is_null() && duration.upper > interval.lower, "Duration cannot be longer than interval" );
+
+		AddPerturbation();
 
 		// set force point, make sure it's not set yet
 		if ( !position_offset.is_null() )
@@ -40,20 +33,31 @@ namespace scone
 		}
 	}
 
+	void PerturbationController::AddPerturbation()
+	{
+		Perturbation p;
+		p.start = perturbations.empty() ? start_time : perturbations.back().start + rng_.uni( interval );
+		p.stop = p.start + rng_.uni( duration );
+		p.force = force;
+		p.moment = moment;
+		perturbations.emplace_back( p );
+	}
+
 	bool PerturbationController::ComputeControls( Model& model, double timestamp )
 	{
-		// find closest perturbation time
-		auto it = std::upper_bound( perturbation_times.begin(), perturbation_times.end(), timestamp );
-		if ( it != perturbation_times.begin() ) --it;
-		bool active = ( timestamp >= *it && timestamp < *it + duration );
+		if ( !interval.is_null() && perturbations.back().start < timestamp && ( stop_time == 0.0 || timestamp < stop_time ) )
+			AddPerturbation();
+
+		bool active = false;
+		auto it = std::upper_bound( perturbations.begin(), perturbations.end(), timestamp, [&]( const TimeInSeconds& t, const Perturbation& p ) { return t < p.start; } );
+		if ( it != perturbations.begin() )
+			active = ( --it )->is_active( timestamp );
 
 		if ( active != active_ )
 		{
 			log::trace( timestamp, ": Changing perturbation state to ", active );
-			double s = active ? 1 : -1;
-			body.AddExternalForce( s * force );
-			body.AddExternalMoment( s * moment );
-
+			body.AddExternalForce( active ? force : -force );
+			body.AddExternalMoment( active ? moment : -moment );
 			active_ = active;
 		}
 
