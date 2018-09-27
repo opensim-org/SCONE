@@ -36,7 +36,6 @@
 #include "../optimization/TestObjective.h"
 #include "../controllers/SequentialController.h"
 #include "../measures/DofMeasure.h"
-#include "../measures/SymmetricMeasure.h"
 #include "../measures/BodyMeasure.h"
 
 namespace scone
@@ -88,7 +87,6 @@ namespace scone
 			g_MeasureFactory.register_class< DofMeasure >();
 			g_MeasureFactory.register_class< BodyMeasure >();
 			g_MeasureFactory.register_class< CompositeMeasure >();
-			g_MeasureFactory.register_class< SymmetricMeasure >();
 			g_MeasureFactory.register_class< JumpMeasure >();
 			g_MeasureFactory.register_class< JointLoadMeasure >();
 			g_MeasureFactory.register_class< ReactionForceMeasure >();
