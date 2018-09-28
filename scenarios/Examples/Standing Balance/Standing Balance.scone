@@ -1,7 +1,6 @@
-#set C0 0.2
-#set KP 1
-#set P0 -0.175
-#set KV 0.1
+#set C0 0.2~0.1
+#set KP 0.5~0.2
+#set KV 0.2~0.1
 
 Optimizer {
 	type = CmaOptimizer
@@ -22,20 +21,20 @@ Optimizer {
 			
 			Controller {
 				type = ReflexController
-				signature_postfix = VEST
+				signature_postfix = POS
 				symmetric = 1
 				
 				// Vestibular reflexes (anterior)
-				Reflex { type = DofReflex target = iliopsoas source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~-(KP) KV = ~-(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = rect_fem source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~-(KP) KV = ~-(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = vasti source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~-(KP) KV = ~-(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = tib_ant source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~-(KP) KV = ~-(KV) delay = 0.100 }
+				Reflex { type = DofReflex target = iliopsoas source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+				Reflex { type = DofReflex target = rect_fem source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+				Reflex { type = DofReflex target = vasti source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+				Reflex { type = DofReflex target = tib_ant source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
 				
 				// Vestibular reflexes (posterior)
-				Reflex { type = DofReflex target = glut_max source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~(KP) KV = ~(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = hamstrings source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~(KP) KV = ~(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = gastroc source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~(KP) KV = ~(KV) delay = 0.100 }
-				Reflex { type = DofReflex target = soleus source = pelvis_tilt C0 = ~(C0) P0 = (P0) KP = ~(KP) KV = ~(KV) delay = 0.100 }
+				Reflex { type = DofReflex target = glut_max source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+				Reflex { type = DofReflex target = hamstrings source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+				Reflex { type = DofReflex target = gastroc source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+				Reflex { type = DofReflex target = soleus source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
 			}
 			
 			Measure {
