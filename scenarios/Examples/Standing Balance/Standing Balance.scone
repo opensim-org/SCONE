@@ -21,7 +21,6 @@ Optimizer {
 			
 			Controller {
 				type = ReflexController
-				signature_postfix = POS
 				symmetric = 1
 				
 				// Vestibular reflexes (anterior)

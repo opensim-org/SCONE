@@ -1,0 +1,96 @@
+#set C0 0.2~0.1
+#set KP 0.5~0.2
+#set KV 0.2~0.1
+
+Optimizer {
+	type = CmaOptimizer
+	signature_prefix = DATE_TIME
+	
+	Objective {
+		type = SimulationObjective
+		max_duration = 15
+		
+		Model {
+			type = Simbody
+			model_file = data/f0916m.osim
+			state_init_file = data/f09_init_stand_10.sto
+			
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			fixed_control_step_size = 0.001
+			
+			Controller {
+				type = CompositeController
+				
+				Controller {
+					type = ReflexController
+					symmetric = 1
+					
+					// Vestibular reflexes (anterior)
+					Reflex { type = DofReflex target = iliopsoas source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+					Reflex { type = DofReflex target = rect_fem source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+					Reflex { type = DofReflex target = vasti source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+					Reflex { type = DofReflex target = tib_ant source = pelvis_tx C0 = (C0) KP = (KP) KV = (KV) delay = 0.100 }
+					
+					// Vestibular reflexes (posterior)
+					Reflex { type = DofReflex target = glut_max source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+					Reflex { type = DofReflex target = hamstrings source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+					Reflex { type = DofReflex target = gastroc source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+					Reflex { type = DofReflex target = soleus source = pelvis_tx C0 = (C0) KP = -(KP) KV = -(KV) delay = 0.100 }
+				}
+				
+				Controller {
+					type = PerturbationController
+					start_time = 5
+					duration = 0.1
+					force = [ 150 0 0 ]
+					body = pelvis
+					position_offset = [ -0.15 0.35 0 ]
+				}
+				
+				Controller {
+					type = PerturbationController
+					start_time = 10
+					duration = 0.1
+					force = [ -150 0 0 ]
+					body = pelvis
+					position_offset = [ -0.15 0.35 0 ]
+				}
+			}
+		}
+		
+		Measure {
+			type = CompositeMeasure
+			
+			// Measure standing
+			Measure {
+				type = BalanceMeasure
+				termination_height = 0.75
+				weight = 100
+			}
+			
+			// Minimize effort
+			Measure {
+				type = EffortMeasure
+				name = Effort
+				weight = 0.01
+				measure_type = Wang2012
+			}
+			
+			// Penalize upper body lean and sway (allowing perturbation response)
+			Measure {
+				type = DofMeasure
+				dof = pelvis_tilt
+				position { min = -25 max = 5 abs_penalty = 10 }
+				velocity { min = -30 max = 30 abs_penalty = 1 }
+			}
+			
+			// Penalize locked knees
+			Measure {
+				type = DofMeasure
+				dof = knee_angle_l
+				position { min = -30 max = 0 abs_penalty = 10 }
+			}
+		}
+	}
+}
