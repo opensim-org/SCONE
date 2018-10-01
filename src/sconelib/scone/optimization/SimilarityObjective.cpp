@@ -1,3 +1,11 @@
+/*
+** SimilarityObjective.cpp
+**
+** Copyright (C) 2013-2018 Thomas Geijtenbeek. All rights reserved.
+**
+** This file is part of SCONE. For more information, see http://scone.software.
+*/
+
 #include "SimilarityObjective.h"
 #include "scone/core/Factories.h"
 #include "xo/container/prop_node_tools.h"

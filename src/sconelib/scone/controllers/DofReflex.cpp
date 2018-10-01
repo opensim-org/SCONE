@@ -1,3 +1,11 @@
+/*
+** DofReflex.cpp
+**
+** Copyright (C) 2013-2018 Thomas Geijtenbeek. All rights reserved.
+**
+** This file is part of SCONE. For more information, see http://scone.software.
+*/
+
 #include "DofReflex.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Side.h"

@@ -1,3 +1,11 @@
+/*
+** CompositeMeasure.cpp
+**
+** Copyright (C) 2013-2018 Thomas Geijtenbeek. All rights reserved.
+**
+** This file is part of SCONE. For more information, see http://scone.software.
+*/
+
 #include "CompositeMeasure.h"
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
