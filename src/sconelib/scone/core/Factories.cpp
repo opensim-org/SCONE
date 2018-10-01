@@ -11,7 +11,6 @@
 #include "scone/measures/JumpMeasure.h"
 #include "scone/measures/JointLoadMeasure.h"
 #include "scone/measures/ReactionForceMeasure.h"
-#include "scone/measures/PointMeasure.h"
 #include "scone/measures/HeightMeasure.h"
 #include "scone/model/Sensors.h"
 #include "scone/controllers/MuscleReflex.h"
@@ -21,7 +20,6 @@
 #include "scone/core/PieceWiseLinearFunction.h"
 #include "scone/core/Polynomial.h"
 #include "scone/model/simbody/ModelSimbody.h"
-#include "scone/optimization/CmaOptimizerCCMAES.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/controllers/SensorStateController.h"
 #include "scone/controllers/MirrorController.h"
@@ -56,19 +54,6 @@ namespace scone
 			g_ControllerFactory.register_class< NeuralController >();
 			g_ControllerFactory.register_class< CompositeController >();
 			g_ControllerFactory.register_class< SequentialController >();
-
-			// register measures
-			g_ControllerFactory.register_class< HeightMeasure >();
-			g_ControllerFactory.register_class< GaitMeasure >();
-			g_ControllerFactory.register_class< GaitCycleMeasure >();
-			g_ControllerFactory.register_class< EffortMeasure >();
-			g_ControllerFactory.register_class< DofLimitMeasure >();
-			g_ControllerFactory.register_class< CompositeMeasure >();
-			g_ControllerFactory.register_class< JumpMeasure >();
-			g_ControllerFactory.register_class< JointLoadMeasure >();
-			g_ControllerFactory.register_class< ReactionForceMeasure >();
-			g_ControllerFactory.register_class< PointMeasure >();
-			g_ControllerFactory.register_class< BalanceMeasure >();
 		}
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}
@@ -90,7 +75,6 @@ namespace scone
 			g_MeasureFactory.register_class< JumpMeasure >();
 			g_MeasureFactory.register_class< JointLoadMeasure >();
 			g_MeasureFactory.register_class< ReactionForceMeasure >();
-			g_MeasureFactory.register_class< PointMeasure >();
 			g_MeasureFactory.register_class< BalanceMeasure >();
 			g_MeasureFactory.register_class< MimicMeasure >();
 		}
@@ -154,7 +138,6 @@ namespace scone
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_class< CmaOptimizerSpot >( "CmaOptimizer" );
-			g_OptimizerFactory.register_class< CmaOptimizerCCMAES >();
 			g_OptimizerFactory.register_class< CmaOptimizerSpot >();
 			g_OptimizerFactory.register_class< CmaPoolOptimizer >();
 		}

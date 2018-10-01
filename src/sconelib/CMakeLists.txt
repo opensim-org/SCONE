@@ -140,8 +140,6 @@ set(MEASURE_FILES
 	scone/measures/MimicMeasure.h
 	scone/measures/ReactionForceMeasure.cpp
 	scone/measures/ReactionForceMeasure.h
-	scone/measures/PointMeasure.cpp
-	scone/measures/PointMeasure.h
 	scone/measures/RangePenalty.h
 	scone/measures/Measure.cpp
 	scone/measures/Measure.h
@@ -154,8 +152,6 @@ set(OPT_API_FILES
 	scone/optimization/CmaOptimizerSpot.h
 	scone/optimization/CmaPoolOptimizer.cpp
 	scone/optimization/CmaPoolOptimizer.h
-	scone/optimization/CmaOptimizerCCMAES.cpp
-	scone/optimization/CmaOptimizerCCMAES.h
 	scone/optimization/Objective.cpp
 	scone/optimization/Objective.h
 	scone/optimization/Optimizer.cpp
