@@ -7,42 +7,47 @@
 */
 
 #include "Factories.h"
-#include "xo/utility/factory.h"
-#include "scone/controllers/GaitStateController.h"
-#include "scone/controllers/TimeStateController.h"
-#include "scone/controllers/PerturbationController.h"
-#include "scone/controllers/FeedForwardController.h"
-#include "scone/controllers/ReflexController.h"
-#include "scone/measures/GaitMeasure.h"
-#include "scone/measures/GaitCycleMeasure.h"
-#include "scone/measures/CompositeMeasure.h"
-#include "scone/measures/JumpMeasure.h"
-#include "scone/measures/JointLoadMeasure.h"
-#include "scone/measures/ReactionForceMeasure.h"
-#include "scone/measures/HeightMeasure.h"
-#include "scone/model/Sensors.h"
-#include "scone/controllers/MuscleReflex.h"
-#include "scone/controllers/DofReflex.h"
+
+#include "scone/controllers/CompositeController.h"
 #include "scone/controllers/ConditionalMuscleReflex.h"
+#include "scone/controllers/DofReflex.h"
+#include "scone/controllers/FeedForwardController.h"
+#include "scone/controllers/GaitStateController.h"
+#include "scone/controllers/MirrorController.h"
+#include "scone/controllers/MuscleReflex.h"
+#include "scone/controllers/NeuralController.h"
+#include "scone/controllers/NoiseController.h"
+#include "scone/controllers/PerturbationController.h"
+#include "scone/controllers/ReflexController.h"
+#include "scone/controllers/SensorStateController.h"
+#include "scone/controllers/SequentialController.h"
+#include "scone/controllers/TimeStateController.h"
+
 #include "scone/core/PieceWiseConstantFunction.h"
 #include "scone/core/PieceWiseLinearFunction.h"
 #include "scone/core/Polynomial.h"
-#include "scone/model/simbody/ModelSimbody.h"
-#include "scone/optimization/SimulationObjective.h"
-#include "scone/controllers/SensorStateController.h"
-#include "scone/controllers/MirrorController.h"
-#include "scone/controllers/NeuralController.h"
-#include "scone/optimization/ImitationObjective.h"
+
 #include "scone/measures/BalanceMeasure.h"
-#include "scone/optimization/SimilarityObjective.h"
-#include "scone/optimization/CmaOptimizerSpot.h"
-#include "scone/controllers/CompositeController.h"
-#include "scone/measures/MimicMeasure.h"
-#include "scone/optimization/CmaPoolOptimizer.h"
-#include "scone/optimization/TestObjective.h"
-#include "scone/controllers/SequentialController.h"
-#include "scone/measures/DofMeasure.h"
 #include "scone/measures/BodyMeasure.h"
+#include "scone/measures/CompositeMeasure.h"
+#include "scone/measures/DofMeasure.h"
+#include "scone/measures/GaitCycleMeasure.h"
+#include "scone/measures/GaitMeasure.h"
+#include "scone/measures/HeightMeasure.h"
+#include "scone/measures/JointLoadMeasure.h"
+#include "scone/measures/JumpMeasure.h"
+#include "scone/measures/MimicMeasure.h"
+#include "scone/measures/ReactionForceMeasure.h"
+
+#include "scone/model/Sensors.h"
+#include "scone/model/simbody/ModelSimbody.h"
+
+#include "scone/optimization/CmaOptimizerSpot.h"
+#include "scone/optimization/CmaPoolOptimizer.h"
+#include "scone/optimization/ImitationObjective.h"
+#include "scone/optimization/SimilarityObjective.h"
+#include "scone/optimization/SimulationObjective.h"
+#include "scone/optimization/TestObjective.h"
 
 namespace scone
 {
@@ -62,6 +67,7 @@ namespace scone
 			g_ControllerFactory.register_class< NeuralController >();
 			g_ControllerFactory.register_class< CompositeController >();
 			g_ControllerFactory.register_class< SequentialController >();
+			g_ControllerFactory.register_class< NoiseController >();
 		}
 		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
 	}

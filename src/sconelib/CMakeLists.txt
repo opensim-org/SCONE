@@ -66,6 +66,8 @@ set(CS_CONTROLLERS_FILES
 	scone/controllers/ExternalBalanceController.cpp
 	scone/controllers/ExternalBalanceController.h
 	scone/controllers/MirrorController.h
+	scone/controllers/NoiseController.h
+	scone/controllers/NoiseController.cpp
 	)
 set(CS_CONTROLLERS_NC_FILES
 	scone/controllers/NeuralController.cpp
