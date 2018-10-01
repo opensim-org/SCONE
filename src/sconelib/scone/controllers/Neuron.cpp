@@ -10,11 +10,11 @@
 #include "scone/model/Side.h"
 #include "scone/model/Dof.h"
 #include "scone/core/Profiler.h"
-#include "../model/Link.h"
-#include "../model/Joint.h"
-#include "../model/model_tools.h"
+#include "scone/model/Link.h"
+#include "scone/model/Joint.h"
+#include "scone/model/model_tools.h"
 #include "xo/container/container_tools.h"
-#include "../model/MuscleId.h"
+#include "scone/model/MuscleId.h"
 
 namespace scone
 {

@@ -1,6 +1,6 @@
 #include "PatternNeuron.h"
 #include "NeuralController.h"
-#include "../model/Model.h"
+#include "scone/model/Model.h"
 #include <cmath>
 #include "spot/par_tools.h"
 #include "scone/core/string_tools.h"

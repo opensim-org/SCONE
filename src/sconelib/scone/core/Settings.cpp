@@ -2,7 +2,6 @@
 #include "system_tools.h"
 #include "xo/filesystem/filesystem.h"
 #include "Log.h"
-#include "../simvis/simvis/color.h"
 
 namespace scone
 {

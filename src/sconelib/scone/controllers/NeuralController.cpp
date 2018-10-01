@@ -27,7 +27,7 @@
 #include "PatternNeuron.h"
 #include "SensorNeuron.h"
 #include "activation_functions.h"
-#include "../model/MuscleId.h"
+#include "scone/model/MuscleId.h"
 
 namespace scone
 {

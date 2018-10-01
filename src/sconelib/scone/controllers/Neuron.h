@@ -5,7 +5,7 @@
 #include "scone/optimization/Params.h"
 #include "scone/core/HasData.h"
 #include "activation_functions.h"
-#include "../model/Side.h"
+#include "scone/model/Side.h"
 
 namespace scone
 {

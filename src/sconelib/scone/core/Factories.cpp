@@ -29,12 +29,12 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/controllers/CompositeController.h"
-#include "../measures/MimicMeasure.h"
-#include "../optimization/CmaPoolOptimizer.h"
-#include "../optimization/TestObjective.h"
-#include "../controllers/SequentialController.h"
-#include "../measures/DofMeasure.h"
-#include "../measures/BodyMeasure.h"
+#include "scone/measures/MimicMeasure.h"
+#include "scone/optimization/CmaPoolOptimizer.h"
+#include "scone/optimization/TestObjective.h"
+#include "scone/controllers/SequentialController.h"
+#include "scone/measures/DofMeasure.h"
+#include "scone/measures/BodyMeasure.h"
 
 namespace scone
 {

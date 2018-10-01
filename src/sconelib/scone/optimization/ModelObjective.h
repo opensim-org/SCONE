@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../optimization/Objective.h"
-#include "../model/Model.h"
+#include "scone/optimization/Objective.h"
+#include "scone/model/Model.h"
 
 namespace scone
 {

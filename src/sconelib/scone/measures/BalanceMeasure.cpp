@@ -1,5 +1,5 @@
 #include "BalanceMeasure.h"
-#include "../model/Model.h"
+#include "scone/model/Model.h"
 
 namespace scone
 {

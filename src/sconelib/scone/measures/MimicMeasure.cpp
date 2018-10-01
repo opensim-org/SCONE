@@ -1,7 +1,7 @@
 #include "MimicMeasure.h"
 
 #include "scone/core/StorageIo.h"
-#include "../model/Model.h"
+#include "scone/model/Model.h"
 #include "xo/numerical/math.h"
 
 namespace scone

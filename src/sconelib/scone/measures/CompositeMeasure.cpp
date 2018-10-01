@@ -2,7 +2,7 @@
 #include "scone/core/Factories.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Factories.h"
-#include "../core/Log.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
