@@ -26,8 +26,6 @@ if(${Qt5Widgets_FOUND})
 		SconeStorageDataModel.cpp
 		ResultsFileSystemModel.h
 		ResultsFileSystemModel.cpp
-		ReflexAnalysisObjective.h
-		ReflexAnalysisObjective.cpp
 		)
 	
 	set(QTFILES

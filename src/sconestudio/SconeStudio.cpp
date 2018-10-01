@@ -27,7 +27,6 @@
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
 #include "scone/core/Profiler.h"
-#include "ReflexAnalysisObjective.h"
 #include "spot/cma_optimizer.h"
 #include "spot/console_reporter.h"
 #include "spot/file_reporter.h"
