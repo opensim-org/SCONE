@@ -25,7 +25,13 @@ namespace scone
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_file.parent_path() ); // external resources are copied from current path
 		OptimizerUP o = CreateOptimizer( scenario_pn.get_child( "Optimizer" ) );
-		xo::log_unaccessed( scenario_pn );
+
+		// report unused properties
+		if ( scenario_pn.count_unaccessed() > 0 )
+		{
+			log::warning( "Warning, unused properties:" );
+			xo::log_unaccessed( scenario_pn );
+		}
 
 		// return created optimizer
 		return std::move( o );
@@ -39,8 +45,12 @@ namespace scone
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
-		// report unused parameters
-		xo::log_unaccessed( objProp );
+		// report unused properties
+		if ( objProp.count_unaccessed() > 0 )
+		{
+			log::warning( "Warning, unused properties:" );
+			xo::log_unaccessed( objProp );
+		}
 
 		// set data storage
 		auto model = so.CreateModelFromParFile( par_file );
