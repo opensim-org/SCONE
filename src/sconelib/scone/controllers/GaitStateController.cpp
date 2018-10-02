@@ -57,7 +57,7 @@ namespace scone
 			m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
 			if ( override_leg_length != 0.0 )
 				m_LegStates.back()->leg_length = override_leg_length;
-			log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
+			//log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 		}
 
 		// create instances for each controller
@@ -88,14 +88,14 @@ namespace scone
 					Location a = Location( model.GetLeg( cc.leg_index ).GetSide() );
 
 					// create controller
-					log::trace( "Creating controllers for " + GetConditionName( cc ) );
+					//log::trace( "Creating controllers for " + GetConditionName( cc ) );
 					const PropNode& cprops = ccIt->second.get_child( "Controller" );
 					ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
 					cc.controller = CreateController( cprops, par, model, a );
 				}
 			}
 		}
-		log::trace( "Controller created" );
+		//log::trace( "Controller created" );
 	}
 
 	GaitStateController::~GaitStateController()

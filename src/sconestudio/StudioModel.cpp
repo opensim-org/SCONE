@@ -32,13 +32,19 @@ namespace scone
 	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), 1.0, 15, 0, 0.5f ),
 	is_evaluating( false )
 	{
+		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
+
+		log::info( "Opening ", file );
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
 		SearchPoint par( model_objective->info() );
 		if ( file.extension() == "par" )
-			par.import_values( file );
+		{
+			auto result = par.import_values( file );
+			log::info( "Read ", result.first, " of ", model_objective->info().dim(), " parameters, skipped ", result.second, " from ", file.filename() );
+		}
 		model = model_objective->CreateModelFromParams( par );
 
 		// accept filename and clear data
@@ -122,7 +128,7 @@ namespace scone
 				}
 			}
 		}
-		log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
+		//log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
 
 		for ( auto& cg : model->GetContactGeometries() )
 		{

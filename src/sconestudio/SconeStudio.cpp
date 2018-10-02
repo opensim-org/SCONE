@@ -449,7 +449,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	{
 		model.reset();
 		storageModel.setStorage( nullptr );
-		model = StudioModelUP( new StudioModel( scene_, path( par_file ), force_evaluation ) );
+		model = std::make_unique< StudioModel >( scene_, path( par_file ), force_evaluation );
 	}
 	catch ( std::exception& e )
 	{
