@@ -131,21 +131,6 @@ namespace scone
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
 
-	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Location& a )
-	{
-		static xo::factory< Sensor, const PropNode&, Params&, Model&, const Location& > g_SensorFactory;
-		if ( g_SensorFactory.empty() )
-		{
-			g_SensorFactory.register_class< MuscleForceSensor >();
-			g_SensorFactory.register_class< MuscleLengthSensor >();
-			g_SensorFactory.register_class< MuscleVelocitySensor >();
-			g_SensorFactory.register_class< MuscleSpindleSensor >();
-			g_SensorFactory.register_class< DofPositionSensor >();
-			g_SensorFactory.register_class< DofVelocitySensor >();
-		}
-		return g_SensorFactory( props.get< String >( "type" ), props, par, m, a );
-	}
-
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
 	{
 		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;

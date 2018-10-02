@@ -26,7 +26,6 @@ namespace scone
 	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Location& target_area );
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par );
 
-	SCONE_API SensorUP CreateSensor( const PropNode&, Params&, Model&, const Location& );
 	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par );
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop );

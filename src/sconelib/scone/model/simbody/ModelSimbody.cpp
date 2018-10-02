@@ -165,7 +165,6 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "CreateWrappers" );
 			CreateModelWrappers( props, par );
 			SetModelProperties( props, par );
-			CreateBalanceSensors( props, par );
 		}
 
 		{
