@@ -34,6 +34,5 @@ namespace scone
 		std::pair< String, int > GetMirroredStateNameAndSign( const String& str );
 
 		State m_InitState;
-
 	};
 }
