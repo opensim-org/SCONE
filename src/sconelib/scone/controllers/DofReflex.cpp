@@ -26,7 +26,6 @@ namespace scone
 	m_pTargetPosSource( nullptr )
 	{
 		String par_name = GetParName( props );
-		name = GetReflexName( m_Target.GetName(), source );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PAR_NAMED( props, par, P0, "P0", 0.0 );
@@ -65,15 +64,16 @@ namespace scone
 		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || condition == 1 && delta_pos > 0 && delta_vel > 0 )
 		{
 			u_p = KP * delta_pos;
-			u_d = KV * delta_vel;
-			AddTargetControlValue( C0 + u_p + u_d );
+			u_v = KV * delta_vel;
+			AddTargetControlValue( C0 + u_p + u_v );
 		}
-		else u_p = u_d = 0.0;
+		else u_p = u_v = 0.0;
 	}
 
 	void DofReflex::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
+		auto name = GetReflexName( actuator_.GetName(), source );
 		frame[ name + ".RDP" ] = u_p;
-		frame[ name + ".RDV" ] = u_d;
+		frame[ name + ".RDV" ] = u_v;
 	}
 }

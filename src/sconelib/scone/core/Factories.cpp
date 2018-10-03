@@ -48,6 +48,7 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
+#include "../controllers/BodyPointReflex.h"
 
 namespace scone
 {
@@ -102,6 +103,7 @@ namespace scone
 		{
 			g_ReflexFactory.register_class< MuscleReflex >();
 			g_ReflexFactory.register_class< DofReflex >();
+			g_ReflexFactory.register_class< BodyPointReflex >();
 			g_ReflexFactory.register_class< ConditionalMuscleReflex >();
 		}
 		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );

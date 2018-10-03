@@ -12,6 +12,11 @@
 #include "scone/core/types.h"
 #include "scone/core/Vec3.h"
 
+#if defined(_MSC_VER)
+#	pragma warning( push )
+#	pragma warning( disable: 4275 )
+#endif
+
 namespace scone
 {
 	// Base class for muscle sensors
@@ -111,22 +116,26 @@ namespace scone
 
 	struct SCONE_API BodyPointPositionSensor : public BodyPointSensor
 	{
-		BodyPointPositionSensor( Body& body, Vec3 dir, Vec3 ofs ) : BodyPointSensor( body, ofs, dir ) {}
+		BodyPointPositionSensor( Body& body, Vec3 ofs, Vec3 dir ) : BodyPointSensor( body, ofs, dir ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
 	};
 
 	struct SCONE_API BodyPointVelocitySensor : public BodyPointSensor
 	{
-		BodyPointVelocitySensor( Body& body, Vec3 dir, Vec3 ofs ) : BodyPointSensor( body, ofs, dir ) {}
+		BodyPointVelocitySensor( Body& body, Vec3 ofs, Vec3 dir ) : BodyPointSensor( body, ofs, dir ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
 	};
 
 	struct SCONE_API BodyPointAccelerationSensor : public BodyPointSensor
 	{
-		BodyPointAccelerationSensor( Body& body, Vec3 dir, Vec3 ofs ) : BodyPointSensor( body, ofs, dir ) {}
+		BodyPointAccelerationSensor( Body& body, Vec3 ofs, Vec3 dir) : BodyPointSensor( body, ofs, dir ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
 	};
 }
+
+#if defined(_MSC_VER)
+#	pragma warning( pop )
+#endif

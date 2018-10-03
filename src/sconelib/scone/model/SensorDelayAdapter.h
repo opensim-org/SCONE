@@ -10,6 +10,11 @@
 
 #include "Sensor.h"
 
+#if defined(_MSC_VER)
+#	pragma warning( push )
+#	pragma warning( disable: 4275 )
+#endif
+
 namespace scone
 {
 	struct SCONE_API SensorDelayAdapter : public Sensor
@@ -33,3 +38,7 @@ namespace scone
 		index_t m_StorageIdx;
 	};
 }
+
+#if defined(_MSC_VER)
+#	pragma warning( pop )
+#endif

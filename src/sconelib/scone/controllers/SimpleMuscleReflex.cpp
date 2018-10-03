@@ -41,7 +41,7 @@ namespace scone
 	void SimpleMuscleReflex::ComputeControls( double timestamp )
 	{
 		if ( m_Source )
-			m_Target.AddInput( m_Gain * m_Source->GetValue( delay ) );
-		else m_Target.AddInput( m_Gain );
+			actuator_.AddInput( m_Gain * m_Source->GetValue( delay ) );
+		else actuator_.AddInput( m_Gain );
 	}
 }
