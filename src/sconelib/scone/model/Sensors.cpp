@@ -9,97 +9,54 @@
 #include "Sensors.h"
 #include "Model.h"
 #include "Muscle.h"
-#include "Location.h"
 #include "Body.h"
 #include "Dof.h"
-#include "scone/core/string_tools.h"
-#include "scone/core/Log.h"
 
 namespace scone
 {
-	Real MuscleForceSensor::GetValue() const { return m_Muscle.GetNormalizedForce(); }
-	String MuscleForceSensor::GetName() const { return m_Muscle.GetName() + ".F"; }
+	String MuscleForceSensor::GetName() const { return muscle_.GetName() + ".F"; }
+	Real MuscleForceSensor::GetValue() const { return muscle_.GetNormalizedForce(); }
 
-	Real MuscleLengthSensor::GetValue() const { return m_Muscle.GetNormalizedFiberLength(); }
-	String MuscleLengthSensor::GetName() const { return m_Muscle.GetName() + ".L"; }
+	String MuscleLengthSensor::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleLengthSensor::GetValue() const { return muscle_.GetNormalizedFiberLength(); }
 
-	Real MuscleVelocitySensor::GetValue() const { return m_Muscle.GetNormalizedFiberVelocity(); }
-	String MuscleVelocitySensor::GetName() const { return m_Muscle.GetName() + ".V"; }
+	String MuscleVelocitySensor::GetName() const { return muscle_.GetName() + ".V"; }
+	Real MuscleVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberVelocity(); }
 
-	Real MuscleSpindleSensor::GetValue() const { return m_Muscle.GetNormalizedSpindleRate(); }
-	String MuscleSpindleSensor::GetName() const { return m_Muscle.GetName() + ".S"; }
+	String MuscleSpindleSensor::GetName() const { return muscle_.GetName() + ".S"; }
+	Real MuscleSpindleSensor::GetValue() const { return muscle_.GetNormalizedSpindleRate(); }
 
-	Real MuscleExcitationSensor::GetValue() const { return m_Muscle.GetExcitation(); }
-	String MuscleExcitationSensor::GetName() const { return m_Muscle.GetName() + ".excitation"; }
+	String MuscleExcitationSensor::GetName() const { return muscle_.GetName() + ".excitation"; }
+	Real MuscleExcitationSensor::GetValue() const { return muscle_.GetExcitation(); }
 
-	Real DofPositionSensor::GetValue() const
-	{
-		// TODO: get rid of this if statement and use a "constant" Dof?
-		if ( m_pRootDof )
-			return m_pRootDof->GetPos() + m_Dof.GetPos();
-		else return m_Dof.GetPos();
+	String DofPositionSensor::GetName() const { return dof_.GetName() + ".DP"; }
+	Real DofPositionSensor::GetValue() const { return root_dof_ ? root_dof_->GetPos() + dof_.GetPos() : dof_.GetPos(); }
+
+	String DofVelocitySensor::GetName() const { return dof_.GetName() + ".DV"; }
+	Real DofVelocitySensor::GetValue() const { return root_dof_ ? root_dof_->GetVel() + dof_.GetVel() : dof_.GetVel(); }
+
+	String DofPosVelSensor::GetName() const { return dof_.GetName() + ".DPV"; }
+	Real DofPosVelSensor::GetValue() const {
+		if ( root_dof_ )
+			return root_dof_->GetPos() + dof_.GetPos() + kv_ * ( root_dof_->GetVel() + dof_.GetVel() );
+		else return dof_.GetPos() + kv_ * dof_.GetVel();
 	}
 
-	String DofPositionSensor::GetName() const
-	{
-		return m_Dof.GetName() + ".DP";
+	String LegLoadSensor::GetName() const { return leg_.GetName() + ".LD"; }
+	Real LegLoadSensor::GetValue() const { return leg_.GetLoad(); }
+
+	String BodyPointPositionSensor::GetName() const { return body_.GetName() + ".PP"; }
+	Real BodyPointPositionSensor::GetValue() const {
+		return xo::dot_product( direction_, body_.GetPosOfPointOnBody( offset_ ) );
 	}
 
-	Real DofVelocitySensor::GetValue() const
-	{
-		// TODO: get rid of this if statement and use a "constant" Dof?
-		if ( m_pRootDof )
-			return m_pRootDof->GetVel() + m_Dof.GetVel();
-		else return m_Dof.GetVel();
+	String BodyPointVelocitySensor::GetName() const { return body_.GetName() + ".PV"; }
+	Real BodyPointVelocitySensor::GetValue() const {
+		return xo::dot_product( direction_, body_.GetLinVelOfPointOnBody( offset_ ) );
 	}
 
-	String DofVelocitySensor::GetName() const
-	{
-		return m_Dof.GetName() + ".DV";
-	}
-
-	Real DofPosVelSensor::GetValue() const
-	{
-		// TODO: get rid of this if statement and use a "constant" Dof?
-		if ( m_pRootDof )
-			return m_pRootDof->GetPos() + m_Dof.GetPos() + m_KV * ( m_pRootDof->GetVel() + m_Dof.GetVel() );
-		else return m_Dof.GetPos() + m_KV * m_Dof.GetVel();
-	}
-
-	String DofPosVelSensor::GetName() const
-	{
-		return m_Dof.GetName() + ".DPV";
-	}
-
-	Real LegLoadSensor::GetValue() const
-	{
-		return m_Leg.GetLoad();
-	}
-
-	String LegLoadSensor::GetName() const
-	{
-		return m_Leg.GetName() + ".LD";
-	}
-
-	const char* g_BodyChannelNames[] = { "X", "Y", "Z" };
-
-	scone::Real BodyOriSensor::GetValue( index_t idx ) const
-	{
-		return xo::rotation_vector_from_quat( m_Body.GetOrientation() )[ idx ];
-	}
-
-	scone::String BodyOriSensor::GetName() const
-	{
-		return m_Body.GetName() + ".Ori";
-	}
-
-	scone::Real BodyAngVelSensor::GetValue( index_t idx ) const
-	{
-		return m_Body.GetAngVel()[ idx ];
-	}
-
-	scone::String BodyAngVelSensor::GetName() const
-	{
-		return m_Body.GetName() + ".AngVel";
+	String BodyPointAccelerationSensor::GetName() const { return body_.GetName() + ".PA"; }
+	Real BodyPointAccelerationSensor::GetValue() const {
+		return xo::dot_product( direction_, body_.GetLinAccOfPointOnBody( offset_ ) );
 	}
 }

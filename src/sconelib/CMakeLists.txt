@@ -190,7 +190,6 @@ set(SIM_MODELCOMPONENTS_FILES
 set(SIM_SENSORSANDACTUATORS_FILES
     scone/model/Actuator.cpp
     scone/model/Actuator.h
-    scone/model/Sensor.cpp
     scone/model/Sensor.h
     scone/model/SensorDelayAdapter.cpp
     scone/model/SensorDelayAdapter.h
