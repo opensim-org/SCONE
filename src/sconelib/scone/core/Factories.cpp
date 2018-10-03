@@ -48,6 +48,7 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
+#include "../controllers/BodyPointReflex.h"
 
 namespace scone
 {
@@ -102,6 +103,7 @@ namespace scone
 		{
 			g_ReflexFactory.register_class< MuscleReflex >();
 			g_ReflexFactory.register_class< DofReflex >();
+			g_ReflexFactory.register_class< BodyPointReflex >();
 			g_ReflexFactory.register_class< ConditionalMuscleReflex >();
 		}
 		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
@@ -129,21 +131,6 @@ namespace scone
 			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
 		}
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
-	}
-
-	SCONE_API SensorUP CreateSensor( const PropNode& props, Params& par, Model& m, const Location& a )
-	{
-		static xo::factory< Sensor, const PropNode&, Params&, Model&, const Location& > g_SensorFactory;
-		if ( g_SensorFactory.empty() )
-		{
-			g_SensorFactory.register_class< MuscleForceSensor >();
-			g_SensorFactory.register_class< MuscleLengthSensor >();
-			g_SensorFactory.register_class< MuscleVelocitySensor >();
-			g_SensorFactory.register_class< MuscleSpindleSensor >();
-			g_SensorFactory.register_class< DofPositionSensor >();
-			g_SensorFactory.register_class< DofVelocitySensor >();
-		}
-		return g_SensorFactory( props.get< String >( "type" ), props, par, m, a );
 	}
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )

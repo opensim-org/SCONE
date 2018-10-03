@@ -61,7 +61,6 @@ namespace scone
 
 	protected:
 
-		String name;
 		Real u_l = 0;
 		Real u_v = 0;
 		Real u_f = 0;

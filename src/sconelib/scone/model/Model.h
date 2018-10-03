@@ -140,10 +140,6 @@ namespace scone
 			else return dynamic_cast<SensorT&>( **it ); // return found element
 		}
 
-		// acquire sensor based on PropNode
-		Sensor& AcquireSensor( const PropNode& pn, Params& par, const Location& loc );
-		SensorDelayAdapter& AcquireDelayedSensor( const PropNode& pn, Params& par, const Location& loc );
-
 		// create delayed sensors
 		SensorDelayAdapter& AcquireSensorDelayAdapter( Sensor& source );
 		Storage< Real >& GetSensorDelayStorage() { return m_SensorDelayStorage; }
@@ -152,9 +148,6 @@ namespace scone
 		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
 		Real sensor_delay_scaling_factor;
-		Real balance_sensor_ori_vel_gain;
-		Real balance_sensor_delay;
-		Vec3 GetDelayedOrientation();
 
 		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
 		bool GetStoreData() const;
@@ -172,7 +165,6 @@ namespace scone
 	protected:
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
-		void CreateBalanceSensors( const PropNode& props, Params& par );
 		void CreateControllers( const PropNode& pn, Params& par );
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
@@ -195,7 +187,6 @@ namespace scone
 		Storage< Real > m_SensorDelayStorage;
 		std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		std::vector< std::unique_ptr< Sensor > > m_Sensors;
-		std::array< SensorDelayAdapter*, 3 > m_OriSensors;
 
 		const PropNode* m_pModelProps;
 		const PropNode* m_pCustomProps;

@@ -17,22 +17,12 @@
 namespace scone
 {
 	SensorDelayAdapter::SensorDelayAdapter( Model& model, Sensor& source, TimeInSeconds default_delay ) :
-		Sensor(),
-		m_Model( model ),
-		m_InputSensor( source ),
-		m_Delay( default_delay )
+	Sensor(),
+	m_Model( model ),
+	m_InputSensor( source ),
+	m_Delay( default_delay )
 	{
-		if ( GetChannelCount() > 1 )
-		{
-			// special case because we need to add postfixes to the channel names
-			m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + ".0" );
-			for ( index_t idx = 1; idx < source.GetChannelCount(); ++idx )
-				m_Model.GetSensorDelayStorage().AddChannel( source.GetName() + "." + to_str( idx ) );
-		}
-		else
-		{
-			m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() );
-		}
+		m_StorageIdx = m_Model.GetSensorDelayStorage().AddChannel( source.GetName() );
 	}
 
 	SensorDelayAdapter::~SensorDelayAdapter()
@@ -43,19 +33,9 @@ namespace scone
 		return GetValue( m_Delay );
 	}
 
-	scone::Real SensorDelayAdapter::GetValue( index_t idx ) const
-	{
-		return GetValue( m_StorageIdx + idx, m_Delay );
-	}
-
 	scone::Real SensorDelayAdapter::GetValue( Real delay ) const
 	{
 		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx );
-	}
-
-	scone::Real SensorDelayAdapter::GetValue( index_t idx, Real delay ) const
-	{
-		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx + idx );
 	}
 
 	scone::Real SensorDelayAdapter::GetAverageValue( int delay_samples, int window_size ) const
@@ -74,15 +54,7 @@ namespace scone
 	{
 		Storage< Real >& storage = m_Model.GetSensorDelayStorage();
 		SCONE_ASSERT( !storage.IsEmpty() && storage.Back().GetTime() == m_Model.GetTime() );
-
-		// add the new value(s)
-		for ( index_t idx = 0; idx < GetChannelCount(); ++idx )
-			storage.Back()[ m_StorageIdx + idx ] = m_InputSensor.GetValue( idx );
-	}
-
-	size_t SensorDelayAdapter::GetChannelCount()
-	{
-		return m_InputSensor.GetChannelCount();
+		storage.Back()[ m_StorageIdx ] = m_InputSensor.GetValue();
 	}
 
 	scone::String SensorDelayAdapter::GetName() const

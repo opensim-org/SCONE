@@ -15,7 +15,7 @@ namespace scone
 {
 	Reflex::Reflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	target( props.get< String >( "target" ) ),
-	m_Target( *FindByLocation( model.GetActuators(), target, loc ) )
+	actuator_( *FindByLocation( model.GetActuators(), target, loc ) )
 	{
 		INIT_PAR( props, par, delay, 0 );
 		INIT_PROP( props, min_control_value, xo::const_lowest<Real>() );
@@ -23,7 +23,7 @@ namespace scone
 	}
 
 	Reflex::Reflex( Actuator& target, TimeInSeconds d, Real min_val, Real max_val ) :
-	m_Target( target ),
+	actuator_( target ),
 	delay( d ),
 	min_control_value( min_val ),
 	max_control_value( max_val )
@@ -39,7 +39,7 @@ namespace scone
 	scone::Real Reflex::AddTargetControlValue( Real u )
 	{
 		xo::clamp( u, min_control_value, max_control_value );
-		m_Target.AddInput( u );
+		actuator_.AddInput( u );
 		return u;
 	}
 

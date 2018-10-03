@@ -26,7 +26,6 @@ namespace scone
 
 		// init names
 		String par_name = GetParName( props );
-		name = GetReflexName( m_Target.GetName(), src_mus.GetName() );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PAR_NAMED( props, par, KL, "KL", 0.0 );
@@ -92,6 +91,7 @@ namespace scone
 
 	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
+		auto name = GetReflexName( target, source );
 		if ( m_pLengthSensor )
 			frame[ name + ".RL" ] = u_l;
 		if ( m_pVelocitySensor )

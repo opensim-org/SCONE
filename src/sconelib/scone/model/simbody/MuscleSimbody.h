@@ -13,6 +13,7 @@
 #include "xo/container/circular_deque.h"
 
 #include <vector>
+#include "xo/container/flat_map.h"
 
 namespace OpenSim
 {

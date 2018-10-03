@@ -49,9 +49,8 @@ namespace scone
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
-		String name;
 		Real u_p;
-		Real u_d;
+		Real u_v;
 		Dof& m_SourceDof;
 		Dof* m_SourceParentDof;
 		SensorDelayAdapter* m_pTargetPosSource;

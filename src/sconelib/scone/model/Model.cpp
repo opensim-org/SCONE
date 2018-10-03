@@ -34,15 +34,12 @@ namespace scone
 	m_ShouldTerminate( false ),
 	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
-	m_OriSensors(),
 	m_StoreData( false ),
 	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 	thread_safe_simulation( false ),
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
-		INIT_PAR( props, par, balance_sensor_delay, 0.0 );
-		INIT_PAR( props, par, balance_sensor_ori_vel_gain, 0.0 );
 	}
 
 	Model::~Model()
@@ -57,23 +54,6 @@ namespace scone
 		return str;
 	}
 
-	Sensor& Model::AcquireSensor( const PropNode& pn, Params& par, const Location& loc )
-	{
-		// create the sensor first, so we can use its name to find it
-		SensorUP sensor = CreateSensor( pn, par, *this, loc );
-
-		// see if there's a sensor with the same name (should be unique)
-		auto it = std::find_if( m_Sensors.begin(), m_Sensors.end(), [&]( SensorUP& s ) { return s->GetName() == sensor->GetName(); } );
-
-		if ( it == m_Sensors.end() )
-		{
-			// add the new sensor and return it
-			m_Sensors.push_back( std::move( sensor ) );
-			return *m_Sensors.back(); // return newly added sensor
-		}
-		else return **it; // return found element (sensor gets deleted)
-	}
-
 	SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 	{
 		auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
@@ -85,20 +65,6 @@ namespace scone
 			return *m_SensorDelayAdapters.back();
 		}
 		else return **it;
-	}
-
-	SensorDelayAdapter& Model::AcquireDelayedSensor( const PropNode& pn, Params& par, const Location& loc )
-	{
-		// acquire sensor first
-		return AcquireSensorDelayAdapter( AcquireSensor( pn, par, loc ) );
-	}
-
-	Vec3 Model::GetDelayedOrientation()
-	{
-		SCONE_ASSERT( m_OriSensors[ 0 ] );
-		return Vec3( m_OriSensors[ 0 ]->GetValue( balance_sensor_delay ),
-			m_OriSensors[ 1 ]->GetValue( balance_sensor_delay ),
-			m_OriSensors[ 2 ]->GetValue( balance_sensor_delay ) );
 	}
 
 	String Model::GetClassSignature() const
@@ -126,16 +92,6 @@ namespace scone
 			sda->UpdateStorage();
 
 		//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
-	}
-
-	void Model::CreateBalanceSensors( const PropNode& props, Params& par )
-	{
-		Real kp = 1;
-		Real kd = balance_sensor_ori_vel_gain;
-
-		m_OriSensors[ 0 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Coronal, kp, kd );
-		m_OriSensors[ 1 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Transverse, kp, kd );
-		m_OriSensors[ 2 ] = &AcquireDelayedSensor< OrientationSensor >( *this, OrientationSensor::Sagittal, kp, kd );
 	}
 
 	void Model::SetMeasure( MeasureUP m )

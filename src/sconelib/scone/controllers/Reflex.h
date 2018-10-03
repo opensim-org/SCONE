@@ -41,7 +41,7 @@ namespace scone
 	protected:
 		/// clamp control value between min_control_value and max_control_value and add to target actuator
 		Real AddTargetControlValue( Real u );
-		Actuator& m_Target;
+		Actuator& actuator_;
 		static String GetReflexName( const String& target, const String& source );
 		static String GetParName( const PropNode& props );
 	};
