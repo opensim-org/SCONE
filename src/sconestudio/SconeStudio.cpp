@@ -217,10 +217,12 @@ void SconeStudio::evaluate()
 	dlg.show();
 	QApplication::processEvents();
 
+	xo::set_thread_priority( xo::thread_priority::highest );
+
 	const double step_size = 0.01;
 	xo::timer real_time;
 
-	const xo::seconds_t visual_update = 0.5;
+	const xo::seconds_t visual_update = 0.25;
 	xo::seconds_t prev_visual_time = -visual_update;
 	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
 	{
@@ -232,7 +234,6 @@ void SconeStudio::evaluate()
 
 			// update progress bar
 			dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
-			//QApplication::processEvents();
 			if ( dlg.wasCanceled() ) {
 				model->FinalizeEvaluation( false );
 				break;
@@ -251,6 +252,8 @@ void SconeStudio::evaluate()
 	auto real_dur = real_time.seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+
+	xo::set_thread_priority( xo::thread_priority::normal );
 
 	dlg.setValue( 1000 );
 	model->UpdateVis( model->GetTime() );
