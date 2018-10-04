@@ -16,7 +16,7 @@ namespace scone
 	Optimizer( pn ),
 	optimizer_pool( *m_Objective )
 	{
-		INIT_PROP( pn, prediction_window_, 400 );
+		INIT_PROP( pn, prediction_window_, 500 );
 		INIT_PROP( pn, prediction_start_, 100 );
 		INIT_PROP( pn, prediction_look_ahead_, 1000 );
 		INIT_PROP( pn, optimizations_, 3 );

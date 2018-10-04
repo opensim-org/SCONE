@@ -34,7 +34,7 @@ namespace scone
 		/// Initial Sigma parameter of CMA-ES.
 		double sigma_;
 
-		/// Window size used for fitness prediction.
+		/// Window size used for fitness prediction; default = 500.
 		size_t window_size;
 
 		/// Random seed that will determine the randomness during the optimization.
