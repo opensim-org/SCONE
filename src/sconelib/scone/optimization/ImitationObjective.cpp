@@ -66,7 +66,7 @@ namespace scone
 	ImitationObjective::~ImitationObjective()
 	{}
 
-	void ImitationObjective::AdvanceModel( Model& model, TimeInSeconds t ) const
+	void ImitationObjective::AdvanceSimulationTo( Model& model, TimeInSeconds t ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 

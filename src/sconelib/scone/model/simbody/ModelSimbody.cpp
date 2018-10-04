@@ -526,90 +526,78 @@ namespace scone
 		Model::StoreCurrentFrame();
 	}
 
-	bool ModelSimbody::AdvanceSimulationTo( double final_time )
+	void ModelSimbody::AdvanceSimulationTo( double time )
 	{
 		SCONE_PROFILE_FUNCTION;
 		SCONE_ASSERT( m_pOsimManager );
 
-		try
+		if ( use_fixed_control_step_size )
 		{
-			if ( use_fixed_control_step_size )
+			// initialize the time-stepper if this is the first step
+			if ( !m_pTkTimeStepper )
 			{
-				// initialize the time-stepper if this is the first step
-				if ( !m_pTkTimeStepper )
+				// Integrate using time stepper
+				m_pTkTimeStepper = std::unique_ptr< SimTK::TimeStepper >( new SimTK::TimeStepper( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator ) );
+				m_pTkTimeStepper->initialize( GetTkState() );
+				if ( GetStoreData() )
 				{
-					// Integrate using time stepper
-					m_pTkTimeStepper = std::unique_ptr< SimTK::TimeStepper >( new SimTK::TimeStepper( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator ) );
-					m_pTkTimeStepper->initialize( GetTkState() );
-					if ( GetStoreData() )
-					{
-						// store initial frame
-						m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-						CopyStateFromTk();
-						StoreCurrentFrame();
-					}
-				}
-
-				// start integration loop
-				int number_of_steps = static_cast<int>( 0.5 + ( final_time - GetTime() ) / fixed_control_step_size );
-				int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
-
-				for ( int current_step = 0; current_step < number_of_steps; )
-				{
-					// update controls
-					UpdateControlValues();
-
-					// integrate
-					m_PrevTime = GetTime();
-					m_PrevIntStep = GetIntegrationStep();
-					double target_time = GetTime() + fixed_control_step_size;
-					SimTK::Integrator::SuccessfulStepStatus status;
-
-					{
-						SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
-						status = m_pTkTimeStepper->stepTo( target_time );
-					}
-
-					SetTkState( m_pTkIntegrator->updAdvancedState() );
-					CopyStateFromTk();
-
-					++current_step;
-
-					// Realize Acceleration, analysis components may need it
-					// this way the results are always consistent
+					// store initial frame
 					m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-
-					// update the sensor delays, analyses, and store data
-					UpdateSensorDelayAdapters();
-					UpdateAnalyses();
-
-					if ( GetStoreData() )
-						StoreCurrentFrame();
-
-					// terminate on request
-					if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
-					{
-						log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
-						break;
-					}
+					CopyStateFromTk();
+					StoreCurrentFrame();
 				}
 			}
-			else
+
+			// start integration loop
+			int number_of_steps = static_cast<int>( 0.5 + ( time - GetTime() ) / fixed_control_step_size );
+			int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
+
+			for ( int current_step = 0; current_step < number_of_steps; )
 			{
-				// Integrate from initial time to final time (the old way)
-				m_pOsimManager->setFinalTime( final_time );
-				m_pOsimManager->integrate( GetTkState() );
+				// update controls
+				UpdateControlValues();
+
+				// integrate
+				m_PrevTime = GetTime();
+				m_PrevIntStep = GetIntegrationStep();
+				double target_time = GetTime() + fixed_control_step_size;
+				SimTK::Integrator::SuccessfulStepStatus status;
+
+				{
+					SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
+					status = m_pTkTimeStepper->stepTo( target_time );
+				}
+
+				SetTkState( m_pTkIntegrator->updAdvancedState() );
+				CopyStateFromTk();
+
+				++current_step;
+
+				// Realize Acceleration, analysis components may need it
+				// this way the results are always consistent
+				m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+
+				// update the sensor delays, analyses, and store data
+				UpdateSensorDelayAdapters();
+				UpdateAnalyses();
+
+				if ( GetStoreData() )
+					StoreCurrentFrame();
+
+				// terminate on request
+				if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+				{
+					log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
+					break;
+				}
 			}
 		}
-		catch ( std::exception& e )
+		else
 		{
-			// in case of an OpenSim exception, just log the exception and return false
-			// TODO: use Result class
-			log::error( e.what() );
-			return false;
+			// Integrate from initial time to final time (the old way)
+			m_pOsimManager->setFinalTime( time );
+			m_pOsimManager->integrate( GetTkState() );
 		}
-
-		return true;
 	}
 
 	void ModelSimbody::SetTerminationRequest()

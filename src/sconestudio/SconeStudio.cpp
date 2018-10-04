@@ -220,33 +220,25 @@ void SconeStudio::evaluate()
 	xo::set_thread_priority( xo::thread_priority::highest );
 
 	const double step_size = 0.01;
-	xo::timer real_time;
-
 	const xo::seconds_t visual_update = 0.25;
 	xo::seconds_t prev_visual_time = -visual_update;
-	for ( double t = step_size; t < model->GetMaxTime(); t += step_size )
+	xo::timer real_time;
+	for ( double t = step_size; model->IsEvaluating(); t += step_size )
 	{
 		auto rt = real_time.seconds();
 		if ( rt - prev_visual_time >= visual_update )
 		{
-			// update 3D visuals
+			// update 3D visuals and progress bar
 			setTime( t, true );
-
-			// update progress bar
 			dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
 			if ( dlg.wasCanceled() ) {
 				model->FinalizeEvaluation( false );
 				break;
 			}
-
 			prev_visual_time = rt;
 		}
-		else setTime( t, false );
+		else setTime( t, false ); // 
 	}
-
-	// make sure evaluation is finished
-	if ( model->IsEvaluating() )
-		model->EvaluateTo( model->GetMaxTime() );
 
 	// report duration
 	auto real_dur = real_time.seconds();

@@ -19,7 +19,7 @@ namespace scone
 		SimilarityObjective( const PropNode& props );
 		virtual ~SimilarityObjective() {}
 		
-		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
+		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
 		virtual TimeInSeconds GetDuration() const override { return 0.0; }

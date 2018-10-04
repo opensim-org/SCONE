@@ -35,7 +35,7 @@ namespace scone
 		size_t frame_delta;
 
 
-		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const override;
+		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
 		virtual TimeInSeconds GetDuration() const override { return m_Storage.Back().GetTime(); }
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;

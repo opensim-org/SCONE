@@ -46,11 +46,11 @@ namespace scone
 	scone::fitness_t SimulationObjective::EvaluateModel( Model& m ) const
 	{
 		m.SetSimulationEndTime( GetDuration() );
-		AdvanceModel( m, GetDuration() );
+		AdvanceSimulationTo( m, GetDuration() );
 		return m.GetMeasure()->GetWeightedResult( m );
 	}
 
-	void SimulationObjective::AdvanceModel( Model& m, TimeInSeconds t ) const
+	void SimulationObjective::AdvanceSimulationTo( Model& m, TimeInSeconds t ) const
 	{
 		m.AdvanceSimulationTo( t );
 	}

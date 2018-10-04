@@ -242,18 +242,21 @@ namespace scone
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
 		SCONE_ASSERT( IsEvaluating() );
-		model_objective->AdvanceModel( *model, t );
-		if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
-			FinalizeEvaluation( true );
+		try
+		{
+			model_objective->AdvanceSimulationTo( *model, t );
+			if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
+				FinalizeEvaluation( true );
+		}
+		catch ( std::exception& e )
+		{
+			log::error( "Error evaluating model at time ", model->GetTime(), ": ", e.what() );
+			FinalizeEvaluation( false );
+		}
 	}
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
-		auto rate = ( model->GetData().GetFrameCount() - 1 ) / model->GetData().Back().GetTime();
-		auto target = GetSconeSettings().get< double >( "data.frequency" );
-		auto stride = xo::max( 1, int( std::round( rate / target ) ) );
-		//log::debug( "Downsampling from ", rate, "Hz to ", target, "Hz; stride = ", stride );
-
 		// copy data and init data
 		data = model->GetData();
 		if ( !data.IsEmpty() )

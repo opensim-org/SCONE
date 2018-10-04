@@ -26,7 +26,7 @@ namespace scone
 		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 
 		virtual fitness_t EvaluateModel( Model& m ) const;
-		virtual void AdvanceModel( Model& m, TimeInSeconds t ) const = 0;
+		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const = 0;
 
 		virtual fitness_t GetResult( Model& m ) const = 0;
 		virtual PropNode GetReport( Model& m ) const = 0;

@@ -93,7 +93,7 @@ namespace scone
 		void SetNeutralState();
 
 		/// Simulate model
-		virtual bool AdvanceSimulationTo( double time ) = 0;
+		virtual void AdvanceSimulationTo( double time ) = 0;
 		virtual double GetSimulationEndTime() const = 0;
 		virtual void SetSimulationEndTime( double time ) = 0;
 

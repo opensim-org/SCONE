@@ -33,7 +33,7 @@ namespace scone
 		target_model_ = target_->CreateModelFromParFile( file_ );
 	}
 
-	void SimilarityObjective::AdvanceModel( Model& m, TimeInSeconds t ) const
+	void SimilarityObjective::AdvanceSimulationTo( Model& m, TimeInSeconds t ) const
 	{
 		EvaluateModel( m );
 	}

@@ -66,7 +66,6 @@ namespace scone
 		Vec3 com_pos = model.GetComPos();
 		Vec3 com_vel = model.GetComVel();
 		double grf = model.GetTotalContactForce();
-		log::trace( "GRF = ", grf );
 
 		if ( com_pos.y < termination_height * init_com.y )
 		{
