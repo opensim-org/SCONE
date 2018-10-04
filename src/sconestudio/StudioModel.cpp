@@ -162,9 +162,6 @@ namespace scone
 
 		index_t force_count = 0;
 
-		// initialize visualization
-		std::unique_lock< std::mutex > simulation_lock( model->GetSimulationMutex(), std::defer_lock );
-
 		if ( !is_evaluating )
 		{
 			// update model state from data

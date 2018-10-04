@@ -533,10 +533,6 @@ namespace scone
 
 		try
 		{
-			std::unique_lock< std::mutex > lock( GetSimulationMutex(), std::defer_lock );
-			if ( GetThreadSafeSimulation() )
-				lock.lock();
-
 			if ( use_fixed_control_step_size )
 			{
 				// initialize the time-stepper if this is the first step
@@ -596,15 +592,6 @@ namespace scone
 						log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 						break;
 					}
-
-					// allow time for other threads to access the model
-					if ( GetThreadSafeSimulation() && current_step % thread_interuption_steps == 0 )
-					{
-						// notify GUI thread
-						lock.unlock();
-						GetSimulationCondVar().notify_all();
-						lock.lock();
-					}
 				}
 			}
 			else
@@ -621,9 +608,6 @@ namespace scone
 			log::error( e.what() );
 			return false;
 		}
-
-		if ( GetThreadSafeSimulation() )
-			GetSimulationCondVar().notify_all();
 
 		return true;
 	}

@@ -154,11 +154,6 @@ namespace scone
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
-		void SetThreadSafeSimulation( bool b ) { thread_safe_simulation = b; }
-		bool GetThreadSafeSimulation() { return thread_safe_simulation; }
-		std::mutex& GetSimulationMutex() { return simulation_mutex; }
-		std::condition_variable& GetSimulationCondVar() { return simulation_cv; }
-
 		Measure* GetMeasure() { return m_Measure; }
 		void SetMeasure( MeasureUP m );
 
