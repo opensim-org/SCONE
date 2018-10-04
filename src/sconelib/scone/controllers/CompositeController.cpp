@@ -52,9 +52,13 @@ namespace scone
 
 	String CompositeController::GetClassSignature() const
 	{
-		std::set< String > strset;
-		for ( auto& m : controllers_ )
-			strset.insert( m->GetSignature() );
+		std::vector< String > strset;
+		for ( auto& c : controllers_ )
+		{
+			string s = c->GetSignature();
+			if ( xo::find( strset, s ) == strset.end() )
+				strset.emplace_back( s );
+		}
 		return xo::to_str( strset, "." );
 	}
 }

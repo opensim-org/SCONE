@@ -75,9 +75,13 @@ namespace scone
 
 	scone::String CompositeMeasure::GetClassSignature() const
 	{
-		std::set< String > strset;
+		std::vector< String > strset;
 		for ( auto& m : m_Measures )
-			strset.insert( m->GetSignature() );
+		{
+			string s = m->GetSignature();
+			if ( xo::find( strset, s ) == strset.end() )
+				strset.emplace_back( s );
+		}
 		return xo::to_str( strset, "" );
 	}
 }
