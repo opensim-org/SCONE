@@ -5,31 +5,39 @@ Optimizer {
 	
 	Objective {
 		type = SimulationObjective
+		signature_postfix = Pose
 		max_duration = 2
 		
+		// Model used in simulation
 		Model {
 			type = Simbody
 			model_file = data/f0914m.osim
-			
-			Controller {
-				type = FeedForwardController
-				symmetric = 1
-				Function {
-					type = PieceWiseConstant
-					control_points = 2
-					control_point_y = 0.3~0.01<0,1>
-					control_point_dt = 0.2~0.01<0,1>
-				}
+		}
+		
+		// Controller for the Model
+		Controller {
+			type = FeedForwardController
+			symmetric = 1
+			Function {
+				type = PieceWiseConstant
+				control_points = 2
+				control_point_y = 0.3~0.01<0,1>
+				control_point_dt = 0.2~0.01<0,1>
 			}
 		}
 		
+		// Fitness measure for Objective
 		Measure {
 			type = CompositeMeasure
+			
+			// measure COM jump height
 			Measure {
 				type = JumpMeasure
 				termination_height = 0.75
 				prepare_time = 0.2
 			}
+			
+			// penalize backwards pose
 			Measure {
 				type = DofMeasure
 				dof = pelvis_tilt
