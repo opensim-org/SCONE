@@ -94,8 +94,6 @@ set(CS_CONTROLLERS_REFLEX_FILES
 	scone/controllers/BodyPointReflex.h
 	scone/controllers/MuscleReflex.cpp
 	scone/controllers/MuscleReflex.h
-	scone/controllers/SimpleMuscleReflex.cpp
-	scone/controllers/SimpleMuscleReflex.h
 	scone/controllers/Reflex.cpp
 	scone/controllers/Reflex.h
 	scone/controllers/ReflexController.cpp

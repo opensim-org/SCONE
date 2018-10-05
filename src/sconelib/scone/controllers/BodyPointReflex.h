@@ -13,7 +13,8 @@
 
 namespace scone
 {
-	/// Reflex based on the value of a specific DOF.
+	/// Reflex based on the value of a specific point on a body.
+	/// Must be part of ReflexController.
 	class BodyPointReflex : public Reflex
 	{
 	public:

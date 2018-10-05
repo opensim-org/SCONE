@@ -15,6 +15,7 @@
 namespace scone
 {
 	/// Reflex based on muscle length, muscle velocity, muscle force, or muscle spindle sensor.
+	/// Must be part of ReflexController.
 	class  MuscleReflex : public Reflex
 	{
 	public:

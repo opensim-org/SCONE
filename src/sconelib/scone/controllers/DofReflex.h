@@ -14,6 +14,7 @@
 namespace scone
 {
 	/// Reflex based on the value of a specific DOF.
+	/// Must be part of ReflexController.
 	class DofReflex : public Reflex
 	{
 	public:

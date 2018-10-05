@@ -16,7 +16,8 @@
 
 namespace scone
 {
-	/// Controller based on reflexes -- see also Reflex and subclasses.
+	/// Controller based on reflexes.
+	/// See also Reflex and subclasses.
 	class ReflexController : public Controller
 	{
 	public:

@@ -17,8 +17,7 @@
 #include "scone/model/Location.h"
 
 #include "MuscleReflex.h"
-#include <tuple>
-#include "SimpleMuscleReflex.h"
+
 #include "xo/string/string_tools.h"
 
 using namespace xo;
