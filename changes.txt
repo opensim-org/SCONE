@@ -1,0 +1,18 @@
+====== What's new ======
+
+===== SCONE 0.16.0 ALPHA =====
+//Released October 5, 2018//
+
+=== New Features and Updates ===
+  * NoiseController for simulating Motor Noise
+  * BodyMeasure for measuring position, speed and velocity of a point on a body
+  * JumpMeasure now has offset on body for measuring height
+  * Controllers can now be defined outside Model
+  * Updated Examples
+
+=== Fixes ===
+  * Simulation errors are now properly reported
+  * .par filenames are now written correctly with extremely high / low fitness
+
+===== SCONE 0.15.0 and earlier =====
+//Changes to SCONE are officially published since version 0.16.0//
