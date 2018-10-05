@@ -30,6 +30,8 @@ namespace scone
 	SCONE_DECLARE_STRUCT_AND_PTR( MotorNeuron );
 	SCONE_DECLARE_STRUCT_AND_PTR( PatternNeuron );
 
+	/// Neural Network Controller.
+	/// Work in progress.
 	class NeuralController : public Controller
 	{
 	public:

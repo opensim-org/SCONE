@@ -25,7 +25,7 @@ namespace scone
 	bool NoiseController::ComputeControls( Model& model, double timestamp )
 	{
 		for ( auto& a : model.GetActuators() )
-			a->AddInput( rng_.norm( 0.0, proportional_noise * a->GetInput() + base_noise ) );
+			a->AddInput( rng_.norm( 0.0, base_noise + proportional_noise * abs( a->GetInput() ) ) );
 		return false;
 	}
 
