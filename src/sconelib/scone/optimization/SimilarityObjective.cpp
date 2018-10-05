@@ -19,14 +19,10 @@ namespace scone
 	ModelObjective( pn ),
 	result_( 0 )
 	{
+		auto model = InitializeModelObjective( pn );
+
 		INIT_PROP_REQUIRED( pn, file_ );
-
 		AddExternalResource( file_ );
-
-		// create model to flag unused model props and create par_info_
-		auto model = CreateModel( pn.get_child( "Model" ), info_ );
-		signature_ = model->GetSignature();
-		AddExternalResources( model->GetExternalResources() );
 
 		// load target model (TODO: this should be one function call?)
 		target_ = CreateModelObjective( file_ );
@@ -52,8 +48,8 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		auto& c1 = dynamic_cast<const NeuralController&>( *target_model_->GetControllers().front() );
-		auto& c2 = dynamic_cast<const NeuralController&>( *m.GetControllers().front() );
+		auto& c1 = dynamic_cast<const NeuralController&>( *target_model_->GetController() );
+		auto& c2 = dynamic_cast<const NeuralController&>( *m.GetController() );
 		result_ = c1.GetSimilarity( c2 );
 		return result_;
 	}

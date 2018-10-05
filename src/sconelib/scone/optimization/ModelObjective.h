@@ -20,8 +20,9 @@ namespace scone
 		ModelObjective( const PropNode& props );
 		virtual ~ModelObjective() {}
 
-		/// Model to be used for the simulation.
-		PropNode model;
+		PropNode model_props;
+		PropNode controller_props;
+		PropNode measure_props;
 
 		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 
@@ -36,6 +37,11 @@ namespace scone
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
 
 		virtual std::vector<path> WriteResults( const path& file_base ) override;
+
+	protected:
+		ModelUP InitializeModelObjective( const PropNode& props );
+		String signature_; // cached variable, because we need to create a model to get the signature
+		virtual String GetClassSignature() const override { return signature_; }
 	};
 
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& config_file );

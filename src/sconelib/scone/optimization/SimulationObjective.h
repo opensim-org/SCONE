@@ -30,23 +30,11 @@ namespace scone
 		/// Maximum duration after which the evaluation is terminated; default = 1e12 (+/-31000 years)
 		double max_duration;
 
-		/// Measure to be used for the Objective.
-		PropNode measure;
-
 		virtual fitness_t EvaluateModel( Model& m ) const override;
 		virtual TimeInSeconds GetDuration() const override { return max_duration; }
 
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
 		virtual fitness_t GetResult( Model& m ) const override { return m.GetMeasure()->GetWeightedResult( m ); }
 		virtual PropNode GetReport( Model& m ) const override { return m.GetMeasure()->GetReport(); }
-
-		virtual ModelUP CreateModelFromParams( Params& point ) const override;
-
-	protected:
-		virtual String GetClassSignature() const override;
-
-	private:
-		String signature_;
-		std::vector< path > external_files_;
 	};
 }

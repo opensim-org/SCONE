@@ -15,8 +15,7 @@
 namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props ) :
-	Objective( props ),
-	model( props.get_any_child( { "Model", "model" } ) )
+	Objective( props )
 	{
 	}
 
@@ -35,7 +34,15 @@ namespace scone
 
 	scone::ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
-		return CreateModel( model, par );
+		auto model = CreateModel( model_props, par );
+
+		if ( !controller_props.empty() ) // A controller was defined OUTSIDE the model prop_node
+			model->SetController( CreateController( controller_props, par, *model, Location( NoSide ) ) );
+
+		if ( !measure_props.empty() ) // A measure was defined OUTSIDE the model prop_node
+			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location( NoSide ) ) );
+
+		return model;
 	}
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
@@ -49,7 +56,43 @@ namespace scone
 		SCONE_THROW_NOT_IMPLEMENTED;
 	}
 
-	ModelObjectiveUP SCONE_API CreateModelObjective( const path& file )
+	ModelUP ModelObjective::InitializeModelObjective( const PropNode& props )
+	{
+		// create TEMPORARY model using the ORIGINAL prop_node to flag unused model props and create par_info_
+		ModelUP model;
+		if ( auto* mprops = props.try_get_child( "Model" ) )
+		{
+			model = CreateModel( *mprops, info_ );
+			model_props = *mprops;
+		}
+
+		SCONE_THROW_IF( !model, "No Model defined in ModelObjective" );
+
+		// create a TEMPORARY controller that's defined OUTSIDE the model prop_node
+		if ( auto* cprops = props.try_get_child( "Controller" ) )
+		{
+			model->SetController( CreateController( *cprops, info_, *model, Location( NoSide ) ) );
+			controller_props = *cprops;
+		}
+
+		// create a TEMPORARY measure that's defined OUTSIDE the model prop_node
+		if ( auto* mprops = props.try_get_child( "Measure" ) )
+		{
+			model->SetMeasure( CreateMeasure( *mprops, info_, *model, Location( NoSide ) ) );
+			measure_props = *mprops;
+		}
+
+		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined in ModelObjective" );
+
+		info_.set_minimize( model->GetMeasure()->GetMinimize() );
+		signature_ = model->GetSignature();
+
+		AddExternalResources( model->GetExternalResources() );
+
+		return model;
+	}
+
+	SCONE_API ModelObjectiveUP CreateModelObjective( const path& file )
 	{
 		bool is_par_file = file.extension() == "par";
 		auto dir = file.parent_path();

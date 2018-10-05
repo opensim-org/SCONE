@@ -24,6 +24,7 @@
 
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
+#include "../controllers/CompositeController.h"
 
 using std::endl;
 
@@ -36,7 +37,6 @@ namespace scone
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 	m_StoreData( false ),
 	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
-	thread_safe_simulation( false ),
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
@@ -70,13 +70,10 @@ namespace scone
 	String Model::GetClassSignature() const
 	{
 		auto sig = GetName();
-		for ( auto& c : GetControllers() )
-		{
-			auto controller_sig = c->GetSignature();
-			if ( !xo::str_ends_with( sig, "." ) && !xo::str_begins_with( controller_sig, "." ) )
-				sig += "."; // add dot if it isn't there
-			sig += c->GetSignature();
-		}
+		if ( GetController() )
+			sig += '.' + GetController()->GetSignature();
+		if ( GetMeasure() )
+			sig += '.' + GetMeasure()->GetSignature();
 		return sig;
 	}
 
@@ -94,36 +91,24 @@ namespace scone
 		//log::TraceF( "Updated Sensor Delays for Int=%03d time=%.6f prev_time=%.6f", GetIntegrationStep(), GetTime(), GetPreviousTime() );
 	}
 
-	void Model::SetMeasure( MeasureUP m )
-	{
-		SCONE_THROW_IF( m_Measure, "Only one measure allowed" );
-		m_Measure = m.get();
-		m_Controllers.push_back( std::move( m ) );
-	}
-
 	void Model::CreateControllers( const PropNode& pn, Params& par )
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		// add controller (new style)
+		// add controller (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
-			m_Controllers.push_back( CreateController( *cprops, par, *this, Location( NoSide ) ) );
+			SetController( CreateController( *cprops, par, *this, Location( NoSide ) ) );
 
-		// add measure (new style)
+		// add measure (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
 			SetMeasure( CreateMeasure( *cprops, par, *this, Location( NoSide ) ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
 		{
-			for ( auto it = cprops->begin(); it != cprops->end(); ++it )
-			{
-				if ( it->first == "Controller" )
-					m_Controllers.push_back( CreateController( it->second, par, *this, Location( NoSide ) ) );
-				else if ( it->first == "Measure" )
-					SetMeasure( CreateMeasure( it->second, par, *this, Location( NoSide ) ) );
-				else xo_error( "Unknown type " + it->first );
-			}
+			SetController( std::make_unique< CompositeController >( *cprops, par, *this, Location( NoSide ) ) );
+			if ( auto* mprops = cprops->try_get_child( "Measure" ) )
+				SetMeasure( CreateMeasure( *mprops, par, *this, Location( NoSide ) ) );
 		}
 	}
 
@@ -168,8 +153,8 @@ namespace scone
 		// store controller data
 		if ( flags( StoreDataTypes::ControllerData ) )
 		{
-			for ( auto& c : GetControllers() )
-				c->StoreData( frame, flags );
+			if ( GetController() ) GetController()->StoreData( frame, flags );
+			if ( GetMeasure() ) GetMeasure()->StoreData( frame, flags );
 		}
 
 		// store sensor data
@@ -224,10 +209,7 @@ namespace scone
 
 		// update all controllers
 		bool terminate = false;
-		for ( ControllerUP& con : GetControllers() )
-			terminate |= con->UpdateControls( *this, GetTime() ) == true;
-
-		//log::TraceF( "Controls updated for Int=%03d time=%.6f", GetIntegrationStep(), GetTime() );
+		terminate |= GetController()->UpdateControls( *this, GetTime() );
 
 		if ( terminate )
 			SetTerminationRequest();
@@ -238,8 +220,8 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		bool terminate = false;
-		for ( ControllerUP& con : GetControllers() )
-			terminate |= con->UpdateAnalysis( *this, GetTime() ) == true;
+		terminate |= GetController()->UpdateAnalysis( *this, GetTime() );
+		terminate |= GetMeasure()->UpdateAnalysis( *this, GetTime() );
 
 		if ( terminate )
 			SetTerminationRequest();

@@ -40,12 +40,8 @@ namespace scone
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
 
-	protected:
-		virtual String GetClassSignature() const override;
-
 	private:
 		Storage<> m_Storage;
-		String m_Signature;
 		std::vector< index_t > m_ExcitationChannels;
 		std::vector< index_t > m_SensorChannels;
 	};

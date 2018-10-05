@@ -249,20 +249,7 @@ namespace scone
 		// create and initialize controllers
 		CreateControllers( props, par );
 
-		{
-			SCONE_PROFILE_SCOPE( "InitMuscleDynamics" );
-			// Initialize muscle dynamics STEP 1
-			// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
-			InitializeOpenSimMuscleActivations( 0.05 );
-			UpdateSensorDelayAdapters();
-
-			// Initialize muscle dynamics STEP 2
-			// compute actual initial control values and re-equilibrate muscles
-			UpdateControlValues();
-			InitializeOpenSimMuscleActivations();
-		}
-
-		log::debug( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
+		log::info( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 	}
 
 	ModelSimbody::~ModelSimbody() {}
@@ -396,8 +383,10 @@ namespace scone
 		std::vector<path> files;
 		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
 		files.push_back( file + ".sto" );
-		for ( auto& c : GetControllers() )
-			xo::append( files, c->WriteResults( file ) );
+
+		if ( GetController() ) xo::append( files, GetController()->WriteResults( file ) );
+		if ( GetMeasure() ) xo::append( files, GetMeasure()->WriteResults( file ) );
+
 		return files;
 	}
 
@@ -825,5 +814,20 @@ namespace scone
 		}
 
 		m_pOsimModel->equilibrateMuscles( GetTkState() );
+	}
+
+	void ModelSimbody::SetController( ControllerUP c )
+	{
+		Model::SetController( std::move( c ) );
+
+		// Initialize muscle dynamics STEP 1
+		// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
+		InitializeOpenSimMuscleActivations( 0.05 );
+		UpdateSensorDelayAdapters();
+
+		// Initialize muscle dynamics STEP 2
+		// compute actual initial control values and re-equilibrate muscles
+		UpdateControlValues();
+		InitializeOpenSimMuscleActivations();
 	}
 }

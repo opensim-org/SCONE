@@ -23,9 +23,10 @@
 #include "scone/core/Storage.h"
 #include <array>
 #include <type_traits>
-#include <mutex>
-#include <condition_variable>
+
 #include "ContactGeometry.h"
+#include "scone/measures/Measure.h"
+#include "scone/controllers/Controller.h"
 
 namespace scone
 {
@@ -52,7 +53,7 @@ namespace scone
 		std::vector< DofUP >& GetDofs() { return m_Dofs; }
 		const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
-		/// Sensor access
+		/// Actuator access
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 
 		/// Contact geometries
@@ -62,9 +63,15 @@ namespace scone
 		const Link& FindLink( const String& body_name );
 		const Link& GetRootLink() const { return *m_RootLink; }
 
-		/// controller access
-		std::vector< ControllerUP >& GetControllers() { return m_Controllers; }
-		const std::vector< ControllerUP >& GetControllers() const { return m_Controllers; }
+		/// Controller access
+		Controller* GetController() { return m_Controller.get(); }
+		const Controller* GetController() const { return m_Controller.get(); }
+		virtual void SetController( ControllerUP c ) { SCONE_ASSERT( !m_Controller ); m_Controller = std::move( c ); }
+
+		/// Measure access
+		Measure* GetMeasure() { return m_Measure.get(); }
+		const Measure* GetMeasure() const { return m_Measure.get(); }
+		void SetMeasure( MeasureUP m ) { SCONE_ASSERT( !m_Measure ); m_Measure = std::move( m ); }
 
 		void UpdateControlValues();
 		void UpdateAnalyses();
@@ -154,9 +161,6 @@ namespace scone
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
-		Measure* GetMeasure() { return m_Measure; }
-		void SetMeasure( MeasureUP m );
-
 	protected:
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
@@ -172,10 +176,11 @@ namespace scone
 		std::vector< JointUP > m_Joints;
 		std::vector< DofUP > m_Dofs;
 		std::vector< LegUP > m_Legs;
-		std::vector< ControllerUP > m_Controllers;
 		std::vector< ContactGeometry > m_ContactGeometries;
 		bool m_ShouldTerminate;
-		Measure* m_Measure;
+
+		MeasureUP m_Measure;
+		ControllerUP m_Controller;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;
@@ -192,11 +197,6 @@ namespace scone
 		bool m_StoreData;
 		TimeInSeconds m_StoreDataInterval;
 		StoreDataFlags m_StoreDataFlags;
-
-		// thread safety stuff
-		bool thread_safe_simulation;
-		std::mutex simulation_mutex;
-		std::condition_variable simulation_cv;
 	};
 
 	inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }
