@@ -758,7 +758,8 @@ namespace scone
 		CopyStateToTk();
 		GetTkState().setTime( timestamp );
 		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-		UpdateControlValues();
+		if ( GetController() )
+			UpdateControlValues();
 	}
 
 	void ModelSimbody::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
@@ -767,7 +768,8 @@ namespace scone
 		CopyStateToTk();
 		GetTkState().setTime( timestamp );
 		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
-		UpdateControlValues();
+		if ( GetController() )
+			UpdateControlValues();
 
 		if ( GetStoreData() )
 			StoreCurrentFrame();
