@@ -30,6 +30,7 @@
 #include "ResultsFileSystemModel.h"
 #include "StudioModel.h"
 #include "simvis/plane.h"
+#include "simvis/prerequisites.h"
 
 using scone::TimeInSeconds;
 

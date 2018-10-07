@@ -102,10 +102,9 @@ scene_( true )
 	tabifyDockWidget( ui.messagesDock, adw );
 
 	// init scene
-	scene_.add_light( vis::vec3f( -20, 80, 40 ), vis::make_white( 1 ) );
-	//ground_plane = scene.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
+	//ground_plane = scene_.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
 	ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
-	ui.osgViewer->setClearColor( make_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
+	ui.osgViewer->setClearColor( to_osg( vis::make_from_hex( 0xa0a0a0 ) ) );
 }
 
 bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
@@ -310,6 +309,7 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 			auto d = com_delta( model->GetSimModel().GetComPos() );
 			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
+
 			if ( analysisView->isVisible() ) // TODO: not update so much when not playing (it's slow)
 				analysisView->refresh( current_time, !ui.playControl->isPlaying() );
 		}
