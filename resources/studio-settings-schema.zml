@@ -21,7 +21,6 @@ video {
 		type = folder
 		default = ""
 		label = "Path to ffmpeg.exe, required for generating videos"
-		label = "Path to ffmpeg.exe, required for generating videos"
 	}
 	frame_rate {
 		type = float
@@ -58,11 +57,26 @@ viewer {
 	force {
 		type = color
 		label = "Force color"
-		default { h = 60 s = 0.75 v = 1.0 }
+		default { h = 60 s = 0.9 v = 1.0 }
 	}
 	contact {
 		type = color
 		label = "Contact color"
-		default { h = 180 s = 0.75 v = 0.75 }
+		default { h = 180 s = 0.9 v = 0.75 }
+	}
+	muscle_0 {
+		type = color
+		label = "Muscle color at 0% activation"
+		default { h = 240 s = 0.9 v = 0.5 }
+	}
+	muscle_50 {
+		type = color
+		label = "Muscle color at 50% activation"
+		default { h = 0 s = 0.9 v = 0.75 }
+	}
+	muscle_100 {
+		type = color
+		label = "Muscle color at 100% activation"
+		default { h = 0 s = 0.5 v = 1.0 }
 	}
 }

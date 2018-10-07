@@ -22,6 +22,7 @@
 #include "scone/model/State.h"
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
+#include "simvis/color_gradient.h"
 
 namespace scone
 {
@@ -80,6 +81,8 @@ namespace scone
 		vis::material muscle_mat;
 		vis::material tendon_mat;
 
+
+		vis::color_gradient muscle_gradient;
 		bool is_evaluating;
 
 		vis::group root;

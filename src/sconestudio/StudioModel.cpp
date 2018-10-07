@@ -27,9 +27,10 @@ namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
 	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), 1, 15, 0, 0.5f ),
-	muscle_mat( vis::make_blue(), 0.5f, 15, 0, 0.5f ),
+	muscle_mat( GetStudioSetting< vis::color >( "viewer.muscle_0" ), 0.5f, 15, 0, 0.5f ),
 	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), 0.5f, 15, 0, 0.5f ),
 	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), 1.0, 15, 0, 0.5f ),
+	muscle_gradient( { { 0.0f, GetStudioSetting< vis::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< vis::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< vis::color >( "viewer.muscle_100" ) } } ),
 	is_evaluating( false )
 	{
 		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
@@ -232,8 +233,10 @@ namespace scone
 		auto i1 = insert_path_point( p, tlen );
 		auto i2 = insert_path_point( p, len - tlen );
 
-		vis.mat.diffuse( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
-		vis.mat.emissive( vis::color( a, 0, 0.5 - 0.5 * a, 1 ) );
+		vis::color c = muscle_gradient( float( a ) );
+
+		vis.mat.diffuse( c );
+		vis.mat.emissive( c );
 		vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
 		vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
 		vis.ten2.set_points( p.begin() + i2, p.end() );
