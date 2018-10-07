@@ -72,11 +72,11 @@ viewer {
 	muscle_50 {
 		type = color
 		label = "Muscle color at 50% activation"
-		default { h = 0 s = 0.9 v = 0.75 }
+		default { h = 0 s = 0.9 v = 0.7 }
 	}
 	muscle_100 {
 		type = color
 		label = "Muscle color at 100% activation"
-		default { h = 0 s = 0.5 v = 1.0 }
+		default { h = 0 s = 0.9 v = 1.0 }
 	}
 }
