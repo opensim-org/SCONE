@@ -3,6 +3,7 @@
 	<Model name="f0914m">
 		<!--Feed forward model with 9 DOF 14 Muscles, following [Geyer & Herr 2010]. Adapted by Thomas Geijtenbeek.
 
+		2018.10.08: Fixed ranges of gastroc conditional via points
 		2017.10.07: Updated contact parameters to 40k/300, based on [Gilchrist & Winter 2013]
 		2017.10.07: Updated knee limits to -5 deg and 2Nm/s / 0.2 Nm/s^2
 		2016.06.30: Updated contact parameters
@@ -1766,7 +1767,7 @@
 								<ConditionalPathPoint name="med_gas_r-P2">
 									<location> -0.03 -0.4022 -0.0258</location>
 									<body>femur_r</body>
-									<range> -0.785398 0.174533</range>
+									<range> -0.785398 1.5708</range>
 									<coordinate>knee_angle_r</coordinate>
 								</ConditionalPathPoint>
 								<PathPoint name="med_gas_r-P3">
@@ -2351,7 +2352,7 @@
 								<ConditionalPathPoint name="med_gas_l-P2">
 									<location> -0.03 -0.4022 0.0258</location>
 									<body>femur_l</body>
-									<range> -0.785398 0.174533</range>
+									<range> -0.785398 1.5708</range>
 									<coordinate>knee_angle_l</coordinate>
 								</ConditionalPathPoint>
 								<PathPoint name="med_gas_l-P3">
