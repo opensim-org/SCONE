@@ -76,11 +76,16 @@ namespace scone
 		std::vector< size_t > state_data_index;
 		scone::State model_state;
 
+		float specular_;
+		float shininess_;
+		float ambient_;
+		float emissive_;
+
 		vis::material bone_mat;
 		vis::material arrow_mat;
 		vis::material muscle_mat;
 		vis::material tendon_mat;
-
+		vis::material contact_mat;
 
 		vis::color_gradient muscle_gradient;
 		bool is_evaluating;

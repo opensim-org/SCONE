@@ -26,10 +26,15 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
-	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), 1, 15, 0, 0.5f ),
-	muscle_mat( GetStudioSetting< vis::color >( "viewer.muscle_0" ), 0.5f, 15, 0, 0.5f ),
-	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), 0.5f, 15, 0, 0.5f ),
-	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), 1.0, 15, 0, 0.5f ),
+	specular_( GetStudioSetting < float > ( "viewer.specular" ) ),
+	shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
+	ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
+	emissive_( GetStudioSetting< float >( "viewer.emissive" ) ),
+	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
+	muscle_mat( GetStudioSetting< vis::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
+	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
+	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
+	contact_mat( GetStudioSetting< vis::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
 	muscle_gradient( { { 0.0f, GetStudioSetting< vis::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< vis::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< vis::color >( "viewer.muscle_100" ) } } ),
 	is_evaluating( false )
 	{
@@ -136,6 +141,7 @@ namespace scone
 			auto idx = FindIndexByName( model->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
 			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ) );
+			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
 
@@ -143,12 +149,12 @@ namespace scone
 		{
 			// add path
 			MuscleVis mv;
-			mv.ten1 = root.add< vis::trail >( 1, 0.005f, vis::make_yellow(), 0.3f );
-			mv.ten2 = root.add< vis::trail >( 1, 0.005f, vis::make_yellow(), 0.3f );
+			mv.ten1 = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.tendon_width" ), vis::make_yellow(), 0.3f );
+			mv.ten2 = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.tendon_width" ), vis::make_yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
 
-			mv.ce = root.add< vis::trail >( 1, 0.0075f, vis::make_red(), 0.5f );
+			mv.ce = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.muscle_width" ), vis::make_red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			muscles.push_back( mv );
