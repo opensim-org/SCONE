@@ -24,11 +24,6 @@ namespace scone
 		virtual ~DofMeasure() {}
 		virtual double ComputeResult( Model& model ) override;
 
-	protected:
-		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual String GetClassSignature() const override;
-		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
-
 		/// Dof to which to apply the penalty to.
 		Dof& dof;
 
@@ -43,6 +38,11 @@ namespace scone
 
 		/// Penalty for when the DOF limit force [N] is out of range.
 		RangePenalty< double > force;
+
+	protected:
+		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
+		virtual String GetClassSignature() const override;
+		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		int range_count;
