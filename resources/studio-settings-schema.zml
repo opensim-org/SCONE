@@ -2,7 +2,7 @@ analysis {
 	line_width {
 		type = float
 		default = 1.5
-		description = "Line with of analysis graphs"
+		label = "Line with of analysis graphs"
 		range = [ 1 10 ]
 	}
 }
@@ -11,7 +11,7 @@ progress {
 	line_width {
 		type = float
 		default = 1.5
-		description = "Line with of progress graphs"
+		label = "Line with of progress graphs"
 		range = [ 1 10 ]
 	}
 }
@@ -29,20 +29,20 @@ video {
 }
 
 viewer {
-	background { type = color label = "Background color" default = 0xa0a0a0 }
-	tile1 { type = color label = "Viewer Tile A" default { h = 215 s = 0 v = 0.52 } }
-	tile2 { type = color label = "Viewer Tile B" default { h = 215 s = 0 v = 0.48 } }
-	bone { type = color label = "Bone color" default { h = 35 s = 0.25 v = 1 } }
-	tendon { type = color label = "Tendon color" default { h = 35 s = 0.02 v = 1 } }
-	force { type = color label = "Force color" default { h = 60 s = 0.9 v = 1.0 } }
-	contact { type = color label = "Contact color" default { h = 180 s = 0.9 v = 0.75 } }
-	muscle_0 { type = color label = "Muscle color at 0% activation" default { h = 240 s = 0.9 v = 0.5 } }
-	muscle_50 { type = color label = "Muscle color at 50% activation" default { h = 0 s = 0.9 v = 0.6 } }
+	background { type = color label = "Background color" default = 0xc0c0c0 }
+	tile1 { type = color label = "Viewer Tile A" default = 0xc4c4c4 }
+	tile2 { type = color label = "Viewer Tile B" default = 0xbcbcbc }
+	bone { type = color label = "Bone color" default { h = 40 s = 0.2 v = 0.8 } }
+	tendon { type = color label = "Tendon color" default { h = 40 s = 0.02 v = 0.8 } }
+	force { type = color label = "Force color" default { h = 60 s = 0.8 v = 0.8 } }
+	contact { type = color label = "Contact color" default { h = 180 s = 0.5 v = 0.5 } }
+	muscle_0 { type = color label = "Muscle color at 0% activation" default { h = 240 s = 0.7 v = 0.5 } }
+	muscle_50 { type = color label = "Muscle color at 50% activation" default { h = 0 s = 0.8 v = 0.6 } }
 	muscle_100 { type = color label = "Muscle color at 100% activation" default { h = 0 s = 0.9 v = 1.0 } }
 	specular { type = float label = "Model specular" default = 1 }
-	shininess { type = float label = "Model shininess" default = 15 }
-	ambient { type = float label = "Model ambient" default = 1 }
-	emissive { type = float label = "Model emissive" default = 0 }
+	shininess { type = float label = "Model shininess" default = 30 }
+	ambient { type = float label = "Model ambient" default = 0 }
+	emissive { type = float label = "Model emissive" default = 0.7 }
 	muscle_width { type = float label = "Muscle width" default = 0.01 }
 	tendon_width { type = float label = "Tendon width" default = 0.00666 }
 }

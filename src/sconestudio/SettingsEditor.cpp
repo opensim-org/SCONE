@@ -21,6 +21,7 @@
 #include "xo/system/type_class.h"
 #include "xo/container/flat_map.h"
 #include "StudioSettings.h"
+#include "QSettingsItemModel.h"
 
 namespace scone
 {
@@ -60,9 +61,10 @@ namespace scone
 
 		// studio settings
 		auto studio_pn = studiocfg.data();
-		auto* studioModel = new QPropNodeItemModel( studio_pn );
+		auto* studioModel = new QSettingsItemModel( studiocfg );
 		ui.studioTree->setModel( studioModel );
 		ui.studioTree->expandAll();
+		ui.studioTree->header()->resizeSections( QHeaderView::Stretch );
 
 		int ret = dialog_window.exec();
 		if ( ret == QDialog::Accepted )

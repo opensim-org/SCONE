@@ -121,7 +121,6 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par" );
 	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
 
-
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
