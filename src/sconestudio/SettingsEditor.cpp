@@ -67,8 +67,8 @@ namespace scone
 		int ret = dialog_window.exec();
 		if ( ret == QDialog::Accepted )
 		{
-			sconecfg.set_data( scone_pn );
-			studiocfg.set_data( studio_pn );
+			sconecfg.set( scone_pn );
+			studiocfg.set( studio_pn );
 
 			// update settings
 			sconecfg.set( "folders.scenarios", ui.scenariosFolder->text().toStdString() );
