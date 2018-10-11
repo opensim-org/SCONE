@@ -92,6 +92,7 @@
     </property>
     <addaction name="actionShow_External_Forces"/>
     <addaction name="actionShow_Muscles"/>
+    <addaction name="actionShow_Tendons"/>
     <addaction name="actionShow_Bone_Geometry"/>
     <addaction name="actionShow_Contact_Geometry"/>
     <addaction name="actionShow_Body_Axes"/>
@@ -565,6 +566,17 @@
     <string>Ctrl+T</string>
    </property>
   </action>
+  <action name="actionShow_Tendons">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Tendons</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="4" margin="4"/>
  <customwidgets>
@@ -920,6 +932,22 @@
    <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>runScenario()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>538</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Tendons</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

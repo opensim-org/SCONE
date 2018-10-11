@@ -39,12 +39,12 @@ namespace scone
 	is_evaluating( false )
 	{
 		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
-		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowGeometry ).set( EnableShadows );
-
-		log::info( "Opening ", file );
+		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowTendons ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
+		log::info( "Created objective ", model_objective->GetSignature(), " from ", file );
+
 		SearchPoint par( model_objective->info() );
 		if ( file.extension() == "par" )
 		{
@@ -236,16 +236,22 @@ namespace scone
 		auto a = mus.GetActivation();
 		auto p = mus.GetMusclePath();
 
-		auto i1 = insert_path_point( p, tlen );
-		auto i2 = insert_path_point( p, len - tlen );
-
 		vis::color c = muscle_gradient( float( a ) );
-
 		vis.mat.diffuse( c );
 		vis.mat.emissive( c );
-		vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
-		vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
-		vis.ten2.set_points( p.begin() + i2, p.end() );
+
+		if ( view_flags.get<ShowTendons>() )
+		{
+			auto i1 = insert_path_point( p, tlen );
+			auto i2 = insert_path_point( p, len - tlen );
+			vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
+			vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
+			vis.ten2.set_points( p.begin() + i2, p.end() );
+		}
+		else
+		{
+			vis.ce.set_points( p.begin(), p.end() );
+		}
 	}
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
@@ -290,10 +296,26 @@ namespace scone
 	void StudioModel::ApplyViewSettings( const ViewFlags& flags )
 	{
 		view_flags = flags;
-		for ( auto& f : forces ) f.show( view_flags.get< ShowForces >() );
-		for ( auto& m : muscles ) m.ce.show( view_flags.get< ShowMuscles >() );
-		for ( auto& e : body_meshes ) e.show( view_flags.get< ShowGeometry >() ); // for ( auto m : e ) m.show( view_flags.get< ShowGeometry >() );
-		for ( auto& e : body_axes ) e.show( view_flags.get< ShowAxes >() );
-		for ( auto& e : contact_geoms ) e.show( view_flags.get< ShowContactGeom >() );
+		for ( auto& f : forces )
+			f.show( view_flags.get< ShowForces >() );
+
+		for ( auto& m : muscles )
+		{
+			m.ce.show( view_flags.get< ShowMuscles >() );
+			m.ten1.show( view_flags.get< ShowMuscles >() && view_flags.get< ShowTendons >() );
+			m.ten2.show( view_flags.get< ShowMuscles >() && view_flags.get< ShowTendons >() );
+		}
+
+		for ( auto& e : body_meshes )
+			e.show( view_flags.get< ShowGeometry >() );
+
+		for ( auto& e : body_axes )
+			e.show( view_flags.get< ShowAxes >() );
+
+		for ( auto& e : contact_geoms )
+			e.show( view_flags.get< ShowContactGeom >() );
+
+		if ( model )
+			UpdateVis( model->GetTime() );
 	}
 }

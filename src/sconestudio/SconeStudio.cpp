@@ -102,7 +102,7 @@ scene_( true )
 	tabifyDockWidget( ui.messagesDock, adw );
 
 	// init scene
-	ground_plane = scene_.add< vis::plane >( 64, 64, 1, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
+	ground_plane = scene_.add< vis::plane >( 128, 128, 0.5f, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
 	ui.osgViewer->setClearColor( to_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
 
 	//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
@@ -600,6 +600,7 @@ void SconeStudio::updateViewSettings()
 		StudioModel::ViewFlags f;
 		f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
 		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
+		f.set( StudioModel::ShowTendons, ui.actionShow_Tendons->isChecked() );
 		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
 		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
 		f.set( StudioModel::ShowContactGeom, ui.actionShow_Contact_Geometry->isChecked() );
