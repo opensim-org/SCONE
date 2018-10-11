@@ -64,7 +64,6 @@ namespace scone
 	scone::Real DofSimbody::GetMoment() const
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
-		// m_osCoord.getMobilizerQIndex()
 	}
 
 	void DofSimbody::SetPos( Real pos, bool enforce_constraints )

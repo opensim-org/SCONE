@@ -75,6 +75,8 @@ namespace scone
 				model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
 			if ( GetSconeSettings().get< bool >( "data.body" ) )
 				model->GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation } );
+			if ( GetSconeSettings().get< bool >( "data.joint" ) )
+				model->GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce } );
 			if ( GetSconeSettings().get< bool >( "data.sensor" ) )
 				model->GetStoreDataFlags().set( { StoreDataTypes::SensorData } );
 			if ( GetSconeSettings().get< bool >( "data.controller" ) )

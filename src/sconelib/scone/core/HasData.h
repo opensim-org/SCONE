@@ -20,7 +20,7 @@ namespace scone
 		MuscleExcitation,
 		MuscleFiberProperties,
 		JointReactionForce,
-		JointMoment,
+		DofMoment,
 		BodyOriginPosition,
 		BodyComPosition,
 		BodyOrientation,

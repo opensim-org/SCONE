@@ -36,7 +36,7 @@ namespace scone
 	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 	m_StoreData( false ),
-	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
+	m_StoreDataFlags( { StoreDataTypes::State, /*StoreDataTypes::DofMoment,*/ StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
@@ -144,7 +144,7 @@ namespace scone
 		}
 
 		// store dof data
-		if ( flags( StoreDataTypes::JointMoment ) )
+		if ( flags( StoreDataTypes::DofMoment ) )
 		{
 			for ( auto& d : GetDofs() )
 				frame[ d->GetName() + ".moment" ] = d->GetMoment();

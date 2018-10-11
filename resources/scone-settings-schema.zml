@@ -32,6 +32,12 @@ data {
 		default = 1
 		description = "Boolean indicating whether to output body position and orientation data (0 or 1)"
 	}
+	joint {
+		type = bool
+		label = "Output joint data"
+		default = 1
+		description = "Boolean indicating whether to output joint reaction force"
+	}
 	muscle {
 		type = bool
 		label = "Output muscle data"
