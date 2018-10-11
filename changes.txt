@@ -1,5 +1,17 @@
 ====== What's new ======
 
+===== SCONE 0.17.0 ALPHA =====
+//Released October 11, 2018//
+
+=== New Features and Updates ===
+  * Many visualization improvements
+  * New, more robust system for storing settings
+  * Example gait model updates (fixed gastroc length issue) 
+  * Documentation updates
+
+=== Fixes ===
+  * Several minor stability improvements
+
 ===== SCONE 0.16.0 ALPHA =====
 //Released October 5, 2018//
 
