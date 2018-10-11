@@ -8,25 +8,17 @@
 
 #include "system_tools.h"
 
-#include "Settings.h"
-
-#include "scone/core/version.h"
-
-#include <fstream>
-
 #include "xo/system/system_tools.h"
 #include "xo/filesystem/path.h"
-#include "Log.h"
-
-#ifdef _MSC_VER
-#include <shlobj.h>
-#endif
 #include "xo/container/prop_node_tools.h"
-#include "string"
 #include "xo/utility/types.h"
 #include "xo/filesystem/filesystem.h"
-#include <mutex>
+
+#include "Settings.h"
+#include "Log.h"
 #include "Exception.h"
+
+#include <mutex>
 
 namespace scone
 {

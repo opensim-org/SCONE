@@ -10,6 +10,8 @@
 #include "system_tools.h"
 #include "xo/filesystem/filesystem.h"
 #include "Log.h"
+#include "version.h"
+#include "xo/serialization/serialize.h"
 
 namespace scone
 {
@@ -17,7 +19,9 @@ namespace scone
 	{
 		static auto settings = xo::settings(
 			load_file( GetInstallFolder() / "resources/scone-settings-schema.zml" ),
-			GetSettingsFolder() / "scone-settings.zml" );
+			GetSettingsFolder() / "scone-settings.zml",
+			GetSconeVersion()
+			);
 
 		// set default paths if they don't exist
 		if ( settings.get< path >( "folders.scenarios" ).empty() )

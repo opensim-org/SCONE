@@ -1,4 +1,5 @@
 analysis {
+	label = "Analysis settings"
 	line_width {
 		type = float
 		default = 1.5
@@ -8,6 +9,7 @@ analysis {
 }
 
 progress {
+	label = "Optimization progress settings"
 	line_width {
 		type = float
 		default = 1.5
@@ -17,18 +19,21 @@ progress {
 }
 
 video {
+	label = "Video settings"
 	path_to_ffmpeg {
 		type = folder
 		default = ""
-		label = "Path to ffmpeg.exe, required for generating videos"
+		label = "Location of ffmpeg.exe (required for videos)"
 	}
 	frame_rate {
 		type = float
+		label = "Video output frame rate"
 		default = 30
 	}
 }
 
 viewer {
+	label = "3D Viewer settings"
 	background { type = color label = "Background color" default = 0xc0c0c0 }
 	tile1 { type = color label = "Viewer Tile A" default = 0xc4c4c4 }
 	tile2 { type = color label = "Viewer Tile B" default = 0xbcbcbc }
