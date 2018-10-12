@@ -1,5 +1,12 @@
 ====== What's new ======
 
+===== SCONE 0.17.1 ALPHA =====
+//Released October 12, 2018//
+
+=== Fixes ===
+  * Fixed issue where settings could not be loaded the first time
+  * Fixed error in the Gait GH2010 example
+
 ===== SCONE 0.17.0 ALPHA =====
 //Released October 11, 2018//
 
