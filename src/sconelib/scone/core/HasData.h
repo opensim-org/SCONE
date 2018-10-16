@@ -32,6 +32,7 @@ namespace scone
 
 	using StoreDataFlags = xo::flag_set< StoreDataTypes >;
 
+	/// Objects derived from this class can store data for analysis
 	class SCONE_API HasData
 	{
 	public:
