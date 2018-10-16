@@ -28,15 +28,18 @@ namespace scone
 
 		/// Target position [rad or m] for sensor DOF; default = 0.
 		Real P0; 
+		/// Position feedback gain; default = 0.
+		Real KP;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_P;
+
 
 		/// Target velocity [rad or m] for sensor DOF; default = 0.
 		Real V0; 
-
-		/// Position feedback gain; default = 0.
-		Real KP; 
-
 		/// Velocity feedback gain; default = 0.
 		Real KV;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_V;
 
 		/// Constant actuation added to the reflex; default = 0.
 		Real C0;

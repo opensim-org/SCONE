@@ -29,9 +29,13 @@ namespace scone
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PAR_NAMED( props, par, P0, "P0", 0.0 );
-		INIT_PAR_NAMED( props, par, V0, "V0", 0.0 );
 		INIT_PAR_NAMED( props, par, KP, "KP", 0.0 );
+		INIT_PROP( props, allow_neg_P, true );
+
+		INIT_PAR_NAMED( props, par, V0, "V0", 0.0 );
 		INIT_PAR_NAMED( props, par, KV, "KV", 0.0 );
+		INIT_PROP( props, allow_neg_V, true );
+
 		INIT_PAR_NAMED( props, par, C0, "C0", 0.0 );
 		INIT_PROP( props, condition, 0 );
 		INIT_PROP( props, filter_cutoff_frequency, 0.0 );
@@ -44,8 +48,7 @@ namespace scone
 	}
 
 	DofReflex::~DofReflex()
-	{
-	}
+	{}
 
 	void DofReflex::ComputeControls( double timestamp )
 	{
@@ -55,7 +58,7 @@ namespace scone
 		if ( filter_cutoff_frequency != 0.0 )
 		{
 			pos = m_Filter( pos );
-			vel = m_Filter.velocity() * 1000;
+			vel = m_Filter.velocity();
 		}
 
 		auto delta_pos = P0 - pos;
@@ -64,7 +67,13 @@ namespace scone
 		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || condition == 1 && delta_pos > 0 && delta_vel > 0 )
 		{
 			u_p = KP * delta_pos;
+			if ( !allow_neg_P && u_p < 0.0 )
+				u_p = 0.0;
+
 			u_v = KV * delta_vel;
+			if ( !allow_neg_V && u_v < 0.0 )
+				u_v = 0.0;
+
 			AddTargetControlValue( C0 + u_p + u_v );
 		}
 		else u_p = u_v = 0.0;
