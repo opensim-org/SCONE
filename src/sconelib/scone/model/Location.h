@@ -19,9 +19,9 @@ namespace scone
 		Location( Side s = NoSide, bool sym = false ) : side( s ), symmetric( s ) {}
 
 		Side side;
-		bool symmetric; // TODO: implement everywhere!
+		bool symmetric;
 
-		String GetSidedName( const String& name ) const { return GetNameNoSide( name ) + GetSideName( side ); }
+		String GetSidedName( const String& name ) const { return scone::GetSidedName( name, side ); }
 		String GetParName( const String& name ) const { return symmetric ? GetNameNoSide( name ) : GetSidedName( name ); }
 		Side GetSide() const { return side; }
 		Location GetOpposite() const { return Location( GetOppositeSide( side ), symmetric ); }
@@ -30,11 +30,19 @@ namespace scone
 	// Find component by name & location
 	template< typename T > T& FindByLocation( std::vector< T >& cont, const String& name, const Location& loc )
 	{
-		if ( auto name_side = GetSideFromName( name ); name_side == NoSide ) {
+		auto side = GetSideFromName( name );
+		if ( side == NoSide ) {
+			// name has no side, try object without side, then object with location side
 			if ( auto it = TryFindByName( cont, name ); it != cont.end() )
-				return *it; // object has name without side
-			else return FindByName( cont, loc.GetSidedName( name ) ); // must have sided name
+				return *it;
+			else return FindByName( cont, loc.GetSidedName( name ) );
 		}
-		else return FindByName( cont, name ); // name already has a side
+		else
+		{
+			// name has side, if location also has side, then mirror in case of LeftSide
+			if ( loc.side == LeftSide )
+				return FindByName( cont, GetSidedName( name, GetOppositeSide( side ) ) );
+			else return FindByName( cont, name ); // use sided name
+		}
 	}
 }

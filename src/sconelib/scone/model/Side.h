@@ -26,15 +26,24 @@ namespace scone
 		RightSide = 1
 	};
 
-	inline Side GetOppositeSide( Side s ) { return static_cast< Side >( -s ); }
+	inline Side GetOppositeSide( Side s ) {
+		switch ( s )
+		{
+		case LeftSide: return RightSide;
+		case NoSide: return NoSide;
+		case RightSide: return LeftSide;
+		default: SCONE_THROW( "Cannot determine opposite side" );
+		}
+	}
 
 	inline Side GetSideFromName( const String& str )
 	{
 		if ( str.length() >= 2 )
 		{
-			String substr = str.substr( str.size() - 2 );
-			if ( substr == "_r" || substr == "_R" ) return RightSide;
-			else if ( substr == "_l" || substr == "_L" ) return LeftSide;
+			String substr = xo::to_lower( str.substr( str.size() - 2 ) );
+			if ( substr == "_r" ) return RightSide;
+			else if ( substr == "_l" ) return LeftSide;
+			//else if ( substr == "_o" ) return OtherSide;
 		}
 
 		return NoSide;

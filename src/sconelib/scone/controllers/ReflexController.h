@@ -26,8 +26,11 @@ namespace scone
 		ReflexController operator=( const ReflexController& other ) = delete;
 		virtual ~ReflexController();
 
-		/// Indicate if reflexes should be the same for left and right; default = true.
+		/// Indicate if reflexes parameters should be the same for left and right; default = 1.
 		bool symmetric;
+
+		/// Indicate if reflexes should be generated for both sides; default = 1.
+		bool dual_sided;
 
 		/// Child node containing all reflexes.
 		const PropNode& Reflexes;

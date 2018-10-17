@@ -29,10 +29,11 @@ namespace scone
 	Reflexes( props.has_key( "Reflexes" ) ? props.get_child( "Reflexes" ) : props )
 	{
 		INIT_PROP( props, symmetric, loc.symmetric );
+		INIT_PROP( props, dual_sided, true );
 
 		for ( const auto& item : Reflexes.select( "Reflex" ) )
 		{
-			if ( loc.side == NoSide )
+			if ( dual_sided )
 			{
 				// create reflexes for both sides
 				for ( auto side : { LeftSide, RightSide } )
