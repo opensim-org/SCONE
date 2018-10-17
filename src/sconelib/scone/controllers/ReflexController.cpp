@@ -29,7 +29,7 @@ namespace scone
 	Reflexes( props.has_key( "Reflexes" ) ? props.get_child( "Reflexes" ) : props )
 	{
 		INIT_PROP( props, symmetric, loc.symmetric );
-		INIT_PROP( props, dual_sided, true );
+		INIT_PROP( props, dual_sided, loc.side == NoSide );
 
 		for ( const auto& item : Reflexes.select( "Reflex" ) )
 		{
