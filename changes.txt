@@ -1,5 +1,18 @@
 ====== What's new ======
 
+===== SCONE 0.18.0 ALPHA =====
+//Released October 17, 2018//
+
+=== New Features and Updates ===
+  * MuscleReflex can now act with activation as source (using KA, A0 and allow_neg_A)
+  * Reflexes can now use contralateral sources, using `_o` postfix.
+  * Added initial_load and initial_load_dof to allow control over the initial position of the model
+  
+=== Fixes ===
+  * Sided reflex data in analysis output is now displayed correctly
+  * Invalid initial_load settings now produce a warning instead of an error
+  * Documentation fixes
+  
 ===== SCONE 0.17.1 ALPHA =====
 //Released October 12, 2018//
 
