@@ -75,7 +75,6 @@ namespace scone
 		path state_init_file;
 		String probe_class;
 		double pre_control_simulation_time;
-		double initial_leg_load;
 
 		INIT_PROP( props, integration_accuracy, 0.001 );
 		INIT_PROP( props, integration_method, String( "SemiExplicitEuler2" ) );
@@ -87,7 +86,8 @@ namespace scone
 		INIT_PROP( props, state_init_file, path() );
 		INIT_PROP( props, probe_class, String() );
 		INIT_PROP( props, pre_control_simulation_time, 0.0 );
-		INIT_PROP( props, initial_leg_load, 0.2 );
+		INIT_PROP( props, initial_load, 0.2 );
+		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 
 		INIT_PROP( props, create_body_forces, false );
 
@@ -228,9 +228,12 @@ namespace scone
 			}
 
 			// apply and fix state
-			CopyStateToTk();
-			FixTkState( initial_leg_load * GetBW() );
-			CopyStateFromTk();
+			if ( !initial_load_dof.empty() && initial_load > 0 )
+			{
+				CopyStateToTk();
+				FixTkState( initial_load * GetBW() );
+				CopyStateFromTk();
+			}
 		}
 
 		// Realize acceleration because controllers may need it and in this way the results are consistent
@@ -675,15 +678,20 @@ namespace scone
 
 	void ModelSimbody::FixTkState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
 	{
-		const String state_name = "pelvis_ty";
 		const Real step_size = 0.1;
 
+		if ( GetState().GetIndex( initial_load_dof ) == NoIndex )
+		{
+			log::warning( "Ignoring initial load setting, could not find ", initial_load_dof );
+			return;
+		}
+
 		// find top
-		double top = GetOsimModel().getStateVariable( GetTkState(), state_name );
+		double top = GetOsimModel().getStateVariable( GetTkState(), initial_load_dof );
 		while ( abs( GetTotalContactForce() ) > force_threshold )
 		{
 			top += step_size;
-			GetOsimModel().setStateVariable( GetTkState(), state_name, top );
+			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, top );
 		}
 
 		// find bottom
@@ -691,7 +699,7 @@ namespace scone
 		do
 		{
 			bottom -= step_size;
-			GetOsimModel().setStateVariable( GetTkState(), state_name, bottom );
+			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, bottom );
 		}
 		while ( abs( GetTotalContactForce() ) <= force_threshold );
 
@@ -701,7 +709,7 @@ namespace scone
 		for ( int i = 0; i < 100; ++i )
 		{
 			new_ty = ( top + bottom ) / 2;
-			GetOsimModel().setStateVariable( GetTkState(), state_name, new_ty );
+			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, new_ty );
 			force = abs( GetTotalContactForce() );
 
 			// check if it's good enough

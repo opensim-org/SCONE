@@ -70,7 +70,13 @@ namespace scone
 		/// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
 
-		/// Boolean that must be set before external forces can be added to the model; default = 0.
+		/// Initial load [BW] at which to place the model initially; default = 0.2;
+		Real initial_load;
+
+		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = pelvis_ty.
+		String initial_load_dof;
+
+		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
 		bool create_body_forces;
 
 		virtual Vec3 GetComPos() const override;
