@@ -12,8 +12,8 @@
 #include <fstream>
 
 #define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 17
-#define SCONE_VERSION_PATCH 1
+#define SCONE_VERSION_MINOR 18
+#define SCONE_VERSION_PATCH 0
 #define SCONE_VERSION_POSTFIX "ALPHA"
 
 namespace scone
