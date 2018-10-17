@@ -12,7 +12,6 @@
 
 namespace scone
 {
-	
 	DofMeasure::DofMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Measure( props, par, model, loc ),
 	dof( *FindByLocation( model.GetDofs(), props.get< String >( "dof" ), loc ) ),

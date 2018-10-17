@@ -23,7 +23,8 @@ namespace scone
 	enum Side {
 		LeftSide = -1,
 		NoSide = 0,
-		RightSide = 1
+		RightSide = 1,
+		OppositeSide = 999
 	};
 
 	inline Side GetOppositeSide( Side s ) {
@@ -43,6 +44,7 @@ namespace scone
 			String substr = xo::to_lower( str.substr( str.size() - 2 ) );
 			if ( substr == "_r" ) return RightSide;
 			else if ( substr == "_l" ) return LeftSide;
+			else if ( substr == "_o" ) return OppositeSide;
 		}
 
 		return NoSide;
@@ -59,6 +61,7 @@ namespace scone
 	{
 		if ( side == LeftSide ) return "_l";
 		else if ( side == RightSide ) return "_r";
+		else if ( side == OppositeSide ) return "_o";
 		else return "";
 	}
 
@@ -66,6 +69,7 @@ namespace scone
 	{
 		if ( side == LeftSide ) return "Left";
 		else if ( side == RightSide ) return "Right";
+		else if ( side == OppositeSide ) return "Opposite";
 		else return "NoSide";
 	}
 

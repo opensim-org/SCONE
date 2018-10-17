@@ -35,14 +35,9 @@ namespace scone
 			// name has no side, try object without side, then object with location side
 			if ( auto it = TryFindByName( cont, name ); it != cont.end() )
 				return *it;
-			else return FindByName( cont, loc.GetSidedName( name ) );
 		}
-		else
-		{
-			// name has side, if location also has side, then mirror in case of LeftSide
-			if ( loc.side == LeftSide )
-				return FindByName( cont, GetSidedName( name, GetOppositeSide( side ) ) );
-			else return FindByName( cont, name ); // use sided name
-		}
+
+		// let location determine name
+		return FindByName( cont, loc.GetSidedName( name ) );
 	}
 }

@@ -28,7 +28,7 @@ namespace scone
 		virtual void ComputeControls( double timestamp ) override;
 
 		/// Name of the source muscle (without side), leave empty for monosynaptic reflexes (default).
-		String source;
+		Muscle& source;
 
 		/// Constant actuation added to reflex output; default = 0.
 		Real C0;

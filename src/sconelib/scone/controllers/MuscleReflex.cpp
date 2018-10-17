@@ -20,11 +20,11 @@ namespace scone
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr ),
-	m_pActivationSensor( nullptr )
+	m_pActivationSensor( nullptr ),
+	source( *FindByLocation( model.GetMuscles(), props.get<string>( "source", target ), loc ) )
 	{
-		INIT_PROP( props, source, target );
-
-		Muscle& src_mus = *FindByLocation( model.GetMuscles(), source, loc );
+		//INIT_PROP( props, source, target );
+		//Muscle& src_mus = *FindByLocation( model.GetMuscles(), source, loc );
 
 		// init names
 		String par_name = GetParName( props );
@@ -54,19 +54,19 @@ namespace scone
 
 		// create delayed sensors
 		if ( KF != 0.0 )
-			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( src_mus );
+			m_pForceSensor = &model.AcquireDelayedSensor< MuscleForceSensor >( source );
 
 		if ( KL != 0.0 )
-			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( src_mus );
+			m_pLengthSensor = &model.AcquireDelayedSensor< MuscleLengthSensor >( source );
 
 		if ( KV != 0.0 )
-			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( src_mus );
+			m_pVelocitySensor = &model.AcquireDelayedSensor< MuscleVelocitySensor >( source );
 
 		if ( KS!= 0.0 )
-			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( src_mus );
+			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( source );
 
 		if ( KA != 0.0 )
-			m_pActivationSensor = &model.AcquireDelayedSensor< MuscleActivationSensor >( src_mus );
+			m_pActivationSensor = &model.AcquireDelayedSensor< MuscleActivationSensor >( source );
 
 		//log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}
@@ -99,7 +99,8 @@ namespace scone
 
 	void MuscleReflex::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		auto name = GetReflexName( target, source );
+		auto name = GetReflexName( actuator_.GetName(), source.GetName() );
+
 		if ( m_pLengthSensor )
 			frame[ name + ".RL" ] = u_l;
 		if ( m_pVelocitySensor )
@@ -110,6 +111,6 @@ namespace scone
 			frame[ name + ".RS" ] = u_s;
 		if ( m_pActivationSensor )
 			frame[ name + ".RA" ] = u_a;
-		frame[ name + ".R" ] = u_total;
+		//frame[ name + ".R" ] = u_total;
 	}
 }
