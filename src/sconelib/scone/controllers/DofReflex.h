@@ -23,7 +23,7 @@ namespace scone
 
 		virtual void ComputeControls( double timestamp );
 
-		/// Name of the DOF that is the source of this Reflex.
+		/// Name of the DOF that is the source of this Reflex, append with _o for DOF on opposite side.
 		String source;
 
 		/// Target position [rad or m] for sensor DOF; default = 0.

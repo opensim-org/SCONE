@@ -23,7 +23,7 @@ namespace scone
 		Reflex( Actuator& target, TimeInSeconds d, Real min_val = REAL_LOWEST, Real max_val = REAL_MAX );
 		virtual ~Reflex();
 
-		/// Name of the target muscle.
+		/// Name of the target actuator; use _o for actuators on the opposite side.
 		String target;
 
 		/// Minimum output for this reflex; default = -infinity.
