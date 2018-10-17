@@ -43,7 +43,6 @@ namespace scone
 			String substr = xo::to_lower( str.substr( str.size() - 2 ) );
 			if ( substr == "_r" ) return RightSide;
 			else if ( substr == "_l" ) return LeftSide;
-			//else if ( substr == "_o" ) return OtherSide;
 		}
 
 		return NoSide;

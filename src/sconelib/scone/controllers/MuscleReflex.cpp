@@ -19,7 +19,8 @@ namespace scone
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr ),
-	m_pSpindleSensor( nullptr )
+	m_pSpindleSensor( nullptr ),
+	m_pActivationSensor( nullptr )
 	{
 		INIT_PROP( props, source, target );
 

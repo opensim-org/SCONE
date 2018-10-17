@@ -21,7 +21,7 @@ namespace scone
 		Side side;
 		bool symmetric;
 
-		String GetSidedName( const String& name ) const { return scone::GetSidedName( name, side ); }
+		String GetSidedName( const String& name ) const;
 		String GetParName( const String& name ) const { return symmetric ? GetNameNoSide( name ) : GetSidedName( name ); }
 		Side GetSide() const { return side; }
 		Location GetOpposite() const { return Location( GetOppositeSide( side ), symmetric ); }
