@@ -29,7 +29,7 @@ if(${Qt5Widgets_FOUND})
 		)
 	
 	set(QTFILES
-		qt_tools.h
+		${QTFX_PATH}/qt_convert.h
 		${QTFX_PATH}/qtfx.h
 		${QTFX_PATH}/qtfx.cpp
 		${QTFX_PATH}/QGroup.h
