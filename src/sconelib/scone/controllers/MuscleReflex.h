@@ -15,7 +15,10 @@
 namespace scone
 {
 	/// Reflex based on muscle length, muscle velocity, muscle force, or muscle spindle sensor.
-	/// Must be part of ReflexController.
+	/// 
+	/// Must be part of ReflexController. Output excitation corresponds to:
+	/// U = _C0_ + [_KF(F - F0)_]<sub>+</sub> + [_KL(L - L0)_]<sub>+</sub> + [_KV(V - V0)_]<sub>+</sub> + [_KS(S - S0)_]<sub>+</sub>.
+	/// []<sub>+</sub> indicates a result is always >= 0 if the corresponding allow_neg_* is set to 0.
 	class  MuscleReflex : public Reflex
 	{
 	public:
@@ -40,7 +43,7 @@ namespace scone
 		/// Length feedback gain, based on normalized CE length (L / Lopt); default = 0.
 		Real KL;
 		/// Length feedback offset; default = 1.
-		Real K0;
+		Real L0;
 		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_L;
 
@@ -50,6 +53,13 @@ namespace scone
 		Real V0;
 		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_V;
+
+		/// Muscle activation feedback gain, based on normalized activation; default = 0.
+		Real KA;
+		/// Activation feedback offset; default = 0.
+		Real A0;
+		/// Allow this reflex to be negative; default = 1.
+		bool allow_neg_A;
 
 		/// Spindle feedback gain, based on [Prochazka 1999], p.135; default = 0.
 		Real KS;
@@ -73,5 +83,6 @@ namespace scone
 		SensorDelayAdapter* m_pLengthSensor;
 		SensorDelayAdapter* m_pVelocitySensor;
 		SensorDelayAdapter* m_pSpindleSensor;
+		SensorDelayAdapter* m_pActivationSensor;
 	};
 }

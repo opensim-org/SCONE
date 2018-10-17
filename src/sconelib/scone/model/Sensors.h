@@ -11,6 +11,9 @@
 #include "Sensor.h"
 #include "scone/core/types.h"
 #include "scone/core/Vec3.h"
+#include "Muscle.h"
+#include "Dof.h"
+#include "Leg.h"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -30,40 +33,46 @@ namespace scone
 	struct SCONE_API MuscleForceSensor : public MuscleSensor
 	{
 		MuscleForceSensor( Muscle& m ) : MuscleSensor( m ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+		virtual String GetName() const override { return muscle_.GetName() + ".F"; }
+		virtual Real GetValue() const override { return muscle_.GetNormalizedForce(); }
 	};
 
 	// Sensor for normalized muscle length
 	struct SCONE_API MuscleLengthSensor : public MuscleSensor
 	{
 		MuscleLengthSensor( Muscle& m ) : MuscleSensor( m ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+		virtual String GetName() const override { return muscle_.GetName() + ".L"; }
+		virtual Real GetValue() const override { return muscle_.GetNormalizedFiberLength(); }
 	};
 
 	// Sensor for normalized muscle lengthening speed
 	struct SCONE_API MuscleVelocitySensor : public MuscleSensor
 	{
 		MuscleVelocitySensor( Muscle& m ) : MuscleSensor( m ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+		virtual String GetName() const override { return muscle_.GetName() + ".V"; }
+		virtual Real GetValue() const override { return muscle_.GetNormalizedFiberVelocity(); }
 	};
 
 	// Sensor that simulates Ia muscle spindle (based on [Prochazka 1999], p.135)
 	struct SCONE_API MuscleSpindleSensor : public MuscleSensor
 	{
 		MuscleSpindleSensor( Muscle& m ) : MuscleSensor( m ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+		virtual String GetName() const override { return muscle_.GetName() + ".S"; }
+		virtual Real GetValue() const override { return muscle_.GetNormalizedSpindleRate(); }
 	};
 
-	// Sensor that simulates Ia muscle spindle (based on [Prochazka 1999], p.135)
 	struct SCONE_API MuscleExcitationSensor : public MuscleSensor
 	{
 		MuscleExcitationSensor( Muscle& m ) : MuscleSensor( m ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+		virtual String GetName() const override { return muscle_.GetName() + ".excitation"; }
+		virtual Real GetValue() const override { return muscle_.GetExcitation(); }
+	};
+
+	struct SCONE_API MuscleActivationSensor : public MuscleSensor
+	{
+		MuscleActivationSensor( Muscle& m ) : MuscleSensor( m ) {}
+		virtual String GetName() const override { return muscle_.GetName() + ".A"; }
+		virtual Real GetValue() const override { return muscle_.GetActivation(); }
 	};
 
 	// Base struct for dof sensors
@@ -77,21 +86,22 @@ namespace scone
 	struct SCONE_API DofPositionSensor : public DofSensor
 	{
 		DofPositionSensor( Dof& dof, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ) {}
-		virtual String GetName() const override;
+		virtual String GetName() const override { return dof_.GetName() + ".DP"; }
 		virtual Real GetValue() const override;
 	};
 
 	struct SCONE_API DofVelocitySensor : public DofSensor
 	{
 		DofVelocitySensor( Dof& dof, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ) {}
-		virtual String GetName() const override;
+
+		virtual String GetName() const override { return dof_.GetName() + ".DV"; }
 		virtual Real GetValue() const override;
 	};
 
 	struct SCONE_API DofPosVelSensor : public DofSensor
 	{
 		DofPosVelSensor( Dof& dof, double kv, Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ), kv_( kv ) {}
-		virtual String GetName() const override;
+		virtual String GetName() const override { return dof_.GetName() + ".DPV"; }
 		virtual Real GetValue() const override;
 		double kv_;
 	};
@@ -100,8 +110,9 @@ namespace scone
 	struct SCONE_API LegLoadSensor : public Sensor
 	{
 		LegLoadSensor( const Leg& leg ) : leg_( leg ) {}
-		virtual String GetName() const override;
-		virtual Real GetValue() const override;
+
+		virtual String GetName() const override { return leg_.GetName() + ".LD"; }
+		virtual Real GetValue() const override { return leg_.GetLoad(); }
 		const Leg& leg_;
 	};
 

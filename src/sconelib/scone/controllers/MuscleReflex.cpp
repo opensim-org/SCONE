@@ -10,6 +10,7 @@
 #include "scone/model/Muscle.h"
 #include "scone/model/Location.h"
 #include "scone/model/Dof.h"
+#include "scone/model/Sensors.h"
 
 namespace scone
 {
@@ -28,23 +29,27 @@ namespace scone
 		String par_name = GetParName( props );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
-		INIT_PAR_NAMED( props, par, KL, "KL", 0.0 );
-		INIT_PAR_NAMED( props, par, K0, "L0", 1.0 );
-		INIT_PROP_NAMED( props, allow_neg_L, "allow_neg_L", true );
+		INIT_PAR( props, par, KL, 0.0 );
+		INIT_PAR( props, par, L0, 1.0 );
+		INIT_PROP( props, allow_neg_L, true );
 
-		INIT_PAR_NAMED( props, par, KV, "KV", 0.0 );
-		INIT_PAR_NAMED( props, par, V0, "V0", 0.0 );
-		INIT_PROP_NAMED( props, allow_neg_V, "allow_neg_V", false );
+		INIT_PAR( props, par, KV, 0.0 );
+		INIT_PAR( props, par, V0, 0.0 );
+		INIT_PROP( props, allow_neg_V, false );
 
-		INIT_PAR_NAMED( props, par, KF, "KF", 0.0 );
-		INIT_PAR_NAMED( props, par, F0, "F0", 0.0 );
-		INIT_PROP_NAMED( props, allow_neg_F, "allow_neg_F", true );
+		INIT_PAR( props, par, KF, 0.0 );
+		INIT_PAR( props, par, F0, 0.0 );
+		INIT_PROP( props, allow_neg_F, true );
 
-		INIT_PAR_NAMED( props, par, KS, "KS", 0.0 );
-		INIT_PAR_NAMED( props, par, S0, "S0", 0.0 );
-		INIT_PROP_NAMED( props, allow_neg_S, "allow_neg_S", false );
+		INIT_PAR( props, par, KS, 0.0 );
+		INIT_PAR( props, par, S0, 0.0 );
+		INIT_PROP( props, allow_neg_S, false );
 
-		INIT_PAR_NAMED( props, par, C0, "C0", 0.0 );
+		INIT_PAR( props, par, KA, 0.0 );
+		INIT_PAR( props, par, A0, 0.0 );
+		INIT_PROP( props, allow_neg_A, false );
+
+		INIT_PAR( props, par, C0, 0.0 );
 
 		// create delayed sensors
 		if ( KF != 0.0 )
@@ -59,6 +64,9 @@ namespace scone
 		if ( KS!= 0.0 )
 			m_pSpindleSensor = &model.AcquireDelayedSensor< MuscleSpindleSensor >( src_mus );
 
+		if ( KA != 0.0 )
+			m_pActivationSensor = &model.AcquireDelayedSensor< MuscleActivationSensor >( src_mus );
+
 		//log::TraceF( "MuscleReflex SRC=%s TRG=%s KL=%.2f KF=%.2f C0=%.2f", source.GetName().c_str(), m_Target.GetName().c_str(), length_gain, force_gain, u_constant );
 	}
 
@@ -69,7 +77,7 @@ namespace scone
 	void MuscleReflex::ComputeControls( double timestamp )
 	{
 		// add stretch reflex
-		u_l = m_pLengthSensor ? KL * ( m_pLengthSensor->GetValue( delay ) - K0 ) : 0;
+		u_l = m_pLengthSensor ? KL * ( m_pLengthSensor->GetValue( delay ) - L0 ) : 0;
 		if ( !allow_neg_L && u_l < 0.0 ) u_l = 0.0;
 
 		// add velocity reflex

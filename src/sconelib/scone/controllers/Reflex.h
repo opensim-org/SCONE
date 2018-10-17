@@ -26,10 +26,10 @@ namespace scone
 		/// Name of the target muscle.
 		String target;
 
-		/// Minimum output for this reflex; default = 0.
+		/// Minimum output for this reflex; default = -infinity.
 		Real min_control_value;
 
-		/// Maximum output for this reflex; default = 0.
+		/// Maximum output for this reflex; default = +infinity.
 		Real max_control_value;
 
 		/// Neuromuscular delay [s] used for this reflex; default = 0.

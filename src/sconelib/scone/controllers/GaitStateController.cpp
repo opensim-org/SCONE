@@ -16,6 +16,7 @@
 #include "scone/core/Profiler.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/core/Factories.h"
+#include "scone/model/Sensors.h"
 
 namespace scone
 {

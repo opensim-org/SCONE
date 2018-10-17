@@ -15,7 +15,6 @@
 #include "scone/core/Storage.h"
 
 #include "Actuator.h"
-#include "Sensors.h"
 
 #include <vector>
 #include "Side.h"
