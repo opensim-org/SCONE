@@ -77,23 +77,22 @@ namespace scone
 	void MuscleReflex::ComputeControls( double timestamp )
 	{
 		// add stretch reflex
-		u_l = m_pLengthSensor ? KL * ( m_pLengthSensor->GetValue( delay ) - L0 ) : 0;
-		if ( !allow_neg_L && u_l < 0.0 ) u_l = 0.0;
+		u_l = GetValue( m_pLengthSensor, KL, L0, allow_neg_L );
 
 		// add velocity reflex
-		u_v = m_pVelocitySensor ? KV * ( m_pVelocitySensor->GetValue( delay ) - V0 ) : 0;
-		if ( !allow_neg_V && u_v < 0.0 ) u_v = 0.0;
+		u_v = GetValue( m_pVelocitySensor, KV, V0, allow_neg_V );
 
 		// add force reflex
-		u_f = m_pForceSensor ? KF * ( m_pForceSensor->GetValue( delay ) - F0 ) : 0;
-		if ( !allow_neg_F && u_f < 0.0 ) u_f = 0.0;
+		u_f = GetValue( m_pForceSensor, KF, F0, allow_neg_F );
 
 		// add spindle reflex
-		u_s = m_pSpindleSensor ? KS * ( m_pSpindleSensor->GetValue( delay ) - S0 ) : 0;
-		if ( !allow_neg_S && u_s < 0.0 ) u_s = 0.0;
+		u_s = GetValue( m_pSpindleSensor, KS, S0, allow_neg_S );
+
+		// add spindle reflex
+		u_a = GetValue( m_pActivationSensor, KA, A0, allow_neg_A );
 
 		// sum it up
-		u_total = u_l + u_v + u_f + u_s + C0;
+		u_total = u_l + u_v + u_f + u_s + u_a + C0;
 		AddTargetControlValue( u_total );
 	}
 
@@ -108,6 +107,8 @@ namespace scone
 			frame[ name + ".RF" ] = u_f;
 		if ( m_pSpindleSensor )
 			frame[ name + ".RS" ] = u_s;
+		if ( m_pActivationSensor )
+			frame[ name + ".RA" ] = u_a;
 		frame[ name + ".R" ] = u_total;
 	}
 }

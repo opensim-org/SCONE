@@ -76,9 +76,18 @@ namespace scone
 		Real u_v = 0;
 		Real u_f = 0;
 		Real u_s = 0;
+		Real u_a = 0;
 		Real u_total = 0;
 
 	private:
+		Real GetValue( SensorDelayAdapter* s, Real gain, Real ofs, bool allow_neg ) {
+			if ( s ) {
+				Real value = gain * ( s->GetValue( delay ) - ofs );
+				return ( !allow_neg && value < 0.0 ) ? 0.0 : value;
+			}
+			else return 0.0;
+		}
+
 		SensorDelayAdapter* m_pForceSensor;
 		SensorDelayAdapter* m_pLengthSensor;
 		SensorDelayAdapter* m_pVelocitySensor;
