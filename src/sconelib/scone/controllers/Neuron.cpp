@@ -70,7 +70,7 @@ namespace scone
 	scone::string Neuron::GetParName() const
 	{
 		auto id = MuscleId( name_ );
-		return symmetric_ ? id.base_ : id.base_ + id.side_name();
+		return symmetric_ ? id.base_line_name() : id.base_line_side_name();
 	}
 
 	void Neuron::AddSynergeticInput( SensorNeuron* sensor, const PropNode& pn, Params& par, NeuralController& nc )

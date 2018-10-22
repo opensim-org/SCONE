@@ -382,7 +382,7 @@ namespace scone
 		{
 			switch ( par_mode_ )
 			{
-			case NeuralController::muscle_mode: return { { MuscleId( mus->GetName() ).base_, 1, {} } };
+			case NeuralController::muscle_mode: return { { MuscleId( mus->GetName() ).base_line_name(), 1, {} } };
 			case NeuralController::dof_mode: return GetMuscleDofs( mus );
 			case NeuralController::virtual_mode: return GetVirtualMuscles( mus, apply_mirrorring );
 			case NeuralController::virtual_dof_mode: return is_sensor ? GetMuscleDofs( mus ) : GetVirtualMuscles( mus, apply_mirrorring );

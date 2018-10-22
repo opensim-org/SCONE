@@ -58,6 +58,7 @@ namespace scone
 
 	// index type
 	using xo::index_t;
+	using xo::no_index;
 	typedef std::string String;
 	using std::string;
 	const index_t NoIndex = size_t( -1 );
