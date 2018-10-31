@@ -51,39 +51,38 @@ namespace scone
 			auto result = par.import_values( file );
 			log::info( "Read ", result.first, " of ", model_objective->info().dim(), " parameters, skipped ", result.second, " from ", file.filename() );
 		}
-		model = model_objective->CreateModelFromParams( par );
+		model_ = model_objective->CreateModelFromParams( par );
 
 		// accept filename and clear data
-		filename = file;
+		filename_ = file;
 
-		// see if we can load a matching .sto file
-		auto sto_file = xo::try_find_file( { file + ".sto", path( file ).replace_extension( ".sto" ) } );
-		if ( !force_evaluation && sto_file && filename.extension() == "par" )
+		// load results if the file is an sto
+		if ( file.extension() == "sto" && !force_evaluation )
 		{
 			xo::timer t;
-			log::info( "Reading ", *sto_file );
-			ReadStorageSto( data, *sto_file );
+			log::info( "Reading ", file );
+			ReadStorageSto( data, file );
 			InitStateDataIndices();
-			log::trace( "Read ", sto_file, " in ", t.seconds(), " seconds" );
+			log::trace( "Read ", file, " in ", t.seconds(), " seconds" );
 		}
 		else
 		{
 			// start evaluation
 			is_evaluating = true;
-			model->SetStoreData( true, 1.0 / GetSconeSettings().get< double >( "data.frequency" ) );
+			model_->SetStoreData( true, 1.0 / GetSconeSettings().get< double >( "data.frequency" ) );
 			if ( GetSconeSettings().get< bool >( "data.muscle" ) )
-				model->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
+				model_->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
 			if ( GetSconeSettings().get< bool >( "data.body" ) )
-				model->GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation } );
+				model_->GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation } );
 			if ( GetSconeSettings().get< bool >( "data.joint" ) )
-				model->GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce } );
+				model_->GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce } );
 			if ( GetSconeSettings().get< bool >( "data.sensor" ) )
-				model->GetStoreDataFlags().set( { StoreDataTypes::SensorData } );
+				model_->GetStoreDataFlags().set( { StoreDataTypes::SensorData } );
 			if ( GetSconeSettings().get< bool >( "data.controller" ) )
-				model->GetStoreDataFlags().set( { StoreDataTypes::ControllerData } );
+				model_->GetStoreDataFlags().set( { StoreDataTypes::ControllerData } );
 
-			model->SetSimulationEndTime( model_objective->GetDuration() );
-			log::info( "Evaluating ", filename );
+			model_->SetSimulationEndTime( model_objective->GetDuration() );
+			log::info( "Evaluating ", filename_ );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
 
@@ -98,7 +97,7 @@ namespace scone
 	{
 		// setup state_data_index (lazy init)
 		SCONE_ASSERT( state_data_index.empty() );
-		model_state = model->GetState();
+		model_state = model_->GetState();
 		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
@@ -113,7 +112,7 @@ namespace scone
 		scone_scene.attach( root );
 
 		xo::timer t;
-		for ( auto& body : model->GetBodies() )
+		for ( auto& body : model_->GetBodies() )
 		{
 			bodies.push_back( root.add_group() );
 			body_axes.push_back( bodies.back().add_axes( vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
@@ -138,16 +137,16 @@ namespace scone
 		}
 		//log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
 
-		for ( auto& cg : model->GetContactGeometries() )
+		for ( auto& cg : model_->GetContactGeometries() )
 		{
-			auto idx = FindIndexByName( model->GetBodies(), cg.m_Body.GetName() );
+			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
 			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ) );
 			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
 
-		for ( auto& muscle : model->GetMuscles() )
+		for ( auto& muscle : model_->GetMuscles() )
 		{
 			// add path
 			MuscleVis mv;
@@ -177,14 +176,14 @@ namespace scone
 			SCONE_ASSERT( !state_data_index.empty() );
 			for ( index_t i = 0; i < model_state.GetSize(); ++i )
 				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
-			model->SetState( model_state, time );
+			model_->SetState( model_state, time );
 		}
 
 		// update com
 		//com.pos( model->GetComPos() );
 
 		// update bodies
-		auto& model_bodies = model->GetBodies();
+		auto& model_bodies = model_->GetBodies();
 		for ( index_t i = 0; i < model_bodies.size(); ++i )
 		{
 			auto& b = model_bodies[ i ];
@@ -201,15 +200,15 @@ namespace scone
 		}
 
 		// update muscle paths
-		auto &model_muscles = model->GetMuscles();
+		auto &model_muscles = model_->GetMuscles();
 		for ( index_t i = 0; i < model_muscles.size(); ++i )
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
 		// update ground reaction forces on legs
-		for ( index_t i = 0; i < model->GetLegCount(); ++i )
+		for ( index_t i = 0; i < model_->GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
-			model->GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
+			model_->GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
 
 			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
 				UpdateForceVis( force_count++, cop, force );
@@ -261,13 +260,13 @@ namespace scone
 		SCONE_ASSERT( IsEvaluating() );
 		try
 		{
-			model_objective->AdvanceSimulationTo( *model, t );
-			if ( model->GetTerminationRequest() || t >= model->GetSimulationEndTime() )
+			model_objective->AdvanceSimulationTo( *model_, t );
+			if ( model_->GetTerminationRequest() || t >= model_->GetSimulationEndTime() )
 				FinalizeEvaluation( true );
 		}
 		catch ( std::exception& e )
 		{
-			log::error( "Error evaluating model at time ", model->GetTime(), ": ", e.what() );
+			log::error( "Error evaluating model at time ", model_->GetTime(), ": ", e.what() );
 			FinalizeEvaluation( false );
 		}
 	}
@@ -275,19 +274,19 @@ namespace scone
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
 		// copy data and init data
-		data = model->GetData();
+		data = model_->GetData();
 		if ( !data.IsEmpty() )
 			InitStateDataIndices();
 
 		if ( output_results )
 		{
-			auto fitness = model_objective->GetResult( *model );
+			auto fitness = model_objective->GetResult( *model_ );
 			log::info( "fitness = ", fitness );
 			PropNode results;
-			results.push_back( "result", model_objective->GetReport( *model ) );
-			model->WriteResults( filename );
+			results.push_back( "result", model_objective->GetReport( *model_ ) );
+			model_->WriteResults( filename_ );
 
-			log::info( "Results written to ", path( filename ).replace_extension( "sto" ) );
+			log::info( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
 			log::info( results );
 		}
 
@@ -317,7 +316,7 @@ namespace scone
 		for ( auto& e : contact_geoms )
 			e.show( view_flags.get< ShowContactGeom >() );
 
-		if ( model )
-			UpdateVis( model->GetTime() );
+		if ( model_ )
+			UpdateVis( model_->GetTime() );
 	}
 }

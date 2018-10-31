@@ -74,6 +74,10 @@ int main(int argc, char* argv[])
 				auto out_path = path( outArg.isSet() ? outArg.getValue() : parArg.getValue() );
 				log::info( "Evaluating ", par_path );
 				EvaluateScenario( scenario_pn, par_path, out_path, 1.0 / freqArg.getValue() );
+
+				// store config file if arguments have changed
+				if ( propArg.isSet() && outArg.isSet() )
+					save_file( scenario_pn, out_path.replace_extension( "scone" ) );
 			}
 		}
 		catch ( std::exception& e )

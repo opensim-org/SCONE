@@ -41,7 +41,8 @@ namespace scone
 	{
 		current_path( par_file.parent_path() );
 
-		const PropNode& objProp = scenario_pn[ "Optimizer" ][ "Objective" ];
+		const PropNode& optProp = scenario_pn[ "Optimizer" ];
+		const PropNode& objProp = optProp[ "Objective" ];
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
@@ -52,8 +53,19 @@ namespace scone
 			xo::log_unaccessed( objProp );
 		}
 
+		// create model
+		ModelUP model;
+		if ( par_file.empty() || par_file.extension() == "scone" )
+		{
+			// no par file was given, try to use init_file
+			if ( auto init_file = optProp.try_get< path >( "init_file" ) )
+				model = so.CreateModelFromParFile( *init_file );
+			else model = so.CreateModelFromParams( SearchPoint( so.info() ) );
+		}
+		else model = so.CreateModelFromParFile( par_file );
+
 		// set data storage
-		auto model = so.CreateModelFromParFile( par_file );
+		SCONE_ASSERT( model );
 		model->SetStoreData( true, data_resolution );
 		Profiler::GetGlobalInstance().Reset();
 
@@ -76,13 +88,12 @@ namespace scone
 		return statistics;
 	}
 
-	SCONE_API path FindScenario( const path& scenario_or_par_file )
+	SCONE_API path FindScenario( const path& file )
 	{
-		if ( scenario_or_par_file.extension() == "par" )
-		{
-			auto folder = scenario_or_par_file.parent_path();
-			return xo::find_file( { folder / "config.scone", folder / "config.xml" } );
-		}
-		else return scenario_or_par_file;
+		if ( file.extension() == "scone" || file.extension() == "xml" )
+			return file;
+
+		auto folder = file.parent_path();
+		return xo::find_file( { path( file ).replace_extension( "scone" ), folder / "config.scone", folder / "config.xml" } );
 	}
 }
