@@ -14,7 +14,12 @@
 #define SCONE_VERSION_MAJOR 0
 #define SCONE_VERSION_MINOR 19
 #define SCONE_VERSION_PATCH 0
-#define SCONE_VERSION_POSTFIX "ALPHA"
+#ifdef NDEBUG
+#	define SCONE_VERSION_POSTFIX "ALPHA"
+#else
+#	define SCONE_VERSION_POSTFIX "ALPHA DEBUG"
+#endif
+
 
 namespace scone
 {
