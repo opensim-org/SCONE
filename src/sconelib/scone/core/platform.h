@@ -22,6 +22,12 @@
 //#define SCONE_ENABLE_PROFILING
 //#define SCONE_ENABLE_XO_PROFILING
 
+#ifdef NBEBUG
+constexpr bool SCONE_DEBUG = false;
+#else
+constexpr bool SCONE_DEBUG = true;
+#endif
+
 #if defined(_MSC_VER)
 // TODO: do this in a nicer way (i.e. push/pop warnings)
 #pragma warning( disable: 4251 )
