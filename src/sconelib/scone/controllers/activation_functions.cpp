@@ -6,6 +6,7 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
+#include <cmath>
 #include "activation_functions.h"
 #include "scone/core/Exception.h"
 

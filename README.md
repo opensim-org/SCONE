@@ -27,3 +27,10 @@ This README would normally document whatever steps are necessary to get your app
 
 * Repo owner or admin
 * Other community or team contact
+
+# 
+- Qt5: homebrew
+- osg: homebrew open-scene-graph
+- osgQt: build from source. change OSX_DEPLOYMENT_TARGET to 10.10
+- simbody, opensim-core: c++17 necessary? maybe not.
+- 

@@ -213,26 +213,54 @@ set(SIM_TOPOLOGY_FILES
     scone/model/Link.h
 	scone/model/Side.h
     )
-	
-set(SIMBODY_FILES
-    scone/model/simbody/BodySimbody.cpp
-    scone/model/simbody/BodySimbody.h
-    scone/model/simbody/DofSimbody.cpp
-    scone/model/simbody/DofSimbody.h
-    scone/model/simbody/JointSimbody.cpp
-    scone/model/simbody/JointSimbody.h
-    scone/model/simbody/ModelSimbody.cpp
-    scone/model/simbody/ModelSimbody.h
-    scone/model/simbody/MuscleSimbody.cpp
-    scone/model/simbody/MuscleSimbody.h
-    scone/model/simbody/SimulationSimbody.cpp
-    scone/model/simbody/SimulationSimbody.h
-    scone/model/simbody/ConstantForce.cpp
-    scone/model/simbody/ConstantForce.h
-    scone/model/simbody/sim_simbody.cpp
-    scone/model/simbody/sim_simbody.h
-    scone/model/simbody/simbody_tools.h
-    )
+
+if(SCONE_OPENSIM_3)
+	set(SIMBODY_FILES
+		scone/model/simbody/BodySimbody.cpp
+		scone/model/simbody/BodySimbody.h
+		scone/model/simbody/DofSimbody.cpp
+		scone/model/simbody/DofSimbody.h
+		scone/model/simbody/JointSimbody.cpp
+		scone/model/simbody/JointSimbody.h
+		scone/model/simbody/ModelSimbody.cpp
+		scone/model/simbody/ModelSimbody.h
+		scone/model/simbody/MuscleSimbody.cpp
+		scone/model/simbody/MuscleSimbody.h
+		scone/model/simbody/SimulationSimbody.cpp
+		scone/model/simbody/SimulationSimbody.h
+		scone/model/simbody/ConstantForce.cpp
+		scone/model/simbody/ConstantForce.h
+		scone/model/simbody/sim_simbody.cpp
+		scone/model/simbody/sim_simbody.h
+		scone/model/simbody/simbody_tools.h
+		)
+else()
+    set(SIMBODY_FILES)
+endif()
+
+if(SCONE_OPENSIM_4)
+	set(SIMBODY4_FILES
+			scone/model/simbody4/BodySimbody.cpp
+			scone/model/simbody4/BodySimbody.h
+			scone/model/simbody4/DofSimbody.cpp
+			scone/model/simbody4/DofSimbody.h
+			scone/model/simbody4/JointSimbody.cpp
+			scone/model/simbody4/JointSimbody.h
+			scone/model/simbody4/ModelSimbody.cpp
+			scone/model/simbody4/ModelSimbody.h
+			scone/model/simbody4/MuscleSimbody.cpp
+			scone/model/simbody4/MuscleSimbody.h
+			scone/model/simbody4/SimulationSimbody.cpp
+			scone/model/simbody4/SimulationSimbody.h
+			scone/model/simbody4/ConstantForce.cpp
+			scone/model/simbody4/ConstantForce.h
+			scone/model/simbody4/sim_simbody.cpp
+			scone/model/simbody4/sim_simbody.h
+			scone/model/simbody4/simbody_tools.h
+			)
+else()
+	set(SIMBODY_FILES)
+endif()
 
 set (SCONELIB_FILES
 	${CORE_BASE_FILES}
@@ -262,6 +290,7 @@ set (SCONELIB_FILES
 	${SIM_TOPOLOGY_FILES}
 	
 	${SIMBODY_FILES}
+	${SIMBODY4_FILES}
 	)
 
 # specify precompiled headers for MSVC
@@ -274,7 +303,16 @@ add_library(sconelib SHARED ${SCONELIB_FILES} )
 set_property(TARGET sconelib PROPERTY CXX_STANDARD 17)
 set_property(TARGET sconelib PROPERTY CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(sconelib xo spot ${OPENSIMSIMBODY_LIBRARIES})
+target_link_libraries(sconelib xo spot)
+if(SCONE_OPENSIM_3)
+	target_link_libraries(sconelib ${OPENSIMSIMBODY_LIBRARIES})
+	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_3)
+endif()
+if(SCONE_OPENSIM_4)
+	target_link_libraries(sconelib osimActuators)
+	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_4)
+endif()
+
 
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 

@@ -40,7 +40,12 @@
 #include "scone/measures/ReactionForceMeasure.h"
 
 #include "scone/model/Sensors.h"
-#include "scone/model/simbody/ModelSimbody.h"
+#ifdef SCONE_OPENSIM_3
+#	include "scone/model/simbody/ModelSimbody.h"
+#endif
+#ifdef SCONE_OPENSIM_4
+#	include "scone/model/simbody4/ModelSimbody.h"
+#endif
 
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/optimization/CmaPoolOptimizer.h"
@@ -128,7 +133,13 @@ namespace scone
 		static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 		if ( g_ModelFactory.empty() )
 		{
+			#ifdef SCONE_OPENSIM_3
 			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
+            #endif
+			#ifdef SCONE_OPENSIM_4
+			// TODO change to ModelSimbody4
+			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
+            #endif
 		}
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}

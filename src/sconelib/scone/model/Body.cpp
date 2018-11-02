@@ -7,7 +7,7 @@
 */
 
 #include "Body.h"
-#include "..\core\HasData.h"
+#include "../core/HasData.h"
 
 namespace scone
 {

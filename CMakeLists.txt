@@ -6,6 +6,9 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Find dependencies.
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
@@ -15,15 +18,24 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 find_package(Spot REQUIRED)
 find_package(Xo REQUIRED)
 
-# This uses the FindOpenSim.cmake file in build/cmake.
-find_package(OpenSim 3.3 REQUIRED)
+option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
+option(SCONE_OPENSIM_4 "Support OpenSim 4.0" ON)
+if(SCONE_OPENSIM3)
+    # This uses the FindOpenSim.cmake file in build/cmake.
+    find_package(OpenSim 3.3 REQUIRED MODULE)
+endif()
+if(SCONE_OPENSIM4)
+    find_package(OpenSim 4.0 REQUIRED CONFIG)
+endif()
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
 
 # include folders
-include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
+if(SCONE_OPENSIM_3)
+    include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
+endif()
 include_directories(${XO_INCLUDE_DIR})
 include_directories(${SPOT_INCLUDE_DIR})
 
