@@ -102,7 +102,6 @@ private:
 
 	double slomo_factor;
 	TimeInSeconds current_time;
-	TimeInSeconds capture_frequency;
 	TimeInSeconds evaluation_time_step;
 	xo::delta< scone::Vec3 > com_delta;
 

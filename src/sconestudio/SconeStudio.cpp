@@ -45,7 +45,6 @@ QCompositeMainWindow( parent, flags ),
 slomo_factor( 1 ),
 com_delta( Vec3( 0, 1, 0 ) ),
 close_all( false ),
-capture_frequency( 30 ),
 evaluation_time_step( 1.0 / 8 ),
 captureProcess( nullptr ),
 scene_( true )
@@ -270,7 +269,7 @@ void SconeStudio::createVideo()
 	ui.progressBar->setFormat( " Creating Video (%p%)" );
 	ui.stackedWidget->setCurrentIndex( 1 );
 
-	const double step_size = ui.playControl->slowMotionFactor() / 30.0;
+	const double step_size = ui.playControl->slowMotionFactor() / GetStudioSettings().get<double>( "video.frame_rate" );
 	for ( double t = 0.0; t <= model->GetMaxTime(); t += step_size )
 	{
 		setTime( t, true );
@@ -649,7 +648,11 @@ void SconeStudio::finalizeCapture()
 
 	QString program = make_qt( xo::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
-	args << "-r" << QString::number( capture_frequency ) << "-i" << captureFilename + ".images/image_0_%d.png" << "-c:v" << "mpeg4" << "-q:v" << "3" << captureFilename;
+	args << "-r" << GetStudioSettings().get<QString>( "video.frame_rate" )
+		<< "-i" << captureFilename + ".images/image_0_%d.png"
+		<< "-c:v" << "mpeg4"
+		<< "-q:v" << GetStudioSettings().get<QString>( "video.quality" )
+		<< captureFilename;
 
 	cout << "starting " << program.toStdString() << endl;
 	auto v = args.toVector();

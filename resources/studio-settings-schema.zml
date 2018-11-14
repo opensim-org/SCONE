@@ -30,6 +30,11 @@ video {
 		label = "Video output frame rate"
 		default = 30
 	}
+	quality {
+		type = int
+		default = 3
+		label = "Quality for video output"
+	}
 }
 
 viewer {
