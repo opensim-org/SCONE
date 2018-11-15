@@ -209,32 +209,6 @@ namespace scone
 			}
 
 			// update state variables if they are being optimized
-			if ( auto sio = props.try_get_child( "state_init_optimization" ) )
-			{
-				initial_state_offset = sio->try_get_child( "offset" );
-				initial_state_offset_symmetric = sio->get( "symmetric", false );
-				initial_state_offset_include = sio->get< String >( "exclude_states", "" );
-				initial_state_offset_exclude = props.get< String >( "initial_state_offset_exclude", "" );
-			}
-#if 0
-			auto offset = sio ? sio->try_get_child( "offset" ) : props.try_get_child( "initial_state_offset" );
-			if ( sio )
-			{
-				bool symmetric = sio ? sio->get( "symmetric", false ) : props.get( "initial_state_offset_symmetric", false );
-				auto inc_pat = xo::pattern_matcher( sio ? sio->get< String >( "include_states", "*" ) : props.get< String >( "initial_state_offset_include", "*" ), ";" );
-				auto ex_pat = xo::pattern_matcher(
-					( sio ? sio->get< String >( "exclude_states", "" ) : props.get< String >( "initial_state_offset_exclude", "" ) ) + ";*.activation;*.fiber_length", ";" );
-				for ( index_t i = 0; i < m_State.GetSize(); ++i )
-				{
-					const String& state_name = m_State.GetName( i );
-					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
-					{
-						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-						m_State[ i ] += par.get( par_name + ".offset", *offset );
-					}
-				}
-			}
-#endif
 			if ( initial_state_offset )
 			{
 				auto inc_pat = xo::pattern_matcher( initial_state_offset_include, ";" );

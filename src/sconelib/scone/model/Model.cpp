@@ -7,21 +7,17 @@
 */
 
 #include "Model.h"
-
 #include "Body.h"
 #include "Joint.h"
 #include "Dof.h"
 #include "Muscle.h"
 #include <algorithm>
-
 #include "scone/core/Profiler.h"
 #include "scone/core/Log.h"
 #include "scone/core/Factories.h"
-
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
 #include "scone/measures/Measure.h"
-
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
 #include "../controllers/CompositeController.h"
@@ -41,9 +37,18 @@ namespace scone
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
 		initial_state_offset = props.try_get_child( "initial_state_offset" );
-		INIT_PROP( props, initial_state_offset_symmetric );
-		INIT_PROP( props, initial_state_offset_exclude );
-		INIT_PROP( props, initial_state_offset_include );
+		INIT_PROP( props, initial_state_offset_symmetric, false );
+		INIT_PROP( props, initial_state_offset_include, "*" );
+		INIT_PROP( props, initial_state_offset_exclude, "" );
+
+		// old-style initialization (for backwards compatibility)
+		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
+		{
+			initial_state_offset = sio->try_get_child( "offset" );
+			initial_state_offset_symmetric = sio->get( "symmetric", false );
+			initial_state_offset_include = sio->get< String >( "include_states", "*" );
+			initial_state_offset_exclude = props.get< String >( "exclude_states", "" );
+		}
 	}
 
 	Model::~Model()
