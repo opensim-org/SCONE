@@ -40,6 +40,10 @@ namespace scone
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
+		initial_state_offset = props.try_get_child( "initial_state_offset" );
+		INIT_PROP( props, initial_state_offset_symmetric );
+		INIT_PROP( props, initial_state_offset_exclude );
+		INIT_PROP( props, initial_state_offset_include );
 	}
 
 	Model::~Model()
