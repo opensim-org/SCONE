@@ -13,6 +13,7 @@
 #include "scone/core/Quat.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/HasData.h"
+#include "DisplayGeometry.h"
 
 namespace scone
 {
@@ -60,7 +61,7 @@ namespace scone
 		virtual const class Model& GetModel() const = 0;
 		virtual class Model& GetModel() = 0;
 
-		virtual std::vector< path > GetDisplayGeomFileNames() const { return std::vector< path >(); }
+		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 	};

@@ -594,17 +594,19 @@ void SconeStudio::tabCloseRequested( int idx )
 
 void SconeStudio::updateViewSettings()
 {
+	StudioModel::ViewFlags f;
+	f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
+	f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
+	f.set( StudioModel::ShowTendons, ui.actionShow_Tendons->isChecked() );
+	f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
+	f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
+	f.set( StudioModel::ShowContactGeom, ui.actionShow_Contact_Geometry->isChecked() );
+	f.set( StudioModel::ShowGroundPlane, ui.actionShow_Ground_Plane->isChecked() );
+
 	if ( model )
-	{
-		StudioModel::ViewFlags f;
-		f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
-		f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
-		f.set( StudioModel::ShowTendons, ui.actionShow_Tendons->isChecked() );
-		f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
-		f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
-		f.set( StudioModel::ShowContactGeom, ui.actionShow_Contact_Geometry->isChecked() );
 		model->ApplyViewSettings( f );
-	}
+
+	ground_plane.show( f.get< StudioModel::ShowGroundPlane >() );
 
 	ProgressDockWidget::AxisScaleType scale = ui.actionUse_Log_Scale->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
 	for ( auto& o : optimizations )

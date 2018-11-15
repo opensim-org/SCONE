@@ -26,6 +26,7 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
+	scene_( s ),
 	specular_( GetStudioSetting < float > ( "viewer.specular" ) ),
 	shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 	ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
@@ -117,21 +118,24 @@ namespace scone
 			bodies.push_back( root.add_group() );
 			body_axes.push_back( bodies.back().add_axes( vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 
-			auto geom_files = body->GetDisplayGeomFileNames();
-			for ( auto geom_file : geom_files )
+			auto geoms = body->GetDisplayGeometries();
+			for ( auto geom : geoms )
 			{
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				try
 				{
-					if ( !xo::file_exists( geom_file ) )
-						geom_file = scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom_file;
-
-					body_meshes.push_back( bodies.back().add_mesh( geom_file ) );
-					body_meshes.back().set_material( bone_mat );
+					auto geom_file = xo::try_find_file( { geom.filename, path( "./geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
+					if ( geom_file )
+					{
+						bodies.back().pos( geom.pos );
+						body_meshes.push_back( bodies.back().add_mesh( *geom_file ) );
+						body_meshes.back().set_material( bone_mat );
+					}
+					else log::warning( "Could not find ", geom.filename );
 				}
 				catch ( std::exception& e )
 				{
-					log::warning( "Could not load ", geom_file, ": ", e.what() );
+					log::warning( "Could not load ", geom.filename, ": ", e.what() );
 				}
 			}
 		}

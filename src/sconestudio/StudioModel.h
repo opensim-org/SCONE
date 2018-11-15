@@ -31,7 +31,7 @@ namespace scone
 	class StudioModel
 	{
 	public:
-		enum ViewSettings { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, EnableShadows };
+		enum ViewSettings { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
 		typedef xo::flag_set< ViewSettings > ViewFlags;
  
 		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
@@ -80,6 +80,8 @@ namespace scone
 		float shininess_;
 		float ambient_;
 		float emissive_;
+
+		vis::scene& scene_;
 
 		vis::material bone_mat;
 		vis::material arrow_mat;

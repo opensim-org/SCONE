@@ -96,6 +96,7 @@
     <addaction name="actionShow_Bone_Geometry"/>
     <addaction name="actionShow_Contact_Geometry"/>
     <addaction name="actionShow_Body_Axes"/>
+    <addaction name="actionShow_Ground_Plane"/>
     <addaction name="separator"/>
     <addaction name="actionUse_Log_Scale"/>
    </widget>
@@ -558,6 +559,17 @@
     <string>Show &amp;Contact Geometry</string>
    </property>
   </action>
+  <action name="actionShow_Ground_Plane">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show &amp;Ground Plane</string>
+   </property>
+  </action>
   <action name="action_Test_Scenario">
    <property name="text">
     <string>&amp;Test Scenario</string>
@@ -833,6 +845,22 @@
   </connection>
   <connection>
    <sender>actionShow_Contact_Geometry</sender>
+   <signal>triggered()</signal>
+   <receiver>SconeStudioClass</receiver>
+   <slot>updateViewSettings()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>502</x>
+     <y>400</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Ground_Plane</sender>
    <signal>triggered()</signal>
    <receiver>SconeStudioClass</receiver>
    <slot>updateViewSettings()</slot>

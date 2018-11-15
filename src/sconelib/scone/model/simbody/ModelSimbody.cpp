@@ -275,7 +275,7 @@ namespace scone
 			if ( auto cg = dynamic_cast< OpenSim::ContactSphere* >( &m_pOsimModel->getContactGeometrySet().get( idx ) ) )
 			{
 				auto& body = *FindByName( m_Bodies, cg->getBodyName() );
-				m_ContactGeometries.emplace_back( body, ToVec3( cg->getLocation() ), cg->getRadius() );
+				m_ContactGeometries.emplace_back( body, from_osim( cg->getLocation() ), cg->getRadius() );
 			}
 		}
 
@@ -392,22 +392,22 @@ namespace scone
 
 	Vec3 ModelSimbody::GetComPos() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 	}
 
 	Vec3 ModelSimbody::GetComVel() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 	}
 
 	Vec3 ModelSimbody::GetComAcc() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
 	scone::Vec3 ModelSimbody::GetGravity() const
 	{
-		return ToVec3( m_pOsimModel->getGravity() );
+		return from_osim( m_pOsimModel->getGravity() );
 	}
 
 	bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
