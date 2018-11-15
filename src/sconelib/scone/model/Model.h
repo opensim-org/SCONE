@@ -157,6 +157,18 @@ namespace scone
 		/// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
 
+		/// Offset [rad] or [m] to apply to initial state; default = 0.
+		const PropNode* initial_state_offset;
+
+		/// Use symmetric offset for left and right; default = 0.
+		bool initial_state_offset_symmetric;
+
+		/// Pattern matching the states to include in initial offset (comma seperated); default = "*".
+		String initial_state_offset_include;
+
+		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
+		String initial_state_offset_exclude;
+
 		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
@@ -182,18 +194,6 @@ namespace scone
 
 		MeasureUP m_Measure;
 		ControllerUP m_Controller;
-
-		/// Offset [rad] or [m] to apply to initial state; default = 0.
-		const PropNode* initial_state_offset;
-
-		/// Use symmetric offset for left and right; default = 0.
-		bool initial_state_offset_symmetric;
-
-		/// Pattern matching the states to include in initial offset (comma seperated); default = "*".
-		String initial_state_offset_include;
-
-		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
-		String initial_state_offset_exclude;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;
