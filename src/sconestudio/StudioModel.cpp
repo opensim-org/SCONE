@@ -127,9 +127,10 @@ namespace scone
 					auto geom_file = xo::try_find_file( { geom.filename, path( "./geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
 					if ( geom_file )
 					{
-						bodies.back().pos( geom.pos );
 						body_meshes.push_back( bodies.back().add_mesh( *geom_file ) );
 						body_meshes.back().set_material( bone_mat );
+						body_meshes.back().pos_ori( geom.pos, geom.ori );
+						body_meshes.back().scale( geom.scale );
 					}
 					else log::warning( "Could not find ", geom.filename );
 				}

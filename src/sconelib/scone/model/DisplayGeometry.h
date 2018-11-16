@@ -10,6 +10,8 @@ namespace scone
 	struct DisplayGeometry
 	{
 		Vec3 pos;
+		Quat ori;
+		Vec3 scale;
 		xo::path filename;
 	};
 }

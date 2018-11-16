@@ -16,6 +16,7 @@
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
 #include "scone/core/Log.h"
+#include "OpenSim/Common/Geometry.h"
 
 namespace scone
 {
@@ -237,9 +238,17 @@ namespace scone
 	std::vector< DisplayGeometry > BodySimbody::GetDisplayGeometries() const
 	{
 		std::vector< DisplayGeometry > geoms;
-		auto& disp = *m_osBody.getDisplayer();
-		for ( int i = 0; i < m_osBody.getDisplayer()->getNumGeometryFiles(); ++i )
-			geoms.push_back( { from_osim( disp.getTransform().p() ), xo::path( disp.getGeometryFileName( i ) ) } );
+
+		auto& gset = m_osBody.getDisplayer()->getGeometrySet();
+		for ( auto i = 0; i < gset.getSize(); ++i )
+		{
+			geoms.emplace_back();
+			geoms.back().filename = gset[ i ].getGeometryFile();
+			geoms.back().pos = from_osim( gset[ i ].getTransform().p() );
+			geoms.back().ori = from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) );
+			geoms.back().scale = from_osim( gset[ i ].getScaleFactors() );
+		}
+
 		return geoms;
 	}
 
