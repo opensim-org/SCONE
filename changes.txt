@@ -1,5 +1,23 @@
 ====== What's new ======
 
+===== SCONE 0.19.1 ALPHA =====
+//Released November 19, 2018//
+
+=== Updates ===
+  * Ground plane can now be hidden
+
+=== Fixes ===
+  * Fixed auto-formatting issues in scone editor
+  * Correctly handle transform and scale of display geometry
+
+===== SCONE 0.19.0 ALPHA =====
+//Released November 14, 2018//
+
+=== New Features and Updates ===
+  * Improved support for batch processing through the command line interface
+  * Added setting for output video quality and video frame rate
+  * Example updates
+
 ===== SCONE 0.18.0 ALPHA =====
 //Released October 17, 2018//
 
