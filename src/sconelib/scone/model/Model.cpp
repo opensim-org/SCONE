@@ -36,10 +36,6 @@ namespace scone
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
-		initial_state_offset = props.try_get_child( "initial_state_offset" );
-		INIT_PROP( props, initial_state_offset_symmetric, false );
-		INIT_PROP( props, initial_state_offset_include, "*" );
-		INIT_PROP( props, initial_state_offset_exclude, "" );
 
 		// old-style initialization (for backwards compatibility)
 		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
@@ -47,7 +43,14 @@ namespace scone
 			initial_state_offset = sio->try_get_child( "offset" );
 			initial_state_offset_symmetric = sio->get( "symmetric", false );
 			initial_state_offset_include = sio->get< String >( "include_states", "*" );
-			initial_state_offset_exclude = props.get< String >( "exclude_states", "" );
+			initial_state_offset_exclude = sio->get< String >( "exclude_states", "" );
+		}
+		else
+		{
+			initial_state_offset = props.try_get_child( "initial_state_offset" );
+			INIT_PROP( props, initial_state_offset_symmetric, false );
+			INIT_PROP( props, initial_state_offset_include, "*" );
+			INIT_PROP( props, initial_state_offset_exclude, "" );
 		}
 	}
 
