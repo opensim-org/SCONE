@@ -22,7 +22,7 @@
 //#define SCONE_ENABLE_PROFILING
 //#define SCONE_ENABLE_XO_PROFILING
 
-#ifdef NBEBUG
+#ifdef NDEBUG
 constexpr bool SCONE_DEBUG = false;
 #else
 constexpr bool SCONE_DEBUG = true;
