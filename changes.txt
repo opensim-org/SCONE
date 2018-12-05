@@ -1,10 +1,11 @@
 ====== What's new ======
 
 ===== SCONE 0.19.2 ALPHA =====
-//Released November 28, 2018//
+//Released December 5, 2018//
 
 === Fixes ===
   * Fixed issue reading state_init_optimization.exclude from legacy scripts
+  * Fixed issue where data output settings were not read when running from command-line
 
 ===== SCONE 0.19.1 ALPHA =====
 //Released November 19, 2018//
