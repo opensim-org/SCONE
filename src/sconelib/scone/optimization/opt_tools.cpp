@@ -37,7 +37,7 @@ namespace scone
 		return std::move( o );
 	}
 
-	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base, double data_resolution )
+	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
 		current_path( par_file.parent_path() );
 
@@ -66,7 +66,7 @@ namespace scone
 
 		// set data storage
 		SCONE_ASSERT( model );
-		model->SetStoreData( true, data_resolution );
+		model->SetStoreData( true );
 		Profiler::GetGlobalInstance().Reset();
 
 		timer tmr;

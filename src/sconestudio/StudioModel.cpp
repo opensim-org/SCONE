@@ -70,17 +70,7 @@ namespace scone
 		{
 			// start evaluation
 			is_evaluating = true;
-			model_->SetStoreData( true, 1.0 / GetSconeSettings().get< double >( "data.frequency" ) );
-			if ( GetSconeSettings().get< bool >( "data.muscle" ) )
-				model_->GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties } );
-			if ( GetSconeSettings().get< bool >( "data.body" ) )
-				model_->GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation } );
-			if ( GetSconeSettings().get< bool >( "data.joint" ) )
-				model_->GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce } );
-			if ( GetSconeSettings().get< bool >( "data.sensor" ) )
-				model_->GetStoreDataFlags().set( { StoreDataTypes::SensorData } );
-			if ( GetSconeSettings().get< bool >( "data.controller" ) )
-				model_->GetStoreDataFlags().set( { StoreDataTypes::ControllerData } );
+			model_->SetStoreData( true );
 
 			model_->SetSimulationEndTime( model_objective->GetDuration() );
 			log::info( "Evaluating ", filename_ );

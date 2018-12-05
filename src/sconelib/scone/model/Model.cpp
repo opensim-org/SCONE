@@ -21,6 +21,7 @@
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
 #include "../controllers/CompositeController.h"
+#include "../core/Settings.h"
 
 using std::endl;
 
@@ -32,7 +33,7 @@ namespace scone
 	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 	m_StoreData( false ),
-	m_StoreDataFlags( { StoreDataTypes::State, /*StoreDataTypes::DofMoment,*/ StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
+	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
@@ -52,6 +53,14 @@ namespace scone
 			INIT_PROP( props, initial_state_offset_include, "*" );
 			INIT_PROP( props, initial_state_offset_exclude, "" );
 		}
+
+		// set store data info from settings
+		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );
+		GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce }, GetSconeSettings().get< bool >( "data.joint" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::SensorData }, GetSconeSettings().get< bool >( "data.sensor" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::ControllerData }, GetSconeSettings().get< bool >( "data.controller" ) );
 	}
 
 	Model::~Model()

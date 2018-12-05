@@ -169,7 +169,7 @@ namespace scone
 		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
 		String initial_state_offset_exclude;
 
-		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
+		void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
