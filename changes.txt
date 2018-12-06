@@ -1,5 +1,11 @@
 ====== What's new ======
 
+===== SCONE 0.19.3 ALPHA =====
+//Released December 6, 2018//
+
+=== Fixes ===
+  * When evaluating a scenario from sconecmd.exe, the average parameters are now used instead of the best, in order to be consistent with scenario test (Ctrl + T) from SCONE studio.
+
 ===== SCONE 0.19.2 ALPHA =====
 //Released December 5, 2018//
 
