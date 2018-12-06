@@ -105,7 +105,7 @@ namespace scone
 		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
-		// create SimulationObjective object
+		// create ModelObjective object
 		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( objProp ) );
 
 		if ( file.extension() == "scone" )

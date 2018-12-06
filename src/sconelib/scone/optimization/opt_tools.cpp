@@ -58,9 +58,12 @@ namespace scone
 		if ( par_file.empty() || par_file.extension() == "scone" )
 		{
 			// no par file was given, try to use init_file
+			// IMPORTANT: this uses the parameter MEAN of the init_file
+			// as to be consistent with running a scenario from inside SCONE studio
+			// TODO: combine this code with CreateModelObjective, since the same is happening there
 			if ( auto init_file = optProp.try_get< path >( "init_file" ) )
-				model = so.CreateModelFromParFile( *init_file );
-			else model = so.CreateModelFromParams( SearchPoint( so.info() ) );
+				so.info().import_mean_std( *init_file, optProp.get< bool >( "use_init_file_std", true ) );
+			model = so.CreateModelFromParams( SearchPoint( so.info() ) );
 		}
 		else model = so.CreateModelFromParFile( par_file );
 
