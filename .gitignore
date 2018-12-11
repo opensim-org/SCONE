@@ -8,3 +8,5 @@ doc/config/NaturalDocs/Working Data/
 tutorials/*.sto
 .version
 *.log
+cmake-build-*
+.idea/

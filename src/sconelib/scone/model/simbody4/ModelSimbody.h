@@ -145,14 +145,16 @@ namespace scone
 		void SetOpenSimProperties( const PropNode& pn, Params& par );
 		void SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par );
 
-		LinkUP CreateLinkHierarchy( OpenSim::PhysicalFrame& osBody, Link* parent = nullptr );
+		LinkUP CreateLinkHierarchy( const OpenSim::PhysicalFrame& osBody, Link* parent = nullptr );
 
 		int m_PrevIntStep;
 		double m_PrevTime;
+		double m_FinalTime;
 
 		std::unique_ptr< OpenSim::Model > m_pOsimModel;
 		std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 		std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
+		int m_integratorMethod = -1;
 		std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 		SimTK::State* m_pTkState; // non-owning state reference
 		OpenSim::Probe* m_pProbe; // owned by OpenSim::Model

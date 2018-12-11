@@ -15,7 +15,9 @@
 #include "xo/system/log_sink.h"
 #include "xo/container/prop_node_tools.h"
 #include "spot/optimizer_pool.h"
-#include <xutility>
+#ifdef _WIN32
+#	include <xutility>
+#endif
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/Exception.h"

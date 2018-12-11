@@ -47,14 +47,15 @@ namespace scone
 	// Simbody controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
 	{
+	    OpenSim_DECLARE_CONCRETE_OBJECT(ControllerDispatcher, OpenSim::Controller);
 	public:
 		ControllerDispatcher( ModelSimbody& model ) : m_Model( model ) { };
 		virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override;
-		virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
-		virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
+		// virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
+		// virtual const std::string& getConcreteClassName() const override { return "ControllerDispatcher"/*TODO*/; }
 
 	private:
-		ModelSimbody& m_Model;
+		SimTK::ReferencePtr<ModelSimbody> m_Model;
 	};
 
 	// Constructor
@@ -87,7 +88,8 @@ namespace scone
 		INIT_PROP( props, probe_class, String() );
 		INIT_PROP( props, pre_control_simulation_time, 0.0 );
 		INIT_PROP( props, initial_load, 0.2 );
-		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
+		// TODO: Must make more generic.
+		INIT_PROP( props, initial_load_dof, "/jointset/ground_pelvis/pelvis_ty/value" );
 
 		INIT_PROP( props, create_body_forces, false );
 
@@ -179,15 +181,26 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( "InitIntegrators" );
 
-			if ( integration_method == "RungeKuttaMerson" )
-				m_integratorMethod = OpenSim::Manager::IntegratorMethod::RungeKuttaMerson;
-			else if ( integration_method == "RungeKutta2" )
-				m_integratorMethod = OpenSim::Manager::IntegratorMethod::RungeKutta2;
-			else if ( integration_method == "RungeKutta3" )
-				m_integratorMethod = OpenSim::Manager::IntegratorMethod::RungeKutta3;
-			else if ( integration_method == "SemiExplicitEuler2" )
-				m_integratorMethod = OpenSim::Manager::IntegratorMethod::SemiExplicitEuler2;
-			else SCONE_THROW( "Invalid integration method: " + xo::quoted( integration_method ) );
+			using Integ = OpenSim::Manager::IntegratorMethod;
+			if ( integration_method == "RungeKuttaMerson" ) {
+				m_integratorMethod = static_cast<int>(Integ::RungeKuttaMerson);
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+			} else if ( integration_method == "RungeKutta2" ) {
+				m_integratorMethod = static_cast<int>(Integ::RungeKutta2);
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta2Integrator( m_pOsimModel->getMultibodySystem() ) );
+			} else if ( integration_method == "RungeKutta3" ) {
+				m_integratorMethod = static_cast<int>(Integ::RungeKutta3);
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta3Integrator( m_pOsimModel->getMultibodySystem() ) );
+			} else if ( integration_method == "SemiExplicitEuler2" ) {
+				m_integratorMethod = static_cast<int>(Integ::SemiExplicitEuler2);
+				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
+			} else {
+				SCONE_THROW( "Invalid integration method: " + xo::quoted( integration_method ) );
+			}
+
+			m_pTkIntegrator->setAccuracy( integration_accuracy );
+			m_pTkIntegrator->setMaximumStepSize( max_step_size );
+			m_pTkIntegrator->resetAllStatistics();
 		}
 
 		// read initial state
@@ -240,6 +253,7 @@ namespace scone
 			// m_pOsimManager->setInitialTime( 0.0 );
 			// m_pOsimManager->setFinalTime( 0.0 );
 
+			m_pOsimManager->setIntegratorMethod(OpenSim::Manager::IntegratorMethod(m_integratorMethod));
 			m_pOsimManager->setIntegratorAccuracy( integration_accuracy );
 			m_pOsimManager->setIntegratorMaximumStepSize( max_step_size );
 
@@ -259,23 +273,28 @@ namespace scone
 		SCONE_ASSERT( m_pOsimModel && m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Muscles.empty() );
 
 		// Create wrappers for bodies
+		m_Bodies.emplace_back( new BodySimbody( *this, m_pOsimModel->getGround() ) );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			m_Bodies.emplace_back( new BodySimbody( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
 		// setup hierarchy and create wrappers
-		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGround() );
+		m_RootLink = CreateLinkHierarchy( m_pOsimModel->updGround() );
 
 		// create wrappers for dofs
-		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
+		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx ) {
 			m_Dofs.emplace_back( new DofSimbody( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
+		}
 
 		// create contact geometries
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
 		{
 			if ( auto cg = dynamic_cast< OpenSim::ContactSphere* >( &m_pOsimModel->getContactGeometrySet().get( idx ) ) )
 			{
-				auto& body = *FindByName( m_Bodies, cg->getBodyName() );
-				m_ContactGeometries.emplace_back( body, ToVec3( cg->getLocation() ), cg->getRadius() );
+				auto& body = *FindByName( m_Bodies, cg->getFrame().findBaseFrame().getName() );
+				const auto& X_BF = cg->getFrame().findTransformInBaseFrame();
+				const auto X_FP = cg->getTransform();
+				const auto loc = (X_BF * X_FP).p();
+				m_ContactGeometries.emplace_back( body, ToVec3( loc ), cg->getRadius() );
 			}
 		}
 
@@ -415,13 +434,105 @@ namespace scone
 		return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody;
 	}
 
-	scone::LinkUP ModelSimbody::CreateLinkHierarchy( OpenSim::PhysicalFrame& osBody, Link* parent )
+	scone::LinkUP ModelSimbody::CreateLinkHierarchy( const OpenSim::PhysicalFrame& osBody, Link* parent )
 	{
 		LinkUP link;
 
 		// find the Body
-		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
+		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body )
+		{ return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
 		SCONE_ASSERT( itBody != m_Bodies.end() );
+
+		const SimTK::MobilizedBodyIndex thisMBI = osBody.getMobilizedBodyIndex();
+		// Get parent MobilizedBodyIndex for osBody.
+		const auto& MB = osBody.getMobilizedBody();
+
+
+		// find the Joint (if any)
+		if ( &osBody != &osBody.getComponent<OpenSim::Ground>("/ground") )
+		{
+			const auto& parentMBI =
+					MB.getParentMobilizedBody().getMobilizedBodyIndex();
+
+		   	OpenSim::Joint* osimJointForThisLink = nullptr;
+			// Search OpenSim for the Body with the same MBI as osBody's MBI.
+			for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
+			{
+			    if (osimJointForThisLink) break;
+				BodySimbody& body = dynamic_cast<BodySimbody&>( **iter );
+
+				const auto& MBI = body.m_osBody.getMobilizedBodyIndex();
+				if (MBI == parentMBI) {
+					// Search all OpenSim Joints for (parent=thisMBI && child=parentMBI) ||
+					// 	(parent=parentMBI && child=thisMBI).
+					auto& osModel =
+							const_cast<OpenSim::Component&>(osBody.getRoot());
+					auto osJoints = osModel.updComponentList<OpenSim::Joint>();
+					for (auto& osJoint : osJoints) {
+						const auto* parentBase = &osJoint.getParentFrame().findBaseFrame();
+						const auto* childBase = &osJoint.getChildFrame().findBaseFrame();
+						if ((parentBase == &body.m_osBody && childBase == &osBody) ||
+								(parentBase == &osBody && childBase == &body.m_osBody)) {
+							osimJointForThisLink = &osJoint;
+							break;
+						}
+					}
+				}
+			}
+			SCONE_ASSERT( osimJointForThisLink );
+			// create a joint
+			m_Joints.emplace_back( // scone joint
+					new JointSimbody(
+							/* scone body */ **itBody,
+							/* parent scone joint */ parent ? &parent->GetJoint() : nullptr,
+							/* model simbody */ *this,
+							/* opensim joint */ *osimJointForThisLink ) );
+			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
+		}
+		else
+		{
+			// this is the root Link
+			link = LinkUP( new Link( **itBody ) );
+		}
+
+		// add children
+		for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
+		{
+			BodySimbody& childBody = dynamic_cast<BodySimbody&>( **iter );
+
+			const auto& childMB = childBody.m_osBody.getMobilizedBody();
+			if ( childMB.getMobilizedBodyIndex() > 0 && childMB.getParentMobilizedBody().getMobilizedBodyIndex() == thisMBI )
+			{
+				// create child link
+				link->GetChildren().push_back( CreateLinkHierarchy( childBody.m_osBody, link.get() ) );
+			}
+		}
+
+		return link;
+	}/*
+	{
+		LinkUP link;
+
+		// find the Body
+		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body )
+		{ return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
+		SCONE_ASSERT( itBody != m_Bodies.end() );
+
+		if (osBody.getName() == "ground") {
+			link = LinkUP( new Link( **itBody ) );
+		} else {
+			m_Joints.emplace_back( new JointSimbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) );
+			// TODO use the Simbody Matter Subsystem and map between MobilizedBodyIndices.
+		}
+
+		const auto& model = dynamic_cast<OpenSim::Model&>(osBody.getRoot());
+		const auto& ground = model.getGround();
+		for (auto& osJoint : osBody.getRoot().updComponentList<Joint>()) {
+			if (&osJoint.getParentFrame().getBaseFrame() == &osJoint.getGround()) {
+
+
+			}
+		}
 
 		// find the Joint (if any)
 		if ( osBody.hasJoint() )
@@ -448,7 +559,7 @@ namespace scone
 		}
 
 		return link;
-	}
+	}*/
 
 	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 	{
@@ -457,37 +568,37 @@ namespace scone
 		// see 'catch' statement below for explanation try {} catch {} is needed
 		try
 		{
-			if ( !m_Model.use_fixed_control_step_size )
+			if ( !m_Model->use_fixed_control_step_size )
 			{
 				// update current state (TODO: remove const cast)
-				m_Model.SetTkState( const_cast<SimTK::State&>( s ) );
+				m_Model->SetTkState( const_cast<SimTK::State&>( s ) );
 
 				// update SensorDelayAdapters at the beginning of each new step
 				// TODO: move this to an analyzer object or some other point
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+				if ( m_Model->GetIntegrationStep() > m_Model->m_PrevIntStep && m_Model->GetIntegrationStep() > 0 )
 				{
-					m_Model.UpdateSensorDelayAdapters();
-					m_Model.UpdateAnalyses();
+					m_Model->UpdateSensorDelayAdapters();
+					m_Model->UpdateAnalyses();
 				}
 
 				// update actuator values
-				m_Model.UpdateControlValues();
+				m_Model->UpdateControlValues();
 
 				// update previous integration step and time
 				// OpenSim: do I need to keep this or is there are smarter way?
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep )
+				if ( m_Model->GetIntegrationStep() > m_Model->m_PrevIntStep )
 				{
-					m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
-					m_Model.m_PrevTime = m_Model.GetTime();
+					m_Model->m_PrevIntStep = m_Model->GetIntegrationStep();
+					m_Model->m_PrevTime = m_Model->GetTime();
 				}
 			}
 
 			// inject actuator values into controls
 			{
-				//SCONE_ASSERT_MSG( controls.size() == m_Model.GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
+				//SCONE_ASSERT_MSG( controls.size() == m_Model->GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
 
 				int idx = 0;
-				for ( auto* act : m_Model.GetActuators() )
+				for ( auto* act : m_Model->GetActuators() )
 				{
 					// This is an optimization that only works when there are only muscles
 					// OpenSim: addInControls is rather inefficient, that's why we don't use it
@@ -583,6 +694,7 @@ namespace scone
 		}
 		else
 		{
+		    SCONE_THROW("Using Manager is not supported currently.");
 			// Integrate from initial time to final time (the old way)
 			m_pOsimManager->integrate( time );
 		}
@@ -642,12 +754,12 @@ namespace scone
 
 	double ModelSimbody::GetSimulationEndTime() const
 	{
-		return m_pOsimManager->getFinalTime();
+		return m_FinalTime;
 	}
 
 	void ModelSimbody::SetSimulationEndTime( double t )
 	{
-		m_pOsimManager->setFinalTime( t );
+		m_FinalTime = t;
 		m_pTkIntegrator->setFinalTime( t );
 	}
 
@@ -742,7 +854,8 @@ namespace scone
 	void ModelSimbody::CopyStateToTk()
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
-		GetOsimModel().setStateValues( GetTkState(), &m_State.GetValues()[ 0 ] );
+		GetOsimModel().setStateVariableValues( GetTkState(),
+				SimTK::Vector( m_State.GetSize(), &m_State.GetValues()[ 0 ] ) );
 
 		// set locked coordinates
 		auto& cs = GetOsimModel().updCoordinateSet();
@@ -794,7 +907,7 @@ namespace scone
 		for ( auto coIdx = 0u; coIdx < m_Dofs.size(); ++coIdx )
 		{
 			DofSimbody& dof = static_cast<DofSimbody&>( *m_Dofs[ coIdx ] );
-			auto mbIdx = dof.GetOsCoordinate().getJoint().getBody().getIndex();
+			auto mbIdx = dof.GetOsCoordinate().getJoint().getParentFrame().getMobilizedBodyIndex();
 
 			for ( auto j = 0; j < 3; ++j )
 				dof.m_RotationAxis[ j ] = jsmat( mbIdx * 6 + j, coIdx );
@@ -803,10 +916,10 @@ namespace scone
 
 	void ModelSimbody::UpdateOsimStorage()
 	{
-		OpenSim::Array<double> stateValues;
-		m_pOsimModel->getStateValues( GetTkState(), stateValues );
+		auto stateValues = m_pOsimModel->getStateVariableValues( GetTkState() );
+
 		OpenSim::StateVector vec;
-		vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[ 0 ] );
+		vec.setStates( GetTkState().getTime(), stateValues );
 		m_pOsimManager->getStateStorage().append( vec );
 	}
 

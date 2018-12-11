@@ -309,7 +309,7 @@ if(SCONE_OPENSIM_3)
 	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_3)
 endif()
 if(SCONE_OPENSIM_4)
-	target_link_libraries(sconelib osimActuators)
+	target_link_libraries(sconelib osimTools)
 	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_4)
 endif()
 

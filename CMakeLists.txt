@@ -20,12 +20,15 @@ find_package(Xo REQUIRED)
 
 option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
 option(SCONE_OPENSIM_4 "Support OpenSim 4.0" ON)
-if(SCONE_OPENSIM3)
+if(SCONE_OPENSIM_3)
     # This uses the FindOpenSim.cmake file in build/cmake.
     find_package(OpenSim 3.3 REQUIRED MODULE)
 endif()
-if(SCONE_OPENSIM4)
+if(SCONE_OPENSIM_4)
     find_package(OpenSim 4.0 REQUIRED CONFIG)
+endif()
+if(SCONE_OPENSIM_3 AND SCONE_OPENSIM_4)
+    message(FATAL_ERROR "Cannot currently use both OpenSim 3 and 4.")
 endif()
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
@@ -65,7 +68,7 @@ set(CMAKE_MACOSX_RPATH ON)
 # --------------------
 # Only build visualizer if Qt5 was found
 if(${Qt5Widgets_FOUND})
-    add_subdirectory(submodules/simvis)
+    # TODO add_subdirectory(submodules/simvis)
 endif()
 
 add_subdirectory(submodules/xo)
@@ -76,5 +79,5 @@ add_subdirectory(submodules/spot)
 #
 add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
-add_subdirectory(src/sconestudio)
+# TODO add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)

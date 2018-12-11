@@ -14,7 +14,7 @@
 
 namespace OpenSim
 {
-	class Body;
+	class PhysicalFrame;
 }
 
 namespace scone
@@ -22,7 +22,7 @@ namespace scone
 	class SCONE_API BodySimbody : public Body
 	{
 	public:
-		BodySimbody( class ModelSimbody& model, OpenSim::Body& body );
+		BodySimbody( class ModelSimbody& model, const OpenSim::PhysicalFrame& body );
 		virtual ~BodySimbody() { };
 
 		virtual Vec3 GetOriginPos() const override;
@@ -46,7 +46,7 @@ namespace scone
 		virtual Vec3 GetContactForce() const override;
 		virtual Vec3 GetContactMoment() const override;
 
-		OpenSim::Body& m_osBody;
+		const OpenSim::PhysicalFrame& m_osBody;
 		class ModelSimbody& m_Model;
 
 		// connect a specific stance_contact force to this body

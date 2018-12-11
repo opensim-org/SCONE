@@ -19,7 +19,7 @@
 
 namespace scone
 {
-	BodySimbody::BodySimbody( class ModelSimbody& model, OpenSim::Body& body ) :
+	BodySimbody::BodySimbody( class ModelSimbody& model, const OpenSim::PhysicalFrame& body ) :
 		Body(),
 		m_osBody( body ),
 		m_Model( model ),
@@ -27,7 +27,11 @@ namespace scone
 		m_LastNumDynamicsRealizations( -1 )
 	{
 		ConnectContactForce( body.getName() );
-		m_LocalComPos = ToVec3( m_osBody.getMassCenter() );
+		if (auto* body = dynamic_cast<const OpenSim::Body*>(&m_osBody)) {
+			m_LocalComPos = ToVec3( body->getMassCenter() );
+		} else {
+			m_LocalComPos = ToVec3( SimTK::Vec3(0) );
+		}
 	}
 
 	const String& BodySimbody::GetName() const
@@ -57,7 +61,7 @@ namespace scone
 		// TODO: OSIM: find what is the most efficient (compare to linvel)
 		// TODO: validate this!
 		SimTK::Vec3 point;
-		SimTK::Vec3 com = m_osBody.getMassCenter();
+		SimTK::Vec3 com(m_LocalComPos.x, m_LocalComPos.y, m_LocalComPos.z);
 		m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
 		return ToVec3( point );
 	}
@@ -95,11 +99,10 @@ namespace scone
 
 		// TODO: OSIM: find what is the most efficient (compare to linvel)
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
-		SimTK::Vec3 com;
+		SimTK::Vec3 com(m_LocalComPos.x, m_LocalComPos.y, m_LocalComPos.z);
 		SimTK::Vec3 vel;
 
 		// TODO: validate this!
-        com = m_osBody.getMassCenter();
 		m_osBody.getModel().getSimbodyEngine().getVelocity( m_Model.GetTkState(), m_osBody, com, vel );
 		return ToVec3( vel );
 	}
@@ -146,11 +149,10 @@ namespace scone
 
 		// TODO: OSIM: find what is the most efficient (compare to linvel)
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
-		SimTK::Vec3 com;
+		SimTK::Vec3 com(m_LocalComPos.x, m_LocalComPos.y, m_LocalComPos.z);
 		SimTK::Vec3 acc;
 
 		// TODO: validate this!
-		com = m_osBody.getMassCenter();
 		m_osBody.getModel().getSimbodyEngine().getAcceleration( m_Model.GetTkState(), m_osBody, com, acc );
 		return ToVec3( acc );
 	}

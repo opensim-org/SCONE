@@ -423,14 +423,20 @@ namespace scone
 		LinkUP link;
 
 		// find the Body
-		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body ) { return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
+		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body )
+		{ return dynamic_cast<BodySimbody&>( *body ).m_osBody == osBody; } );
 		SCONE_ASSERT( itBody != m_Bodies.end() );
 
 		// find the Joint (if any)
 		if ( osBody.hasJoint() )
 		{
 			// create a joint
-			m_Joints.emplace_back( new JointSimbody( **itBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() ) );
+			m_Joints.emplace_back( // scone joint
+					new JointSimbody(
+							/* scone body */ **itBody,
+							/* parent scone joint */ parent ? &parent->GetJoint() : nullptr,
+							/* model simbody */ *this,
+							/* opensim joint */ osBody.getJoint() ) );
 			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
 		}
 		else

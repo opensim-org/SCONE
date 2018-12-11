@@ -53,7 +53,7 @@ namespace scone
 		auto& model = m_osJoint.getModel();
 		auto& matter = model.getMatterSubsystem();
 		auto& state = m_Model.GetTkState();
-		auto child_body_idx = m_osJoint.getBody().getIndex();
+		auto child_body_idx = m_osJoint.getChildFrame().getMobilizedBodyIndex();
 
 		SimTK::Vector_< SimTK::SpatialVec > forcesAtMInG;
 		matter.calcMobilizerReactionForces( state, forcesAtMInG ); // state should be at acceleration
@@ -81,10 +81,8 @@ namespace scone
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
 
-		// TODO: compute the actual world pos of this joint instead of the pos in the parent frame
-		// OpenSim: how can we get the actual position of a joint
 		SimTK::Vec3 p;
-		m_osJoint.getLocationInParent( p );
+		m_osJoint.getParentFrame().getPositionInGround( m_Model.GetTkState() );
 		std::cout << GetName() << ": " << p << std::endl;
 		return ToVec3( p );
 	}
