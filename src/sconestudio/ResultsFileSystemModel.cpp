@@ -87,7 +87,8 @@ QVariant ResultsFileSystemModel::data( const QModelIndex &idx, int role ) const
 
 	if ( role == Qt::DisplayRole )
 	{
-		auto stat = getStatus( fileInfo( idx ) );
+		auto fi = fileInfo( idx );
+		auto stat = getStatus( fi );
 		if ( stat.gen < 0 )
 			return QVariant( QString( "" ) );
 

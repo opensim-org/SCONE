@@ -68,7 +68,7 @@ set(CMAKE_MACOSX_RPATH ON)
 # --------------------
 # Only build visualizer if Qt5 was found
 if(${Qt5Widgets_FOUND})
-    # TODO add_subdirectory(submodules/simvis)
+    add_subdirectory(submodules/simvis)
 endif()
 
 add_subdirectory(submodules/xo)
@@ -79,5 +79,5 @@ add_subdirectory(submodules/spot)
 #
 add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
-# TODO add_subdirectory(src/sconestudio)
+add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)

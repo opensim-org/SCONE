@@ -183,7 +183,8 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		std::stringstream str( s.substr( 1 ) );
 		xo::prop_node pn;
 		xo::error_code ec;
-		str >> xo::prop_node_serializer_zml( pn, &ec );
+		xo::prop_node_serializer_zml zml( pn, &ec ) ;
+		str >> zml;
 
 		if ( ec.bad() )
 		{
