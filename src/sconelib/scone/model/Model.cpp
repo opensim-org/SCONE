@@ -210,6 +210,8 @@ namespace scone
 				frame[ leg->GetName() + ".grf_z" ] = grf.z;
 			}
 		}
+
+		// TODO: store contact force, moment and cop of all bodies
 	}
 
 	void Model::StoreCurrentFrame()
