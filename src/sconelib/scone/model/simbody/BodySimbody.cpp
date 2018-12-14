@@ -259,6 +259,7 @@ namespace scone
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
 			int num_dyn = m_osBody.getModel().getMultibodySystem().getNumRealizationsOfThisStage( SimTK::Stage::Dynamics );
 
+			// update m_ContactForceValues only if needed (performance)
 			if ( m_LastNumDynamicsRealizations != num_dyn )
 			{
 				// TODO: find out if this can be done less clumsy in OpenSim
@@ -269,6 +270,7 @@ namespace scone
 				m_LastNumDynamicsRealizations = num_dyn;
 			}
 		}
+
 		return m_ContactForceValues;
 	}
 

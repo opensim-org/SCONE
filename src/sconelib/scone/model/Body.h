@@ -42,6 +42,7 @@ namespace scone
 		virtual const std::vector< Real >& GetContactForceValues() const = 0;
 		virtual const std::vector< String >& GetContactForceLabels() const = 0;
 
+		virtual bool HasContact() const = 0;
 		virtual Vec3 GetContactForce() const = 0;
 		virtual Vec3 GetContactMoment() const = 0;
 
@@ -50,7 +51,6 @@ namespace scone
 		virtual void SetExternalMoment( const Vec3& torque ) = 0;
 		virtual void AddExternalForce( const Vec3& f ) = 0;
 		virtual void AddExternalMoment( const Vec3& torque ) = 0;
-
 
 		virtual Vec3 GetExternalForce() const = 0;
 		virtual Vec3 GetExternalForcePoint() const = 0;

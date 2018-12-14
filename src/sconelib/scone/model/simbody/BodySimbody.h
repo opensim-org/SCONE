@@ -43,6 +43,7 @@ namespace scone
 
 		virtual const String& GetName() const override;
 
+		virtual bool HasContact() const override { return m_ForceIndex != -1; }
 		virtual Vec3 GetContactForce() const override;
 		virtual Vec3 GetContactMoment() const override;
 

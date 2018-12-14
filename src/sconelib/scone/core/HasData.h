@@ -25,6 +25,7 @@ namespace scone
 		BodyComPosition,
 		BodyOrientation,
 		GroundReactionForce,
+		ExternalForce,
 		CenterOfMass,
 		SensorData,
 		ControllerData

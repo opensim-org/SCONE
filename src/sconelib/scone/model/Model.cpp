@@ -204,14 +204,32 @@ namespace scone
 		{
 			for ( auto& leg : GetLegs() )
 			{
-				auto grf = leg->GetContactForce() / GetBW();
-				frame[ leg->GetName() + ".grf_x" ] = grf.x;
-				frame[ leg->GetName() + ".grf_y" ] = grf.y;
-				frame[ leg->GetName() + ".grf_z" ] = grf.z;
+				Vec3 force, moment, cop;
+				leg->GetContactForceMomentCop( force, moment, cop );
+				Vec3 grf = force / GetBW();
+
+				frame[ leg->GetName() + ".grf_norm_x" ] = grf.x;
+				frame[ leg->GetName() + ".grf_norm_y" ] = grf.y;
+				frame[ leg->GetName() + ".grf_norm_z" ] = grf.z;
+				frame[ leg->GetName() + ".grf_x" ] = force.x;
+				frame[ leg->GetName() + ".grf_y" ] = force.y;
+				frame[ leg->GetName() + ".grf_z" ] = force.z;
+				frame[ leg->GetName() + ".grm_x" ] = moment.x;
+				frame[ leg->GetName() + ".grm_y" ] = moment.y;
+				frame[ leg->GetName() + ".grm_z" ] = moment.z;
+				frame[ leg->GetName() + ".cop_x" ] = cop.x;
+				frame[ leg->GetName() + ".cop_y" ] = cop.y;
+				frame[ leg->GetName() + ".cop_z" ] = cop.z;
 			}
 		}
 
-		// TODO: store contact force, moment and cop of all bodies
+		if ( flags( StoreDataTypes::ExternalForce ) )
+		{
+			for ( auto& body : GetBodies() )
+			{
+				// TODO: store external force, moment and cop of all bodies
+			}
+		}
 	}
 
 	void Model::StoreCurrentFrame()
