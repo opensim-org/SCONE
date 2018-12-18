@@ -24,6 +24,9 @@ namespace scone
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const override;
 
+		/// Child node containing all Measures.
+		const PropNode* Controllers;
+
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 

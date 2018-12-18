@@ -18,6 +18,10 @@ namespace scone
 	{
 		for ( auto& cpn : props.select( "Controller" ) )
 			controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
+
+		if ( Controllers = props.try_get_child( "Controllers" ) )
+			for ( auto& cpn : *Controllers )
+				controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
 	}
 
 	bool CompositeController::ComputeControls( Model& model, double timestamp )
