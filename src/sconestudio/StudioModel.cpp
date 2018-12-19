@@ -44,7 +44,7 @@ namespace scone
 
 		// create the objective form par file or config file
 		model_objective = CreateModelObjective( file );
-		log::info( "Created objective ", model_objective->GetSignature(), " from ", file );
+		log::info( "Created objective ", model_objective->GetSignature(), "; dim=", model_objective->dim(), " source=", file.filename() );
 
 		SearchPoint par( model_objective->info() );
 		if ( file.extension() == "par" )
@@ -61,7 +61,7 @@ namespace scone
 		if ( file.extension() == "sto" && !force_evaluation )
 		{
 			xo::timer t;
-			log::info( "Reading ", file );
+			log::debug( "Reading ", file );
 			ReadStorageSto( data, file );
 			InitStateDataIndices();
 			log::trace( "Read ", file, " in ", t.seconds(), " seconds" );
@@ -73,7 +73,7 @@ namespace scone
 			model_->SetStoreData( true );
 
 			model_->SetSimulationEndTime( model_objective->GetDuration() );
-			log::info( "Evaluating ", filename_ );
+			log::debug( "Evaluating ", filename_ );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
 
@@ -281,7 +281,7 @@ namespace scone
 			results.push_back( "result", model_objective->GetReport( *model_ ) );
 			model_->WriteResults( filename_ );
 
-			log::info( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
+			log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
 			log::info( results );
 		}
 

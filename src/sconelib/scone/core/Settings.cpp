@@ -24,7 +24,7 @@ namespace scone
 			auto schema_path = GetInstallFolder() / "resources/scone-settings-schema.zml";
 			auto settings_path = GetSettingsFolder() / "scone-settings.zml";
 			scone_settings = std::make_unique< xo::settings >( load_file( schema_path ), settings_path, GetSconeVersion() );
-			log::info( "Loaded settings from ", settings_path );
+			log::debug( "Loaded settings from ", settings_path );
 		}
 
 		// set default paths if they don't exist

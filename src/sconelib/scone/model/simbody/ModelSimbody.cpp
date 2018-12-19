@@ -248,8 +248,7 @@ namespace scone
 
 		// create and initialize controllers
 		CreateControllers( props, par );
-
-		log::info( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
+		log::info( "Created model ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 	}
 
 	ModelSimbody::~ModelSimbody() {}

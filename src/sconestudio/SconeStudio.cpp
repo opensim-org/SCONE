@@ -32,6 +32,7 @@
 #include "xo/filesystem/filesystem.h"
 #include "xo/system/system_tools.h"
 #include "xo/utility/types.h"
+#include "xo/system/platform.h"
 
 using namespace scone;
 using namespace std;
@@ -46,7 +47,6 @@ captureProcess( nullptr ),
 scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
-
 	ui.setupUi( this );
 
 	createFileMenu( make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
@@ -154,9 +154,9 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( &backgroundUpdateTimer, SIGNAL( timeout() ), this, SLOT( updateBackgroundTimer() ) );
 	backgroundUpdateTimer.start( 500 );
 
-	// only do this after the ui has been initialized
+	// add outputText to global sinks (only *after* the ui has been initialized)
 	xo::log::add_sink( ui.outputText );
-	ui.outputText->set_log_level( xo::log::trace_level );
+	ui.outputText->set_log_level( XO_IS_DEBUG ? xo::log::trace_level : xo::log::debug_level );
 
 	restoreSettings( "SCONE", "SconeStudio" );
 	ui.messagesDock->raise();
@@ -397,7 +397,7 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 
 		auto columns = std::max<int>( 1, ( optimizations.size() + 5 ) / 6 );
 		auto rows = ( optimizations.size() + columns - 1 ) / columns;
-		log::info( "Reorganizing windows, columns=", columns, " rows=", rows );
+		log::debug( "Reorganizing windows, columns=", columns, " rows=", rows );
 
 		// first column
 		splitDockWidget( optimizations[ 0 ], ui.resultsDock, Qt::Horizontal );

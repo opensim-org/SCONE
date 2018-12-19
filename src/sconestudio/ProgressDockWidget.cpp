@@ -147,7 +147,7 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 	if ( pn.try_get( message, "error" ) )
 	{
 		state = ErrorState;
-		log::info( "Optimization ", name, " error: ", message.toStdString() );
+		log::error( "Optimization ", name, " error: ", message.toStdString() );
 	}
 
 	has_update_flag = true;
@@ -229,7 +229,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 					updateText();
 				}
 
-				log::info( "Initialized optimization ", *id );
+				log::debug( "Initialized optimization ", *id );
 			}
 			else
 			{
