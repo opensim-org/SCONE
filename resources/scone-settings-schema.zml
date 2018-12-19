@@ -52,8 +52,8 @@ data {
 	}
 	controller {
 		type = bool
-		default = 1
 		label = "Output controller data"
+		default = 1
 		description = "Boolean indicating whether to output controller data"
 	}
 }
