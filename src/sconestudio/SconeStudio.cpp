@@ -7,34 +7,30 @@
 */
 
 #include "SconeStudio.h"
+#include "StudioSettings.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
+#include "scone/core/Settings.h"
+#include "studio_config.h"
 
 #include <osgDB/ReadFile>
+#include "simvis/color.h"
+#include "simvis/osg_tools.h"
+#include "simvis/plane.h"
 
 #include <QtWidgets/QFileSystemModel.h>
 #include <QtWidgets/QMessageBox.h>
 #include <QtWidgets/QFileDialog>
 #include <QTextStream>
-
-#include "simvis/osg_tools.h"
-#include "simvis/plane.h"
-#include "scone/optimization/opt_tools.h"
-#include "xo/system/system_tools.h"
-#include "qt_tools.h"
-#include "qevent.h"
+#include <QTabWidget>
 #include "qcustomplot.h"
-#include "studio_config.h"
+#include "qevent.h"
+#include "qt_tools.h"
 #include "ui_SconeSettings.h"
-#include "scone/core/Profiler.h"
-#include "spot/cma_optimizer.h"
-#include "spot/console_reporter.h"
-#include "spot/file_reporter.h"
+
 #include "xo/filesystem/filesystem.h"
-#include "simvis/color.h"
-#include "scone/core/Settings.h"
-#include "StudioSettings.h"
-#include "QTabWidget"
+#include "xo/system/system_tools.h"
 #include "xo/utility/types.h"
 
 using namespace scone;
@@ -50,24 +46,36 @@ captureProcess( nullptr ),
 scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
-	//setStyleSheet( "QFrame { border: 1px solid red }" );
 
 	ui.setupUi( this );
 
-	ui.stackedWidget->setCurrentIndex( 0 );
-	ui.playControl->setDigits( 6, 3 );
+	createFileMenu( make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
-	analysisView = new QDataAnalysisView( &storageModel, this );
-	analysisView->setObjectName( "Analysis" );
-	analysisView->setMinSeriesInterval( 0 );
-	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
+	auto viewMenu = menuBar()->addMenu( "&View" );
+	viewActions[ StudioModel::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowTendons ] = addMenuAction( viewMenu, "Show &Tendons", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowGeometry ] = addMenuAction( viewMenu, "Show &Bone Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowContactGeom ] = addMenuAction( viewMenu, "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
+	viewActions[ StudioModel::ShowGroundPlane ] = addMenuAction( viewMenu, "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
+	for ( auto& va : viewActions )
+	{
+		va.second->setCheckable( true );
+		va.second->setChecked( va.first != StudioModel::ShowAxes );
+	}
+
+	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
+	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
+	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ), true );
+	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence(), true );
+	addMenuAction( scenarioMenu, "&Run Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
-	// create window menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
@@ -86,6 +94,14 @@ scene_( true )
 	createWindowMenu();
 	createHelpMenu();
 
+	ui.stackedWidget->setCurrentIndex( 0 );
+	ui.playControl->setDigits( 6, 3 );
+
+	analysisView = new QDataAnalysisView( &storageModel, this );
+	analysisView->setObjectName( "Analysis" );
+	analysisView->setMinSeriesInterval( 0 );
+	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
+
 	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
@@ -103,7 +119,6 @@ scene_( true )
 	// init scene
 	ground_plane = scene_.add< vis::plane >( 128, 128, 0.5f, scone::GetStudioSetting< vis::color >( "viewer.tile1" ), scone::GetStudioSetting< vis::color >( "viewer.tile2" ) );
 	ui.osgViewer->setClearColor( to_osg( scone::GetStudioSetting< vis::color >( "viewer.background" ) ) );
-
 	//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
 	//ui.osgViewer->setClearColor( to_osg( vis::make_from_hex( 0xa0a0a0 ) ) );
 }
@@ -132,10 +147,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	connect( ui.playControl, &QPlayControl::playTriggered, this, &SconeStudio::start );
 	connect( ui.playControl, &QPlayControl::stopTriggered, this, &SconeStudio::stop );
 	connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::setPlaybackTime );
-	//connect( ui.playControl, &QPlayControl::timeChanged, this, &SconeStudio::refreshAnalysis );
 	connect( ui.playControl, &QPlayControl::sliderReleased, this, &SconeStudio::refreshAnalysis );
-	//connect( ui.playControl, &QPlayControl::nextTriggered, this, &SconeStudio::refreshAnalysis );
-	//connect( ui.playControl, &QPlayControl::previousTriggered, this, &SconeStudio::refreshAnalysis );
 	connect( analysisView, &QDataAnalysisView::timeChanged, ui.playControl, &QPlayControl::setTime );
 
 	// start timer for viewer
@@ -146,13 +158,7 @@ bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
 	xo::log::add_sink( ui.outputText );
 	ui.outputText->set_log_level( xo::log::trace_level );
 
-	xo::log::debug( "Loading GUI settings" );
-	QSettings cfg( "SCONE", "SconeStudio" );
-	restoreGeometry( cfg.value( "geometry" ).toByteArray() );
-	restoreState( cfg.value( "windowState" ).toByteArray() );
-	recentFiles = cfg.value( "recentFiles" ).toStringList();
-
-	updateRecentFilesMenu();
+	restoreSettings( "SCONE", "SconeStudio" );
 	ui.messagesDock->raise();
 
 	return true;
@@ -316,7 +322,7 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 	}
 }
 
-void SconeStudio::fileOpen()
+void SconeStudio::fileOpenTriggered()
 {
 	QString default_path = make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) );
 	if ( auto* s = getActiveScenario() )
@@ -324,10 +330,10 @@ void SconeStudio::fileOpen()
 
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.scone *.xml *.zml)" );
 	if ( !filename.isEmpty() )
-		fileOpen( filename );
+		openFile( filename );
 }
 
-void SconeStudio::fileOpen( const QString& filename )
+void SconeStudio::openFile( const QString& filename )
 {
 	try
 	{
@@ -337,21 +343,15 @@ void SconeStudio::fileOpen( const QString& filename )
 		ui.tabWidget->setCurrentIndex( idx );
 		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
 		scenarios.push_back( edw );
-		addRecentFile( filename );
+		updateRecentFilesMenu( filename );
 	}
 	catch ( std::exception& e )
 	{
-		error( "Error opening file", e.what() );
+		error( "Error opening " + filename, e.what() );
 	}
 }
 
-void SconeStudio::fileOpenRecent()
-{
-	auto act = qobject_cast<QAction*>( sender() );
-	fileOpen( act->text() );
-}
-
-void SconeStudio::fileSave()
+void SconeStudio::fileSaveTriggered()
 {
 	if ( auto* s = getActiveScenario() )
 	{
@@ -360,30 +360,29 @@ void SconeStudio::fileSave()
 	}
 }
 
-void SconeStudio::fileSaveAs()
+void SconeStudio::fileSaveAsTriggered()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		QString fn = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml)" );
-		if ( !fn.isEmpty() )
+		QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml)" );
+		if ( !filename.isEmpty() )
 		{
-			s->saveAs( fn );
+			s->saveAs( filename );
 			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-			addRecentFile( s->fileName );
+			updateRecentFilesMenu( s->fileName );
 		}
 	}
 }
 
-void SconeStudio::fileExit()
+bool SconeStudio::tryExit()
 {
-	log::info( "Exiting SCONE" );
-	close();
+	abortOptimizations();
+	return optimizations.empty();
 }
 
 void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 {
 	optimizations.push_back( pdw );
-
 	if ( optimizations.size() < 4 )
 	{
 		// stack below results
@@ -416,26 +415,6 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 			}
 		}
 	}
-}
-
-void SconeStudio::addRecentFile( const QString& filename )
-{
-	recentFiles.push_front( filename );
-	recentFiles.removeDuplicates();
-	while ( recentFiles.size() > 10 ) recentFiles.removeLast();
-	updateRecentFilesMenu();
-}
-
-void SconeStudio::updateRecentFilesMenu()
-{
-	// init recent files menu
-	QMenu* recent_menu = new QMenu();
-	for ( int idx = 0; idx < recentFiles.size(); ++idx )
-	{
-		QAction* act = recent_menu->addAction( recentFiles[ idx ] );
-		connect( act, SIGNAL( triggered() ), this, SLOT( fileOpenRecent() ) );
-	}
-	ui.action_Recent->setMenu( recent_menu );
 }
 
 bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
@@ -595,33 +574,13 @@ void SconeStudio::tabCloseRequested( int idx )
 void SconeStudio::updateViewSettings()
 {
 	StudioModel::ViewFlags f;
-	f.set( StudioModel::ShowForces, ui.actionShow_External_Forces->isChecked() );
-	f.set( StudioModel::ShowMuscles, ui.actionShow_Muscles->isChecked() );
-	f.set( StudioModel::ShowTendons, ui.actionShow_Tendons->isChecked() );
-	f.set( StudioModel::ShowGeometry, ui.actionShow_Bone_Geometry->isChecked() );
-	f.set( StudioModel::ShowAxes, ui.actionShow_Body_Axes->isChecked() );
-	f.set( StudioModel::ShowContactGeom, ui.actionShow_Contact_Geometry->isChecked() );
-	f.set( StudioModel::ShowGroundPlane, ui.actionShow_Ground_Plane->isChecked() );
+	for ( auto& va : viewActions )
+		f.set( va.first, va.second->isChecked() );
 
 	if ( model )
 		model->ApplyViewSettings( f );
 
 	ground_plane.show( f.get< StudioModel::ShowGroundPlane >() );
-
-	ProgressDockWidget::AxisScaleType scale = ui.actionUse_Log_Scale->isChecked() ? ProgressDockWidget::Logarithmic : ProgressDockWidget::Linear;
-	for ( auto& o : optimizations )
-		o->SetAxisScaleType( scale );
-}
-
-void SconeStudio::fixViewCheckboxes()
-{
-	ui.actionOptimization_Results->blockSignals( true );
-	ui.actionOptimization_Results->setChecked( ui.resultsDock->isVisible() );
-	ui.actionOptimization_Results->blockSignals( false );
-
-	ui.action_Messages->blockSignals( true );
-	ui.action_Messages->setChecked( ui.messagesDock->isVisible() );
-	ui.action_Messages->blockSignals( false );
 }
 
 void SconeStudio::updateTabTitles()
@@ -675,22 +634,4 @@ void SconeStudio::finalizeCapture()
 	delete captureProcess;
 	captureProcess = nullptr;
 	captureFilename.clear();
-}
-
-void SconeStudio::closeEvent( QCloseEvent *e )
-{
-	abortOptimizations();
-	if ( !optimizations.empty() )
-	{
-		e->ignore();
-		return;
-	}
-
-	xo::log::debug( "Saving GUI settings" );
-	QSettings cfg( "SCONE", "SconeStudio" );
-	cfg.setValue( "geometry", saveGeometry() );
-	cfg.setValue( "windowState", saveState() );
-	cfg.setValue( "recentFiles", recentFiles );
-
-	QMainWindow::closeEvent( e );
 }
