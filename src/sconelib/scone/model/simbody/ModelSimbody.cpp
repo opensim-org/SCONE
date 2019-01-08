@@ -549,11 +549,12 @@ namespace scone
 				m_PrevTime = GetTime();
 				m_PrevIntStep = GetIntegrationStep();
 				double target_time = GetTime() + fixed_control_step_size;
-				SimTK::Integrator::SuccessfulStepStatus status;
 
 				{
 					SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
-					status = m_pTkTimeStepper->stepTo( target_time );
+					auto status = m_pTkTimeStepper->stepTo( target_time );
+					if ( status == SimTK::Integrator::EndOfSimulation )
+						RequestTermination();
 				}
 
 				SetTkState( m_pTkIntegrator->updAdvancedState() );
@@ -572,8 +573,8 @@ namespace scone
 				if ( GetStoreData() )
 					StoreCurrentFrame();
 
-				// terminate on request
-				if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+				// terminate when simulation has ended
+				if ( HasSimulationEnded() )
 				{
 					log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 					break;
@@ -588,10 +589,10 @@ namespace scone
 		}
 	}
 
-	void ModelSimbody::SetTerminationRequest()
+	void ModelSimbody::RequestTermination()
 	{
-		Model::SetTerminationRequest();
-		m_pOsimManager->halt();
+		Model::RequestTermination();
+		m_pOsimManager->halt(); // needed when using an OpenSim::Manager
 	}
 
 	double ModelSimbody::GetTime() const

@@ -228,7 +228,7 @@ namespace scone
 	{
 		auto mp = mus.GetMusclePath();
 		auto len = mus.GetLength();
-		auto tlen = mus.GetTendonLength() / 2;
+		auto tlen = std::max( 0.0, mus.GetTendonLength() / 2 );
 		auto a = mus.GetActivation();
 		auto p = mus.GetMusclePath();
 
@@ -256,7 +256,7 @@ namespace scone
 		try
 		{
 			model_objective->AdvanceSimulationTo( *model_, t );
-			if ( model_->GetTerminationRequest() || t >= model_->GetSimulationEndTime() )
+			if ( model_->HasSimulationEnded() )
 				FinalizeEvaluation( true );
 		}
 		catch ( std::exception& e )

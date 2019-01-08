@@ -253,7 +253,7 @@ namespace scone
 		terminate |= GetController()->UpdateControls( *this, GetTime() );
 
 		if ( terminate )
-			SetTerminationRequest();
+			RequestTermination();
 	}
 
 	void Model::UpdateAnalyses()
@@ -265,7 +265,7 @@ namespace scone
 		terminate |= GetMeasure()->UpdateAnalysis( *this, GetTime() );
 
 		if ( terminate )
-			SetTerminationRequest();
+			RequestTermination();
 	}
 
 	const Link& Model::FindLink( const String& body_name )

@@ -103,6 +103,8 @@ namespace scone
 		virtual void AdvanceSimulationTo( double time ) = 0;
 		virtual double GetSimulationEndTime() const = 0;
 		virtual void SetSimulationEndTime( double time ) = 0;
+		virtual bool HasSimulationEnded() { return m_ShouldTerminate || GetTime() >= GetSimulationEndTime(); }
+		virtual void RequestTermination() { m_ShouldTerminate = true; }
 
 		/// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
@@ -124,10 +126,6 @@ namespace scone
 		const PropNode* GetCustomProps() { return m_pCustomProps; }
 		const PropNode* GetModelProps() { return m_pModelProps; }
 		PropNode& GetUserData() { return m_UserData; }
-
-		// TODO: perhaps remove termination request here
-		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
-		virtual bool GetTerminationRequest() { return m_ShouldTerminate; }
 
 		// streaming operator (for debugging)
 		virtual std::ostream& ToStream( std::ostream& str ) const;
