@@ -2,7 +2,7 @@
 ;Start Menu Folder Selection Example Script
 ;Written by Joost Verburg
 
-!define SCONE_VERSION "0.20.0-ALPHA"
+!define SCONE_VERSION "0.20.1-ALPHA"
 !define MSVC_VERSION "msvc2017_64"
 !define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.0"

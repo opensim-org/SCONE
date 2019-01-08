@@ -1,5 +1,12 @@
 ====== What's new ======
 
+==== SCONE 0.20.1 ALPHA ====
+//Released January 8, 2019//
+
+=== Fixes ===
+  * Issue where negative tendon lengths would cause a crash in the visualization
+  * Issue where simulations with a duration with a decimal point would not terminate correctly
+
 ==== SCONE 0.20.0 ALPHA ====
 //Released December 14, 2018//
 
