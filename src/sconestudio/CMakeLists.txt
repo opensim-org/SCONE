@@ -103,9 +103,6 @@ if(${Qt5Widgets_FOUND})
 	INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
 	INCLUDE_DIRECTORIES(${OSGQT_INCLUDE_DIR})
 
-		# TODO: use osgqt 3.4.3, which includes osgqt.
-		#		osg moved osgqt to a separate repo in 3.6(?)
-
 	target_link_libraries(sconestudio
 		sconelib
 		simvis

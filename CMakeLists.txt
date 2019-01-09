@@ -19,7 +19,7 @@ find_package(Spot REQUIRED)
 find_package(Xo REQUIRED)
 
 option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
-option(SCONE_OPENSIM_4 "Support OpenSim 4.0" ON)
+option(SCONE_OPENSIM_4 "Support OpenSim 4.0" OFF)
 if(SCONE_OPENSIM_3)
     # This uses the FindOpenSim.cmake file in build/cmake.
     find_package(OpenSim 3.3 REQUIRED MODULE)

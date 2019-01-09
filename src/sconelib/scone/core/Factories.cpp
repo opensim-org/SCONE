@@ -133,13 +133,12 @@ namespace scone
 		static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
 		if ( g_ModelFactory.empty() )
 		{
-			#ifdef SCONE_OPENSIM_3
+#ifdef SCONE_OPENSIM_3
 			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
-            #endif
-			#ifdef SCONE_OPENSIM_4
-			// TODO change to ModelSimbody4
+#endif
+#ifdef SCONE_OPENSIM_4
 			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
-            #endif
+#endif
 		}
 		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
 	}
