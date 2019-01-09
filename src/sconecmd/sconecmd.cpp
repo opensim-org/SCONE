@@ -36,7 +36,6 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< String > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
 		TCLAP::ValueArg< String > parArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Parameter file" );
 		TCLAP::ValueArg< String > outArg( "r", "result", "Output file for evaluation result", false, "", "Output file", cmd );
-		TCLAP::ValueArg< double > freqArg( "f", "frequency", "Output file data frequency", false, 100, "10-10000", cmd );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
@@ -75,7 +74,11 @@ int main(int argc, char* argv[])
 				auto par_path = path( parArg.getValue() );
 				auto out_path = path( outArg.isSet() ? outArg.getValue() : parArg.getValue() );
 				log::info( "Evaluating ", par_path );
-				EvaluateScenario( scenario_pn, par_path, out_path, 1.0 / freqArg.getValue() );
+				EvaluateScenario( scenario_pn, par_path, out_path );
+
+				// store config file if arguments have changed
+				if ( propArg.isSet() && outArg.isSet() )
+					save_file( scenario_pn, out_path.replace_extension( "scone" ) );
 			}
 		}
 		catch ( std::exception& e )

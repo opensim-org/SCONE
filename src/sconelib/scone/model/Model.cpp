@@ -7,24 +7,21 @@
 */
 
 #include "Model.h"
-
 #include "Body.h"
 #include "Joint.h"
 #include "Dof.h"
 #include "Muscle.h"
 #include <algorithm>
-
 #include "scone/core/Profiler.h"
 #include "scone/core/Log.h"
 #include "scone/core/Factories.h"
-
 #include "SensorDelayAdapter.h"
 #include "scone/model/State.h"
 #include "scone/measures/Measure.h"
-
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
 #include "../controllers/CompositeController.h"
+#include "../core/Settings.h"
 
 using std::endl;
 
@@ -36,10 +33,34 @@ namespace scone
 	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 	m_StoreData( false ),
-	m_StoreDataFlags( { StoreDataTypes::State, /*StoreDataTypes::DofMoment,*/ StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
+	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 	m_Measure( nullptr )
 	{
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
+
+		// old-style initialization (for backwards compatibility)
+		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
+		{
+			initial_state_offset = sio->try_get_child( "offset" );
+			initial_state_offset_symmetric = sio->get( "symmetric", false );
+			initial_state_offset_include = sio->get< String >( "include_states", "*" );
+			initial_state_offset_exclude = sio->get< String >( "exclude_states", "" );
+		}
+		else
+		{
+			initial_state_offset = props.try_get_child( "initial_state_offset" );
+			INIT_PROP( props, initial_state_offset_symmetric, false );
+			INIT_PROP( props, initial_state_offset_include, "*" );
+			INIT_PROP( props, initial_state_offset_exclude, "" );
+		}
+
+		// set store data info from settings
+		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );
+		GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce }, GetSconeSettings().get< bool >( "data.joint" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::SensorData }, GetSconeSettings().get< bool >( "data.sensor" ) );
+		GetStoreDataFlags().set( { StoreDataTypes::ControllerData }, GetSconeSettings().get< bool >( "data.controller" ) );
 	}
 
 	Model::~Model()
@@ -183,10 +204,30 @@ namespace scone
 		{
 			for ( auto& leg : GetLegs() )
 			{
-				auto grf = leg->GetContactForce() / GetBW();
-				frame[ leg->GetName() + ".grf_x" ] = grf.x;
-				frame[ leg->GetName() + ".grf_y" ] = grf.y;
-				frame[ leg->GetName() + ".grf_z" ] = grf.z;
+				Vec3 force, moment, cop;
+				leg->GetContactForceMomentCop( force, moment, cop );
+				Vec3 grf = force / GetBW();
+
+				frame[ leg->GetName() + ".grf_norm_x" ] = grf.x;
+				frame[ leg->GetName() + ".grf_norm_y" ] = grf.y;
+				frame[ leg->GetName() + ".grf_norm_z" ] = grf.z;
+				frame[ leg->GetName() + ".grf_x" ] = force.x;
+				frame[ leg->GetName() + ".grf_y" ] = force.y;
+				frame[ leg->GetName() + ".grf_z" ] = force.z;
+				frame[ leg->GetName() + ".grm_x" ] = moment.x;
+				frame[ leg->GetName() + ".grm_y" ] = moment.y;
+				frame[ leg->GetName() + ".grm_z" ] = moment.z;
+				frame[ leg->GetName() + ".cop_x" ] = cop.x;
+				frame[ leg->GetName() + ".cop_y" ] = cop.y;
+				frame[ leg->GetName() + ".cop_z" ] = cop.z;
+			}
+		}
+
+		if ( flags( StoreDataTypes::ExternalForce ) )
+		{
+			for ( auto& body : GetBodies() )
+			{
+				// TODO: store external force, moment and cop of all bodies
 			}
 		}
 	}
@@ -212,7 +253,7 @@ namespace scone
 		terminate |= GetController()->UpdateControls( *this, GetTime() );
 
 		if ( terminate )
-			SetTerminationRequest();
+			RequestTermination();
 	}
 
 	void Model::UpdateAnalyses()
@@ -224,7 +265,7 @@ namespace scone
 		terminate |= GetMeasure()->UpdateAnalysis( *this, GetTime() );
 
 		if ( terminate )
-			SetTerminationRequest();
+			RequestTermination();
 	}
 
 	const Link& Model::FindLink( const String& body_name )

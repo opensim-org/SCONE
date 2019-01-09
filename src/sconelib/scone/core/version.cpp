@@ -11,10 +11,10 @@
 #include "xo/filesystem/filesystem.h"
 #include <fstream>
 
-#define SCONE_VERSION_MAJOR 0
-#define SCONE_VERSION_MINOR 18
-#define SCONE_VERSION_PATCH 0
-#define SCONE_VERSION_POSTFIX "ALPHA"
+constexpr int SCONE_VERSION_MAJOR = 0;
+constexpr int SCONE_VERSION_MINOR = 20;
+constexpr int SCONE_VERSION_PATCH = 1;
+constexpr char* SCONE_VERSION_POSTFIX = SCONE_DEBUG ? "ALPHA DEBUG" : "ALPHA";
 
 namespace scone
 {

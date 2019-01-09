@@ -37,11 +37,12 @@ namespace scone
 		return std::move( o );
 	}
 
-	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base, double data_resolution )
+	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
 		current_path( par_file.parent_path() );
 
-		const PropNode& objProp = scenario_pn[ "Optimizer" ][ "Objective" ];
+		const PropNode& optProp = scenario_pn[ "Optimizer" ];
+		const PropNode& objProp = optProp[ "Objective" ];
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
@@ -52,9 +53,23 @@ namespace scone
 			xo::log_unaccessed( objProp );
 		}
 
+		// create model
+		ModelUP model;
+		if ( par_file.empty() || par_file.extension() == "scone" )
+		{
+			// no par file was given, try to use init_file
+			// IMPORTANT: this uses the parameter MEAN of the init_file
+			// as to be consistent with running a scenario from inside SCONE studio
+			// TODO: combine this code with CreateModelObjective, since the same is happening there
+			if ( auto init_file = optProp.try_get< path >( "init_file" ) )
+				so.info().import_mean_std( *init_file, optProp.get< bool >( "use_init_file_std", true ) );
+			model = so.CreateModelFromParams( SearchPoint( so.info() ) );
+		}
+		else model = so.CreateModelFromParFile( par_file );
+
 		// set data storage
-		auto model = so.CreateModelFromParFile( par_file );
-		model->SetStoreData( true, data_resolution );
+		SCONE_ASSERT( model );
+		model->SetStoreData( true );
 		Profiler::GetGlobalInstance().Reset();
 
 		timer tmr;
@@ -76,13 +91,12 @@ namespace scone
 		return statistics;
 	}
 
-	SCONE_API path FindScenario( const path& scenario_or_par_file )
+	SCONE_API path FindScenario( const path& file )
 	{
-		if ( scenario_or_par_file.extension() == "par" )
-		{
-			auto folder = scenario_or_par_file.parent_path();
-			return xo::find_file( { folder / "config.scone", folder / "config.xml" } );
-		}
-		else return scenario_or_par_file;
+		if ( file.extension() == "scone" || file.extension() == "xml" )
+			return file;
+
+		auto folder = file.parent_path();
+		return xo::find_file( { path( file ).replace_extension( "scone" ), folder / "config.scone", folder / "config.xml" } );
 	}
 }

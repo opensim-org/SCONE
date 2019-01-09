@@ -1,8 +1,0 @@
-syntax: glob
-bin/
-intermediate/
-build/
-*.log
-models/test/*
-config/backup/*
-build/cmake-msvc2013/

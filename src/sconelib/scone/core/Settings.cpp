@@ -15,23 +15,27 @@
 
 namespace scone
 {
+	u_ptr< xo::settings > scone_settings;
+
 	xo::settings& GetSconeSettings()
 	{
-		static auto settings = xo::settings(
-			load_file( GetInstallFolder() / "resources/scone-settings-schema.zml" ),
-			GetSettingsFolder() / "scone-settings.zml",
-			GetSconeVersion()
-			);
+		if ( !scone_settings )
+		{
+			auto schema_path = GetInstallFolder() / "resources/scone-settings-schema.zml";
+			auto settings_path = GetSettingsFolder() / "scone-settings.zml";
+			scone_settings = std::make_unique< xo::settings >( load_file( schema_path ), settings_path, GetSconeVersion() );
+			log::debug( "Loaded settings from ", settings_path );
+		}
 
 		// set default paths if they don't exist
-		if ( settings.get< path >( "folders.scenarios" ).empty() )
-			settings.set( "folders.scenarios", GetDataFolder() );
-		if ( settings.get< path >( "folders.results" ).empty() )
-			settings.set( "folders.results", GetDataFolder() / "results" );
-		if ( settings.get< path >( "folders.geometry" ).empty() )
-			settings.set( "folders.geometry", GetInstallFolder() / "resources/geometry" );
+		if ( scone_settings->get< path >( "folders.scenarios" ).empty() )
+			scone_settings->set( "folders.scenarios", GetDataFolder() );
+		if ( scone_settings->get< path >( "folders.results" ).empty() )
+			scone_settings->set( "folders.results", GetDataFolder() / "results" );
+		if ( scone_settings->get< path >( "folders.geometry" ).empty() )
+			scone_settings->set( "folders.geometry", GetInstallFolder() / "resources/geometry" );
 
-		return settings;
+		return *scone_settings;
 	}
 
 	void SaveSconeSettings()

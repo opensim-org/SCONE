@@ -7,14 +7,14 @@
 namespace scone
 {
 	BodyPointReflex::BodyPointReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Reflex( props, par, model, loc ),
-	CONSTRUCT_PROP_REQUIRED( props, source ),
-	CONSTRUCT_PROP( props, offset, Vec3::zero() ),
-	CONSTRUCT_PROP( props, direction, Vec3::zero() ),
-	body_( *FindByNameTrySided( model.GetBodies(), source, loc.side ) ),
-	m_DelayedPos( model.AcquireDelayedSensor< BodyPointPositionSensor >( body_, offset, direction ) ),
-	m_DelayedVel( model.AcquireDelayedSensor< BodyPointVelocitySensor >( body_, offset, direction ) ),
-	m_DelayedAcc( model.AcquireDelayedSensor< BodyPointAccelerationSensor >( body_, offset, direction ) )
+		Reflex( props, par, model, loc ),
+		INIT_MEMBER_REQUIRED( props, source ),
+		INIT_MEMBER( props, offset, Vec3::zero() ),
+		INIT_MEMBER( props, direction, Vec3::zero() ),
+		body_( *FindByNameTrySided( model.GetBodies(), source, loc.side ) ),
+		m_DelayedPos( model.AcquireDelayedSensor< BodyPointPositionSensor >( body_, offset, direction ) ),
+		m_DelayedVel( model.AcquireDelayedSensor< BodyPointVelocitySensor >( body_, offset, direction ) ),
+		m_DelayedAcc( model.AcquireDelayedSensor< BodyPointAccelerationSensor >( body_, offset, direction ) )
 	{
 		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "." );
 

@@ -31,6 +31,7 @@
 #include "StudioModel.h"
 #include "simvis/plane.h"
 #include "simvis/prerequisites.h"
+#include "xo/container/flat_map.h"
 
 using scone::TimeInSeconds;
 
@@ -43,6 +44,8 @@ public:
 	~SconeStudio();
 
 	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
+	virtual void openFile( const QString& filename ) override;
+	virtual bool tryExit() override;
 
 public slots:
 	void runSimulation( const QString& filename );
@@ -52,12 +55,11 @@ public slots:
 	void start();
 	void stop();
 	void refreshAnalysis();
-	void fileOpen();
-	void fileOpen( const QString& filename );
-	void fileOpenRecent();
-	void fileSave();
-	void fileSaveAs();
-	void fileExit();
+
+	virtual void fileOpenTriggered() override;
+	virtual void fileSaveTriggered() override;
+	virtual void fileSaveAsTriggered() override;
+
 	void helpAbout() {}
 	void runScenario();
 	void optimizeScenario();
@@ -71,7 +73,6 @@ public slots:
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
-	void fixViewCheckboxes();
 	void updateTabTitles();
 
 public:
@@ -86,9 +87,8 @@ private:
 	bool requestSaveChanges( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
-	void addRecentFile( const QString& filename );
-	void updateRecentFilesMenu();
-	QStringList recentFiles;
+
+	xo::flat_map< scone::StudioModel::ViewSettings, QAction* > viewActions;
 
 	vis::scene scene_;
 	vis::plane ground_plane;
@@ -102,7 +102,6 @@ private:
 
 	double slomo_factor;
 	TimeInSeconds current_time;
-	TimeInSeconds capture_frequency;
 	TimeInSeconds evaluation_time_step;
 	xo::delta< scone::Vec3 > com_delta;
 
@@ -121,9 +120,6 @@ private:
 	void finalizeCapture();
 
 	scone::SettingsEditor settings;
-
-protected:
-	virtual void closeEvent( QCloseEvent * ) override;
 };
 
 #endif // SCONESTUDIO_H

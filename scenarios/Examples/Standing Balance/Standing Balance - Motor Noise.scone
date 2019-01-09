@@ -1,8 +1,8 @@
-#set L0 ~0.5
-#set KL ~1
-#set KP 0~0.1
-#set KV 0~0.1
-#set DT 0.100
+#define (L0) ~0.5
+#define (KL) ~1
+#define (KP) 0~0.1
+#define (KV) 0~0.1
+#define (DT) 0.100
 
 Optimizer {
 	type = CmaOptimizer

@@ -31,7 +31,7 @@ namespace scone
 	class StudioModel
 	{
 	public:
-		enum ViewSettings { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, EnableShadows };
+		enum ViewSettings { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
 		typedef xo::flag_set< ViewSettings > ViewFlags;
  
 		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
@@ -43,15 +43,15 @@ namespace scone
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return data; }
-		Model& GetSimModel() { return *model; }
+		Model& GetSimModel() { return *model_; }
 		ModelObjective& GetObjective() { return *model_objective; }
 
 		bool IsEvaluating() const { return is_evaluating; }
-		TimeInSeconds GetTime() const { return model->GetTime(); }
+		TimeInSeconds GetTime() const { return model_->GetTime(); }
 		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
 
 		void ApplyViewSettings( const ViewFlags& f );
-		const path& GetFileName() { return filename; }
+		const path& GetFileName() { return filename_; }
 
 	private:
 		struct MuscleVis
@@ -68,8 +68,8 @@ namespace scone
 
 		Storage<> data;
 		ModelObjectiveUP model_objective;
-		ModelUP model;
-		path filename;
+		ModelUP model_;
+		path filename_;
 
 		ViewFlags view_flags;
 
@@ -80,6 +80,8 @@ namespace scone
 		float shininess_;
 		float ambient_;
 		float emissive_;
+
+		vis::scene& scene_;
 
 		vis::material bone_mat;
 		vis::material arrow_mat;

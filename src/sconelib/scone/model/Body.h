@@ -13,6 +13,7 @@
 #include "scone/core/Quat.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/HasData.h"
+#include "DisplayGeometry.h"
 
 namespace scone
 {
@@ -41,6 +42,7 @@ namespace scone
 		virtual const std::vector< Real >& GetContactForceValues() const = 0;
 		virtual const std::vector< String >& GetContactForceLabels() const = 0;
 
+		virtual bool HasContact() const = 0;
 		virtual Vec3 GetContactForce() const = 0;
 		virtual Vec3 GetContactMoment() const = 0;
 
@@ -49,7 +51,6 @@ namespace scone
 		virtual void SetExternalMoment( const Vec3& torque ) = 0;
 		virtual void AddExternalForce( const Vec3& f ) = 0;
 		virtual void AddExternalMoment( const Vec3& torque ) = 0;
-
 
 		virtual Vec3 GetExternalForce() const = 0;
 		virtual Vec3 GetExternalForcePoint() const = 0;
@@ -60,7 +61,7 @@ namespace scone
 		virtual const class Model& GetModel() const = 0;
 		virtual class Model& GetModel() = 0;
 
-		virtual std::vector< path > GetDisplayGeomFileNames() const { return std::vector< path >(); }
+		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 	};

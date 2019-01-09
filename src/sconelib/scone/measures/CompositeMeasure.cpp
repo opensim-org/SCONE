@@ -15,26 +15,27 @@
 namespace scone
 {
 	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Measure( props, par, model, loc ),
-	Measures( props.try_get_child( "Measures" ) )
+	Measure( props, par, model, loc )
 	{
 		INIT_PROP( props, symmetric, false );
 
-		if ( !Measures )
-			Measures = &props;
+		auto create_measure = [&]( const PropNode& mpn ) {
+			if ( symmetric ) {
+				m_Measures.push_back( CreateMeasure( mpn, par, model, Location( LeftSide, true ) ) );
+				m_Measures.push_back( CreateMeasure( mpn, par, model, Location( RightSide, true ) ) );
+			}
+			else m_Measures.push_back( CreateMeasure( mpn, par, model, loc ) );
+		};
 
 		// add any Measure
-		for ( auto& m : Measures->select( "Measure" ) )
-		{
-			if ( symmetric )
-			{
-				m_Measures.push_back( CreateMeasure( m.second, par, model, Location( LeftSide, true ) ) );
-				m_Measures.push_back( CreateMeasure( m.second, par, model, Location( RightSide, true ) ) );
-			}
-			else m_Measures.push_back( CreateMeasure( m.second, par, model, loc ) );
-		}
+		for ( auto& m : props.select( "Measure" ) )
+			create_measure( m.second );
 
-		// copy minimize flag from
+		if ( Measures = props.try_get_child( "Measures" ) )
+			for ( auto& m : *Measures )
+				create_measure( m.second );
+
+		// copy minimize flag from first measure
 		INIT_PROP( props, minimize, !m_Measures.empty() ? m_Measures.front()->minimize : true );
 	}
 

@@ -1,6 +1,57 @@
 ====== What's new ======
 
-===== SCONE 0.18.0 ALPHA =====
+==== SCONE 0.20.1 ALPHA ====
+//Released January 8, 2019//
+
+=== Fixes ===
+  * Issue where negative tendon lengths would cause a crash in the visualization
+  * Issue where simulations with a duration with a decimal point would not terminate correctly
+
+==== SCONE 0.20.0 ALPHA ====
+//Released December 14, 2018//
+
+=== Updates ===
+  * Ground reaction force is now output both as normalized [gBW] as unnormalized [N] data.
+  * New data output: Center of Pressure (CoP) and Ground Reaction Moment [Nm] 
+
+==== SCONE 0.19.4 ALPHA ====
+//Released December 6, 2018//
+
+=== Fixes ===
+  * Fixed regression reading vector data
+
+==== SCONE 0.19.3 ALPHA ====
+//Released December 6, 2018//
+
+=== Fixes ===
+  * When evaluating a scenario from sconecmd.exe, the average parameters are now used instead of the best, in order to be consistent with scenario test (Ctrl + T) from SCONE studio.
+
+==== SCONE 0.19.2 ALPHA ====
+//Released December 5, 2018//
+
+=== Fixes ===
+  * Fixed issue reading state_init_optimization.exclude from legacy scripts
+  * Fixed issue where data output settings were not read when running from command-line
+
+==== SCONE 0.19.1 ALPHA ====
+//Released November 19, 2018//
+
+=== Updates ===
+  * Ground plane can now be hidden
+
+=== Fixes ===
+  * Fixed auto-formatting issues in scone editor
+  * Correctly handle transform and scale of display geometry
+
+==== SCONE 0.19.0 ALPHA ====
+//Released November 14, 2018//
+
+=== New Features and Updates ===
+  * Improved support for batch processing through the command line interface
+  * Added setting for output video quality and video frame rate
+  * Example updates
+
+==== SCONE 0.18.0 ALPHA ====
 //Released October 17, 2018//
 
 === New Features and Updates ===
@@ -13,14 +64,14 @@
   * Invalid initial_load settings now produce a warning instead of an error
   * Documentation fixes
   
-===== SCONE 0.17.1 ALPHA =====
+==== SCONE 0.17.1 ALPHA ====
 //Released October 12, 2018//
 
 === Fixes ===
   * Fixed issue where settings could not be loaded the first time
   * Fixed error in the Gait GH2010 example
 
-===== SCONE 0.17.0 ALPHA =====
+==== SCONE 0.17.0 ALPHA ====
 //Released October 11, 2018//
 
 === New Features and Updates ===
@@ -32,7 +83,7 @@
 === Fixes ===
   * Several minor stability improvements
 
-===== SCONE 0.16.0 ALPHA =====
+==== SCONE 0.16.0 ALPHA ====
 //Released October 5, 2018//
 
 === New Features and Updates ===
@@ -46,5 +97,5 @@
   * Simulation errors are now properly reported
   * .par filenames are now written correctly with extremely high / low fitness
 
-===== SCONE 0.15.0 and earlier =====
+==== SCONE 0.15.0 and earlier ====
 //Changes to SCONE are officially published since version 0.16.0//

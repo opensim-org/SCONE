@@ -33,7 +33,7 @@ namespace scone
 		bool dual_sided;
 
 		/// Child node containing all reflexes.
-		const PropNode& Reflexes;
+		const PropNode* Reflexes;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;

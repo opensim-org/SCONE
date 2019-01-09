@@ -24,10 +24,14 @@ namespace scone
 		virtual void Run() override;
 		virtual void SetOutputMode( OutputMode m ) override;
 
+		/// Maximum number of optimizations; default = 3.
+		size_t optimizations_;
+
+		/// Random seed of the first optimization; default = 1.
+		long random_seed_;
+
 	protected:
 		std::vector< PropNode > props_;
-		size_t optimizations_;
-		long random_seed_;
 	};
 
 	class SCONE_API CmaPoolOptimizerReporter : public spot::reporter

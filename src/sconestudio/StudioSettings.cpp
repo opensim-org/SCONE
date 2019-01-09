@@ -27,7 +27,7 @@ namespace scone
 		std::call_once( flag, [] {
 			if ( s.data_version() < version( 0, 17, 0 ) )
 			{
-				log::info( "Restoring studio settings to default" );
+				log::warning( "Restoring studio settings to default" );
 				s.reset(); // ignore settings from version < 0.17.0
 			}
 		} );

@@ -11,6 +11,7 @@
 #include "scone/core/Factories.h"
 #include "scone/core/Log.h"
 #include "xo/filesystem/filesystem.h"
+#include "opt_tools.h"
 
 namespace scone
 {
@@ -96,9 +97,8 @@ namespace scone
 
 	SCONE_API ModelObjectiveUP CreateModelObjective( const path& file )
 	{
-		bool is_par_file = file.extension() == "par";
 		auto dir = file.parent_path();
-		path scenario_file = is_par_file ? xo::find_file( { dir / "config.xml", dir / "config.scone" } ) : file;
+		path scenario_file = FindScenario( file );
 
 		// set current path to scenario path
 		xo::current_path( scenario_file.parent_path() );
@@ -107,10 +107,10 @@ namespace scone
 		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
 
-		// create SimulationObjective object
+		// create ModelObjective object
 		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( objProp ) );
 
-		if ( !is_par_file )
+		if ( file.extension() == "scone" )
 		{
 			// read mean / std from init file
 			auto& optProp = configProp.get_child( "Optimizer" );

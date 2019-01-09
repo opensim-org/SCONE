@@ -33,6 +33,7 @@
 
 #include <thread>
 #include <mutex>
+#include "../Model.h"
 
 using std::cout;
 using std::endl;
@@ -208,21 +209,17 @@ namespace scone
 			}
 
 			// update state variables if they are being optimized
-			auto sio = props.try_get_child( "state_init_optimization" );
-			auto offset = sio ? sio->try_get_child( "offset" ) : props.try_get_child( "initial_state_offset" );
-			if ( offset )
+			if ( initial_state_offset )
 			{
-				bool symmetric = sio ? sio->get( "symmetric", false ) : props.get( "initial_state_offset_symmetric", false );
-				auto inc_pat = xo::pattern_matcher( sio ? sio->get< String >( "include_states", "*" ) : props.get< String >( "initial_state_offset_include", "*" ), ";" );
-				auto ex_pat = xo::pattern_matcher(
-					( sio ? sio->get< String >( "exclude_states", "" ) : props.get< String >( "initial_state_offset_exclude", "" ) ) + ";*.activation;*.fiber_length", ";" );
+				auto inc_pat = xo::pattern_matcher( initial_state_offset_include, ";" );
+				auto ex_pat = xo::pattern_matcher( initial_state_offset_exclude + ";*.activation;*.fiber_length", ";" );
 				for ( index_t i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
 					if ( inc_pat( state_name ) && !ex_pat( state_name ) )
 					{
-						auto par_name = symmetric ? GetNameNoSide( state_name ) : state_name;
-						m_State[ i ] += par.get( par_name + ".offset", *offset );
+						auto par_name = initial_state_offset_symmetric ? GetNameNoSide( state_name ) : state_name;
+						m_State[ i ] += par.get( par_name + ".offset", *initial_state_offset );
 					}
 				}
 			}
@@ -251,8 +248,7 @@ namespace scone
 
 		// create and initialize controllers
 		CreateControllers( props, par );
-
-		log::info( "Successfully constructed ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
+		log::info( "Created model ", GetName(), "; dofs=", GetDofs().size(), " muscles=", GetMuscles().size(), " mass=", GetMass() );
 	}
 
 	ModelSimbody::~ModelSimbody() {}
@@ -278,7 +274,7 @@ namespace scone
 			if ( auto cg = dynamic_cast< OpenSim::ContactSphere* >( &m_pOsimModel->getContactGeometrySet().get( idx ) ) )
 			{
 				auto& body = *FindByName( m_Bodies, cg->getBodyName() );
-				m_ContactGeometries.emplace_back( body, ToVec3( cg->getLocation() ), cg->getRadius() );
+				m_ContactGeometries.emplace_back( body, from_osim( cg->getLocation() ), cg->getRadius() );
 			}
 		}
 
@@ -395,22 +391,22 @@ namespace scone
 
 	Vec3 ModelSimbody::GetComPos() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 	}
 
 	Vec3 ModelSimbody::GetComVel() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 	}
 
 	Vec3 ModelSimbody::GetComAcc() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
 	scone::Vec3 ModelSimbody::GetGravity() const
 	{
-		return ToVec3( m_pOsimModel->getGravity() );
+		return from_osim( m_pOsimModel->getGravity() );
 	}
 
 	bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
@@ -559,11 +555,12 @@ namespace scone
 				m_PrevTime = GetTime();
 				m_PrevIntStep = GetIntegrationStep();
 				double target_time = GetTime() + fixed_control_step_size;
-				SimTK::Integrator::SuccessfulStepStatus status;
 
 				{
 					SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
-					status = m_pTkTimeStepper->stepTo( target_time );
+					auto status = m_pTkTimeStepper->stepTo( target_time );
+					if ( status == SimTK::Integrator::EndOfSimulation )
+						RequestTermination();
 				}
 
 				SetTkState( m_pTkIntegrator->updAdvancedState() );
@@ -582,8 +579,8 @@ namespace scone
 				if ( GetStoreData() )
 					StoreCurrentFrame();
 
-				// terminate on request
-				if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+				// terminate when simulation has ended
+				if ( HasSimulationEnded() )
 				{
 					log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 					break;
@@ -598,10 +595,10 @@ namespace scone
 		}
 	}
 
-	void ModelSimbody::SetTerminationRequest()
+	void ModelSimbody::RequestTermination()
 	{
-		Model::SetTerminationRequest();
-		m_pOsimManager->halt();
+		Model::RequestTermination();
+		m_pOsimManager->halt(); // needed when using an OpenSim::Manager
 	}
 
 	double ModelSimbody::GetTime() const

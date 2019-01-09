@@ -103,6 +103,8 @@ namespace scone
 		virtual void AdvanceSimulationTo( double time ) = 0;
 		virtual double GetSimulationEndTime() const = 0;
 		virtual void SetSimulationEndTime( double time ) = 0;
+		virtual bool HasSimulationEnded() { return m_ShouldTerminate || GetTime() >= GetSimulationEndTime(); }
+		virtual void RequestTermination() { m_ShouldTerminate = true; }
 
 		/// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
@@ -124,10 +126,6 @@ namespace scone
 		const PropNode* GetCustomProps() { return m_pCustomProps; }
 		const PropNode* GetModelProps() { return m_pModelProps; }
 		PropNode& GetUserData() { return m_UserData; }
-
-		// TODO: perhaps remove termination request here
-		virtual void SetTerminationRequest() { m_ShouldTerminate = true; }
-		virtual bool GetTerminationRequest() { return m_ShouldTerminate; }
 
 		// streaming operator (for debugging)
 		virtual std::ostream& ToStream( std::ostream& str ) const;
@@ -154,9 +152,22 @@ namespace scone
 		template< typename SensorT, typename... Args > SensorDelayAdapter& AcquireDelayedSensor( Args&&... args )
 		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
+		/// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
 
-		void SetStoreData( bool store, TimeInSeconds interval = 0.001 ) { m_StoreData = store; m_StoreDataInterval = interval; }
+		/// Offset [rad] or [m] to apply to initial state; default = 0.
+		const PropNode* initial_state_offset;
+
+		/// Use symmetric offset for left and right; default = 0.
+		bool initial_state_offset_symmetric;
+
+		/// Pattern matching the states to include in initial offset (comma seperated); default = "*".
+		String initial_state_offset_include;
+
+		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
+		String initial_state_offset_exclude;
+
+		void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
