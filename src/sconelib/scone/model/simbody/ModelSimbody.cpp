@@ -343,10 +343,26 @@ namespace scone
 		}
 	}
 
+	OpenSim::Object& ModelSimbody::FindOpenSimObject( const String& name )
+	{
+		if ( auto idx = m_pOsimModel->updForceSet().getIndex( name ); idx != -1 )
+			return m_pOsimModel->updForceSet().get( idx );
+		SCONE_THROW( "Could not find OpenSim object " + name );
+	}
+
 	void ModelSimbody::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
 	{
-		for ( auto& param : osim_pars )
+		for ( auto& object_pn : osim_pars )
 		{
+			ScopedParamSetPrefixer prefix( par, object_pn.first + '.' );
+			auto& obj = FindOpenSimObject( object_pn.first );
+			for ( auto& prop : object_pn.second )
+			{
+				double v = par.get( prop.first, prop.second );
+				obj.updPropertyByName( prop.first ).updValue< double >() = v;
+			}
+
+#if 0
 			if ( param.first == "Force" )
 			{
 				auto& name = param.second[ "name" ].get_value();
@@ -361,6 +377,7 @@ namespace scone
 				if ( count == 0 )
 					log::warning( "Could not find OpenSim Object that matches ", name );
 			}
+#endif
 		}
 	}
 
