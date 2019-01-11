@@ -6,7 +6,7 @@ set(CORE_BASE_FILES
 	scone/core/HasExternalResources.h
 	scone/core/HasSignature.cpp
 	scone/core/HasSignature.h
-)
+	)
 set(CORE_MATH_FILES
 	scone/core/Angle.h
 	scone/core/Vec3.h
@@ -23,7 +23,7 @@ set(CORE_MATH_FILES
 	scone/core/PieceWiseLinearFunction.h
 	scone/core/Polynomial.h	
 	scone/core/Polynomial.cpp
-)
+	)
 set(CORE_SYSTEM_FILES
 	scone/core/Factories.h
     scone/core/Factories.cpp
@@ -42,20 +42,20 @@ set(CORE_SYSTEM_FILES
 	scone/core/system_tools.h
 	scone/core/Settings.cpp
 	scone/core/Settings.h
-)
+	)
 set(CORE_STORAGE_FILES
 	scone/core/Storage.h
 	scone/core/StorageIo.h
 	scone/core/StorageIo.cpp
 	scone/core/PropNode.h
 	scone/core/StringMap.h
-)
+	)
 set(CORE_TOOL_FILES
 	scone/core/Event.cpp
 	scone/core/Event.h
 	scone/core/string_tools.cpp
 	scone/core/string_tools.h
-)
+	)
 set(CS_CONTROLLERS_FILES
 	scone/controllers/Controller.cpp
 	scone/controllers/Controller.h
@@ -146,7 +146,6 @@ set(MEASURE_FILES
 	scone/measures/Measure.cpp
 	scone/measures/Measure.h
 	)
-
 set(OPT_API_FILES
 	scone/optimization/CmaOptimizer.cpp
 	scone/optimization/CmaOptimizer.h
@@ -171,8 +170,7 @@ set(OPT_API_FILES
 	scone/optimization/SimilarityObjective.h
     scone/optimization/opt_tools.cpp
     scone/optimization/opt_tools.h
-    )
-	
+	)
 set(SIM_MODELCOMPONENTS_FILES
     scone/model/Body.cpp
     scone/model/Body.h
@@ -186,7 +184,7 @@ set(SIM_MODELCOMPONENTS_FILES
     scone/model/Muscle.h
     scone/model/State.cpp
     scone/model/State.h
-    )
+	)
 set(SIM_SENSORSANDACTUATORS_FILES
     scone/model/Actuator.cpp
     scone/model/Actuator.h
@@ -233,31 +231,31 @@ if(SCONE_OPENSIM_3)
 		scone/model/simbody/sim_simbody.cpp
 		scone/model/simbody/sim_simbody.h
 		scone/model/simbody/simbody_tools.h
-		)
+	)
 else()
     set(SIMBODY_FILES)
 endif()
 
 if(SCONE_OPENSIM_4)
 	set(SIMBODY4_FILES
-			scone/model/simbody4/BodySimbody.cpp
-			scone/model/simbody4/BodySimbody.h
-			scone/model/simbody4/DofSimbody.cpp
-			scone/model/simbody4/DofSimbody.h
-			scone/model/simbody4/JointSimbody.cpp
-			scone/model/simbody4/JointSimbody.h
-			scone/model/simbody4/ModelSimbody.cpp
-			scone/model/simbody4/ModelSimbody.h
-			scone/model/simbody4/MuscleSimbody.cpp
-			scone/model/simbody4/MuscleSimbody.h
-			scone/model/simbody4/SimulationSimbody.cpp
-			scone/model/simbody4/SimulationSimbody.h
-			scone/model/simbody4/ConstantForce.cpp
-			scone/model/simbody4/ConstantForce.h
-			scone/model/simbody4/sim_simbody.cpp
-			scone/model/simbody4/sim_simbody.h
-			scone/model/simbody4/simbody_tools.h
-			)
+		scone/model/simbody4/BodySimbody.cpp
+		scone/model/simbody4/BodySimbody.h
+		scone/model/simbody4/DofSimbody.cpp
+		scone/model/simbody4/DofSimbody.h
+		scone/model/simbody4/JointSimbody.cpp
+		scone/model/simbody4/JointSimbody.h
+		scone/model/simbody4/ModelSimbody.cpp
+		scone/model/simbody4/ModelSimbody.h
+		scone/model/simbody4/MuscleSimbody.cpp
+		scone/model/simbody4/MuscleSimbody.h
+		scone/model/simbody4/SimulationSimbody.cpp
+		scone/model/simbody4/SimulationSimbody.h
+		scone/model/simbody4/ConstantForce.cpp
+		scone/model/simbody4/ConstantForce.h
+		scone/model/simbody4/sim_simbody.cpp
+		scone/model/simbody4/sim_simbody.h
+		scone/model/simbody4/simbody_tools.h
+	)
 else()
 	set(SIMBODY4_FILES)
 endif()
