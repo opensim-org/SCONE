@@ -209,6 +209,9 @@ namespace scone
 				if ( ls.allow_stance_transition )
 					new_state = EarlyStanceState;
 				break;
+
+			case StateCount:
+				break;
 			}
 
 			if ( new_state != ls.state )

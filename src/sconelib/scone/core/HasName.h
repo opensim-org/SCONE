@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <vector>
 #include "types.h"
+#include <xo/string/pattern_matcher.h>
 
 namespace scone
 {

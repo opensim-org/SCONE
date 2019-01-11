@@ -21,7 +21,7 @@ namespace scone
 		DofReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~DofReflex();
 
-		virtual void ComputeControls( double timestamp );
+		virtual void ComputeControls( double timestamp ) override;
 
 		/// Name of the DOF that is the source of this Reflex, append with _o for DOF on opposite side.
 		String source;

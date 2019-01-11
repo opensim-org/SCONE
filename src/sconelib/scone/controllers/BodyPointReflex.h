@@ -21,7 +21,7 @@ namespace scone
 		BodyPointReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~BodyPointReflex() {}
 
-		virtual void ComputeControls( double timestamp );
+		virtual void ComputeControls( double timestamp ) override;
 
 		/// Name of the Body that is the source of this Reflex.
 		String source;

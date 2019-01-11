@@ -16,6 +16,7 @@
 #include <algorithm>
 
 #include "xo/string/string_tools.h"
+#include "xo/string/string_cast.h"
 #include "scone/core/types.h"
 
 namespace scone

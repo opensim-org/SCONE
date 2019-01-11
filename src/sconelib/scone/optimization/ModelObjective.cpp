@@ -22,7 +22,8 @@ namespace scone
 
 	scone::fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
 	{
-		auto model = CreateModelFromParams( SearchPoint( point ) );
+		SearchPoint params( point );
+		auto model = CreateModelFromParams( params );
 		return EvaluateModel( *model );
 	}
 
@@ -48,7 +49,8 @@ namespace scone
 
 	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
 	{
-		return CreateModelFromParams( SearchPoint( info_, parfile ) );
+		SearchPoint params( info_, parfile );
+		return CreateModelFromParams( params );
 	}
 
 	std::vector<path> ModelObjective::WriteResults( const path & file_base )

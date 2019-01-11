@@ -31,6 +31,9 @@ int main( int argc, char *argv[] )
 {
 	QApplication a( argc, argv );
 	QCoreApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
+// #ifdef __APPLE__
+// 	QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps );
+// #endif
 
 	QApplication::style()->setProperty( "margin", 50 );
 
@@ -87,9 +90,11 @@ int main( int argc, char *argv[] )
 	}
 }
 
+#ifdef _WIN32
 #ifndef DEBUG
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
 	return main( __argc, __argv );
 }
+#endif
 #endif

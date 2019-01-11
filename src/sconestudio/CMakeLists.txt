@@ -101,6 +101,7 @@ if(${Qt5Widgets_FOUND})
 	FIND_PACKAGE( osgshadow )
 	FIND_PACKAGE( OpenThreads )
 	INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
+	INCLUDE_DIRECTORIES(${OSGQT_INCLUDE_DIR})
 
 	target_link_libraries(sconestudio
 		sconelib

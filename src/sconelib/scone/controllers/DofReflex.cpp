@@ -64,7 +64,7 @@ namespace scone
 		auto delta_pos = P0 - pos;
 		auto delta_vel = V0 - vel;
 
-		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || condition == 1 && delta_pos > 0 && delta_vel > 0 )
+		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || (condition == 1 && delta_pos > 0 && delta_vel > 0 ) )
 		{
 			u_p = KP * delta_pos;
 			if ( !allow_neg_P && u_p < 0.0 )
