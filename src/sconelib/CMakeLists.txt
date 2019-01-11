@@ -259,7 +259,7 @@ if(SCONE_OPENSIM_4)
 			scone/model/simbody4/simbody_tools.h
 			)
 else()
-	set(SIMBODY_FILES)
+	set(SIMBODY4_FILES)
 endif()
 
 set (SCONELIB_FILES
