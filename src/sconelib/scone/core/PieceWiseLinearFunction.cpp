@@ -7,12 +7,14 @@
 */
 
 #include "PieceWiseLinearFunction.h"
-#include "OpenSim/Common/PiecewiseLinearFunction.h"
+//#include "OpenSim/Common/PiecewiseLinearFunction.h"
+#include "xo/numerical/piecewise_linear_function.h"
 
 namespace scone
 {
 	struct PieceWiseLinearFunction::Impl {
-		OpenSim::PiecewiseLinearFunction m_osFunc;
+		xo::piecewise_linear_function< double > m_osFunc;
+		//OpenSim::PiecewiseLinearFunction m_osFunc;
 	};
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par ) :
@@ -29,10 +31,11 @@ namespace scone
 			if ( cpidx > 0 )
 			{
 				double dt = par.get( stringf( "DT%d", cpidx - 1 ), control_point_dt );
-				xVal = m_pImpl->m_osFunc.getX( cpidx - 1 ) + dt;
+				//xVal = m_pImpl->m_osFunc.getX( cpidx - 1 ) + dt;
+				xVal = m_pImpl->m_osFunc.point( cpidx - 1 ).first + dt;
 			}
 			Real yVal = par.get( stringf( "Y%d", cpidx ), control_point_y );
-			m_pImpl->m_osFunc.addPoint( xVal, yVal );
+			m_pImpl->m_osFunc.insert_point( xVal, yVal );
 		}
 	}
 
@@ -42,14 +45,17 @@ namespace scone
 
 	scone::Real PieceWiseLinearFunction::GetValue( Real x )
 	{
-		SimTK::Vector xval( 1 );
-		xval[ 0 ] = flat_extrapolation ? std::min( x, m_pImpl->m_osFunc.getX( m_pImpl->m_osFunc.getNumberOfPoints() - 1) ) : x;
+		//SimTK::Vector xval( 1 );
+		//xval[ 0 ] = flat_extrapolation ? std::min( x, m_pImpl->m_osFunc.getX( m_pImpl->m_osFunc.getNumberOfPoints() - 1) ) : x;
 
-		return m_pImpl->m_osFunc.calcValue( xval );
+		if ( flat_extrapolation )
+			x = xo::min( x, m_pImpl->m_osFunc.data().back().first );
+
+		return m_pImpl->m_osFunc( x );
 	}
 
 	String PieceWiseLinearFunction::GetSignature()
 	{
-		return stringf( "L%d", m_pImpl->m_osFunc.getSize() );
+		return stringf( "L%d", m_pImpl->m_osFunc.size() );
 	}
 }
