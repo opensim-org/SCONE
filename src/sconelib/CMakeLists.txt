@@ -212,32 +212,8 @@ set(SIM_TOPOLOGY_FILES
 	scone/model/Side.h
     )
 
-if(SCONE_OPENSIM_3)
-	set(SIMBODY_FILES
-		scone/model/simbody/BodySimbody.cpp
-		scone/model/simbody/BodySimbody.h
-		scone/model/simbody/DofSimbody.cpp
-		scone/model/simbody/DofSimbody.h
-		scone/model/simbody/JointSimbody.cpp
-		scone/model/simbody/JointSimbody.h
-		scone/model/simbody/ModelSimbody.cpp
-		scone/model/simbody/ModelSimbody.h
-		scone/model/simbody/MuscleSimbody.cpp
-		scone/model/simbody/MuscleSimbody.h
-		scone/model/simbody/SimulationSimbody.cpp
-		scone/model/simbody/SimulationSimbody.h
-		scone/model/simbody/ConstantForce.cpp
-		scone/model/simbody/ConstantForce.h
-		scone/model/simbody/sim_simbody.cpp
-		scone/model/simbody/sim_simbody.h
-		scone/model/simbody/simbody_tools.h
-	)
-else()
-    set(SIMBODY_FILES)
-endif()
-
 if(SCONE_OPENSIM_4)
-	set(SIMBODY4_FILES
+	set(MODEL_OPENSIM_4_FILES
 		scone/model/simbody4/BodySimbody.cpp
 		scone/model/simbody4/BodySimbody.h
 		scone/model/simbody4/DofSimbody.cpp
@@ -257,7 +233,7 @@ if(SCONE_OPENSIM_4)
 		scone/model/simbody4/simbody_tools.h
 	)
 else()
-	set(SIMBODY4_FILES)
+	set(MODEL_OPENSIM_4_FILES)
 endif()
 
 set (SCONELIB_FILES
@@ -287,8 +263,7 @@ set (SCONELIB_FILES
 	${SIM_SYSTEM_FILES}
 	${SIM_TOPOLOGY_FILES}
 	
-	${SIMBODY_FILES}
-	${SIMBODY4_FILES}
+	${MODEL_OPENSIM_4_FILES}
 	)
 
 # specify precompiled headers for MSVC
@@ -302,13 +277,12 @@ set_property(TARGET sconelib PROPERTY CXX_STANDARD 17)
 set_property(TARGET sconelib PROPERTY CXX_STANDARD_REQUIRED ON)
 
 target_link_libraries(sconelib xo spot)
-if(SCONE_OPENSIM_3)
-	target_link_libraries(sconelib ${OPENSIMSIMBODY_LIBRARIES})
-	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_3)
-endif()
+
 if(SCONE_OPENSIM_4)
-	target_link_libraries(sconelib osimTools)
-	target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_4)
+    find_package(OpenSim 4.0 REQUIRED CONFIG) # This uses the FindOpenSim.cmake file in build/cmake.
+	target_link_libraries(sconelib-opensim4 osimTools)
+	#target_link_libraries(sconelib-opensim4 osimTools)
+	#target_compile_definitions(sconelib PUBLIC SCONE_OPENSIM_4)
 endif()
 
 
@@ -347,7 +321,5 @@ source_group("model" FILES ${SIM_SENSORSANDACTUATORS_FILES})
 source_group("model" FILES ${SIM_SIMULATIONANDCONTROL_FILES})
 source_group("model" FILES ${SIM_SYSTEM_FILES})
 source_group("model" FILES ${SIM_TOPOLOGY_FILES})
-
-source_group("model\\simbody" FILES ${SIMBODY_FILES})
 
 source_group("" FILES ${PRECOMPILED_HEADER_FILES})

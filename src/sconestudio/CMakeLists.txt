@@ -105,6 +105,7 @@ if(${Qt5Widgets_FOUND})
 
 	target_link_libraries(sconestudio
 		sconelib
+		sconemodelopensim3
 		simvis
 #		Qt5::Widgets
 		${OSG_LIBRARIES}

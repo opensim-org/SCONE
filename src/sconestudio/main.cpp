@@ -27,6 +27,9 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/version.h"
 
+#include "../sconemodelopensim3/ModelSimbody.h"
+#include "scone/core/Factories.h"
+
 int main( int argc, char *argv[] )
 {
 	QApplication a( argc, argv );
@@ -42,13 +45,15 @@ int main( int argc, char *argv[] )
 	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
 	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
-
 	if ( !file_sink.good() )
 	{
 		QMessageBox::critical( 0, "Error creating log file", "Could not create file " + make_qt( log_file.str() ) );
 		return -1;
 	}
 	else xo::log::debug( "Created log file ", log_file );
+
+	// register models
+	scone::GetModelFactory().register_class< scone::ModelSimbody >( "Simbody" );
 
 #ifdef _DEBUG
 	xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );

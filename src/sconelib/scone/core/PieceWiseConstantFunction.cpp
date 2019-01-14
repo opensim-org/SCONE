@@ -43,8 +43,8 @@ namespace scone
 
 	scone::Real PieceWiseConstantFunction::GetValue( Real x )
 	{
-		SimTK::Vector xval( 1 );
-		xval[ 0 ] = x;
+		//SimTK::Vector xval( 1 );
+		//xval[ 0 ] = x;
 		return m_pImpl->m_osFunc( x );
 	}
 

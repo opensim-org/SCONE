@@ -40,12 +40,6 @@
 #include "scone/measures/ReactionForceMeasure.h"
 
 #include "scone/model/Sensors.h"
-#ifdef SCONE_OPENSIM_3
-#	include "scone/model/simbody/ModelSimbody.h"
-#endif
-#ifdef SCONE_OPENSIM_4
-#	include "scone/model/simbody4/ModelSimbody.h"
-#endif
 
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/optimization/CmaPoolOptimizer.h"
@@ -128,21 +122,6 @@ namespace scone
 		return g_FunctionFactory( props.get< String >( "type" ), props, par );
 	}
 
-	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
-	{
-		static xo::factory< Model, const PropNode&, Params& > g_ModelFactory;
-		if ( g_ModelFactory.empty() )
-		{
-#ifdef SCONE_OPENSIM_3
-			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
-#endif
-#ifdef SCONE_OPENSIM_4
-			g_ModelFactory.register_class< ModelSimbody >( "Simbody" );
-#endif
-		}
-		return g_ModelFactory( prop.get< String >( "type" ), prop, par );
-	}
-
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
 	{
 		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
@@ -155,9 +134,24 @@ namespace scone
 		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
 	}
 
-	SCONE_API xo::factory< Objective, const PropNode& >& GetObjectiveFactory()
+	SCONE_API ModelFactory& GetModelFactory()
 	{
-		static xo::factory< Objective, const PropNode& > g_ObjectiveFactory;
+		static ModelFactory g_ModelFactory;
+		if ( g_ModelFactory.empty() )
+		{
+			// all models are registered externally
+		}
+		return g_ModelFactory;
+	}
+
+	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
+	{
+		return GetModelFactory()( prop.get< String >( "type" ), prop, par );
+	}
+
+	SCONE_API ObjectiveFactory& GetObjectiveFactory()
+	{
+		static ObjectiveFactory g_ObjectiveFactory;
 		if ( g_ObjectiveFactory.empty() )
 		{
 			g_ObjectiveFactory.register_class< SimulationObjective >();
