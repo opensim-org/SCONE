@@ -138,7 +138,6 @@ namespace scone
 		void CreateModelWrappers( const PropNode& pn, Params& par );
 		void SetModelProperties( const PropNode &pn, Params& par );
 		void SetOpenSimProperties( const PropNode& pn, Params& par );
-		void SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par );
 		OpenSim::Object& FindOpenSimObject( const String& name );
 
 		LinkUP CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent = nullptr );

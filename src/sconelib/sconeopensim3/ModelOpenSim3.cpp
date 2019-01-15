@@ -349,19 +349,6 @@ namespace scone
 		SCONE_THROW( "Could not find OpenSim object " + name );
 	}
 
-	void ModelOpenSim3::SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par )
-	{
-		// we have a match!
-		String prop_str = pn.get< String >( "property" );
-		ScopedParamSetPrefixer prefix( par, pn.get< String >( "name" ) + "." );
-		double value = par.get( prop_str, pn.get_child( "value" ) );
-		if ( os.hasProperty( prop_str ) )
-		{
-			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();
-			prop = pn.get( "factor", false ) ? prop * value : value;
-		}
-	}
-
 	void ModelOpenSim3::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
 	{
 		for ( auto& object_pn : osim_pars )
