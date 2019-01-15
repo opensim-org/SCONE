@@ -60,6 +60,7 @@ namespace scone
 			vis::trail ten2;
 			vis::trail ce;
 			vis::material mat;
+			float ce_pos = 0.5f;
 		};
 
 		void InitVis( vis::scene& s );

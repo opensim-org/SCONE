@@ -53,6 +53,9 @@ viewer {
 	shininess { type = float label = "Model shininess" default = 30 }
 	ambient { type = float label = "Model ambient" default = 0 }
 	emissive { type = float label = "Model emissive" default = 0.7 }
-	muscle_width { type = float label = "Muscle width" default = 0.01 }
-	tendon_width { type = float label = "Tendon width" default = 0.00666 }
+	auto_muscle_width { type = bool label = "Muscle diameter represents PCSA" default = true }
+	auto_muscle_width_factor { type = float label = "Muscle diameter scaling factor" default = 0.25 }
+	muscle_width { type = float label = "Muscle width (if not derived from PCSA)" default = 0.01 }
+	muscle_position { type = float label = "Relative muscle belly position (0-1)" range = [ 0 1 ] default = 0.333 }
+	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.666 }
 }

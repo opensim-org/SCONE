@@ -143,16 +143,22 @@ namespace scone
 
 		for ( auto& muscle : model_->GetMuscles() )
 		{
+			auto muscle_radius = GetStudioSetting<bool>( "viewer.auto_muscle_width" ) ?
+				GetStudioSetting<float>( "viewer.auto_muscle_width_factor" ) * sqrt( muscle->GetPCSA() / xo::numconstd::pi() ) :
+				GetStudioSetting<float>( "viewer.muscle_width" );
+
+			auto tendon_radius = GetStudioSetting<float>( "viewer.relative_tendon_width" ) * muscle_radius;
+
 			// add path
 			MuscleVis mv;
-			mv.ten1 = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.tendon_width" ), vis::make_yellow(), 0.3f );
-			mv.ten2 = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.tendon_width" ), vis::make_yellow(), 0.3f );
+			mv.ten1 = root.add< vis::trail >( 1, tendon_radius, vis::make_yellow(), 0.3f );
+			mv.ten2 = root.add< vis::trail >( 1, tendon_radius, vis::make_yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-
-			mv.ce = root.add< vis::trail >( 1, GetStudioSetting<float>( "viewer.muscle_width" ), vis::make_red(), 0.5f );
+			mv.ce = root.add< vis::trail >( 1, muscle_radius, vis::make_red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
+			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
 			muscles.push_back( mv );
 		}
 
@@ -227,8 +233,8 @@ namespace scone
 	void StudioModel::UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis )
 	{
 		auto mp = mus.GetMusclePath();
-		auto len = mus.GetLength();
-		auto tlen = std::max( 0.0, mus.GetTendonLength() / 2 );
+		auto mlen = mus.GetFiberLength();
+		auto tlen = std::max( 0.0, mus.GetTendonLength() * vis.ce_pos );
 		auto a = mus.GetActivation();
 		auto p = mus.GetMusclePath();
 
@@ -239,7 +245,7 @@ namespace scone
 		if ( view_flags.get<ShowTendons>() )
 		{
 			auto i1 = insert_path_point( p, tlen );
-			auto i2 = insert_path_point( p, len - tlen );
+			auto i2 = insert_path_point( p, tlen + mlen );
 			vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
 			vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
 			vis.ten2.set_points( p.begin() + i2, p.end() );
