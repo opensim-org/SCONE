@@ -11,3 +11,12 @@ if(UNIX)
 endif()
 
 target_link_libraries(sconecmd sconelib ${REALTIME_LIB})
+
+if (SCONE_OPENSIM_3)
+	target_link_libraries(sconecmd sconeopensim3)
+	target_compile_definitions( sconecmd PRIVATE SCONE_OPENSIM_3 )
+endif()
+if (SCONE_OPENSIM_4)
+	target_link_libraries(sconecmd sconeopensim4)
+	target_compile_definitions( sconecmd PRIVATE SCONE_OPENSIM_4 )
+endif()

@@ -27,37 +27,13 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/version.h"
 
-#include "../sconemodelopensim3/ModelSimbody.h"
-#include "scone/core/Factories.h"
+#include "scone/sconelib_config.h"
+#include "scone/core/Exception.h"
 
 int main( int argc, char *argv[] )
 {
 	QApplication a( argc, argv );
 	QCoreApplication::setAttribute( Qt::AA_UseDesktopOpenGL );
-// #ifdef __APPLE__
-// 	QCoreApplication::setAttribute( Qt::AA_UseHighDpiPixmaps );
-// #endif
-
-	QApplication::style()->setProperty( "margin", 50 );
-
-	// init logging
-	xo::create_directories( scone::GetSettingsFolder() / "log" );
-	xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
-	xo::log::file_sink file_sink( xo::log::debug_level, log_file );
-	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
-	if ( !file_sink.good() )
-	{
-		QMessageBox::critical( 0, "Error creating log file", "Could not create file " + make_qt( log_file.str() ) );
-		return -1;
-	}
-	else xo::log::debug( "Created log file ", log_file );
-
-	// register models
-	scone::GetModelFactory().register_class< scone::ModelSimbody >( "Simbody" );
-
-#ifdef _DEBUG
-	xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
-#endif
 
 	try
 	{
@@ -65,8 +41,19 @@ int main( int argc, char *argv[] )
 		QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
-		//splash.showMessage( QString( "Initiating SCONE version " ) + scone::GetSconeVersion().to_str().c_str(), Qt::AlignLeft | Qt::AlignBaseline, Qt::black);
 		a.processEvents();
+
+		// init logging
+		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
+		xo::log::file_sink file_sink( xo::log::debug_level, log_file );
+		SCONE_THROW_IF( !file_sink.good(), "Could not create file " + log_file.str() );
+		xo::log::debug( "Created log file ", log_file );
+#ifdef _DEBUG
+		xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
+#endif
+
+		// register models
+		scone::RegisterModels();
 
 		// init main window
 		SconeStudio w;

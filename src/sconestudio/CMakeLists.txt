@@ -105,9 +105,7 @@ if(${Qt5Widgets_FOUND})
 
 	target_link_libraries(sconestudio
 		sconelib
-		sconemodelopensim3
 		simvis
-#		Qt5::Widgets
 		${OSG_LIBRARIES}
 		${OSGWIDGET_LIBRARIES}
 		${OSGGA_LIBRARIES}
@@ -117,7 +115,16 @@ if(${Qt5Widgets_FOUND})
 		${OSGSHADOW_LIBRARIES}
 		${OPENTHREADS_LIBRARIES}
 		)
-	
+
+	if (SCONE_OPENSIM_3)
+		target_link_libraries(sconestudio sconeopensim3)
+		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_3 )
+	endif()
+	if (SCONE_OPENSIM_4)
+		target_link_libraries(sconestudio sconeopensim4)
+		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_4 )
+	endif()
+
 	# no console in release mode
 	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
 	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )

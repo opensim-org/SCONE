@@ -8,7 +8,6 @@
 
 #include "scone/core/Log.h"
 #include "scone/optimization/opt_tools.h"
-#include "scone/model/simbody/sim_simbody.h"
 #include "xo/system/system_tools.h"
 #include <tclap/CmdLine.h>
 #include <thread>
@@ -21,6 +20,7 @@
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/Exception.h"
+#include "scone/sconelib_config.h"
 
 using namespace scone;
 using namespace std;
@@ -29,6 +29,7 @@ int main(int argc, char* argv[])
 {
 	xo::log::stream_sink console_sink( xo::log::info_level, std::cout );
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
+	scone::RegisterModels();
 
 	try
 	{

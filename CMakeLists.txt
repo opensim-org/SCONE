@@ -68,7 +68,6 @@ add_subdirectory(submodules/spot)
 # Add targets
 #
 add_subdirectory(src/sconelib)
-add_subdirectory(src/sconemodelopensim3)
 add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)
