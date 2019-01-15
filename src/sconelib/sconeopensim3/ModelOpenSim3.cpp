@@ -349,37 +349,6 @@ namespace scone
 		SCONE_THROW( "Could not find OpenSim object " + name );
 	}
 
-	void ModelOpenSim3::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
-	{
-		for ( auto& object_pn : osim_pars )
-		{
-			ScopedParamSetPrefixer prefix( par, object_pn.first + '.' );
-			auto& obj = FindOpenSimObject( object_pn.first );
-			for ( auto& prop : object_pn.second )
-			{
-				double v = par.get( prop.first, prop.second );
-				obj.updPropertyByName( prop.first ).updValue< double >() = v;
-			}
-
-#if 0
-			if ( param.first == "Force" )
-			{
-				auto& name = param.second[ "name" ].get_value();
-				xo::pattern_matcher pm( name );
-				int count = 0;
-				for ( int i = 0; i < m_pOsimModel->updForceSet().getSize(); ++i )
-				{
-					auto& force = m_pOsimModel->updForceSet().get( i );
-					if ( pm( force.getName() ) )
-						SetOpenSimProperty( force, param.second, par ), ++count;
-				}
-				if ( count == 0 )
-					log::warning( "Could not find OpenSim Object that matches ", name );
-			}
-#endif
-		}
-	}
-
 	void ModelOpenSim3::SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par )
 	{
 		// we have a match!
@@ -390,6 +359,26 @@ namespace scone
 		{
 			auto& prop = os.updPropertyByName( prop_str ).updValue< double >();
 			prop = pn.get( "factor", false ) ? prop * value : value;
+		}
+	}
+
+	void ModelOpenSim3::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
+	{
+		for ( auto& object_pn : osim_pars )
+		{
+			ScopedParamSetPrefixer prefix( par, object_pn.first + '.' );
+			auto& os_object = FindOpenSimObject( object_pn.first );
+			for ( auto& kvp : object_pn.second )
+			{
+				auto prop_name = xo::left_of_str( kvp.first, "." );
+				auto prop_qualifier = xo::right_of_str( kvp.first, "." );
+				auto& os_property = os_object.updPropertyByName( prop_name ).updValue< double >();
+				double value = par.get( kvp.first, kvp.second );
+
+				if ( prop_qualifier == "factor" )
+					os_property *= value;
+				else os_property = value;
+			}
 		}
 	}
 
