@@ -382,7 +382,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>183</x>
-     <y>620</y>
+     <y>561</y>
     </hint>
     <hint type="destinationlabel">
      <x>183</x>
@@ -441,29 +441,7 @@
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
-  <slot>updateScrollbar(int)</slot>
-  <slot>start()</slot>
-  <slot>stop()</slot>
-  <slot>slomo(int)</slot>
-  <slot>fileOpen()</slot>
-  <slot>fileClose()</slot>
-  <slot>fileSave()</slot>
-  <slot>fileSaveAs()</slot>
-  <slot>showViewer()</slot>
-  <slot>viewAction()</slot>
-  <slot>helpAbout()</slot>
-  <slot>optimizeScenario()</slot>
-  <slot>abortOptimizations()</slot>
-  <slot>fileExit()</slot>
   <slot>selectBrowserItem(QModelIndex)</slot>
-  <slot>createVideo()</slot>
-  <slot>optimizeScenarioMultiple()</slot>
   <slot>tabCloseRequested(int)</slot>
-  <slot>updateViewSettings()</slot>
-  <slot>showSettingsDialog()</slot>
-  <slot>viewResults(bool)</slot>
-  <slot>viewMessages(bool)</slot>
-  <slot>fixViewCheckboxes()</slot>
-  <slot>runScenario()</slot>
  </slots>
 </ui>

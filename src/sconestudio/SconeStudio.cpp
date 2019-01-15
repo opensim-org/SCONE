@@ -123,7 +123,7 @@ scene_( true )
 	//ui.osgViewer->setClearColor( to_osg( vis::make_from_hex( 0xa0a0a0 ) ) );
 }
 
-bool SconeStudio::init( osgViewer::ViewerBase::ThreadingModel threadingModel )
+bool SconeStudio::init()
 {
 	// init file model and browser widget
 	auto results_folder = scone::GetFolder( SCONE_RESULTS_FOLDER );

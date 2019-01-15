@@ -43,7 +43,7 @@ public:
 	SconeStudio(QWidget *parent = 0, Qt::WindowFlags flags = 0);
 	~SconeStudio();
 
-	bool init(osgViewer::ViewerBase::ThreadingModel threadingModel);
+	bool init();
 	virtual void openFile( const QString& filename ) override;
 	virtual bool tryExit() override;
 

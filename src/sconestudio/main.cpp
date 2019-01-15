@@ -52,22 +52,18 @@ int main( int argc, char *argv[] )
 		xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
 #endif
 
+		// init scone file format
+		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
+
 		// register models
 		scone::RegisterModels();
 
 		// init main window
 		SconeStudio w;
-
-		// sleep a while so people can enjoy the splash screen :-)
-		QThread::sleep( 0 );
-
-		// Qt5 is currently crashing and reporting "Cannot make QOpenGLContext current in a different thread" when the viewer is run multi-threaded, this is regression from Qt4
-		osgViewer::ViewerBase::ThreadingModel threadingModel = osgViewer::ViewerBase::SingleThreaded;
-
-		w.init(threadingModel);
+		QThread::sleep( 0 ); // sleep a while so people can enjoy the splash screen :-)
+		w.init();
 		w.show();
 		scone::log::info( "SCONE version ", scone::GetSconeVersion() );
-
 		splash.close();
 		
 		return a.exec();
