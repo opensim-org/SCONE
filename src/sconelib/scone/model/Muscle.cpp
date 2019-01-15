@@ -41,6 +41,17 @@ namespace scone
 		else return mom;
 	}
 
+	scone::Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
+	{
+		// from OpenSim Umberger metabolic energy model docs
+		return ( GetMaxIsometricForce() / specific_tension ) * muscle_density * GetOptimalFiberLength();
+	}
+
+	scone::Real Muscle::GetPCSA( Real specific_tension ) const
+	{
+		return GetMaxIsometricForce() / specific_tension;
+	}
+
 	Real Muscle::GetNormalizedSpindleRate() const
 	{
 		// derived from [Prochazka1999], velocity component normalized to unit length

@@ -43,11 +43,6 @@ namespace scone
 		return m_osMus.getTendonSlackLength();
 	}
 
-	scone::Real MuscleOpenSim3::GetMass( Real specific_tension, Real muscle_density ) const
-	{
-		return ( GetMaxIsometricForce() / specific_tension ) * muscle_density * GetOptimalFiberLength(); // from OpenSim Umberger metabolic energy model docs
-	}
-
 	scone::Real MuscleOpenSim3::GetForce() const
 	{
 		SCONE_PROFILE_FUNCTION;
