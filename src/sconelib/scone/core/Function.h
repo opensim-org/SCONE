@@ -9,8 +9,7 @@
 #pragma once
 
 #include "scone/core/platform.h"
-#include "scone/optimization/Params.h"
-#include "scone/core/HasName.h"
+#include "types.h"
 
 namespace scone
 {

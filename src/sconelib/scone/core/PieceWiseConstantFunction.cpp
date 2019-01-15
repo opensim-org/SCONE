@@ -7,14 +7,13 @@
 */
 
 #include "PieceWiseConstantFunction.h"
-//#include "OpenSim/Common/PiecewiseConstantFunction.h"
+#include "scone/core/string_tools.h"
 #include "xo/numerical/piecewise_constant_function.h"
 
 namespace scone
 {
 	struct PieceWiseConstantFunction::Impl {
 		xo::piecewise_constant_function< double > m_osFunc;
-		//OpenSim::PiecewiseConstantFunction m_osFunc;
 	};
 
 	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, Params& par ) :
@@ -30,7 +29,6 @@ namespace scone
 			if ( cpidx > 0 )
 			{
 				double dt = par.get( stringf( "DT%d", cpidx - 1 ), control_point_dt );
-				//xVal = m_pImpl->m_osFunc.getX( cpidx - 1 ) + dt;
 				xVal = m_pImpl->m_osFunc.point( cpidx - 1 ).first + dt;
 			}
 			Real yVal = par.get( stringf( "Y%d", cpidx ), control_point_y );
@@ -43,8 +41,6 @@ namespace scone
 
 	scone::Real PieceWiseConstantFunction::GetValue( Real x )
 	{
-		//SimTK::Vector xval( 1 );
-		//xval[ 0 ] = x;
 		return m_pImpl->m_osFunc( x );
 	}
 
@@ -52,5 +48,4 @@ namespace scone
 	{
 		return stringf( "C%d", m_pImpl->m_osFunc.size() );
 	}
-
 }

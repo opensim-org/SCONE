@@ -9,8 +9,8 @@
 #pragma once
 
 #include "Function.h"
-#include "scone/core/string_tools.h"
 #include "PropNode.h"
+#include "optimization/Params.h"
 
 namespace scone
 {
