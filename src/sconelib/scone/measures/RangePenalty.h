@@ -19,7 +19,7 @@ namespace scone
 	template< typename T > class RangePenalty
 	{
 	public:
-		RangePenalty() : range( xo::const_lowest<T>(), xo::const_max<T>() ), abs_penalty( 0 ), squared_penalty( 0 ) { }
+		RangePenalty() : range( xo::constants<T>::lowest(), xo::constants<T>::max() ), abs_penalty( 0 ), squared_penalty( 0 ) { }
 
 		RangePenalty( const PropNode& prop ) :
 		abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, T( 0 ) ) ),

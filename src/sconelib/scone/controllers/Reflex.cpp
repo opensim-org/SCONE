@@ -18,8 +18,8 @@ namespace scone
 	actuator_( *FindByLocation( model.GetActuators(), target, loc ) )
 	{
 		INIT_PAR( props, par, delay, 0 );
-		INIT_PROP( props, min_control_value, xo::const_lowest<Real>() );
-		INIT_PROP( props, max_control_value, xo::const_max<Real>() );
+		INIT_PROP( props, min_control_value, xo::constants<Real>::lowest() );
+		INIT_PROP( props, max_control_value, xo::constants<Real>::max() );
 	}
 
 	Reflex::Reflex( Actuator& target, TimeInSeconds d, Real min_val, Real max_val ) :

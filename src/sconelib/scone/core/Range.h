@@ -19,7 +19,7 @@ namespace scone
 	{
 	public:
 		Range() : min( T() ), max( T() ) {}
-		Range( const PropNode& props ) : min( props.get< T >( "min", xo::const_lowest<T>() ) ), max( props.get< T >( "max", xo::const_max<T>() ) ) {}
+		Range( const PropNode& props ) : min( props.get< T >( "min", xo::constants<T>::lowest() ) ), max( props.get< T >( "max", xo::constants<T>::max() ) ) {}
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
 
 		// test if a value is inside the range

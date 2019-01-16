@@ -144,7 +144,7 @@ namespace scone
 		for ( auto& muscle : model_->GetMuscles() )
 		{
 			auto muscle_radius = GetStudioSetting<bool>( "viewer.auto_muscle_width" ) ?
-				GetStudioSetting<float>( "viewer.auto_muscle_width_factor" ) * sqrt( muscle->GetPCSA() / xo::numconstd::pi() ) :
+				GetStudioSetting<float>( "viewer.auto_muscle_width_factor" ) * sqrt( muscle->GetPCSA() / xo::constantsd::pi() ) :
 				GetStudioSetting<float>( "viewer.muscle_width" );
 
 			auto tendon_radius = GetStudioSetting<float>( "viewer.relative_tendon_width" ) * muscle_radius;
