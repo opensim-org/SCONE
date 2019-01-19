@@ -52,7 +52,7 @@ private:
 
 void optimization_test()
 {
-	GetObjectiveFactory().register_class< TestObjective >();
+	GetObjectiveFactory().register_type< TestObjective >();
 
 	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test" );
 	const PropNode pn = load_file( "rosenbrock_50_test.xml" );

@@ -57,19 +57,19 @@ namespace scone
 		if ( g_ControllerFactory.empty() )
 		{
 			// register controllers
-			g_ControllerFactory.register_class< FeedForwardController >();
-			g_ControllerFactory.register_class< GaitStateController >();
-			g_ControllerFactory.register_class< ReflexController >();
-			g_ControllerFactory.register_class< TimeStateController >();
-			g_ControllerFactory.register_class< PerturbationController >();
-			g_ControllerFactory.register_class< SensorStateController >();
-			g_ControllerFactory.register_class< MirrorController >();
-			g_ControllerFactory.register_class< NeuralController >();
-			g_ControllerFactory.register_class< CompositeController >();
-			g_ControllerFactory.register_class< SequentialController >();
-			g_ControllerFactory.register_class< NoiseController >();
+			g_ControllerFactory.register_type< FeedForwardController >();
+			g_ControllerFactory.register_type< GaitStateController >();
+			g_ControllerFactory.register_type< ReflexController >();
+			g_ControllerFactory.register_type< TimeStateController >();
+			g_ControllerFactory.register_type< PerturbationController >();
+			g_ControllerFactory.register_type< SensorStateController >();
+			g_ControllerFactory.register_type< MirrorController >();
+			g_ControllerFactory.register_type< NeuralController >();
+			g_ControllerFactory.register_type< CompositeController >();
+			g_ControllerFactory.register_type< SequentialController >();
+			g_ControllerFactory.register_type< NoiseController >();
 		}
-		return g_ControllerFactory( props.get< String >( "type" ), props, par, model, target_area );
+		return g_ControllerFactory.create( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
 	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Location& target_area )
@@ -78,21 +78,21 @@ namespace scone
 		if ( g_MeasureFactory.empty() )
 		{
 			// register measures
-			g_MeasureFactory.register_class< HeightMeasure >();
-			g_MeasureFactory.register_class< GaitMeasure >();
-			g_MeasureFactory.register_class< GaitCycleMeasure >();
-			g_MeasureFactory.register_class< EffortMeasure >();
-			g_MeasureFactory.register_class< DofLimitMeasure >();
-			g_MeasureFactory.register_class< DofMeasure >();
-			g_MeasureFactory.register_class< BodyMeasure >();
-			g_MeasureFactory.register_class< CompositeMeasure >();
-			g_MeasureFactory.register_class< JumpMeasure >();
-			g_MeasureFactory.register_class< JointLoadMeasure >();
-			g_MeasureFactory.register_class< ReactionForceMeasure >();
-			g_MeasureFactory.register_class< BalanceMeasure >();
-			g_MeasureFactory.register_class< MimicMeasure >();
+			g_MeasureFactory.register_type< HeightMeasure >();
+			g_MeasureFactory.register_type< GaitMeasure >();
+			g_MeasureFactory.register_type< GaitCycleMeasure >();
+			g_MeasureFactory.register_type< EffortMeasure >();
+			g_MeasureFactory.register_type< DofLimitMeasure >();
+			g_MeasureFactory.register_type< DofMeasure >();
+			g_MeasureFactory.register_type< BodyMeasure >();
+			g_MeasureFactory.register_type< CompositeMeasure >();
+			g_MeasureFactory.register_type< JumpMeasure >();
+			g_MeasureFactory.register_type< JointLoadMeasure >();
+			g_MeasureFactory.register_type< ReactionForceMeasure >();
+			g_MeasureFactory.register_type< BalanceMeasure >();
+			g_MeasureFactory.register_type< MimicMeasure >();
 		}
-		return g_MeasureFactory( props.get< String >( "type" ), props, par, model, target_area );
+		return g_MeasureFactory.create( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
 	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Location& target_area )
@@ -100,12 +100,12 @@ namespace scone
 		static xo::factory< Reflex, const PropNode&, Params&, Model&, const Location& > g_ReflexFactory;
 		if ( g_ReflexFactory.empty() )
 		{
-			g_ReflexFactory.register_class< MuscleReflex >();
-			g_ReflexFactory.register_class< DofReflex >();
-			g_ReflexFactory.register_class< BodyPointReflex >();
-			g_ReflexFactory.register_class< ConditionalMuscleReflex >();
+			g_ReflexFactory.register_type< MuscleReflex >();
+			g_ReflexFactory.register_type< DofReflex >();
+			g_ReflexFactory.register_type< BodyPointReflex >();
+			g_ReflexFactory.register_type< ConditionalMuscleReflex >();
 		}
-		return g_ReflexFactory( props.get< String >( "type" ), props, par, model, target_area );
+		return g_ReflexFactory.create( props.get< String >( "type" ), props, par, model, target_area );
 	}
 
 	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par )
@@ -113,13 +113,13 @@ namespace scone
 		static xo::factory< Function, const PropNode&, Params& > g_FunctionFactory;
 		if ( g_FunctionFactory.empty() )
 		{
-			g_FunctionFactory.register_class< PieceWiseConstantFunction >();
-			g_FunctionFactory.register_class< PieceWiseConstantFunction >( "PieceWiseConstant" );
-			g_FunctionFactory.register_class< PieceWiseLinearFunction >();
-			g_FunctionFactory.register_class< PieceWiseLinearFunction >( "PieceWiseLinear" );
-			g_FunctionFactory.register_class< Polynomial >();
+			g_FunctionFactory.register_type< PieceWiseConstantFunction >();
+			g_FunctionFactory.register_type< PieceWiseConstantFunction >( "PieceWiseConstant" );
+			g_FunctionFactory.register_type< PieceWiseLinearFunction >();
+			g_FunctionFactory.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" );
+			g_FunctionFactory.register_type< Polynomial >();
 		}
-		return g_FunctionFactory( props.get< String >( "type" ), props, par );
+		return g_FunctionFactory.create( props.get< String >( "type" ), props, par );
 	}
 
 	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
@@ -127,11 +127,11 @@ namespace scone
 		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
 		if ( g_OptimizerFactory.empty() )
 		{
-			g_OptimizerFactory.register_class< CmaOptimizerSpot >( "CmaOptimizer" );
-			g_OptimizerFactory.register_class< CmaOptimizerSpot >();
-			g_OptimizerFactory.register_class< CmaPoolOptimizer >();
+			g_OptimizerFactory.register_type< CmaOptimizerSpot >( "CmaOptimizer" );
+			g_OptimizerFactory.register_type< CmaOptimizerSpot >();
+			g_OptimizerFactory.register_type< CmaPoolOptimizer >();
 		}
-		return g_OptimizerFactory( prop.get< String >( "type" ), prop );
+		return g_OptimizerFactory.create( prop.get< String >( "type" ), prop );
 	}
 
 	SCONE_API ModelFactory& GetModelFactory()
@@ -146,7 +146,7 @@ namespace scone
 
 	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
 	{
-		return GetModelFactory()( prop.get< String >( "type" ), prop, par );
+		return GetModelFactory().create( prop.get< String >( "type" ), prop, par );
 	}
 
 	SCONE_API ObjectiveFactory& GetObjectiveFactory()
@@ -154,16 +154,16 @@ namespace scone
 		static ObjectiveFactory g_ObjectiveFactory;
 		if ( g_ObjectiveFactory.empty() )
 		{
-			g_ObjectiveFactory.register_class< SimulationObjective >();
-			g_ObjectiveFactory.register_class< ImitationObjective >();
-			g_ObjectiveFactory.register_class< SimilarityObjective >();
-			g_ObjectiveFactory.register_class< TestObjective >();
+			g_ObjectiveFactory.register_type< SimulationObjective >();
+			g_ObjectiveFactory.register_type< ImitationObjective >();
+			g_ObjectiveFactory.register_type< SimilarityObjective >();
+			g_ObjectiveFactory.register_type< TestObjective >();
 		}
 		return g_ObjectiveFactory;
 	}
 
 	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop )
 	{
-		return GetObjectiveFactory()( prop.get< String >( "type" ), prop );
+		return GetObjectiveFactory().create( prop.get< String >( "type" ), prop );
 	}
 }
