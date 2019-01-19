@@ -78,7 +78,9 @@ cmake ../scone \
     -DCMAKE_PREFIX_PATH="/usr/local/opt/qt;$(pwd)/../opensim-core/install" \
     -DOSGQT_INCLUDE_DIR=$(pwd)/../osgQt/install/include \
     -DOSGQT_LIBRARY_RELEASE=$(pwd)/../osgQt/install/lib/libosgQt5.dylib \
-    -DOSG_DIR="$(pwd)/../OpenSceneGraph/install"
+    -DOSG_DIR="$(pwd)/../OpenSceneGraph/install" \
+    -DSCONE_OPENSIM_3=off \
+    -DSCONE_OPENSIM_4=on
 make --jobs 4
 
 

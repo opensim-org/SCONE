@@ -14,7 +14,7 @@
 constexpr int SCONE_VERSION_MAJOR = 0;
 constexpr int SCONE_VERSION_MINOR = 20;
 constexpr int SCONE_VERSION_PATCH = 1;
-constexpr char* SCONE_VERSION_POSTFIX = SCONE_DEBUG ? "ALPHA DEBUG" : "ALPHA";
+constexpr const char* SCONE_VERSION_POSTFIX = SCONE_DEBUG ? "ALPHA DEBUG" : "ALPHA";
 
 namespace scone
 {
