@@ -9,7 +9,7 @@
 #include "ConstantForce.h"
 
 #include "SimTKcommon/SmallMatrix.h"
-#include "OpenSim/Simulation/OpenSim4Engine/OpenSim4Engine.h"
+#include "OpenSim/Simulation/SimbodyEngine/SimbodyEngine.h"
 #include "OpenSim/Simulation/Model/Model.h"
 #include "OpenSim/Simulation/Model/BodySet.h"
 
@@ -77,7 +77,7 @@ namespace OpenSim
 
 	void ConstantForce::computeForce( const SimTK::State& s, SimTK::Vector_<SimTK::SpatialVec>& bodyForces, SimTK::Vector& mobilityForces ) const
 	{
-		const OpenSim4Engine& engine = getModel().getOpenSim4Engine();
+		const SimbodyEngine& engine = getModel().getSimbodyEngine();
 
 		if ( !_model || !body_ ) return;
 

@@ -59,7 +59,7 @@ namespace scone
 		matter.calcMobilizerReactionForces( state, forcesAtMInG ); // state should be at acceleration
 
 #if 1
-		return ToVec3( forcesAtMInG[ child_body_idx ][ 1 ] );
+		return from_osim( forcesAtMInG[ child_body_idx ][ 1 ] );
 #else
 		const SimTK::MobilizedBody& mobod = matter.getMobilizedBody( child_body_idx );
 		const SimTK::MobilizedBody& parent = mobod.getParentMobilizedBody();
@@ -73,7 +73,7 @@ namespace scone
 		SimTK::Vec3 p_MF_G = -( R_GF * p_FM ); // Re-express and negate shift vector. 
 		SimTK::SpatialVec forcesAtFInG = -SimTK::shiftForceBy( forcesAtMInG[ child_body_idx ], p_MF_G );
 
-		return ToVec3( forcesAtFInG[ 1 ] );
+		return from_osim( forcesAtFInG[ 1 ] );
 #endif
 	}
 
@@ -84,6 +84,6 @@ namespace scone
 		SimTK::Vec3 p;
 		m_osJoint.getParentFrame().getPositionInGround( m_Model.GetTkState() );
 		std::cout << GetName() << ": " << p << std::endl;
-		return ToVec3( p );
+		return from_osim( p );
 	}
 }

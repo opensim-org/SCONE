@@ -31,7 +31,7 @@ namespace scone
 		for ( auto& m : props.select( "Measure" ) )
 			create_measure( m.second );
 
-		if ( Measures = props.try_get_child( "Measures" ) )
+		if (( Measures = props.try_get_child( "Measures" ) ))
 			for ( auto& m : *Measures )
 				create_measure( m.second );
 

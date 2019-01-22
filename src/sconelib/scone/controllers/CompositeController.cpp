@@ -19,7 +19,7 @@ namespace scone
 		for ( auto& cpn : props.select( "Controller" ) )
 			controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
 
-		if ( Controllers = props.try_get_child( "Controllers" ) )
+		if (( Controllers = props.try_get_child( "Controllers" ) ))
 			for ( auto& cpn : *Controllers )
 				controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
 	}

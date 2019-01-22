@@ -42,7 +42,7 @@ namespace scone
 		for ( const auto& item : props.select( "Reflex" ) )
 			create_reflex( item.second );
 
-		if ( Reflexes = props.try_get_child( "Reflexes" ) )
+		if (( Reflexes = props.try_get_child( "Reflexes" ) ))
 			for ( auto& item : *Reflexes )
 				create_reflex( item.second );
 	}
