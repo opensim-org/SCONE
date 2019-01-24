@@ -39,7 +39,7 @@ namespace scone
 		return m_osBody.getName();
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetOriginPos() const
+	Vec3 BodyOpenSim3::GetOriginPos() const
 	{
 		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
@@ -52,7 +52,7 @@ namespace scone
 		return from_osim( point );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetComPos() const
+	Vec3 BodyOpenSim3::GetComPos() const
 	{
 		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
@@ -68,12 +68,12 @@ namespace scone
 		return from_osim( point );
 	}
 
-	scone::Vec3 BodyOpenSim3::GetLocalComPos() const
+	Vec3 BodyOpenSim3::GetLocalComPos() const
 	{
 		return m_LocalComPos;
 	}
 
-	scone::Quat scone::BodyOpenSim3::GetOrientation() const
+	Quat BodyOpenSim3::GetOrientation() const
 	{
 		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 		auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
@@ -83,7 +83,7 @@ namespace scone
 		return q1;
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetPosOfPointOnBody( Vec3 point ) const
+	Vec3 BodyOpenSim3::GetPosOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
@@ -92,7 +92,7 @@ namespace scone
 		return from_osim( mob.findStationLocationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetComVel() const
+	Vec3 BodyOpenSim3::GetComVel() const
 	{
 		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
@@ -109,7 +109,7 @@ namespace scone
 		return from_osim( vel );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetOriginVel() const
+	Vec3 BodyOpenSim3::GetOriginVel() const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -121,7 +121,7 @@ namespace scone
 		return from_osim( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetAngVel() const
+	Vec3 BodyOpenSim3::GetAngVel() const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -133,7 +133,7 @@ namespace scone
 		return from_osim( mb.getBodyAngularVelocity( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetLinVelOfPointOnBody( Vec3 point ) const
+	Vec3 BodyOpenSim3::GetLinVelOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
@@ -143,7 +143,7 @@ namespace scone
 	}
 
 
-	scone::Vec3 scone::BodyOpenSim3::GetComAcc() const
+	Vec3 BodyOpenSim3::GetComAcc() const
 	{
 		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
@@ -160,7 +160,7 @@ namespace scone
 		return from_osim( acc );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetOriginAcc() const
+	Vec3 BodyOpenSim3::GetOriginAcc() const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -172,7 +172,7 @@ namespace scone
 		return from_osim( mob.getBodyOriginAcceleration( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetAngAcc() const
+	Vec3 BodyOpenSim3::GetAngAcc() const
 	{
 		SCONE_PROFILE_FUNCTION;
 
@@ -184,7 +184,7 @@ namespace scone
 		return from_osim( mb.getBodyAngularAcceleration( m_Model.GetTkState() ) );
 	}
 
-	scone::Vec3 scone::BodyOpenSim3::GetLinAccOfPointOnBody( Vec3 point ) const
+	Vec3 BodyOpenSim3::GetLinAccOfPointOnBody( Vec3 point ) const
 	{
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
@@ -253,7 +253,7 @@ namespace scone
 		return geoms;
 	}
 
-	const std::vector< scone::Real >& BodyOpenSim3::GetContactForceValues() const
+	const std::vector< Real >& BodyOpenSim3::GetContactForceValues() const
 	{
 		if ( m_ForceIndex != -1 )
 		{
@@ -304,21 +304,21 @@ namespace scone
 			cf->setTorque( to_osim( torque ) + cf->getTorque() );
 	}
 
-	scone::Vec3 BodyOpenSim3::GetExternalForce() const
+	Vec3 BodyOpenSim3::GetExternalForce() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			return from_osim( cf->getForce() );
 		else return Vec3::zero();
 	}
 
-	scone::Vec3 BodyOpenSim3::GetExternalForcePoint() const
+	Vec3 BodyOpenSim3::GetExternalForcePoint() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			return from_osim( cf->getPoint() );
 		else return Vec3::zero();
 	}
 
-	scone::Vec3 BodyOpenSim3::GetExternalMoment() const
+	Vec3 BodyOpenSim3::GetExternalMoment() const
 	{
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getIndex() ) )
 			return from_osim( cf->getTorque() );
