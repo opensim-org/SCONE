@@ -54,7 +54,7 @@ namespace scone
 
 	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name )
 	{
-		std::ofstream str( file.str() );
+		std::ofstream str( file.string() );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
 		WriteStorageSto( storage, str, name );
 	}

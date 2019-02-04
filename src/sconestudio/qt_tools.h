@@ -15,7 +15,7 @@
 #include "simvis/color.h"
 
 inline QString make_qt( const std::string& s ) { return QString( s.c_str() ); }
-inline QString make_qt( const xo::path& s ) { return QString( s.str().c_str() ); }
+inline QString make_qt( const xo::path& s ) { return QString( s.c_str() ); }
 inline QColor make_qt( const vis::color& c ) { return QColor( 255 * c.r, 255 * c.g, 255 * c.b ); }
 
 namespace xo {

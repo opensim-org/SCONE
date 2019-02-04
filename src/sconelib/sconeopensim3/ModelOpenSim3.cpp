@@ -372,7 +372,7 @@ namespace scone
 	std::vector<path> ModelOpenSim3::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).string() );
 		files.push_back( file + ".sto" );
 
 		if ( GetController() ) xo::append( files, GetController()->WriteResults( file ) );

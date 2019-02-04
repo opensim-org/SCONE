@@ -314,7 +314,7 @@ namespace scone
 
 		std::sort( contrib_vec.begin(), contrib_vec.end(), std::greater<>() );
 
-		std::ofstream str( ( file + ".NeuralController.txt" ).str() );
+		std::ofstream str( ( file + ".NeuralController.txt" ).string() );
 		files.emplace_back( file + ".NeuralController.txt" );
 
 		// output gains
