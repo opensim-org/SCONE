@@ -1,5 +1,6 @@
 #include "optimization_test.h"
 #include "propnode_test.h"
+#include "simulation_test.h"
 
 int main( int argc, const char* argv[] )
 {
