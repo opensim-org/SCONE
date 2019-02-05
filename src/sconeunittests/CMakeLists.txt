@@ -1,17 +1,23 @@
 set(FILES
     main.cpp
 	optimization_test.h
-	propnode_test.h
 	simulation_test.h
 	)
 
-add_executable(scone-unit-tests ${FILES})
+add_executable(sconeunittests ${FILES})
 
-set_property(TARGET scone-unit-tests PROPERTY CXX_STANDARD 17)
-set_property(TARGET scone-unit-tests PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET sconeunittests PROPERTY CXX_STANDARD 17)
+set_property(TARGET sconeunittests PROPERTY CXX_STANDARD_REQUIRED ON)
 
-set_target_properties(scone-unit-tests PROPERTIES
-    PROJECT_LABEL "sconeunittests"
-    OUTPUT_NAME sconeunittests)
+target_link_libraries(sconeunittests sconelib xo)
 
-target_link_libraries(scone-unit-tests sconelib xo)
+if (SCONE_OPENSIM_3)
+	target_link_libraries(sconeunittests sconeopensim3)
+	target_compile_definitions( sconeunittests PRIVATE SCONE_OPENSIM_3 )
+endif()
+if (SCONE_OPENSIM_4)
+	target_link_libraries(sconeunittests sconeopensim4)
+	target_compile_definitions( sconeunittests PRIVATE SCONE_OPENSIM_4 )
+endif()
+
+source_group("" FILES ${FILES})

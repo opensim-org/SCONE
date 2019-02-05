@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<report>0.809876<Gait>0&#9;100 * (0.032314 + 0 if &gt; 0.05)</Gait><Effort>0.809876&#9;0.1 * (8.09876 + 0 if &gt; 0)<cost_of_transport>8.09876</cost_of_transport><average>642.165</average><total>3210.83</total><probe_total>0</probe_total></Effort><AnkleLimits>0&#9;0.1 * (0 + 0 if &gt; 0)</AnkleLimits><KneeLimits>0&#9;0.001 * (0 + 0 if &gt; 500)</KneeLimits><Posture>0&#9;1 * (0 + 0 if &gt; 0)</Posture></report>

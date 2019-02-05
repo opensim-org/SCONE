@@ -5,11 +5,9 @@
 	<lambda>0</lambda>
 	<mu>0</mu>
 	<sigma>1</sigma>
-	<max_generations>500</max_generations>
-	<maximize_objective>0</maximize_objective>
+	<max_generations>10000</max_generations>
 	<signature_postfix>DATE_TIME_EXACT</signature_postfix>
-
 	<Objective type="TestObjective">
-		<num_params>100</num_params>
+		<dim>5</dim>
 	</Objective>
 </Optimizer>
