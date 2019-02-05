@@ -39,6 +39,7 @@ namespace scone
 
 	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
+		bool store_data = !output_base.empty();
 		current_path( par_file.parent_path() );
 
 		const PropNode& optProp = scenario_pn[ "Optimizer" ];
@@ -69,12 +70,19 @@ namespace scone
 
 		// set data storage
 		SCONE_ASSERT( model );
-		model->SetStoreData( true );
+		model->SetStoreData( store_data );
 		Profiler::GetGlobalInstance().Reset();
 
 		timer tmr;
 		double result = so.EvaluateModel( *model );
 		auto duration = tmr.seconds();
+
+		// write results
+		if ( store_data )
+		{
+			auto files = model->WriteResults( output_base );
+			log::info( "Results written to " + output_base.string() + "*" );
+		}
 
 		// collect statistics
 		PropNode statistics;
@@ -83,10 +91,6 @@ namespace scone
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
 		log::info( statistics );
-
-		// write results
-		auto files = model->WriteResults( output_base );
-		log::info( "Results written to " + output_base.string() + "*" );
 
 		return statistics;
 	}

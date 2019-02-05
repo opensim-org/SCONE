@@ -24,6 +24,9 @@ namespace scone
 	{
 	public:
 		Optimizer( const PropNode& props );
+		Optimizer( const Optimizer& ) = delete;
+		Optimizer& operator=( const Optimizer& ) = delete;
+
 		virtual ~Optimizer();
 
 		/// Parameter file (.par) to be used for initial parameter values.
@@ -70,28 +73,18 @@ namespace scone
 		// get the results output folder (creates it if it doesn't exist)
 		const path& GetOutputFolder() const;
 
-		bool IsBetterThan( double v1, double v2 ) { return IsMinimizing() ? v1 < v2 : v1 > v2; }
 		virtual bool IsMinimizing() const { return m_Objective->info().minimize(); }
 
-		double GetBestFitness() { return m_BestFitness; }
+		virtual double GetBestFitness() const = 0;
 
 		enum OutputMode { no_output, console_output, status_output };
 		virtual void SetOutputMode( OutputMode m ) { output_mode_ = m; }
 		bool GetProgressOutput() const { return output_mode_ == console_output; }
 		bool GetStatusOutput() const { return output_mode_ == status_output; }
 
-		PropNode GetStatusPropNode() const { PropNode pn; if ( !id_.empty() ) pn[ "id" ] = id_; return pn; }
-
-		void OutputStatus( const PropNode& pn ) const {
-			xo::error_code ec;
-			std::cout << "*" << xo::prop_node_serializer_zml_concise( pn, &ec ) << std::endl;
-		}
-
-		template< typename T > void OutputStatus( const String& key, const T& value ) const {
-			PropNode pn = GetStatusPropNode();
-			pn.set( key, value );
-			OutputStatus( pn );
-		}
+		PropNode GetStatusPropNode() const;
+		void OutputStatus( const PropNode& pn ) const;
+		template< typename T > void OutputStatus( const String& key, const T& value ) const;
 
 		const String& id() const { return id_; }
 
@@ -99,8 +92,6 @@ namespace scone
 		path output_root;
 		bool show_optimization_time;
 		bool output_objective_result_files;
-
-		void ManageFileOutput( double fitness, const std::vector< path >& files ) const;
 
 	protected:
 		const PropNode& m_ObjectiveProps;
@@ -118,14 +109,14 @@ namespace scone
 
 		xo::log::level log_level_;
 		u_ptr< xo::log::file_sink > log_sink_;
-
-	private:
-		static void SetThreadPriority( int priority );
-
-		mutable std::vector< std::pair< double, std::vector< path > > > m_OutputFiles;
-
-	private: // non-copyable and non-assignable
-		Optimizer( const Optimizer& ) = delete;
-		Optimizer& operator=( const Optimizer& ) = delete;
 	};
+
+	template< typename T >
+	void scone::Optimizer::OutputStatus( const String& key, const T& value ) const
+	{
+		PropNode pn = GetStatusPropNode();
+		pn.set( key, value );
+		OutputStatus( pn );
+	}
+
 }

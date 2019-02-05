@@ -29,6 +29,7 @@ namespace scone
 		virtual void SetOutputMode( OutputMode m ) override;
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
+		virtual double GetBestFitness() const override { return best_fitness(); }
 	};
 
 	class SCONE_API CmaOptimizerReporter : public spot::reporter

@@ -30,6 +30,8 @@ namespace scone
 		/// Random seed of the first optimization; default = 1.
 		long random_seed_;
 
+		virtual double GetBestFitness() const override { return best_fitness(); }
+
 	protected:
 		std::vector< PropNode > props_;
 	};

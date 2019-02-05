@@ -74,6 +74,19 @@ namespace scone
 		return output_folder_;
 	}
 
+	PropNode Optimizer::GetStatusPropNode() const
+	{
+		PropNode pn;
+		if ( !id_.empty() ) pn[ "id" ] = id_;
+		return pn;
+	}
+
+	void Optimizer::OutputStatus( const PropNode& pn ) const
+	{
+		xo::error_code ec;
+		std::cout << "*" << xo::prop_node_serializer_zml_concise( pn, &ec ) << std::endl;
+	}
+
 	scone::String Optimizer::GetClassSignature() const
 	{
 		String s = GetObjective().GetSignature();
@@ -105,40 +118,5 @@ namespace scone
 		// copy all objective resources to output folder
 		for ( auto& f : GetObjective().GetExternalResources() )
 			xo::copy_file( f, outdir / f.filename(), true );
-	}
-
-	void Optimizer::ManageFileOutput( double fitness, const std::vector< path >& files ) const
-	{
-		m_OutputFiles.push_back( std::make_pair( fitness, files ) );
-		if ( m_OutputFiles.size() >= 3 )
-		{
-			// see if we should delete the second last file
-			auto testIt = m_OutputFiles.end() - 2;
-			double imp1 = testIt->first / ( testIt - 1 )->first;
-			double imp2 = ( testIt + 1 )->first / testIt->first;
-			if ( IsMinimizing() ) { imp1 = 1.0 / imp1; imp2 = 1.0 / imp2; }
-
-			if ( imp1 < min_improvement_for_file_output && imp2 < min_improvement_for_file_output )
-			{
-				// delete the file(s)
-				bool ok = true;
-				for ( auto& file : testIt->second )
-					ok &= xo::remove( file );
-
-				if ( ok )
-					m_OutputFiles.erase( testIt );
-			}
-		}
-	}
-
-	void Optimizer::SetThreadPriority( int priority )
-	{
-#ifdef _MSC_VER
-		::SetThreadPriority( ::GetCurrentThread(), priority );
-#elif __APPLE__
-		// TODO setschedprio unavailable; maybe use getschedparam?
-#else
-		pthread_setschedprio( pthread_self(), priority );
-#endif
 	}
 }
