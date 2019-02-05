@@ -19,13 +19,13 @@ void simulation_test()
 				if ( parfile.extension() == ".par" )
 				{
 					xo::path scenario_file = FindScenario( xo::path( parfile.string() ) );
+					fs::path base_report_file = parfile.parent_path() / ( "simulation_test_result_" + parfile.stem().string() + ".zml" );
 					auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 					auto result_pn = scone::EvaluateScenario( scenario_pn, parfile, xo::path() );
 
-					fs::path base_report_file = parfile.parent_path() / ( "result_" + parfile.stem().string() + ".zml" );
 					if ( !exists( base_report_file ) )
 					{
-						log::warning( "Could not find simulation report: ", base_report_file.string() );
+						log::warning( "Could not find: ", base_report_file.string() );
 						xo::save_file( result_pn, base_report_file );
 					}
 					else

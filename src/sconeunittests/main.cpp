@@ -11,7 +11,7 @@ int main( int argc, const char* argv[] )
 
 	try
 	{
-		optimization_test();
+		//optimization_test();
 		simulation_test();
 	}
 	catch ( std::exception& e)
