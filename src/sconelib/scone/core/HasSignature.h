@@ -21,10 +21,10 @@ namespace scone
 		HasSignature( const PropNode& pn );
 		virtual ~HasSignature();
 
-		/// Prefix signature with custom string.
+		/// Prefix signature with custom string. Special tags: DATE_TIME, DATE_TIME_EXACT, SCONE_VERSION.
 		String signature_prefix;
 
-		/// Append custom string to signature.
+		/// Append custom string to signature. Special tags: DATE_TIME, DATE_TIME_EXACT, SCONE_VERSION.
 		String signature_postfix;
 
 		String GetSignature() const;

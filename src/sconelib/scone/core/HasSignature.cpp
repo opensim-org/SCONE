@@ -24,8 +24,8 @@ namespace scone
 		xo::replace_str( signature_postfix, "DATE_TIME", GetDateTimeAsString() );
 		xo::replace_str( signature_prefix, "DATE_TIME_EXACT", GetDateTimeExactAsString() );
 		xo::replace_str( signature_postfix, "DATE_TIME_EXACT", GetDateTimeExactAsString() );
-		xo::replace_str( signature_prefix, "SCONE_BUILD", to_str( GetSconeVersion().build ) );
-		xo::replace_str( signature_postfix, "SCONE_BUILD", to_str( GetSconeVersion().build ) );
+		xo::replace_str( signature_prefix, "SCONE_VERSION", to_str( GetSconeVersion().build ) );
+		xo::replace_str( signature_postfix, "SCONE_VERSION", to_str( GetSconeVersion().build ) );
 	}
 
 	HasSignature::~HasSignature()
