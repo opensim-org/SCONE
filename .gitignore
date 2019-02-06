@@ -5,7 +5,9 @@ doc/ref/
 doc/html/
 doc/xml/
 doc/config/NaturalDocs/Working Data/
+simulation_test_result_*
 tutorials/*.sto
 .version
 *.log
 cmake-build-*
+/doc/upload.bat
