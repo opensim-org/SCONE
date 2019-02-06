@@ -9,6 +9,7 @@
 #include "NoiseController.h"
 #include "scone/model/Model.h"
 #include "scone/model/Actuator.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {
@@ -35,6 +36,6 @@ namespace scone
 
 	String NoiseController::GetClassSignature() const
 	{
-		return String( "N" );
+		return stringf( "N%02d", static_cast<int>( 100 * proportional_noise ) );
 	}
 }
