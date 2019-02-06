@@ -18,14 +18,18 @@ namespace scone
 	random_seed( props.get< unsigned int >( "random_seed", 123 ) ),
 	rng_( random_seed )
 	{
-		INIT_PROP( props, base_noise, 0 );
+		INIT_PROP( props, base_noise,  );
 		INIT_PROP( props, proportional_noise, 0 );
 	}
 
 	bool NoiseController::ComputeControls( Model& model, double timestamp )
 	{
+
 		for ( auto& a : model.GetActuators() )
-			a->AddInput( rng_.norm( 0.0, base_noise + proportional_noise * abs( a->GetInput() ) ) );
+		{
+			auto input = std::max( a->GetInput(), 1e-6 ); // input must be > 0
+			a->AddInput( rng_.norm( 0.0, base_noise + proportional_noise * input ) );
+		}
 		return false;
 	}
 
