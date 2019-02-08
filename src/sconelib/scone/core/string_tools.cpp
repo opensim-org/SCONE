@@ -33,12 +33,12 @@ namespace scone
 	{
 		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
 		auto tm = std::localtime( &today );
-		return stringf( "%04d%02d%02d.%02d%02d%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec );
+		return stringf( "%02d%02d%02d.%02d%02d%02d", tm->tm_year % 100, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec );
 	}
 
 	std::string GetDateTimeExactAsString()
 	{
-		// TODO: depricate
+		// TODO: depeicate
 		// users that run multiple simulations in quick succession
 		// should differentiate them through the .R 'random_seed' tag
 		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
