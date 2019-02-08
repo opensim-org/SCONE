@@ -25,19 +25,6 @@ option(SCONE_OPENSIM_4 "Support OpenSim 4.0" OFF)
 find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
 
-# include folders
-if(SCONE_OPENSIM_3)
-    include_directories(${OPENSIMSIMBODY_INCLUDE_DIRS})
-endif()
-include_directories(${XO_INCLUDE_DIR})
-include_directories(${SPOT_INCLUDE_DIR})
-
-# Add sconelib include folder to all projects
-include_directories(${CMAKE_SOURCE_DIR}/src/sconelib)
-
-# Add TCLAP
-include_directories(${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
-
 if (MSVC)
 	add_compile_options("/MP")
 endif()

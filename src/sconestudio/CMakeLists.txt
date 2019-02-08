@@ -80,9 +80,6 @@ if(${Qt5Widgets_FOUND})
 
 	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 
-	set_property(TARGET sconestudio PROPERTY CXX_STANDARD 17)
-	set_property(TARGET sconestudio PROPERTY CXX_STANDARD_REQUIRED ON)
-
 	target_compile_definitions(sconestudio PRIVATE QTFX_USE_QCUSTOMPLOT)
 
 	qt5_use_modules( sconestudio Widgets OpenGL PrintSupport )
@@ -100,8 +97,9 @@ if(${Qt5Widgets_FOUND})
 	FIND_PACKAGE( osgdb )
 	FIND_PACKAGE( osgshadow )
 	FIND_PACKAGE( OpenThreads )
-	INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIR})
-	INCLUDE_DIRECTORIES(${OSGQT_INCLUDE_DIR})
+
+	# set target include libraries
+	target_include_directories(sconestudio PRIVATE ${SIMVIS_INCLUDE_DIR} ${OSG_INCLUDE_DIR} ${OSGQT_INCLUDE_DIR})
 
 	target_link_libraries(sconestudio
 		sconelib
@@ -134,9 +132,6 @@ if(${Qt5Widgets_FOUND})
 	source_group("Studio Files" FILES ${STUDIOFILES} )
 	source_group("Resource Files" FILES ${RESOURCEFILES} )
 	
-	# Try to add simvis
-	INCLUDE_DIRECTORIES(${SIMVIS_INCLUDE_DIR})
-
 	if (MSVC)
 		add_custom_command(TARGET sconestudio POST_BUILD COMMAND "${CMAKE_SOURCE_DIR}/install.bat" )
 	endif()

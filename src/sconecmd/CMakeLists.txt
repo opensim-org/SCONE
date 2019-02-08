@@ -10,6 +10,8 @@ if(UNIX)
     endif()
 endif()
 
+target_include_directories( sconecmd PRIVATE ${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
+
 target_link_libraries(sconecmd sconelib ${REALTIME_LIB})
 
 if (SCONE_OPENSIM_3)

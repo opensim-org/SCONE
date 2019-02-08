@@ -6,9 +6,6 @@ set(FILES
 
 add_executable(sconeunittests ${FILES})
 
-set_property(TARGET sconeunittests PROPERTY CXX_STANDARD 17)
-set_property(TARGET sconeunittests PROPERTY CXX_STANDARD_REQUIRED ON)
-
 target_link_libraries(sconeunittests sconelib xo)
 
 if (SCONE_OPENSIM_3)

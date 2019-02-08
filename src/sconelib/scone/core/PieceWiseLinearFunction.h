@@ -10,7 +10,7 @@
 
 #include "Function.h"
 #include "PropNode.h"
-#include "optimization/Params.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {
