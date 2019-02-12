@@ -38,10 +38,10 @@ namespace scone
 	{
 		auto model = CreateModel( model_props, par );
 
-		if ( !controller_props.empty() ) // A controller was defined OUTSIDE the model prop_node
+		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
 			model->SetController( CreateController( controller_props, par, *model, Location( NoSide ) ) );
 
-		if ( !measure_props.empty() ) // A measure was defined OUTSIDE the model prop_node
+		if ( measure_props ) // A measure was defined OUTSIDE the model prop_node
 			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location( NoSide ) ) );
 
 		return model;
@@ -53,7 +53,7 @@ namespace scone
 		return CreateModelFromParams( params );
 	}
 
-	std::vector<path> ModelObjective::WriteResults( const path & file_base )
+	std::vector<path> ModelObjective::WriteResults( const path& file_base )
 	{
 		// this does not work because we don't have a model member in Objective
 		SCONE_THROW_NOT_IMPLEMENTED;
@@ -62,28 +62,16 @@ namespace scone
 	ModelUP ModelObjective::InitializeModelObjective( const PropNode& props )
 	{
 		// create TEMPORARY model using the ORIGINAL prop_node to flag unused model props and create par_info_
-		ModelUP model;
-		if ( auto* mprops = props.try_get_child( "Model" ) )
-		{
-			model = CreateModel( *mprops, info_ );
-			model_props = *mprops;
-		}
-
-		SCONE_THROW_IF( !model, "No Model defined in ModelObjective" );
+		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
+		ModelUP model = CreateModel( model_props, info_ );
 
 		// create a TEMPORARY controller that's defined OUTSIDE the model prop_node
-		if ( auto* cprops = props.try_get_child( "Controller" ) )
-		{
-			model->SetController( CreateController( *cprops, info_, *model, Location( NoSide ) ) );
-			controller_props = *cprops;
-		}
+		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
+			model->SetController( CreateController( controller_props, info_, *model, Location( NoSide ) ) );
 
 		// create a TEMPORARY measure that's defined OUTSIDE the model prop_node
-		if ( auto* mprops = props.try_get_child( "Measure" ) )
-		{
-			model->SetMeasure( CreateMeasure( *mprops, info_, *model, Location( NoSide ) ) );
-			measure_props = *mprops;
-		}
+		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
+			model->SetMeasure( CreateMeasure( measure_props, info_, *model, Location( NoSide ) ) );
 
 		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined in ModelObjective" );
 
@@ -105,7 +93,7 @@ namespace scone
 
 		// read properties
 		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
-		PropNode& objProp = configProp.get_child( "Optimizer" ).get_child( "Objective" );
+		FactoryProps objProp = FindFactoryProps( GetOptimizerFactory(), configProp.get_child( "Optimizer" ), "Objective" );
 
 		// create ModelObjective object
 		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( objProp ) );
@@ -123,10 +111,10 @@ namespace scone
 		}
 
 		// report unused properties
-		if ( objProp.count_unaccessed() > 0 )
+		if ( objProp.props().count_unaccessed() > 0 )
 		{
 			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( objProp );
+			xo::log_unaccessed( objProp.props() );
 		}
 
 		return mob;

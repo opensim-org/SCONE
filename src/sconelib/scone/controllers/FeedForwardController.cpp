@@ -54,7 +54,8 @@ namespace scone
 			// create a new function
 			String prefix = symmetric ? ai.name : ai.full_name;
 			ScopedParamSetPrefixer prefixer( par, prefix + "." );
-			m_Functions.push_back( scone::CreateFunction( props.get_child( "Function" ), par ) );
+			auto fp = FindFactoryProps( GetFunctionFactory(), props, "Function" );
+			m_Functions.push_back( CreateFunction( fp, par ) );
 			ai.function_idx = m_Functions.size() - 1;
 		}
 	}

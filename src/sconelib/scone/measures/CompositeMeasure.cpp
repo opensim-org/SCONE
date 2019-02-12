@@ -19,21 +19,23 @@ namespace scone
 	{
 		INIT_PROP( props, symmetric, false );
 
-		auto create_measure = [&]( const PropNode& mpn ) {
+		auto create_measure = [&]( const FactoryProps& fp ) {
 			if ( symmetric ) {
-				m_Measures.push_back( CreateMeasure( mpn, par, model, Location( LeftSide, true ) ) );
-				m_Measures.push_back( CreateMeasure( mpn, par, model, Location( RightSide, true ) ) );
+				m_Measures.push_back( CreateMeasure( fp, par, model, Location( LeftSide, true ) ) );
+				m_Measures.push_back( CreateMeasure( fp, par, model, Location( RightSide, true ) ) );
 			}
-			else m_Measures.push_back( CreateMeasure( mpn, par, model, loc ) );
+			else m_Measures.push_back( CreateMeasure( fp, par, model, loc ) );
 		};
 
 		// add any Measure
-		for ( auto& m : props.select( "Measure" ) )
-			create_measure( m.second );
+		for ( auto& m : props )
+			if ( auto fp = MakeFactoryProps( GetMeasureFactory(), m, "Measure" ) )
+				create_measure( fp );
 
 		if ( Measures = props.try_get_child( "Measures" ) )
 			for ( auto& m : *Measures )
-				create_measure( m.second );
+				if ( auto fp = MakeFactoryProps( GetMeasureFactory(), m, "Measure" ) )
+					create_measure( fp );
 
 		// copy minimize flag from first measure
 		INIT_PROP( props, minimize, !m_Measures.empty() ? m_Measures.front()->minimize : true );

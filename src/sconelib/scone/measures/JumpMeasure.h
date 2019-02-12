@@ -49,6 +49,7 @@ namespace scone
 		virtual double ComputeResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
 		enum State { Prepare, Takeoff, Flight, Landing, Recover };
@@ -60,6 +61,7 @@ namespace scone
 
 		State state;
 		Vec3 init_com;
+		Vec3 current_pos;
 		double init_min_x;
 		Vec3 prepare_com;
 		Vec3 peak_com;

@@ -16,6 +16,7 @@
 #include "xo/system/error_code.h"
 #include <iostream>
 #include "xo/system/log_sink.h"
+#include "../core/Factories.h"
 
 namespace scone
 {
@@ -94,7 +95,7 @@ namespace scone
 		bool output_objective_result_files;
 
 	protected:
-		const PropNode& m_ObjectiveProps;
+		const FactoryProps m_ObjectiveProps;
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 

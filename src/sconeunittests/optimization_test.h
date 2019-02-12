@@ -14,7 +14,7 @@ void optimization_test()
 {
 	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test" );
 	const PropNode pn = load_file( "schwefel_5.xml" );
-	OptimizerUP o = CreateOptimizer( pn.get_child( "Optimizer" ) );
+	OptimizerUP o = CreateOptimizer( FindFactoryProps( GetOptimizerFactory(), pn, "Optimizer" ) );
 	xo::log_unaccessed( pn );
 	o->Run();
 

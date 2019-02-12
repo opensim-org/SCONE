@@ -10,6 +10,7 @@
 
 #include "scone/optimization/Objective.h"
 #include "scone/model/Model.h"
+#include "scone/core/Factories.h"
 
 namespace scone
 {
@@ -20,9 +21,9 @@ namespace scone
 		ModelObjective( const PropNode& props );
 		virtual ~ModelObjective() {}
 
-		PropNode model_props;
-		PropNode controller_props;
-		PropNode measure_props;
+		FactoryProps model_props;
+		FactoryProps controller_props;
+		FactoryProps measure_props;
 
 		virtual fitness_t evaluate( const SearchPoint& point ) const override;
 

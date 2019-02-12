@@ -61,9 +61,9 @@ namespace scone
 				SCONE_THROW_IF( !has_any_state, "Conditional Controller has empty state mask" );
 
 				// create controller
-				const PropNode& cprops = ccIt->second.get_child( "Controller" );
+				auto cfp = FindFactoryProps( GetControllerFactory(), ccIt->second, "Controller" );
 				ScopedParamSetPrefixer prefixer( par, "S" + bit_string + "." );
-				cc.second = CreateController( cprops, par, model, loc );
+				cc.second = CreateController( cfp, par, model, loc );
 			}
 		}
 	}

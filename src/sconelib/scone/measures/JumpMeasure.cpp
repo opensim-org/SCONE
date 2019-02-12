@@ -73,8 +73,8 @@ namespace scone
 			return true;
 		}
 
-		Vec3 pos = GetTargetPos( model );
-		peak_height = xo::max( peak_height, pos.y );
+		current_pos = GetTargetPos( model );
+		peak_height = xo::max( peak_height, current_pos.y );
 
 		switch ( state )
 		{
@@ -153,10 +153,16 @@ namespace scone
 		}
 	}
 
+	void JumpMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		if ( flags.get< StoreDataTypes::ControllerData >() )
+			frame[ "jump_height" ] = current_pos.y;
+	}
+
 	double JumpMeasure::GetHighJumpResult( const Model& model )
 	{
-		Vec3 pos = GetTargetPos( model );
-		peak_height = xo::max( peak_height, pos.y );
+		current_pos = GetTargetPos( model );
+		peak_height = xo::max( peak_height, current_pos.y );
 
 		double early_jump_penalty = 100 * std::max( 0.0, prepare_com.y - init_com.y );
 		double jump_height = 100 * peak_height;
@@ -166,7 +172,7 @@ namespace scone
 		{
 		case scone::JumpMeasure::Prepare:
 			// failed during preparation, return projected height after 1s
-			result = 100 * ( init_com.y + ( pos.y - init_com.y ) / model.GetTime() );
+			result = 100 * ( init_com.y + ( current_pos.y - init_com.y ) / model.GetTime() );
 			break;
 		case scone::JumpMeasure::Takeoff:
 		case scone::JumpMeasure::Flight:

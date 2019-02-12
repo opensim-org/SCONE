@@ -24,7 +24,7 @@ namespace scone
 	{
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_file.parent_path() ); // external resources are copied from current path
-		OptimizerUP o = CreateOptimizer( scenario_pn.get_child( "Optimizer" ) );
+		OptimizerUP o = CreateOptimizer( FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" ) );
 
 		// report unused properties
 		if ( scenario_pn.count_unaccessed() > 0 )
@@ -42,16 +42,16 @@ namespace scone
 		bool store_data = !output_base.empty();
 		current_path( par_file.parent_path() );
 
-		const PropNode& optProp = scenario_pn[ "Optimizer" ];
-		const PropNode& objProp = optProp[ "Objective" ];
+		auto optProp = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
+		auto objProp = FindFactoryProps( GetObjectiveFactory(), optProp.props(), "Objective" );
 		ObjectiveUP obj = CreateObjective( objProp );
 		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
 
 		// report unused properties
-		if ( objProp.count_unaccessed() > 0 )
+		if ( objProp.props().count_unaccessed() > 0 )
 		{
 			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( objProp );
+			xo::log_unaccessed( objProp.props() );
 		}
 
 		// create model
@@ -62,8 +62,8 @@ namespace scone
 			// IMPORTANT: this uses the parameter MEAN of the init_file
 			// as to be consistent with running a scenario from inside SCONE studio
 			// TODO: combine this code with CreateModelObjective, since the same is happening there
-			if ( auto init_file = optProp.try_get< path >( "init_file" ) )
-				so.info().import_mean_std( *init_file, optProp.get< bool >( "use_init_file_std", true ) );
+			if ( auto init_file = optProp.props().try_get< path >( "init_file" ) )
+				so.info().import_mean_std( *init_file, optProp.props().get< bool >( "use_init_file_std", true ) );
 			model = so.CreateModelFromParams( SearchPoint( so.info() ) );
 		}
 		else model = so.CreateModelFromParFile( par_file );

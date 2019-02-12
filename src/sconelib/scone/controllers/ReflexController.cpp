@@ -25,26 +25,28 @@ using namespace xo;
 namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Controller( props, par, model, loc )
+		Controller( props, par, model, loc )
 	{
 		INIT_PROP( props, symmetric, loc.symmetric );
 		INIT_PROP( props, dual_sided, loc.side == NoSide );
 
 		// create reflexes for single or both sides
-		auto create_reflex = [&]( const prop_node& item ) {
+		auto create_reflex = [&]( const FactoryProps& fp ) {
 			if ( dual_sided ) {
 				for ( auto side : { LeftSide, RightSide } )
-					m_Reflexes.push_back( CreateReflex( item, par, model, Location( side, symmetric ) ) );
+					m_Reflexes.push_back( CreateReflex( fp, par, model, Location( side, symmetric ) ) );
 			}
-			else m_Reflexes.push_back( CreateReflex( item, par, model, Location( loc.side, symmetric ) ) );
+			else m_Reflexes.push_back( CreateReflex( fp, par, model, Location( loc.side, symmetric ) ) );
 		};
 
-		for ( const auto& item : props.select( "Reflex" ) )
-			create_reflex( item.second );
+		for ( const auto& item : props )
+			if ( auto fp = MakeFactoryProps( GetReflexFactory(), item, "Reflex" ) )
+				create_reflex( fp );
 
 		if ( Reflexes = props.try_get_child( "Reflexes" ) )
 			for ( auto& item : *Reflexes )
-				create_reflex( item.second );
+				if ( auto fp = MakeFactoryProps( GetReflexFactory(), item, "Reflex" ) )
+					create_reflex( fp );
 	}
 
 	ReflexController::~ReflexController()

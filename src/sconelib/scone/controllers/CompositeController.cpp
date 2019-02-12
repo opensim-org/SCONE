@@ -16,12 +16,14 @@ namespace scone
 	CompositeController::CompositeController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Controller( props, par, model, loc )
 	{
-		for ( auto& cpn : props.select( "Controller" ) )
-			controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
+		for ( auto& cpn : props )
+			if ( auto fp = MakeFactoryProps( GetControllerFactory(), cpn, "Controller" ))
+				controllers_.emplace_back( CreateController( fp, par, model, loc ) );
 
 		if ( Controllers = props.try_get_child( "Controllers" ) )
 			for ( auto& cpn : *Controllers )
-				controllers_.emplace_back( CreateController( cpn.second, par, model, loc ) );
+				if ( auto fp = MakeFactoryProps( GetControllerFactory(), cpn, "Controller" ) )
+					controllers_.emplace_back( CreateController( fp, par, model, loc ) );
 	}
 
 	bool CompositeController::ComputeControls( Model& model, double timestamp )

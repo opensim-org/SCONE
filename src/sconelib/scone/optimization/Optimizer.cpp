@@ -30,7 +30,7 @@ namespace scone
 	HasSignature( props ),
 	max_threads( 1 ),
 	thread_priority( (int)xo::thread_priority::lowest ),
-	m_ObjectiveProps( props.get_child( "Objective" ) ),
+	m_ObjectiveProps( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ) ),
 	m_Objective( CreateObjective( m_ObjectiveProps ) ),
 	m_BestFitness( m_Objective->info().worst_fitness() ),
 	output_mode_( no_output ),

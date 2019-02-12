@@ -51,9 +51,9 @@
 
 namespace scone
 {
-	SCONE_API ControllerUP CreateController( const PropNode& props, Params& par, Model& model, const Location& target_area )
+	SCONE_API ControllerFactory& GetControllerFactory()
 	{
-		static xo::factory< Controller, const PropNode&, Params&, Model&, const Location& > g_ControllerFactory;
+		static ControllerFactory g_ControllerFactory;
 		if ( g_ControllerFactory.empty() )
 		{
 			// register controllers
@@ -69,12 +69,22 @@ namespace scone
 			g_ControllerFactory.register_type< SequentialController >();
 			g_ControllerFactory.register_type< NoiseController >();
 		}
-		return g_ControllerFactory.create( props.get< String >( "type" ), props, par, model, target_area );
+		return g_ControllerFactory;
 	}
 
-	SCONE_API MeasureUP CreateMeasure( const PropNode& props, Params& par, Model& model, const Location& target_area )
+	SCONE_API ControllerUP CreateController( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Measure, const PropNode&, Params&, Model&, const Location& > g_MeasureFactory;
+		return GetControllerFactory().create( fp.type(), fp.props(), par, model, target_area );
+	}
+
+	SCONE_API ControllerUP CreateController( const PropNode& pn, Params& par, Model& model, const Location& target_area )
+	{
+		return GetControllerFactory().create( pn.get< String >( "type" ), pn, par, model, target_area );
+	}
+
+	SCONE_API MeasureFactory& GetMeasureFactory()
+	{
+		static MeasureFactory g_MeasureFactory;
 		if ( g_MeasureFactory.empty() )
 		{
 			// register measures
@@ -92,12 +102,22 @@ namespace scone
 			g_MeasureFactory.register_type< BalanceMeasure >();
 			g_MeasureFactory.register_type< MimicMeasure >();
 		}
-		return g_MeasureFactory.create( props.get< String >( "type" ), props, par, model, target_area );
+		return g_MeasureFactory;
 	}
 
-	SCONE_API ReflexUP CreateReflex( const PropNode& props, Params& par, Model& model, const Location& target_area )
+	SCONE_API MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Reflex, const PropNode&, Params&, Model&, const Location& > g_ReflexFactory;
+		return GetMeasureFactory().create( fp.type(), fp.props(), par, model, target_area );
+	}
+
+	SCONE_API MeasureUP CreateMeasure( const PropNode& pn, Params& par, Model& model, const Location& target_area )
+	{
+		return GetMeasureFactory().create( pn.get< String >( "type" ), pn, par, model, target_area );
+	}
+
+	SCONE_API ReflexFactory& GetReflexFactory()
+	{
+		static ReflexFactory g_ReflexFactory;
 		if ( g_ReflexFactory.empty() )
 		{
 			g_ReflexFactory.register_type< MuscleReflex >();
@@ -105,12 +125,17 @@ namespace scone
 			g_ReflexFactory.register_type< BodyPointReflex >();
 			g_ReflexFactory.register_type< ConditionalMuscleReflex >();
 		}
-		return g_ReflexFactory.create( props.get< String >( "type" ), props, par, model, target_area );
+		return g_ReflexFactory;
 	}
 
-	SCONE_API FunctionUP CreateFunction( const PropNode& props, Params& par )
+	SCONE_API ReflexUP CreateReflex( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
 	{
-		static xo::factory< Function, const PropNode&, Params& > g_FunctionFactory;
+		return GetReflexFactory().create( fp.type(), fp.props(), par, model, target_area );
+	}
+
+	SCONE_API FunctionFactory& GetFunctionFactory()
+	{
+		static FunctionFactory g_FunctionFactory;
 		if ( g_FunctionFactory.empty() )
 		{
 			g_FunctionFactory.register_type< PieceWiseConstantFunction >();
@@ -119,19 +144,29 @@ namespace scone
 			g_FunctionFactory.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" );
 			g_FunctionFactory.register_type< Polynomial >();
 		}
-		return g_FunctionFactory.create( props.get< String >( "type" ), props, par );
+		return g_FunctionFactory;
 	}
 
-	SCONE_API OptimizerUP CreateOptimizer( const PropNode& prop )
+	SCONE_API FunctionUP CreateFunction( const FactoryProps& fp, Params& par )
 	{
-		static xo::factory< Optimizer, const PropNode& > g_OptimizerFactory;
+		return GetFunctionFactory().create( fp.type(), fp.props(), par );
+	}
+
+	SCONE_API OptimizerFactory& GetOptimizerFactory()
+	{
+		static OptimizerFactory g_OptimizerFactory;
 		if ( g_OptimizerFactory.empty() )
 		{
 			g_OptimizerFactory.register_type< CmaOptimizerSpot >( "CmaOptimizer" );
 			g_OptimizerFactory.register_type< CmaOptimizerSpot >();
 			g_OptimizerFactory.register_type< CmaPoolOptimizer >();
 		}
-		return g_OptimizerFactory.create( prop.get< String >( "type" ), prop );
+		return g_OptimizerFactory;
+	}
+
+	SCONE_API OptimizerUP CreateOptimizer( const FactoryProps& fp )
+	{
+		return GetOptimizerFactory().create( fp.type(), fp.props() );
 	}
 
 	SCONE_API ModelFactory& GetModelFactory()
@@ -144,9 +179,9 @@ namespace scone
 		return g_ModelFactory;
 	}
 
-	SCONE_API ModelUP CreateModel( const PropNode& prop, Params& par )
+	SCONE_API ModelUP CreateModel( const FactoryProps& fp, Params& par )
 	{
-		return GetModelFactory().create( prop.get< String >( "type" ), prop, par );
+		return GetModelFactory().create( fp.type(), fp.props(), par );
 	}
 
 	SCONE_API ObjectiveFactory& GetObjectiveFactory()
@@ -162,8 +197,8 @@ namespace scone
 		return g_ObjectiveFactory;
 	}
 
-	SCONE_API ObjectiveUP CreateObjective( const PropNode& prop )
+	SCONE_API ObjectiveUP CreateObjective( const FactoryProps& fp )
 	{
-		return GetObjectiveFactory().create( prop.get< String >( "type" ), prop );
+		return GetObjectiveFactory().create( fp.type(), fp.props() );
 	}
 }

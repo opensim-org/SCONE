@@ -22,10 +22,10 @@ namespace scone
 		{
 			for ( auto& pn : props )
 			{
-				if ( pn.first == "Controller" )
+				if ( auto fp = MakeFactoryProps( GetControllerFactory(), pn, "Controller" ) )
 				{
-					c0 = CreateController( pn.second, par, model, Location( RightSide, loc.symmetric ) );
-					c1 = CreateController( pn.second, par, model, Location( LeftSide, loc.symmetric ) );
+					c0 = CreateController( fp, par, model, Location( RightSide, loc.symmetric ) );
+					c1 = CreateController( fp, par, model, Location( LeftSide, loc.symmetric ) );
 				}
 			}
 		}

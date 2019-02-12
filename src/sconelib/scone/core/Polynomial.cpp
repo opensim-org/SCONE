@@ -10,7 +10,6 @@
 
 namespace scone
 {
-
 	Polynomial::Polynomial( size_t degree )
 	{
 		m_Coeffs.resize( degree + 1 );
