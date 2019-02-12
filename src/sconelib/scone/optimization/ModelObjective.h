@@ -45,5 +45,6 @@ namespace scone
 		virtual String GetClassSignature() const override { return signature_; }
 	};
 
+	// TODO: take (persistent) PropNode instead of file?
 	ModelObjectiveUP SCONE_API CreateModelObjective( const path& config_file );
 }
