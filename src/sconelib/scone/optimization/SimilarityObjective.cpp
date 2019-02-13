@@ -12,6 +12,7 @@
 #include "spot/search_point.h"
 #include "scone/controllers/NeuralController.h"
 #include "scone/core/Profiler.h"
+#include "opt_tools.h"
 
 namespace scone
 {
@@ -24,8 +25,10 @@ namespace scone
 		INIT_PROP_REQUIRED( pn, file_ );
 		AddExternalResource( file_ );
 
-		// load target model (TODO: this should be one function call?)
-		target_ = CreateModelObjective( file_ );
+		// load target model
+		// scenario_pn can be local because the model is created in the same scope
+		auto scenario_pn = xo::load_file_with_include( FindScenario( file_ ), "INCLUDE" );
+		target_ = CreateModelObjective( scenario_pn, file_.parent_path() );
 		target_model_ = target_->CreateModelFromParFile( file_ );
 	}
 

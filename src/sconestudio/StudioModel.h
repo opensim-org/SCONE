@@ -67,6 +67,8 @@ namespace scone
 		void UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force );
 		void UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis );
 
+		PropNode scenario_pn_;
+
 		Storage<> data;
 		ModelObjectiveUP model_objective;
 		ModelUP model_;

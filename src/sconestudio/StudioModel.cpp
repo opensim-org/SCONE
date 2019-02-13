@@ -43,7 +43,9 @@ namespace scone
 		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowTendons ).set( ShowGeometry ).set( EnableShadows );
 
 		// create the objective form par file or config file
-		model_objective = CreateModelObjective( file );
+		auto scenario_file = FindScenario( file );
+		scenario_pn_ = xo::load_file_with_include( scenario_file, "INCLUDE" );
+		model_objective = CreateModelObjective( scenario_pn_, file.parent_path() );
 		log::info( "Created objective ", model_objective->GetSignature(), "; dim=", model_objective->dim(), " source=", file.filename() );
 
 		SearchPoint par( model_objective->info() );

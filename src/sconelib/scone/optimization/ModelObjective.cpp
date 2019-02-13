@@ -83,38 +83,31 @@ namespace scone
 		return model;
 	}
 
-	SCONE_API ModelObjectiveUP CreateModelObjective( const path& file )
+	SCONE_API ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )
 	{
-		auto dir = file.parent_path();
-		path scenario_file = FindScenario( file );
-
 		// set current path to scenario path
-		xo::current_path( scenario_file.parent_path() );
+		xo::current_path( dir );
 
-		// read properties
-		PropNode configProp = xo::load_file_with_include( scenario_file, "INCLUDE" );
-		FactoryProps objProp = FindFactoryProps( GetOptimizerFactory(), configProp.get_child( "Optimizer" ), "Objective" );
+		// find objective
+		FactoryProps opt_props = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
+		FactoryProps obj_props = FindFactoryProps( GetObjectiveFactory(), opt_props.props(), "Objective" );
 
 		// create ModelObjective object
-		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( objProp ) );
+		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( obj_props ) );
 
-		if ( file.extension() == "scone" )
+		// read mean / std from init file
+		if ( opt_props.props().has_key( "init_file" ) && opt_props.props().get< bool >( "use_init_file", true ) )
 		{
-			// read mean / std from init file
-			auto& optProp = configProp.get_child( "Optimizer" );
-			if ( optProp.has_key( "init_file" ) && optProp.get< bool >( "use_init_file", true ) )
-			{
-				auto init_file = optProp.get< path >( "init_file" );
-				auto result = mob->info().import_mean_std( init_file, optProp.get< bool >( "use_init_file_std", true ) );
-				log::info( "Imported ", result.first, " of ", mob->dim(), ", skipped ", result.second, " parameters from ", init_file );
-			}
+			auto init_file = opt_props.props().get< path >( "init_file" );
+			auto result = mob->info().import_mean_std( init_file, opt_props.props().get< bool >( "use_init_file_std", true ) );
+			log::info( "Imported ", result.first, " of ", mob->dim(), ", skipped ", result.second, " parameters from ", init_file );
 		}
 
 		// report unused properties
-		if ( objProp.props().count_unaccessed() > 0 )
+		if ( obj_props.props().count_unaccessed() > 0 )
 		{
 			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( objProp.props() );
+			xo::log_unaccessed( obj_props.props() );
 		}
 
 		return mob;
