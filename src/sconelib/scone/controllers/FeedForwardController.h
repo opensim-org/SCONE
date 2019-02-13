@@ -29,9 +29,6 @@ namespace scone
 		FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 		virtual ~FeedForwardController() { };
 
-		/// Parameterizable Function to be used as feed-forward signal; see Function.
-		const PropNode& Function;
-
 		/// Bool indicating if function should be the same for left and right; default = true.
 		bool symmetric;
 

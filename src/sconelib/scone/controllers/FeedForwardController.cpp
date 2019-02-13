@@ -18,8 +18,7 @@
 namespace scone
 {
 	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
-	Controller( props, par, model, target_area ),
-	Function( props.get_child( "Function" ) )
+	Controller( props, par, model, target_area )
 	{
 		INIT_PROP( props, symmetric, true );
 
