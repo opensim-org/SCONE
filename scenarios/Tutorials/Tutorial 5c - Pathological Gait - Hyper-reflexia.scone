@@ -3,6 +3,7 @@ CmaOptimizer {
 	
 	SimulationObjective {
 		max_duration = 10
+		signature_postfix = spastic_gas
 		
 		# Model used in simulation
 		OpenSimModel {
@@ -21,7 +22,7 @@ CmaOptimizer {
 			# Mimick hyper-reflexia through F+ reflex in gastroc
 			ReflexController {
 				symmetric = 1
-				MuscleReflex { target = gastroc delay = 0.020 KF = 2 }
+				MuscleReflex { target = gastroc delay = 0.020 KF = 1.5 }
 			}
 		}
 		

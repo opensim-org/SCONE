@@ -3,22 +3,24 @@ CmaOptimizer {
 	
 	SimulationObjective {
 		max_duration = 10
+		signature_postfix = weak_sol_gas
 		
 		# Model used in simulation
 		OpenSimModel {
 			model_file = data/Human0914.osim
 			
+			# Optimize initial state parameters
+			state_init_file = data/InitStateGait10.sto
+			initial_state_offset =	0~0.01<-0.5,0.5>
+			initial_state_offset_exclude = "*_tx;*_ty;*_u"
+
+			# Override model properties
 			Properties {
 				gastroc_l { max_isometric_force.factor = 0.2 }
 				gastroc_r { max_isometric_force.factor = 0.2 }
 				soleus_l { max_isometric_force.factor = 0.2 }
 				soleus_r { max_isometric_force.factor = 0.2 }
 			}
-			
-			# Optimize initial state parameters
-			state_init_file = data/InitStateGait10.sto
-			initial_state_offset =	0~0.01<-0.5,0.5>
-			initial_state_offset_exclude = "*_tx;*_ty;*_u"
 		}
 		
 		# Controller for gait, based on [Geyer & Herr 2010]

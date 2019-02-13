@@ -3,20 +3,22 @@ CmaOptimizer {
 	
 	SimulationObjective {
 		max_duration = 10
+		signature_postfix = short_ham
 		
 		# Model used in simulation
 		OpenSimModel {
 			model_file = data/Human0914.osim
 			
-			Properties {
-				hamstrings_l { optimal_fiber_length.factor = 0.75 }
-				hamstrings_r { optimal_fiber_length.factor = 0.75 }
-			}
-			
 			# Optimize initial state parameters
 			state_init_file = data/InitStateGait10.sto
 			initial_state_offset =	0~0.01<-0.5,0.5>
 			initial_state_offset_exclude = "*_tx;*_ty;*_u"
+
+			# Override model properties
+			Properties {
+				hamstrings_l { optimal_fiber_length.factor = 0.75 }
+				hamstrings_r { optimal_fiber_length.factor = 0.75 }
+			}
 		}
 		
 		# Controller for gait, based on [Geyer & Herr 2010]
