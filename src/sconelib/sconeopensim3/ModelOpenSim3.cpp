@@ -126,8 +126,8 @@ namespace scone
 			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
 
 			// change model properties
-			if ( auto* model_pars = props.try_get_child( "OpenSimProperties" ) )
-				SetOpenSimProperties( *model_pars, par );
+			if ( auto* model_pars = props.try_get_child( "Properties" ) )
+				SetProperties( *model_pars, par );
 
 			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
 			m_pControllerDispatcher = new ControllerDispatcher( *this );
@@ -164,7 +164,6 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( "CreateWrappers" );
 			CreateModelWrappers( props, par );
-			SetModelProperties( props, par );
 		}
 
 		{
@@ -319,37 +318,16 @@ namespace scone
 		}
 	}
 
-	void ModelOpenSim3::SetModelProperties( const PropNode &pn, Params& par )
-	{
-		if ( auto* model_props = pn.try_get_child( "ModelProperties" ) )
-		{
-			for ( auto& mp : *model_props )
-			{
-				int usage = 0;
-				if ( mp.first == "Actuator" )
-				{
-					for ( auto act : xo::make_view_if( m_Actuators, xo::pattern_matcher( mp.second.get< String >( "name" ) ) ) )
-					{
-						SCONE_THROW_IF( !use_fixed_control_step_size, "Custom Actuator Delay only works with use_fixed_control_step_size" );
-						act->SetActuatorDelay( mp.second.get< TimeInSeconds >( "delay", 0.0 ) * sensor_delay_scaling_factor, fixed_control_step_size );
-						++usage;
-					}
-				}
-
-				if ( usage == 0 )
-					log::warning( "Unused model property: ", mp.second.get< String >( "name" ) );
-			}
-		}
-	}
-
 	OpenSim::Object& ModelOpenSim3::FindOpenSimObject( const String& name )
 	{
 		if ( auto idx = m_pOsimModel->updForceSet().getIndex( name ); idx != -1 )
 			return m_pOsimModel->updForceSet().get( idx );
+		if ( auto idx = m_pOsimModel->updBodySet().getIndex( name ); idx != -1 )
+			return m_pOsimModel->updBodySet().get( idx );
 		SCONE_THROW( "Could not find OpenSim object " + name );
 	}
 
-	void ModelOpenSim3::SetOpenSimProperties( const PropNode& osim_pars, Params& par )
+	void ModelOpenSim3::SetProperties( const PropNode& osim_pars, Params& par )
 	{
 		for ( auto& object_pn : osim_pars )
 		{
