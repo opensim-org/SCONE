@@ -20,10 +20,10 @@ using xo::timer;
 
 namespace scone
 {
-	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_file )
+	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
 		// create optimizer and report unused parameters
-		xo::current_path( scenario_file.parent_path() ); // external resources are copied from current path
+		xo::current_path( scenario_dir ); // external resources are copied from current path
 		OptimizerUP o = CreateOptimizer( FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" ) );
 
 		// report unused properties

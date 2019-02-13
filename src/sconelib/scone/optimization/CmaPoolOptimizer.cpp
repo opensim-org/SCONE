@@ -24,7 +24,7 @@ namespace scone
 		INIT_PROP( pn, random_seed_, 1 );
 
 		// create output folder
-		CreateOutputFolder( pn );
+		PrepareOutputFolder( pn );
 
 		// fill the pool
 		for ( int i = 0; i < optimizations_; ++i )

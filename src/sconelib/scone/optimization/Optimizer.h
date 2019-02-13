@@ -99,7 +99,7 @@ namespace scone
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 
-		void CreateOutputFolder( const PropNode& props );
+		void PrepareOutputFolder( const PropNode& props );
 
 		// current status
 		double m_BestFitness;

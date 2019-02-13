@@ -35,7 +35,7 @@ namespace scone
 		enable_fitness_tracking( window_size );
 
 		// create output folder
-		CreateOutputFolder( pn );
+		PrepareOutputFolder( pn );
 
 		// reporters
 		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );

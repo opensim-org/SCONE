@@ -96,7 +96,7 @@ namespace scone
 		return s;
 	}
 
-	void Optimizer::CreateOutputFolder( const PropNode& props )
+	void Optimizer::PrepareOutputFolder( const PropNode& props )
 	{
 		SCONE_ASSERT( output_folder_.empty() );
 
