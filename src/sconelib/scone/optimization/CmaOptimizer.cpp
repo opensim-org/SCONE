@@ -14,8 +14,8 @@ namespace scone
 {
 	const long DEFAULT_RANDOM_SEED = 123;
 
-	CmaOptimizer::CmaOptimizer( const PropNode& props ) :
-		Optimizer( props ),
+	CmaOptimizer::CmaOptimizer( const PropNode& props, const PropNode& root ) :
+		Optimizer( props, root ),
 		mu_( 0 ),
 		lambda_( 0 ),
 		sigma_( 1.0 ),

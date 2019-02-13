@@ -24,7 +24,7 @@ namespace scone
 	class SCONE_API Optimizer : public HasSignature
 	{
 	public:
-		Optimizer( const PropNode& props );
+		Optimizer( const PropNode& props, const PropNode& root );
 		Optimizer( const Optimizer& ) = delete;
 		Optimizer& operator=( const Optimizer& ) = delete;
 
@@ -99,7 +99,7 @@ namespace scone
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 
-		void PrepareOutputFolder( const PropNode& props );
+		void PrepareOutputFolder( const PropNode& root_props );
 
 		// current status
 		double m_BestFitness;

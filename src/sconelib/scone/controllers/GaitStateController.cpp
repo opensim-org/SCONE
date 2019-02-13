@@ -90,9 +90,10 @@ namespace scone
 
 					// create controller
 					//log::trace( "Creating controllers for " + GetConditionName( cc ) );
-					const PropNode& cprops = ccIt->second.get_child( "Controller" );
+					auto fp = FindFactoryProps( GetControllerFactory(), ccIt->second, "Controller" );
+					//const PropNode& cprops = ccIt->second.get_child( "Controller" );
 					ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
-					cc.controller = CreateController( cprops, par, model, a );
+					cc.controller = CreateController( fp, par, model, a );
 				}
 			}
 		}

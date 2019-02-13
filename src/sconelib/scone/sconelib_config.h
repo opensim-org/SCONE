@@ -17,6 +17,7 @@ namespace scone
 #ifdef SCONE_OPENSIM_3
 	GetModelFactory().register_type< scone::ModelOpenSim3 >( "Simbody" );
 	GetModelFactory().register_type< scone::ModelOpenSim3 >( "OpenSim3Model" );
+	GetModelFactory().register_type< scone::ModelOpenSim3 >( "OpenSimModel" );
 #endif
 #ifdef SCONE_OPENSIM_4
 	GetModelFactory().register_type< scone::ModelOpenSim34 >( "OpenSim4" );

@@ -164,9 +164,10 @@ namespace scone
 		return g_OptimizerFactory;
 	}
 
-	SCONE_API OptimizerUP CreateOptimizer( const FactoryProps& fp )
+	SCONE_API OptimizerUP CreateOptimizer( const PropNode& props )
 	{
-		return GetOptimizerFactory().create( fp.type(), fp.props() );
+		auto fp = FindFactoryProps( GetOptimizerFactory(), props, "Optimizer" );
+		return GetOptimizerFactory().create( fp.type(), fp.props(), props );
 	}
 
 	SCONE_API ModelFactory& GetModelFactory()

@@ -24,7 +24,7 @@ namespace scone
 	{
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_dir ); // external resources are copied from current path
-		OptimizerUP o = CreateOptimizer( FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" ) );
+		OptimizerUP o = CreateOptimizer( scenario_pn );
 
 		// report unused properties
 		if ( scenario_pn.count_unaccessed() > 0 )

@@ -12,8 +12,8 @@
 
 namespace scone
 {
-	CmaPoolOptimizer::CmaPoolOptimizer( const PropNode& pn ) :
-	Optimizer( pn ),
+	CmaPoolOptimizer::CmaPoolOptimizer( const PropNode& pn, const PropNode& root ) :
+	Optimizer( pn, root ),
 	optimizer_pool( *m_Objective )
 	{
 		INIT_PROP( pn, prediction_window_, 500 );
@@ -34,7 +34,7 @@ namespace scone
 			props_.back().set( "type", "CmaOptimizer" );
 			props_.back().set( "output_root", GetOutputFolder() );
 			props_.back().set( "log_level", xo::log::never_log_level );
-			push_back( std::make_unique< CmaOptimizerSpot >( props_.back() ) );
+			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), root ) );
 		}
 
 		// add reporters

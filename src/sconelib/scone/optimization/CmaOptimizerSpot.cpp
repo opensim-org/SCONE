@@ -21,8 +21,8 @@ namespace scone
 	using std::cout;
 	using std::endl;
 
-	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn ) :
-	CmaOptimizer( pn ),
+	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& root ) :
+	CmaOptimizer( pn, root ),
 	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
 	{
 		size_t dim = GetObjective().dim();
@@ -35,7 +35,7 @@ namespace scone
 		enable_fitness_tracking( window_size );
 
 		// create output folder
-		PrepareOutputFolder( pn );
+		PrepareOutputFolder( root );
 
 		// reporters
 		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );

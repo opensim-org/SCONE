@@ -26,7 +26,7 @@
 
 namespace scone
 {
-	Optimizer::Optimizer( const PropNode& props ) :
+	Optimizer::Optimizer( const PropNode& props, const PropNode& root ) :
 	HasSignature( props ),
 	max_threads( 1 ),
 	thread_priority( (int)xo::thread_priority::lowest ),
@@ -96,7 +96,7 @@ namespace scone
 		return s;
 	}
 
-	void Optimizer::PrepareOutputFolder( const PropNode& props )
+	void Optimizer::PrepareOutputFolder( const PropNode& root )
 	{
 		SCONE_ASSERT( output_folder_.empty() );
 
@@ -109,9 +109,7 @@ namespace scone
 
 		// prepare output folder, and initialize
 		auto outdir = GetOutputFolder();
-		PropNode pn;
-		pn[ "Optimizer" ] = props;
-		xo::save_file( pn, GetOutputFolder() / "config.scone" );
+		xo::save_file( root, GetOutputFolder() / "config.scone" );
 		if ( use_init_file && !init_file.empty() )
 			xo::copy_file( init_file, GetOutputFolder() / init_file.filename(), true );
 

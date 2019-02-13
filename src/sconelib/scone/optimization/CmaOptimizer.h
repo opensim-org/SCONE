@@ -18,7 +18,7 @@ namespace scone
 	class SCONE_API CmaOptimizer : public Optimizer
 	{
 	public:
-		CmaOptimizer( const PropNode& props );
+		CmaOptimizer( const PropNode& props, const PropNode& root );
 		CmaOptimizer( const CmaOptimizer& ) = delete;
 		CmaOptimizer& operator=( const CmaOptimizer& ) = delete;
 		virtual ~CmaOptimizer();

@@ -25,7 +25,7 @@ namespace scone
 	class SCONE_API CmaOptimizerSpot : public CmaOptimizer, public spot::cma_optimizer
 	{
 	public:
-		CmaOptimizerSpot( const PropNode& pn );
+		CmaOptimizerSpot( const PropNode& pn, const PropNode& root );
 		virtual void SetOutputMode( OutputMode m ) override;
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
