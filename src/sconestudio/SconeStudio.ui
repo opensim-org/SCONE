@@ -406,38 +406,6 @@
     </hint>
    </hints>
   </connection>
-  <connection>
-   <sender>resultsDock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>SconeStudioClass</receiver>
-   <slot>fixViewCheckboxes()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>131</x>
-     <y>291</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>538</x>
-     <y>400</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>messagesDock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>SconeStudioClass</receiver>
-   <slot>fixViewCheckboxes()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>538</x>
-     <y>673</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>538</x>
-     <y>400</y>
-    </hint>
-   </hints>
-  </connection>
  </connections>
  <slots>
   <slot>activateBrowserItem(QModelIndex)</slot>
