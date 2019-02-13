@@ -1,5 +1,21 @@
 ====== What's new ======
 
+==== SCONE 0.21.0 ALPHA ====
+//Released February 13, 2019//
+
+=== Updates ===
+  * New tutorials
+  * Improved scone scenario notation, 'type' parameter can now be omitted
+  * Model properties can now be set via ModelProperties
+  * External files can now be included using << FILENAME >>
+  * Improved appearance
+  * Added unit tests
+  * DATE_TIME year now uses 2 digits
+
+=== Fixes ===
+  * NoiseController now works when noise sigma is zero
+  * Better handling of upper / lower parameter bounds during optimizaiton
+
 ==== SCONE 0.20.1 ALPHA ====
 //Released January 8, 2019//
 
