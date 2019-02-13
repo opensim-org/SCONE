@@ -1,0 +1,161 @@
+# Gait controller adapted from [Geyer & Herr 2010] by Thomas Geijtenbeek 
+# Version history
+# 7: Changed C0 ranges to <-10,10>; fixes issue for negative C0 on glut_max during Liftoff
+# 6: Fixed sign on glut_max during LiftOff
+Controller {
+	signature_postfix = "GH2010v7"
+	type = GaitStateController
+	stance_load_threshold = ~0.1<0.001,1>
+	leg_load_sensor_delay = 0
+	ConditionalControllers {
+
+		# TA stretch reflexes [Geyer & Herr 2010]
+		ConditionalController {
+			states = "EarlyStance LateStance Liftoff Swing Landing"
+			ReflexController {
+				symmetric = 1
+				MuscleReflex {
+					target = tib_ant
+					delay = 0.020
+					KL = ~1.1<-10,10>
+					L0 = ~0.71<0,2>
+				}
+				MuscleReflex {
+					target = tib_ant
+					source = soleus
+					delay = 0.020
+					KF = ~-0.3<-10,10>
+				}
+			}
+		}
+		
+		# GAS and SOL F+ reflexes [Geyer & Herr 2010]
+		ConditionalController {
+			states = "EarlyStance LateStance Liftoff"
+			Controller {
+				type = ReflexController
+				symmetric = 1
+				MuscleReflex {
+					target = soleus
+					delay = 0.020
+					KF = ~1.2<-10,10>
+				}
+				MuscleReflex {
+					target = gastroc
+					delay = 0.020
+					KF = ~1.1<-10,10>
+				}
+			}
+		}
+		
+		# Stance reflexes
+		ConditionalController {
+			states = "EarlyStance LateStance"
+			Controller {
+				type = ReflexController
+				symmetric = 1
+				Reflexes {
+					# F+ VAS
+					ConditionalMuscleReflex {
+						target = vasti
+						delay = 0.010
+						KF = ~1.15<-10,10> # G_VAS
+						C0 = ~0.09<-1,1> # S_0,VAS
+						dof = knee_angle
+						pos_max = ~-0.175<-1,0>
+					}
+					# Root stability
+					DofReflex {
+						target = hamstrings
+						source = pelvis_tilt
+						delay = 0.005
+						KP = ~1.91<-10,10> # k_p
+						KV = ~0.25<-10,10> # k_d
+						P0 = -0.105 # theta_ref, not optimized because of C0
+						C0 = ~0.05<-1,1> # S_0,BAL
+					}
+					DofReflex {
+						target = glut_max
+						source = pelvis_tilt
+						delay = 0.005
+						KP = ~1.91<-10,10> # k_p
+						KV = ~0.25<-10,10> # k_d
+						P0 = -0.105 # theta_ref, not optimized because of C0
+						C0 = ~0.05<-1,1> # S_0,BAL
+					}
+					DofReflex {
+						target = iliopsoas
+						source = pelvis_tilt
+						delay = 0.005
+						KP = ~-1.91<-10,10> # -k_p
+						KV = ~-0.25<-10,10> # -k_d
+						P0 = -0.105 # theta_ref, not optimized because of C0
+						C0 = ~0.05<-1,1> # S_0,BAL
+					}
+				}
+			}
+		}
+		
+		# Double support reflexes
+		ConditionalController {
+			states = "Liftoff"
+			Controller {
+				type = ReflexController
+				symmetric = 1
+				MuscleReflex {
+					target = iliopsoas
+					delay = 0.005
+					C0 = ~0.25<-1,1> # DELTA_S
+				}
+				MuscleReflex {
+					target = glut_max
+					delay = 0.005
+					C0 = ~-0.25<-1,1> # DELTA_S
+				}
+			}
+		}
+		
+		# Swing reflexes
+		ConditionalController {
+			states = "Swing Landing"
+			Controller {
+				type = ReflexController
+				symmetric = 1
+				# HFL excitation [Geyer & Herr 2010]
+				MuscleReflex {
+					target = iliopsoas
+					delay = 0.005
+					KL = ~0.35<-10,10> # G_HFL
+					L0 = ~0.6<0,2> # l_off_HFL
+				}
+				DofReflex {
+					target = iliopsoas
+					source = pelvis_tilt
+					delay = 0.005
+					KP = ~1.15<-10,10> # k_lean
+					KV = ~0.25<-10,10> # not in [GH2010]
+					P0 = ~-0.105<-1,1> # theta_ref
+				}
+				# late-swing HFL inhibition [Geyer & Herr 2010]
+				MuscleReflex {
+					target = iliopsoas
+					source = hamstrings
+					delay = 0.005
+					KL = ~-4.0<-10,10>
+					L0 = ~0.85<0,2>
+				}
+				# late-swing HAM and GLU reflexes [Geyer & Herr 2010]
+				MuscleReflex {
+					target = hamstrings
+					delay = 0.005
+					KF = ~0.65<-10,10>
+				}
+				MuscleReflex {
+					target = glut_max
+					delay = 0.005
+					KF = ~0.4<-10,10>
+				}
+			}
+		}
+	}
+}

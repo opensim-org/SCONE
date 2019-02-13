@@ -1,0 +1,46 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 30
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+			create_body_forces = 1 # Required when applying external forces
+			
+			# Optimize initial state parameters
+			state_init_file = data/InitStateGait10.sto
+			initial_state_offset =	0~0.01<-0.5,0.5>
+			initial_state_offset_exclude = "*_tx;*_ty;*_u"
+		}
+		
+		CompositeController {
+			# Controller for gait, based on [Geyer & Herr 2010]
+			<< data/ControllerGH2010.scone >>
+			
+			# Perturbation backwards every 4 seconds
+			PerturbationController {
+				start_time = 3
+				duration = 0.2
+				interval = 4
+				force = [ -100 0 0 ]
+				body = pelvis
+				position_offset = [ -0.15 0.35 0 ]
+			}
+			
+			# Perturbation forwards every other 4 seconds
+			PerturbationController {
+				start_time = 5
+				duration = 0.2
+				interval = 4
+				force = [ 100 0 0 ]
+				body = pelvis
+				position_offset = [ -0.15 0.35 0 ]
+			}
+		}
+		
+		# Measure for gait
+		<< data/MeasureGait05.scone >>
+	}
+}

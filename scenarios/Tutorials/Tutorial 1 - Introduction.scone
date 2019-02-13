@@ -1,0 +1,30 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 2
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+		}
+		
+		# Controller for the Model
+		FeedForwardController {
+			symmetric = 1
+
+			# Function for feed-forward pattern
+			PieceWiseConstant {
+				control_points = 2
+				control_point_y = 0.3~0.01<0,1>
+				control_point_dt = 0.2~0.01<0,1>
+			}
+		}
+		
+		# Fitness measure for jumping
+		JumpMeasure {
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}

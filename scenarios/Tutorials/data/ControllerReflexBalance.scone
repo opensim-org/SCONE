@@ -1,0 +1,32 @@
+Controller {
+	type = ReflexController
+	symmetric = 1
+	
+	# Muscle length reflexes
+	MuscleReflex { target = iliopsoas L0 = ~0.5 KL = ~1 delay = 0.010 }
+	MuscleReflex { target = glut_max L0 = ~0.5 KL = ~1 delay = 0.010 }
+	MuscleReflex { target = rect_fem L0 = ~0.5 KL = ~1 delay = 0.010 }
+	MuscleReflex { target = hamstrings L0 = ~0.5 KL = ~1 delay = 0.010 }
+	MuscleReflex { target = vasti L0 = ~0.5 KL = ~1 delay = 0.020 }
+	MuscleReflex { target = gastroc L0 = ~0.5 KL = ~1 delay = 0.020 }
+	MuscleReflex { target = soleus L0 = ~0.5 KL = ~1 delay = 0.035 }
+	MuscleReflex { target = tib_ant L0 = ~0.5 KL = ~1 delay = 0.035 }
+	
+	# Vestibular reflexes
+	BodyPointReflex { target = iliopsoas source = torso
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = rect_fem source = torso
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = vasti source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = tib_ant source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = glut_max source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = hamstrings source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = gastroc source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+	BodyPointReflex { target = soleus source = torso 
+		KP = 0~0.1 KV = 0~0.1 delay = 0.1 offset = [ 0 0.5 0 ] direction = [ 1 0 0 ] }
+}

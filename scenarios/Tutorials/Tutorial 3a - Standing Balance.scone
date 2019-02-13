@@ -1,0 +1,19 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 30
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0916.osim
+			state_init_file = data/InitStateStand.sto
+		}
+		
+		# Controller for reflex based balance (different file)
+		<< data/ControllerReflexBalance.scone >>
+		
+		# Measure for standing balance (different file)
+		<< data/MeasureBalance.scone >>
+	}
+}
