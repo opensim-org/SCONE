@@ -1,25 +1,20 @@
 # Measure for standing balance
-Measure {
-	type = CompositeMeasure
-
+CompositeMeasure {
 	# Penalize falling
-	Measure {
-		type = BalanceMeasure
+	BalanceMeasure {
 		termination_height = 0.8
 		weight = 100
 	}
 	
 	# Minimize effort
-	Measure {
-		type = EffortMeasure
+	EffortMeasure {
 		name = Effort
 		weight = 0.01
 		measure_type = Wang2012
 	}
 	
 	# Penalize locked knees
-	Measure {
-		type = DofMeasure
+	DofMeasure {
 		dof = knee_angle_r
 		position { min = -30 max = 0 abs_penalty = 10 }
 	}

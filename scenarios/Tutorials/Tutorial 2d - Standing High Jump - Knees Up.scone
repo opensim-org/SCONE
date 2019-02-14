@@ -1,5 +1,6 @@
 CmaOptimizer {
 	signature_prefix = DATE_TIME
+	init_file = data/StandingHighJumpFC2.par # use previous result
 	
 	SimulationObjective {
 		max_duration = 2
