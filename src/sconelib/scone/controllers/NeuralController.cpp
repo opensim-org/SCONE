@@ -307,7 +307,7 @@ namespace scone
 			{
 				weights( input.neuron->GetName( false ), neuron->name_ ) = input.gain;
 				contribs( input.neuron->GetName( false ), neuron->name_ ) = input.contribution / tot;
-				sources( xo::left_of_str( input.neuron->GetParName(), "." ), neuron->GetParName() ) += input.contribution / tot / 2.0;
+				sources( xo::split_str_at_last( input.neuron->GetParName(), "." ).first, neuron->GetParName() ) += input.contribution / tot / 2.0;
 				contrib_vec.emplace_back( input.contribution, neuron->name_ + "\t" + input.neuron->GetName( false ) );
 			}
 		}

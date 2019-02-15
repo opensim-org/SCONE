@@ -327,22 +327,20 @@ namespace scone
 		SCONE_THROW( "Could not find OpenSim object " + name );
 	}
 
-	void ModelOpenSim3::SetProperties( const PropNode& osim_pars, Params& par )
+	void ModelOpenSim3::SetProperties( const PropNode& properties_pn, Params& par )
 	{
-		for ( auto& object_pn : osim_pars )
+		for ( auto& object_pn : properties_pn )
 		{
 			ScopedParamSetPrefixer prefix( par, object_pn.first + '.' );
 			auto& os_object = FindOpenSimObject( object_pn.first );
 			for ( auto& kvp : object_pn.second )
 			{
-				auto prop_name = xo::left_of_str( kvp.first, "." );
-				auto prop_qualifier = xo::right_of_str( kvp.first, "." );
-				auto& os_property = os_object.updPropertyByName( prop_name ).updValue< double >();
-				double value = par.get( kvp.first, kvp.second );
-
+				auto[ prop_name, prop_qualifier ] = xo::split_str_at_last( kvp.first, "." );
+				auto& os_prop = os_object.updPropertyByName( prop_name );
+				double user_value = par.get( kvp.first, kvp.second );
 				if ( prop_qualifier == "factor" )
-					os_property *= value;
-				else os_property = value;
+					os_prop.updValue< double >() *= user_value;
+				else os_prop.updValue< double >() = user_value;
 			}
 		}
 	}
