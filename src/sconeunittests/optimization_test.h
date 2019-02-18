@@ -1,3 +1,11 @@
+/*
+** optimization_test.h
+**
+** Copyright (C) 2013-2019 Thomas Geijtenbeek and contributors. All rights reserved.
+**
+** This file is part of SCONE. For more information, see http://scone.software.
+*/
+
 #include "scone/optimization/opt_tools.h"
 #include "scone/optimization/Objective.h"
 
