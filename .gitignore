@@ -1,4 +1,6 @@
+_output/
 bin/
+install/SCONE*.exe
 build/
 ignore/
 doc/ref/
@@ -8,6 +10,4 @@ doc/config/NaturalDocs/Working Data/
 simulation_test_result_*
 tutorials/*.sto
 .version
-*.log
-cmake-build-*
 /doc/upload.bat
