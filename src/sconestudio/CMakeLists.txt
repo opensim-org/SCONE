@@ -132,10 +132,6 @@ if(${Qt5Widgets_FOUND})
 	source_group("Studio Files" FILES ${STUDIOFILES} )
 	source_group("Resource Files" FILES ${RESOURCEFILES} )
 	
-	if (MSVC)
-		add_custom_command(TARGET sconestudio POST_BUILD COMMAND "${CMAKE_SOURCE_DIR}/install.bat" )
-	endif()
-	
 	if(MSVC)
 		# copy dlls
 		# get the VS version, the shabby cmake way.
