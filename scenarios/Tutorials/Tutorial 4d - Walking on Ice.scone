@@ -3,11 +3,10 @@ CmaOptimizer {
 	
 	SimulationObjective {
 		max_duration = 10
-		signature_postfix = spastic_gas
 		
 		# Model used in simulation
 		OpenSimModel {
-			model_file = data/Human0914.osim
+			model_file = data/Human0914Ice.osim
 			
 			# Optimize initial state parameters
 			state_init_file = data/InitStateGait10.sto
@@ -15,16 +14,8 @@ CmaOptimizer {
 			initial_state_offset_exclude = "*_tx;*_ty;*_u"
 		}
 		
-		CompositeController {
-			# Controller for gait, based on [Geyer & Herr 2010]
-			<< data/ControllerGH2010.scone >>
-			
-			# Mimick hyper-reflexia through F+ reflex in gastroc
-			ReflexController {
-				symmetric = 1
-				MuscleReflex { target = gastroc delay = 0.020 C0 = 0.1 KF = 1 }
-			}
-		}
+		# Controller for gait, based on [Geyer & Herr 2010]
+		<< data/ControllerGH2010.scone >>
 		
 		# Measure for gait
 		<< data/MeasureGait05.scone >>

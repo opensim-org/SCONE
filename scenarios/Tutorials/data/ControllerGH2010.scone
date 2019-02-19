@@ -2,9 +2,8 @@
 # Version history
 # 7: Changed C0 ranges to <-10,10>; fixes issue for negative C0 on glut_max during Liftoff
 # 6: Fixed sign on glut_max during LiftOff
-Controller {
+GaitStateController {
 	signature_postfix = "GH2010v7"
-	type = GaitStateController
 	stance_load_threshold = ~0.1<0.001,1>
 	leg_load_sensor_delay = 0
 	ConditionalControllers {

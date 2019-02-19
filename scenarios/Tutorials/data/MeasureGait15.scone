@@ -1,4 +1,4 @@
-# Measure for gait, minimum speed = 1.0 m/s
+# Measure for gait, minimum speed = 1.5 m/s
 CompositeMeasure {
 	GaitMeasure {
 		name = Gait
