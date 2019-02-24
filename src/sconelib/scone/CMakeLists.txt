@@ -250,11 +250,15 @@ use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} )
 
+# Require C++17 standard
+set_target_properties(sconelib PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
 target_include_directories(sconelib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 target_link_libraries(sconelib xo spot)
 
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
+
 
 if (MSVC)
 	target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )

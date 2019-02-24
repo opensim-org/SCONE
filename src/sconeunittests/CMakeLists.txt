@@ -6,6 +6,9 @@ set(FILES
 
 add_executable(sconeunittests ${FILES})
 
+# Require C++17 standard
+set_target_properties(sconeunittests PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
 target_link_libraries(sconeunittests sconelib xo)
 
 if (SCONE_OPENSIM_3)

@@ -1,7 +1,7 @@
 add_executable(sconecmd sconecmd.cpp)
 
-set_property(TARGET sconecmd PROPERTY CXX_STANDARD 17)
-set_property(TARGET sconecmd PROPERTY CXX_STANDARD_REQUIRED ON)
+# Require C++17 standard
+set_target_properties(sconecmd PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 if(UNIX)
     set(REALTIME_LIB ncurses)

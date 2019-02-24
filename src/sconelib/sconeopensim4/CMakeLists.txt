@@ -24,6 +24,9 @@ if(SCONE_OPENSIM_4)
 	add_library( sconeopensim4 SHARED ${MODEL_OPENSIM_4_FILES} )
 	target_link_libraries( sconeopensim4 sconelib ${OPENSIMSIMBODY_LIBRARIES} )
 
+	# Require C++17 standard
+	set_target_properties(sconeopensim3 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
 	if (MSVC)
 		target_compile_definitions( sconeopensim4 PRIVATE SCONE_MODEL_OPENSIM_4_EXPORTS )
 		target_compile_definitions( sconeopensim4 PRIVATE _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS )
