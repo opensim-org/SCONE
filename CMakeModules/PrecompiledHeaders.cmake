@@ -1,7 +1,7 @@
 macro(use_precompiled_headers SOURCE_FILES STD_AFX_H STD_AFX_CPP PCH_SIZE)
 	if(MSVC)
 		get_filename_component(STD_AFX_H_NAME ${STD_AFX_H} NAME)
-		set(PCH_FILE "${CMAKE_CURRENT_BINARY_DIR}/$<$<CONFIG:DEBUG>:Debug/>stdafx.pch")
+		set(PCH_FILE "$(IntermediateOutputPath)stdafx.pch")
 		set_source_files_properties( ${${SOURCE_FILES}} PROPERTIES COMPILE_FLAGS "/Yu\"${STD_AFX_H}\" /FI\"${STD_AFX_H}\" /Fp\"${PCH_FILE}\"" OBJECT_DEPENDS "${PCH_FILE}" )
 		set_source_files_properties( ${STD_AFX_CPP} PROPERTIES COMPILE_FLAGS "/Yc\"${STD_AFX_H_NAME}\" /Fp\"${PCH_FILE}\"" OBJECT_OUTPUTS "${PCH_FILE}" )
 		set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Zm${PCH_SIZE}" )
