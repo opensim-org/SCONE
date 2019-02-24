@@ -1,5 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
-# 2.8.11 is required for how we use Qt5.
+cmake_minimum_required(VERSION 3.12.0)
 
 project(scone)
 
