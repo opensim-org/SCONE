@@ -28,6 +28,7 @@ namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
 	scene_( s ),
+	root( &scene_ ),
 	specular_( GetStudioSetting < float > ( "viewer.specular" ) ),
 	shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 	ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
@@ -108,8 +109,8 @@ namespace scone
 		xo::timer t;
 		for ( auto& body : model_->GetBodies() )
 		{
-			bodies.push_back( root.add_group() );
-			body_axes.push_back( bodies.back().add_axes( vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+			bodies.push_back( vis::node( &root ) );
+			body_axes.push_back( vis::axes( bodies.back(), vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 
 			auto geoms = body->GetDisplayGeometries();
 			for ( auto geom : geoms )
@@ -120,7 +121,7 @@ namespace scone
 					auto geom_file = xo::try_find_file( { geom.filename, path( "./geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
 					if ( geom_file )
 					{
-						body_meshes.push_back( bodies.back().add_mesh( *geom_file ) );
+						body_meshes.push_back( vis::mesh( bodies.back(), *geom_file ) );
 						body_meshes.back().set_material( bone_mat );
 						body_meshes.back().pos_ori( geom.pos, geom.ori );
 						body_meshes.back().scale( geom.scale );
@@ -139,7 +140,7 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( parent.add_shape( xo::sphere{ float( cg.m_Scale.x ) }, vis::make_red(), 0.75f ) );
+			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, vis::make_red(), 0.75f ) );
 			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
@@ -154,11 +155,11 @@ namespace scone
 
 			// add path
 			MuscleVis mv;
-			mv.ten1 = root.add< vis::trail >( 1, tendon_radius, vis::make_yellow(), 0.3f );
-			mv.ten2 = root.add< vis::trail >( 1, tendon_radius, vis::make_yellow(), 0.3f );
+			mv.ten1 = vis::trail( root, 1, tendon_radius, vis::make_yellow(), 0.3f );
+			mv.ten2 = vis::trail( root, 1, tendon_radius, vis::make_yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-			mv.ce = root.add< vis::trail >( 1, muscle_radius, vis::make_red(), 0.5f );
+			mv.ce = vis::trail( root, 1, muscle_radius, vis::make_red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
@@ -223,7 +224,7 @@ namespace scone
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.push_back( root.add_arrow( 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
+			forces.push_back( vis::arrow( root, 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
