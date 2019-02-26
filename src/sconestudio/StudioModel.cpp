@@ -134,6 +134,7 @@ namespace scone
 			}
 		}
 		//log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
+
 		for ( auto& cg : model_->GetContactGeometries() )
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
@@ -190,12 +191,12 @@ namespace scone
 			vis::transformf trans( b->GetOriginPos(), b->GetOrientation() );
 			bodies[ i ].transform( trans );
 
-			// external forces / moments
-			auto f = b->GetExternalForce();
-			if ( !f.is_null() )
+			// external forces
+			if ( auto f = b->GetExternalForce(); !f.is_null() )
 				UpdateForceVis( force_count++, b->GetPosOfPointOnBody( b->GetExternalForcePoint() ), f );
-			auto m = b->GetExternalMoment();
-			if ( !m.is_null() )
+
+			// external moments
+			if ( auto m = b->GetExternalMoment(); !m.is_null() )
 				UpdateForceVis( force_count++, b->GetComPos(), m );
 		}
 
