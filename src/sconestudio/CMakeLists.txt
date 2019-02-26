@@ -86,6 +86,9 @@ if(${Qt5Widgets_FOUND})
 
 	set_target_properties(sconestudio PROPERTIES PROJECT_LABEL "sconestudio" OUTPUT_NAME sconestudio )
 
+	# Require C++17 standard
+	set_target_properties(sconestudio PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+
 	# setup OpenSceneGraph stuff
 	set(OSG_DIR "" CACHE PATH "Installation directory of OpenSceneGraph")
 	FIND_PACKAGE( osg )

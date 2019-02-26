@@ -22,6 +22,7 @@
 #include "simvis/color.h"
 #include "xo/geometry/path_alg.h"
 #include "StudioSettings.h"
+#include "xo/shape/sphere.h"
 
 namespace scone
 {
@@ -133,12 +134,11 @@ namespace scone
 			}
 		}
 		//log::debug( "Meshes loaded in ", t.seconds(), " seconds" );
-
 		for ( auto& cg : model_->GetContactGeometries() )
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( parent.add_sphere( cg.m_Scale.x, GetStudioSetting< vis::color >( "viewer.contact" ), 0.75f ) );
+			contact_geoms.push_back( parent.add_shape( xo::sphere{ float( cg.m_Scale.x ) }, vis::make_red(), 0.75f ) );
 			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
@@ -181,9 +181,6 @@ namespace scone
 				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
 			model_->SetState( model_state, time );
 		}
-
-		// update com
-		//com.pos( model->GetComPos() );
 
 		// update bodies
 		auto& model_bodies = model_->GetBodies();

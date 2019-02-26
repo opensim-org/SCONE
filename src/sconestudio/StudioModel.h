@@ -103,7 +103,6 @@ namespace scone
 		std::vector< vis::axes > body_axes;
 		std::vector< vis::group > bodies;
 		std::vector< vis::mesh > contact_geoms;
-		vis::mesh com;
 		void InitStateDataIndices();
 	};
 }
