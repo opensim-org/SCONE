@@ -3,6 +3,7 @@ CmaOptimizer {
 	
 	SimulationObjective {
 		max_duration = 10
+		signature_postfix = ice
 		
 		# Model used in simulation
 		OpenSimModel {
