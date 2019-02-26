@@ -23,6 +23,7 @@
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
 #include "simvis/color_gradient.h"
+#include "simvis/material.h"
 
 namespace scone
 {
@@ -95,13 +96,13 @@ namespace scone
 		vis::color_gradient muscle_gradient;
 		bool is_evaluating;
 
-		vis::group root;
+		vis::node root;
 		std::vector< vis::mesh > body_meshes;
 		std::vector< vis::mesh > joints;
 		std::vector< MuscleVis > muscles;
 		std::vector< vis::arrow > forces;
 		std::vector< vis::axes > body_axes;
-		std::vector< vis::group > bodies;
+		std::vector< vis::node > bodies;
 		std::vector< vis::mesh > contact_geoms;
 		void InitStateDataIndices();
 	};
