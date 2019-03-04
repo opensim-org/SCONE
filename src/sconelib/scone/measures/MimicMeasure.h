@@ -15,6 +15,9 @@
 namespace scone
 {
 	/// Measure for how well a simulation mimics data from predefined motion file.
+	/// This measure only considers variable that are part of the actual state of the model,
+	/// which includes the DOFs, DOF velocities, muscle activation (*.activation), and muscle fiber length (*.fiber_length)
+	/// Variables that are derived from the state are not included in the measure.
 	class MimicMeasure : public Measure
 	{
 	public:

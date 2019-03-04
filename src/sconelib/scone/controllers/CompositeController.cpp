@@ -17,7 +17,7 @@ namespace scone
 	Controller( props, par, model, loc )
 	{
 		for ( auto& cpn : props )
-			if ( auto fp = MakeFactoryProps( GetControllerFactory(), cpn, "Controller" ))
+			if ( auto fp = MakeFactoryProps( GetControllerFactory(), cpn, "Controller" ) )
 				controllers_.emplace_back( CreateController( fp, par, model, loc ) );
 
 		if ( Controllers = props.try_get_child( "Controllers" ) )

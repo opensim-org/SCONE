@@ -19,7 +19,8 @@ namespace scone
 		SequentialController( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~SequentialController() {}
 
-		std::vector< TimeInSeconds > transition_times;
+		/// intervals to use between each set of consecutive controllers
+		std::vector< TimeInSeconds > transition_intervals;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 
@@ -29,5 +30,6 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 		std::vector< ControllerUP > controllers_;
+		std::vector< TimeInSeconds > transition_times;
 	};
 }

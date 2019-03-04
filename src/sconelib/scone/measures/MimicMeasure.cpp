@@ -11,6 +11,7 @@
 #include "scone/core/StorageIo.h"
 #include "scone/model/Model.h"
 #include "xo/numerical/math.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -38,6 +39,9 @@ namespace scone
 				}
 			}
 		}
+
+		log::debug( "MimicMeasure found ", state_storage_map_.size(), " of ", storage_.GetChannelCount(), " channels from ", file );
+
 		SCONE_THROW_IF( state_storage_map_.empty(), "No matching states found in " + file.string() );
 
 		model.AddExternalResource( file );

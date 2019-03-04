@@ -23,8 +23,8 @@ namespace scone
 		{
 			for ( index_t idx = 0; idx < time_pn->size(); ++idx )
 			{
-				time += par.get( xo::stringf( "dt%d", idx + 1 ), time_pn[ idx ] );
-				transition_times.push_back( time );
+				transition_intervals.push_back( par.get( xo::stringf( "dt%d", idx + 1 ), time_pn[ idx ] ) );
+				transition_times.push_back( transition_times.back() + transition_intervals.back() );
 			}
 		}
 	}
