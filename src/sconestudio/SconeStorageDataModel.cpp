@@ -22,11 +22,6 @@ size_t SconeStorageDataModel::seriesCount() const
 	return storage ? storage->GetChannelCount() : 0;
 }
 
-size_t SconeStorageDataModel::samplesCount() const
-{
-	return storage ? storage->GetFrameCount() : 0;
-}
-
 QString SconeStorageDataModel::label( int idx ) const
 {
 	SCONE_ASSERT( storage );

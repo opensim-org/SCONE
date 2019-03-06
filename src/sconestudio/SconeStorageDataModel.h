@@ -20,7 +20,6 @@ public:
 
 	void setStorage( const scone::Storage<>* s );
 	virtual size_t seriesCount() const override;
-	virtual size_t samplesCount() const override;
 
 	virtual QString label( int idx ) const override;
 

@@ -163,7 +163,7 @@ namespace scone
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
-			muscles.push_back( mv );
+			muscles.push_back( std::move( mv ) );
 		}
 
 		ApplyViewSettings( view_flags );
@@ -216,15 +216,15 @@ namespace scone
 				UpdateForceVis( force_count++, cop, force );
 		}
 
-		if ( force_count < forces.size() )
-			forces.resize( force_count );
+		while ( force_count < forces.size() )
+			forces.pop_back();
 	}
 
 	void StudioModel::UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force )
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.push_back( vis::arrow( root, 0.01f, 0.02f, vis::make_yellow(), 0.3f ) );
+			forces.emplace_back( root, 0.01f, 0.02f, vis::make_yellow(), 0.3f );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
