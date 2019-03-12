@@ -140,7 +140,7 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, vis::make_red(), 0.75f ) );
+			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, vis::color::cyan(), 0.75f ) );
 			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
@@ -155,11 +155,11 @@ namespace scone
 
 			// add path
 			MuscleVis mv;
-			mv.ten1 = vis::trail( root, 1, tendon_radius, vis::make_yellow(), 0.3f );
-			mv.ten2 = vis::trail( root, 1, tendon_radius, vis::make_yellow(), 0.3f );
+			mv.ten1 = vis::trail( root, 1, tendon_radius, vis::color::yellow(), 0.3f );
+			mv.ten2 = vis::trail( root, 1, tendon_radius, vis::color::yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-			mv.ce = vis::trail( root, 1, muscle_radius, vis::make_red(), 0.5f );
+			mv.ce = vis::trail( root, 1, muscle_radius, vis::color::red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
@@ -224,7 +224,7 @@ namespace scone
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.emplace_back( root, 0.01f, 0.02f, vis::make_yellow(), 0.3f );
+			forces.emplace_back( root, 0.01f, 0.02f, vis::color::yellow(), 0.3f );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
