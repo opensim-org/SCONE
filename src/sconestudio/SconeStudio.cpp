@@ -140,7 +140,7 @@ bool SconeStudio::init()
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
 	ui.osgViewer->setScene( &scene_.osg_group() );
-	ui.osgViewer->setHud( GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "scone_hud.png" );
+	ui.osgViewer->createHud( GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "scone_hud.png" );
 	//ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 
 	ui.playControl->setRange( 0, 100 );
