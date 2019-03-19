@@ -10,3 +10,6 @@
 [submodule "submodules/xo"]
 	path = submodules/xo
 	url = ../../tgeijten/xo.git
+[submodule "submodules/vis"]
+	path = submodules/vis
+	url = ../../tgeijten/vis.git
