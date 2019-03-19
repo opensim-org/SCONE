@@ -1,6 +1,3 @@
-[submodule "submodules/simvis"]
-	path = submodules/simvis
-	url = https://github.com/tgeijten/simvis.git
 [submodule "submodules/qtfx"]
 	path = submodules/qtfx
 	url = https://github.com/tgeijten/qtfx.git
