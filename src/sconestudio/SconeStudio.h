@@ -32,6 +32,7 @@
 #include "vis/plane.h"
 #include "vis/vis_api.h"
 #include "xo/container/flat_map.h"
+#include "SconeStorageDataModel.h"
 
 using scone::TimeInSeconds;
 

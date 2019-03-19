@@ -33,12 +33,12 @@ namespace scone
 	shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 	ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
 	emissive_( GetStudioSetting< float >( "viewer.emissive" ) ),
-	bone_mat( GetStudioSetting< vis::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
-	muscle_mat( GetStudioSetting< vis::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
-	tendon_mat( GetStudioSetting< vis::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
-	arrow_mat( GetStudioSetting< vis::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
-	contact_mat( GetStudioSetting< vis::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
-	muscle_gradient( { { 0.0f, GetStudioSetting< vis::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< vis::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< vis::color >( "viewer.muscle_100" ) } } ),
+	bone_mat( GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
+	muscle_mat( GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
+	tendon_mat( GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
+	arrow_mat( GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
+	contact_mat( GetStudioSetting< xo::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
+	muscle_gradient( { { 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
 	is_evaluating( false )
 	{
 		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
@@ -140,7 +140,7 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, vis::color::cyan(), 0.75f ) );
+			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, xo::color::cyan(), 0.75f ) );
 			contact_geoms.back().set_material( contact_mat );
 			contact_geoms.back().pos( cg.m_Pos );
 		}
@@ -155,11 +155,11 @@ namespace scone
 
 			// add path
 			MuscleVis mv;
-			mv.ten1 = vis::trail( root, 1, tendon_radius, vis::color::yellow(), 0.3f );
-			mv.ten2 = vis::trail( root, 1, tendon_radius, vis::color::yellow(), 0.3f );
+			mv.ten1 = vis::trail( root, 1, tendon_radius, xo::color::yellow(), 0.3f );
+			mv.ten2 = vis::trail( root, 1, tendon_radius, xo::color::yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-			mv.ce = vis::trail( root, 1, muscle_radius, vis::color::red(), 0.5f );
+			mv.ce = vis::trail( root, 1, muscle_radius, xo::color::red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
@@ -224,7 +224,7 @@ namespace scone
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.emplace_back( root, 0.01f, 0.02f, vis::color::yellow(), 0.3f );
+			forces.emplace_back( root, 0.01f, 0.02f, xo::color::yellow(), 0.3f );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
@@ -239,7 +239,7 @@ namespace scone
 		auto a = mus.GetActivation();
 		auto p = mus.GetMusclePath();
 
-		vis::color c = muscle_gradient( float( a ) );
+		xo::color c = muscle_gradient( float( a ) );
 		vis.mat.diffuse( c );
 		vis.mat.emissive( c );
 

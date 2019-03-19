@@ -10,17 +10,18 @@
 
 #include "scone/core/system_tools.h"
 #include "scone/model/Model.h"
-#include "vis/scene.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/Objective.h"
 
 #include "xo/container/flag_set.h"
 #include "xo/utility/color_gradient.h"
+
+#include "vis/scene.h"
 #include "vis/arrow.h"
 #include "vis/axes.h"
 #include "vis/material.h"
+#include "vis/trail.h"
 
-#include "SconeStorageDataModel.h"
 #include "scone/model/State.h"
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
@@ -93,7 +94,7 @@ namespace scone
 		vis::material tendon_mat;
 		vis::material contact_mat;
 
-		vis::color_gradient muscle_gradient;
+		xo::color_gradient muscle_gradient;
 		bool is_evaluating;
 
 		vis::node root;
