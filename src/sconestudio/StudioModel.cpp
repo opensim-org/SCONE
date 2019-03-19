@@ -19,7 +19,7 @@
 
 #include "xo/time/timer.h"
 #include "xo/filesystem/filesystem.h"
-#include "simvis/color.h"
+#include "xo/utility/color.h"
 #include "xo/geometry/path_alg.h"
 #include "StudioSettings.h"
 #include "xo/shape/sphere.h"

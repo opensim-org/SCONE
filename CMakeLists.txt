@@ -41,7 +41,7 @@ set(CMAKE_MACOSX_RPATH ON)
 # --------------------
 # Only build visualizer if Qt5 was found
 if(${Qt5Widgets_FOUND})
-    add_subdirectory(submodules/simvis)
+    add_subdirectory(submodules/vis)
 endif()
 
 add_subdirectory(submodules/xo)

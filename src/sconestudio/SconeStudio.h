@@ -29,8 +29,8 @@
 #include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
 #include "StudioModel.h"
-#include "simvis/plane.h"
-#include "simvis/simvis_api.h"
+#include "vis/plane.h"
+#include "vis/vis_api.h"
 #include "xo/container/flat_map.h"
 
 using scone::TimeInSeconds;

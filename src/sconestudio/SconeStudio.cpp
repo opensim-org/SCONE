@@ -15,9 +15,11 @@
 #include "studio_config.h"
 
 #include <osgDB/ReadFile>
-#include "simvis/color.h"
-#include "simvis/osg_tools.h"
-#include "simvis/plane.h"
+#include "xo/utility/color.h"
+#include "vis/plane.h"
+
+#include "vis-osg/osg_tools.h"
+#include "vis-osg/osg_object_manager.h"
 
 #include <QtWidgets/QFileSystemModel.h>
 #include <QtWidgets/QMessageBox.h>
@@ -139,7 +141,7 @@ bool SconeStudio::init()
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
 
-	ui.osgViewer->setScene( &scene_.osg_group() );
+	ui.osgViewer->setScene( &vis::osg_group( scene_.node_id() ) );
 	ui.osgViewer->createHud( GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "scone_hud.png" );
 	//ui.tabWidget->tabBar()->tabButton( 0, QTabBar::RightSide )->resize( 0, 0 );
 

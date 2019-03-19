@@ -34,9 +34,10 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/qtfx.cpp
 		${QTFX_PATH}/QGroup.h
 		${QTFX_PATH}/QGroup.cpp
-		${QTFX_PATH}/QOsgViewer.cpp
 		${QTFX_PATH}/QOsgViewer.h
 		${QTFX_PATH}/QOsgViewer.cpp
+		${QTFX_PATH}/osg_camera_man.h
+		${QTFX_PATH}/osg_camera_man.cpp
 		${QTFX_PATH}/QCodeEditor.h
 		${QTFX_PATH}/QCodeEditor.cpp
 		${QTFX_PATH}/QCodeHighlighter.h
@@ -102,11 +103,11 @@ if(${Qt5Widgets_FOUND})
 	FIND_PACKAGE( OpenThreads )
 
 	# set target include libraries
-	target_include_directories(sconestudio PRIVATE ${SIMVIS_INCLUDE_DIR} ${OSG_INCLUDE_DIR} ${OSGQT_INCLUDE_DIR})
+	target_include_directories(sconestudio PRIVATE ${VIS_INCLUDE_DIR} ${OSG_INCLUDE_DIR} ${OSGQT_INCLUDE_DIR})
 
 	target_link_libraries(sconestudio
 		sconelib
-		simvis
+		vis-osg
 		${OSG_LIBRARIES}
 		${OSGWIDGET_LIBRARIES}
 		${OSGGA_LIBRARIES}

@@ -10,20 +10,20 @@
 
 #include "scone/core/system_tools.h"
 #include "scone/model/Model.h"
-#include "simvis/scene.h"
+#include "vis/scene.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/Objective.h"
 
 #include "xo/container/flag_set.h"
-#include "simvis/arrow.h"
+#include "xo/utility/color_gradient.h"
+#include "vis/arrow.h"
+#include "vis/axes.h"
+#include "vis/material.h"
 
 #include "SconeStorageDataModel.h"
-#include "simvis/axes.h"
 #include "scone/model/State.h"
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
-#include "simvis/color_gradient.h"
-#include "simvis/material.h"
 
 namespace scone
 {

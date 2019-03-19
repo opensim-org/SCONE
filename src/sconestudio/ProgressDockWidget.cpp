@@ -207,7 +207,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				state = RunningState;
 
 				// add graphs
-				QColor c = make_qt( vis::make_unique_color( idx ) );
+				QColor c = make_qt( xo::make_unique_color( idx ) );
 #ifdef SCONE_SHOW_TREND_LINES
 				ui.plot->addGraph();
 				ui.plot->graph( idx * 2 )->setPen( QPen( c, GetStudioSetting< float >( "progress.line_width" ) ) );
