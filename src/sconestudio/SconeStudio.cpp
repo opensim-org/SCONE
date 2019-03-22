@@ -33,8 +33,6 @@
 
 #include "xo/filesystem/filesystem.h"
 #include "xo/system/system_tools.h"
-#include "xo/xo_types.h"
-#include "xo/system/platform.h"
 #include "xo/container/container_tools.h"
 
 using namespace scone;
