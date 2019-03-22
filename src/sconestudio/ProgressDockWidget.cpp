@@ -18,6 +18,7 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "StudioSettings.h"
 #include "xo/container/container_tools.h"
+#include "xo/serialization/prop_node_serializer_ini.h"
 
 using namespace scone;
 
@@ -297,7 +298,10 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		}
 	}
 
-	tooltipText = make_qt( to_str( tooltipProps ) );
+	// TODO: use to_str instead
+	std::stringstream str;
+	xo::prop_node_serializer_ini( tooltipProps ).write_stream( str );
+	tooltipText = make_qt( str.str() );
 	ui.text->setToolTip( tooltipText );
 
 	return OkResult;
