@@ -9,7 +9,7 @@
 #pragma once
 
 #include "scone/core/memory_tools.h"
-#include "xo/utility/types.h"
+#include "xo/xo_types.h"
 #include <string>
 
 namespace scone

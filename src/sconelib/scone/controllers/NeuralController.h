@@ -11,7 +11,7 @@
 #include "scone/core/types.h"
 #include "scone/core/PropNode.h"
 #include "scone/controllers/Controller.h"
-#include "xo/utility/types.h"
+#include "xo/xo_types.h"
 #include "MotorNeuron.h"
 #include "SensorNeuron.h"
 #include "InterNeuron.h"

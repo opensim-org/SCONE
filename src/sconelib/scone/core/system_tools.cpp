@@ -11,7 +11,7 @@
 #include "xo/system/system_tools.h"
 #include "xo/filesystem/path.h"
 #include "xo/container/prop_node_tools.h"
-#include "xo/utility/types.h"
+#include "xo/xo_types.h"
 #include "xo/filesystem/filesystem.h"
 
 #include "Settings.h"
