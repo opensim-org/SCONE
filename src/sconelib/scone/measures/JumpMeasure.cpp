@@ -9,6 +9,7 @@
 #include "JumpMeasure.h"
 #include "scone/model/Location.h"
 #include "scone/core/Log.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {

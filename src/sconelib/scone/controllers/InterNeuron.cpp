@@ -18,6 +18,7 @@
 #include "xo/string/dictionary.h"
 #include "scone/model/Muscle.h"
 #include "xo/string/string_tools.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {

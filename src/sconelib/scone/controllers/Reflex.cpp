@@ -10,6 +10,7 @@
 #include "scone/model/Actuator.h"
 #include "scone/model/Location.h"
 #include "scone/core/math.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {

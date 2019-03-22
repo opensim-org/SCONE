@@ -35,6 +35,7 @@
 #include "xo/system/system_tools.h"
 #include "xo/utility/types.h"
 #include "xo/system/platform.h"
+#include "xo/container/container_tools.h"
 
 using namespace scone;
 using namespace std;

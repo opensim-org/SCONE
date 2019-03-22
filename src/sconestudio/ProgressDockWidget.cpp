@@ -17,6 +17,7 @@
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "StudioSettings.h"
+#include "xo/container/container_tools.h"
 
 using namespace scone;
 

@@ -12,6 +12,7 @@
 #include <cmath>
 #include "spot/par_tools.h"
 #include "scone/core/string_tools.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {

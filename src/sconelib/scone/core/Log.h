@@ -48,7 +48,6 @@ namespace scone
 }
 
 // import XO logging, using dynamic logging
-#define XO_STATIC_LOG_LEVEL XO_LOG_LEVEL_TRACE
 #include "xo/system/log.h"
 
 namespace scone

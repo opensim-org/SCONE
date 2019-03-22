@@ -12,7 +12,7 @@
 #include "scone/core/platform.h"
 #include "scone/core/Storage.h"
 #include "scone/core/string_tools.h"
-#include <algorithm>
+#include "xo/numerical/math.h"
 
 namespace scone
 {
@@ -41,7 +41,7 @@ namespace scone
 	scone::Real SensorDelayAdapter::GetAverageValue( int delay_samples, int window_size ) const
 	{
 		auto& sto = m_Model.GetSensorDelayStorage();
-		auto history_begin = std::max( 0, (int)sto.GetFrameCount() - delay_samples - window_size / 2 );
+		auto history_begin = xo::max( 0, (int)sto.GetFrameCount() - delay_samples - window_size / 2 );
 		auto history_end = xo::clamped( (int)sto.GetFrameCount() - delay_samples - window_size / 2 + window_size, 1, (int)sto.GetFrameCount() );
 
 		Real value = 0.0;
