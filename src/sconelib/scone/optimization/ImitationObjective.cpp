@@ -119,6 +119,6 @@ namespace scone
 
 	PropNode ImitationObjective::GetReport( Model& m ) const
 	{
-		return xo::make_prop_node( GetResult( m ) );
+		return xo::to_prop_node( GetResult( m ) );
 	}
 }

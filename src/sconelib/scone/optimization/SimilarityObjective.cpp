@@ -44,7 +44,7 @@ namespace scone
 
 	PropNode SimilarityObjective::GetReport( Model& m ) const
 	{
-		return xo::make_prop_node( GetResult( m ) );
+		return xo::to_prop_node( GetResult( m ) );
 	}
 
 	scone::fitness_t SimilarityObjective::EvaluateModel( Model& m ) const
