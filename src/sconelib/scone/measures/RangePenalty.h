@@ -55,6 +55,14 @@ namespace scone
 	};
 }
 
-IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< double > );
-IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Degree > );
-IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Radian > );
+namespace xo
+{
+	template< typename T > bool from_prop_node( const prop_node& pn, scone::RangePenalty< T >& rp ) {
+		rp = scone::RangePenalty<T>( pn );
+		return true;
+	}
+}
+//
+//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< double > );
+//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Degree > );
+//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Radian > );
