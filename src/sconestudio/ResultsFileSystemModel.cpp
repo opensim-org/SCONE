@@ -29,9 +29,9 @@ ResultsFileSystemModel::Status ResultsFileSystemModel::getStatus( QFileInfo &fi 
 	{
 		auto split = fi.completeBaseName().split( "_" );
 		if ( split.size() > 0 )
-			stat.gen = xo::from_str( split[ 0 ].toStdString(), -1 );
+			xo::from_str( split[ 0 ].toStdString(), stat.gen );
 		if ( split.size() > 2 )
-			stat.best = xo::from_str( split[ 2 ].toStdString(), 0.0 );
+			xo::from_str( split[ 2 ].toStdString(), stat.best );
 	}
 	else
 	{

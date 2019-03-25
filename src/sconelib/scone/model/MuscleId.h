@@ -8,11 +8,15 @@ namespace scone
 {
 	struct MuscleId
 	{
-		MuscleId( const String& str ) : side_( GetSideFromName( str ) ), base_( GetNameNoSide( str ) ), line_( no_index ) {
+		MuscleId( const String& str ) :
+			side_( GetSideFromName( str ) ),
+			base_( GetNameNoSide( str ) ),
+			line_( no_index )
+		{
 			auto idx = str.find_first_of( "123456789" );
 			if ( idx != String::npos )
 			{
-				line_ = xo::from_str( base_.substr( idx ), 0 );
+				xo::from_str( base_.substr( idx ), line_ );
 				base_ = base_.substr( 0, idx );
 			}
 		}

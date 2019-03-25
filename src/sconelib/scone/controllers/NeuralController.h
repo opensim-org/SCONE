@@ -51,7 +51,7 @@ namespace scone
 
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const override;
 
-		static string FixLayerName( string str ) { return xo::from_str( str, 0 ) > 0 ? "N" + str : str; }
+		static string FixLayerName( string str ) { int n = 0; if ( xo::from_str( str, n ) && n > 0 ) return "N" + str; else return str; }
 		TimeInSeconds GetDelay( const string& name );
 
 		struct MuscleParam {
