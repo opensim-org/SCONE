@@ -28,7 +28,6 @@
 #include <QTabWidget>
 #include "qcustomplot.h"
 #include "qevent.h"
-#include "qt_tools.h"
 #include "ui_SconeSettings.h"
 
 #include "xo/filesystem/filesystem.h"
@@ -50,7 +49,7 @@ scene_( true )
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 
-	createFileMenu( make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
+	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
 	viewActions[ StudioModel::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
@@ -133,7 +132,7 @@ bool SconeStudio::init()
 	resultsModel = new ResultsFileSystemModel( nullptr );
 	ui.resultsBrowser->setModel( resultsModel );
 	ui.resultsBrowser->setNumColumns( 1 );
-	ui.resultsBrowser->setRoot( make_qt( results_folder ), "*.par;*.sto" );
+	ui.resultsBrowser->setRoot( to_qt( results_folder ), "*.par;*.sto" );
 	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
 
 	connect( ui.resultsBrowser->selectionModel(),
@@ -325,9 +324,9 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 
 void SconeStudio::fileOpenTriggered()
 {
-	QString default_path = make_qt( GetFolder( SCONE_SCENARIO_FOLDER ) );
+	QString default_path = to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) );
 	if ( auto* s = getActiveScenario() )
-		default_path = make_qt( path( s->fileName.toStdString() ).parent_path() );
+		default_path = to_qt( path( s->fileName.toStdString() ).parent_path() );
 
 	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.scone *.xml *.zml)" );
 	if ( !filename.isEmpty() )
@@ -553,8 +552,8 @@ void SconeStudio::updateOptimizations()
 	{
 		if ( o->updateProgress() == ProgressDockWidget::ShowErrorResult )
 		{
-			QString title = "Error optimizing " + o->fileName;
-			QString msg = o->message;
+			QString title = to_qt( "Error optimizing " + o->fileName );
+			QString msg = o->message.c_str();
 			o->close();
 			QMessageBox::critical( this, title, msg );
 			return; // must return here because close invalidates the iterator
@@ -608,12 +607,12 @@ void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = make_qt( xo::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
+	QString program = to_qt( xo::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
-	args << "-r" << GetStudioSettings().get<QString>( "video.frame_rate" )
+	args << "-r" << to_qt( GetStudioSettings().get<string>( "video.frame_rate" ) )
 		<< "-i" << captureFilename + ".images/image_0_%d.png"
 		<< "-c:v" << "mpeg4"
-		<< "-q:v" << GetStudioSettings().get<QString>( "video.quality" )
+		<< "-q:v" << to_qt( GetStudioSettings().get<string>( "video.quality" ) )
 		<< captureFilename;
 
 	cout << "starting " << program.toStdString() << endl;

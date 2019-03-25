@@ -9,7 +9,7 @@
 #include "SettingsEditor.h"
 
 #include <QDialog>
-#include "qt_tools.h"
+#include "qt_convert.h"
 #include "QPropNodeItemModel.h"
 
 #include "ui_SconeSettings.h"
@@ -35,9 +35,9 @@ namespace scone
 		auto& scone_settings = GetSconeSettings();
 
 		// folders
-		ui.scenariosFolder->setText( make_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
-		ui.resultsFolder->setText( make_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
-		ui.geometryFolder->setText( make_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
+		ui.scenariosFolder->setText( to_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
+		ui.resultsFolder->setText( to_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
+		ui.geometryFolder->setText( to_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
 
 		// data checkboxes
 		xo::flat_map< string, QListWidgetItem* > data_checkboxes;

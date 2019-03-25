@@ -19,8 +19,6 @@
 #include "scone/core/string_tools.h"
 #include "scone/core/Log.h"
 
-#include "qt_tools.h"
-
 #include "xo/system/log_sink.h"
 #include "xo/system/system_tools.h"
 #include "xo/filesystem/filesystem.h"
@@ -39,7 +37,7 @@ int main( int argc, char *argv[] )
 	try
 	{
 		// init plash screen
-		QPixmap splash_pm( make_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
+		QPixmap splash_pm( to_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
 		a.processEvents();

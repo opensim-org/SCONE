@@ -8,7 +8,6 @@
 
 #include "ProgressDockWidget.h"
 #include "SconeStudio.h"
-#include "qt_tools.h"
 #include "xo/system/system_tools.h"
 #include "xo/system/assert.h"
 #include "scone/core/Log.h"
@@ -31,17 +30,17 @@ view_first_gen( 0 ),
 view_last_gen( min_view_gens ),
 best_idx( -1 )
 {
-	QString program = make_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
+	QString program = to_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
 
 	process = new QProcess( this );
 	process->setReadChannel( QProcess::StandardOutput );
 	process->start( program, args );
-	fileName = config_file;
+	fileName = config_file.toStdString();
 
-	xo_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName.toStdString() );
-	scone::log::info( "Started scenario ", fileName.toStdString() );
+	xo_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName );
+	scone::log::info( "Started scenario ", fileName );
 
 	ui.setupUi( this );
 
@@ -143,13 +142,13 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 	if ( pn.try_get( message, "finished" ) )
 	{
 		state = FinishedState;
-		log::info( "Optimization ", name, " finished: ", message.toStdString() );
+		log::info( "Optimization ", name, " finished: ", message );
 	}
 
 	if ( pn.try_get( message, "error" ) )
 	{
 		state = ErrorState;
-		log::error( "Optimization ", name, " error: ", message.toStdString() );
+		log::error( "Optimization ", name, " error: ", message );
 	}
 
 	has_update_flag = true;
@@ -209,7 +208,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 				state = RunningState;
 
 				// add graphs
-				QColor c = make_qt( xo::make_unique_color( idx ) );
+				QColor c = to_qt( xo::make_unique_color( idx ) );
 #ifdef SCONE_SHOW_TREND_LINES
 				ui.plot->addGraph();
 				ui.plot->graph( idx * 2 )->setPen( QPen( c, GetStudioSetting< float >( "progress.line_width" ) ) );
@@ -228,7 +227,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 
 				if ( scenario.empty() )
 				{
-					setWindowTitle( make_qt( scenario = *id ) );
+					setWindowTitle( to_qt( scenario = *id ) );
 					updateText();
 				}
 
@@ -255,13 +254,13 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		else // generic message
 		{
 			if ( pn.try_get( scenario, "scenario" ) )
-				setWindowTitle( make_qt( scenario ) );
+				setWindowTitle( to_qt( scenario ) );
 
 			if ( pn.try_get( message, "error" ) )
 			{
 				state = ErrorState;
 				updateText();
-				log::error( "Error optimizing ", fileName.toStdString(), ": ", message.toStdString() );
+				log::error( "Error optimizing ", fileName, ": ", message );
 				return ShowErrorResult;
 			}
 			else if ( pn.try_get( message, "finished" ) )
@@ -301,7 +300,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 	// TODO: use to_str instead
 	std::stringstream str;
 	xo::prop_node_serializer_ini( tooltipProps ).write_stream( str );
-	tooltipText = make_qt( str.str() );
+	tooltipText = to_qt( str.str() );
 	ui.text->setToolTip( tooltipText );
 
 	return OkResult;
@@ -336,7 +335,7 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 
 void ProgressDockWidget::updateText()
 {
-	QString s;
+	string s;
 
 	auto* opt = ( best_idx != -1 ) ? &optimizations[ best_idx ] : nullptr;
 
@@ -347,12 +346,12 @@ void ProgressDockWidget::updateText()
 		break;
 	case ProgressDockWidget::RunningState: 
 		if ( opt )
-			s = QString().sprintf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", opt->cur_gen, opt->best, opt->best_gen, opt->cur_pred );
+			s = xo::stringf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", opt->cur_gen, opt->best, opt->best_gen, opt->cur_pred );
 		else s = "Waiting for first evaluation...";
 		break;
 	case ProgressDockWidget::FinishedState:
 		if ( opt )
-			s = QString().sprintf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
+			s = xo::stringf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
@@ -362,5 +361,5 @@ void ProgressDockWidget::updateText()
 	default:
 		break;
 	}
-	ui.text->setText( s );
+	ui.text->setText( to_qt( s ) );
 }

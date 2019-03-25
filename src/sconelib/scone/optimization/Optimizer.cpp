@@ -16,6 +16,7 @@
 #include "scone/optimization/Objective.h"
 
 #include "xo/filesystem/filesystem.h"
+#include "xo/string/string_cast_enum.h"
 
 #if defined(_MSC_VER)
 #	define NOMINMAX

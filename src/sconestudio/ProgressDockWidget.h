@@ -15,7 +15,7 @@
 #include "scone/core/PropNode.h"
 #include "xo/numerical/polynomial.h"
 #include "scone/core/types.h"
-#include "qt_tools.h"
+#include "qt_convert.h"
 
 using scone::String;
 using scone::PropNode;
@@ -32,7 +32,7 @@ public:
 	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
 	virtual ~ProgressDockWidget();
 
-	QString getIdentifier() { return optimizations.empty() ? "" : make_qt( optimizations.front().name ); }
+	QString getIdentifier() { return optimizations.empty() ? "" : to_qt( optimizations.front().name ); }
 
 	enum AxisScaleType { Linear, Logarithmic };
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
@@ -40,9 +40,9 @@ public:
 	SconeStudio* studio;
 	QProcess* process;
 	Ui::ProgressDockWidget ui;
-	QString fileName;
+	String fileName;
 	State state;
-	QString message;
+	String message;
 	PropNode tooltipProps;
 	QString tooltipText;
 
@@ -50,7 +50,7 @@ public:
 	{
 		int idx;
 		String name;
-		QString message;
+		String message;
 		State state;
 		int max_generations;
 		int window_size;

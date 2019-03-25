@@ -12,7 +12,7 @@ namespace scone
 			auto idx = str.find_first_of( "123456789" );
 			if ( idx != String::npos )
 			{
-				line_ = xo::from_str< size_t >( base_.substr( idx ), 0 );
+				line_ = xo::from_str( base_.substr( idx ), 0 );
 				base_ = base_.substr( 0, idx );
 			}
 		}

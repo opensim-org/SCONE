@@ -10,6 +10,7 @@
 #include "scone/model/Location.h"
 #include "scone/core/Log.h"
 #include "xo/numerical/math.h"
+#include "xo/string/string_cast_enum.h"
 
 namespace scone
 {
@@ -50,10 +51,10 @@ namespace scone
 	{
 		switch ( jump_type )
 		{
-		case scone::JumpMeasure::HighJump:
+		case JumpMeasure::HighJump:
 			return GetHighJumpResult( model );
 			break;
-		case scone::JumpMeasure::LongJump:
+		case JumpMeasure::LongJump:
 			return GetLongJumpResult( model );
 			break;
 		default:
