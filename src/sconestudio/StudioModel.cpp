@@ -17,7 +17,7 @@
 #include "scone/core/math.h"
 #include "scone/model/Muscle.h"
 
-#include "xo/time/timer.h"
+#include "xo/time/timer_v1.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/utility/color.h"
 #include "xo/geometry/path_alg.h"
@@ -64,7 +64,7 @@ namespace scone
 		// load results if the file is an sto
 		if ( file.extension() == "sto" && !force_evaluation )
 		{
-			xo::timer t;
+			xo::timer_v1 t;
 			log::debug( "Reading ", file );
 			ReadStorageSto( data, file );
 			InitStateDataIndices();
@@ -106,7 +106,7 @@ namespace scone
 	{
 		scone_scene.attach( root );
 
-		xo::timer t;
+		xo::timer_v1 t;
 		for ( auto& body : model_->GetBodies() )
 		{
 			bodies.push_back( vis::node( &root ) );

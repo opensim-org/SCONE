@@ -11,7 +11,7 @@
 #include "platform.h"
 #include "PropNode.h"
 #include "scone/core/string_tools.h"
-#include "xo/time/timer.h"
+#include "xo/time/timer_v1.h"
 
 #include <map>
 #include "xo/diagnose/profiler.h"
@@ -84,7 +84,7 @@ namespace scone
 		Item m_Root;
 		Item* m_Current;
 		bool m_bActive;
-		xo::timer m_Timer;
+		xo::timer_v1 m_Timer;
 
 	private:
 		Profiler( const Profiler& other );
