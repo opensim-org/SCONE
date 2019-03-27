@@ -19,7 +19,7 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "xo/time/timer_v1.h"
+#include "xo/time/timer_v2.h"
 #include "xo/numerical/delta.h"
 #include "ProgressDockWidget.h"
 #include "QCodeEditor.h"

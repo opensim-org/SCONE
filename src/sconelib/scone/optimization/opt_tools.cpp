@@ -12,11 +12,11 @@
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/core/Profiler.h"
 
-#include "xo/time/timer_v1.h"
+#include "xo/time/timer_v2.h"
 #include "xo/container/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
 
-using xo::timer_v1;
+using xo::timer_v2;
 
 namespace scone
 {
@@ -73,9 +73,9 @@ namespace scone
 		model->SetStoreData( store_data );
 		Profiler::GetGlobalInstance().Reset();
 
-		timer_v1 tmr;
+		timer_v2 tmr;
 		double result = so.EvaluateModel( *model );
-		auto duration = tmr.seconds();
+		auto duration = tmr().seconds();
 
 		// write results
 		if ( store_data )

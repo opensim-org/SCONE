@@ -156,7 +156,7 @@ bool SconeStudio::init()
 
 	// add outputText to global sinks (only *after* the ui has been initialized)
 	xo::log::add_sink( ui.outputText );
-	ui.outputText->set_log_level( XO_IS_DEBUG ? xo::log::trace_level : xo::log::debug_level );
+	ui.outputText->set_log_level( XO_IS_DEBUG_BUILD ? xo::log::trace_level : xo::log::debug_level );
 
 	restoreSettings( "SCONE", "SconeStudio" );
 	ui.messagesDock->raise();
@@ -227,10 +227,10 @@ void SconeStudio::evaluate()
 	const double step_size = 0.01;
 	const xo::seconds_t visual_update = 0.25;
 	xo::seconds_t prev_visual_time = -visual_update;
-	xo::timer_v1 real_time;
+	xo::timer_v2 real_time;
 	for ( double t = step_size; model->IsEvaluating(); t += step_size )
 	{
-		auto rt = real_time.seconds();
+		auto rt = real_time().seconds();
 		if ( rt - prev_visual_time >= visual_update )
 		{
 			// update 3D visuals and progress bar
@@ -246,7 +246,7 @@ void SconeStudio::evaluate()
 	}
 
 	// report duration
-	auto real_dur = real_time.seconds();
+	auto real_dur = real_time().seconds();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
