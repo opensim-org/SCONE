@@ -54,6 +54,8 @@ namespace scone
 		friend class ScopedProfile;
 
 		Profiler();
+		Profiler( const Profiler& other ) = delete;
+		Profiler& operator=( const Profiler& other ) = delete;
 		virtual ~Profiler();
 
 		PropNode GetReport();
@@ -85,9 +87,5 @@ namespace scone
 		Item* m_Current;
 		bool m_bActive;
 		xo::timer_v1 m_Timer;
-
-	private:
-		Profiler( const Profiler& other );
-		Profiler& operator=( const Profiler& other );
 	};
 }
