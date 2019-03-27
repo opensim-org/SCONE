@@ -227,7 +227,7 @@ void SconeStudio::evaluate()
 	const double step_size = 0.01;
 	const xo::seconds_t visual_update = 0.25;
 	xo::seconds_t prev_visual_time = -visual_update;
-	xo::timer_v2 real_time;
+	xo::timer real_time;
 	for ( double t = step_size; model->IsEvaluating(); t += step_size )
 	{
 		auto rt = real_time().seconds();
