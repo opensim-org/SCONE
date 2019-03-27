@@ -29,6 +29,5 @@ constexpr bool SCONE_DEBUG = true;
 #endif
 
 #if defined(_MSC_VER)
-// TODO: do this in a nicer way (i.e. push/pop warnings)
-#pragma warning( disable: 4251 )
+#	pragma warning( disable: 4251 ) // disable W4251, unfortunately there's no nice way to do this
 #endif
