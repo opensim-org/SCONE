@@ -68,7 +68,7 @@ namespace scone
 			log::debug( "Reading ", file );
 			ReadStorageSto( data, file );
 			InitStateDataIndices();
-			log::trace( "Read ", file, " in ", t().seconds(), " seconds" );
+			log::trace( "Read ", file, " in ", t(), " seconds" );
 		}
 		else
 		{

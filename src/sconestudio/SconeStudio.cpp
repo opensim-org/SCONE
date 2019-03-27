@@ -36,6 +36,7 @@
 
 using namespace scone;
 using namespace std;
+using namespace xo::literals;
 
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 QCompositeMainWindow( parent, flags ),
@@ -225,12 +226,12 @@ void SconeStudio::evaluate()
 	xo::set_thread_priority( xo::thread_priority::highest );
 
 	const double step_size = 0.01;
-	const xo::seconds_t visual_update = 0.25;
-	xo::seconds_t prev_visual_time = -visual_update;
+	const xo::time visual_update = 250_ms;
+	xo::time prev_visual_time = xo::time() - visual_update;
 	xo::timer real_time;
 	for ( double t = step_size; model->IsEvaluating(); t += step_size )
 	{
-		auto rt = real_time().seconds();
+		auto rt = real_time();
 		if ( rt - prev_visual_time >= visual_update )
 		{
 			// update 3D visuals and progress bar
@@ -246,7 +247,7 @@ void SconeStudio::evaluate()
 	}
 
 	// report duration
-	auto real_dur = real_time().seconds();
+	auto real_dur = real_time().seconds<double>();
 	auto sim_time = model->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
