@@ -1,4 +1,4 @@
 # SCONE
-Framework for predictive simulation of biological motion.
+Framework for predictive simulation of biological motion. See http://scone.software for details.
 
-See http://scone.software for details.
+![alt text](https://github.com/opensim-org/SCONE/blob/master/resources/ui/scone_splash.png "SCONE")
