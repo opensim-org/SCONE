@@ -20,7 +20,7 @@ using xo::timer;
 
 namespace scone
 {
-	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
+	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
 		// create optimizer and report unused parameters
 		xo::current_path( scenario_dir ); // external resources are copied from current path
@@ -37,7 +37,7 @@ namespace scone
 		return std::move( o );
 	}
 
-	PropNode SCONE_API EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
+	PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
 		bool store_data = !output_base.empty();
 		current_path( par_file.parent_path() );
@@ -95,7 +95,7 @@ namespace scone
 		return statistics;
 	}
 
-	SCONE_API path FindScenario( const path& file )
+	path FindScenario( const path& file )
 	{
 		if ( file.extension() == "scone" || file.extension() == "xml" )
 			return file;

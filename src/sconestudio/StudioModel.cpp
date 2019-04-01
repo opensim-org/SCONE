@@ -42,7 +42,7 @@ namespace scone
 	is_evaluating( false )
 	{
 		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
-		view_flags.set( ShowForces ).set( ShowMuscles ).set( ShowTendons ).set( ShowGeometry ).set( EnableShadows );
+		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
 
 		// create the objective form par file or config file
 		auto scenario_file = FindScenario( file );

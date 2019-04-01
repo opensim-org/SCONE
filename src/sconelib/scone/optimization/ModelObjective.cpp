@@ -83,7 +83,7 @@ namespace scone
 		return model;
 	}
 
-	SCONE_API ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )
+	ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )
 	{
 		// set current path to scenario path
 		xo::current_path( dir );

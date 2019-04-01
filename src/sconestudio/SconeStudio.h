@@ -82,9 +82,10 @@ public:
 	bool isEvalutating() { return model && model->IsEvaluating(); }
 
 private:
+	QCodeEditor* getActiveScenario();
+	QCodeEditor* getVerifiedActiveScenario();
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
-	QCodeEditor* getActiveScenario( bool show_error = false );
 	bool requestSaveChanges( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );

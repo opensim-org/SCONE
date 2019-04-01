@@ -28,8 +28,6 @@
 
 namespace scone
 {
-	SCONE_DECLARE_CLASS_AND_PTR( StudioModel );
-
 	class StudioModel
 	{
 	public:
