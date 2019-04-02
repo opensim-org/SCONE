@@ -461,6 +461,16 @@ int SconeStudio::getTabIndex( QCodeEditor* s )
 	return -1;
 }
 
+QCodeEditor* SconeStudio::getActiveScenario()
+{
+	for ( auto edw : scenarios )
+	{
+		if ( !edw->visibleRegion().isEmpty() )
+			return edw;
+	}
+	return nullptr;
+}
+
 QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 {
 	try
@@ -473,8 +483,9 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
 			if ( pn.count_unaccessed() > 0 )
 			{
-				QString message = "Unused parameters found in " + s->fileName + "\n\nCheck Messages for details.";
-				if ( QMessageBox::warning( this, "Unused parameters", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
+				QString message = "This scenario contains invalid settings. Please verify and correct the following settings in order to prevent unexpected optimization results:\n\n";
+				message += to_qt( to_str_unaccessed( pn ) );
+				if ( QMessageBox::warning( this, "Invalid scenario settings", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
 					return nullptr;
 			}
 			return s;
@@ -506,8 +517,9 @@ void SconeStudio::runScenario()
 {
 	ui.playControl->stop();
 
-	if ( auto* s = getVerifiedActiveScenario() )
+	if ( auto* s = getActiveScenario() )
 	{
+		requestSaveChanges( s );
 		runSimulation( s->fileName );
 		if ( model )
 			ui.playControl->play();
@@ -615,17 +627,6 @@ void SconeStudio::updateTabTitles()
 {
 	for ( auto s : scenarios )
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-}
-
-QCodeEditor* SconeStudio::getActiveScenario()
-{
-	for ( auto edw : scenarios )
-	{
-		if ( !edw->visibleRegion().isEmpty() )
-			return edw;
-	}
-
-	return nullptr;
 }
 
 void SconeStudio::finalizeCapture()
