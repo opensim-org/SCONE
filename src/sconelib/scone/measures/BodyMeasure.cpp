@@ -18,6 +18,7 @@ namespace scone
 	body( *FindByLocation( model.GetBodies(), props.get< String >( "body" ), loc ) ),
 	range_count( 0 )
 	{
+		INIT_PROP( props, offset, Vec3::zero() );
 		INIT_PROP( props, axes_weights, Vec3::zero() );
 		INIT_PROP( props, relative_to_model_com, false );
 		INIT_PROP( props, position, RangePenalty< Real >() );
