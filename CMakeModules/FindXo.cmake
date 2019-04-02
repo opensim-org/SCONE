@@ -1,7 +1,7 @@
 # Find XO headers
 # TODO: use a better path estimate!
 find_path(XO_INCLUDE_DIR
-    NAMES xo/system/platform.h
+    NAMES xo/system/xo_config.h
     PATHS ${CMAKE_SOURCE_DIR}/submodules/xo
    )
 
