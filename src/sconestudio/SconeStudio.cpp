@@ -483,7 +483,7 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
 			if ( pn.count_unaccessed() > 0 )
 			{
-				QString message = "This scenario contains invalid settings. Please verify and correct the following settings in order to prevent unexpected optimization results:\n\n";
+				QString message = "Invalid scenario settings detected. Please verify and correct the following settings in order to prevent unexpected optimization results:\n\n";
 				message += to_qt( to_str_unaccessed( pn ) );
 				if ( QMessageBox::warning( this, "Invalid scenario settings", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
 					return nullptr;
