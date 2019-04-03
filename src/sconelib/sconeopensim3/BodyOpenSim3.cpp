@@ -240,14 +240,21 @@ namespace scone
 	{
 		std::vector< DisplayGeometry > geoms;
 
-		auto& gset = m_osBody.getDisplayer()->getGeometrySet();
+		auto* disp = m_osBody.getDisplayer();
+		auto disp_pos = from_osim( disp->getTransform().p() );
+		auto disp_ori = from_osim( SimTK::Quaternion( disp->getTransform().R() ) );
+		SimTK::Vec3 disp_scale_tk;
+		disp->getScaleFactors( disp_scale_tk );
+		auto disp_scale = from_osim( disp_scale_tk );
+
+		auto& gset = disp->getGeometrySet();
 		for ( auto i = 0; i < gset.getSize(); ++i )
 		{
 			geoms.emplace_back();
 			geoms.back().filename = gset[ i ].getGeometryFile();
-			geoms.back().pos = from_osim( gset[ i ].getTransform().p() );
-			geoms.back().ori = from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) );
-			geoms.back().scale = from_osim( gset[ i ].getScaleFactors() );
+			geoms.back().pos = disp_pos + from_osim( gset[ i ].getTransform().p() );
+			geoms.back().ori = disp_ori * from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) );
+			geoms.back().scale = disp_scale * from_osim( gset[ i ].getScaleFactors() );
 		}
 
 		return geoms;
