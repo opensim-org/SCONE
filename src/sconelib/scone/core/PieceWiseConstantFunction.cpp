@@ -9,6 +9,7 @@
 #include "PieceWiseConstantFunction.h"
 #include "scone/core/string_tools.h"
 #include "xo/numerical/piecewise_constant_function.h"
+#include "Exception.h"
 
 namespace scone
 {
@@ -21,7 +22,8 @@ namespace scone
 	control_point_y( props.get_child( "control_point_y" ) ),
 	control_point_dt( props.get_child( "control_point_dt" ) )
 	{
-		INIT_PROP( props, control_points, size_t( 0 ) );
+		INIT_PROP_REQUIRED( props, control_points );
+		SCONE_CHECK_RANGE( control_points, 1, 99 );
 
 		for ( int cpidx = 0; cpidx < control_points; ++cpidx )
 		{

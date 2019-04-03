@@ -32,19 +32,22 @@ namespace scone
 #define SCONE_ASSERT_DEBUG_ALWAYS
 
 #if defined(_DEBUG) || defined(SCONE_ASSERT_DEBUG_ALWAYS)
-#define SCONE_ASSERT_DEBUG( expression ) \
-		if (!(expression)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#expression );
+#define SCONE_ASSERT_DEBUG( _expression_ ) \
+		if (!(_expression_)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#_expression_ );
 #else
-#define SCONE_ASSERT_DEBUG( expression )
+#define SCONE_ASSERT_DEBUG( _expression_ )
 #endif
 
-#define SCONE_ASSERT( expression ) \
-	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#expression );
+#define SCONE_ASSERT( _expression_ ) \
+	if (!(_expression_)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#_expression_ );
 
-#define SCONE_ASSERT_MSG( expression, message ) \
-	if (!(expression)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#expression" (" + String( message ) + ")" );
+#define SCONE_ASSERT_MSG( _expression_, message ) \
+	if (!(_expression_)) throw scone::RuntimeException( "Assertion Failure in " + std::string( __func__ ) + "(): "#_expression_" (" + String( message ) + ")" );
 
 #define SCONE_THROW( message ) throw scone::RuntimeException(std::string( __func__ ) + "(): " + std::string( message ) )
 #define SCONE_THROW_IF( _condition_, _message_ ) \
     do { \
         if ( _condition_ ) throw scone::RuntimeException( std::string( __func__ ) + "(): " + std::string( _message_ ) ); } while (false);
+
+#define SCONE_CHECK_RANGE( _value_, _min_, _max_ ) \
+	if ( _value_ < _min_ || _value_ > _max_ ) throw scone::RuntimeException( #_value_" must be a value between " + to_str( _min_ ) + " and " + to_str( _max_ ) );
