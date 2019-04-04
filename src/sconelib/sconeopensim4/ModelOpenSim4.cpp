@@ -369,7 +369,7 @@ namespace scone
 		{
 			if ( param.first == "Force" )
 			{
-				auto& name = param.second[ "name" ].get_value();
+				auto& name = param.second[ "name" ].raw_value();
 				xo::pattern_matcher pm( name );
 				int count = 0;
 				for ( int i = 0; i < m_pOsimModel->updForceSet().getSize(); ++i )
@@ -400,13 +400,19 @@ namespace scone
 	std::vector<path> ModelOpenSim4::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).string() );
 		files.push_back( file + ".sto" );
 
 		if ( GetController() ) xo::append( files, GetController()->WriteResults( file ) );
 		if ( GetMeasure() ) xo::append( files, GetMeasure()->WriteResults( file ) );
 
 		return files;
+	}
+
+	void ModelOpenSim4::RequestTermination()
+	{
+		Model::RequestTermination();
+		m_pOsimManager->halt();
 	}
 
 	Vec3 ModelOpenSim4::GetComPos() const
@@ -684,8 +690,8 @@ namespace scone
 				if ( GetStoreData() )
 					StoreCurrentFrame();
 
-				// terminate on request
-				if ( GetTerminationRequest() || status == SimTK::Integrator::EndOfSimulation )
+				// terminate when simulation has ended
+				if ( HasSimulationEnded() )
 				{
 					log::DebugF( "Terminating simulation at %.3f", m_pTkTimeStepper->getTime() );
 					break;
@@ -698,12 +704,6 @@ namespace scone
 			// Integrate from initial time to final time (the old way)
 			m_pOsimManager->integrate( time );
 		}
-	}
-
-	void ModelOpenSim4::SetTerminationRequest()
-	{
-		Model::SetTerminationRequest();
-		m_pOsimManager->halt();
 	}
 
 	double ModelOpenSim4::GetTime() const

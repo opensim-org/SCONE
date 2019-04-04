@@ -9,6 +9,7 @@
 #pragma once
 
 #include "scone/model/Dof.h"
+#include "platform.h"
 
 namespace OpenSim
 {

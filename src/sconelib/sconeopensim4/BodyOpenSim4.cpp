@@ -16,6 +16,7 @@
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
 #include "scone/core/Log.h"
+#include "sconeopensim3/simbody_tools.h"
 
 namespace scone
 {
@@ -231,6 +232,22 @@ namespace scone
 	Model& BodyOpenSim4::GetModel()
 	{
 		return dynamic_cast<Model&>( m_Model );
+	}
+
+	std::vector<scone::DisplayGeometry> BodyOpenSim4::GetDisplayGeometries() const
+	{
+		std::vector< DisplayGeometry > geoms;
+		for ( const auto& mesh : m_osBody.getComponentList<OpenSim::Mesh>() )
+		{
+			DisplayGeometry g;
+			g.filename = mesh.get_mesh_file();
+			g.scale = from_osim( mesh.get_scale_factors() );
+			// TODO: Make sure it's "attached_geometry".
+			// TODO: set pos and ori?
+			geoms.emplace_back( g );
+		}
+		return geoms;
+
 	}
 
 	std::vector< path > BodyOpenSim4::GetDisplayGeomFileNames() const

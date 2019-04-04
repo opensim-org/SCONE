@@ -19,13 +19,12 @@ if(SCONE_OPENSIM_4)
 	)
 
     find_package(OpenSim 4.0 REQUIRED CONFIG) # This uses the FindOpenSim.cmake file in build/cmake.
-	target_link_libraries(sconelib-opensim4 osimTools)
-
+	
 	add_library( sconeopensim4 SHARED ${MODEL_OPENSIM_4_FILES} )
-	target_link_libraries( sconeopensim4 sconelib ${OPENSIMSIMBODY_LIBRARIES} )
+	target_link_libraries( sconeopensim4 sconelib osimTools ${OPENSIMSIMBODY_LIBRARIES} )
 
 	# Require C++17 standard
-	set_target_properties(sconeopensim3 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+	set_target_properties(sconeopensim4 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 	if (MSVC)
 		target_compile_definitions( sconeopensim4 PRIVATE SCONE_MODEL_OPENSIM_4_EXPORTS )

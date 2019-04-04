@@ -99,7 +99,7 @@ namespace scone
 		virtual void SetSimulationEndTime( double t ) override;
 		virtual std::vector<xo::path> WriteResults( const path& file_base ) const override;
 
-		virtual void SetTerminationRequest() override;
+		virtual void RequestTermination();
 
 		virtual double GetTime() const override;
 		virtual double GetPreviousTime() const override;
