@@ -30,7 +30,7 @@ namespace scone
 		Real threshold;
 
 		/// Offset added to measure result; default = 0.
-		Real offset;
+		Real result_offset;
 
 		/// Indicate whether this measure should be minimized; is set correctly by default.
 		bool minimize;
@@ -44,7 +44,7 @@ namespace scone
 		virtual const String& GetName() const override { return name; }
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }
-		Real GetOffset() { return offset; }
+		Real GetOffset() { return result_offset; }
 		bool GetMinimize() { return minimize; }
 
 	protected:

@@ -15,7 +15,7 @@ namespace scone
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, weight, 1.0 );
 		INIT_PROP( props, threshold, 0.0 );
-		INIT_PROP( props, offset, 0.0 );
+		INIT_PROP( props, result_offset, 0.0 );
 		INIT_PROP( props, minimize, true );
 	}
 
