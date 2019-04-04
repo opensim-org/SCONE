@@ -18,6 +18,10 @@ if(SCONE_OPENSIM_4)
 		platform.h
 	)
 
+	if (MSVC)
+		add_compile_options( "/wd5040" )
+	endif()
+	
     find_package(OpenSim 4.0 REQUIRED CONFIG) # This uses the FindOpenSim.cmake file in build/cmake.
 	
 	add_library( sconeopensim4 SHARED ${MODEL_OPENSIM_4_FILES} )
