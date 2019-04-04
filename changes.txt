@@ -1,5 +1,22 @@
 ====== What's new ======
 
+==== SCONE 0.22.0 ALPHA ====
+//Released April 4, 2019//
+
+=== Updates ===
+  * SCONE now displays a warning dialog when a scenario contains invalid setting
+  * New and updated tutorials
+  * Added keyboard shurtcuts in SCONE viewer:
+    * 'r' reset viewer camera
+    * 'x' view model along x direction
+    * 'y' view model along y direction
+    * 'z' view model along z direction
+  * Improved reading and error reporting of SCONE scenarios
+
+=== Fixes ===
+  * Fixed visualization of scaled OpenSim models (OpenSim3)
+  * Restored DATE_TIME_EXACT tag in signatures
+
 ==== SCONE 0.21.0 ALPHA ====
 //Released February 13, 2019//
 
