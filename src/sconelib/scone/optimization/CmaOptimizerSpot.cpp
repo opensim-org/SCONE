@@ -34,18 +34,6 @@ namespace scone
 		set_max_threads( ( int )max_threads );
 		enable_fitness_tracking( window_size );
 
-		// create output folder
-		PrepareOutputFolder( pn_root );
-
-		// reporters
-		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );
-		rep.min_improvement_for_file_output = min_improvement_for_file_output;
-		rep.max_steps_without_file_output = max_generations_without_file_output;
-
-		// stop conditions
-		add_stop_condition< spot::max_steps_condition >( max_generations );
-		add_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
-		find_stop_condition< spot::flat_fitness_condition >().epsilon_ = flat_fitness_epsilon_;
 	}
 
 	void CmaOptimizerSpot::SetOutputMode( OutputMode m )
@@ -68,6 +56,19 @@ namespace scone
 
 	void CmaOptimizerSpot::Run()
 	{
+		// create output folder
+		PrepareOutputFolder();
+
+		// reporters
+		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );
+		rep.min_improvement_for_file_output = min_improvement_for_file_output;
+		rep.max_steps_without_file_output = max_generations_without_file_output;
+
+		// stop conditions
+		add_stop_condition< spot::max_steps_condition >( max_generations );
+		add_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
+		find_stop_condition< spot::flat_fitness_condition >().epsilon_ = flat_fitness_epsilon_;
+
 		run();
 	}
 

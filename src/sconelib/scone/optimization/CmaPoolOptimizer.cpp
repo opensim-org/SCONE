@@ -22,19 +22,22 @@ namespace scone
 		INIT_PROP( pn, optimizations_, 3 );
 		INIT_PROP( pn, concurrent_optimizations_, optimizations_ );
 		INIT_PROP( pn, random_seed_, 1 );
+	}
 
+	void CmaPoolOptimizer::Run()
+	{
 		// create output folder
-		PrepareOutputFolder( pn );
+		PrepareOutputFolder();
 
 		// fill the pool
 		for ( int i = 0; i < optimizations_; ++i )
 		{
-			props_.push_back( pn ); // we're reusing the props from CmaPoolOptimizer
+			props_.push_back( config_copy_ ); // we're reusing the props from CmaPoolOptimizer
 			props_.back().set( "random_seed", random_seed_ + i );
 			props_.back().set( "type", "CmaOptimizer" );
 			props_.back().set( "output_root", GetOutputFolder() );
 			props_.back().set( "log_level", xo::log::never_log_level );
-			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), root ) );
+			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), config_copy_ ) );
 		}
 
 		// add reporters
@@ -45,10 +48,7 @@ namespace scone
 
 		// reset the id, so that the ProgressDock can interpret OutputStatus() as a general message
 		id_.clear();
-	}
 
-	void CmaPoolOptimizer::Run()
-	{
 		run();
 	}
 

@@ -99,7 +99,7 @@ namespace scone
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
 
-		void PrepareOutputFolder( const PropNode& root_props );
+		void PrepareOutputFolder();
 
 		// current status
 		double m_BestFitness;
@@ -110,6 +110,8 @@ namespace scone
 
 		xo::log::level log_level_;
 		u_ptr< xo::log::file_sink > log_sink_;
+
+		PropNode config_copy_;
 	};
 
 	template< typename T >

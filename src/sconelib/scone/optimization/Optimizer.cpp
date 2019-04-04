@@ -35,7 +35,8 @@ namespace scone
 	m_Objective( CreateObjective( m_ObjectiveProps ) ),
 	m_BestFitness( m_Objective->info().worst_fitness() ),
 	output_mode_( no_output ),
-	m_LastFileOutputGen( 0 )
+	m_LastFileOutputGen( 0 ),
+	config_copy_( root )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
 		INIT_PROP( props, log_level_, xo::log::info_level );
@@ -97,7 +98,7 @@ namespace scone
 		return s;
 	}
 
-	void Optimizer::PrepareOutputFolder( const PropNode& root )
+	void Optimizer::PrepareOutputFolder()
 	{
 		SCONE_ASSERT( output_folder_.empty() );
 
@@ -110,7 +111,7 @@ namespace scone
 
 		// prepare output folder, and initialize
 		auto outdir = GetOutputFolder();
-		xo::save_file( root, GetOutputFolder() / "config.scone" );
+		xo::save_file( config_copy_, GetOutputFolder() / "config.scone" );
 		if ( use_init_file && !init_file.empty() )
 			xo::copy_file( init_file, GetOutputFolder() / init_file.filename(), true );
 
