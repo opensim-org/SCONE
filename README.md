@@ -9,6 +9,7 @@ The fastest way to get started using SCONE is to install the software on Windows
 SCONE can also be build from source using CMake version 3.12 or higher (see https://cmake.org), using a C++17 conformant compiler. The following compilers / environments have been tested to work with SCONE:
   * Microsoft Visual Studio 2017 on Windows 10 (64 bit)
 
+### Dependencies
 SCONE Depends on the following third party libraries:
   * **Qt 5.12** or higher (https://www.qt.io)
   * **OpenSceneGraph 3.4** (https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.4)
@@ -22,6 +23,7 @@ The following libraries are added to the source tree automatically as submodules
   * **osg-vis**
   * **qtfx**
 
+### CMake settings
 After all third party libs are installed and compiled, SCONE can be build by running CMake. The following CMake variables need special attention:
   * **OSG_DIR**: path to your OpenSceneGraph installation
   * **Qt5Widgets_DIR**: path to the Qt5WidgetsConfig.cmake in your Qt installation
