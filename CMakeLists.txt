@@ -44,7 +44,8 @@ if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/vis)
 endif()
 
-add_subdirectory(submodules/xo)
+add_subdirectory(submodules/xo/xo)
+add_subdirectory(submodules/xo/test)
 add_subdirectory(submodules/spot)
 
 #
@@ -54,3 +55,10 @@ add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)
+
+#
+# Add tests
+#
+enable_testing()
+add_test( xo_test "${EXECUTABLE_OUTPUT_PATH}/xo_test")
+add_test( scone_unit_tests "${EXECUTABLE_OUTPUT_PATH}/sconeunittests")
