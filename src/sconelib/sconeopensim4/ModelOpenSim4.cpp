@@ -109,6 +109,7 @@ namespace scone
 			AddExternalResource( model_file );
 		}
 
+#ifdef ENABLE_CONTACT_FORCE
 		// create torque and point actuators
 		if ( create_body_forces )
 		{
@@ -123,6 +124,7 @@ namespace scone
 				m_pOsimModel->addForce( cf );
 			}
 		}
+#endif
 
 		{
 			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
@@ -294,7 +296,7 @@ namespace scone
 				const auto& X_BF = cg->getFrame().findTransformInBaseFrame();
 				const auto X_FP = cg->getTransform();
 				const auto loc = (X_BF * X_FP).p();
-				m_ContactGeometries.emplace_back( body, ToVec3( loc ), cg->getRadius() );
+				m_ContactGeometries.emplace_back( body, from_osim( loc ), cg->getRadius() );
 			}
 		}
 
@@ -417,22 +419,22 @@ namespace scone
 
 	Vec3 ModelOpenSim4::GetComPos() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );
 	}
 
 	Vec3 ModelOpenSim4::GetComVel() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterVelocity( GetTkState() ) );
 	}
 
 	Vec3 ModelOpenSim4::GetComAcc() const
 	{
-		return ToVec3( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
+		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
 	scone::Vec3 ModelOpenSim4::GetGravity() const
 	{
-		return ToVec3( m_pOsimModel->getGravity() );
+		return from_osim( m_pOsimModel->getGravity() );
 	}
 
 	bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )

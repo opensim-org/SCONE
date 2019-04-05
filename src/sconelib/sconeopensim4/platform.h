@@ -17,3 +17,5 @@
 #else
 #	define SCONE_OPENSIM_4_API
 #endif
+
+#define ENABLE_CONTACT_FORCE

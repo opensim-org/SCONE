@@ -17,9 +17,8 @@
 
 namespace scone
 {
-	inline Vec3 ToVec3( const SimTK::Vec3& vec ) { return Vec3( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
-	inline Vec3f ToVec3f( const SimTK::Vec3& vec ) { return Vec3f( float( vec[ 0 ] ), float( vec[ 1 ] ), float( vec[ 2 ] ) ); }
-	inline Vec3d ToVec3d( const SimTK::Vec3& vec ) { return Vec3d( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
+	inline Vec3 from_osim( const SimTK::Vec3& vec ) { return Vec3( vec[ 0 ], vec[ 1 ], vec[ 2 ] ); }
+	inline Quat from_osim( const SimTK::Quaternion& q ) { return Quat( q[ 0 ], q[ 1 ], q[ 2 ], q[ 3 ] ); }
 
-	inline SimTK::Vec3 make_osim( const Vec3& v ) { return SimTK::Vec3( v.x, v.y, v.z ); }
+	inline SimTK::Vec3 to_osim( const Vec3& v ) { return SimTK::Vec3( v.x, v.y, v.z ); }
 }

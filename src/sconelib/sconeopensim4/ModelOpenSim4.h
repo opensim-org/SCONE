@@ -16,7 +16,10 @@
 
 #include <memory>
 #include <map>
+
+#ifdef ENABLE_CONTACT_FORCE
 #include "ConstantForce.h"
+#endif // ENABLE_CONTACT_FORCE
 
 namespace OpenSim
 {
@@ -123,7 +126,9 @@ namespace scone
 		void StoreCurrentFrame() override;
 		void UpdateOsimStorage();
 
+#ifdef ENABLE_CONTACT_FORCE
 		OpenSim::ConstantForce* GetOsimBodyForce( index_t idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
+#endif // ENABLE_CONTACT_FORCE
 
 		virtual const State& GetState() const override { return m_State; }
 		virtual State& GetState() override { return m_State; }
@@ -158,7 +163,10 @@ namespace scone
 		std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 		SimTK::State* m_pTkState; // non-owning state reference
 		OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
+
+#ifdef ENABLE_CONTACT_FORCE
 		std::vector< OpenSim::ConstantForce* > m_BodyForces;
+#endif
 		State m_State; // model state
 
 		friend ControllerDispatcher;

@@ -16,7 +16,7 @@
 #include "scone/core/Profiler.h"
 #include "simbody_tools.h"
 #include "scone/core/Log.h"
-#include "sconeopensim3/simbody_tools.h"
+#include "simbody_tools.h"
 
 namespace scone
 {
@@ -28,10 +28,10 @@ namespace scone
 		m_LastNumDynamicsRealizations( -1 )
 	{
 		ConnectContactForce( body.getName() );
-		if (auto* body = dynamic_cast<const OpenSim::Body*>(&m_osBody)) {
-			m_LocalComPos = ToVec3( body->getMassCenter() );
+		if ( auto* body = dynamic_cast<const OpenSim::Body*>( &m_osBody ) ) {
+			m_LocalComPos = from_osim( body->getMassCenter() );
 		} else {
-			m_LocalComPos = ToVec3( SimTK::Vec3(0) );
+			m_LocalComPos = from_osim( SimTK::Vec3(0) );
 		}
 	}
 
@@ -49,8 +49,8 @@ namespace scone
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 		SimTK::Vec3 point;
 
-		m_osBody.getModel().getOpenSim4Engine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
-		return ToVec3( point );
+		m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, zero, point );
+		return from_osim( point );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetComPos() const
@@ -63,8 +63,8 @@ namespace scone
 		// TODO: validate this!
 		SimTK::Vec3 point;
 		SimTK::Vec3 com(m_LocalComPos.x, m_LocalComPos.y, m_LocalComPos.z);
-		m_osBody.getModel().getOpenSim4Engine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
-		return ToVec3( point );
+		m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
+		return from_osim( point );
 	}
 
 	scone::Vec3 BodyOpenSim4::GetLocalComPos() const
@@ -88,7 +88,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getMobilizedBodyIndex() );
-		return ToVec3( mob.findStationLocationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
+		return from_osim( mob.findStationLocationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
 
 	}
 
@@ -104,8 +104,8 @@ namespace scone
 		SimTK::Vec3 vel;
 
 		// TODO: validate this!
-		m_osBody.getModel().getOpenSim4Engine().getVelocity( m_Model.GetTkState(), m_osBody, com, vel );
-		return ToVec3( vel );
+		m_osBody.getModel().getSimbodyEngine().getVelocity( m_Model.GetTkState(), m_osBody, com, vel );
+		return from_osim( vel );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetOriginVel() const
@@ -117,7 +117,7 @@ namespace scone
 
 		// TODO: OSIM: see if we can do this more efficient
 		const SimTK::MobilizedBody& mob = m_osBody.getMobilizedBody();
-		return ToVec3( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
+		return from_osim( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetAngVel() const
@@ -129,7 +129,7 @@ namespace scone
 
 		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 		const auto& mb = m_osBody.getMobilizedBody();
-		return ToVec3( mb.getBodyAngularVelocity( m_Model.GetTkState() ) );
+		return from_osim( mb.getBodyAngularVelocity( m_Model.GetTkState() ) );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetLinVelOfPointOnBody( Vec3 point ) const
@@ -138,7 +138,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getMobilizedBody();
-		return ToVec3( mob.findStationVelocityInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
+		return from_osim( mob.findStationVelocityInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
 	}
 
 
@@ -154,8 +154,8 @@ namespace scone
 		SimTK::Vec3 acc;
 
 		// TODO: validate this!
-		m_osBody.getModel().getOpenSim4Engine().getAcceleration( m_Model.GetTkState(), m_osBody, com, acc );
-		return ToVec3( acc );
+		m_osBody.getModel().getSimbodyEngine().getAcceleration( m_Model.GetTkState(), m_osBody, com, acc );
+		return from_osim( acc );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetOriginAcc() const
@@ -167,7 +167,7 @@ namespace scone
 
 		// TODO: OSIM: see if we can do this more efficient
 		const SimTK::MobilizedBody& mob = m_osBody.getMobilizedBody();
-		return ToVec3( mob.getBodyOriginAcceleration( m_Model.GetTkState() ) );
+		return from_osim( mob.getBodyOriginAcceleration( m_Model.GetTkState() ) );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetAngAcc() const
@@ -179,7 +179,7 @@ namespace scone
 
 		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
 		const SimTK::MobilizedBody& mb = m_osBody.getMobilizedBody();
-		return ToVec3( mb.getBodyAngularAcceleration( m_Model.GetTkState() ) );
+		return from_osim( mb.getBodyAngularAcceleration( m_Model.GetTkState() ) );
 	}
 
 	scone::Vec3 scone::BodyOpenSim4::GetLinAccOfPointOnBody( Vec3 point ) const
@@ -188,7 +188,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getMobilizedBody();
-		return ToVec3( mob.findStationAccelerationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
+		return from_osim( mob.findStationAccelerationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
 	}
 
 	Vec3 BodyOpenSim4::GetContactForce() const
@@ -287,46 +287,60 @@ namespace scone
 
 	void BodyOpenSim4::SetExternalForceAtPoint( const Vec3& force, const Vec3& point )
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			cf->setForceAtPoint( make_osim( force ), make_osim( point ) );
+			cf->setForceAtPoint( to_osim( force ), to_osim( point ) );
+#endif
 	}
 
 	void BodyOpenSim4::SetExternalMoment( const Vec3& torque )
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			cf->setTorque( make_osim( torque ) );
+			cf->setTorque( to_osim( torque ) );
+#endif
 	}
 
 	void BodyOpenSim4::AddExternalForce( const Vec3& force )
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			cf->setForce( make_osim( force ) + cf->getForce() );
+			cf->setForce( to_osim( force ) + cf->getForce() );
+#endif
 	}
 
 	void BodyOpenSim4::AddExternalMoment( const Vec3& torque )
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			cf->setTorque( make_osim( torque ) + cf->getTorque() );
+			cf->setTorque( to_osim( torque ) + cf->getTorque() );
+#endif
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalForce() const
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			return ToVec3( cf->getForce() );
-		else return Vec3::zero();
+			return from_osim( cf->getForce() );
+#endif
+		return Vec3::zero();
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalForcePoint() const
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			return ToVec3( cf->getPoint() );
-		else return Vec3::zero();
+			return from_osim( cf->getPoint() );
+#endif
+		return Vec3::zero();
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalMoment() const
 	{
+#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
-			return ToVec3( cf->getTorque() );
-		else return Vec3::zero();
+			return from_osim( cf->getTorque() );
+#endif
+		return Vec3::zero();
 	}
 }

@@ -190,7 +190,7 @@ namespace scone
 		{
 			const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[ i ]->getBody().getMobilizedBodyIndex() );
 			auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[ i ]->getLocation( m_Model.GetTkState() );
-			points[ i ] = ToVec3( world_pos );
+			points[ i ] = from_osim( world_pos );
 		}
 		return points;
 	}
