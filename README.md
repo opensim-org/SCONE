@@ -6,10 +6,7 @@ SCONE is open source software for predictive simulation of biological motion. Se
 The fastest way to get started using SCONE is to install the software on Windows (64 bit) and run the tutorials. See http://scone.software for details.
 
 ## Building SCONE
-SCONE can also be build from source using CMake version 3.12 or higher (see https://cmake.org), using a C++17 conformant compiler.
-
-### Supported compilers
-The following compilers / environments have been tested to work with SCONE:
+SCONE can also be build from source using CMake version 3.12 or higher (see https://cmake.org), using a C++17 conformant compiler. The following compilers / environments have been tested to work with SCONE:
   * Microsoft Visual Studio 2017 on Windows 10 (64 bit)
 
 ### Dependencies
