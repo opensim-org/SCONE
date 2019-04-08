@@ -287,60 +287,46 @@ namespace scone
 
 	void BodyOpenSim4::SetExternalForceAtPoint( const Vec3& force, const Vec3& point )
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			cf->setForceAtPoint( to_osim( force ), to_osim( point ) );
-#endif
 	}
 
 	void BodyOpenSim4::SetExternalMoment( const Vec3& torque )
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			cf->setTorque( to_osim( torque ) );
-#endif
 	}
 
 	void BodyOpenSim4::AddExternalForce( const Vec3& force )
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			cf->setForce( to_osim( force ) + cf->getForce() );
-#endif
 	}
 
 	void BodyOpenSim4::AddExternalMoment( const Vec3& torque )
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			cf->setTorque( to_osim( torque ) + cf->getTorque() );
-#endif
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalForce() const
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			return from_osim( cf->getForce() );
-#endif
 		return Vec3::zero();
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalForcePoint() const
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			return from_osim( cf->getPoint() );
-#endif
 		return Vec3::zero();
 	}
 
 	scone::Vec3 BodyOpenSim4::GetExternalMoment() const
 	{
-#ifdef ENABLE_CONTACT_FORCE
 		if ( auto* cf = m_Model.GetOsimBodyForce( m_osBody.getMobilizedBodyIndex() ) )
 			return from_osim( cf->getTorque() );
-#endif
 		return Vec3::zero();
 	}
 }
