@@ -15,13 +15,14 @@ SCONE Depends on the following third party libraries:
   * **OpenSceneGraph 3.4** (https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.4)
   * **OpenSim**, the following versions are supported:
     * **OpenSim 3.3** (https://github.com/opensim-org/opensim-core/tree/OpenSim32)
-    * **OpenSim 4** (https://github.com/opensim-org/opensim-core/tree/master)
+    * **OpenSim 4** -- EXPERIMENAL (https://github.com/opensim-org/opensim-core/tree/master)
 
 The following libraries are added to the source tree automatically as submodules:
-  * **xo**
-  * **spot**
-  * **osg-vis**
-  * **qtfx**
+  * **QCustomPlot** (https://www.qcustomplot.com)
+  * **xo** (https://github.com/tgeijten/xo)
+  * **spot** (https://github.com/tgeijten/spot)
+  * **osg-vis** (https://github.com/tgeijten/vis)
+  * **qtfx** (https://github.com/tgeijten/qtfx)
 
 ### CMake settings
 After all third party libs are installed and compiled, SCONE can be build by running CMake. The following CMake variables need special attention:
