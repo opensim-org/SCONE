@@ -15,7 +15,7 @@ find_package(Spot REQUIRED)
 find_package(Xo REQUIRED)
 
 option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
-option(SCONE_OPENSIM_4 "Support OpenSim 4.0" OFF)
+option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
