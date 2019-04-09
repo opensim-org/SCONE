@@ -23,6 +23,8 @@ The use of predictive simulations with neuromusculoskeletal models has the poten
 
 SCONE (Simulated Controller OptimizatioN Environment) is an open source software framework that helps researchers to overcome these barriers. It allows researchers to define neuromuscular controllers and optimize their control parameters through simulation, all without programming. It uses a modular approach for both controllers and objectives, allowing researchers to investigate various control strategies for a range of tasks. The software generates optimal motion that produces a task defined through an objective function without the need or constraints imposed by reference motions. SCONE is ‘simulator-agnostic’, it can be used in combination with any dynamics simulation package.
 
+More information on SCONE, including tutorials, examples and documentation can be found on https://scone.software.
+
 ![The SCONE user interface](scone_window.png)
 
 # References
