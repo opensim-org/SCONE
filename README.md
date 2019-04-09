@@ -1,6 +1,6 @@
 ![alt text](https://github.com/opensim-org/SCONE/blob/master/resources/ui/scone_logo_notext.png "SCONE")
 # Welcome to SCONE!
-SCONE is open source software for predictive simulation of biological motion. See http://scone.software for details.
+SCONE is open source software for predictive simulation of biological motion. See https://scone.software for details.
 
 ## Running SCONE on Windows (64 bit)
 The fastest way to get started using SCONE is to install the software on Windows (64 bit) and run the tutorials. See http://scone.software for details.
