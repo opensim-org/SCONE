@@ -64,7 +64,8 @@ namespace scone
 			// TODO: combine this code with CreateModelObjective, since the same is happening there
 			if ( auto init_file = optProp.props().try_get< path >( "init_file" ) )
 				so.info().import_mean_std( *init_file, optProp.props().get< bool >( "use_init_file_std", true ) );
-			model = so.CreateModelFromParams( SearchPoint( so.info() ) );
+			SearchPoint searchPoint( so.info() );
+			model = so.CreateModelFromParams( searchPoint );
 		}
 		else model = so.CreateModelFromParFile( par_file );
 
