@@ -18,10 +18,6 @@ if(SCONE_OPENSIM_3)
 		platform.h
 	)
 
-	if (MSVC)
-		add_compile_options( "/wd5040" )
-	endif()
-	
 	find_package( OpenSim 3.3 REQUIRED MODULE )
 
 	include( PrecompiledHeaders )
@@ -37,9 +33,8 @@ if(SCONE_OPENSIM_3)
 
 	if (MSVC)
 		target_compile_definitions( sconeopensim3 PRIVATE SCONE_MODEL_OPENSIM_3_EXPORTS )
-		target_compile_definitions( sconeopensim3 PRIVATE _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS )
 		target_compile_definitions( sconeopensim3 PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
 	endif()
 
-	#source_group("" FILES ${MODEL_OPENSIM_3_FILES})
+	source_group("" FILES ${MODEL_OPENSIM_3_FILES})
 endif()
