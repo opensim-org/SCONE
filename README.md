@@ -14,9 +14,9 @@ SCONE depends on a number of third party libraries. It is possible to download b
 #### Option 1: Download pre-build binary packages
 The following binary packages need to be downloaded and extracted to your system:
   * **OpenSim 3.3**
-    * Download from SimTK (user account required) at https://simtk.org/frs/?group_id=1180
+    * Download from https://simtk.org/frs/?group_id=1180 (SimTK user account required)
   * **OpenSceneGraph 3.4** (https://scone.software/lib/exe/fetch.php?media=dependencies:OpenSim3.3-scone-VC2017-64.7z)
-    * Download from SimTK (user account required) at https://simtk.org/frs/?group_id=1180
+    * Download from https://simtk.org/frs/?group_id=1180 (SimTK user account required)
   * **Qt 5.12** or higher
     * Download from https://www.qt.io/download, select 'Open Source'
 
@@ -26,14 +26,11 @@ Once these packages are installed, continue with 'Building SCONE'
 Alternatively, dependencies can be build from source:
   * **OpenSim 3.3**
     * Checkout **Simbody 3.5.4** (https://github.com/simbody/simbody/tree/Simbody-3.5.4)
-    * Configure the folder in CMake. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
-    * Generate and open the Visual Studio project files
-    * Build the INSTALL project for Debug and Release
+    * Configure in CMake and generate project files. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
+    * Open the Visual Studio project and build the INSTALL project for Debug and Release.
     * Download **OpenSim 3.3** (https://github.com/tgeijten/opensim3-scone)
-    * Configure the folder in CMake. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
-    * Set **SIMBODY_HOME** to a the installation folder for Simbody.
-    * Generate and open the Visual Studio project files
-    * Build the INSTALL project for Debug and Release
+    * Configure in CMake and generate project files. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access, and to set SIMBODY_HOME to the Simbody installation.
+    * Open the Visual Studio project and build the INSTALL project for Debug and Release.
   * **OpenSceneGraph 3.4**
     * Checkout the repository (https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.4)
     * See http://www.openscenegraph.org/index.php/documentation/10-getting-started for details
