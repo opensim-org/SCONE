@@ -11,8 +11,7 @@ SCONE can be build from source using Microsoft Visual Studio 2017 (https://visua
 ### Dependencies
 SCONE depends on a number of third party libraries. It is possible to download binary packages for these libraries (recommended), or you can build the dependencies from source.
 
-#### Option 1: Download pre-build binary packages
-The following binary packages need to be downloaded and extracted to your system:
+#### Option 1: Download pre-build binary packages:
   * **OpenSim 3.3**
     * Download from https://simtk.org/frs/?group_id=1180 (SimTK user account required)
   * **OpenSceneGraph 3.4** (https://scone.software/lib/exe/fetch.php?media=dependencies:OpenSim3.3-scone-VC2017-64.7z)
@@ -20,10 +19,7 @@ The following binary packages need to be downloaded and extracted to your system
   * **Qt 5.12** or higher
     * Download from https://www.qt.io/download, select 'Open Source'
 
-Once these packages are installed, continue with 'Building SCONE'
-
-#### Option 2: Build dependencies from source
-Alternatively, dependencies can be build from source:
+#### Option 2: Build dependencies from source:
   * **OpenSim 3.3**
     * Checkout **Simbody 3.5.4** (https://github.com/simbody/simbody/tree/Simbody-3.5.4)
     * Configure in CMake and generate project files. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
