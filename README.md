@@ -41,8 +41,8 @@ Alternatively, dependencies can be build from source:
     * Download from https://www.qt.io/download
     * See from https://www.qt.io for details
 
-#### Additional included libraries
-The following libraries are included in the repository and are build automatically:
+#### Additional libraries
+The following libraries are included in the SCONE repository and are build automatically:
   * **QCustomPlot** (https://www.qcustomplot.com)
   * **TCLAP** (http://tclap.sourceforge.net/)
   * **xo** (https://github.com/tgeijten/xo)
