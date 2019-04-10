@@ -6,16 +6,34 @@ SCONE is open source software for predictive simulation of biological motion. Mo
 The fastest way to get started using SCONE is to install the software on Windows 64 bit and run the tutorials. See https://scone.software/doku.php?id=install for details.
 
 ## Building SCONE
-SCONE can also be build from source using CMake version 3.12 or higher (https://cmake.org), using a C++17 conformant compiler. The following compilers / environments have been tested to work with SCONE:
-  * Microsoft Visual Studio 2017 on Windows 10 (64 bit)
+SCONE can also be build from source, using a C++17 conformant compiler. Currently, the following compilers / environments have been tested to work with SCONE:
+  * Microsoft Visual Studio 2017 on Windows 10 64 bit
 
-### Dependencies
-SCONE Depends on the following third party libraries, which need to be downloaded and build separately:
-  * **Qt 5.12** or higher (https://www.qt.io)
-  * **OpenSceneGraph 3.4** (https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.4)
-  * **OpenSim**, the following versions are supported:
-    * **OpenSim 3.3** (https://github.com/opensim-org/opensim-core/tree/OpenSim32)
-    * **OpenSim 4** -- EXPERIMENAL (https://github.com/opensim-org/opensim-core/tree/master)
+### Building SCONE with Microsoft Visual Studio (Windows 64 bit)
+#### Prerequisites
+Make sure you have the following software installed:
+  * Microsoft Visual Studio 2017 (latest version)
+  * CMake version 3.12 or higher (https://cmake.org)
+
+#### Dependencies
+SCONE Depends on a number of third party libraries. 
+
+, which need to be downloaded and build separately:
+  * **OpenSim 3.3**
+    * Checkout **Simbody 3.5.4** (https://github.com/simbody/simbody/tree/Simbody-3.5.4)
+    * Configure the folder in CMake. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
+    * Generate and open the Visual Studio project files
+    * Build the INSTALL project for Debug and Release
+    * Download **OpenSim 3.3** (https://github.com/tgeijten/opensim3-scone)
+    * Configure the folder in CMake. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
+    * Set **SIMBODY_HOME** to a the installation folder for Simbody.
+    * Generate and open the Visual Studio project files
+    * Build the INSTALL project for Debug and Release
+  * **Qt 5.12** or higher
+    * Download and install **Qt 5.12** or higher (https://www.qt.io)
+  * **OpenSceneGraph 3.4**
+    * Checkout the repository (https://github.com/openscenegraph/OpenSceneGraph/tree/OpenSceneGraph-3.4)
+    * Build and install according to 
 
 The following libraries are included in the repository and are build automatically:
   * **QCustomPlot** (https://www.qcustomplot.com)
@@ -25,14 +43,18 @@ The following libraries are included in the repository and are build automatical
   * **osg-vis** (https://github.com/tgeijten/vis)
   * **qtfx** (https://github.com/tgeijten/qtfx)
 
-### CMake settings
-After all third party libs are installed and compiled, SCONE can be build by running CMake. The following CMake variables need special attention:
-  * **OSG_DIR**: path to your OpenSceneGraph installation
-  * **Qt5Widgets_DIR**: path to the Qt5WidgetsConfig.cmake in your Qt installation
-  * **OPENSIM_INSTALL_DIR**: path to your OpenSim installation
+### Building SCONE
+Once the required dependencies are build, perform the following steps to build SCONE:
+  * Configure the folder in CMake. Be sure to set CMAKE_INSTALL_PREFIX to a folder with write access.
+  * Set **OSG_DIR** to the path of to your OpenSceneGraph installation
+  * Set **Qt5Widgets_DIR** to the path of Qt5WidgetsConfig.cmake in your Qt installation
+  * Set **OPENSIM_INSTALL_DIR** to the path of your OpenSim installation
+  * Generate and open the Visual Studio project files
+  * Build the ALL_BUILD project
+  * Build the RUN_TESTS project to validate your build
 
-### Testing
-After compilation succeeds, be sure to run the included CMake tests to ensure everything is working correctly.
+### Running SCONE
+You can now run SCONE by setting the sconestudio project as the startup project. Running in Release mode is recommended. Once SCONE is running, be sure to check out the tutorials at https://scone.software/doku.php?id=tutorials:start.
 
 ## License
 SCONE is licensed under the GNU Public License 3.0
