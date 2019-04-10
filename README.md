@@ -34,7 +34,7 @@ SCONE depends on a number of third party libraries. It is possible to download b
     * Download from https://www.qt.io/download
     * See from https://www.qt.io for details
 
-#### Additional libraries
+#### Additional dependencies
 The following libraries are included in the SCONE repository and are build automatically:
   * **QCustomPlot** (https://www.qcustomplot.com)
   * **TCLAP** (http://tclap.sourceforge.net/)
