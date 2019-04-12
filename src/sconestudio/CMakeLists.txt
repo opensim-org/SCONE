@@ -154,9 +154,14 @@ if(${Qt5Widgets_FOUND})
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
 			)
 		endforeach()
+
+		add_custom_command(TARGET sconestudio POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${DLL_TARGET_DIR}/platforms")
+		add_custom_command(TARGET sconestudio POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../plugins/platforms/qwindows$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/platforms"
+		)
 	
+		# Copy all OpenSim3 DLLs
 		if (SCONE_OPENSIM_3)
-			# Copy all OpenSim3 DLLs
 			SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon SimTKsimbody SimTKmath SimTKcommon)
 			foreach(opensimdll ${OPENSIM_DLLS})
 				add_custom_command(TARGET sconestudio POST_BUILD
@@ -174,12 +179,23 @@ if(${Qt5Widgets_FOUND})
 		endif()
 
 		# Copy OSG DLLs
-		SET(OSG_DLLS osg130-osg osg130-osgwidget osg130-osgqt osg130-osgga osg130-osgviewer osg130-osgutil osg130-osgtext osg130-osgdb osg130-osgshadow ot20-OpenThreads)
+		set(OSG_DLL_PREFIX "osg130-" CACHE STRING "Prefix of OpenSceneGraph DLLs. Yes, you need to set this by hand, living with CMake can be sad." )
+		SET(OSG_DLLS ${OSG_DLL_PREFIX}osg ${OSG_DLL_PREFIX}osgwidget ${OSG_DLL_PREFIX}osgqt
+			${OSG_DLL_PREFIX}osgga ${OSG_DLL_PREFIX}osgviewer ${OSG_DLL_PREFIX}osgutil
+			${OSG_DLL_PREFIX}osgtext ${OSG_DLL_PREFIX}osgdb ${OSG_DLL_PREFIX}osgshadow
+			ot20-OpenThreads)
 		foreach(osgdll ${OSG_DLLS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${osgdll}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
 			)
 		endforeach()
+
+		# Copy osg png plugin
+		set(OSG_PLUGINS_FOLDER "osgPlugins-3.4.0" CACHE STRING "Prefix of OpenSceneGraph Plugins folder. Yes, you need to set this by hand, living with CMake can be sad." )
+		add_custom_command(TARGET sconestudio POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}" )
+		add_custom_command(TARGET sconestudio POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${OSG_PLUGINS_FOLDER}/osgdb_png$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}"
+		)
 
 	endif()
 endif()
