@@ -1,6 +1,6 @@
 ====== What's new ======
 
-==== SCONE 0.22.0 ALPHA ====
+==== SCONE 0.22.0 BETA ====
 //Released April 4, 2019//
 
 === Updates ===
