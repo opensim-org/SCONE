@@ -56,7 +56,6 @@ namespace scone
 		INIT_PROP( props, fixed_control_step_size, 0.001 );
 		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
 		INIT_PROP( props, initial_load, 0.2 );
-		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
 
 		// set store data info from settings
