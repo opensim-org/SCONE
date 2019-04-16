@@ -152,9 +152,6 @@ namespace scone
 		template< typename SensorT, typename... Args > SensorDelayAdapter& AcquireDelayedSensor( Args&&... args )
 		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
-		/// Scaling factor to apply to all sensor delays; default = 1.
-		Real sensor_delay_scaling_factor;
-
 		/// Offset [rad] or [m] to apply to initial state; default = 0.
 		const PropNode* initial_state_offset;
 
@@ -166,6 +163,21 @@ namespace scone
 
 		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
 		String initial_state_offset_exclude;
+
+		/// Maximum integration step size; default = 0.001.
+		double max_step_size;
+
+		/// Use fixed step size for controllers; default = true.
+		bool use_fixed_control_step_size;
+
+		/// Step size used for controllers; default = 0.001.
+		double fixed_control_step_size;
+
+		/// Initial load [BW] at which to place the model initially; default = 0.2;
+		Real initial_load;
+
+		/// Scaling factor to apply to all sensor delays; default = 1.
+		Real sensor_delay_scaling_factor;
 
 		void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;

@@ -1,7 +1,7 @@
 /*
 ** ModelOpenSim4.cpp
 **
-** Copyright (C) 2013-2018 Thomas Geijtenbeek. All rights reserved.
+** Copyright (C) 2013-2019 Thomas Geijtenbeek and contributors. All rights reserved.
 **
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
@@ -75,22 +75,16 @@ namespace scone
 		path model_file;
 		path state_init_file;
 		String probe_class;
-		double pre_control_simulation_time;
 
 		INIT_PROP( props, integration_accuracy, 0.001 );
 		INIT_PROP( props, integration_method, String( "SemiExplicitEuler2" ) );
-		INIT_PROP( props, max_step_size, 0.001 );
-		INIT_PROP( props, fixed_control_step_size, 0.001 );
-		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
 
 		INIT_PROP_REQUIRED( props, model_file );
 		INIT_PROP( props, state_init_file, path() );
 		INIT_PROP( props, probe_class, String() );
-		INIT_PROP( props, pre_control_simulation_time, 0.0 );
-		INIT_PROP( props, initial_load, 0.2 );
+
 		// TODO: Must make more generic.
 		INIT_PROP( props, initial_load_dof, "/jointset/ground_pelvis/pelvis_ty/value" );
-
 		INIT_PROP( props, create_body_forces, false );
 
 		// always set create_body_forces when there's a PerturbationController
@@ -109,7 +103,6 @@ namespace scone
 			AddExternalResource( model_file );
 		}
 
-#ifdef ENABLE_CONTACT_FORCE
 		// create torque and point actuators
 		if ( create_body_forces )
 		{
@@ -124,7 +117,6 @@ namespace scone
 				m_pOsimModel->addForce( cf );
 			}
 		}
-#endif
 
 		{
 			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );

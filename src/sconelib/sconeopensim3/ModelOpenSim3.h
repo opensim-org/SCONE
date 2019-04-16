@@ -61,18 +61,6 @@ namespace scone
 		/// Accuracy parameter for integration; default = 0.001.
 		double integration_accuracy;
 
-		/// Maximum integration step size; default = 0.001.
-		double max_step_size;
-
-		/// Use fixed step size for controllers; default = true.
-		bool use_fixed_control_step_size;
-
-		/// Step size used for controllers; default = 0.001.
-		double fixed_control_step_size;
-
-		/// Initial load [BW] at which to place the model initially; default = 0.2;
-		Real initial_load;
-
 		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = pelvis_ty.
 		String initial_load_dof;
 

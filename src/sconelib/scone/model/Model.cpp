@@ -36,8 +36,6 @@ namespace scone
 	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
 	m_Measure( nullptr )
 	{
-		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
-
 		// old-style initialization (for backwards compatibility)
 		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
 		{
@@ -53,6 +51,13 @@ namespace scone
 			INIT_PROP( props, initial_state_offset_include, "*" );
 			INIT_PROP( props, initial_state_offset_exclude, "" );
 		}
+
+		INIT_PROP( props, max_step_size, 0.001 );
+		INIT_PROP( props, fixed_control_step_size, 0.001 );
+		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
+		INIT_PROP( props, initial_load, 0.2 );
+		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
+		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
 
 		// set store data info from settings
 		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );

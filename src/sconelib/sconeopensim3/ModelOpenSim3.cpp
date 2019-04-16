@@ -74,21 +74,15 @@ namespace scone
 		path model_file;
 		path state_init_file;
 		String probe_class;
-		double pre_control_simulation_time;
 
 		INIT_PROP( props, integration_accuracy, 0.001 );
 		INIT_PROP( props, integration_method, String( "SemiExplicitEuler2" ) );
-		INIT_PROP( props, max_step_size, 0.001 );
-		INIT_PROP( props, fixed_control_step_size, 0.001 );
-		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
 
 		INIT_PROP_REQUIRED( props, model_file );
 		INIT_PROP( props, state_init_file, path() );
 		INIT_PROP( props, probe_class, String() );
-		INIT_PROP( props, pre_control_simulation_time, 0.0 );
-		INIT_PROP( props, initial_load, 0.2 );
-		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 
+		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, create_body_forces, false );
 
 		// always set create_body_forces when there's a PerturbationController
