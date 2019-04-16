@@ -23,9 +23,9 @@ void simulation_test()
 			for ( fs::directory_iterator fileit( dir_it->path() ); fileit != fs::directory_iterator(); ++fileit )
 			{
 				fs::path parfile = fileit->path();
-				log::info( "Checking file ", parfile.string() );
 				if ( parfile.extension() == ".par" )
 				{
+					log::debug("Checking ", parfile.string());
 					xo::path scenario_file = FindScenario( xo::path( parfile.string() ) );
 					fs::path base_report_file = parfile.parent_path() / ( "simulation_test_result_" + parfile.stem().string() + ".zml" );
 					auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
