@@ -1,5 +1,13 @@
 ====== What's new ======
 
+==== SCONE 0.22.1 BETA ====
+//Released April 16, 2019//
+
+=== Updates ===
+  * Documentation updates
+  * Updates to unit testing
+  * SCONE now uses OpenSceneGraph 3.4.1 (see https://openscenegraph.org)
+
 ==== SCONE 0.22.0 BETA ====
 //Released April 4, 2019//
 
