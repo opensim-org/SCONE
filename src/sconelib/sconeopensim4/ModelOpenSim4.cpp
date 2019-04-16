@@ -229,7 +229,7 @@ namespace scone
 			}
 
 			// apply and fix state
-			if ( !initial_load_dof.empty() && initial_load > 0 )
+			if ( !initial_load_dof.empty() && initial_load > 0 && !GetContactGeometries().empty() )
 			{
 				CopyStateToTk();
 				FixTkState( initial_load * GetBW() );
