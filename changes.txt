@@ -8,6 +8,9 @@
   * Updates to unit testing
   * SCONE now uses OpenSceneGraph 3.4.1 (see https://openscenegraph.org)
 
+=== Fixes ===
+  * SCONE now ignores the initial_load setting when a model does not have contact geometry, preventing the software from hanging.
+
 ==== SCONE 0.22.0 BETA ====
 //Released April 4, 2019//
 
