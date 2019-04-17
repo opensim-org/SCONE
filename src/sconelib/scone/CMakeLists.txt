@@ -28,11 +28,11 @@ set(CORE_MATH_FILES
 	)
 set(CORE_SYSTEM_FILES
 	core/Factories.h
-    core/Factories.cpp
+	core/Factories.cpp
 	core/memory_tools.h
-    core/ResourceCache.h
+	core/ResourceCache.h
 	core/Profiler.cpp
-    core/Profiler.h
+	core/Profiler.h
 	core/Exception.h
 	core/platform.h
 	core/Log.cpp
@@ -170,49 +170,49 @@ set(OPT_API_FILES
 	optimization/ImitationObjective.h
 	optimization/SimilarityObjective.cpp
 	optimization/SimilarityObjective.h
-    optimization/opt_tools.cpp
-    optimization/opt_tools.h
+	optimization/opt_tools.cpp
+	optimization/opt_tools.h
 	)
 set(SIM_MODELCOMPONENTS_FILES
-    model/Body.cpp
-    model/Body.h
-    model/Dof.cpp
-    model/Dof.h
-    model/Joint.cpp
-    model/Joint.h
-    model/Model.cpp
-    model/Model.h
-    model/Muscle.cpp
-    model/Muscle.h
-    model/State.cpp
-    model/State.h
+	model/Body.cpp
+	model/Body.h
+	model/Dof.cpp
+	model/Dof.h
+	model/Joint.cpp
+	model/Joint.h
+	model/Model.cpp
+	model/Model.h
+	model/Muscle.cpp
+	model/Muscle.h
+	model/State.cpp
+	model/State.h
 	)
 set(SIM_SENSORSANDACTUATORS_FILES
-    model/Actuator.cpp
-    model/Actuator.h
-    model/Sensor.h
-    model/SensorDelayAdapter.cpp
-    model/SensorDelayAdapter.h
-    model/Sensors.cpp
-    model/Sensors.h
-    )
+	model/Actuator.cpp
+	model/Actuator.h
+	model/Sensor.h
+	model/SensorDelayAdapter.cpp
+	model/SensorDelayAdapter.h
+	model/Sensors.cpp
+	model/Sensors.h
+	)
 set(SIM_SIMULATIONANDCONTROL_FILES
-    model/Simulation.cpp
-    model/Simulation.h
-    )
+	model/Simulation.cpp
+	model/Simulation.h
+	)
 set(SIM_SYSTEM_FILES
-    model/model_tools.cpp
-    model/model_tools.h
-    )
+	model/model_tools.cpp
+	model/model_tools.h
+	)
 set(SIM_TOPOLOGY_FILES
-    model/Location.cpp
-    model/Location.h
-    model/Leg.cpp
-    model/Leg.h
-    model/Link.cpp
-    model/Link.h
+	model/Location.cpp
+	model/Location.h
+	model/Leg.cpp
+	model/Leg.h
+	model/Link.cpp
+	model/Link.h
 	model/Side.h
-    )
+	)
 
 set (SCONELIB_FILES
 	${SCONE_CONFIG_FILES}
@@ -230,15 +230,15 @@ set (SCONELIB_FILES
 	${CS_CONTROLLERS_STATE_FILES}
 	${CS_CONTROLLERS_COMPOSITE_FILES}
 
-    ${CS_FUNCTIONS_FILES}
+	${CS_FUNCTIONS_FILES}
 	${MEASURE_FILES}
-    ${CS_TOOLS_FILES}
+	${CS_TOOLS_FILES}
 	
 	${OPT_API_FILES}
 	
 	${SIM_MODELCOMPONENTS_FILES}
 	${SIM_SENSORSANDACTUATORS_FILES}
-    ${SIM_SIMULATIONANDCONTROL_FILES}
+	${SIM_SIMULATIONANDCONTROL_FILES}
 	${SIM_SYSTEM_FILES}
 	${SIM_TOPOLOGY_FILES}
 	)
