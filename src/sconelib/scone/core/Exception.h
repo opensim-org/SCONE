@@ -51,3 +51,4 @@ namespace scone
 
 #define SCONE_CHECK_RANGE( _value_, _min_, _max_ ) \
 	if ( _value_ < _min_ || _value_ > _max_ ) throw scone::RuntimeException( #_value_" must be a value between " + to_str( _min_ ) + " and " + to_str( _max_ ) );
+

@@ -25,6 +25,8 @@ if (MSVC)
 	add_compile_options("/MP")
 endif()
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+
 # Various settings
 # ----------------
 # Place build products (libraries, executables) in root
