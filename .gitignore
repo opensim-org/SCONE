@@ -13,3 +13,4 @@ tutorials/*.sto
 /doc/upload.bat
 /make_release_win64.bat
 /install/*.exe
+*.log
