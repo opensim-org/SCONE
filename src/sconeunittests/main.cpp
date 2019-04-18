@@ -19,10 +19,10 @@ int main( int argc, const char* argv[] )
 
 	try
 	{
-		//optimization_test();
+		optimization_test();
 		simulation_test();
 	}
-	catch ( std::exception& e)
+	catch ( std::exception& e )
 	{
 		log::critical( "Could not perform tests: ", e.what() );
 		return 1;

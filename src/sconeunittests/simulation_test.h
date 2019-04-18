@@ -14,7 +14,7 @@ namespace fs = std::filesystem;
 
 void simulation_test()
 {
-	fs::path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/simulation_test" ).string();
+	fs::path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/simulation_test" ).string();
 
 	for ( fs::directory_iterator dir_it( testpath ); dir_it != fs::directory_iterator(); ++dir_it )
 	{

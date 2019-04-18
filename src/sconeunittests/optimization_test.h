@@ -20,7 +20,7 @@ using namespace scone;
 
 void optimization_test()
 {
-	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "unittestdata/optimization_test" );
+	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/optimization_test" );
 	const PropNode pn = load_file( "schwefel_5.xml" );
 	OptimizerUP o = CreateOptimizer( pn );
 	xo::log_unaccessed( pn );

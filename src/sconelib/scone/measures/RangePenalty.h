@@ -40,7 +40,7 @@ namespace scone
 		double GetAverage() const { return static_cast<double>( penalty.GetAverage() ); }
 		double GetLatest() const { return static_cast<double>( penalty.GetLatest() ); }
 
-		/// Range, set through parameters 'min' and 'max'.
+		/// Specify the valid range, set through parameters 'min' and 'max'; defaults to { min = -inf max = inf }
 		Range< T > range;
 
 		/// Absolute penalty factor when value is out of range; default = 0.
