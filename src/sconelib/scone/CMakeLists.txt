@@ -104,12 +104,6 @@ set(CS_CONTROLLERS_REFLEX_FILES
 set(CS_CONTROLLERS_STATE_FILES
 	controllers/GaitStateController.cpp
 	controllers/GaitStateController.h
-	controllers/StateController.cpp
-	controllers/StateController.h
-	controllers/SensorStateController.cpp
-	controllers/SensorStateController.h
-	controllers/TimeStateController.cpp
-	controllers/TimeStateController.h
 	)
 set(CS_CONTROLLERS_COMPOSITE_FILES
 	controllers/CompositeController.cpp
