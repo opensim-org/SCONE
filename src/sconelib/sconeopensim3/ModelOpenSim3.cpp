@@ -41,8 +41,8 @@ namespace scone
 {
 	std::mutex g_SimBodyMutex;
 
-	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.string() ); } );
-	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.string() ); } );
+	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.to_string() ); } );
+	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.to_string() ); } );
 
 	// OpenSim3 controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
@@ -342,7 +342,7 @@ namespace scone
 	std::vector<path> ModelOpenSim3::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).string() );
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).to_string() );
 		files.push_back( file + ".sto" );
 
 		if ( GetController() ) xo::append( files, GetController()->WriteResults( file ) );

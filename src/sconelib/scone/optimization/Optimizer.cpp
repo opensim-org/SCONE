@@ -103,7 +103,7 @@ namespace scone
 		SCONE_ASSERT( output_folder_.empty() );
 
 		output_folder_ = xo::create_unique_folder( output_root / GetSignature() );
-		id_ = output_folder_.filename().string();
+		id_ = output_folder_.filename().to_string();
 
 		// create log sink if enabled
 		if ( log_level_ < xo::log::never_log_level )

@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		try
 		{
 			// load scenario and add additional properties
-			path scenario_file = FindScenario( path( optArg.isSet() ? optArg.getValue() : parArg.getValue() ) );
+			xo::path scenario_file = FindScenario( xo::path( optArg.isSet() ? optArg.getValue() : parArg.getValue() ) );
 			PropNode scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 
 			// apply command line settings (parameter 2 and further)
@@ -72,8 +72,8 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				auto par_path = path( parArg.getValue() );
-				auto out_path = path( outArg.isSet() ? outArg.getValue() : parArg.getValue() );
+				auto par_path = xo::path( parArg.getValue() );
+				auto out_path = xo::path( outArg.isSet() ? outArg.getValue() : parArg.getValue() );
 				log::info( "Evaluating ", par_path );
 				EvaluateScenario( scenario_pn, par_path, out_path );
 

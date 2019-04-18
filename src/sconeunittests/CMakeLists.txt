@@ -11,6 +11,10 @@ set_target_properties(sconeunittests PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQ
 
 target_link_libraries(sconeunittests sconelib xo)
 
+if (UNIX)
+    target_link_libraries(sconeunittests stdc++fs)
+endif()
+
 if (SCONE_OPENSIM_3)
 	target_link_libraries(sconeunittests sconeopensim3)
 	target_compile_definitions( sconeunittests PRIVATE SCONE_OPENSIM_3 )

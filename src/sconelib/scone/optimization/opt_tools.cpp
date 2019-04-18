@@ -82,7 +82,7 @@ namespace scone
 		if ( store_data )
 		{
 			auto files = model->WriteResults( output_base );
-			log::info( "Results written to " + output_base.string() + "*" );
+			log::info( "Results written to " + output_base.to_string() + "*" );
 		}
 
 		// collect statistics
