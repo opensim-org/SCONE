@@ -1,5 +1,12 @@
 ====== What's new ======
 
+==== SCONE 1.0.0 ====
+//Released April 18, 2019//
+
+=== Updates ===
+  * Documentation updates
+  * Depricated StateController, TimeStateController and SensorStateController
+
 ==== SCONE 0.22.1 BETA ====
 //Released April 16, 2019//
 
