@@ -1,0 +1,1 @@
+git rev-list --count HEAD > "%~dp0\..\.version"
