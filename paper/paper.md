@@ -1,5 +1,5 @@
 ---
-title: 'SCONE: Open source software for predicting biological motion'
+title: 'SCONE: Open Source Software for Predictive Simulation of Biological Motion'
 authors:
 - affiliation: 1
   name: Thomas Geijtenbeek
@@ -31,9 +31,9 @@ SCONE (Simulation-based Controller OptimizatioN Environment) is designed to help
   * SCONE is *simulator-agnostic*, meaning it can be used with any musculoskeletal dynamics simulation software package, after implementing a thin API layer in C++. Support for OpenSim [@Seth2018] models and simulation is included in the software.
   * SCONE provides an integrated Graphical User Interface (GUI) that allows simultaneous development, optimization, and analysis of predictive simulations.
 
-![The SCONE user interface](scone_window.png)
+Please visit https://scone.software for more information on SCONE, including tutorials, examples, documentation, community guidelines and contributions.
 
-More information on SCONE, including tutorials, examples, community guidelines and documentation can be found on https://scone.software.
+![The SCONE user interface](scone_window.png)
 
 # Acknowledgements
 The development of SCONE has been made possible through the following financial contributions:
