@@ -6,10 +6,11 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
-#include "optimization_test.h"
-#include "simulation_test.h"
 #include "scone/sconelib_config.h"
 #include "xo/serialization/serialize.h"
+#include "xo/system/log_sink.h"
+#include "xo/diagnose/test_framework.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
 
 int main( int argc, const char* argv[] )
 {
@@ -17,16 +18,5 @@ int main( int argc, const char* argv[] )
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 	scone::RegisterModels();
 
-	try
-	{
-		optimization_test();
-		simulation_test();
-	}
-	catch ( std::exception& e )
-	{
-		log::critical( "Could not perform tests: ", e.what() );
-		return 1;
-	}
-
-	return XO_TEST_REPORT();
+	return xo::test::run_all();
 }

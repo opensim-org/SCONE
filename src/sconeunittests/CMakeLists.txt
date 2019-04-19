@@ -1,7 +1,7 @@
 set(FILES
     main.cpp
-	optimization_test.h
-	simulation_test.h
+	optimization_test.cpp
+	simulation_test.cpp
 	)
 
 add_executable(sconeunittests ${FILES})

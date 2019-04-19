@@ -18,7 +18,7 @@
 
 using namespace scone;
 
-void optimization_test()
+XO_TEST_CASE( optimization_test )
 {
 	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/optimization_test" );
 	const PropNode pn = load_file( "schwefel_5.xml" );
@@ -26,5 +26,5 @@ void optimization_test()
 	xo::log_unaccessed( pn );
 	o->Run();
 
-	XO_TEST_MSG( o->GetBestFitness() < 1000.0, to_str( o->GetBestFitness() ) );
+	XO_CHECK_MESSAGE( o->GetBestFitness() < 1000.0, to_str( o->GetBestFitness() ) );
 }
