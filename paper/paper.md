@@ -26,6 +26,7 @@ Predictive forward dynamic simulations do the opposite: they compute motion traj
 Despite having shown great promise [@Anderson2001, @Geijtenbeek2013], the number of studies that successfully employ predictive forward simulations has been remarkably limited. A main contributing factor is complexity: besides expertise in neurological and musculoskeletal modeling, users require knowledge and understanding of optimization theory, as well as advanced software development skills to tie these components together. Even successful projects often do not permit fruitful collaboration and follow-up research, due to lack of structure and documentation of the resulting code-base.
 
 SCONE (Simulation-based Controller OptimizatioN Environment) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion, without the need for software development. Features of SCONE include:
+
   * A component-based control framework that enables hierarchical composition of neuromuscular control strategies, through use of a simple configuration script.
   * The ability to simultaneously optimize both model and control parameters, according to a user-defined hierarchically composed objective function. Support for different flavors of Covariance Matrix Adaptation [@Hansen2006] is included in the software.
   * SCONE is *simulator-agnostic*, meaning it can be used with any musculoskeletal dynamics simulation software package, after implementing a thin API layer in C++. Support for OpenSim [@Seth2018] models and simulation is included in the software.
@@ -37,6 +38,7 @@ Please visit https://scone.software for more information on SCONE, including tut
 
 # Acknowledgements
 The development of SCONE has been made possible through the following financial contributions:
+
   * The European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement no 600932.
   * The National Center for Simulation in Rehabilitation Research (NIH P2C HD065690).
   * The VENI research program with project number 15153, which is (partly) financed by the Netherlands Organisation for Scientific Research (NWO).
