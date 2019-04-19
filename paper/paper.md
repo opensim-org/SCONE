@@ -3,7 +3,7 @@ title: 'SCONE: Open source software for predicting biological motion'
 authors:
 - affiliation: 1
   name: Thomas Geijtenbeek
-  orcid: 0000-0003-0984-7016
+  orcid: 0000-0001-8352-8107
 date: "19 April 2019"
 bibliography: paper.bib
 tags:
