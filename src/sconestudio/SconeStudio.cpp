@@ -8,34 +8,33 @@
 
 #include "SconeStudio.h"
 #include "StudioSettings.h"
+#include "studio_config.h"
+#include "ui_SconeSettings.h"
+
 #include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
 #include "scone/core/Profiler.h"
 #include "scone/core/Settings.h"
-#include "studio_config.h"
+#include "scone/core/Factories.h"
+#include "scone/optimization/Optimizer.h"
+#include "scone/optimization/opt_tools.h"
 
-#include <osgDB/ReadFile>
-#include "xo/utility/color.h"
 #include "vis/plane.h"
-
 #include "vis-osg/osg_tools.h"
 #include "vis-osg/osg_object_manager.h"
 
+#include "xo/utility/color.h"
+#include "xo/filesystem/filesystem.h"
+#include "xo/system/system_tools.h"
+#include "xo/container/container_tools.h"
+
+#include <osgDB/ReadFile>
 #include <QtWidgets/QFileSystemModel.h>
 #include <QtWidgets/QMessageBox.h>
 #include <QtWidgets/QFileDialog>
 #include <QTextStream>
 #include <QTabWidget>
 #include "qcustomplot.h"
-#include "qevent.h"
-#include "ui_SconeSettings.h"
-
-#include "xo/filesystem/filesystem.h"
-#include "xo/system/system_tools.h"
-#include "xo/container/container_tools.h"
-#include "scone/core/Factories.h"
-#include "scone/optimization/Optimizer.h"
-#include "scone/optimization/opt_tools.h"
 
 using namespace scone;
 using namespace std;
