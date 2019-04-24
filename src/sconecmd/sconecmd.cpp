@@ -6,21 +6,18 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
+#include <tclap/CmdLine.h>
 #include "scone/core/Log.h"
 #include "scone/optimization/opt_tools.h"
 #include "xo/system/system_tools.h"
-#include <tclap/CmdLine.h>
-#include <thread>
 #include "xo/system/log_sink.h"
 #include "xo/container/prop_node_tools.h"
 #include "spot/optimizer_pool.h"
-#ifdef _WIN32
-#	include <xutility>
-#endif
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/Exception.h"
 #include "scone/sconelib_config.h"
+#include "scone/core/version.h"
 
 using namespace scone;
 using namespace std;
@@ -33,12 +30,12 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', "0.1", true );
-		TCLAP::ValueArg< String > optArg( "o", "optimize", "Scenario to optimize", true, "", "Scenario file" );
-		TCLAP::ValueArg< String > parArg( "e", "evaluate", "Evaluate result from an optimization", false, "", "Parameter file" );
-		TCLAP::ValueArg< String > outArg( "r", "result", "Output file for evaluation result", false, "", "Output file", cmd );
+		TCLAP::CmdLine cmd( "SCONE Command Line Utility", ' ', xo::to_str( scone::GetSconeVersion() ), true );
+		TCLAP::ValueArg< String > optArg( "o", "optimize", "Optimize a scenario file", true, "", "Scenario file (*.scone)" );
+		TCLAP::ValueArg< String > parArg( "e", "evaluate", "Evaluate a result from an optimization", false, "", "Parameter file (*.par)" );
+		TCLAP::ValueArg< String > outArg( "r", "result", "Output file for evaluation result", false, "", "Output file (*.sto)", cmd );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
-		TCLAP::SwitchArg statusOutput( "s", "status", "Output status updates for use in external tools", cmd, false );
+		TCLAP::SwitchArg statusOutput( "s", "status", "Output full status updates", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
 		cmd.xorAdd( optArg, parArg );
@@ -90,11 +87,11 @@ int main(int argc, char* argv[])
 			{
 				cout << std::endl << "*error=" << xo::try_quoted( e.what() ) << std::endl;
 				cout.flush();
-				std::this_thread::sleep_for( std::chrono::seconds( 5 ) );
+				xo::sleep( 5000 );
 			}
 		}
 	}
-	catch (TCLAP::ExitException& e )
+	catch ( TCLAP::ExitException& e )
 	{
 		return e.getExitStatus();
 	}
