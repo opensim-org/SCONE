@@ -42,7 +42,7 @@ namespace scone
 
 		log::debug( "MimicMeasure found ", state_storage_map_.size(), " of ", storage_.GetChannelCount(), " channels from ", file );
 
-		SCONE_THROW_IF( state_storage_map_.empty(), "No matching states found in " + file.string() );
+		SCONE_THROW_IF( state_storage_map_.empty(), "No matching states found in " + file.str() );
 
 		model.AddExternalResource( file );
 	}

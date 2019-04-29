@@ -220,7 +220,7 @@ void SconeStudio::evaluate()
 {
 	SCONE_ASSERT( model );
 
-	QProgressDialog dlg( ( "Evaluating " + model->GetFileName().string() ).c_str(), "Abort", 0, 1000, this );
+	QProgressDialog dlg( ( "Evaluating " + model->GetFileName().str() ).c_str(), "Abort", 0, 1000, this );
 	dlg.setWindowModality( Qt::WindowModal );
 	dlg.show();
 	QApplication::processEvents();

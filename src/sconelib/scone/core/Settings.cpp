@@ -41,7 +41,7 @@ namespace scone
 	void SaveSconeSettings()
 	{
 		auto settings_file = GetSettingsFolder() / "scone-settings.zml";
-		xo::create_directories( xo::path( settings_file.string() ).parent_path() );
+		xo::create_directories( xo::path( settings_file.str() ).parent_path() );
 		GetSconeSettings().save( settings_file );
 		log::debug( "Saved settings to ", settings_file );
 	}

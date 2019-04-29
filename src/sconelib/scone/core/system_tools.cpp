@@ -77,6 +77,6 @@ namespace scone
 			return p.filename(); // filename in current folder
 		else if ( p.has_filename() && file_exists( path( ".." ) / p.filename() ) )
 			return path( ".." ) / p.filename(); // filename in folder one above current folder
-		else SCONE_THROW( "Could not find " + p.string() + " in " + xo::current_path().string() );
+		else SCONE_THROW( "Could not find " + p.str() + " in " + xo::current_path().str() );
 	}
 }

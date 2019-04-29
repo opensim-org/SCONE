@@ -29,7 +29,7 @@ namespace scone
 			if ( xo::exists( versionpath / ".version" ) )
 			{
 				// .version file found, read its contents
-				std::ifstream ifstr( ( versionpath / ".version" ).string() );
+				std::ifstream ifstr( ( versionpath / ".version" ).str() );
 				ifstr >> build;
 				break;
 			}

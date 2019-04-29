@@ -33,8 +33,8 @@ namespace scone
 
 	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
-		std::ofstream ofs( file.string() );
-		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.string() );
+		std::ofstream ofs( file.str() );
+		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
 		WriteStorageTxt( storage, ofs );
 	}
 
@@ -54,15 +54,15 @@ namespace scone
 
 	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name )
 	{
-		std::ofstream str( file.string() );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
+		std::ofstream str( file.str() );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		WriteStorageSto( storage, str, name );
 	}
 
 	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		ReadStorageSto( storage, str );
 	}
 
@@ -80,7 +80,7 @@ namespace scone
 	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.string() );
+		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		ReadStorageTxt( storage, str );
 	}
 
