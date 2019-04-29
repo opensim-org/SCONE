@@ -15,7 +15,7 @@
 
 namespace scone
 {
-	/// Base class for reflexes, requires use of ReflexController.
+	/// Base class for reflexes, requires use of ReflexController. See inherited Controllers for details.
 	class Reflex : public HasData
 	{
 	public:

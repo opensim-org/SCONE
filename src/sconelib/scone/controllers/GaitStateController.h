@@ -19,6 +19,7 @@
 namespace scone
 {
 	/// Finite State Machine (FSM) controller that detects different phases of gait.
+	/// See the [[https://scone.software/doku.php?id=tutorials:gait]] tutorial for an example.
 	class GaitStateController : public Controller
 	{
 	public:

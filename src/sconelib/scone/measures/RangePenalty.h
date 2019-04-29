@@ -17,7 +17,7 @@ namespace scone
 {
 	/// Helper class to compute penalty if a value is outside a specific range. The penalty corresponds to
 	/// ''abs_penalty * | _E_ | + squared_penalty * _E_^2'',
-	/// where _E_ is the amount the value is out of the specified range
+	/// where _E_ is the amount a value is out of the specified range.
 	template< typename T > class RangePenalty
 	{
 	public:

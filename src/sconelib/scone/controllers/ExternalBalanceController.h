@@ -22,12 +22,19 @@ namespace scone
 	public:
 		ExternalBalanceController( const PropNode& props, Params& par, Model& model, const Location& target_area );
 
+		/// Name of the target body.
 		String name;
 
+		/// Target angular position [rad] of the body; default = 0.
 		Real angular_position_target;
+
+		/// Torque gain for position displacement.
 		Real angular_position_gain;
 
+		/// Target angular velocity [rad/s] of the body; default = 0.
 		Real angular_velocity_gain;
+
+		/// Torque gain for velocity damping.
 		Real angular_velocity_target;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

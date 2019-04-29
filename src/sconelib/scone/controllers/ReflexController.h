@@ -16,8 +16,8 @@
 
 namespace scone
 {
-	/// Controller based on reflexes.
-	/// See also Reflex and subclasses.
+	/// Controller that simulates reflexes with time delays.
+	/// See Reflex and its subclasses for the various reflexes that can be added to this Controller.
 	class ReflexController : public Controller
 	{
 	public:

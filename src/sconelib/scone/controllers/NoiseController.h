@@ -14,7 +14,7 @@ namespace scone
 {
 	/// Controller that adds random signals to actuators.
 	/// For each controller timestep, a random noise is sampled from a normal distribution
-	/// with a standard deviation of: base_noise + current_signal * proportional_noise.
+	/// with a standard deviation of ''base_noise + current_signal * proportional_noise''.
 	class NoiseController : public Controller
 	{
 	public:

@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	/// Controller that automatically generates a mirrored version of a child Controller.
+	/// Controller that automatically adds a mirrored version for each child Controller.
 	class MirrorController : public Controller
 	{
 	public:

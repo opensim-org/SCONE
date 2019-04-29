@@ -15,7 +15,8 @@
 
 namespace scone
 {
-	/// Measure for penalizing joint load, if above a specific treashold.
+	/// Measure for penalizing joint load, if above a specific threshold.
+	/// See RangePenalty for details on how to set range, abs_penalty and squared_penalty.
 	class JointLoadMeasure : public Measure, public RangePenalty< Real >
 	{
 	public:

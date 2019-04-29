@@ -13,7 +13,7 @@
 namespace scone
 {
 	/// Controller consisting of multiple child controllers.
-	/// Children can be inserted through an additional 'Controller' tag.
+	/// Child Controllers are inserted as children of this parameter, e.g. ''CompositeController { FeedForwardController { ... } ReflexController { ... } }''.
 	class CompositeController : public Controller
 	{
 	public:
@@ -24,7 +24,6 @@ namespace scone
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const override;
 
-		/// Child node containing all Measures.
 		const PropNode* Controllers;
 
 	protected:

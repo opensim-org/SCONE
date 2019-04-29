@@ -14,7 +14,7 @@
 namespace scone
 {
 	/// Measure how well a single gait cycle is performed.
-	/// For gait optimization, it is recommended to use GaitMeasure instead
+	/// *work in progress*, for gait optimization, use GaitMeasure instead.
 	class GaitCycleMeasure : public Measure
 	{
 	public:

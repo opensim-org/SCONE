@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	/// Base class for Measures
+	/// Base class for Measures.
 	class Measure : public Controller, public HasName
 	{
 	public:

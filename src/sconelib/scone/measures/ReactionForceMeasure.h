@@ -14,6 +14,7 @@
 namespace scone
 {
 	/// Measure that penalizes ground reaction forces above a certain threshold.
+	/// See RangePenalty for details on how to set range, abs_penalty and squared_penalty.
 	class ReactionForceMeasure : public Measure, public RangePenalty< Real >
 	{
 	public:
