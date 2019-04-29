@@ -18,8 +18,9 @@
 
 namespace scone
 {
-	/// Finite State Machine (FSM) controller that detects different phases of gait.
-	/// See the [[https://scone.software/doku.php?id=tutorials:gait]] tutorial for an example.
+	/// Finite State Machine controller that detects different phases of gait.
+	/// Supported states are: ''EarlyStance'', ''LateStance'', ''LiftOff'', ''Swing'', ''Landing''.
+	/// See the gait tutorial https://scone.software/doku.php?id=tutorials:gait for an example.
 	class GaitStateController : public Controller
 	{
 	public:
@@ -31,13 +32,13 @@ namespace scone
 		/// Gait states that can be detected by the controller
 		enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
 
-		/// Sagittal distance [m] of the swing foot used for detecting LandingState.
+		/// Relative sagittal distance [m] of the swing foot used for detecting LandingState.
 		Real landing_threshold;
 
-		/// Sagittal distance [m] of the stance foot used for detecting LateStanceState.
+		/// Relative sagittal distance [m] of the stance foot used for detecting LateStanceState.
 		Real late_stance_threshold;
 
-		/// Sagittal distance [m] of the stance foot used for detecting LiftoffState.
+		/// Relative sagittal distance [m] of the stance foot used for detecting LiftoffState.
 		Real liftoff_threshold;
 
 		/// Use custom leg length instead of deriving from model; default = false.

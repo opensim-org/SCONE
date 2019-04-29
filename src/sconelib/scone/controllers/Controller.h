@@ -33,7 +33,7 @@ namespace scone
 		/// Called each step, returns true on termination request, checks IsActive() first
 		bool UpdateControls( Model& model, double timestamp );
 
-		/// Called after each successful integration step, returns true on termination request
+		/// Called after each successful integration step, returns true on termination request, checks IsActive() first
 		bool UpdateAnalysis( const Model& model, double timestamp );
 
 		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
