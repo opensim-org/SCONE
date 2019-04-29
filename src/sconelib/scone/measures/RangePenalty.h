@@ -62,7 +62,3 @@ namespace xo
 		return true;
 	}
 }
-//
-//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< double > );
-//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Degree > );
-//IS_PROP_NODE_CONSTRUCTABLE( scone::RangePenalty< scone::Radian > );

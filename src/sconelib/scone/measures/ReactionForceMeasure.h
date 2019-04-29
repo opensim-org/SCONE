@@ -14,7 +14,7 @@
 namespace scone
 {
 	/// Measure that penalizes ground reaction forces above a certain threshold.
-	class ReactionForceMeasure : public Measure, RangePenalty< Real >
+	class ReactionForceMeasure : public Measure, public RangePenalty< Real >
 	{
 	public:
 		ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
