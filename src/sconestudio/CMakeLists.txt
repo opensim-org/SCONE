@@ -127,6 +127,11 @@ if(${Qt5Widgets_FOUND})
 		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_4 )
 	endif()
 
+	if (SCONE_LUA)
+		target_link_libraries(sconestudio sconelua)
+		target_compile_definitions( sconestudio PRIVATE SCONE_LUA )
+	endif()
+
 	# no console in release mode
 	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
 	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )

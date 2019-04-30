@@ -19,7 +19,7 @@ namespace scone
 	/// Must be part of ReflexController. Output excitation corresponds to
 	/// ''U = _C0_ + [_KF(F - F0)_]<sub>+</sub> + [_KL(L - L0)_]<sub>+</sub> + [_KV(V - V0)_]<sub>+</sub> + [_KS(S - S0)_]<sub>+</sub>'',
 	/// where []<sub>+</sub> indicates a result is always >= 0, unless the corresponding allow_neg_* is set to 1.
-	class  MuscleReflex : public Reflex
+	class MuscleReflex : public Reflex
 	{
 	public:
 		MuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc );

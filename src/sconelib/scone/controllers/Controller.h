@@ -18,7 +18,7 @@
 namespace scone
 {
 	/// Base class for SCONE Controllers. See derived classes for specific functionality.
-	class Controller : public HasSignature, public HasData
+	class SCONE_API Controller : public HasSignature, public HasData
 	{
 	public:
 		Controller( const PropNode& props, Params& par, Model& model, const Location& target_area );

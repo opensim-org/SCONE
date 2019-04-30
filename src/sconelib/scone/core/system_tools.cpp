@@ -69,7 +69,7 @@ namespace scone
 		}
 	}
 
-	SCONE_API path FindFile( const path& p )
+	path FindFile( const path& p )
 	{
 		if ( file_exists( p ) )
 			return p; // original path
