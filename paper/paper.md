@@ -17,7 +17,7 @@ affiliations:
 ---
 
 # Summary
-Mobility impairments pose an increasing burden on our ageing society, urging researchers and clinicians to invent new assistive technologies and improve medical treatment. However, their efforts are impeded by a gap in our understanding of biological motion. Even though individual branches of neuroscience and biomechanics have produced a wealth of knownledge on the components comprising biological motion, the fundamental question of how the neural, muscular and skeletal systems operate together to produce efficient and purposeful motion remains largely unanswered.
+Mobility impairments pose an increasing burden on our ageing society, urging researchers and clinicians to invent new assistive technologies and improve medical treatment. However, their efforts are impeded by a gap in our understanding of biological motion. Even though individual branches of neuroscience and biomechanics have produced a wealth of knowledge on the components comprising biological motion, the fundamental question of how the neural, muscular and skeletal systems operate together to produce efficient and purposeful motion remains largely unanswered.
 
 The use of neurological and musculoskeletal simulations can help improve our understanding of biological motion. Inverse dynamic simulations have been used successfully to estimate quantities of recorded human motion that are not directly observable, such as muscle force or joint torque. Even though these inverse simulations have provided useful insights into human motion, they rely on existing data and cannot predict new behavior.
 
