@@ -20,6 +20,7 @@
 
 #ifdef SCONE_LUA
 #include "sconelua/ScriptController.h"
+#include "sconelua/ScriptMeasure.h"
 #endif
 
 namespace scone
@@ -27,7 +28,7 @@ namespace scone
 	void RegisterModels()
 	{
 #ifdef SCONE_OPENSIM_3
-	GetModelFactory().register_type< ModelOpenSim3 >( "Simbody" );
+	GetModelFactory().register_type< ModelOpenSim3 >( "Simbody" ); // backwards compatibility
 	GetModelFactory().register_type< ModelOpenSim3 >( "OpenSim3Model" );
 	GetModelFactory().register_type< ModelOpenSim3 >( "OpenSimModel" );
 #endif
@@ -36,6 +37,7 @@ namespace scone
 #endif
 #ifdef SCONE_LUA
 	GetControllerFactory().register_type< ScriptController >( "ScriptController" );
+	GetMeasureFactory().register_type< ScriptMeasure >( "ScriptMeasure" );
 #endif
 	}
 }

@@ -14,7 +14,7 @@
 namespace scone
 {
 	/// Base class for Measures.
-	class Measure : public Controller, public HasName
+	class SCONE_API Measure : public Controller, public HasName
 	{
 	public:
 		Measure( const PropNode& props, Params& par, Model& model, const Location& loc );

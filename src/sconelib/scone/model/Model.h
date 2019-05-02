@@ -44,6 +44,7 @@ namespace scone
 		/// body access
 		std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 		const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
+		Body* GetBody( index_t i ) { return m_Bodies[ i ].get(); }
 
 		/// joint access
 		std::vector< JointUP >& GetJoints() { return m_Joints; }
@@ -55,6 +56,7 @@ namespace scone
 
 		/// Actuator access
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
+		Actuator* GetActuator( index_t i ) { return m_Actuators[ i ]; }
 
 		/// Contact geometries
 		std::vector< ContactGeometry > GetContactGeometries() { return m_ContactGeometries; }
