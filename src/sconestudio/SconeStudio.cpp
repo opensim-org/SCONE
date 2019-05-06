@@ -525,6 +525,16 @@ void SconeStudio::runScenario()
 	}
 }
 
+void SconeStudio::performanceTest()
+{
+	ui.playControl->stop();
+	if ( auto* s = getActiveScenario() )
+	{
+		requestSaveChanges( s );
+		// TODO: run simulation without Model / storage
+	}
+}
+
 void SconeStudio::optimizeScenarioMultiple()
 {
 	if ( auto* s = getVerifiedActiveScenario() )

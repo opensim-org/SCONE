@@ -63,6 +63,7 @@ public slots:
 
 	void helpAbout() {}
 	void runScenario();
+	void performanceTest();
 	void optimizeScenario();
 	void optimizeScenarioMultiple();
 	void abortOptimizations();
