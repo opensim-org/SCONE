@@ -9,7 +9,7 @@
 #pragma once
 
 #include <stdexcept>
-#include <iostream>
+#include "xo/string/string_cast.h"
 
 #if defined(_MSC_VER)
 #define __func__ __FUNCTION__
@@ -49,7 +49,7 @@ namespace scone
 	if ( _condition_ ) throw scone::RuntimeException( std::string( __func__ ) + "(): " + std::string( _message_ ) );
 
 #define SCONE_CHECK_RANGE( _value_, _min_, _max_ ) \
-	if ( _value_ < _min_ || _value_ > _max_ ) throw scone::RuntimeException( #_value_" must be a value between " + to_str( _min_ ) + " and " + to_str( _max_ ) );
+	if ( _value_ < _min_ || _value_ > _max_ ) throw scone::RuntimeException( #_value_" must be a value between " + xo::to_str( _min_ ) + " and " + xo::to_str( _max_ ) );
 
 #define SCONE_ERROR( _message_ ) \
 	throw scone::RuntimeException( std::string( _message_ ) )

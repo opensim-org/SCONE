@@ -15,7 +15,7 @@ namespace scone
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
-		u_ptr< class LuaScript > script_;
+		u_ptr< class lua_script > script_;
 		std::function<void( struct lua_model*, struct lua_params* )> init_;
 		std::function<void( struct lua_model* )> update_;
 	};

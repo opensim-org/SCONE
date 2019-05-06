@@ -10,18 +10,18 @@
 #include "scone/model/Model.h"
 #include "scone/model/Actuator.h"
 #include "scone/core/string_tools.h"
-#include "LuaScript.h"
-#include "scone_lua_api.h"
+#include "lua_script.h"
+#include "lua_api.h"
 #include "scone/core/Log.h"
 
 namespace scone
 {
 	ScriptController::ScriptController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Controller( props, par, model, loc ),
-	script_( new LuaScript( props, par, model ) )
+	script_( new lua_script( props, par, model ) )
 	{
-		init_ = script_->GetFunction( "init" );
-		update_ = script_->GetFunction( "update" );
+		init_ = script_->find_function( "init" );
+		update_ = script_->find_function( "update" );
 
 		try
 		{
@@ -31,10 +31,10 @@ namespace scone
 		}
 		catch ( const std::exception& e )
 		{
-			SCONE_ERROR( "Error in " + script_->GetFile().str() + " while calling init(): " + e.what() );
+			SCONE_ERROR( "Error in " + script_->script_file_.str() + " while calling init(): " + e.what() );
 		}
 
-		model.AddExternalResource( script_->GetFile() );
+		model.AddExternalResource( script_->script_file_ );
 	}
 
 	ScriptController::~ScriptController()
@@ -49,7 +49,7 @@ namespace scone
 		}
 		catch ( const std::exception& e )
 		{
-			log::error( "Error in ", script_->GetFile().str(), " while calling update(): ", e.what() );
+			log::error( "Error in ", script_->script_file_.str(), " while calling update(): ", e.what() );
 			return true;
 		}
 

@@ -29,7 +29,7 @@ namespace scone
 	T& FindByName( std::vector< T >& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
-		SCONE_THROW_IF( it == cont.end(), "Could not find `" + name + "`" );
+		SCONE_THROW_IF( it == cont.end(), "Could not find \"" + name + "\"" );
 		return *it;
 	}
 
