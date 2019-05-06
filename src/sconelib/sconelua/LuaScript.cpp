@@ -21,7 +21,7 @@ namespace scone
 		if ( !script.valid() )
 		{
 			sol::error err = script;
-			SCONE_THROW( "Error in " + script_file_.str() + ":\n:" + err.what() );
+			SCONE_ERROR( "Error in " + script_file_.str() + ": " + err.what() );
 		}
 
 		// run once to define functions
@@ -29,7 +29,7 @@ namespace scone
 		if ( !res.valid() )
 		{
 			sol::error err = res;
-			SCONE_THROW( "Error in " + script_file_.str() + ":\n:" + err.what() );
+			SCONE_ERROR( "Error in " + script_file_.str() + ": " + err.what() );
 		}
 	}
 
@@ -39,7 +39,7 @@ namespace scone
 	sol::function LuaScript::GetFunction( const String& name )
 	{
 		sol::function f = lua_[ name ];
-		SCONE_THROW_IF( !f.valid(), "Error in " + script_file_.str() + ": Could not find function " + name );
+		SCONE_ERROR_IF( !f.valid(), "Error in " + script_file_.str() + ": Could not find function " + xo::quoted( name ) );
 		return f;
 	}
 }

@@ -52,8 +52,9 @@ namespace scone
 		virtual bool ComputeControls( Model& model, double timestamp ) override final { return false; }
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override final;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;
+		double WorstResult() const;
 
 		PropNode report;
-		xo::optional< double > result;
+		xo::optional< double > result; // caches result so it's only computed once
 	};
 }

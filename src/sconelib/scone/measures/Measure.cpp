@@ -7,6 +7,7 @@
 */
 
 #include "Measure.h"
+#include "xo/numerical/constants.h"
 
 namespace scone
 {
@@ -41,4 +42,10 @@ namespace scone
 		// TODO: cleanup, rename UpdateMeasure into PerformAnalysis
 		return UpdateMeasure( model, timestamp );
 	}
+
+	double Measure::WorstResult() const
+	{
+		return minimize ? xo::constants<double>::max() : xo::constants<double>::lowest();
+	}
+
 }

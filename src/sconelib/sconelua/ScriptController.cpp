@@ -12,6 +12,7 @@
 #include "scone/core/string_tools.h"
 #include "LuaScript.h"
 #include "scone_lua_api.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -22,9 +23,16 @@ namespace scone
 		init_ = script_->GetFunction( "init" );
 		update_ = script_->GetFunction( "update" );
 
-		lua_params lp( par );
-		lua_model lm( model );
-		init_( &lm, &lp );
+		try
+		{
+			lua_params lp( par );
+			lua_model lm( model );
+			init_( &lm, &lp );
+		}
+		catch ( const std::exception& e )
+		{
+			SCONE_ERROR( "Error in " + script_->GetFile().str() + " while calling init(): " + e.what() );
+		}
 
 		model.AddExternalResource( script_->GetFile() );
 	}
@@ -34,8 +42,17 @@ namespace scone
 
 	bool ScriptController::ComputeControls( Model& model, double timestamp )
 	{
-		lua_model lm( model );
-		update_( &lm );
+		try
+		{
+			lua_model lm( model );
+			update_( &lm );
+		}
+		catch ( const std::exception& e )
+		{
+			log::error( "Error in ", script_->GetFile().str(), " while calling update(): ", e.what() );
+			return true;
+		}
+
 		return false;
 	}
 
