@@ -12,6 +12,7 @@
 #include "xo/system/log.h"
 #include "scone/optimization/opt_tools.h"
 #include "xo/diagnose/test_framework.h"
+#include "xo/filesystem/filesystem.h"
 
 namespace fs = std::filesystem;
 
@@ -25,18 +26,19 @@ XO_TEST_CASE( simulation_test )
 		{
 			for ( fs::directory_iterator fileit( dir_it->path() ); fileit != fs::directory_iterator(); ++fileit )
 			{
-				fs::path parfile = fileit->path();
-				if ( parfile.extension() == ".par" )
+				fs::path fsparfile = fileit->path();
+				if ( fsparfile.extension() == ".par" )
 				{
-					xo::log::debug("Checking ", parfile.string());
-					xo::path scenario_file = scone::FindScenario( xo::path( parfile.string() ) );
-					fs::path base_report_file = parfile.parent_path() / ( "simulation_test_result_" + parfile.stem().string() + ".zml" );
+					xo::path parfile( fsparfile.string() );
+					xo::log::debug("Checking ", parfile );
+					xo::path scenario_file = scone::FindScenario( parfile );
+					xo::path base_report_file = parfile.parent_path() / ( "simulation_test_result_" + parfile.stem().str() + ".zml" );
 					auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 					auto result_pn = scone::EvaluateScenario( scenario_pn, parfile, xo::path() );
 
-					if ( !exists( base_report_file ) )
+					if ( !xo::file_exists( base_report_file ) )
 					{
-						xo::log::warning( "Could not find: ", base_report_file.string() );
+						xo::log::warning( "Could not find: ", base_report_file );
 						xo::save_file( result_pn, base_report_file );
 					}
 					else
