@@ -26,7 +26,8 @@ namespace scone
 		INIT_PROP( props, force, RangePenalty< double >() );
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !force.IsNull() );
-		name = dof.GetName();
+		if ( name.empty() )
+			name = dof.GetName();
 	}
 
 	double DofMeasure::ComputeResult( Model& model )

@@ -21,7 +21,7 @@ namespace scone
 		virtual ~Measure() { };
 
 		/// Name of the Measure, to be used in reporting.
-		String name;
+		mutable String name;
 
 		/// Weighting factor applied to the result of the measure; default = 1.
 		Real weight;
@@ -41,7 +41,7 @@ namespace scone
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
 	
-		virtual const String& GetName() const override { return name; }
+		virtual const String& GetName() const override;
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }
 		Real GetOffset() { return result_offset; }

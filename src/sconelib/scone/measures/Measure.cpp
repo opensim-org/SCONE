@@ -37,6 +37,13 @@ namespace scone
 		else return GetWeight() * ( *result + GetOffset() );
 	}
 
+	const String& Measure::GetName() const
+	{
+		if ( name.empty() )
+			name = xo::get_clean_type_name( *this );
+		return name;
+	}
+
 	bool Measure::PerformAnalysis( const Model& model, double timestamp )
 	{
 		// TODO: cleanup, rename UpdateMeasure into PerformAnalysis
