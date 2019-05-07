@@ -73,6 +73,7 @@ scene_( true )
 	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ), true );
 	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence(), true );
 	addMenuAction( scenarioMenu, "&Run Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( scenarioMenu, "Measure Scenario &Performance", this, &SconeStudio::performanceTest, QKeySequence( "Ctrl+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
@@ -176,11 +177,11 @@ void SconeStudio::runSimulation( const QString& filename )
 	if ( createModel( filename.toStdString() ) )
 	{
 		updateViewSettings();
-		storageModel.setStorage( &model->GetData() );
+		storageModel.setStorage( &model_->GetData() );
 		analysisView->reset();
-		if ( model->IsEvaluating() )
+		if ( model_->IsEvaluating() )
 			evaluate();
-		ui.playControl->setRange( 0, model->GetMaxTime() );
+		ui.playControl->setRange( 0, model_->GetMaxTime() );
 	}
 	SCONE_PROFILE_REPORT;
 }
@@ -190,7 +191,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
 	ui.playControl->reset();
 	runSimulation( currentParFile );
-	if ( model )
+	if ( model_ )
 		ui.playControl->play();
 }
 
@@ -218,9 +219,9 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
-	SCONE_ASSERT( model );
+	SCONE_ASSERT( model_ );
 
-	QProgressDialog dlg( ( "Evaluating " + model->GetFileName().str() ).c_str(), "Abort", 0, 1000, this );
+	QProgressDialog dlg( ( "Evaluating " + model_->GetFileName().str() ).c_str(), "Abort", 0, 1000, this );
 	dlg.setWindowModality( Qt::WindowModal );
 	dlg.show();
 	QApplication::processEvents();
@@ -231,16 +232,16 @@ void SconeStudio::evaluate()
 	const xo::time visual_update = 250_ms;
 	xo::time prev_visual_time = xo::time() - visual_update;
 	xo::timer real_time;
-	for ( double t = step_size; model->IsEvaluating(); t += step_size )
+	for ( double t = step_size; model_->IsEvaluating(); t += step_size )
 	{
 		auto rt = real_time();
 		if ( rt - prev_visual_time >= visual_update )
 		{
 			// update 3D visuals and progress bar
 			setTime( t, true );
-			dlg.setValue( int( 1000 * t / model->GetMaxTime() ) );
+			dlg.setValue( int( 1000 * t / model_->GetMaxTime() ) );
 			if ( dlg.wasCanceled() ) {
-				model->FinalizeEvaluation( false );
+				model_->FinalizeEvaluation( false );
 				break;
 			}
 			prev_visual_time = rt;
@@ -250,18 +251,18 @@ void SconeStudio::evaluate()
 
 	// report duration
 	auto real_dur = real_time().seconds<double>();
-	auto sim_time = model->GetTime();
+	auto sim_time = model_->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
 	xo::set_thread_priority( xo::thread_priority::normal );
 
 	dlg.setValue( 1000 );
-	model->UpdateVis( model->GetTime() );
+	model_->UpdateVis( model_->GetTime() );
 }
 
 void SconeStudio::createVideo()
 {
-	if ( !model )
+	if ( !model_ )
 		return error( "No Scenario", "There is no scenario open" );
 
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
@@ -279,10 +280,10 @@ void SconeStudio::createVideo()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	const double step_size = ui.playControl->slowMotionFactor() / GetStudioSettings().get<double>( "video.frame_rate" );
-	for ( double t = 0.0; t <= model->GetMaxTime(); t += step_size )
+	for ( double t = 0.0; t <= model_->GetMaxTime(); t += step_size )
 	{
 		setTime( t, true );
-		ui.progressBar->setValue( int( t / model->GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / model_->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 			break;
@@ -303,19 +304,19 @@ void SconeStudio::captureImage()
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
-	if ( model )
+	if ( model_ )
 	{
 		// update current time and stop when done
 		current_time = t;
 
 		// update ui and visualization
-		if ( model->IsEvaluating() )
-			model->EvaluateTo( t );
+		if ( model_->IsEvaluating() )
+			model_->EvaluateTo( t );
 
 		if ( update_vis )
 		{
-			model->UpdateVis( t );
-			auto d = com_delta( model->GetSimModel().GetComPos() );
+			model_->UpdateVis( t );
+			auto d = com_delta( model_->GetSimModel().GetComPos() );
 			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
 
@@ -424,9 +425,9 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 {
 	try
 	{
-		model.reset();
+		model_.reset();
 		storageModel.setStorage( nullptr );
-		model = std::make_unique< StudioModel >( scene_, path( par_file ), force_evaluation );
+		model_ = std::make_unique< StudioModel >( scene_, path( par_file ), force_evaluation );
 	}
 	catch ( std::exception& e )
 	{
@@ -520,7 +521,7 @@ void SconeStudio::runScenario()
 	{
 		requestSaveChanges( s );
 		runSimulation( s->fileName );
-		if ( model )
+		if ( model_ )
 			ui.playControl->play();
 	}
 }
@@ -531,7 +532,18 @@ void SconeStudio::performanceTest()
 	if ( auto* s = getActiveScenario() )
 	{
 		requestSaveChanges( s );
-		// TODO: run simulation without Model / storage
+		auto scenario_file = FindScenario( xo::path( s->fileName.toStdString() ) );
+		auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
+		xo::timer real_time;
+		auto model_objective = CreateModelObjective( scenario_pn, scenario_file.parent_path() );
+		auto model = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
+		model->SetStoreData( false );
+		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+		auto result = model_objective->GetResult( *model );
+		log::info( "fitness = ", result );
+		auto real_dur = real_time().seconds<double>();
+		auto sim_time = model->GetTime();
+		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
 }
 
@@ -626,8 +638,8 @@ void SconeStudio::updateViewSettings()
 	for ( auto& va : viewActions )
 		f.set( va.first, va.second->isChecked() );
 
-	if ( model )
-		model->ApplyViewSettings( f );
+	if ( model_ )
+		model_->ApplyViewSettings( f );
 
 	ground_plane.show( f.get< StudioModel::ShowGroundPlane >() );
 }

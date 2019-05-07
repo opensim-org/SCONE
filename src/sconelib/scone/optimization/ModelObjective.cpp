@@ -16,27 +16,28 @@
 namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props ) :
-	Objective( props )
+		Objective( props )
 	{
 	}
 
-	scone::fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
+	fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
 	{
 		SearchPoint params( point );
 		auto model = CreateModelFromParams( params );
 		return EvaluateModel( *model );
 	}
 
-	scone::fitness_t ModelObjective::EvaluateModel( Model& m ) const
+	fitness_t ModelObjective::EvaluateModel( Model& m ) const
 	{
 		m.SetSimulationEndTime( GetDuration() );
 		AdvanceSimulationTo( m, GetDuration() );
 		return GetResult( m );
 	}
 
-	scone::ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
+	ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
 		auto model = CreateModel( model_props, par );
+		model->SetSimulationEndTime( GetDuration() );
 
 		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
 			model->SetController( CreateController( controller_props, par, *model, Location( NoSide ) ) );
@@ -47,9 +48,12 @@ namespace scone
 		return model;
 	}
 
-	scone::ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
+	ModelUP ModelObjective::CreateModelFromParFile( const path& parfile ) const
 	{
-		SearchPoint params( info_, parfile );
+		SearchPoint params( info_ );
+		auto result = params.import_values( parfile );
+		log::info( "Read ", result.first, " of ", info().dim(), " parameters, skipped ", result.second, " from ", parfile.filename() );
+
 		return CreateModelFromParams( params );
 	}
 
@@ -100,7 +104,7 @@ namespace scone
 		{
 			auto init_file = opt_props.props().get< path >( "init_file" );
 			auto result = mob->info().import_mean_std( init_file, opt_props.props().get< bool >( "use_init_file_std", true ) );
-			log::info( "Imported ", result.first, " of ", mob->dim(), ", skipped ", result.second, " parameters from ", init_file );
+			log::debug( "Imported ", result.first, " of ", mob->dim(), ", skipped ", result.second, " parameters from ", init_file );
 		}
 
 		// report unused properties

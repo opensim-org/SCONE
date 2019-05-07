@@ -44,19 +44,16 @@ namespace scone
 		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
 		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
 
-		// create the objective form par file or config file
-		auto scenario_file = FindScenario( file );
-		scenario_pn_ = xo::load_file_with_include( scenario_file, "INCLUDE" );
+		// create the objective from par file or config file
+		scenario_pn_ = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
 		model_objective = CreateModelObjective( scenario_pn_, file.parent_path() );
 		log::info( "Created objective ", model_objective->GetSignature(), "; dim=", model_objective->dim(), " source=", file.filename() );
 
-		SearchPoint par( model_objective->info() );
+		// create model from par or with default parameters
 		if ( file.extension() == "par" )
-		{
-			auto result = par.import_values( file );
-			log::info( "Read ", result.first, " of ", model_objective->info().dim(), " parameters, skipped ", result.second, " from ", file.filename() );
-		}
-		model_ = model_objective->CreateModelFromParams( par );
+			model_ = model_objective->CreateModelFromParFile( file );
+		else
+			model_ = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
 
 		// accept filename and clear data
 		filename_ = file;
@@ -75,8 +72,6 @@ namespace scone
 			// start evaluation
 			is_evaluating = true;
 			model_->SetStoreData( true );
-
-			model_->SetSimulationEndTime( model_objective->GetDuration() );
 			log::debug( "Evaluating ", filename_ );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}

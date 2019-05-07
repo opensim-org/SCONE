@@ -45,5 +45,7 @@ namespace scone
 		virtual String GetClassSignature() const override { return signature_; }
 	};
 
+	/// Create ModelObjective from a PropNode
+	/// CAUTION: scenario_pn is required afterwards by CreateModelFromParams()
 	ModelObjectiveUP SCONE_API CreateModelObjective( const PropNode& scenario_pn, const path& dir );
 }

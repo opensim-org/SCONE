@@ -80,7 +80,7 @@ public slots:
 public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
-	bool isEvalutating() { return model && model->IsEvaluating(); }
+	bool isEvalutating() { return model_ && model_->IsEvaluating(); }
 
 private:
 	QCodeEditor* getActiveScenario();
@@ -95,7 +95,7 @@ private:
 
 	vis::scene scene_;
 	vis::plane ground_plane;
-	std::unique_ptr< scone::StudioModel > model;
+	std::unique_ptr< scone::StudioModel > model_;
 
 	bool createModel( const String& par_file, bool force_evaluation = false );
 
