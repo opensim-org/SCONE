@@ -77,7 +77,7 @@ namespace scone
 	{
 		frame[ "mimic_error" ] = result_.GetLatest();
 		for ( auto& c : channel_errors_ )
-			frame[ c.first + "_error" ] = c.second;
+			frame[ c.first + "_mimic_error" ] = c.second;
 	}
 
 	String MimicMeasure::GetClassSignature() const

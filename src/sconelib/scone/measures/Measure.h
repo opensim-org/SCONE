@@ -14,14 +14,14 @@
 namespace scone
 {
 	/// Base class for Measures.
-	class Measure : public Controller, public HasName
+	class SCONE_API Measure : public Controller, public HasName
 	{
 	public:
 		Measure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~Measure() { };
 
 		/// Name of the Measure, to be used in reporting.
-		String name;
+		mutable String name;
 
 		/// Weighting factor applied to the result of the measure; default = 1.
 		Real weight;
@@ -41,7 +41,7 @@ namespace scone
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
 	
-		virtual const String& GetName() const override { return name; }
+		virtual const String& GetName() const override;
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }
 		Real GetOffset() { return result_offset; }
@@ -52,8 +52,9 @@ namespace scone
 		virtual bool ComputeControls( Model& model, double timestamp ) override final { return false; }
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override final;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;
+		double WorstResult() const;
 
 		PropNode report;
-		xo::optional< double > result;
+		xo::optional< double > result; // caches result so it's only computed once
 	};
 }

@@ -7,6 +7,7 @@
 */
 
 #include "Measure.h"
+#include "xo/numerical/constants.h"
 
 namespace scone
 {
@@ -36,9 +37,22 @@ namespace scone
 		else return GetWeight() * ( *result + GetOffset() );
 	}
 
+	const String& Measure::GetName() const
+	{
+		if ( name.empty() )
+			name = xo::get_clean_type_name( *this );
+		return name;
+	}
+
 	bool Measure::PerformAnalysis( const Model& model, double timestamp )
 	{
 		// TODO: cleanup, rename UpdateMeasure into PerformAnalysis
 		return UpdateMeasure( model, timestamp );
 	}
+
+	double Measure::WorstResult() const
+	{
+		return minimize ? xo::constants<double>::max() : xo::constants<double>::lowest();
+	}
+
 }

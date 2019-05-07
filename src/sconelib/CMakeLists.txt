@@ -1,3 +1,13 @@
 add_subdirectory(scone)
-add_subdirectory(sconeopensim3)
-add_subdirectory(sconeopensim4)
+
+if (SCONE_OPENSIM_3)
+	add_subdirectory(sconeopensim3)
+endif()
+
+if (SCONE_OPENSIM_4)
+	add_subdirectory(sconeopensim4)
+endif()
+
+if (SCONE_LUA)
+	add_subdirectory(sconelua)
+endif()
