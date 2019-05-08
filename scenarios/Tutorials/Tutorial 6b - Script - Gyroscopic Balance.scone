@@ -1,0 +1,36 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 10
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+			fixed_control_step_size = 0.005 # higher step sizes give better performance
+			enable_external_forces = 1 # Required when applying external forces
+			
+			# Optimize initial state parameters
+			state_init_file = data/InitStateGait10.sto
+			initial_state_offset =	0~0.01<-0.5,0.5>
+			initial_state_offset_exclude = "*_tx;*_ty;*_u"
+		}
+		
+		CompositeController {
+			# Controller for gait, based on [Geyer & Herr 2010]
+			<< data/ControllerGH2010.scone >>
+			
+			ScriptController {
+				target_body = torso
+				min_deg = -20~2 # optimize this parameter
+				max_deg = 5~0.5 # optimize this parameter
+				moment = 50
+				duration = 0.2
+				script_file = "data/ScriptControllerGyro.lua"
+			}
+		}
+		
+		# Measure for gait
+		<< data/MeasureGait05.scone >>
+	}
+}

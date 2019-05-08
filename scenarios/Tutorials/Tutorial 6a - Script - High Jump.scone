@@ -1,0 +1,25 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 2
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+			fixed_control_step_size = 0.005 # higher step sizes give better performance
+		}
+		
+		# Controller based on lua script
+		ScriptController {
+			script_file = "data/ScriptControllerJump.lua"
+		}
+		
+		# Measure based on lua script
+		ScriptMeasure {
+			target_body = "toes_r" # this parameter will be used in the script
+			minimize = 0 # let the optimizer know we want to maximize
+			script_file = "data/ScriptMeasureJump.lua"
+		}
+	}
+}
