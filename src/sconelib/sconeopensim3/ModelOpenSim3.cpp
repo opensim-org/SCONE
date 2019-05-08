@@ -83,14 +83,14 @@ namespace scone
 		INIT_PROP( props, probe_class, String() );
 
 		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
-		INIT_PROP( props, create_body_forces, false );
+		INIT_PROP( props, enable_external_forces, false );
 
 		// always set create_body_forces when there's a PerturbationController
 		// TODO: think of a nicer, more generic way of dealing with this issue
 		if ( auto* controller = props.try_get_child( "Controller" ) )
 		{
 			for ( auto& cprops : controller->select( "Controller" ) )
-				create_body_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
+				enable_external_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
 		}
 
 		// create new OpenSim Model using resource cache
@@ -102,7 +102,7 @@ namespace scone
 		}
 
 		// create torque and point actuators
-		if ( create_body_forces )
+		if ( enable_external_forces )
 		{
 			SCONE_PROFILE_SCOPE( "SetupBodyForces" );
 			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )

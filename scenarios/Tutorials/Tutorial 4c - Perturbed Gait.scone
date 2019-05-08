@@ -8,7 +8,7 @@ CmaOptimizer {
 		# Model used in simulation
 		OpenSimModel {
 			model_file = data/Human0914.osim
-			create_body_forces = 1 # Required when applying external forces
+			enable_external_forces = 1 # Required when applying external forces
 			
 			# Optimize initial state parameters
 			state_init_file = data/InitStateGait10.sto

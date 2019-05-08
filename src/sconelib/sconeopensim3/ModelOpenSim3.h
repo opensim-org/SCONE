@@ -65,7 +65,7 @@ namespace scone
 		String initial_load_dof;
 
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
-		bool create_body_forces;
+		bool enable_external_forces;
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
