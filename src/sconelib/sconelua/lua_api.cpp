@@ -5,10 +5,10 @@ namespace scone
 {
 	void register_lua_wrappers( sol::state& lua )
 	{
-		lua.new_usertype<lua_vec>( "lua_vec3", sol::constructors<Vec3( double, double, double )>(),
-			"x", &lua_vec::x,
-			"y", &lua_vec::y,
-			"z", &lua_vec::z
+		lua.new_usertype<lua_vec3>( "lua_vec3", sol::constructors<Vec3( double, double, double )>(),
+			"x", &lua_vec3::x,
+			"y", &lua_vec3::y,
+			"z", &lua_vec3::z
 			);
 
 		lua.new_usertype<lua_actuator>( "lua_actuator", sol::constructors<>(),
@@ -51,6 +51,7 @@ namespace scone
 
 		lua.new_usertype<lua_model>( "lua_model", sol::constructors<>(),
 			"time", &lua_model::time,
+			"delta_time", &lua_model::delta_time,
 			"com_pos", &lua_model::com_pos,
 			"com_vel", &lua_model::com_vel,
 			"actuator", &lua_model::actuator,
@@ -68,7 +69,16 @@ namespace scone
 			);
 
 		lua.new_usertype<lua_params>( "lua_params", sol::constructors<>(),
-			"get", &lua_params::get
+			"create_from_mean_std", &lua_params::create_from_mean_std,
+			"create_from_string", &lua_params::create_from_string
+			);
+
+		lua.new_usertype<lua_scone>( "scone", sol::constructors<>(),
+			"trace", &lua_scone::trace,
+			"debug", &lua_scone::debug,
+			"info", &lua_scone::info,
+			"warning", &lua_scone::warning,
+			"error", &lua_scone::error
 			);
 	}
 }

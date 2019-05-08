@@ -15,9 +15,9 @@ namespace scone
 		lua_.open_libraries( sol::lib::base, sol::lib::math );
 		register_lua_wrappers( lua_ );
 
-		// propagate all properties to lua script
+		// propagate all properties to scone namespace in lua script
 		for ( auto& prop : pn )
-			lua_[ prop.first ] = prop.second.get<string>();
+			lua_[ "scone" ][ prop.first ] = prop.second.get<string>();
 
 		// load script
 		auto script = lua_.load_file( FindFile( script_file_ ).str() );
@@ -28,7 +28,7 @@ namespace scone
 		}
 
 		// run once to define functions
-		sol::protected_function_result res = script();
+		auto res = script();
 		if ( !res.valid() )
 		{
 			sol::error err = res;

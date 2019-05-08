@@ -8,6 +8,8 @@
 #include "scone/model/Dof.h"
 #include "xo/geometry/vec3_type.h"
 #include "xo/string/string_cast.h"
+#include "scone/core/Log.h"
+#include "xo/geometry/quat_type.h"
 
 namespace sol { class state; }
 
@@ -24,7 +26,22 @@ namespace scone
 		return *it;
 	}
 
-	struct lua_vec : public Vec3d
+	/// access to scone logging in script
+	struct lua_scone
+	{
+		/// display trace message
+		static void trace( const std::string& msg ) { log::trace( msg ); }
+		/// display debug message
+		static void debug( const std::string& msg ) { log::debug( msg ); }
+		/// display info message
+		static void info( const std::string& msg ) { log::info( msg ); }
+		/// display warning message
+		static void warning( const std::string& msg ) { log::warning( msg ); }
+		/// display error message
+		static void error( const std::string& msg ) { log::error( msg ); }
+	};
+
+	struct lua_vec3 : public Vec3d
 	{
 		using Vec3::vec3_;
 	};
@@ -106,17 +123,17 @@ namespace scone
 		/// get the name of the body
 		const char* name() { return bod_.GetName().c_str(); }
 		/// get the current com position [m]
-		lua_vec com_pos() { return bod_.GetComPos(); }
+		lua_vec3 com_pos() { return bod_.GetComPos(); }
 		/// get the current com velocity [m/s]
-		lua_vec com_vel() { return bod_.GetComVel(); }
+		lua_vec3 com_vel() { return bod_.GetComVel(); }
 		/// get the orientation as a 3d rotation vector [rad]
-		lua_vec ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
+		lua_vec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
 		/// get the angular velocity [rad/s] of the body
-		lua_vec ang_vel() { return bod_.GetAngVel(); }
+		lua_vec3 ang_vel() { return bod_.GetAngVel(); }
 		/// add external moment [Nm] to body
-		void add_external_moment( lua_vec m ) { bod_.AddExternalMoment( m ); }
+		void add_external_moment( double x, double y, double z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
 		/// add external force [N] to body com
-		void add_external_force( lua_vec f ) { bod_.AddExternalForce( f ); }
+		void add_external_force( double x, double y, double z ) { bod_.AddExternalForce( Vec3d( x, y, z ) ); }
 
 		Body& bod_;
 	};
@@ -129,10 +146,12 @@ namespace scone
 
 		/// get the current simulation time [s]
 		double time() { return mod_.GetTime(); }
+		/// get the current simulation time [s]
+		double delta_time() { return mod_.GetDeltaTime(); }
 		/// get the current com position [m]
-		lua_vec com_pos() { return mod_.GetComPos(); }
+		lua_vec3 com_pos() { return mod_.GetComPos(); }
 		/// get the current com velocity [m/s]
-		lua_vec com_vel() { return mod_.GetComVel(); }
+		lua_vec3 com_vel() { return mod_.GetComVel(); }
 
 		/// get the actuator at index (starting at 1)
 		lua_actuator actuator( int index ) { return *GetByLuaIndex( mod_.GetActuators(), index ); }
@@ -172,8 +191,11 @@ namespace scone
 		lua_params( Params& p ) : par_( p ) {}
 
 		/// get or create an optimization parameter with a specific name, mean, stdev, minval and maxval
-		double get( const std::string& name, double mean, double stdev, double minval, double maxval ) {
+		double create_from_mean_std( const std::string& name, double mean, double stdev, double minval, double maxval ) {
 			return par_.get( name, mean, stdev, minval, maxval );
+		}
+		double create_from_string( const std::string& name, const std::string& value ) {
+			return par_.get( name, xo::to_prop_node( value ) );
 		}
 		Params& par_;
 	};
