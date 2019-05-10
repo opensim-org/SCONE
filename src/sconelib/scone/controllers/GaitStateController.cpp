@@ -225,8 +225,6 @@ namespace scone
 
 	void GaitStateController::UpdateControllerStates( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// update controller states
 		for ( ConditionalControllerUP& cc : m_ConditionalControllers )
 		{

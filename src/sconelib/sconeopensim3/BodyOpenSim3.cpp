@@ -41,7 +41,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginPos() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
@@ -54,7 +53,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComPos() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
@@ -94,7 +92,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComVel() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
@@ -111,8 +108,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginVel() const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
@@ -123,7 +118,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetAngVel() const
 	{
-		SCONE_PROFILE_FUNCTION;
 
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
@@ -145,7 +139,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComAcc() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
@@ -162,8 +155,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginAcc() const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
@@ -174,7 +165,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetAngAcc() const
 	{
-		SCONE_PROFILE_FUNCTION;
 
 		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
@@ -195,7 +185,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactForce() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		if ( m_ForceIndex != -1 )
 		{
 			const auto& f = GetContactForceValues();

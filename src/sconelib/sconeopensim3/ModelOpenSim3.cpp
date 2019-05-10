@@ -117,7 +117,7 @@ namespace scone
 		}
 
 		{
-			SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
+			//SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
 
 			// change model properties
 			if ( auto* model_pars = props.try_get_child( "Properties" ) )
@@ -156,12 +156,12 @@ namespace scone
 
 		// create model component wrappers and sensors
 		{
-			SCONE_PROFILE_SCOPE( "CreateWrappers" );
+			//SCONE_PROFILE_SCOPE( "CreateWrappers" );
 			CreateModelWrappers( props, par );
 		}
 
 		{
-			SCONE_PROFILE_SCOPE( "InitVariables" );
+			//SCONE_PROFILE_SCOPE( "InitVariables" );
 			// initialize cached variables to save computation time
 			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 			m_BW = GetGravity().length() * GetMass();
@@ -170,8 +170,7 @@ namespace scone
 
 		// Create the integrator for the simulation.
 		{
-			SCONE_PROFILE_SCOPE( "InitIntegrators" );
-
+			//SCONE_PROFILE_SCOPE( "InitIntegrators" );
 			if ( integration_method == "RungeKuttaMerson" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
 			else if ( integration_method == "RungeKutta2" )
@@ -419,8 +418,6 @@ namespace scone
 
 	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// see 'catch' statement below for explanation try {} catch {} is needed
 		try
 		{
@@ -456,9 +453,7 @@ namespace scone
 				int idx = 0;
 				for ( auto* act : m_Model.GetActuators() )
 				{
-					// This is an optimization that only works when there are only muscles
 					// OpenSim: addInControls is rather inefficient, that's why we don't use it
-					// TODO: fix this into a generic version (i.e. work with other actuators)
 					controls[ idx++ ] += act->GetInput();
 				}
 			}
@@ -485,6 +480,7 @@ namespace scone
 	void ModelOpenSim3::AdvanceSimulationTo( double time )
 	{
 		SCONE_PROFILE_FUNCTION;
+
 		SCONE_ASSERT( m_pOsimManager );
 
 		if ( use_fixed_control_step_size )
@@ -532,7 +528,10 @@ namespace scone
 
 				// Realize Acceleration, analysis components may need it
 				// this way the results are always consistent
-				m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+				{
+					SCONE_PROFILE_SCOPE( "SimTK::MultibodySystem::realize" );
+					m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
+				}
 
 				// update the sensor delays, analyses, and store data
 				UpdateSensorDelayAdapters();
@@ -793,6 +792,8 @@ namespace scone
 
 	void ModelOpenSim3::SetController( ControllerUP c )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		Model::SetController( std::move( c ) );
 
 		// Initialize muscle dynamics STEP 1

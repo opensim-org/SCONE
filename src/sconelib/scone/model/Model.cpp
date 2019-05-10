@@ -118,8 +118,6 @@ namespace scone
 
 	void Model::CreateControllers( const PropNode& pn, Params& par )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// add controller (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
 			SetController( CreateController( *cprops, par, *this, Location( NoSide ) ) );
@@ -248,9 +246,8 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		// reset actuator values
-		// TODO: not only muscles!
-		for ( MuscleUP& mus : GetMuscles() )
-			mus->ClearInput();
+		for ( Actuator* a : GetActuators() )
+			a->ClearInput();
 
 		// update all controllers
 		bool terminate = false;

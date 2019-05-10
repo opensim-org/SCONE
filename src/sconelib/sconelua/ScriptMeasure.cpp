@@ -3,6 +3,7 @@
 #include "lua_script.h"
 #include "lua_api.h"
 #include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -48,6 +49,8 @@ namespace scone
 
 	bool ScriptMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
+		SCONE_PROFILE_FUNCTION;
+
 		try
 		{
 			lua_model lm( const_cast<Model&>( model ) );

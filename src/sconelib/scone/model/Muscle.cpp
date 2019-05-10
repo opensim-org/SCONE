@@ -67,8 +67,6 @@ namespace scone
 
 	bool Muscle::HasMomentArm( const Dof& dof ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		return GetMomentArm( dof ) != 0;
 	}
 

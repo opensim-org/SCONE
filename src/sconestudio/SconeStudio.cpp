@@ -173,7 +173,6 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::runSimulation( const QString& filename )
 {
-	SCONE_PROFILE_START;
 	if ( createModel( filename.toStdString() ) )
 	{
 		updateViewSettings();
@@ -183,7 +182,6 @@ void SconeStudio::runSimulation( const QString& filename )
 			evaluate();
 		ui.playControl->setRange( 0, model_->GetMaxTime() );
 	}
-	SCONE_PROFILE_REPORT;
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
@@ -536,9 +534,11 @@ void SconeStudio::performanceTest()
 		auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		xo::timer real_time;
 		auto model_objective = CreateModelObjective( scenario_pn, scenario_file.parent_path() );
+		SCONE_PROFILE_START;
 		auto model = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
 		model->SetStoreData( false );
 		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+		SCONE_PROFILE_REPORT;
 		auto result = model_objective->GetResult( *model );
 		log::info( "fitness = ", result );
 		auto real_dur = real_time().seconds<double>();

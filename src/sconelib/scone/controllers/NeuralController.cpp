@@ -102,8 +102,6 @@ namespace scone
 
 	void NeuralController::AddSensorNeuronLayer( const PropNode& layer_pn, Params& par )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& child_kvp : layer_pn )
 		{
 			auto& child_pn = child_kvp.second;
@@ -134,8 +132,6 @@ namespace scone
 
 	void NeuralController::AddPatternNeurons( const PropNode& pn, Params& par )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		auto amount = pn.get< int >( "amount" );
 		for ( int i = 0; i < amount; ++i )
 			m_PatternNeurons.emplace_back( std::make_unique< PatternNeuron >( pn, par, *this, i, false ) );
@@ -145,8 +141,6 @@ namespace scone
 
 	void NeuralController::AddInterNeuronLayer( const PropNode& pn, Params& par )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		auto layer_name = FixLayerName( pn.get< string >( "layer" ) );
 		int amount = pn.get< int >( "neurons" );
 		string act_func = pn.get< string >( "activation", "rectifier" );
@@ -165,8 +159,6 @@ namespace scone
 
 	void NeuralController::AddMotorNeuronLayer( const PropNode& pn, Params& par )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& muscle : GetModel().GetMuscles() )
 		{
 			auto name = muscle->GetName();
@@ -181,7 +173,7 @@ namespace scone
 		}
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, index_t joint_idx, bool apply_mirroring )
+	NeuralController::MuscleParamList NeuralController::GetVirtualMusclesRecursiveFunc( const Muscle* mus, index_t joint_idx, bool apply_mirroring )
 	{
 		auto& joints = mus->GetJoints();
 		if ( joint_idx >= joints.size() )
@@ -220,10 +212,8 @@ namespace scone
 		return results;
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMusclesFunc( const Muscle* mus, bool mirror_dofs )
+	NeuralController::MuscleParamList NeuralController::GetVirtualMusclesFunc( const Muscle* mus, bool mirror_dofs )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		auto result = GetVirtualMusclesRecursiveFunc( mus, 0, mirror_dofs );
 
 		// square root & normalize
@@ -237,12 +227,12 @@ namespace scone
 		return result;
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetVirtualMuscles( const Muscle* mus, bool mirror_dofs ) const
+	NeuralController::MuscleParamList NeuralController::GetVirtualMuscles( const Muscle* mus, bool mirror_dofs ) const
 	{
 		return m_VirtualMusclesMemoize( mus, mirror_dofs );
 	}
 
-	scone::NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus ) const
+	NeuralController::MuscleParamList NeuralController::GetMuscleDofs( const Muscle* mus ) const
 	{
 		MuscleParamList result;
 
@@ -376,8 +366,6 @@ namespace scone
 
 	NeuralController::MuscleParamList NeuralController::GetMuscleParams( const Muscle* mus, bool is_sensor, bool apply_mirrorring ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		if ( mus )
 		{
 			switch ( par_mode_ )

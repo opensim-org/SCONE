@@ -13,6 +13,7 @@
 #include "lua_script.h"
 #include "lua_api.h"
 #include "scone/core/Log.h"
+#include "scone/core/Profiler.h"
 
 namespace scone
 {
@@ -42,6 +43,8 @@ namespace scone
 
 	bool ScriptController::ComputeControls( Model& model, double timestamp )
 	{
+		SCONE_PROFILE_FUNCTION;
+			
 		try
 		{
 			lua_model lm( model );
