@@ -134,7 +134,7 @@ if(${Qt5Widgets_FOUND})
 
 	# no console in release mode
 	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
-	target_compile_definitions( sconestudio PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
+	target_compile_definitions( sconestudio PRIVATE SCONE_ENABLE_XO_PROFILING )
 
 	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
 	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )

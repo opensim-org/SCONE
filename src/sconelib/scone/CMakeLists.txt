@@ -254,11 +254,11 @@ target_link_libraries(sconelib xo spot)
 
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 
-
 if (MSVC)
 	target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )
 	target_compile_definitions( sconelib PRIVATE _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS )
-	target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
+	#target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
+	target_compile_definitions( sconelib PRIVATE SCONE_ENABLE_XO_PROFILING )
 endif()
 
 # To create folders in Visual Studio.
