@@ -173,7 +173,7 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::runSimulation( const QString& filename )
 {
-	SCONE_PROFILE_RESET;
+	SCONE_PROFILE_START;
 	if ( createModel( filename.toStdString() ) )
 	{
 		updateViewSettings();

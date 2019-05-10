@@ -20,7 +20,7 @@
 
 // enable / disable profiling
 //#define SCONE_ENABLE_PROFILING
-//#define SCONE_ENABLE_XO_PROFILING
+#define SCONE_ENABLE_XO_PROFILING
 
 #ifdef NDEBUG
 constexpr bool SCONE_DEBUG = false;
