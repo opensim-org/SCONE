@@ -9,7 +9,7 @@
 #include "HeightMeasure.h"
 #include "scone/model/Model.h"
 #include "scone/core/Log.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {

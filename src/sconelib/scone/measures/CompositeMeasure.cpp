@@ -8,10 +8,11 @@
 
 #include "CompositeMeasure.h"
 #include "scone/core/Factories.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/core/Factories.h"
 #include "scone/core/Log.h"
 #include "xo/container/container_tools.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

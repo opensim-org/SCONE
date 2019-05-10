@@ -14,7 +14,7 @@
 
 #include "ModelOpenSim3.h"
 #include "ConstantForce.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "simbody_tools.h"
 #include "scone/core/Log.h"
 #include "OpenSim/Common/Geometry.h"

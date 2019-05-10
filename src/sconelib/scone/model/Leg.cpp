@@ -10,7 +10,8 @@
 #include "Link.h"
 #include "Body.h"
 #include "Joint.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
+#include "scone/core/string_tools.h"
 #include "Model.h"
 #include "model_tools.h"
 

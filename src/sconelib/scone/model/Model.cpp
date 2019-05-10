@@ -12,7 +12,7 @@
 #include "Dof.h"
 #include "Muscle.h"
 #include <algorithm>
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/core/Log.h"
 #include "scone/core/Factories.h"
 #include "SensorDelayAdapter.h"

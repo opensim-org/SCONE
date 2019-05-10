@@ -8,8 +8,9 @@
 
 #include "DofLimitMeasure.h"
 #include "scone/model/Model.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/core/math.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

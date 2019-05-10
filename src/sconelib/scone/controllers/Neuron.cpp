@@ -17,7 +17,7 @@
 #include "scone/model/Actuator.h"
 #include "scone/model/Side.h"
 #include "scone/model/Dof.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/model/Link.h"
 #include "scone/model/Joint.h"
 #include "scone/model/model_tools.h"

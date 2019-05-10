@@ -15,7 +15,7 @@
 #include "Body.h"
 #include "Model.h"
 #include "scone/core/math.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 #pragma warning( disable: 4355 )
 

@@ -13,7 +13,7 @@
 #include "scone/model/Location.h"
 
 #include "scone/core/Factories.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {

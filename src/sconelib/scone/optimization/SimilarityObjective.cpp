@@ -11,7 +11,7 @@
 #include "xo/container/prop_node_tools.h"
 #include "spot/search_point.h"
 #include "scone/controllers/NeuralController.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "opt_tools.h"
 
 namespace scone

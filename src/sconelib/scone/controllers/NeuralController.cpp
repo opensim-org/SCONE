@@ -21,7 +21,7 @@
 #include "xo/utility/hash.h"
 
 #include "scone/core/HasName.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/core/string_tools.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Joint.h"

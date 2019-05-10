@@ -19,7 +19,7 @@
 #include "scone/model/Muscle.h"
 #include <vector>
 #include "xo/container/prop_node.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "xo/container/container_tools.h"
 
 namespace scone

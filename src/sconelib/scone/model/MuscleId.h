@@ -3,6 +3,7 @@
 #include "scone/core/types.h"
 #include "Side.h"
 #include "xo/string/string_cast.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {

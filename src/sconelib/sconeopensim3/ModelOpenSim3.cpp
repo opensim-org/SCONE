@@ -25,7 +25,7 @@
 #include <OpenSim/Simulation/Model/Bhargava2004MuscleMetabolicsProbe.h>
 
 #include "scone/core/system_tools.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 #include "xo/string/string_tools.h"
 #include "xo/string/pattern_matcher.h"

@@ -13,7 +13,7 @@
 
 #include "scone/model/Body.h"
 #include "scone/core/Log.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/core/Factories.h"
 #include "scone/model/Sensors.h"

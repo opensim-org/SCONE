@@ -9,7 +9,7 @@
 #include "model_tools.h"
 
 #include "scone/core/string_tools.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "Sensors.h"
 #include "Muscle.h"
 #include "Joint.h"

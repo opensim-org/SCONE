@@ -3,7 +3,7 @@
 #include "lua_script.h"
 #include "lua_api.h"
 #include "scone/core/Log.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {

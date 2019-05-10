@@ -33,6 +33,7 @@ set(CORE_SYSTEM_FILES
 	core/ResourceCache.h
 	core/Profiler.cpp
 	core/Profiler.h
+	core/profiler_config.h
 	core/Exception.h
 	core/platform.h
 	core/Log.cpp

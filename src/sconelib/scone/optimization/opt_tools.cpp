@@ -10,7 +10,7 @@
 #include "scone/core/types.h"
 #include "scone/core/Factories.h"
 #include "scone/optimization/SimulationObjective.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 #include "xo/time/timer.h"
 #include "xo/container/prop_node_tools.h"
@@ -72,7 +72,6 @@ namespace scone
 		// set data storage
 		SCONE_ASSERT( model );
 		model->SetStoreData( store_data );
-		Profiler::GetGlobalInstance().Reset();
 
 		timer tmr;
 		double result = so.EvaluateModel( *model );

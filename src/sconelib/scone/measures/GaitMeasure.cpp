@@ -11,7 +11,7 @@
 #include "scone/model/Body.h"
 #include "scone/core/Log.h"
 #include "scone/model/Muscle.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 #include "scone/core/Range.h"
 #include "xo/container/sorted_vector.h"
 #include "xo/container/container_algorithms.h"

@@ -12,7 +12,7 @@
 #include "ModelOpenSim3.h"
 
 #include "scone/core/Exception.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 #include "DofOpenSim3.h"
 #include "simbody_tools.h"
