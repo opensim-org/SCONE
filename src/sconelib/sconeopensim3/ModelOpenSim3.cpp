@@ -328,7 +328,7 @@ namespace scone
 			auto& os_object = FindOpenSimObject( object_pn.first );
 			for ( auto& kvp : object_pn.second )
 			{
-				SCONE_ERROR_IF( kvp.second.empty(), "Error setting property for " + object_pn.first + ": " + kvp.first + " must have a value" );
+				SCONE_ERROR_IF( kvp.second.raw_value().empty(), "Error setting Propertry of " + object_pn.first + ": '" + kvp.first + "' must have a value" );
 				auto[ prop_name, prop_qualifier ] = xo::split_str_at_last( kvp.first, "." );
 				auto& os_prop = os_object.updPropertyByName( prop_name );
 				double user_value = par.get( kvp.first, kvp.second );
