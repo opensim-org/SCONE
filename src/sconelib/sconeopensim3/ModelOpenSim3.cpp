@@ -317,7 +317,7 @@ namespace scone
 			return m_pOsimModel->updForceSet().get( idx );
 		if ( auto idx = m_pOsimModel->updBodySet().getIndex( name ); idx != -1 )
 			return m_pOsimModel->updBodySet().get( idx );
-		SCONE_THROW( "Could not find OpenSim object " + name );
+		SCONE_ERROR( "Could not find OpenSim object " + name );
 	}
 
 	void ModelOpenSim3::SetProperties( const PropNode& properties_pn, Params& par )
@@ -328,6 +328,7 @@ namespace scone
 			auto& os_object = FindOpenSimObject( object_pn.first );
 			for ( auto& kvp : object_pn.second )
 			{
+				SCONE_ERROR_IF( kvp.second.empty(), "Error setting property for " + object_pn.first + ": " + kvp.first + " must have a value" );
 				auto[ prop_name, prop_qualifier ] = xo::split_str_at_last( kvp.first, "." );
 				auto& os_prop = os_object.updPropertyByName( prop_name );
 				double user_value = par.get( kvp.first, kvp.second );
