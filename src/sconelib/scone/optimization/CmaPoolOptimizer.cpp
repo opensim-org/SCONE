@@ -41,10 +41,10 @@ namespace scone
 		}
 
 		// add reporters
-		auto& rep = add_reporter< spot::file_reporter >( GetOutputFolder() );
-		rep.min_improvement_for_file_output = min_improvement_for_file_output;
-		rep.max_steps_without_file_output = max_generations_without_file_output;
-		add_reporter< CmaPoolOptimizerReporter >();
+		auto rep = add_new_reporter< spot::file_reporter >( GetOutputFolder() );
+		rep->min_improvement_for_file_output = min_improvement_for_file_output;
+		rep->max_steps_without_file_output = max_generations_without_file_output;
+		add_new_reporter< CmaPoolOptimizerReporter >();
 
 		// reset the id, so that the ProgressDock can interpret OutputStatus() as a general message
 		id_.clear();
