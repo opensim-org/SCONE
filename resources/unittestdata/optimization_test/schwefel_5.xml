@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Optimizer type="CmaOptimizer">
+<Optimizer type="CmaOptimizerSpot">
 	<max_threads>16</max_threads>
 	<thread_priority>-2</thread_priority>
 	<lambda>0</lambda>

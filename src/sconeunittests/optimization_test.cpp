@@ -15,6 +15,7 @@
 
 #include "xo/diagnose/test_framework.h"
 #include "xo/filesystem/filesystem.h"
+#include "scone/optimization/CmaOptimizerSpot.h"
 
 using namespace scone;
 
@@ -23,6 +24,7 @@ XO_TEST_CASE( optimization_test )
 	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/optimization_test" );
 	const PropNode pn = load_file( "schwefel_5.xml" );
 	OptimizerUP o = CreateOptimizer( pn );
+	o->output_root = xo::temp_directory_path() / "SCONE/optimization_test";
 	xo::log_unaccessed( pn );
 	o->Run();
 
