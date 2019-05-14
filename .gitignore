@@ -12,5 +12,6 @@ tutorials/*.sto
 .version
 /doc/upload.bat
 /make_release_win64.bat
+/make_release_win64_nodoc.bat
 /install/*.exe
 *.log
