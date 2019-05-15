@@ -1,4 +1,4 @@
-# Find FLUT headers
+# Find spot headers
 # TODO: use a better path estimate!
 find_path(SPOT_INCLUDE_DIR
 	NAMES "spot/optimizer.h"

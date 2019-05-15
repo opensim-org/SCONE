@@ -9,11 +9,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 
-# find flut include path
-# find_package(Flut REQUIRED)
-find_package(Spot REQUIRED)
-find_package(Xo REQUIRED)
-
 option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
 option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 option(SCONE_LUA "Support for lua scripting" OFF)
@@ -45,8 +40,7 @@ if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/vis)
 endif()
 
-add_subdirectory(submodules/xo/xo)
-add_subdirectory(submodules/xo/test)
+add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
 
 #
@@ -61,5 +55,7 @@ add_subdirectory(src/sconeunittests)
 # Add tests
 #
 enable_testing()
-add_test( xo_test "${EXECUTABLE_OUTPUT_PATH}/xo_test")
+if (XO_TEST_ENABLED)
+	add_test( xo_test "${EXECUTABLE_OUTPUT_PATH}/xo_test")
+endif()
 add_test( scone_unit_tests "${EXECUTABLE_OUTPUT_PATH}/sconeunittests")
