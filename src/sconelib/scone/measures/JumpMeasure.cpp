@@ -30,7 +30,7 @@ namespace scone
 		INIT_PROP( props, minimize, false ); // defaults to false
 		INIT_PROP( props, offset, Vec3::zero() );
 
-		if ( auto body = props.try_get< String >( "body" ) )
+		if ( auto body = props.try_get_any< String >( { "body", "target_body" } ) )
 			target_body = FindByName( model.GetBodies(), *body ).get();
 
 		prepare_com = init_com = model.GetComPos();
