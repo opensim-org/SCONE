@@ -7,7 +7,7 @@ doc/ref/
 doc/html/
 doc/xml/
 doc/config/NaturalDocs/Working Data/
-simulation_test_result_*
+*simulation_test_result*.zml
 tutorials/*.sto
 .version
 /doc/upload.bat

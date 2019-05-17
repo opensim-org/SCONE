@@ -32,18 +32,19 @@ XO_TEST_CASE( simulation_test )
 					xo::path parfile( fsparfile.string() );
 					xo::log::debug("Checking ", parfile );
 					xo::path scenario_file = scone::FindScenario( parfile );
-					xo::path base_report_file = parfile.parent_path() / ( "simulation_test_result_" + parfile.stem().str() + ".zml" );
+					std::string result_prefix = xo::get_computer_name() + "_simulation_test_result_";
+					xo::path report_file = parfile.parent_path() / ( result_prefix + parfile.stem().str() + ".zml" );
 					auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 					auto result_pn = scone::EvaluateScenario( scenario_pn, parfile, xo::path() );
 
-					if ( !xo::file_exists( base_report_file ) )
+					if ( !xo::file_exists( report_file ) )
 					{
-						xo::log::warning( "Could not find: ", base_report_file );
-						xo::save_file( result_pn, base_report_file );
+						xo::log::warning( "Could not find: ", report_file );
+						xo::save_file( result_pn, report_file );
 					}
 					else
 					{
-						auto base_report_pn = xo::load_file( base_report_file );
+						auto base_report_pn = xo::load_file( report_file );
 						auto rep1 = result_pn.get_child( "result" );
 						auto rep2 = base_report_pn.get_child( "result" );
 						XO_CHECK( rep1 == rep2 );
