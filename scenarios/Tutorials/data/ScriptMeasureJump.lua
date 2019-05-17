@@ -35,3 +35,9 @@ function result( model )
 	-- or the height at the end of the simulation
 	return body:com_pos().y
 end
+
+function store_data( frame )
+	-- store some values for analysis
+	frame:set_value( "body_height", body:com_pos().y )
+	frame:set_bool( "has_moved_up", has_moved_up )
+end

@@ -11,6 +11,12 @@ namespace scone
 			"z", &lua_vec3::z
 			);
 
+		lua.new_usertype<lua_frame>( "lua_frame", sol::constructors<>(),
+			"set_value", &lua_frame::set_value,
+			"set_bool", &lua_frame::set_bool,
+			"time", &lua_frame::time
+			);
+
 		lua.new_usertype<lua_actuator>( "lua_actuator", sol::constructors<>(),
 			"name", &lua_actuator::name,
 			"add_input", &lua_actuator::add_input,

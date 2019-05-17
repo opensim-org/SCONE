@@ -10,6 +10,7 @@
 #include "xo/string/string_cast.h"
 #include "scone/core/Log.h"
 #include "xo/geometry/quat_type.h"
+#include "scone/core/Storage.h"
 
 namespace sol { class state; }
 
@@ -41,9 +42,25 @@ namespace scone
 		static void error( const std::string& msg ) { log::error( msg ); }
 	};
 
+	/// 3d vector type with components x, y, z
 	struct lua_vec3 : public Vec3d
 	{
 		using Vec3::vec3_;
+	};
+
+	/// access to writing data for scone Analysis window
+	struct lua_frame
+	{
+		lua_frame( Storage<Real>::Frame& f ) : frame_( f ) {}
+
+		/// set a numeric value for channel named key
+		void set_value( const std::string& key, double value ) { frame_[ key ] = value; }
+		/// set a boolean (true or false) value for channel named key
+		void set_bool( const std::string& key, bool b ) { frame_[ key ] = b ? 1.0 : 0.0; }
+		/// get time of current frame
+		double time() { return frame_.GetTime(); }
+
+		Storage<Real>::Frame& frame_;
 	};
 
 	/// actuator type for use in lua scripting.

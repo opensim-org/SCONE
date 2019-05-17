@@ -7,24 +7,25 @@
 
 namespace scone
 {
-
 	ScriptMeasure::ScriptMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Measure( props, par, model, loc ),
 	script_( new lua_script( props, par, model ) )
 	{
-		init_ = script_->find_function( "init" );
-		update_ = script_->find_function( "update" );
+		// optional functions
+		if ( auto f = script_->try_find_function( "init" ) )
+			init_ = f;
+		if ( auto f = script_->try_find_function( "update" ) )
+			update_ = f;
+		if ( auto f = script_->try_find_function( "store_data" ) )
+			store_ = f;
+
+		// result is required
 		result_ = script_->find_function( "result" );
 
-		lua_model lm( model );
-		try
+		if ( init_ )
 		{
 			lua_model lm( model );
 			init_( &lm );
-		}
-		catch ( const std::exception& e )
-		{
-			SCONE_ERROR( "Error in " + script_->script_file_.str() + " while calling init(): " + e.what() );
 		}
 
 		model.AddExternalResource( script_->script_file_ );
@@ -35,31 +36,30 @@ namespace scone
 
 	double ScriptMeasure::ComputeResult( Model& model )
 	{
-		try
-		{
-			lua_model lm( const_cast<Model&>( model ) );
-			return result_( &lm );
-		}
-		catch ( const std::exception& e )
-		{
-			log::error( "Error in ", script_->script_file_, " while calling result(): ", e.what() );
-			return WorstResult();
-		}
+		lua_model lm( const_cast<Model&>( model ) );
+		return result_( &lm );
 	}
 
 	bool ScriptMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		try
+		if ( update_ )
 		{
 			lua_model lm( const_cast<Model&>( model ) );
 			return update_( &lm );
 		}
-		catch ( const std::exception& e )
+		else return false;
+	}
+
+	void ScriptMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		SCONE_PROFILE_FUNCTION;
+
+		if ( store_ )
 		{
-			log::error( "Error in ", script_->script_file_, " while calling update(): ", e.what() );
-			return true;
+			lua_frame lf( frame );
+			store_( &lf );
 		}
 	}
 

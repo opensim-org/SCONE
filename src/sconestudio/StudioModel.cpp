@@ -23,6 +23,8 @@
 #include "xo/geometry/path_alg.h"
 #include "StudioSettings.h"
 #include "xo/shape/sphere.h"
+#include "QMessageBox"
+#include "qt_convert.h"
 
 namespace scone
 {
@@ -263,8 +265,11 @@ namespace scone
 		}
 		catch ( std::exception& e )
 		{
-			log::error( "Error evaluating model at time ", model_->GetTime(), ": ", e.what() );
 			FinalizeEvaluation( false );
+			QString title = "Error evaluating " + to_qt( filename_.filename() );
+			QString msg = e.what();
+			log::error( title.toStdString(), msg.toStdString() );
+			QMessageBox::critical( nullptr, title, msg );
 		}
 	}
 
@@ -287,7 +292,6 @@ namespace scone
 			log::info( results );
 		}
 
-		// reset this stuff
 		is_evaluating = false;
 	}
 

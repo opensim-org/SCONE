@@ -21,18 +21,20 @@ namespace scone
 	Controller( props, par, model, loc ),
 	script_( new lua_script( props, par, model ) )
 	{
-		init_ = script_->find_function( "init" );
+		// optional functions
+		if ( auto f = script_->try_find_function( "init" ) )
+			init_ = f;
+		if ( auto f = script_->try_find_function( "store_data" ) )
+			store_ = f;
+
+		// update is required
 		update_ = script_->find_function( "update" );
 
-		try
+		if ( init_ )
 		{
 			lua_params lp( par );
 			lua_model lm( model );
 			init_( &lm, &lp );
-		}
-		catch ( const std::exception& e )
-		{
-			SCONE_ERROR( "Error in " + script_->script_file_.str() + " while calling init(): " + e.what() );
 		}
 
 		model.AddExternalResource( script_->script_file_ );
@@ -41,22 +43,23 @@ namespace scone
 	ScriptController::~ScriptController()
 	{}
 
+	void ScriptController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		SCONE_PROFILE_FUNCTION;
+
+		if ( store_ )
+		{
+			lua_frame lf( frame );
+			store_( &lf );
+		}
+	}
+
 	bool ScriptController::ComputeControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-			
-		try
-		{
-			lua_model lm( model );
-			update_( &lm );
-		}
-		catch ( const std::exception& e )
-		{
-			log::error( "Error in ", script_->script_file_.str(), " while calling update(): ", e.what() );
-			return true;
-		}
-
-		return false;
+		
+		lua_model lm( model );
+		return update_( &lm );
 	}
 
 	String ScriptController::GetClassSignature() const

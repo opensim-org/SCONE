@@ -45,4 +45,10 @@ namespace scone
 		SCONE_ERROR_IF( !f.valid(), "Error in " + script_file_.str() + ": Could not find function " + xo::quoted( name ) );
 		return f;
 	}
+
+	sol::function lua_script::try_find_function( const String& name )
+	{
+		sol::function f = lua_[ name ];
+		return f;
+	}
 }

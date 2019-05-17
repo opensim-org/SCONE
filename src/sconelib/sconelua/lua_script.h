@@ -15,6 +15,7 @@ namespace scone
 		~lua_script();
 
 		sol::function find_function( const String& name );
+		sol::function try_find_function( const String& name );
 		xo::path script_file_;
 
 	private:
