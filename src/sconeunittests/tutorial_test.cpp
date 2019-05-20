@@ -20,7 +20,7 @@ XO_TEST_CASE( tutorial_test )
 		auto scenario_file = xo::path( fileit->path().string() );
 		if ( scenario_file.extension() == "scone" )
 		{
-			xo::log::info( "TESTING ", scenario_file.filename() );
+			xo::log::info( "TESTING: ", scenario_file.filename() );
 			xo::path report_file = results_dir / scenario_file.stem() + ".zml";
 			auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 			auto result_pn = scone::EvaluateScenario( scenario_pn, scenario_file, xo::path() );
@@ -39,7 +39,7 @@ XO_TEST_CASE( tutorial_test )
 			}
 			else
 			{
-				xo::log::warning( "Could not find: ", report_file );
+				xo::log::warning( "Could not find results for ", report_file.filename() );
 				xo::save_file( result_pn, report_file );
 			}
 		}
