@@ -16,7 +16,7 @@
 
 namespace fs = std::filesystem;
 
-XO_TEST_CASE( simulation_test )
+XO_TEST_CASE_SKIP( simulation_test )
 {
 	fs::path testpath = ( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/simulation_test" ).str();
 

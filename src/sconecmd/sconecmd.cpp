@@ -72,7 +72,8 @@ int main(int argc, char* argv[])
 				auto par_path = path( parArg.getValue() );
 				auto out_path = path( outArg.isSet() ? outArg.getValue() : parArg.getValue() );
 				log::info( "Evaluating ", par_path );
-				EvaluateScenario( scenario_pn, par_path, out_path );
+				auto results = EvaluateScenario( scenario_pn, par_path, out_path );
+				log::info( results );
 
 				// store config file if arguments have changed
 				if ( propArg.isSet() && outArg.isSet() )

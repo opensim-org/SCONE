@@ -1,15 +1,15 @@
-_output/
-bin/
-install/SCONE*.exe
-build/
+/_output/
+/bin/
+/install/SCONE*.exe
 ignore/
-doc/ref/
-doc/html/
-doc/xml/
-doc/config/NaturalDocs/Working Data/
+/doc/ref/
+/doc/html/
+/doc/xml/
+/doc/config/NaturalDocs/Working Data/
+/scenarios/Tutorials/*.sto
+/resources/unittestdata/tutorial_test/
 *simulation_test_result*.zml
-tutorials/*.sto
-.version
+/.version
 /doc/upload.bat
 /make_release_win64.bat
 /make_release_win64_nodoc.bat

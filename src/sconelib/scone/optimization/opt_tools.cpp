@@ -90,8 +90,6 @@ namespace scone
 		statistics.set( "simulation time", model->GetTime() );
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
-		log::info( statistics );
-
 		return statistics;
 	}
 
