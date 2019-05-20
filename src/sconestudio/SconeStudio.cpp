@@ -54,6 +54,12 @@ scene_( true )
 
 	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
+	auto editMenu = menuBar()->addMenu( "&Edit" );
+	addMenuAction( editMenu, "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ), true );
+	addMenuAction( editMenu, "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
+	addMenuAction( editMenu, "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ), true );
+	addMenuAction( editMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
+
 	auto viewMenu = menuBar()->addMenu( "&View" );
 	viewActions[ StudioModel::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
 	viewActions[ StudioModel::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
@@ -341,6 +347,7 @@ void SconeStudio::openFile( const QString& filename )
 	{
 		QCodeEditor* edw = new QCodeEditor( this );
 		edw->open( filename );
+		edw->setFocus();
 		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 		ui.tabWidget->setCurrentIndex( idx );
 		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
@@ -438,7 +445,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 bool SconeStudio::requestSaveChanges( QCodeEditor* s )
 {
 	xo_assert( s != nullptr );
-	if ( s->hasTextChanged() )
+	if ( s->document()->isModified() )
 	{
 		QString message = "Save changes to " + s->getTitle() + "?";
 		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
