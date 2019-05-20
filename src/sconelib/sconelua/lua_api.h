@@ -143,7 +143,11 @@ namespace scone
 		lua_vec3 com_pos() { return bod_.GetComPos(); }
 		/// get the current com velocity [m/s]
 		lua_vec3 com_vel() { return bod_.GetComVel(); }
-		/// get the orientation as a 3d rotation vector [rad]
+		/// get the global position [m] of a local point p on the body
+		lua_vec3 point_pos( const lua_vec3& p ) { return bod_.GetPosOfPointOnBody( p ); }
+		/// get the global linear velocity [m/s] of a local point p on the body
+		lua_vec3 point_vel( const lua_vec3& p ) { return bod_.GetLinVelOfPointOnBody( p ); }
+		/// get the body orientation as a 3d rotation vector [rad]
 		lua_vec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
 		/// get the angular velocity [rad/s] of the body
 		lua_vec3 ang_vel() { return bod_.GetAngVel(); }
