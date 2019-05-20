@@ -1,5 +1,26 @@
 ====== What's new ======
 
+==== SCONE 1.1.0 RC 1 ====
+//Released May 20, 2019//
+
+=== New Features and Updates ===
+  * SCONE now has a powerful new scripting interface for custom controllers and measures
+    * Using the lua scripting language (http://lua.org)
+    * Create custom controllers using ScriptController
+    * Create custom measures using ScriptMeasures
+    * Support for writing custom data to .sto and SCONE Analysis window
+  * The SCONE Studio editor now supports Find (Ctrl+F) and Find Next / Previous (F3 / Shift+F3)
+  * The .SCONE file format is now more strict:
+    * Comments using ';' '//' '/*' and '*/' are no longer supported
+    * Only single line comments '#' and multi-line comments '###' are supported
+  * Improved unit testing
+  * Many documentation updates and fixes
+
+=== Fixes ===
+  * Jump tutorials now use correct init_file
+  * Editor now handles undo/redo of document formatting as single step
+  * JumpMeasure now supports both 'body' and 'target_body', matching documentation and keeping backwards compatibility
+
 ==== SCONE 1.0.0 ====
 //Released April 18, 2019//
 
