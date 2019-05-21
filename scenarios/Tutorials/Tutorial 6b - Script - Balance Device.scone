@@ -26,7 +26,7 @@ CmaOptimizer {
 				max_deg = 5~0.5 # optimize this parameter
 				moment = 50
 				duration = 0.2
-				script_file = "data/ScriptControllerGyro.lua"
+				script_file = "data/ScriptControllerBalanceDevice.lua"
 			}
 		}
 		
