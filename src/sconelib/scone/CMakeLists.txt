@@ -137,6 +137,8 @@ set(MEASURE_FILES
 	measures/JointLoadMeasure.h
 	measures/MimicMeasure.cpp
 	measures/MimicMeasure.h
+	measures/MuscleMeasure.cpp
+	measures/MuscleMeasure.h
 	measures/ReactionForceMeasure.cpp
 	measures/ReactionForceMeasure.h
 	measures/RangePenalty.h

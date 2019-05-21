@@ -20,6 +20,7 @@
 #include "scone/controllers/PerturbationController.h"
 #include "scone/controllers/ReflexController.h"
 #include "scone/controllers/SequentialController.h"
+#include "scone/controllers/BodyPointReflex.h"
 
 #include "scone/core/PieceWiseConstantFunction.h"
 #include "scone/core/PieceWiseLinearFunction.h"
@@ -36,6 +37,7 @@
 #include "scone/measures/JumpMeasure.h"
 #include "scone/measures/MimicMeasure.h"
 #include "scone/measures/ReactionForceMeasure.h"
+#include "scone/measures/MuscleMeasure.h"
 
 #include "scone/model/Sensors.h"
 
@@ -45,7 +47,6 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
-#include "../controllers/BodyPointReflex.h"
 
 namespace scone
 {
@@ -90,6 +91,7 @@ namespace scone
 			g_MeasureFactory.register_type< EffortMeasure >();
 			g_MeasureFactory.register_type< DofLimitMeasure >();
 			g_MeasureFactory.register_type< DofMeasure >();
+			g_MeasureFactory.register_type< MuscleMeasure >();
 			g_MeasureFactory.register_type< BodyMeasure >();
 			g_MeasureFactory.register_type< CompositeMeasure >();
 			g_MeasureFactory.register_type< JumpMeasure >();
