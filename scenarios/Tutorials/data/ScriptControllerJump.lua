@@ -1,3 +1,6 @@
+-- SCONE script for a simple feed-forward controller.
+-- See Tutorial 6a - Script - High Jump
+
 function init( model, par )
 	-- keep a list of offsets and slopes to compute the excitation
 	offset = {}
