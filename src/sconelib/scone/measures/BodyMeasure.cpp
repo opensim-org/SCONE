@@ -34,21 +34,21 @@ namespace scone
 		double penalty = 0.0;
 		if ( !position.IsNull() )
 		{
-			penalty += position.GetAverage();
+			penalty += position.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".pos_limit", stringf( "%g", position.GetAverage() ) );
+				GetReport().set( name + ".pos_limit", stringf( "%g", position.GetResult() ) );
 		}
 		if ( !velocity.IsNull() )
 		{
-			penalty += velocity.GetAverage();
+			penalty += velocity.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".vel_limit", stringf( "%g", velocity.GetAverage() ) );
+				GetReport().set( name + ".vel_limit", stringf( "%g", velocity.GetResult() ) );
 		}
 		if ( !acceleration.IsNull() )
 		{
-			penalty += acceleration.GetAverage();
+			penalty += acceleration.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".acc_limit", stringf( "%g", acceleration.GetAverage() ) );
+				GetReport().set( name + ".acc_limit", stringf( "%g", acceleration.GetResult() ) );
 		}
 
 		return  penalty;

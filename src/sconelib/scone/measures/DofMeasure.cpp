@@ -35,21 +35,21 @@ namespace scone
 		double penalty = 0.0;
 		if ( !position.IsNull() )
 		{
-			penalty += position.GetAverage();
+			penalty += position.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".pos_limit" , stringf( "%g", position.GetAverage() ) );
+				GetReport().set( name + ".position_penalty" , stringf( "%g", position.GetResult() ) );
 		}
 		if ( !velocity.IsNull() )
 		{
-			penalty += velocity.GetAverage();
+			penalty += velocity.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".vel_limit", stringf( "%g", velocity.GetAverage() ) );
+				GetReport().set( name + ".velocity_penalty", stringf( "%g", velocity.GetResult() ) );
 		}
 		if ( !force.IsNull() )
 		{
-			penalty += force.GetAverage();
+			penalty += force.GetResult();
 			if ( range_count > 1 )
-				GetReport().set( name + ".force_limit", stringf( "%g", force.GetAverage() ) );
+				GetReport().set( name + ".force_penalty", stringf( "%g", force.GetResult() ) );
 		}
 
 		return  penalty;
@@ -71,10 +71,10 @@ namespace scone
 	void DofMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( !position.IsNull() )
-			frame[ dof.GetName() + ".pos_limit" ] = position.GetLatest();
+			frame[ dof.GetName() + ".position_penalty" ] = position.GetLatest();
 		if ( !velocity.IsNull() )
-			frame[ dof.GetName() + ".vel_limit" ] = velocity.GetLatest();
+			frame[ dof.GetName() + ".velocity_penalty" ] = velocity.GetLatest();
 		if ( !force.IsNull() )
-			frame[ dof.GetName() + ".force_limit" ] = force.GetLatest();
+			frame[ dof.GetName() + ".force_penalty" ] = force.GetLatest();
 	}
 }

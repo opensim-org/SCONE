@@ -26,7 +26,8 @@ namespace scone
 		RangePenalty( const PropNode& prop ) :
 		abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, T( 0 ) ) ),
 		squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, T( 0 ) ) ),
-		range( prop )
+		range( prop ),
+		INIT_MEMBER( prop, use_peek, false )
 		{ }
 		virtual ~RangePenalty() {}
 
@@ -39,7 +40,7 @@ namespace scone
 		}
 
 		bool IsNull() const { return abs_penalty == 0.0 && squared_penalty == 0.0; }
-		double GetAverage() const { return static_cast<double>( penalty.GetAverage() ); }
+		double GetResult() const { return static_cast<double>( use_peek ? penalty.GetHighest() : penalty.GetAverage() ); }
 		double GetLatest() const { return static_cast<double>( penalty.GetLatest() ); }
 
 		/// Specify the valid range, set through parameters 'min' and 'max'; defaults to { min = -inf max = inf }
@@ -51,6 +52,8 @@ namespace scone
 		/// Squared penalty factor when value out of range; default = 0.
 		Real squared_penalty;
 
+		/// Use the peek range violation instead of average range violation; default = 0.
+		bool use_peek;
 		
 	private:
 		Statistic< T > penalty;

@@ -20,7 +20,7 @@ namespace scone
 
 	double ReactionForceMeasure::ComputeResult( Model& model )
 	{
-		return GetAverage();
+		return RangePenalty<Real>::GetResult();
 	}
 
 	bool ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )

@@ -22,7 +22,7 @@ namespace scone
 
 	double JointLoadMeasure::ComputeResult( Model& model )
 	{
-		return GetAverage();
+		return RangePenalty<Real>::GetResult();
 	}
 
 	bool JointLoadMeasure::UpdateMeasure( const Model& model, double timestamp )
