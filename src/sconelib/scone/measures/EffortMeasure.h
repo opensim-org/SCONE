@@ -25,10 +25,11 @@ namespace scone
 		/// Model for measuring energy
 		enum EnergyMeasureType {
 			UnknownMeasure,
+			Constant, ///< Constant energy.
 			TotalForce, ///< Total muscle force.
 			Wang2012, ///< Use metabolic energy measure as defined in [Wang et al. 2012].
-			Constant, ///< Constant energy.
-			Uchida2016 ///< Use metabolic energy measure as defined in [Uchida et al. 2016].
+			Uchida2016, ///< Use metabolic energy measure as defined in [Uchida et al. 2016].
+			SquaredMuscleStress ///< Use the summed squared muscle stress as a measure
 		};
 
 		/// Energy model to be used, can be: TotalForce, Wang2012, Uchida2016, or Constant; default = UnknownMeasure.
@@ -79,5 +80,6 @@ namespace scone
 		double GetUchida2016( const Model& model ) const;
 		double GetTotalForce( const Model& model ) const;
 		void SetSlowTwitchRatios( const PropNode& props, const Model& model );
+		double GetSquaredMuscleStress( const Model& model ) const;
 	};
 }

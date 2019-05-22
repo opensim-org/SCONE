@@ -12,14 +12,16 @@
 #include "scone/core/profiler_config.h"
 #include "scone/core/math.h"
 #include "xo/string/pattern_matcher.h"
+#include "xo/numerical/math.h"
 
 namespace scone
 {
 	StringMap< EffortMeasure::EnergyMeasureType > EffortMeasure::m_MeasureNames = StringMap< EffortMeasure::EnergyMeasureType >(
+		EffortMeasure::Constant, "Constant",
 		EffortMeasure::TotalForce, "TotalForce",
 		EffortMeasure::Wang2012, "Wang2012",
-		EffortMeasure::Constant, "Constant",
-		EffortMeasure::Uchida2016, "Uchida2016"
+		EffortMeasure::Uchida2016, "Uchida2016",
+		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress"
 		);
 
 	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
@@ -97,6 +99,7 @@ namespace scone
 		case Wang2012: return GetWang2012( model );
 		case Constant: return model.GetMass();
 		case Uchida2016: return GetUchida2016( model );
+		case SquaredMuscleStress: return GetSquaredMuscleStress( model );
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 	}
@@ -106,7 +109,6 @@ namespace scone
 		double f = 1.0; // base muscle force
 		for ( const MuscleUP& mus : model.GetMuscles() )
 			f += mus->GetForce();
-
 		return f;
 	}
 
@@ -259,7 +261,15 @@ namespace scone
 		}
 	}
 
-	scone::String EffortMeasure::GetClassSignature() const
+	double EffortMeasure::GetSquaredMuscleStress( const Model& model ) const
+	{
+		double total_stress = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			total_stress += xo::squared( m->GetForce() / m->GetPCSA() );
+		return total_stress;
+	}
+
+	String EffortMeasure::GetClassSignature() const
 	{
 		String s;
 
@@ -272,6 +282,7 @@ namespace scone
 		case Wang2012: s += "W"; break;
 		case Constant: s += "C"; break;
 		case Uchida2016: s += "U"; break;
+		case SquaredMuscleStress: s += "S"; break;
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 
