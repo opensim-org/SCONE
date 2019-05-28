@@ -12,9 +12,12 @@
 #include "scone/core/Range.h"
 #include "scone/core/Statistic.h"
 #include "scone/core/Angle.h"
+#include "xo/utility/smart_enum.h"
 
 namespace scone
 {
+	xo_smart_enum_class( penalty_mode, average, lowest, highest );
+
 	/// Helper class to compute penalty if a value is outside a specific range. The penalty corresponds to
 	/// ''abs_penalty * | _E_ | + squared_penalty * _E_^2'',
 	/// where _E_ is the amount a value is out of the specified range.
@@ -24,15 +27,15 @@ namespace scone
 		RangePenalty() : range( xo::constants<T>::lowest(), xo::constants<T>::max() ), abs_penalty( 0 ), squared_penalty( 0 ) { }
 
 		RangePenalty( const PropNode& prop ) :
-		abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, T( 0 ) ) ),
-		squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, T( 0 ) ) ),
-		range( prop ),
-		INIT_MEMBER( prop, use_peek, false )
-		{ }
+			abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, T( 0 ) ) ),
+			squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, T( 0 ) ) ),
+			range( prop ),
+			mode_( prop.get<penalty_mode>( "mode", penalty_mode::average ) )
+		{
+		}
 		virtual ~RangePenalty() {}
 
-		void AddSample( TimeInSeconds timestamp, const T& value )
-		{
+		void AddSample( TimeInSeconds timestamp, const T& value ) {
 			auto range_violation = range.GetRangeViolation( value );
 			auto abs_pen = abs( range_violation );
 			auto pen = abs_penalty * abs( range_violation ) + squared_penalty * GetSquared( range_violation );
@@ -40,8 +43,17 @@ namespace scone
 		}
 
 		bool IsNull() const { return abs_penalty == 0.0 && squared_penalty == 0.0; }
-		double GetResult() const { return static_cast<double>( use_peek ? penalty.GetHighest() : penalty.GetAverage() ); }
-		double GetLatest() const { return static_cast<double>( penalty.GetLatest() ); }
+
+		double GetLatest() const { return double( penalty.GetLatest() ); }
+
+		double GetResult() const {
+			switch ( mode_ ) {
+			case penalty_mode::average: return double( penalty.GetAverage() );
+			case penalty_mode::highest: return double( penalty.GetHighest() );
+			case penalty_mode::lowest: return double( penalty.GetLowest() );
+			default: SCONE_THROW( "Invalid mode" );
+			}
+		}
 
 		/// Specify the valid range, set through parameters 'min' and 'max'; defaults to { min = -inf max = inf }
 		Range< T > range;
@@ -53,8 +65,8 @@ namespace scone
 		Real squared_penalty;
 
 		/// Use the peek range violation instead of average range violation; default = 0.
-		bool use_peek;
-		
+		penalty_mode mode_;
+
 	private:
 		Statistic< T > penalty;
 	};
