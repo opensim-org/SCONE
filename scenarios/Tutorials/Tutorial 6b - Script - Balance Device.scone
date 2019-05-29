@@ -21,6 +21,7 @@ CmaOptimizer {
 			<< data/ControllerGH2010.scone >>
 			
 			ScriptController {
+				name = BalanceDevice
 				target_body = torso
 				min_deg = -20~2 # optimize this parameter
 				max_deg = 5~0.5 # optimize this parameter

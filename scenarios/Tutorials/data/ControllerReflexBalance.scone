@@ -1,5 +1,5 @@
-Controller {
-	type = ReflexController
+ReflexController {
+	name = Balance
 	symmetric = 1
 	
 	# Muscle length reflexes

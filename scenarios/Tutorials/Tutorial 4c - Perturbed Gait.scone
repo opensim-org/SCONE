@@ -22,6 +22,7 @@ CmaOptimizer {
 			
 			# Perturbation backwards every 4 seconds
 			PerturbationController {
+				name = PushBack
 				start_time = 3
 				duration = 0.2
 				interval = 4
@@ -32,6 +33,7 @@ CmaOptimizer {
 			
 			# Perturbation forwards every other 4 seconds
 			PerturbationController {
+				name = PushForward
 				start_time = 5
 				duration = 0.2
 				interval = 4

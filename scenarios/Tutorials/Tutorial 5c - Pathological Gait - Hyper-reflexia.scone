@@ -21,6 +21,7 @@ CmaOptimizer {
 			
 			# Mimick hyper-reflexia through F+ reflex in gastroc
 			ReflexController {
+				name = HyperReflexia
 				symmetric = 1
 				MuscleReflex { target = gastroc delay = 0.020 C0 = 0.1 KF = 1 }
 			}
