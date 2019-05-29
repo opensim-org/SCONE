@@ -24,7 +24,7 @@ namespace scone
 
 		if ( init_ )
 		{
-			lua_model lm( model );
+			LuaModel lm( model );
 			init_( &lm );
 		}
 
@@ -36,7 +36,7 @@ namespace scone
 
 	double ScriptMeasure::ComputeResult( Model& model )
 	{
-		lua_model lm( const_cast<Model&>( model ) );
+		LuaModel lm( const_cast<Model&>( model ) );
 		return result_( &lm );
 	}
 
@@ -46,7 +46,7 @@ namespace scone
 
 		if ( update_ )
 		{
-			lua_model lm( const_cast<Model&>( model ) );
+			LuaModel lm( const_cast<Model&>( model ) );
 			return update_( &lm );
 		}
 		else return false;
@@ -58,7 +58,7 @@ namespace scone
 
 		if ( store_ )
 		{
-			lua_frame lf( frame );
+			LuaFrame lf( frame );
 			store_( &lf );
 		}
 	}

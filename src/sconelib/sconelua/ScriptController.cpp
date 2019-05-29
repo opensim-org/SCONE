@@ -32,8 +32,8 @@ namespace scone
 
 		if ( init_ )
 		{
-			lua_params lp( par );
-			lua_model lm( model );
+			LuaParams lp( par );
+			LuaModel lm( model );
 			init_( &lm, &lp );
 		}
 
@@ -49,7 +49,7 @@ namespace scone
 
 		if ( store_ )
 		{
-			lua_frame lf( frame );
+			LuaFrame lf( frame );
 			store_( &lf );
 		}
 	}
@@ -58,7 +58,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 		
-		lua_model lm( model );
+		LuaModel lm( model );
 		return update_( &lm );
 	}
 

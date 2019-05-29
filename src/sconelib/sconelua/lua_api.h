@@ -28,7 +28,7 @@ namespace scone
 	}
 
 	/// access to scone logging in script
-	struct lua_scone
+	struct LuaScone
 	{
 		/// display trace message
 		static void trace( const std::string& msg ) { log::trace( msg ); }
@@ -43,15 +43,15 @@ namespace scone
 	};
 
 	/// 3d vector type with components x, y, z
-	struct lua_vec3 : public Vec3d
+	struct LuaVec3 : public Vec3d
 	{
 		using Vec3::vec3_;
 	};
 
 	/// access to writing data for scone Analysis window
-	struct lua_frame
+	struct LuaFrame
 	{
-		lua_frame( Storage<Real>::Frame& f ) : frame_( f ) {}
+		LuaFrame( Storage<Real>::Frame& f ) : frame_( f ) {}
 
 		/// set a numeric value for channel named key
 		void set_value( const std::string& key, double value ) { frame_[ key ] = value; }
@@ -65,9 +65,9 @@ namespace scone
 
 	/// actuator type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_actuator
+	struct LuaActuator
 	{
-		lua_actuator( Actuator& a ) : act_( a ) {}
+		LuaActuator( Actuator& a ) : act_( a ) {}
 
 		/// get the name of the actuator
 		const char* name() { return act_.GetName().c_str(); }
@@ -81,9 +81,9 @@ namespace scone
 
 	/// dof (degree-of-freedom) type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_dof
+	struct LuaDof
 	{
-		lua_dof( Dof& d ) : dof_( d ) {}
+		LuaDof( Dof& d ) : dof_( d ) {}
 
 		/// get the name of the muscle
 		const char* name() { return dof_.GetName().c_str(); }
@@ -97,9 +97,9 @@ namespace scone
 
 	/// muscle type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_muscle
+	struct LuaMuscle
 	{
-		lua_muscle( Muscle& m ) : mus_( m ) {}
+		LuaMuscle( Muscle& m ) : mus_( m ) {}
 
 		/// get the name of the muscle
 		const char* name() { return mus_.GetName().c_str(); }
@@ -133,24 +133,24 @@ namespace scone
 
 	/// body type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_body
+	struct LuaBody
 	{
-		lua_body( Body& b ) : bod_( b ) {}
+		LuaBody( Body& b ) : bod_( b ) {}
 
 		/// get the name of the body
 		const char* name() { return bod_.GetName().c_str(); }
 		/// get the current com position [m]
-		lua_vec3 com_pos() { return bod_.GetComPos(); }
+		LuaVec3 com_pos() { return bod_.GetComPos(); }
 		/// get the current com velocity [m/s]
-		lua_vec3 com_vel() { return bod_.GetComVel(); }
+		LuaVec3 com_vel() { return bod_.GetComVel(); }
 		/// get the global position [m] of a local point p on the body
-		lua_vec3 point_pos( const lua_vec3& p ) { return bod_.GetPosOfPointOnBody( p ); }
+		LuaVec3 point_pos( const LuaVec3& p ) { return bod_.GetPosOfPointOnBody( p ); }
 		/// get the global linear velocity [m/s] of a local point p on the body
-		lua_vec3 point_vel( const lua_vec3& p ) { return bod_.GetLinVelOfPointOnBody( p ); }
+		LuaVec3 point_vel( const LuaVec3& p ) { return bod_.GetLinVelOfPointOnBody( p ); }
 		/// get the body orientation as a 3d rotation vector [rad]
-		lua_vec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
+		LuaVec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
 		/// get the angular velocity [rad/s] of the body
-		lua_vec3 ang_vel() { return bod_.GetAngVel(); }
+		LuaVec3 ang_vel() { return bod_.GetAngVel(); }
 		/// add external moment [Nm] to body
 		void add_external_moment( double x, double y, double z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
 		/// add external force [N] to body com
@@ -161,44 +161,44 @@ namespace scone
 
 	/// model type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_model
+	struct LuaModel
 	{
-		lua_model( Model& m ) : mod_( m ) {}
+		LuaModel( Model& m ) : mod_( m ) {}
 
 		/// get the current simulation time [s]
 		double time() { return mod_.GetTime(); }
 		/// get the current simulation time [s]
 		double delta_time() { return mod_.GetDeltaTime(); }
 		/// get the current com position [m]
-		lua_vec3 com_pos() { return mod_.GetComPos(); }
+		LuaVec3 com_pos() { return mod_.GetComPos(); }
 		/// get the current com velocity [m/s]
-		lua_vec3 com_vel() { return mod_.GetComVel(); }
+		LuaVec3 com_vel() { return mod_.GetComVel(); }
 
 		/// get the actuator at index (starting at 1)
-		lua_actuator actuator( int index ) { return *GetByLuaIndex( mod_.GetActuators(), index ); }
+		LuaActuator actuator( int index ) { return *GetByLuaIndex( mod_.GetActuators(), index ); }
 		/// find an actuator with a specific name
-		lua_actuator find_actuator( const std::string& name ) { return *GetByLuaName( mod_.GetActuators(), name ); }
+		LuaActuator find_actuator( const std::string& name ) { return *GetByLuaName( mod_.GetActuators(), name ); }
 		/// number of actuators
 		size_t actuator_count() { return mod_.GetActuators().size(); }
 
 		/// get the muscle at index (starting at 1)
-		lua_dof dof( int index ) { return *GetByLuaIndex( mod_.GetDofs(), index ); }
+		LuaDof dof( int index ) { return *GetByLuaIndex( mod_.GetDofs(), index ); }
 		/// find a muscle with a specific name
-		lua_dof find_dof( const std::string& name ) { return *GetByLuaName( mod_.GetDofs(), name ); }
+		LuaDof find_dof( const std::string& name ) { return *GetByLuaName( mod_.GetDofs(), name ); }
 		/// number of bodies
 		size_t dof_count() { return mod_.GetDofs().size(); }
 
 		/// get the muscle at index (starting at 1)
-		lua_muscle muscle( int index ) { return *GetByLuaIndex( mod_.GetMuscles(), index ); }
+		LuaMuscle muscle( int index ) { return *GetByLuaIndex( mod_.GetMuscles(), index ); }
 		/// find a muscle with a specific name
-		lua_muscle find_muscle( const std::string& name ) { return *GetByLuaName( mod_.GetMuscles(), name ); }
+		LuaMuscle find_muscle( const std::string& name ) { return *GetByLuaName( mod_.GetMuscles(), name ); }
 		/// number of bodies
 		size_t muscle_count() { return mod_.GetMuscles().size(); }
 
 		/// get the body at index (starting at 1)
-		lua_body body( int index ) { return *GetByLuaIndex( mod_.GetBodies(), index ); }
+		LuaBody body( int index ) { return *GetByLuaIndex( mod_.GetBodies(), index ); }
 		/// find a body with a specific name
-		lua_body find_body( const std::string& name ) { return *GetByLuaName( mod_.GetBodies(), name ); }
+		LuaBody find_body( const std::string& name ) { return *GetByLuaName( mod_.GetBodies(), name ); }
 		/// number of bodies
 		size_t body_count() { return mod_.GetBodies().size(); }
 
@@ -207,9 +207,9 @@ namespace scone
 
 	/// parameter access for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
-	struct lua_params
+	struct LuaParams
 	{
-		lua_params( Params& p ) : par_( p ) {}
+		LuaParams( Params& p ) : par_( p ) {}
 
 		/// get or create an optimization parameter with a specific name, mean, stdev, minval and maxval
 		double create_from_mean_std( const std::string& name, double mean, double stdev, double minval, double maxval ) {

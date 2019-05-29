@@ -22,9 +22,9 @@ namespace scone
 
 	private:
 		u_ptr< class lua_script > script_;
-		std::function<void( struct lua_model* )> init_;
-		std::function<bool( struct lua_model* )> update_;
-		std::function<double( struct lua_model* )> result_;
-		std::function<double( struct lua_frame* )> store_;
+		std::function<void( struct LuaModel* )> init_;
+		std::function<bool( struct LuaModel* )> update_;
+		std::function<double( struct LuaModel* )> result_;
+		std::function<double( struct LuaFrame* )> store_;
 	};
 }
