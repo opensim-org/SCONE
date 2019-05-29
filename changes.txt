@@ -1,6 +1,23 @@
 ====== What's new ======
 
-==== SCONE 1.1.0 RC 1 ====
+==== SCONE 1.1.1 ====
+//Released May 29, 2019//
+
+=== New Features and Updates ===
+  * Added new MuscleMeasure for penalizing muscle activation, length and contraction velocity (issue #36).
+  * RangePenalty now supports 'mode' setting, allowing the final penalty to be the 'average' (default), 'lowest', or 'highest' of all recorded
+  * New measure_type in EfforMeasure: SquaredMuscleStress. This minimizes the sum of (F/PCSA)^2 for all muscles.
+  * Controllers now have 'name' member that is used as a prefix for all parameter names. This should prevent undesired parameter name clashes when combining controllers. CompositeController displays warning when child controllers have identical names.
+  * Added warning in folder preferences dialog to avoid network drives (issue #53)
+  * Documentation updates
+  * Tutorial updates
+
+=== Fixes ===
+  * SequentialController now works correctly
+  * NoiseController more accurately handles cases where the noise STD is zero
+  * tutorial 6b, renamed 'gyro' to 'external balance device'
+
+==== SCONE 1.1.0 ====
 //Released May 20, 2019//
 
 === New Features and Updates ===
