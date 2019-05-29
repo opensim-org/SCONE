@@ -1,0 +1,34 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 2
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+		}
+		
+		# Controller for the Model
+		SequentialController {
+			transition_intervals = [ ~0.2<0.1,0.5> ]
+			
+			FeedForwardController {
+				name = Prepare
+				symmetric = 1
+				Polynomial { degree = 0 coefficient0 = 0.2~0.01<0,1> }
+			}
+			
+			FeedForwardController {
+				name = Jump
+				symmetric = 1
+				Polynomial { degree = 0 coefficient0 = 0.4~0.1<0,1> }
+			}
+		}
+		# Fitness measure for jumping
+		JumpMeasure {
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}
