@@ -5,6 +5,8 @@
 
 namespace scone
 {
+	/// Controller defined through a Lua script.
+	/// Documentation is in preparation; see Tutorial 6a and 6b for example usage.
 	class SCONE_LUA_API ScriptController : public Controller
 	{
 	public:
