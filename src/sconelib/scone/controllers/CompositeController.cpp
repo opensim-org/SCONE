@@ -10,6 +10,7 @@
 
 #include "scone/core/Factories.h"
 #include "xo/container/container_tools.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -24,6 +25,15 @@ namespace scone
 			for ( auto& cpn : *Controllers )
 				if ( auto fp = MakeFactoryProps( GetControllerFactory(), cpn, "Controller" ) )
 					controllers_.emplace_back( CreateController( fp, par, model, loc ) );
+
+		// display warning if child controllers have identical names
+		if ( controllers_.size() > 1 )
+		{
+			for ( int i1 = 0; i1 < controllers_.size() - 1; ++i1 )
+				for ( int i2 = i1 + 1; i2 < controllers_.size(); ++i2 )
+					if ( controllers_[ i1 ]->GetName() == controllers_[ i2 ]->GetName() )
+						log::warning( "Warning: child controllers ", i1, " and ", i2, " have identical names, parameters may get mixed up" );
+		}
 	}
 
 	bool CompositeController::ComputeControls( Model& model, double timestamp )
