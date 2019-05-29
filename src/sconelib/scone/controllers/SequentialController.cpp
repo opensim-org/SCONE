@@ -9,23 +9,24 @@
 #include "SequentialController.h"
 #include "xo/string/string_tools.h"
 #include "xo/numerical/math.h"
+#include "scone/core/string_tools.h"
 
 namespace scone
 {
 	SequentialController::SequentialController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	CompositeController( props, par, model, loc )
 	{
-		SCONE_THROW_IF( controllers_.empty(), "No Controllers defined in SequentialController" );
+		const PropNode& trans_pn = props.get_child( "transition_intervals" );
+		SCONE_ERROR_IF( controllers_.empty(), "No Controllers defined in SequentialController" );
+		SCONE_ERROR_IF( controllers_.size() - 1 != trans_pn.size(),
+			"Wrong number of transition_intervals, expected " + to_str( controllers_.size() - 1 ) );
 
 		double time = 0.0;
 		transition_times.push_back( time );
-		if ( auto time_pn = props.try_get_child( "transition_intervals" ) )
+		for ( index_t idx = 0; idx < trans_pn.size(); ++idx )
 		{
-			for ( index_t idx = 0; idx < time_pn->size(); ++idx )
-			{
-				transition_intervals.push_back( par.get( xo::stringf( "dt%d", idx + 1 ), time_pn[ idx ] ) );
-				transition_times.push_back( transition_times.back() + transition_intervals.back() );
-			}
+			transition_intervals.push_back( par.get( xo::stringf( "transition%d", idx + 1 ), trans_pn[ idx ] ) );
+			transition_times.push_back( transition_times.back() + transition_intervals.back() );
 		}
 	}
 

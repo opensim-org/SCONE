@@ -28,8 +28,6 @@ namespace scone
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;
 		index_t GetActiveIdx( double timestamp );
 		virtual String GetClassSignature() const override;
-
-		std::vector< ControllerUP > controllers_;
 		std::vector< TimeInSeconds > transition_times;
 	};
 }
