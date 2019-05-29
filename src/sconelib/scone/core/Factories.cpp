@@ -71,11 +71,13 @@ namespace scone
 
 	ControllerUP CreateController( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
 	{
+		ScopedParamSetPrefixer param_prefix( par, fp.props().get<String>( "name", "" ), true );
 		return GetControllerFactory().create( fp.type(), fp.props(), par, model, target_area );
 	}
 
 	ControllerUP CreateController( const PropNode& pn, Params& par, Model& model, const Location& target_area )
 	{
+		ScopedParamSetPrefixer param_prefix( par, pn.get<String>( "name", "" ), true );
 		return GetControllerFactory().create( pn.get< String >( "type" ), pn, par, model, target_area );
 	}
 

@@ -14,11 +14,12 @@
 #include "scone/model/State.h"
 #include "scone/optimization/Params.h"
 #include "xo/filesystem/path.h"
+#include "scone/core/HasName.h"
 
 namespace scone
 {
 	/// Base class for SCONE Controllers. See derived classes for specific functionality.
-	class SCONE_API Controller : public HasSignature, public HasData
+	class SCONE_API Controller : public HasSignature, public HasData, public HasName
 	{
 	public:
 		Controller( const PropNode& props, Params& par, Model& model, const Location& target_area );
@@ -29,6 +30,9 @@ namespace scone
 
 		/// Time [s] at which Controller becomes inactive; default = until simulation ends.
 		TimeInSeconds stop_time;
+
+		/// Name of the controller, uses as a prefix for the control parameters; empty by default
+		String name;
 
 		/// Called each step, returns true on termination request, checks IsActive() first
 		bool UpdateControls( Model& model, double timestamp );
@@ -44,6 +48,8 @@ namespace scone
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}
 		virtual std::vector<xo::path> WriteResults( const xo::path& file ) const { return std::vector<xo::path>(); }
+
+		virtual const String& GetName() const override { return name; }
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) { return false; }

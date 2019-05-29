@@ -14,13 +14,13 @@
 namespace scone
 {
 	/// Base class for Measures.
-	class SCONE_API Measure : public Controller, public HasName
+	class SCONE_API Measure : public Controller
 	{
 	public:
 		Measure( const PropNode& props, Params& par, Model& model, const Location& loc );
 		virtual ~Measure() { };
 
-		/// Name of the Measure, to be used in reporting.
+		/// Name of the Measure, to be used in reporting; defaults to measure type
 		mutable String name;
 
 		/// Weighting factor applied to the result of the measure; default = 1.
