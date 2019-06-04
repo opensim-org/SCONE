@@ -17,6 +17,7 @@ namespace sol { class state; }
 namespace scone
 {
 	using LuaString = const char*;
+	using LuaNumber = double;
 
 	template< typename T > T& GetByLuaIndex( std::vector<T>& vec, int index ) {
 		SCONE_ERROR_IF( index < 1 || index > vec.size(), "Index must be between 1 and " + xo::to_str( vec.size() ) );
@@ -56,11 +57,11 @@ namespace scone
 		LuaFrame( Storage<Real>::Frame& f ) : frame_( f ) {}
 
 		/// set a numeric value for channel named key
-		void set_value( LuaString key, double value ) { frame_[ key ] = value; }
+		void set_value( LuaString key, LuaNumber value ) { frame_[ key ] = value; }
 		/// set a boolean (true or false) value for channel named key
 		void set_bool( LuaString key, bool b ) { frame_[ key ] = b ? 1.0 : 0.0; }
 		/// get time of current frame
-		double time() { return frame_.GetTime(); }
+		LuaNumber time() { return frame_.GetTime(); }
 
 		Storage<Real>::Frame& frame_;
 	};
@@ -73,10 +74,10 @@ namespace scone
 
 		/// get the name of the actuator
 		LuaString name() { return act_.GetName().c_str(); }
-		/// add a value to the normalized actuator input
-		void add_input( double value ) { act_.AddInput( value ); }
-		/// get the current actuator input
-		double input() { return act_.GetInput(); }
+		/// add a value to the normalized actuator input [0..1]
+		void add_input( LuaNumber value ) { act_.AddInput( value ); }
+		/// get the current actuator input [0..1]
+		LuaNumber input() { return act_.GetInput(); }
 
 		Actuator& act_;
 	};
@@ -89,10 +90,10 @@ namespace scone
 
 		/// get the name of the muscle
 		LuaString name() { return dof_.GetName().c_str(); }
-		/// get the current value (position) of the dof
-		double position() { return dof_.GetPos(); }
-		/// get the current velocity of the dof [/s]
-		double velocity() { return dof_.GetVel(); }
+		/// get the current value (position) of the dof in [m] or [rad]
+		LuaNumber position() { return dof_.GetPos(); }
+		/// get the current velocity of the dof in [m/s] or [rad/s]
+		LuaNumber velocity() { return dof_.GetVel(); }
 
 		Dof& dof_;
 	};
@@ -106,29 +107,29 @@ namespace scone
 		/// get the name of the muscle
 		LuaString name() { return mus_.GetName().c_str(); }
 		/// add a value to the normalized actuator input
-		void add_input( double value ) { mus_.AddInput( value ); }
+		void add_input( LuaNumber value ) { mus_.AddInput( value ); }
 		/// get the current actuator input
-		double input() { return mus_.GetInput(); }
+		LuaNumber input() { return mus_.GetInput(); }
 		/// get the normalized excitation level [0..1] of the muscle
-		double excitation() { return mus_.GetExcitation(); }
+		LuaNumber excitation() { return mus_.GetExcitation(); }
 		/// get the normalized activation level [0..1] of the muscle
-		double activation() { return mus_.GetActivation(); }
+		LuaNumber activation() { return mus_.GetActivation(); }
 		/// get the fiber length [m] of the contractile element
-		double fiber_length() { return mus_.GetFiberLength(); }
+		LuaNumber fiber_length() { return mus_.GetFiberLength(); }
 		/// get the normalized fiber length of the contractile element
-		double normalized_fiber_length() { return mus_.GetNormalizedFiberLength(); }
+		LuaNumber normalized_fiber_length() { return mus_.GetNormalizedFiberLength(); }
 		/// get the optimal fiber length [m]
-		double optimal_fiber_length() { return mus_.GetOptimalFiberLength(); }
+		LuaNumber optimal_fiber_length() { return mus_.GetOptimalFiberLength(); }
 		/// get the current muscle force [N]
-		double fiber_force() { return mus_.GetFiberForce(); }
+		LuaNumber fiber_force() { return mus_.GetFiberForce(); }
 		/// get the normalized muscle force [0..1]
-		double normalized_fiber_force() { return mus_.GetNormalizedFiberForce(); }
+		LuaNumber normalized_fiber_force() { return mus_.GetNormalizedFiberForce(); }
 		/// get the maximum isometric force [N]
-		double max_isometric_force() { return mus_.GetMaxIsometricForce(); }
+		LuaNumber max_isometric_force() { return mus_.GetMaxIsometricForce(); }
 		/// get the contraction velocity [m/s]
-		double contraction_velocity() { return mus_.GetFiberVelocity(); }
+		LuaNumber contraction_velocity() { return mus_.GetFiberVelocity(); }
 		/// get the contraction velocity [m/s]
-		double normalized_contraction_velocity() { return mus_.GetNormalizedFiberVelocity(); }
+		LuaNumber normalized_contraction_velocity() { return mus_.GetNormalizedFiberVelocity(); }
 
 		Muscle& mus_;
 	};
@@ -154,9 +155,9 @@ namespace scone
 		/// get the angular velocity [rad/s] of the body
 		LuaVec3 ang_vel() { return bod_.GetAngVel(); }
 		/// add external moment [Nm] to body
-		void add_external_moment( double x, double y, double z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
+		void add_external_moment( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
 		/// add external force [N] to body com
-		void add_external_force( double x, double y, double z ) { bod_.AddExternalForce( Vec3d( x, y, z ) ); }
+		void add_external_force( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalForce( Vec3d( x, y, z ) ); }
 
 		Body& bod_;
 	};
@@ -168,9 +169,9 @@ namespace scone
 		LuaModel( Model& m ) : mod_( m ) {}
 
 		/// get the current simulation time [s]
-		double time() { return mod_.GetTime(); }
+		LuaNumber time() { return mod_.GetTime(); }
 		/// get the current simulation time [s]
-		double delta_time() { return mod_.GetDeltaTime(); }
+		LuaNumber delta_time() { return mod_.GetDeltaTime(); }
 		/// get the current com position [m]
 		LuaVec3 com_pos() { return mod_.GetComPos(); }
 		/// get the current com velocity [m/s]
@@ -181,28 +182,28 @@ namespace scone
 		/// find an actuator with a specific name
 		LuaActuator find_actuator( LuaString name ) { return *GetByLuaName( mod_.GetActuators(), name ); }
 		/// number of actuators
-		size_t actuator_count() { return mod_.GetActuators().size(); }
+		int actuator_count() { return static_cast<int>( mod_.GetActuators().size() ); }
 
 		/// get the muscle at index (starting at 1)
 		LuaDof dof( int index ) { return *GetByLuaIndex( mod_.GetDofs(), index ); }
 		/// find a muscle with a specific name
 		LuaDof find_dof( LuaString name ) { return *GetByLuaName( mod_.GetDofs(), name ); }
 		/// number of bodies
-		size_t dof_count() { return mod_.GetDofs().size(); }
+		int dof_count() { return static_cast<int>( mod_.GetDofs().size() ); }
 
 		/// get the muscle at index (starting at 1)
 		LuaMuscle muscle( int index ) { return *GetByLuaIndex( mod_.GetMuscles(), index ); }
 		/// find a muscle with a specific name
 		LuaMuscle find_muscle( LuaString name ) { return *GetByLuaName( mod_.GetMuscles(), name ); }
 		/// number of bodies
-		size_t muscle_count() { return mod_.GetMuscles().size(); }
+		int muscle_count() { return static_cast<int>( mod_.GetMuscles().size() ); }
 
 		/// get the body at index (starting at 1)
 		LuaBody body( int index ) { return *GetByLuaIndex( mod_.GetBodies(), index ); }
 		/// find a body with a specific name
 		LuaBody find_body( LuaString name ) { return *GetByLuaName( mod_.GetBodies(), name ); }
 		/// number of bodies
-		size_t body_count() { return mod_.GetBodies().size(); }
+		int body_count() { return static_cast<int>( mod_.GetBodies().size() ); }
 
 		Model& mod_;
 	};
@@ -214,11 +215,11 @@ namespace scone
 		LuaParams( Params& p ) : par_( p ) {}
 
 		/// get or create an optimization parameter with a specific name, mean, stdev, minval and maxval
-		double create_from_mean_std( LuaString name, double mean, double stdev, double minval, double maxval ) {
+		LuaNumber create_from_mean_std( LuaString name, LuaNumber mean, LuaNumber stdev, LuaNumber minval, LuaNumber maxval ) {
 			return par_.get( name, mean, stdev, minval, maxval );
 		}
 		/// get or create an optimization parameter from a string
-		double create_from_string( LuaString name, const std::string& value ) {
+		LuaNumber create_from_string( LuaString name, const std::string& value ) {
 			return par_.get( name, xo::to_prop_node( value ) );
 		}
 
