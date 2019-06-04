@@ -80,10 +80,10 @@ namespace scone
 					// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
 					for ( int i = 0; i < StateCount; ++i )
 						cc.state_mask.set( i, instance_states.find( m_StateNames.GetString( GaitState( i ) ) ) != String::npos );
-					SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" )
+					SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" );
 
-						// initialize leg index
-						cc.leg_index = legIdx;
+					// initialize leg index
+					cc.leg_index = legIdx;
 
 					// TODO: allow neater definition of target loc instead of just taking the leg side
 					Location a = Location( model.GetLeg( cc.leg_index ).GetSide() );
