@@ -34,16 +34,16 @@ namespace scone
 		/// Name of the controller, uses as a prefix for the control parameters; empty by default
 		String name;
 
-		/// Called each step, returns true on termination request, checks IsActive() first
+		// Called each step, returns true on termination request, checks IsActive() first
 		bool UpdateControls( Model& model, double timestamp );
 
-		/// Called after each successful integration step, returns true on termination request, checks IsActive() first
+		// Called after each successful integration step, returns true on termination request, checks IsActive() first
 		bool UpdateAnalysis( const Model& model, double timestamp );
 
-		/// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
+		// Check if Controller is active, i.e. start_time >= time_stamp > stop_time && disabled state is not set
 		virtual bool IsActive( const Model& model, double time ) { return time >= start_time && ( stop_time == 0.0 || time < stop_time ) && !disabled_; }
 
-		/// Set the disabled state of the controller, this is checked in IsActive().
+		// Set the disabled state of the controller, this is checked in IsActive().
 		void SetDisabled( bool disabled ) { disabled_ = disabled; }
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override {}

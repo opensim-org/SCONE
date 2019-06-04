@@ -37,39 +37,39 @@ namespace scone
 		Model( const PropNode& props, Params& par );
 		virtual ~Model();
 
-		/// muscle access
+		// muscle access
 		std::vector< MuscleUP >& GetMuscles() { return m_Muscles; }
 		const std::vector< MuscleUP >& GetMuscles() const { return m_Muscles; }
 
-		/// body access
+		// body access
 		std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 		const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
 
-		/// joint access
+		// joint access
 		std::vector< JointUP >& GetJoints() { return m_Joints; }
 		const std::vector< JointUP >& GetJoints() const { return m_Joints; }
 
-		/// dof access
+		// dof access
 		std::vector< DofUP >& GetDofs() { return m_Dofs; }
 		const std::vector< DofUP >& GetDofs() const { return m_Dofs; }
 
-		/// Actuator access
+		// Actuator access
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
 		Actuator* GetActuator( index_t i ) { return m_Actuators[ i ]; }
 
-		/// Contact geometries
+		// Contact geometries
 		std::vector< ContactGeometry > GetContactGeometries() { return m_ContactGeometries; }
 
-		/// link access
+		// link access
 		const Link& FindLink( const String& body_name );
 		const Link& GetRootLink() const { return *m_RootLink; }
 
-		/// Controller access
+		// Controller access
 		Controller* GetController() { return m_Controller.get(); }
 		const Controller* GetController() const { return m_Controller.get(); }
 		virtual void SetController( ControllerUP c ) { SCONE_ASSERT( !m_Controller ); m_Controller = std::move( c ); }
 
-		/// Measure access
+		// Measure access
 		Measure* GetMeasure() { return m_Measure.get(); }
 		const Measure* GetMeasure() const { return m_Measure.get(); }
 		void SetMeasure( MeasureUP m ) { SCONE_ASSERT( !m_Measure ); m_Measure = std::move( m ); }
@@ -77,14 +77,14 @@ namespace scone
 		void UpdateControlValues();
 		void UpdateAnalyses();
 
-		/// leg access
+		// leg access
 		size_t GetLegCount() const { return m_Legs.size(); }
 		const Leg& GetLeg( size_t idx ) const { return *m_Legs[ idx ]; }
 		const Leg& GetLeg( const Location& loc ) const { for ( auto& l : m_Legs ) if ( l->GetSide() == loc.GetSide() ) return *l; xo_error( "Could not find leg" ); }
 		std::vector< LegUP >& GetLegs() { return m_Legs; }
 		const std::vector< LegUP >& GetLegs() const { return m_Legs; }
 
-		/// Get simulation info
+		// Get simulation info
 		virtual TimeInSeconds GetTime() const = 0;
 		virtual int GetIntegrationStep() const = 0;
 		virtual int GetPreviousIntegrationStep() const = 0;
@@ -92,7 +92,7 @@ namespace scone
 		virtual TimeInSeconds GetDeltaTime() const { return GetTime() - GetPreviousTime(); }
 		virtual TimeInSeconds GetSimulationStepSize() = 0;
 
-		/// Model state access
+		// Model state access
 		virtual const State& GetState() const = 0;
 		virtual State& GetState() = 0;
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) = 0;
@@ -100,18 +100,18 @@ namespace scone
 		void SetNullState();
 		void SetNeutralState();
 
-		/// Simulate model
+		// Simulate model
 		virtual void AdvanceSimulationTo( double time ) = 0;
 		virtual double GetSimulationEndTime() const = 0;
 		virtual void SetSimulationEndTime( double time ) = 0;
 		virtual bool HasSimulationEnded() { return m_ShouldTerminate || GetTime() >= GetSimulationEndTime(); }
 		virtual void RequestTermination() { m_ShouldTerminate = true; }
 
-		/// Model data
+		// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
 		virtual std::vector<path> WriteResults( const path& file_base ) const = 0;
 
-		/// get dynamic model statistics
+		// get dynamic model statistics
 		virtual Vec3 GetComPos() const = 0;
 		virtual Vec3 GetComVel() const = 0;
 		virtual Vec3 GetComAcc() const = 0;
@@ -153,31 +153,31 @@ namespace scone
 		template< typename SensorT, typename... Args > SensorDelayAdapter& AcquireDelayedSensor( Args&&... args )
 		{ return AcquireSensorDelayAdapter( AcquireSensor< SensorT >( std::forward< Args >( args )... ) ); }
 
-		/// Offset [rad] or [m] to apply to initial state; default = 0.
+		// Offset [rad] or [m] to apply to initial state; default = 0.
 		const PropNode* initial_state_offset;
 
-		/// Use symmetric offset for left and right; default = 0.
+		// Use symmetric offset for left and right; default = 0.
 		bool initial_state_offset_symmetric;
 
-		/// Pattern matching the states to include in initial offset (comma seperated); default = "*".
+		// Pattern matching the states to include in initial offset (comma seperated); default = "*".
 		String initial_state_offset_include;
 
-		/// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
+		// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
 		String initial_state_offset_exclude;
 
-		/// Maximum integration step size; default = 0.001.
+		// Maximum integration step size; default = 0.001.
 		double max_step_size;
 
-		/// Use fixed step size for controllers; default = true.
+		// Use fixed step size for controllers; default = true.
 		bool use_fixed_control_step_size;
 
-		/// Step size used for controllers; default = 0.001.
+		// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
 
-		/// Initial load [BW] at which to place the model initially; default = 0.2;
+		// Initial load [BW] at which to place the model initially; default = 0.2;
 		Real initial_load;
 
-		/// Scaling factor to apply to all sensor delays; default = 1.
+		// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
 
 		void SetStoreData( bool store ) { m_StoreData = store; }

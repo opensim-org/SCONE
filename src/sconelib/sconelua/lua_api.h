@@ -16,6 +16,8 @@ namespace sol { class state; }
 
 namespace scone
 {
+	using LuaString = const char*;
+
 	template< typename T > T& GetByLuaIndex( std::vector<T>& vec, int index ) {
 		SCONE_ERROR_IF( index < 1 || index > vec.size(), "Index must be between 1 and " + xo::to_str( vec.size() ) );
 		return vec[ index - 1 ];
@@ -27,19 +29,19 @@ namespace scone
 		return *it;
 	}
 
-	/// access to scone logging in script
+	/// Access to scone logging in script
 	struct LuaScone
 	{
 		/// display trace message
-		static void trace( const std::string& msg ) { log::trace( msg ); }
+		static void trace( LuaString msg ) { log::trace( msg ); }
 		/// display debug message
-		static void debug( const std::string& msg ) { log::debug( msg ); }
+		static void debug( LuaString msg ) { log::debug( msg ); }
 		/// display info message
-		static void info( const std::string& msg ) { log::info( msg ); }
+		static void info( LuaString msg ) { log::info( msg ); }
 		/// display warning message
-		static void warning( const std::string& msg ) { log::warning( msg ); }
+		static void warning( LuaString msg ) { log::warning( msg ); }
 		/// display error message
-		static void error( const std::string& msg ) { log::error( msg ); }
+		static void error( LuaString msg ) { log::error( msg ); }
 	};
 
 	/// 3d vector type with components x, y, z
@@ -48,29 +50,29 @@ namespace scone
 		using Vec3::vec3_;
 	};
 
-	/// access to writing data for scone Analysis window
+	/// Access to writing data for scone Analysis window
 	struct LuaFrame
 	{
 		LuaFrame( Storage<Real>::Frame& f ) : frame_( f ) {}
 
 		/// set a numeric value for channel named key
-		void set_value( const std::string& key, double value ) { frame_[ key ] = value; }
+		void set_value( LuaString key, double value ) { frame_[ key ] = value; }
 		/// set a boolean (true or false) value for channel named key
-		void set_bool( const std::string& key, bool b ) { frame_[ key ] = b ? 1.0 : 0.0; }
+		void set_bool( LuaString key, bool b ) { frame_[ key ] = b ? 1.0 : 0.0; }
 		/// get time of current frame
 		double time() { return frame_.GetTime(); }
 
 		Storage<Real>::Frame& frame_;
 	};
 
-	/// actuator type for use in lua scripting.
+	/// Actuator type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
 	struct LuaActuator
 	{
 		LuaActuator( Actuator& a ) : act_( a ) {}
 
 		/// get the name of the actuator
-		const char* name() { return act_.GetName().c_str(); }
+		LuaString name() { return act_.GetName().c_str(); }
 		/// add a value to the normalized actuator input
 		void add_input( double value ) { act_.AddInput( value ); }
 		/// get the current actuator input
@@ -79,30 +81,30 @@ namespace scone
 		Actuator& act_;
 	};
 
-	/// dof (degree-of-freedom) type for use in lua scripting.
+	/// Dof (degree-of-freedom) type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
 	struct LuaDof
 	{
 		LuaDof( Dof& d ) : dof_( d ) {}
 
 		/// get the name of the muscle
-		const char* name() { return dof_.GetName().c_str(); }
+		LuaString name() { return dof_.GetName().c_str(); }
 		/// get the current value (position) of the dof
-		double position() const { return dof_.GetPos(); }
+		double position() { return dof_.GetPos(); }
 		/// get the current velocity of the dof [/s]
-		double velocity() const { return dof_.GetVel(); }
+		double velocity() { return dof_.GetVel(); }
 
 		Dof& dof_;
 	};
 
-	/// muscle type for use in lua scripting.
+	/// Muscle type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
 	struct LuaMuscle
 	{
 		LuaMuscle( Muscle& m ) : mus_( m ) {}
 
 		/// get the name of the muscle
-		const char* name() { return mus_.GetName().c_str(); }
+		LuaString name() { return mus_.GetName().c_str(); }
 		/// add a value to the normalized actuator input
 		void add_input( double value ) { mus_.AddInput( value ); }
 		/// get the current actuator input
@@ -131,14 +133,14 @@ namespace scone
 		Muscle& mus_;
 	};
 
-	/// body type for use in lua scripting.
+	/// Body type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
 	struct LuaBody
 	{
 		LuaBody( Body& b ) : bod_( b ) {}
 
 		/// get the name of the body
-		const char* name() { return bod_.GetName().c_str(); }
+		LuaString name() { return bod_.GetName().c_str(); }
 		/// get the current com position [m]
 		LuaVec3 com_pos() { return bod_.GetComPos(); }
 		/// get the current com velocity [m/s]
@@ -159,7 +161,7 @@ namespace scone
 		Body& bod_;
 	};
 
-	/// model type for use in lua scripting.
+	/// Model type for use in lua scripting.
 	/// See ScriptController and ScriptMeasure for details on scripting.
 	struct LuaModel
 	{
@@ -177,28 +179,28 @@ namespace scone
 		/// get the actuator at index (starting at 1)
 		LuaActuator actuator( int index ) { return *GetByLuaIndex( mod_.GetActuators(), index ); }
 		/// find an actuator with a specific name
-		LuaActuator find_actuator( const std::string& name ) { return *GetByLuaName( mod_.GetActuators(), name ); }
+		LuaActuator find_actuator( LuaString name ) { return *GetByLuaName( mod_.GetActuators(), name ); }
 		/// number of actuators
 		size_t actuator_count() { return mod_.GetActuators().size(); }
 
 		/// get the muscle at index (starting at 1)
 		LuaDof dof( int index ) { return *GetByLuaIndex( mod_.GetDofs(), index ); }
 		/// find a muscle with a specific name
-		LuaDof find_dof( const std::string& name ) { return *GetByLuaName( mod_.GetDofs(), name ); }
+		LuaDof find_dof( LuaString name ) { return *GetByLuaName( mod_.GetDofs(), name ); }
 		/// number of bodies
 		size_t dof_count() { return mod_.GetDofs().size(); }
 
 		/// get the muscle at index (starting at 1)
 		LuaMuscle muscle( int index ) { return *GetByLuaIndex( mod_.GetMuscles(), index ); }
 		/// find a muscle with a specific name
-		LuaMuscle find_muscle( const std::string& name ) { return *GetByLuaName( mod_.GetMuscles(), name ); }
+		LuaMuscle find_muscle( LuaString name ) { return *GetByLuaName( mod_.GetMuscles(), name ); }
 		/// number of bodies
 		size_t muscle_count() { return mod_.GetMuscles().size(); }
 
 		/// get the body at index (starting at 1)
 		LuaBody body( int index ) { return *GetByLuaIndex( mod_.GetBodies(), index ); }
 		/// find a body with a specific name
-		LuaBody find_body( const std::string& name ) { return *GetByLuaName( mod_.GetBodies(), name ); }
+		LuaBody find_body( LuaString name ) { return *GetByLuaName( mod_.GetBodies(), name ); }
 		/// number of bodies
 		size_t body_count() { return mod_.GetBodies().size(); }
 
@@ -212,12 +214,14 @@ namespace scone
 		LuaParams( Params& p ) : par_( p ) {}
 
 		/// get or create an optimization parameter with a specific name, mean, stdev, minval and maxval
-		double create_from_mean_std( const std::string& name, double mean, double stdev, double minval, double maxval ) {
+		double create_from_mean_std( LuaString name, double mean, double stdev, double minval, double maxval ) {
 			return par_.get( name, mean, stdev, minval, maxval );
 		}
-		double create_from_string( const std::string& name, const std::string& value ) {
+		/// get or create an optimization parameter from a string
+		double create_from_string( LuaString name, const std::string& value ) {
 			return par_.get( name, xo::to_prop_node( value ) );
 		}
+
 		Params& par_;
 	};
 
