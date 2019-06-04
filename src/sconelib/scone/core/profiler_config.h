@@ -12,7 +12,7 @@
 #	define SCONE_PROFILE_REPORT log::info( Profiler::GetGlobalInstance().GetReport() )
 #elif defined SCONE_ENABLE_XO_PROFILING
 #	include "PropNode.h"
-#	include "xo/diagnose/profiler.h"
+#	include "xo/system/profiler.h"
 #	define SCONE_PROFILE_FUNCTION xo::scope_profiler unique_scoped_profile( __FUNCTION__, xo::profiler::instance() )
 #	define SCONE_PROFILE_SCOPE( scope_name_arg ) xo::scope_profiler unique_scoped_profile( scope_name_arg, xo::profiler::instance() )
 #	define SCONE_PROFILE_START xo::profiler::instance().start()
