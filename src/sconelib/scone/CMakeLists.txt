@@ -69,6 +69,7 @@ set(CS_CONTROLLERS_FILES
 	controllers/ExternalBalanceController.cpp
 	controllers/ExternalBalanceController.h
 	controllers/MirrorController.h
+	controllers/MirrorController.cpp
 	controllers/NoiseController.h
 	controllers/NoiseController.cpp
 	)
