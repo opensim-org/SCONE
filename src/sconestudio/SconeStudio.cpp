@@ -383,6 +383,12 @@ void SconeStudio::fileSaveAsTriggered()
 	}
 }
 
+void SconeStudio::fileCloseTriggered()
+{
+	if ( auto idx = ui.tabWidget->currentIndex(); idx >= 0 )
+		tabCloseRequested( idx );
+}
+
 bool SconeStudio::tryExit()
 {
 	abortOptimizations();
@@ -632,7 +638,7 @@ void SconeStudio::updateOptimizations()
 void SconeStudio::tabCloseRequested( int idx )
 {
 	auto it = xo::find( scenarios, (QCodeEditor*)ui.tabWidget->widget( idx ) );
-	SCONE_THROW_IF( it == scenarios.end(), "Could not find scenarion for tab " + to_str( idx ) );
+	SCONE_THROW_IF( it == scenarios.end(), "Could not find scenario for tab " + to_str( idx ) );
 
 	requestSaveChanges( *it );
 	scenarios.erase( it );

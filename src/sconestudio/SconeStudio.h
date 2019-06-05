@@ -60,6 +60,7 @@ public slots:
 	virtual void fileOpenTriggered() override;
 	virtual void fileSaveTriggered() override;
 	virtual void fileSaveAsTriggered() override;
+	virtual void fileCloseTriggered() override;
 
 	void helpAbout() {}
 	void runScenario();
