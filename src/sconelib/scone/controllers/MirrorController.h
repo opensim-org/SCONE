@@ -17,44 +17,15 @@ namespace scone
 	class MirrorController : public Controller
 	{
 	public:
-		MirrorController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-		Controller( props, par, model, loc )
-		{
-			for ( auto& pn : props )
-			{
-				if ( auto fp = MakeFactoryProps( GetControllerFactory(), pn, "Controller" ) )
-				{
-					c0 = CreateController( fp, par, model, Location( RightSide, loc.symmetric ) );
-					c1 = CreateController( fp, par, model, Location( LeftSide, loc.symmetric ) );
-				}
-			}
-		}
-		virtual ~MirrorController() {}
+		MirrorController( const PropNode& props, Params& par, Model& model, const Location& loc );
+		virtual ~MirrorController();
 
-		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override
-		{
-			c0->StoreData( frame, flags );
-			c1->StoreData( frame, flags );
-		}
-
-		virtual bool PerformAnalysis( const Model& model, double timestamp ) override
-		{
-			c0->UpdateAnalysis( model, timestamp );
-			return c1->UpdateAnalysis( model, timestamp );
-		}
-
-
-		virtual bool ComputeControls( Model& model, double timestamp ) override
-		{
-			c0->UpdateControls( model, timestamp );
-			return c1->UpdateControls( model, timestamp );
-		}
+		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;
+		virtual bool ComputeControls( Model& model, double timestamp ) override;
 
 	protected:
-		virtual String GetClassSignature() const override
-		{
-			return c0->GetSignature();
-		}
+		virtual String GetClassSignature() const override;
 
 	private:
 		ControllerUP c0, c1;
