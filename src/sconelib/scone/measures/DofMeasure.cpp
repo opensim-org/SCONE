@@ -19,7 +19,7 @@ namespace scone
 	range_count( 0 )
 	{
 		if ( props.try_get< String >( "parent" ) )
-			parent = &*FindByLocation( model.GetDofs(), props.get< String >( "parent" ), loc );
+			parent = FindByLocation( model.GetDofs(), props.get< String >( "parent" ), loc ).get();
 
 		INIT_PROP( props, position, RangePenalty< Degree >() );
 		INIT_PROP( props, velocity, RangePenalty< Degree >() );
