@@ -26,7 +26,7 @@ namespace scone
 		INIT_PROP( props, recover_time, 1.0 );
 		INIT_PROP( props, terminate_on_peak, true );
 		INIT_PROP( props, negate_result, false );
-		INIT_PROP( props, jump_type, int( HighJump ) );
+		INIT_PROP( props, jump_type, HighJump );
 		INIT_PROP( props, minimize, false ); // defaults to false
 		INIT_PROP( props, offset, Vec3::zero() );
 
