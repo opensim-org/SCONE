@@ -43,6 +43,6 @@ namespace scone
 		Real AddTargetControlValue( Real u );
 		Actuator& actuator_;
 		static String GetReflexName( const String& target, const String& source );
-		static String GetParName( const PropNode& props );
+		static String GetParName( const PropNode& props, const Location& loc );
 	};
 }

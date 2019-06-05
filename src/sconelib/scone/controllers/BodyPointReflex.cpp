@@ -19,12 +19,12 @@ namespace scone
 		INIT_MEMBER_REQUIRED( props, source ),
 		INIT_MEMBER( props, offset, Vec3::zero() ),
 		INIT_MEMBER( props, direction, Vec3::zero() ),
-		body_( *FindByNameTrySided( model.GetBodies(), source, loc.side ) ),
+		body_( *FindByNameTrySided( model.GetBodies(), source, loc.side_ ) ),
 		m_DelayedPos( model.AcquireDelayedSensor< BodyPointPositionSensor >( body_, offset, direction ) ),
 		m_DelayedVel( model.AcquireDelayedSensor< BodyPointVelocitySensor >( body_, offset, direction ) ),
 		m_DelayedAcc( model.AcquireDelayedSensor< BodyPointAccelerationSensor >( body_, offset, direction ) )
 	{
-		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "." );
+		ScopedParamSetPrefixer prefixer( par, GetParName( props, loc ) + "." );
 
 		INIT_PAR_NAMED( props, par, P0, "P0", 0.0 );
 		INIT_PAR_NAMED( props, par, KP, "KP", 0.0 );

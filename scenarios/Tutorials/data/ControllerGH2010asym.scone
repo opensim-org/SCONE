@@ -4,10 +4,10 @@
 # 7: Changed C0 ranges to <-10,10>; fixes issue for negative C0 on glut_max during Liftoff
 # 6: Fixed sign on glut_max during LiftOff
 GaitStateController {
-	signature_postfix = "GH2010v8"
+	signature_postfix = "GH2010v8asym"
 	stance_load_threshold = ~0.1<0.001,1>
 	leg_load_sensor_delay = 0
-	symmetric = 1
+	symmetric = 0
 	ConditionalControllers {
 		# TA stretch reflexes [Geyer & Herr 2010]
 		ConditionalController {

@@ -20,7 +20,7 @@ namespace scone
 	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 	Controller( props, par, model, target_area )
 	{
-		INIT_PROP( props, symmetric, true );
+		INIT_PROP( props, symmetric, target_area.symmetric_ );
 
 		// setup actuator info
 		for ( size_t idx = 0; idx < model.GetMuscles().size(); ++idx )
@@ -32,7 +32,7 @@ namespace scone
 			ai.muscle_idx = idx;
 
 			// see if this muscle is on the right side
-			if ( target_area.side == NoSide || target_area.side == ai.side )
+			if ( target_area.side_ == NoSide || target_area.side_ == ai.side )
 				m_ActInfos.push_back( ai );
 		}
 

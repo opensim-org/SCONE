@@ -23,11 +23,8 @@ namespace scone
 	m_pActivationSensor( nullptr ),
 	source( *FindByLocation( model.GetMuscles(), props.get<string>( "source", target ), loc ) )
 	{
-		//INIT_PROP( props, source, target );
-		//Muscle& src_mus = *FindByLocation( model.GetMuscles(), source, loc );
-
 		// init names
-		String par_name = GetParName( props );
+		String par_name = GetParName( props, loc );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
 
 		INIT_PAR( props, par, KL, 0.0 );

@@ -17,12 +17,11 @@
 namespace scone
 {
 	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Measure( props, par, model, loc )
+		Measure( props, par, model, loc ),
+		dual_sided( props.get_any<bool>( { "dual_sided", "symmetric" }, false ) ) // symmetric is for back. comp.
 	{
-		INIT_PROP( props, symmetric, false );
-
 		auto create_measure = [&]( const FactoryProps& fp ) {
-			if ( symmetric ) {
+			if ( dual_sided ) {
 				m_Measures.push_back( CreateMeasure( fp, par, model, Location( LeftSide, true ) ) );
 				m_Measures.push_back( CreateMeasure( fp, par, model, Location( RightSide, true ) ) );
 			}

@@ -27,8 +27,8 @@ namespace scone
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 		Controller( props, par, model, loc )
 	{
-		INIT_PROP( props, symmetric, loc.symmetric );
-		INIT_PROP( props, dual_sided, loc.side == NoSide );
+		INIT_PROP( props, symmetric, loc.symmetric_ );
+		INIT_PROP( props, dual_sided, loc.side_ == NoSide );
 
 		// create reflexes for single or both sides
 		auto create_reflex = [&]( const FactoryProps& fp ) {
@@ -36,7 +36,7 @@ namespace scone
 				for ( auto side : { LeftSide, RightSide } )
 					m_Reflexes.push_back( CreateReflex( fp, par, model, Location( side, symmetric ) ) );
 			}
-			else m_Reflexes.push_back( CreateReflex( fp, par, model, Location( loc.side, symmetric ) ) );
+			else m_Reflexes.push_back( CreateReflex( fp, par, model, Location( loc.side_, symmetric ) ) );
 		};
 
 		for ( const auto& item : props )

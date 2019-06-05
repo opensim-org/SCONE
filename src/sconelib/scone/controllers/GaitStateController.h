@@ -53,6 +53,9 @@ namespace scone
 		/// Threshold load [bw] for detecting stance phase; default = stance_load_threshold.
 		Real swing_load_threshold;
 
+		/// Bool indicating if control parameters should be the same for left and right; default = true.
+		bool symmetric;
+
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;

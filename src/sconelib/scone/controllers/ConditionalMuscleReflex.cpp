@@ -23,7 +23,7 @@ namespace scone
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );
 
-		ScopedParamSetPrefixer prefixer( par, GetParName( props ) + "-" + props.get< String >( "dof" ) + "." );
+		ScopedParamSetPrefixer prefixer( par, GetParName( props, loc ) + "-" + props.get< String >( "dof" ) + "." );
 		INIT_PAR( props, par, pos_max, 1e12 );
 		INIT_PAR( props, par, pos_min, -1e12 );
 		m_ConditionalPosRange.max = pos_max;

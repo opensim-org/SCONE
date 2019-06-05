@@ -16,15 +16,15 @@ namespace scone
 	class SCONE_API Location
 	{
 	public:
-		Location( Side s = NoSide, bool sym = false ) : side( s ), symmetric( s ) {}
+		Location( Side side = NoSide, bool symmetric = true ) : side_( side ), symmetric_( symmetric ) {}
 
-		Side side;
-		bool symmetric;
+		Side side_;
+		bool symmetric_;
 
 		String GetSidedName( const String& name ) const;
-		String GetParName( const String& name ) const { return symmetric ? GetNameNoSide( name ) : GetSidedName( name ); }
-		Side GetSide() const { return side; }
-		Location GetOpposite() const { return Location( GetOppositeSide( side ), symmetric ); }
+		String GetParName( const String& name ) const { return symmetric_ ? GetNameNoSide( name ) : GetSidedName( name ); }
+		Side GetSide() const { return side_; }
+		Location GetOpposite() const { return Location( GetOppositeSide( side_ ), symmetric_ ); }
 	};
 
 	// Find component by name & location

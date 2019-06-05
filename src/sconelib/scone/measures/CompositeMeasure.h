@@ -30,7 +30,7 @@ namespace scone
 		const PropNode* Measures;
 
 		/// Create symmetric measures for both sides; default = false.
-		bool symmetric;
+		bool dual_sided;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 

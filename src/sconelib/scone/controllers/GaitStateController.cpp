@@ -51,6 +51,7 @@ namespace scone
 		INIT_PAR( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
 		INIT_PROP( props, leg_load_sensor_delay, 0.0 );
 		INIT_PROP( props, override_leg_length, 0.0 );
+		INIT_PROP( props, symmetric, true );
 
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )
@@ -86,14 +87,14 @@ namespace scone
 					cc.leg_index = legIdx;
 
 					// TODO: allow neater definition of target loc instead of just taking the leg side
-					Location a = Location( model.GetLeg( cc.leg_index ).GetSide() );
+					Location l = Location( model.GetLeg( cc.leg_index ).GetSide(), symmetric );
 
 					// create controller
 					//log::trace( "Creating controllers for " + GetConditionName( cc ) );
 					auto fp = FindFactoryProps( GetControllerFactory(), ccIt->second, "Controller" );
 					//const PropNode& cprops = ccIt->second.get_child( "Controller" );
 					ScopedParamSetPrefixer prefixer( par, "S" + cc.state_mask.to_string() + "." );
-					cc.controller = CreateController( fp, par, model, a );
+					cc.controller = CreateController( fp, par, model, l );
 				}
 			}
 		}

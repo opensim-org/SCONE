@@ -120,18 +120,18 @@ namespace scone
 	{
 		// add controller (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
-			SetController( CreateController( *cprops, par, *this, Location( NoSide ) ) );
+			SetController( CreateController( *cprops, par, *this, Location() ) );
 
 		// add measure (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
-			SetMeasure( CreateMeasure( *cprops, par, *this, Location( NoSide ) ) );
+			SetMeasure( CreateMeasure( *cprops, par, *this, Location() ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
 		{
-			SetController( std::make_unique< CompositeController >( *cprops, par, *this, Location( NoSide ) ) );
+			SetController( std::make_unique< CompositeController >( *cprops, par, *this, Location() ) );
 			if ( auto* mprops = cprops->try_get_child( "Measure" ) )
-				SetMeasure( CreateMeasure( *mprops, par, *this, Location( NoSide ) ) );
+				SetMeasure( CreateMeasure( *mprops, par, *this, Location() ) );
 		}
 	}
 

@@ -40,10 +40,10 @@ namespace scone
 		model->SetSimulationEndTime( GetDuration() );
 
 		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
-			model->SetController( CreateController( controller_props, par, *model, Location( NoSide ) ) );
+			model->SetController( CreateController( controller_props, par, *model, Location() ) );
 
 		if ( measure_props ) // A measure was defined OUTSIDE the model prop_node
-			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location( NoSide ) ) );
+			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location() ) );
 
 		return model;
 	}
@@ -71,11 +71,11 @@ namespace scone
 
 		// create a TEMPORARY controller that's defined OUTSIDE the model prop_node
 		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
-			model->SetController( CreateController( controller_props, info_, *model, Location( NoSide ) ) );
+			model->SetController( CreateController( controller_props, info_, *model, Location() ) );
 
 		// create a TEMPORARY measure that's defined OUTSIDE the model prop_node
 		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
-			model->SetMeasure( CreateMeasure( measure_props, info_, *model, Location( NoSide ) ) );
+			model->SetMeasure( CreateMeasure( measure_props, info_, *model, Location() ) );
 
 		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined in ModelObjective" );
 

@@ -49,10 +49,10 @@ namespace scone
 		return ( target == source ) ? target : target + "-" + source;
 	}
 
-	String Reflex::GetParName( const PropNode& props )
+	String Reflex::GetParName( const PropNode& props, const Location& loc )
 	{
-		auto trg_name = props.get< String >( "target" );
-		auto src_name = props.get< String >( "source", trg_name );
+		auto trg_name = loc.GetParName( props.get< String >( "target" ) );
+		auto src_name = loc.GetParName( props.get< String >( "source", trg_name ) );
 		return ( trg_name == src_name ) ? trg_name : trg_name + "-" + src_name;
 	}
 }
