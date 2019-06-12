@@ -1,8 +1,6 @@
 # Contribution Guidelines
 
-Thank you for your interest in contributing to SCONE -- your help is appreciated!
-
-Ways in which to contribute are:
+Thank you for your interest in contributing to SCONE -- your help is appreciated! Ways in which to contribute include:
 
   * Help improve SCONE by **reporting issues** or **suggesting new features** on the [SCONE GitHub issues page](https://github.com/opensim-org/SCONE/issues)..
   * Become involved by **posting** and **replying to posts** on the [SCONE User Forum](https://simtk.org/plugins/phpBB/indexPhpbb.php?group_id=1180&pluginname=phpBB).
