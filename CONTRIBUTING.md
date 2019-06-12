@@ -24,16 +24,15 @@ Feature requests and enhancements can be reported on the [SCONE GitHub issues pa
 
 Before sending a pull-request, please let us know via the [SCONE GitHub issues page](https://github.com/opensim-org/SCONE/issues). We love to think along with you and get the best out of your efforts.
 
-#### Building SCONE
+### Building SCONE
 
 For more information on how to build SCONE, please see the [Building Instructions](BUILD.md).
 
-#### Code Style
+### Code Style
 
 Please try to match existing code styles when making changes. Note that code styles may differ between different library dependencies. When in doubt, ask. Eventually we might compile these questions into a separate document.
 
-#### Pull requests
+### Pull requests
 - Keep them simple and small. If possible, squash your commits.
 - Try to share how your code has been tested before submitting a pull request.
 - If your PR resolves an issue, include **closes #ISSUE_NUMBER** in your commit message (or a [synonym](https://help.github.com/articles/closing-issues-via-commit-messages)).
-
