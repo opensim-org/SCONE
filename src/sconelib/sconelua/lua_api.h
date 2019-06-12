@@ -154,10 +154,15 @@ namespace scone
 		LuaVec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
 		/// get the angular velocity [rad/s] of the body
 		LuaVec3 ang_vel() { return bod_.GetAngVel(); }
-		/// add external moment [Nm] to body
-		void add_external_moment( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
+		/// add contact force [N] to body com
+		LuaVec3 get_contact_force() { return bod_.GetContactForce(); }
+		/// get contact moment [Nm] to body
+		LuaVec3 get_contact_moment() { return bod_.GetContactMoment(); }
 		/// add external force [N] to body com
 		void add_external_force( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalForce( Vec3d( x, y, z ) ); }
+		/// add external moment [Nm] to body
+		void add_external_moment( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
+
 
 		Body& bod_;
 	};
