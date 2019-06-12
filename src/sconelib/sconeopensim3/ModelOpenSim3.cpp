@@ -292,10 +292,8 @@ namespace scone
 			}
 		}
 
-		// create BodySensor
-		//m_BalanceSensor = BalanceSensorUP( new BalanceSensor( * this ) );
-
 		// create legs and connect stance_contact forces
+		// #TODO #issue55: replace this with something generic
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );

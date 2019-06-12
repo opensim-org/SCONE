@@ -185,6 +185,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactForce() const
 	{
+		// #TODO #issue55: change this into a generic form
 		if ( m_ForceIndex != -1 )
 		{
 			const auto& f = GetContactForceValues();
@@ -195,6 +196,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactMoment() const
 	{
+		// #TODO #issue55: change this into a generic form
 		if ( m_ForceIndex != -1 )
 		{
 			const auto& f = GetContactForceValues();
@@ -205,10 +207,20 @@ namespace scone
 
 	void BodyOpenSim3::ConnectContactForce( const String& force_name )
 	{
-		m_ForceIndex = m_osBody.getModel().getForceSet().getIndex( force_name, 0 );
+		const auto& forces = m_osBody.getModel().getForceSet();
+		for ( int i = 0; i < forces.getSize(); ++i )
+		{
+			if ( auto* hcf = dynamic_cast<const OpenSim::HuntCrossleyForce*>( &forces.get( i ) ) )
+			{
+				// #issue55: find a way to assign the correct force and index here
+			}
+		}
+
+		// #TODO: this code can be removed once #issue55 is resolved
+		m_ForceIndex = forces.getIndex( force_name, 0 );
 		if ( m_ForceIndex != -1 )
 		{
-			auto labels = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordLabels();
+			auto labels = forces.get( m_ForceIndex ).getRecordLabels();
 			for ( int i = 0; i < labels.size(); ++i )
 				m_ContactForceLabels.push_back( labels[ i ] );
 			m_ContactForceValues.resize( m_ContactForceLabels.size() );
@@ -251,6 +263,7 @@ namespace scone
 
 	const std::vector< Real >& BodyOpenSim3::GetContactForceValues() const
 	{
+		// #issue55: verify this code
 		if ( m_ForceIndex != -1 )
 		{
 			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
@@ -259,7 +272,7 @@ namespace scone
 			// update m_ContactForceValues only if needed (performance)
 			if ( m_LastNumDynamicsRealizations != num_dyn )
 			{
-				// TODO: find out if this can be done less clumsy in OpenSim
+				// #TODO: find out if this can be done less clumsy in OpenSim
 				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
 				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
 				for ( int i = 0; i < forces.size(); ++i )

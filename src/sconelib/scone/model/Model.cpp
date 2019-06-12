@@ -33,7 +33,7 @@ namespace scone
 	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 	m_StoreData( false ),
-	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::CenterOfMass } ),
+	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
 	m_Measure( nullptr )
 	{
 		// old-style initialization (for backwards compatibility)
@@ -60,11 +60,13 @@ namespace scone
 
 		// set store data info from settings
 		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );
-		GetStoreDataFlags().set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
-		GetStoreDataFlags().set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
-		GetStoreDataFlags().set( { StoreDataTypes::JointReactionForce }, GetSconeSettings().get< bool >( "data.joint" ) );
-		GetStoreDataFlags().set( { StoreDataTypes::SensorData }, GetSconeSettings().get< bool >( "data.sensor" ) );
-		GetStoreDataFlags().set( { StoreDataTypes::ControllerData }, GetSconeSettings().get< bool >( "data.controller" ) );
+		auto& flags = GetStoreDataFlags();
+		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
+		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
+		flags.set( StoreDataTypes::JointReactionForce, GetSconeSettings().get< bool >( "data.joint" ) );
+		flags.set( StoreDataTypes::SensorData, GetSconeSettings().get< bool >( "data.sensor" ) );
+		flags.set( StoreDataTypes::ControllerData, GetSconeSettings().get< bool >( "data.controller" ) );
+		flags.set( StoreDataTypes::ContactForce, GetSconeSettings().get< bool >( "data.contact" ) );
 	}
 
 	Model::~Model()
@@ -225,11 +227,21 @@ namespace scone
 			}
 		}
 
-		if ( flags( StoreDataTypes::ExternalForce ) )
+		if ( flags( StoreDataTypes::ContactForce ) )
 		{
 			for ( auto& body : GetBodies() )
 			{
-				// TODO: store external force, moment and cop of all bodies
+				if ( body->HasContact() )
+				{
+					Vec3 force = body->GetContactForce();
+					Vec3 moment = body->GetContactMoment();
+					frame[ body->GetName() + ".contact_force_x" ] = force.x;
+					frame[ body->GetName() + ".contact_force_y" ] = force.y;
+					frame[ body->GetName() + ".contact_force_z" ] = force.z;
+					frame[ body->GetName() + ".contact_moment_x" ] = moment.x;
+					frame[ body->GetName() + ".contact_moment_y" ] = moment.y;
+					frame[ body->GetName() + ".contact_moment_z" ] = moment.z;
+				}
 			}
 		}
 	}

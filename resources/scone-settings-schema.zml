@@ -56,4 +56,10 @@ data {
 		default = 1
 		description = "Boolean indicating whether to output controller data"
 	}
+	contact {
+		type = bool
+		label = "Output contact forces and moments"
+		default = 1
+		description = "Boolean indicating whether to output contact forces and moments"
+	}
 }
