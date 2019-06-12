@@ -24,8 +24,6 @@ Feature requests and enhancements can be reported on the [SCONE GitHub issues pa
 
 Before sending a pull-request, please let us know via the [SCONE GitHub issues page](https://github.com/opensim-org/SCONE/issues). We love to think along with you and get the best out of your efforts.
 
-### Building SCONE
-
 For more information on how to build SCONE, please see the [Building Instructions](BUILD.md).
 
 ### Code Style
