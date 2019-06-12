@@ -14,9 +14,8 @@
 #include "scone/core/Factories.h"
 #include "scone/core/math.h"
 #include "scone/optimization/Objective.h"
-
 #include "xo/filesystem/filesystem.h"
-#include "xo/string/string_cast_enum.h"
+#include "xo/container/prop_node_tools.h"
 
 #if defined(_MSC_VER)
 #	define NOMINMAX
@@ -39,7 +38,7 @@ namespace scone
 	config_copy_( root )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
-		INIT_PROP( props, log_level_, xo::log::info_level );
+		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level" ) );
 
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
