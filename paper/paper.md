@@ -28,6 +28,7 @@ Despite having shown great promise [@Anderson2001, @Geijtenbeek2013], the number
 SCONE (Simulation-based Controller OptimizatioN Environment) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills.
 
 SCONE is designed to cater to a wide range of potential users, including:   
+
   * Clinical researchers with limited technical skills, who wish to perform *what-if* scenarios using existing SCONE Scenarios.
   * Biomechanics / neuromechanics researchers studying neuromuscular control.
   * Robotics researchers interested in optimized control strategies, or the interaction between humans and assistive devices.
@@ -38,6 +39,7 @@ Please visit https://scone.software for more information on SCONE, including tut
 
 # Acknowledgements
 The development of SCONE has been made possible through the following financial contributions:    
+
   * The European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement no 600932.
   * The National Center for Simulation in Rehabilitation Research (NIH P2C HD065690).
   * The VENI research program with project number 15153, which is (partly) financed by the Netherlands Organisation for Scientific Research (NWO).
