@@ -38,10 +38,10 @@ SCONE is designed to cater to a wide range of potential users, including:
  With SCONE, users can:
 
   * Design elaborate control strategies, by means of an easy-to-use custom configuration script (examples included).
-  * Optimize any set of model or control parameters, according to a user-defined objective. By default, SCONE supports different flavors of Covariance Matrix Adaptation [@Hansen2006] for optimization.
-  * Use existing OpenSim [@Seth2018] models for predictive simulations.
-  * Add support for any dynamics simulation software package, by implementing a thin API layer in C++.
-  * Simultaneously develop, optimize, and analyze simulations through an integrated graphical user interface (GUI).
+  * Optimize any set of model or control parameters, according to a user-defined objective. Out-of-the-box, SCONE supports different flavors of Covariance Matrix Adaptation [@Hansen2006] for optimization.
+  * Use any existing OpenSim model [@Seth2018] as a basis for predictive simulation.
+  * Add support for any third-party dynamics simulation software package, by implementing a thin API layer in C++.
+  * Efficiently develop, optimize, and analyze predictive simulations using the SCONE user interface.
 
 Please visit https://scone.software for more information on SCONE, including tutorials, examples, documentation and contribution guidelines.
 
