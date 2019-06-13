@@ -81,7 +81,7 @@ namespace scone
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
 
-		// TODO: compute the actual world pos of this joint instead of the pos in the parent frame
+		// #todo: compute the actual world pos of this joint instead of the pos in the parent frame
 		// OpenSim: how can we get the actual position of a joint
 		SimTK::Vec3 p;
 		m_osJoint.getLocationInParent( p );

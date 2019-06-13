@@ -38,7 +38,7 @@ namespace scone
 
 	std::string GetDateTimeExactAsString()
 	{
-		// TODO: depeicate
+		// #todo: depeicate
 		// users that run multiple simulations in quick succession
 		// should differentiate them through the .R 'random_seed' tag
 		std::time_t today = std::chrono::system_clock::to_time_t( std::chrono::system_clock::now() );
@@ -49,7 +49,7 @@ namespace scone
 		return stringf( "%02d%02d.%02d%02d%02d.%06d", tm->tm_mon, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec, frac_secs );
 	}
 
-	// TODO: Could use regex to remove platform dependencies
+	// #todo: Could use regex to remove platform dependencies
 	// Currently assumes one delimiter char.
 	bool SCONE_API MatchesPattern( const String& str, const String& pattern, bool multiple_patterns, char delim )
 	{

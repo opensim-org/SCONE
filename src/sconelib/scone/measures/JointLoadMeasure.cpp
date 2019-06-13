@@ -40,7 +40,7 @@ namespace scone
 
 	void JointLoadMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		// TODO: store joint load value
+		// #todo: store joint load value
 		frame[ joint.GetName() + ".load_penalty" ] = GetLatest();
 	}
 }

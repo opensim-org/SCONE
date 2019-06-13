@@ -43,7 +43,7 @@ namespace scone
 		Real MeasureLength() const;
 		Real m_LegLength;
 		size_t m_Index;
-		Side m_Side; // TODO: use loc instead of side
+		Side m_Side; // #todo: use loc instead of side
 		size_t m_Rank;
 		Link& m_Foot;
 		Link& m_Upper;

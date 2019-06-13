@@ -41,7 +41,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginPos() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
@@ -53,14 +53,14 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComPos() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
-		// TODO: OSIM: find what is the most efficient (compare to linvel)
+		// #todo: OSIM: find what is the most efficient (compare to linvel)
 		SimTK::Vec3 com;
 		SimTK::Vec3 point;
 
-		// TODO: validate this!
+		// #todo: validate this!
 		m_osBody.getMassCenter( com );
 		m_osBody.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osBody, com, point );
 		return from_osim( point );
@@ -73,7 +73,7 @@ namespace scone
 
 	Quat BodyOpenSim3::GetOrientation() const
 	{
-		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
+		// #todo: cache this baby (after profiling), because sensors evaluate it for each channel
 		auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 		const auto& quat = mb.getBodyRotation( m_Model.GetTkState() ).convertRotationToQuaternion();
 		Quat q1( quat[ 0 ], quat[ 1 ], quat[ 2 ], quat[ 3 ] );
@@ -83,7 +83,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetPosOfPointOnBody( Vec3 point ) const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
@@ -92,15 +92,15 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComVel() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
-		// TODO: OSIM: find what is the most efficient (compare to linvel)
+		// #todo: OSIM: find what is the most efficient (compare to linvel)
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 		SimTK::Vec3 com;
 		SimTK::Vec3 vel;
 
-		// TODO: validate this!
+		// #todo: validate this!
 		m_osBody.getMassCenter( com );
 		m_osBody.getModel().getSimbodyEngine().getVelocity( m_Model.GetTkState(), m_osBody, com, vel );
 		return from_osim( vel );
@@ -108,10 +108,10 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginVel() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
-		// TODO: OSIM: see if we can do this more efficient
+		// #todo: OSIM: see if we can do this more efficient
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 		return from_osim( mob.getBodyOriginVelocity( m_Model.GetTkState() ) );
 	}
@@ -119,17 +119,17 @@ namespace scone
 	Vec3 BodyOpenSim3::GetAngVel() const
 	{
 
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
-		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
+		// #todo: cache this baby (after profiling), because sensors evaluate it for each channel
 		auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 		return from_osim( mb.getBodyAngularVelocity( m_Model.GetTkState() ) );
 	}
 
 	Vec3 BodyOpenSim3::GetLinVelOfPointOnBody( Vec3 point ) const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
@@ -139,15 +139,15 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetComAcc() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
-		// TODO: OSIM: find what is the most efficient (compare to linvel)
+		// #todo: OSIM: find what is the most efficient (compare to linvel)
 		SimTK::Vec3 zero( 0.0, 0.0, 0.0 );
 		SimTK::Vec3 com;
 		SimTK::Vec3 acc;
 
-		// TODO: validate this!
+		// #todo: validate this!
 		m_osBody.getMassCenter( com );
 		m_osBody.getModel().getSimbodyEngine().getAcceleration( m_Model.GetTkState(), m_osBody, com, acc );
 		return from_osim( acc );
@@ -155,10 +155,10 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetOriginAcc() const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
-		// TODO: OSIM: see if we can do this more efficient
+		// #todo: OSIM: see if we can do this more efficient
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 		return from_osim( mob.getBodyOriginAcceleration( m_Model.GetTkState() ) );
 	}
@@ -166,17 +166,17 @@ namespace scone
 	Vec3 BodyOpenSim3::GetAngAcc() const
 	{
 
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
-		// TODO: cache this baby (after profiling), because sensors evaluate it for each channel
+		// #todo: cache this baby (after profiling), because sensors evaluate it for each channel
 		auto& mb = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
 		return from_osim( mb.getBodyAngularAcceleration( m_Model.GetTkState() ) );
 	}
 
 	Vec3 BodyOpenSim3::GetLinAccOfPointOnBody( Vec3 point ) const
 	{
-		// TODO: see if we need to do this call to realize every time (maybe do it once before controls are updated)
+		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
 		const SimTK::MobilizedBody& mob = m_osBody.getModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( m_osBody.getIndex() );
@@ -185,7 +185,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactForce() const
 	{
-		// #TODO #issue55: change this into a generic form
+		// #issue55: change this into a generic form
 		if ( m_ForceIndex != -1 )
 		{
 			const auto& f = GetContactForceValues();
@@ -196,7 +196,7 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactMoment() const
 	{
-		// #TODO #issue55: change this into a generic form
+		// #issue55: change this into a generic form
 		if ( m_ForceIndex != -1 )
 		{
 			const auto& f = GetContactForceValues();
@@ -216,7 +216,7 @@ namespace scone
 			}
 		}
 
-		// #TODO: this code can be removed once #issue55 is resolved
+		// #todo: this code can be removed once #issue55 is resolved
 		m_ForceIndex = forces.getIndex( force_name, 0 );
 		if ( m_ForceIndex != -1 )
 		{
@@ -272,7 +272,7 @@ namespace scone
 			// update m_ContactForceValues only if needed (performance)
 			if ( m_LastNumDynamicsRealizations != num_dyn )
 			{
-				// #TODO: find out if this can be done less clumsy in OpenSim
+				// #todo: find out if this can be done less clumsy in OpenSim
 				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
 				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
 				for ( int i = 0; i < forces.size(); ++i )

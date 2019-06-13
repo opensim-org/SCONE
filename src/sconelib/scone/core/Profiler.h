@@ -51,7 +51,7 @@ namespace scone
 		HighResolutionTime StartMeasure( const String& scope );
 		void StopMeasure( HighResolutionTime start_time );
 
-		// TODO: move to pImpl
+		// #todo: move to pImpl
 		struct Item {
 			Item( Item* parent );
 			void AddSample( HighResolutionTime duration );

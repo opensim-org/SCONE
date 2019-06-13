@@ -66,7 +66,7 @@ namespace scone
 		return cont.end() != std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}
 
-	// TODO: move to elsewhere
+	// #todo: move to elsewhere
 	template< typename T >
 	index_t FindIndex( const std::vector< T >& cont, const T& item )
 	{
@@ -74,7 +74,7 @@ namespace scone
 		return it != cont.end() ? static_cast< index_t >( it - cont.begin() ) : NoIndex;
 	}
 
-	// TODO: move to elsewhere
+	// #todo: move to elsewhere
 	template< typename T >
 	index_t FindIndexOrThrow( const std::vector< T >& cont, const T& item )
 	{

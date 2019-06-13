@@ -324,7 +324,7 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
 
-			if ( analysisView->isVisible() ) // TODO: not update so much when not playing (it's slow)
+			if ( analysisView->isVisible() ) // #todo: not update so much when not playing (it's slow)
 				analysisView->refresh( current_time, !ui.playControl->isPlaying() );
 		}
 	}

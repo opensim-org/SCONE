@@ -30,7 +30,7 @@ namespace scone
 {
 	namespace log
 	{
-		// TODO: replace g_LogLevel with atomic variable
+		// #todo: replace g_LogLevel with atomic variable
 		// Even though simple read / write operations are atomic on WIN32
 		// (see https://msdn.microsoft.com/en-us/library/windows/desktop/ms684122(v=vs.85).aspx)
 		const int g_MaxLogMessageSize = 1000;

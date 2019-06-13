@@ -28,7 +28,7 @@ namespace scone
 		ScopedParamSetPrefixer ps( par, layer + stringf( "_%d.", idx ) );
 
 		INIT_PAR( pn, par, width_, 0.0 );
-		use_distance_ = act_func == "gaussian"; // TODO: neater
+		use_distance_ = act_func == "gaussian"; // #todo: neater
 
 		offset_ = par.try_get( "C0", pn, "offset", 0.0 );
 	}

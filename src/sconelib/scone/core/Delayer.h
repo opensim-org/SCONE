@@ -61,7 +61,7 @@ namespace scone
 			auto it0 = it1;
 			--it0;
 
-			// TODO: make this an ASSERT once we know it'll never happen
+			// #todo: make this an ASSERT once we know it'll never happen
 			if ( ! ( it0->first <= delayed_time && delayed_time < it1->first ) )
 				log::ErrorF( "Delayed<>::GetDelayed(): Failed condition: t0=%.6f <= delayed_time=%.6f < t1=%.6f", it0->first, delayed_time, it1->first );
 

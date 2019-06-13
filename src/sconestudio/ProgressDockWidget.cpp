@@ -297,7 +297,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		}
 	}
 
-	// TODO: use to_str instead
+	// #todo: use to_str instead
 	std::stringstream str;
 	xo::prop_node_serializer_ini( tooltipProps ).write_stream( str );
 	tooltipText = to_qt( str.str() );

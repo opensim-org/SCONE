@@ -14064,7 +14064,7 @@ void QCPColorScale::rescaleDataRange(bool onlyVisibleMaps)
   QList<QCPColorMap*> maps = colorMaps();
   QCPRange newRange;
   bool haveRange = false;
-  int sign = 0; // TODO: should change this to QCPAbstractPlottable::SignDomain later (currently is protected, maybe move to QCP namespace)
+  int sign = 0; // #todo: should change this to QCPAbstractPlottable::SignDomain later (currently is protected, maybe move to QCP namespace)
   if (mDataScaleType == QCPAxis::stLogarithmic)
     sign = (mDataRange.upper < 0 ? -1 : 1);
   for (int i=0; i<maps.size(); ++i)

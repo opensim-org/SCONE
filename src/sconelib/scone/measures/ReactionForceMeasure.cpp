@@ -36,7 +36,7 @@ namespace scone
 
 	void ReactionForceMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		// TODO: store joint load value
+		// #todo: store joint load value
 		frame[ "legs.load_penalty" ] = GetLatest();
 	}
 }

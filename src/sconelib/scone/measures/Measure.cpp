@@ -46,7 +46,7 @@ namespace scone
 
 	bool Measure::PerformAnalysis( const Model& model, double timestamp )
 	{
-		// TODO: cleanup, rename UpdateMeasure into PerformAnalysis
+		// #todo: cleanup, rename UpdateMeasure into PerformAnalysis
 		return UpdateMeasure( model, timestamp );
 	}
 

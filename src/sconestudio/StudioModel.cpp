@@ -43,7 +43,7 @@ namespace scone
 	muscle_gradient( { { 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
 	is_evaluating( false )
 	{
-		// TODO: don't reset this every time, perhaps keep view_flags outside StudioModel
+		// #todo: don't reset this every time, perhaps keep view_flags outside StudioModel
 		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
 
 		// create the objective from par file or config file

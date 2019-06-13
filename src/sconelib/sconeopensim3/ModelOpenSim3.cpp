@@ -86,7 +86,7 @@ namespace scone
 		INIT_PROP( props, enable_external_forces, false );
 
 		// always set create_body_forces when there's a PerturbationController
-		// TODO: think of a nicer, more generic way of dealing with this issue
+		// #todo: think of a nicer, more generic way of dealing with this issue
 		if ( auto* controller = props.try_get_child( "Controller" ) )
 		{
 			for ( auto& cprops : controller->select( "Controller" ) )
@@ -293,7 +293,7 @@ namespace scone
 		}
 
 		// create legs and connect stance_contact forces
-		// #TODO #issue55: replace this with something generic
+		// #issue55: replace this with something generic
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
@@ -422,11 +422,11 @@ namespace scone
 		{
 			if ( !m_Model.use_fixed_control_step_size )
 			{
-				// update current state (TODO: remove const cast)
+				// update current state (#todo: remove const cast)
 				m_Model.SetTkState( const_cast<SimTK::State&>( s ) );
 
 				// update SensorDelayAdapters at the beginning of each new step
-				// TODO: move this to an analyzer object or some other point
+				// #todo: move this to an analyzer object or some other point
 				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
 				{
 					m_Model.UpdateSensorDelayAdapters();

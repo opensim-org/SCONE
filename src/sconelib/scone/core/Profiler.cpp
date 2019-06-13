@@ -17,7 +17,7 @@ namespace scone
 	Profiler& Profiler::GetGlobalInstance()
 	{
 		// this should be thread-safe in c++14
-		// TODO: use thread local storage, or ensure thread safety
+		// #todo: use thread local storage, or ensure thread safety
 		static Profiler g_GlobalInstance;
 		return g_GlobalInstance;
 	}
@@ -122,7 +122,7 @@ namespace scone
 		HighResolutionTime topnode_time = topnode->inclusive_time;
 		HighResolutionTime children_time = 0;
 
-		// TODO: sort children first
+		// #todo: sort children first
 		for ( auto it = children.begin(); it != children.end(); ++it )
 			children_time += it->second->GetReport( pn.push_back( it->first ) );
 

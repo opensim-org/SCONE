@@ -188,7 +188,7 @@ namespace scone
 								{
 									string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
 									auto factor = mp.correlation * sp.correlation;
-									// TODO: this whole relation thing should be reconsidered
+									// #todo: this whole relation thing should be reconsidered
 									bool relation_ok = nc.GetParMode() == NeuralController::muscle_mode || CheckMuscleParamRelation( connect, mp, sp );
 									if ( relation_ok && factor >= nc.min_virtual_muscle_correlation )
 									{
@@ -200,7 +200,7 @@ namespace scone
 						}
 						else
 						{
-							// input sensor is no muscle, so we need no breakdown (TODO: a little neater)
+							// input sensor is no muscle, so we need no breakdown (#todo: a little neater)
 							for ( auto& mp : mpvec )
 							{
 								gain += mp.correlation * par.try_get( mp.name + '.' + sensor->GetParName(), pn, "gain", 1.0 );

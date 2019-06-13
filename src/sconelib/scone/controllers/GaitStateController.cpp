@@ -43,7 +43,7 @@ namespace scone
 	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 		Controller( props, par, model, target_area )
 	{
-		// TODO: move contact_force_threshold to leg?
+		// #todo: move contact_force_threshold to leg?
 		INIT_PAR( props, par, stance_load_threshold, 0.1 );
 		INIT_PAR( props, par, swing_load_threshold, stance_load_threshold );
 		INIT_PAR( props, par, landing_threshold, 0.0 );
@@ -78,7 +78,7 @@ namespace scone
 					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController() ) );
 					ConditionalController& cc = *m_ConditionalControllers.back();
 
-					// initialize state_mask based on names in instance_states (TODO: use tokenizer?)
+					// initialize state_mask based on names in instance_states (#todo: use tokenizer?)
 					for ( int i = 0; i < StateCount; ++i )
 						cc.state_mask.set( i, instance_states.find( m_StateNames.GetString( GaitState( i ) ) ) != String::npos );
 					SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" );
@@ -86,7 +86,7 @@ namespace scone
 					// initialize leg index
 					cc.leg_index = legIdx;
 
-					// TODO: allow neater definition of target loc instead of just taking the leg side
+					// #todo: allow neater definition of target loc instead of just taking the leg side
 					Location l = Location( model.GetLeg( cc.leg_index ).GetSide(), symmetric );
 
 					// create controller
