@@ -23,9 +23,9 @@ The use of neurological and musculoskeletal simulations can help improve our und
 
 Predictive forward dynamic simulations do the opposite: they compute motion trajectories that perform a given task optimally, according to high-level objectives such as stability, energy efficiency and pain avoidance. Predictive simulations enable powerful new applications for musculoskeletal models, such as predicting the outcome of treatment and optimizing the efficiency and efficacy of assistive devices. More fundamentally, it enables researchers to pose true *what-if?* questions, allowing them to investigate the effects of individual model and control parameters on the motion as a whole.
 
-Despite having shown great promise [@Anderson2001, @Geijtenbeek2013], the number of studies that successfully employed predictive forward simulations has been remarkably limited. A main contributing factor is complexity: besides expertise in neurological and musculoskeletal modeling, users require knowledge and understanding of optimization theory, as well as advanced software development skills to tie these components together. Even successful projects often do not permit fruitful collaboration and follow-up research, due to lack of structure and documentation of the resulting code-base.
+Despite having shown great promise [@Anderson2001, @Geyer2010, @Geijtenbeek2013], the number of studies that successfully employed predictive forward simulations has been remarkably limited. A main contributing factor is complexity: besides expertise in neurological and musculoskeletal modeling, users require knowledge and understanding of optimization theory, as well as advanced software development skills to tie these components together. Even successful projects often do not permit fruitful collaboration and follow-up research, due to lack of structure and documentation of the resulting code-base.
 
-SCONE (Simulation-based Controller OptimizatioN Environment) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills.
+SCONE (https://scone.software) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills.
 
 SCONE is designed to cater to a wide range of potential users, including:   
 
@@ -33,9 +33,17 @@ SCONE is designed to cater to a wide range of potential users, including:
   * Biomechanics / neuromechanics researchers studying neuromuscular control.
   * Robotics researchers interested in optimized control strategies, or the interaction between humans and assistive devices.
 
-Please visit https://scone.software for more information on SCONE, including tutorials, examples, documentation, community guidelines and contributions.
-
 ![The SCONE user interface](scone_window.png)
+
+ With SCONE, users can:
+
+  * Design elaborate control strategies, by means of an easy-to-use custom configuration script (examples included).
+  * Optimize any set of model or control parameters, according to a user-defined objective. By default, SCONE supports different flavors of Covariance Matrix Adaptation [@Hansen2006] for optimization.
+  * Use existing OpenSim [@Seth2018] models for predictive simulations.
+  * Add support for any dynamics simulation software package, by implementing a thin API layer in C++.
+  * Simultaneously develop, optimize, and analyze simulations through an integrated graphical user interface (GUI).
+
+Please visit https://scone.software for more information on SCONE, including tutorials, examples, documentation and contribution guidelines.
 
 # Acknowledgements
 The development of SCONE has been made possible through the following financial contributions:    
