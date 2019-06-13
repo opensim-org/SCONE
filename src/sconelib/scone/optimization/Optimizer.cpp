@@ -38,7 +38,7 @@ namespace scone
 	config_copy_( root )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
-		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level" ) );
+		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level", xo::log::info_level ) );
 
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
