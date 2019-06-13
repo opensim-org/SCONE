@@ -46,10 +46,7 @@ namespace scone
 	};
 
 	/// 3d vector type with components x, y, z
-	struct LuaVec3 : public Vec3d
-	{
-		using Vec3::vec3_;
-	};
+	using LuaVec3 = Vec3d;
 
 	/// Access to writing data for scone Analysis window
 	struct LuaFrame

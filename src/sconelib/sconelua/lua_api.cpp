@@ -5,31 +5,40 @@ namespace scone
 {
 	void register_lua_wrappers( sol::state& lua )
 	{
-		lua.new_usertype<LuaVec3>( "lua_vec3", sol::constructors<Vec3( double, double, double )>(),
+		auto Vec3_mul_overloads = sol::overload(
+			[]( LuaVec3& v, double d ) -> LuaVec3 { return v * d; },
+			[]( double d, LuaVec3& v ) -> LuaVec3 { return d * v; }
+		);
+
+		lua.new_usertype<LuaVec3>( "LuaVec3", sol::constructors<LuaVec3( double, double, double )>(),
 			"x", &LuaVec3::x,
 			"y", &LuaVec3::y,
-			"z", &LuaVec3::z
+			"z", &LuaVec3::z,
+			sol::meta_function::to_string, []( LuaVec3& v ) -> String { return to_str( v ); },
+			sol::meta_function::addition, []( LuaVec3& v1, LuaVec3& v2 ) -> LuaVec3 { return v1 + v2; },
+			sol::meta_function::subtraction, []( LuaVec3& v1, LuaVec3& v2 ) -> LuaVec3 { return v1 - v2; },
+			sol::meta_function::multiplication, Vec3_mul_overloads
 			);
 
-		lua.new_usertype<LuaFrame>( "lua_frame", sol::constructors<>(),
+		lua.new_usertype<LuaFrame>( "LuaFrame", sol::constructors<>(),
 			"set_value", &LuaFrame::set_value,
 			"set_bool", &LuaFrame::set_bool,
 			"time", &LuaFrame::time
 			);
 
-		lua.new_usertype<LuaActuator>( "lua_actuator", sol::constructors<>(),
+		lua.new_usertype<LuaActuator>( "LuaActuator", sol::constructors<>(),
 			"name", &LuaActuator::name,
 			"add_input", &LuaActuator::add_input,
 			"input", &LuaActuator::input
 			);
 
-		lua.new_usertype<LuaDof>( "lua_dof", sol::constructors<>(),
+		lua.new_usertype<LuaDof>( "LuaDof", sol::constructors<>(),
 			"name", &LuaDof::name,
 			"position", &LuaDof::position,
 			"velocity", &LuaDof::velocity
 			);
 
-		lua.new_usertype<LuaBody>( "lua_body", sol::constructors<>(),
+		lua.new_usertype<LuaBody>( "LuaBody", sol::constructors<>(),
 			"name", &LuaBody::name,
 			"com_pos", &LuaBody::com_pos,
 			"com_vel", &LuaBody::com_vel,
@@ -39,7 +48,7 @@ namespace scone
 			"add_external_moment", &LuaBody::add_external_moment
 			);
 
-		lua.new_usertype<LuaMuscle>( "lua_muscle", sol::constructors<>(),
+		lua.new_usertype<LuaMuscle>( "LuaMuscle", sol::constructors<>(),
 			"name", &LuaMuscle::name,
 			"add_input", &LuaMuscle::add_input,
 			"input", &LuaMuscle::input,
@@ -55,7 +64,7 @@ namespace scone
 			"normalized_contraction_velocity", &LuaMuscle::normalized_contraction_velocity
 			);
 
-		lua.new_usertype<LuaModel>( "lua_model", sol::constructors<>(),
+		lua.new_usertype<LuaModel>( "LuaModel", sol::constructors<>(),
 			"time", &LuaModel::time,
 			"delta_time", &LuaModel::delta_time,
 			"com_pos", &LuaModel::com_pos,
@@ -74,7 +83,7 @@ namespace scone
 			"body_count", &LuaModel::body_count
 			);
 
-		lua.new_usertype<LuaParams>( "lua_params", sol::constructors<>(),
+		lua.new_usertype<LuaParams>( "LuaParams", sol::constructors<>(),
 			"create_from_mean_std", &LuaParams::create_from_mean_std,
 			"create_from_string", &LuaParams::create_from_string
 			);
