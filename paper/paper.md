@@ -29,7 +29,7 @@ Despite having shown great promise [@Anderson2001, @Geyer2010, @Geijtenbeek2013]
 SCONE (https://scone.software) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills. Its potential audience includes:
 
   * Clinical researchers with limited technical skills, who wish to perform *what-if* scenarios using existing SCONE scenarios.
-  * Biomechanics / neuromechanics researchers studying neuromuscular control of human or animal motion.
+  * Biomechanics / neuromechanics researchers studying neuromuscular control of human or animal movement.
   * Robotics researchers interested in optimized control strategies, or the interaction between humans and assistive devices.
 
 ![The SCONE user interface](scone_window.png)
