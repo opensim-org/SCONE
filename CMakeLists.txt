@@ -17,6 +17,7 @@ option(SCONE_LUA "Support for lua scripting" OFF)
 find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
 
+# enable multithreaded compilation on MSVC
 if (MSVC)
 	add_compile_options("/MP")
 endif()
@@ -40,6 +41,14 @@ if(${Qt5Widgets_FOUND})
     add_subdirectory(submodules/vis)
 endif()
 
+# Build lua if SCONE_LUA is set
+if (SCONE_LUA)
+	add_subdirectory(contrib/lua-5.3.5)
+endif()
+
+#
+# Add submodules
+#
 add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
 
