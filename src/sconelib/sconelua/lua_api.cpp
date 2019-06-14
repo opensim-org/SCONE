@@ -1,24 +1,13 @@
 #include "lua_api.h"
 #include "sol/sol.hpp"
+#include "xo_lua/lua_register.h"
 
 namespace scone
 {
 	void register_lua_wrappers( sol::state& lua )
 	{
-		auto Vec3_mul_overloads = sol::overload(
-			[]( LuaVec3& v, double d ) -> LuaVec3 { return v * d; },
-			[]( double d, LuaVec3& v ) -> LuaVec3 { return d * v; }
-		);
-
-		lua.new_usertype<LuaVec3>( "LuaVec3", sol::constructors<LuaVec3( double, double, double )>(),
-			"x", &LuaVec3::x,
-			"y", &LuaVec3::y,
-			"z", &LuaVec3::z,
-			sol::meta_function::to_string, []( LuaVec3& v ) -> String { return to_str( v ); },
-			sol::meta_function::addition, []( LuaVec3& v1, LuaVec3& v2 ) -> LuaVec3 { return v1 + v2; },
-			sol::meta_function::subtraction, []( LuaVec3& v1, LuaVec3& v2 ) -> LuaVec3 { return v1 - v2; },
-			sol::meta_function::multiplication, Vec3_mul_overloads
-			);
+		xo::lua_register_vec3<double>( lua, "vec3" );
+		xo::lua_register_quat<double>( lua, "quat" );
 
 		lua.new_usertype<LuaFrame>( "LuaFrame", sol::constructors<>(),
 			"set_value", &LuaFrame::set_value,

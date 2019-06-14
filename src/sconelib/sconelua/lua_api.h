@@ -47,6 +47,7 @@ namespace scone
 
 	/// 3d vector type with components x, y, z
 	using LuaVec3 = Vec3d;
+	using LuaQuat = Quatd;
 
 	/// Access to writing data for scone Analysis window
 	struct LuaFrame
@@ -55,6 +56,8 @@ namespace scone
 
 		/// set a numeric value for channel named key
 		void set_value( LuaString key, LuaNumber value ) { frame_[ key ] = value; }
+		/// set a numeric value for channel named key
+		void set_vec3( LuaString key, LuaVec3 v ) { string s( key ); frame_[ s + "_x" ] = v.x; frame_[ s + "_y" ] = v.y; frame_[ s + "_z" ] = v.z; }
 		/// set a boolean (true or false) value for channel named key
 		void set_bool( LuaString key, bool b ) { frame_[ key ] = b ? 1.0 : 0.0; }
 		/// get time of current frame
@@ -147,6 +150,8 @@ namespace scone
 		LuaVec3 point_pos( const LuaVec3& p ) { return bod_.GetPosOfPointOnBody( p ); }
 		/// get the global linear velocity [m/s] of a local point p on the body
 		LuaVec3 point_vel( const LuaVec3& p ) { return bod_.GetLinVelOfPointOnBody( p ); }
+		/// get the body orientation as a quaternion
+		LuaQuat ori() { return bod_.GetOrientation(); }
 		/// get the body orientation as a 3d rotation vector [rad]
 		LuaVec3 ang_pos() { return rotation_vector_from_quat( bod_.GetOrientation() ); }
 		/// get the angular velocity [rad/s] of the body
