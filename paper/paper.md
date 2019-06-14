@@ -26,7 +26,7 @@ Predictive forward dynamic simulations do the opposite: they compute motion traj
 
 Despite having shown great promise [@Anderson2001, @Geyer2010, @Geijtenbeek2013], the number of studies that successfully employed predictive forward simulations has been remarkably limited. A main contributing factor is complexity: besides expertise in neurological and musculoskeletal modeling, users require knowledge and understanding of optimization theory, as well as advanced software development skills to tie these components together. Even successful projects often do not permit fruitful collaboration and follow-up research, due to lack of structure and documentation of the resulting code-base.
 
-SCONE (https://scone.software) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills. It is designed with a wide potential audience in mind, including:   
+SCONE (https://scone.software) is designed to help overcome these obstacles. It is a fully featured software framework that allows researchers to perform, analyze and reproduce custom predictive simulations of biological motion. SCONE features a user-friendly graphical user interface and can be used without programming skills. Its potential audience includes:
 
   * Clinical researchers with limited technical skills, who wish to perform *what-if* scenarios using existing SCONE scenarios.
   * Biomechanics / neuromechanics researchers studying neuromuscular control of human or animal motion.
