@@ -7,6 +7,7 @@
 */
 
 #include "Actuator.h"
+#include <cmath>
 
 namespace scone
 {
