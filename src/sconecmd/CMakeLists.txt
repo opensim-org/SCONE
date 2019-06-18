@@ -3,16 +3,9 @@ add_executable(sconecmd sconecmd.cpp)
 # Require C++17 standard
 set_target_properties(sconecmd PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-if(UNIX)
-    set(REALTIME_LIB ncurses)
-    if(NOT APPLE)
-        list(APPEND REALTIME_LIB tinfo)
-    endif()
-endif()
-
 target_include_directories(sconecmd PRIVATE ${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
 
-target_link_libraries(sconecmd sconelib ${REALTIME_LIB})
+target_link_libraries(sconecmd sconelib)
 
 if (SCONE_OPENSIM_3)
 	target_link_libraries(sconecmd sconeopensim3)

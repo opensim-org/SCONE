@@ -9,7 +9,14 @@ add_executable(sconeunittests ${FILES})
 # Require C++17 standard
 set_target_properties(sconeunittests PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(sconeunittests sconelib xo)
+# If using GCC before version 9, add library for filesystem
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 9)
+        set(FILESYSTEM_LIB stdc++fs)
+    endif()
+endif()
+
+target_link_libraries(sconeunittests sconelib xo ${FILESYSTEM_LIB})
 
 if (SCONE_OPENSIM_3)
 	target_link_libraries(sconeunittests sconeopensim3)
