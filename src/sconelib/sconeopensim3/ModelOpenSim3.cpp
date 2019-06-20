@@ -31,6 +31,8 @@
 #include "xo/string/pattern_matcher.h"
 #include "xo/container/container_tools.h"
 #include "xo/utility/file_resource_cache.h"
+#include "xo/geometry/euler_angles.h"
+#include "xo/geometry/angle.h"
 
 #include <mutex>
 
@@ -262,11 +264,17 @@ namespace scone
 		// create contact geometries
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
 		{
-			if ( auto cg = dynamic_cast< OpenSim::ContactSphere* >( &m_pOsimModel->getContactGeometrySet().get( idx ) ) )
-			{
-				auto& body = *FindByName( m_Bodies, cg->getBodyName() );
-				m_ContactGeometries.emplace_back( body, from_osim( cg->getLocation() ), cg->getRadius() );
-			}
+			OpenSim::ContactGeometry* cg_osim = &m_pOsimModel->getContactGeometrySet().get( idx );
+			const auto& name = cg_osim->getBodyName();
+			auto& bod = *FindByName( m_Bodies, name );
+			auto loc = from_osim( cg_osim->getLocation() );
+			xo::euler_angles< double > ea = from_osim( cg_osim->getOrientation() );
+			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
+
+			if ( auto cs = dynamic_cast< OpenSim::ContactSphere* >( cg_osim ) )
+				m_ContactGeometries.emplace_back( name, bod, xo::sphere( float( cs->getRadius() ) ), loc, ori );
+			else if ( auto cp = dynamic_cast< OpenSim::ContactHalfSpace* >( cg_osim ) )
+				m_ContactGeometries.emplace_back( name, bod, xo::plane( xo::vec3f::unit_x() ), loc, ori );
 		}
 
 		// Create wrappers for actuators
@@ -286,14 +294,17 @@ namespace scone
 				dof.SetCoordinateActuator( osCo );
 				m_Actuators.push_back( &dof );
 			}
-			else if ( OpenSim::PointActuator* osPa = dynamic_cast<OpenSim::PointActuator*>( &osAct ) )
+			else
 			{
-				// do something?
+				log::warning( "Unsupported actuator: ", osAct.getName() );
 			}
 		}
 
+		// Create ContactForce wrappers
+		// #todo for #issue55
+
 		// create legs and connect stance_contact forces
-		// #issue55: replace this with something generic
+		// #issue55: remove this after generic implementation
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );

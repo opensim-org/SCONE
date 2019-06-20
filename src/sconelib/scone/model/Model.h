@@ -27,6 +27,7 @@
 #include "ContactGeometry.h"
 #include "scone/measures/Measure.h"
 #include "scone/controllers/Controller.h"
+#include "ContactForce.h"
 
 namespace scone
 {
@@ -58,7 +59,10 @@ namespace scone
 		Actuator* GetActuator( index_t i ) { return m_Actuators[ i ]; }
 
 		// Contact geometries
-		std::vector< ContactGeometry > GetContactGeometries() { return m_ContactGeometries; }
+		const std::vector< ContactGeometry >& GetContactGeometries() const { return m_ContactGeometries; }
+
+		// Contact forces
+		const std::vector< ContactForce >& GetContactForces() const { return m_ContactForces; }
 
 		// link access
 		const Link& FindLink( const String& body_name );
@@ -201,6 +205,7 @@ namespace scone
 		std::vector< DofUP > m_Dofs;
 		std::vector< LegUP > m_Legs;
 		std::vector< ContactGeometry > m_ContactGeometries;
+		std::vector< ContactForce > m_ContactForces;
 		bool m_ShouldTerminate;
 
 		MeasureUP m_Measure;

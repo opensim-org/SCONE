@@ -34,6 +34,9 @@ namespace scone
 		m_LocalComPos = from_osim( com );
 	}
 
+	BodyOpenSim3::~BodyOpenSim3()
+	{}
+
 	const String& BodyOpenSim3::GetName() const
 	{
 		return m_osBody.getName();

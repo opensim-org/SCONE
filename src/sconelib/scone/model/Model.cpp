@@ -28,13 +28,13 @@ using std::endl;
 namespace scone
 {
 	Model::Model( const PropNode& props, Params& par ) :
-	HasSignature( props ),
-	m_ShouldTerminate( false ),
-	m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
-	m_pModelProps( props.try_get_child( "ModelProperties" ) ),
-	m_StoreData( false ),
-	m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
-	m_Measure( nullptr )
+		HasSignature( props ),
+		m_ShouldTerminate( false ),
+		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
+		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
+		m_StoreData( false ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
+		m_Measure( nullptr )
 	{
 		// old-style initialization (for backwards compatibility)
 		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
@@ -229,19 +229,8 @@ namespace scone
 
 		if ( flags( StoreDataTypes::ContactForce ) )
 		{
-			for ( auto& body : GetBodies() )
+			for ( auto& force : GetContactForces() )
 			{
-				if ( body->HasContact() )
-				{
-					Vec3 force = body->GetContactForce();
-					Vec3 moment = body->GetContactMoment();
-					frame[ body->GetName() + ".contact_force_x" ] = force.x;
-					frame[ body->GetName() + ".contact_force_y" ] = force.y;
-					frame[ body->GetName() + ".contact_force_z" ] = force.z;
-					frame[ body->GetName() + ".contact_moment_x" ] = moment.x;
-					frame[ body->GetName() + ".contact_moment_y" ] = moment.y;
-					frame[ body->GetName() + ".contact_moment_z" ] = moment.z;
-				}
 			}
 		}
 	}
@@ -294,7 +283,7 @@ namespace scone
 		for ( index_t i = 0; i < zero_state.GetSize(); ++i )
 		{
 			if ( !xo::str_ends_with( zero_state.GetName( i ), ".fiber_length" ) &&
-				 !xo::str_ends_with( zero_state.GetName( i ), ".activation" ) )
+				!xo::str_ends_with( zero_state.GetName( i ), ".activation" ) )
 				zero_state.SetValue( i, 0 );
 		}
 		SetState( zero_state, 0 );
@@ -309,7 +298,7 @@ namespace scone
 		}
 	}
 
-	scone::Real Model::GetTotalContactForce() const
+	Real Model::GetTotalContactForce() const
 	{
 		Real force = 0.0;
 		for ( const LegUP& leg : GetLegs() )
@@ -317,7 +306,7 @@ namespace scone
 		return force;
 	}
 
-	scone::Real Model::GetBW() const
+	Real Model::GetBW() const
 	{
 		return GetMass() * GetGravity().length();
 	}

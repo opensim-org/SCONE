@@ -10,11 +10,11 @@
 
 #include "platform.h"
 #include "scone/model/Body.h"
-#include "ModelOpenSim3.h"
 
 namespace OpenSim
 {
 	class Body;
+	class ModelOpenSim3;
 }
 
 namespace scone
@@ -23,7 +23,7 @@ namespace scone
 	{
 	public:
 		BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body );
-		virtual ~BodyOpenSim3() { };
+		virtual ~BodyOpenSim3();;
 
 		virtual Vec3 GetOriginPos() const override;
 		virtual Vec3 GetComPos() const override;

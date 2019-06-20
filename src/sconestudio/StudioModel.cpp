@@ -137,9 +137,13 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			contact_geoms.push_back( vis::mesh( parent, xo::sphere{ float( cg.m_Scale.x ) }, xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
-			contact_geoms.back().set_material( contact_mat );
-			contact_geoms.back().pos( cg.m_Pos );
+			if ( std::holds_alternative<xo::sphere>( cg.m_Shape ) )
+			{
+				// #todo: add support for other shapes (i.e. planes)
+				contact_geoms.push_back( vis::mesh( parent, cg.m_Shape, xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
+				contact_geoms.back().set_material( contact_mat );
+				contact_geoms.back().pos( cg.m_Pos );
+			}
 		}
 
 		for ( auto& muscle : model_->GetMuscles() )
