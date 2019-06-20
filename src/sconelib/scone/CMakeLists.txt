@@ -184,6 +184,7 @@ set(SIM_MODELCOMPONENTS_FILES
 	model/Muscle.h
 	model/State.cpp
 	model/State.h
+	model/ContactGeometry.h
 	)
 set(SIM_SENSORSANDACTUATORS_FILES
 	model/Actuator.cpp
