@@ -17,7 +17,7 @@ namespace scone
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 	Controller( props, par, model, target_area ),
 	body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
-	current_force( 0 ),
+	current_force(),
 	active_( false ),
 	random_seed( props.get( "random_seed", 5489 ) ),
 	rng_( random_seed )
