@@ -35,7 +35,7 @@ namespace scone
 				if ( xo::exists( g_RootFolder / ".version" ) )
 					break;
 			}
-			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat" );
+			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat or .updateversion.sh" );
 			log::debug( "SCONE root folder: ", g_RootFolder );
 		}
 		return g_RootFolder;
