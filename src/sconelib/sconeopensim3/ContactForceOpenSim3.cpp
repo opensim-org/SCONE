@@ -72,7 +72,7 @@ namespace scone
 		auto& osModel = m_Model.GetOsimModel();
 		auto& tkState = m_Model.GetTkState();
 
-		// #todo: why is this needed?
+		// #todo #issue55: use timestamp or step instead of this
 		osModel.getMultibodySystem().realize( tkState, SimTK::Stage::Dynamics );
 		int num_dyn = osModel.getMultibodySystem().getNumRealizationsOfThisStage( SimTK::Stage::Dynamics );
 
