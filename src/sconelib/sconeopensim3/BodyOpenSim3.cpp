@@ -210,16 +210,8 @@ namespace scone
 
 	void BodyOpenSim3::ConnectContactForce( const String& force_name )
 	{
-		const auto& forces = m_osBody.getModel().getForceSet();
-		for ( int i = 0; i < forces.getSize(); ++i )
-		{
-			if ( auto* hcf = dynamic_cast<const OpenSim::HuntCrossleyForce*>( &forces.get( i ) ) )
-			{
-				// #issue55: find a way to assign the correct force and index here
-			}
-		}
-
 		// #todo: this code can be removed once #issue55 is resolved
+		const auto& forces = m_osBody.getModel().getForceSet();
 		m_ForceIndex = forces.getIndex( force_name, 0 );
 		if ( m_ForceIndex != -1 )
 		{

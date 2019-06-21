@@ -21,9 +21,10 @@ namespace scone
 		ContactForce();
 		virtual ~ContactForce();
 
-		virtual Vec3 GetForce() const = 0;
-		virtual Vec3 GetMoment() const = 0;
-		virtual Vec3 GetPoint() const = 0;
+		virtual const Vec3& GetForce() const = 0;
+		virtual const Vec3& GetMoment() const = 0;
+		virtual const Vec3& GetPoint() const = 0;
+		virtual std::tuple<const Vec3&, const Vec3&, const Vec3&> GetForceMomentPoint() const;
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 	};

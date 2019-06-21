@@ -1,6 +1,8 @@
 set(MODEL_OPENSIM_3_FILES
 	BodyOpenSim3.cpp
 	BodyOpenSim3.h
+	ContactForceOpenSim3.h
+	ContactForceOpenSim3.cpp
 	DofOpenSim3.cpp
 	DofOpenSim3.h
 	JointOpenSim3.cpp

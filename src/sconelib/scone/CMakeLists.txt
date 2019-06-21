@@ -174,6 +174,8 @@ set(OPT_API_FILES
 set(SIM_MODELCOMPONENTS_FILES
 	model/Body.cpp
 	model/Body.h
+	model/ContactForce.cpp
+	model/ContactForce.h
 	model/Dof.cpp
 	model/Dof.h
 	model/Joint.cpp

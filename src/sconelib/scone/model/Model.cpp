@@ -230,8 +230,7 @@ namespace scone
 		if ( flags( StoreDataTypes::ContactForce ) )
 		{
 			for ( auto& force : GetContactForces() )
-			{
-			}
+				force->StoreData( frame, flags );
 		}
 	}
 

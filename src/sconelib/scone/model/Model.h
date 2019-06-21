@@ -59,10 +59,10 @@ namespace scone
 		Actuator* GetActuator( index_t i ) { return m_Actuators[ i ]; }
 
 		// Contact geometries
-		const std::vector< ContactGeometry >& GetContactGeometries() const { return m_ContactGeometries; }
+		const std::vector< ContactGeometryUP >& GetContactGeometries() const { return m_ContactGeometries; }
 
 		// Contact forces
-		const std::vector< ContactForce >& GetContactForces() const { return m_ContactForces; }
+		const std::vector< ContactForceUP >& GetContactForces() const { return m_ContactForces; }
 
 		// link access
 		const Link& FindLink( const String& body_name );
@@ -204,8 +204,8 @@ namespace scone
 		std::vector< JointUP > m_Joints;
 		std::vector< DofUP > m_Dofs;
 		std::vector< LegUP > m_Legs;
-		std::vector< ContactGeometry > m_ContactGeometries;
-		std::vector< ContactForce > m_ContactForces;
+		std::vector< ContactGeometryUP > m_ContactGeometries;
+		std::vector< ContactForceUP > m_ContactForces;
 		bool m_ShouldTerminate;
 
 		MeasureUP m_Measure;

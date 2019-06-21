@@ -16,15 +16,19 @@ namespace scone
 	ContactForce::~ContactForce()
 	{}
 
+	std::tuple<const Vec3&, const Vec3&, const Vec3&> ContactForce::GetForceMomentPoint() const
+	{
+		return { GetForce(), GetMoment(), GetPoint() };
+	}
+
 	void ContactForce::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		auto force = GetForce();
-		auto moment = GetMoment();
-		frame[ GetName() + ".contact_force_x" ] = force.x;
-		frame[ GetName() + ".contact_force_y" ] = force.y;
-		frame[ GetName() + ".contact_force_z" ] = force.z;
-		frame[ GetName() + ".contact_moment_x" ] = moment.x;
-		frame[ GetName() + ".contact_moment_y" ] = moment.y;
-		frame[ GetName() + ".contact_moment_z" ] = moment.z;
+		auto& [ force, moment, point ]= GetForceMomentPoint();
+		frame[ GetName() + ".force_x" ] = force.x;
+		frame[ GetName() + ".force_y" ] = force.y;
+		frame[ GetName() + ".force_z" ] = force.z;
+		frame[ GetName() + ".moment_x" ] = moment.x;
+		frame[ GetName() + ".moment_y" ] = moment.y;
+		frame[ GetName() + ".moment_z" ] = moment.z;
 	}
 }

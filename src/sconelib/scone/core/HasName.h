@@ -26,7 +26,7 @@ namespace scone
 	};
 
 	template< typename T >
-	T& FindByName( std::vector< T >& cont, const String& name )
+	const T& FindByName( const std::vector<T>& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
 		SCONE_THROW_IF( it == cont.end(), "Could not find \"" + name + "\"" );
@@ -34,20 +34,26 @@ namespace scone
 	}
 
 	template< typename T >
-	index_t FindIndexByName( const std::vector< T >& cont, const String& name )
+	T& FindByName( std::vector<T>& cont, const String& name )
+	{
+		return const_cast<T&>( FindByName( const_cast< const std::vector<T>& >( cont ), name ) );
+	}
+
+	template< typename T >
+	index_t FindIndexByName( const std::vector<T>& cont, const String& name )
 	{
 		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
 		return it != cont.end() ? it - cont.begin() : NoIndex;
 	}
 
 	template< typename T >
-	typename std::vector< T >::iterator TryFindByName( std::vector< T >& cont, const String& name )
+	typename std::vector<T>::iterator TryFindByName( std::vector<T>& cont, const String& name )
 	{
 		return std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}
 
 	template< typename T >
-	std::vector< string > FindMatchingNames( std::vector< T >& cont, const String& include, const String& exclude )
+	std::vector< string > FindMatchingNames( std::vector<T>& cont, const String& include, const String& exclude )
 	{
 		std::vector< string > names;
 		auto inc_pat = xo::pattern_matcher( include );
@@ -61,14 +67,14 @@ namespace scone
 	}
 
 	template< typename T >
-	bool HasElementWithName( std::vector< T >& cont, const String& name )
+	bool HasElementWithName( std::vector<T>& cont, const String& name )
 	{
 		return cont.end() != std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
 	}
 
 	// #todo: move to elsewhere
 	template< typename T >
-	index_t FindIndex( const std::vector< T >& cont, const T& item )
+	index_t FindIndex( const std::vector<T>& cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
 		return it != cont.end() ? static_cast< index_t >( it - cont.begin() ) : NoIndex;
@@ -76,7 +82,7 @@ namespace scone
 
 	// #todo: move to elsewhere
 	template< typename T >
-	index_t FindIndexOrThrow( const std::vector< T >& cont, const T& item )
+	index_t FindIndexOrThrow( const std::vector<T>& cont, const T& item )
 	{
 		auto it = std::find( cont.begin(), cont.end(), item );
 		SCONE_THROW_IF( it == cont.end(), "Could not find " + to_str( item ) );

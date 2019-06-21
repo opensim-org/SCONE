@@ -18,6 +18,7 @@
 #include "JointOpenSim3.h"
 #include "DofOpenSim3.h"
 #include "ConstantForce.h"
+#include "ContactForceOpenSim3.h"
 #include "simbody_tools.h"
 
 #include <OpenSim/OpenSim.h>
@@ -265,16 +266,18 @@ namespace scone
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
 		{
 			OpenSim::ContactGeometry* cg_osim = &m_pOsimModel->getContactGeometrySet().get( idx );
-			const auto& name = cg_osim->getBodyName();
-			auto& bod = *FindByName( m_Bodies, name );
+			const auto& name = cg_osim->getName();
+			auto& bod = *FindByName( m_Bodies, cg_osim->getBodyName() );
 			auto loc = from_osim( cg_osim->getLocation() );
 			xo::euler_angles< double > ea = from_osim( cg_osim->getOrientation() );
 			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
 
 			if ( auto cs = dynamic_cast< OpenSim::ContactSphere* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( name, bod, xo::sphere( float( cs->getRadius() ) ), loc, ori );
+				m_ContactGeometries.emplace_back( new ContactGeometry(
+					name, bod, xo::sphere( float( cs->getRadius() ) ), loc, ori ) );
 			else if ( auto cp = dynamic_cast< OpenSim::ContactHalfSpace* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( name, bod, xo::plane( xo::vec3f::unit_x() ), loc, ori );
+				m_ContactGeometries.emplace_back( new ContactGeometry(
+					name, bod, xo::plane( xo::vec3f::neg_unit_x() ), loc, ori ) );
 		}
 
 		// Create wrappers for actuators
@@ -287,7 +290,7 @@ namespace scone
 				m_Muscles.emplace_back( new MuscleOpenSim3( *this, *osMus ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
-			else if ( OpenSim::CoordinateActuator* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
+			else if ( auto* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
 			{
 				// add corresponding dof to list of actuators
 				auto& dof = dynamic_cast<DofOpenSim3&>( *FindByName( m_Dofs, osCo->getCoordinate()->getName() ) );
@@ -301,7 +304,12 @@ namespace scone
 		}
 
 		// Create ContactForce wrappers
-		// #todo for #issue55
+		const auto& forces = m_pOsimModel->getForceSet();
+		for ( int i = 0; i < forces.getSize(); ++i )
+		{
+			if ( auto* hcf = dynamic_cast<const OpenSim::HuntCrossleyForce*>( &forces.get( i ) ) )
+				m_ContactForces.emplace_back( new ContactForceOpenSim3( *this, *hcf ) );
+		}
 
 		// create legs and connect stance_contact forces
 		// #issue55: remove this after generic implementation

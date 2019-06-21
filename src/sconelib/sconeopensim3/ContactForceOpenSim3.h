@@ -14,7 +14,7 @@
 
 namespace OpenSim
 {
-	class Force;
+	class HuntCrossleyForce;
 	class ModelOpenSim3;
 }
 
@@ -23,20 +23,30 @@ namespace scone
 	class SCONE_OPENSIM_3_API ContactForceOpenSim3 : public ContactForce
 	{
 	public:
-		ContactForceOpenSim3( class ModelOpenSim3& model, OpenSim::Force& force );
+		ContactForceOpenSim3( class ModelOpenSim3& model, const OpenSim::HuntCrossleyForce& force );
 		virtual ~ContactForceOpenSim3();
 
 		virtual const String& GetName() const override;
 
-		virtual Vec3 GetForce() const override;
-		virtual Vec3 GetMoment() const override;
-		virtual Vec3 GetPoint() const override;
+		virtual const Vec3& GetForce() const override;
+		virtual const Vec3& GetMoment() const override;
+		virtual const Vec3& GetPoint() const override;
+		virtual std::tuple<const Vec3&, const Vec3&, const Vec3&> GetForceMomentPoint() const override;
 
 	private:
-		OpenSim::Force& m_osForce;
+		const OpenSim::HuntCrossleyForce& m_osForce;
+		ModelOpenSim3& m_Model;
+		std::vector< ContactGeometry* > m_Geometries;
 
+		mutable Vec3 m_Force;
+		mutable Vec3 m_Moment;
+		mutable Vec3 m_Point;
+
+		void UpdateForceValues() const;
 		mutable int m_LastNumDynamicsRealizations;
-		mutable std::vector< Real > m_ContactForceValues;
-		std::vector< String > m_ContactForceLabels;
+		mutable std::vector< Real > m_Values;
+		std::vector< String > m_Labels;
+		Vec3 m_PlaneNormal;
+		Vec3 m_PlaneLocation;
 	};
 }

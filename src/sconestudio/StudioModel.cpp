@@ -135,14 +135,14 @@ namespace scone
 
 		for ( auto& cg : model_->GetContactGeometries() )
 		{
-			auto idx = FindIndexByName( model_->GetBodies(), cg.m_Body.GetName() );
+			auto idx = FindIndexByName( model_->GetBodies(), cg->GetBody().GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
-			if ( std::holds_alternative<xo::sphere>( cg.m_Shape ) )
+			if ( std::holds_alternative<xo::sphere>( cg->GetShape() ) )
 			{
 				// #todo: add support for other shapes (i.e. planes)
-				contact_geoms.push_back( vis::mesh( parent, cg.m_Shape, xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
+				contact_geoms.push_back( vis::mesh( parent, cg->GetShape(), xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
 				contact_geoms.back().set_material( contact_mat );
-				contact_geoms.back().pos( cg.m_Pos );
+				contact_geoms.back().pos( cg->GetPos() );
 			}
 		}
 
@@ -208,6 +208,7 @@ namespace scone
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
 		// update ground reaction forces on legs
+#ifdef USE_GRF
 		for ( index_t i = 0; i < model_->GetLegCount(); ++i )
 		{
 			Vec3 force, moment, cop;
@@ -215,6 +216,14 @@ namespace scone
 
 			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
 				UpdateForceVis( force_count++, cop, force );
+		}
+#endif // USE_GRF
+
+		for ( auto& cf : model_->GetContactForces() )
+		{
+			auto&[ force, moment, point ] = cf->GetForceMomentPoint();
+			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
+				UpdateForceVis( force_count++, point, force );
 		}
 
 		while ( force_count < forces.size() )
