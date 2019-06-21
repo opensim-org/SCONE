@@ -312,18 +312,22 @@ namespace scone
 		}
 
 		// create legs and connect stance_contact forces
-		// #issue55: remove this after generic implementation
+		// #todo #issue55: cleanup ConnectContactForce after testing
 		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
 		{
 			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
-			m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide ) );
+			auto cf_it = TryFindByName( GetContactForces(), "foot_l" );
+			ContactForce* cf = cf_it != GetContactForces().end() ? &**cf_it : nullptr;
+			m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide, 0, cf ) );
 			dynamic_cast<BodyOpenSim3&>( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
 		}
 
 		if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
 		{
 			Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
-			m_Legs.emplace_back( new Leg( *right_femur, right_femur->GetChild( 0 ).GetChild( 0 ), m_Legs.size(), RightSide ) );
+			auto cf_it = TryFindByName( GetContactForces(), "foot_r" );
+			ContactForce* cf = cf_it != GetContactForces().end() ? &**cf_it : nullptr;
+			m_Legs.emplace_back( new Leg( *right_femur, right_foot, m_Legs.size(), RightSide, 0, cf ) );
 			dynamic_cast<BodyOpenSim3&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
 		}
 	}

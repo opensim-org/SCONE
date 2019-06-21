@@ -19,7 +19,7 @@ namespace scone
 	class SCONE_API Leg : public HasName
 	{
 	public:
-		Leg( Link& upper, Link& foot, size_t index, Side side = NoSide, size_t rank = 0 );
+		Leg( Link& upper, Link& foot, size_t index, Side side = NoSide, size_t rank = 0, const ContactForce* cf = nullptr );
 		virtual ~Leg();
 
 		const Link& GetUpperLink() const { return m_Upper; }
@@ -48,6 +48,7 @@ namespace scone
 		Link& m_Foot;
 		Link& m_Upper;
 		String m_Name;
+		const ContactForce* m_ContactForce;
 	};
 
 	inline index_t GetLegIndex( index_t idx, bool mirrored ) { return mirrored ? ( idx ^ 1 ) : idx; }
