@@ -22,6 +22,7 @@
 #include "xo/string/string_tools.h"
 #include "../controllers/CompositeController.h"
 #include "../core/Settings.h"
+#include <tuple>
 
 using std::endl;
 
@@ -297,6 +298,19 @@ namespace scone
 		}
 	}
 
+	Real Model::GetComHeight( const Vec3& up ) const
+	{
+		auto com = GetComPos();
+		if ( auto* ground = GetGroundPlane() )
+		{
+			xo::rayf r{ xo::vec3f( com ), xo::vec3f( -up ) };
+			xo::transformf t{ ground->GetPos(), ground->GetOri() };
+			auto p = xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
+			return com.y - p.y;
+		}
+		else return com.y;
+	}
+
 	Real Model::GetTotalContactForce() const
 	{
 		Real force = 0.0;
@@ -308,5 +322,13 @@ namespace scone
 	Real Model::GetBW() const
 	{
 		return GetMass() * GetGravity().length();
+	}
+
+	const scone::ContactGeometry* Model::GetGroundPlane() const
+	{
+		auto& cg = GetContactGeometries();
+		if ( cg.size() > 0 && std::holds_alternative< xo::plane >( cg.front()->GetShape() ) )
+			return cg.front().get();
+		else return nullptr;
 	}
 }

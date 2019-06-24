@@ -54,7 +54,8 @@ namespace scone
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
 		// check termination
-		if ( model.GetComPos().y < termination_height * m_InitialComPos.y )
+		auto com_height = model.GetComHeight();
+		if ( com_height < termination_height * m_InitialComPos.y )
 			return true;
 
 		// update min_velocity measure on new step

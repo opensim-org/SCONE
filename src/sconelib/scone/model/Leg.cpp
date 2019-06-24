@@ -52,7 +52,7 @@ namespace scone
 
 	void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
 	{
-		// #todo #issue: clean this up after testing
+		// #todo #issue55: clean this up after testing
 		force = m_Foot.GetBody().GetContactForce();
 		moment = m_Foot.GetBody().GetContactMoment();
 		cop = GetGroundCop( force, moment );

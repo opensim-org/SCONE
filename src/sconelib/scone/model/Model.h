@@ -119,6 +119,7 @@ namespace scone
 		virtual Vec3 GetComPos() const = 0;
 		virtual Vec3 GetComVel() const = 0;
 		virtual Vec3 GetComAcc() const = 0;
+		virtual Real GetComHeight( const Vec3& up = Vec3::unit_y() ) const;
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
 
@@ -126,6 +127,7 @@ namespace scone
 		virtual Real GetMass() const = 0;
 		virtual Vec3 GetGravity() const = 0;
 		virtual Real GetBW() const;
+		virtual const ContactGeometry* GetGroundPlane() const;
 
 		// custom model properties
 		const PropNode* GetCustomProps() { return m_pCustomProps; }
