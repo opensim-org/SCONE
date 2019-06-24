@@ -27,5 +27,10 @@ namespace scone
 		virtual std::tuple<const Vec3&, const Vec3&, const Vec3&> GetForceMomentPoint() const;
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
+		const std::vector< ContactGeometry* >& GetContactGeometries() const { return m_Geometries; }
+
+	protected:
+		std::vector< ContactGeometry* > m_Geometries;
 	};
 }

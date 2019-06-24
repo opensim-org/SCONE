@@ -39,11 +39,6 @@ namespace scone
 		virtual Vec3 GetAngAcc() const = 0;
 		virtual Vec3 GetLinAccOfPointOnBody( Vec3 point ) const = 0;
 
-		virtual const std::vector< Real >& GetContactForceValues() const = 0;
-		virtual const std::vector< String >& GetContactForceLabels() const = 0;
-
-		/// #todo #issue55: remove after ContactForce is working
-		virtual bool HasContact() const = 0;
 		virtual Vec3 GetContactForce() const = 0;
 		virtual Vec3 GetContactMoment() const = 0;
 

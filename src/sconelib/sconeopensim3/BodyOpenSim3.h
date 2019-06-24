@@ -23,7 +23,7 @@ namespace scone
 	{
 	public:
 		BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body );
-		virtual ~BodyOpenSim3();;
+		virtual ~BodyOpenSim3();
 
 		virtual Vec3 GetOriginPos() const override;
 		virtual Vec3 GetComPos() const override;
@@ -43,23 +43,16 @@ namespace scone
 
 		virtual const String& GetName() const override;
 
-		virtual bool HasContact() const override { return m_ForceIndex != -1; }
 		virtual Vec3 GetContactForce() const override;
 		virtual Vec3 GetContactMoment() const override;
 
 		OpenSim::Body& m_osBody;
 		class ModelOpenSim3& m_Model;
 
-		// connect a specific stance_contact force to this body
-		void ConnectContactForce( const String& force_name );
-
 		virtual Model& GetModel() override;
 		virtual const Model& GetModel() const override;
 
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const override;
-
-		virtual const std::vector< Real >& GetContactForceValues() const override;
-		virtual const std::vector< String >& GetContactForceLabels() const override { return m_ContactForceLabels; }
 
 		virtual void SetExternalForce( const Vec3& f ) override;
 		virtual void SetExternalMoment( const Vec3& torque ) override;
@@ -73,9 +66,5 @@ namespace scone
 
 	private:
 		Vec3 m_LocalComPos;
-		int m_ForceIndex;
-		mutable int m_LastNumDynamicsRealizations;
-		mutable std::vector< Real > m_ContactForceValues;
-		std::vector< String > m_ContactForceLabels;
 	};
 }

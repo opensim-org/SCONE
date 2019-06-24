@@ -319,7 +319,6 @@ namespace scone
 			auto cf_it = TryFindByName( GetContactForces(), "foot_l" );
 			ContactForce* cf = cf_it != GetContactForces().end() ? &**cf_it : nullptr;
 			m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide, 0, cf ) );
-			dynamic_cast<BodyOpenSim3&>( left_foot.GetBody() ).ConnectContactForce( "foot_l" );
 		}
 
 		if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
@@ -328,7 +327,6 @@ namespace scone
 			auto cf_it = TryFindByName( GetContactForces(), "foot_r" );
 			ContactForce* cf = cf_it != GetContactForces().end() ? &**cf_it : nullptr;
 			m_Legs.emplace_back( new Leg( *right_femur, right_foot, m_Legs.size(), RightSide, 0, cf ) );
-			dynamic_cast<BodyOpenSim3&>( right_foot.GetBody() ).ConnectContactForce( "foot_r" );
 		}
 	}
 

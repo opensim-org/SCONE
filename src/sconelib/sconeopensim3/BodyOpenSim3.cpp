@@ -24,11 +24,8 @@ namespace scone
 	BodyOpenSim3::BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body ) :
 		Body(),
 		m_osBody( body ),
-		m_Model( model ),
-		m_ForceIndex( -1 ),
-		m_LastNumDynamicsRealizations( -1 )
+		m_Model( model )
 	{
-		ConnectContactForce( body.getName() );
 		SimTK::Vec3 com;
 		m_osBody.getMassCenter( com );
 		m_LocalComPos = from_osim( com );
@@ -40,6 +37,30 @@ namespace scone
 	const String& BodyOpenSim3::GetName() const
 	{
 		return m_osBody.getName();
+	}
+
+	Vec3 BodyOpenSim3::GetContactForce() const
+	{
+		Vec3 force = Vec3::zero();
+		for ( auto& cf : m_Model.GetContactForces() )
+		{
+			for ( auto& cg : cf->GetContactGeometries() )
+				if ( &cg->GetBody() == this )
+					force += cf->GetForce();
+		}
+		return force;
+	}
+
+	Vec3 BodyOpenSim3::GetContactMoment() const
+	{
+		Vec3 moment = Vec3::zero();
+		for ( auto& cf : m_Model.GetContactForces() )
+		{
+			for ( auto& cg : cf->GetContactGeometries() )
+				if ( &cg->GetBody() == this )
+					moment += cf->GetMoment();
+		}
+		return moment;
 	}
 
 	Vec3 BodyOpenSim3::GetOriginPos() const
@@ -186,42 +207,6 @@ namespace scone
 		return from_osim( mob.findStationAccelerationInGround( m_Model.GetTkState(), SimTK::Vec3( point.x, point.y, point.z ) ) );
 	}
 
-	Vec3 BodyOpenSim3::GetContactForce() const
-	{
-		// #issue55: change this into a generic form
-		if ( m_ForceIndex != -1 )
-		{
-			const auto& f = GetContactForceValues();
-			return Vec3( -f[ 0 ], -f[ 1 ], -f[ 2 ] ); // entry 0-2 are forces applied to ground
-		}
-		else return Vec3::zero();
-	}
-
-	Vec3 BodyOpenSim3::GetContactMoment() const
-	{
-		// #issue55: change this into a generic form
-		if ( m_ForceIndex != -1 )
-		{
-			const auto& f = GetContactForceValues();
-			return Vec3( -f[ 3 ], -f[ 4 ], -f[ 5 ] ); // entry 3-5 are moments applied to ground
-		}
-		else return Vec3::zero();
-	}
-
-	void BodyOpenSim3::ConnectContactForce( const String& force_name )
-	{
-		// #todo: this code can be removed once #issue55 is resolved
-		const auto& forces = m_osBody.getModel().getForceSet();
-		m_ForceIndex = forces.getIndex( force_name, 0 );
-		if ( m_ForceIndex != -1 )
-		{
-			auto labels = forces.get( m_ForceIndex ).getRecordLabels();
-			for ( int i = 0; i < labels.size(); ++i )
-				m_ContactForceLabels.push_back( labels[ i ] );
-			m_ContactForceValues.resize( m_ContactForceLabels.size() );
-		}
-	}
-
 	const Model& BodyOpenSim3::GetModel() const
 	{
 		return dynamic_cast<const Model&>( m_Model );
@@ -254,29 +239,6 @@ namespace scone
 		}
 
 		return geoms;
-	}
-
-	const std::vector< Real >& BodyOpenSim3::GetContactForceValues() const
-	{
-		// #issue55: verify this code
-		if ( m_ForceIndex != -1 )
-		{
-			m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-			int num_dyn = m_osBody.getModel().getMultibodySystem().getNumRealizationsOfThisStage( SimTK::Stage::Dynamics );
-
-			// update m_ContactForceValues only if needed (performance)
-			if ( m_LastNumDynamicsRealizations != num_dyn )
-			{
-				// #todo: find out if this can be done less clumsy in OpenSim
-				m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-				OpenSim::Array<double> forces = m_osBody.getModel().getForceSet().get( m_ForceIndex ).getRecordValues( m_Model.GetTkState() );
-				for ( int i = 0; i < forces.size(); ++i )
-					m_ContactForceValues[ i ] = forces[ i ];
-				m_LastNumDynamicsRealizations = num_dyn;
-			}
-		}
-
-		return m_ContactForceValues;
 	}
 
 	void BodyOpenSim3::SetExternalForce( const Vec3& f )

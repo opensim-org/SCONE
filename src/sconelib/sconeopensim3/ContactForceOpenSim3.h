@@ -36,7 +36,6 @@ namespace scone
 	private:
 		const OpenSim::HuntCrossleyForce& m_osForce;
 		ModelOpenSim3& m_Model;
-		std::vector< ContactGeometry* > m_Geometries;
 
 		mutable Vec3 m_Force;
 		mutable Vec3 m_Moment;

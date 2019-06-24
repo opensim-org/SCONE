@@ -72,15 +72,15 @@ namespace scone
 		auto& osModel = m_Model.GetOsimModel();
 		auto& tkState = m_Model.GetTkState();
 
-		// #todo #issue55: use timestamp or step instead of this
+		// realize the state and check the number of realizations
+		// IMPORTANT: we use the getNumRealizationsOfThisStage() instead of time or step
+		// because FixTkState() calls this multiple times before integration
 		osModel.getMultibodySystem().realize( tkState, SimTK::Stage::Dynamics );
 		int num_dyn = osModel.getMultibodySystem().getNumRealizationsOfThisStage( SimTK::Stage::Dynamics );
 
 		// update m_ContactForceValues only if needed (performance)
 		if ( m_LastNumDynamicsRealizations != num_dyn )
 		{
-			// #todo: find out if this can be done less clumsy in OpenSim
-			osModel.getMultibodySystem().realize( tkState, SimTK::Stage::Dynamics );
 			OpenSim::Array<double> forces = m_osForce.getRecordValues( tkState );
 			for ( int i = 0; i < forces.size(); ++i )
 				m_Values[ i ] = forces[ i ];

@@ -37,12 +37,12 @@ namespace scone
 
 	Vec3 Leg::GetContactForce() const
 	{
-		return m_Foot.GetBody().GetContactForce();
+		return m_ContactForce->GetForce();
 	}
 
 	Vec3 Leg::GetContactCop() const
 	{
-		return GetGroundCop( m_Foot.GetBody().GetContactForce(), m_Foot.GetBody().GetContactMoment() );
+		return m_ContactForce->GetPoint();
 	}
 
 	Vec3 Leg::GetRelFootPos() const
@@ -52,20 +52,7 @@ namespace scone
 
 	void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
 	{
-		// #todo #issue55: clean this up after testing
-		force = m_Foot.GetBody().GetContactForce();
-		moment = m_Foot.GetBody().GetContactMoment();
-		cop = GetGroundCop( force, moment );
-		if ( m_ContactForce )
-		{
-			auto&[ cf, cm, cp ] = m_ContactForce->GetForceMomentPoint();
-			if ( cf != force )
-				log::warning( "force: ", cf, " != ", force );
-			if ( cm != moment )
-				log::warning( "moment: ", cm, " != ", moment );
-			if ( cp != cop )
-				log::warning( "cop: ", cp, " != ", cop );
-		}
+		std::tie( force, moment, cop ) = m_ContactForce->GetForceMomentPoint();
 	}
 
 	Real Leg::MeasureLength() const
