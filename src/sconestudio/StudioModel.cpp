@@ -16,6 +16,7 @@
 #include "scone/core/Settings.h"
 #include "scone/core/math.h"
 #include "scone/model/Muscle.h"
+#include "xo/geometry/euler_angles.h"
 
 #include "xo/time/timer.h"
 #include "xo/filesystem/filesystem.h"
@@ -102,6 +103,14 @@ namespace scone
 	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
 		scone_scene.attach( root );
+
+		// ground plane
+		if ( auto* gp = model_->GetGroundPlane() )
+		{
+			ground_ = vis::plane( root, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
+			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
+			ground_.pos_ori( gp->GetPos(), xo::quat_from_z_angle( 90_deg ) * gp->GetOri() );
+		}
 
 		xo::timer t;
 		for ( auto& body : model_->GetBodies() )
@@ -329,6 +338,8 @@ namespace scone
 
 		for ( auto& e : contact_geoms )
 			e.show( view_flags.get< ShowContactGeom >() );
+
+		ground_.show( view_flags.get< StudioModel::ShowGroundPlane >() );
 
 		if ( model_ )
 			UpdateVis( model_->GetTime() );

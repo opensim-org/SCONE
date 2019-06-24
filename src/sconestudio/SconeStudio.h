@@ -98,7 +98,6 @@ private:
 	xo::flat_map< scone::StudioModel::ViewSettings, QAction* > viewActions;
 
 	vis::scene scene_;
-	vis::plane ground_plane;
 	std::unique_ptr< scone::StudioModel > model_;
 
 	bool createModel( const String& par_file, bool force_evaluation = false );

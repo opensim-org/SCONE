@@ -21,6 +21,7 @@
 #include "vis/axes.h"
 #include "vis/material.h"
 #include "vis/trail.h"
+#include "vis/plane.h"
 
 #include "scone/model/State.h"
 #include "scone/core/types.h"
@@ -85,6 +86,7 @@ namespace scone
 		float emissive_;
 
 		vis::scene& scene_;
+		vis::plane ground_;
 
 		vis::material bone_mat;
 		vis::material arrow_mat;

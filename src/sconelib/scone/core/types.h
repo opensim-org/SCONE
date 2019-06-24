@@ -63,6 +63,7 @@ namespace scone
 	using xo::no_index;
 	using std::string;
 	const index_t NoIndex = size_t( -1 );
+	using namespace xo::literals;
 
 	typedef double TimeInSeconds;
 	typedef double Frequency;
