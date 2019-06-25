@@ -132,16 +132,18 @@ if(${Qt5Widgets_FOUND})
 		target_compile_definitions( sconestudio PRIVATE SCONE_LUA )
 	endif()
 
-	# no console in release mode
-	set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
 	target_compile_definitions( sconestudio PRIVATE SCONE_ENABLE_XO_PROFILING )
 
-	source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
-	source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
-	source_group("Studio Files" FILES ${STUDIOFILES} )
-	source_group("Resource Files" FILES ${RESOURCEFILES} )
-	
 	if(MSVC)
+		# no console in release mode
+		set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
+		target_compile_options( sconestudio PRIVATE "/MP" ) # multithreaded compilation on MSVC
+
+		source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
+		source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
+		source_group("Studio Files" FILES ${STUDIOFILES} )
+		source_group("Resource Files" FILES ${RESOURCEFILES} )
+	
 		# copy dlls
 		# get the VS version, the shabby cmake way.
 		string(SUBSTRING ${CMAKE_VS_PLATFORM_TOOLSET} 1 3 VS_PLATFORM_TOOLSET_NUMBER)

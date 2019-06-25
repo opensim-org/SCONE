@@ -16,6 +16,7 @@ set_target_properties( sconelua PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED
 if (MSVC)
 	target_compile_definitions( sconelua PRIVATE SCONE_LUA_EXPORTS )
 	target_compile_definitions( sconelua PRIVATE SCONE_ENABLE_XO_PROFILING )
+	target_compile_options( sconelua PRIVATE "/MP" ) # multithreaded compilation on MSVC
 endif()
 
 source_group( "" FILES ${SCONE_LUA_FILES} )

@@ -35,6 +35,7 @@ set_target_properties(sconeopensim3 PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQU
 if (MSVC)
 	target_compile_definitions( sconeopensim3 PRIVATE SCONE_MODEL_OPENSIM_3_EXPORTS )
 	target_compile_definitions( sconeopensim3 PRIVATE SCONE_ENABLE_XO_PROFILING )
+	target_compile_options( sconeopensim3 PRIVATE "/MP" ) # multithreaded compilation on MSVC
 endif()
 
 source_group("" FILES ${MODEL_OPENSIM_3_FILES})

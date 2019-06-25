@@ -265,6 +265,7 @@ if (MSVC)
 	target_compile_definitions( sconelib PRIVATE _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS )
 	#target_compile_definitions( sconelib PRIVATE "$<$<CONFIG:RELWITHDEBINFO>:SCONE_ENABLE_XO_PROFILING>" )
 	target_compile_definitions( sconelib PRIVATE SCONE_ENABLE_XO_PROFILING )
+	target_compile_options( sconelib PRIVATE "/MP" ) # multithreaded compilation on MSVC
 endif()
 
 # To create folders in Visual Studio.

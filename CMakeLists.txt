@@ -17,11 +17,6 @@ option(SCONE_LUA "Support for lua scripting" OFF)
 find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
 
-# enable multithreaded compilation on MSVC
-if (MSVC)
-	add_compile_options("/MP")
-endif()
-
 # Various settings
 # ----------------
 # Place build products (libraries, executables) in root
