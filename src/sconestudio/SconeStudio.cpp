@@ -35,6 +35,7 @@
 #include <QTextStream>
 #include <QTabWidget>
 #include "qcustomplot.h"
+#include "qt_convert.h"
 
 using namespace scone;
 using namespace std;
@@ -497,10 +498,12 @@ int SconeStudio::getTabIndex( QCodeEditor* s )
 
 QCodeEditor* SconeStudio::getActiveScenario()
 {
-	for ( auto edw : scenarios )
+	QCodeEditor* active = nullptr;
+	for ( auto s : scenarios )
 	{
-		if ( !edw->visibleRegion().isEmpty() )
-			return edw;
+		if ( path_from_qt( s->fileName ) == )
+		if ( !s->visibleRegion().isEmpty() )
+			return s;
 	}
 	return nullptr;
 }

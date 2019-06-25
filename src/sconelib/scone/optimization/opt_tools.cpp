@@ -56,7 +56,7 @@ namespace scone
 
 		// create model
 		ModelUP model;
-		if ( par_file.empty() || par_file.extension() == "scone" )
+		if ( par_file.empty() || par_file.extension_no_dot() == "scone" )
 		{
 			// no par file was given, try to use init_file
 			// IMPORTANT: this uses the parameter MEAN of the init_file
@@ -95,7 +95,7 @@ namespace scone
 
 	path FindScenario( const path& file )
 	{
-		if ( file.extension() == "scone" || file.extension() == "xml" )
+		if ( file.extension_no_dot() == "scone" || file.extension_no_dot() == "xml" )
 			return file;
 
 		auto folder = file.parent_path();

@@ -18,7 +18,7 @@ XO_TEST_CASE( tutorial_test )
 	for ( fs::directory_iterator fileit( tutorials_dir.str() ); fileit!= fs::directory_iterator(); ++fileit )
 	{
 		auto scenario_file = xo::path( fileit->path().string() );
-		if ( scenario_file.extension() == "scone" )
+		if ( scenario_file.extension_no_dot() == "scone" )
 		{
 			xo::log::info( "TESTING: ", scenario_file.filename() );
 			xo::path report_file = results_dir / scenario_file.stem() + ".zml";

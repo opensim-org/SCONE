@@ -53,7 +53,7 @@ namespace scone
 		log::info( "Created objective ", model_objective->GetSignature(), "; dim=", model_objective->dim(), " source=", file.filename() );
 
 		// create model from par or with default parameters
-		if ( file.extension() == "par" )
+		if ( file.extension_no_dot() == "par" )
 			model_ = model_objective->CreateModelFromParFile( file );
 		else
 			model_ = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
@@ -62,7 +62,7 @@ namespace scone
 		filename_ = file;
 
 		// load results if the file is an sto
-		if ( file.extension() == "sto" && !force_evaluation )
+		if ( file.extension_no_dot() == "sto" && !force_evaluation )
 		{
 			xo::timer t;
 			log::debug( "Reading ", file );
