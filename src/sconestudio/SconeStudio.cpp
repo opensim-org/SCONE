@@ -56,7 +56,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
 	auto editMenu = menuBar()->addMenu( "&Edit" );
-	addMenuAction( editMenu, "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ), true );
+	addMenuAction( editMenu, "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ) );
 	addMenuAction( editMenu, "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
 	addMenuAction( editMenu, "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ), true );
 	addMenuAction( editMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
@@ -501,11 +501,17 @@ QCodeEditor* SconeStudio::getActiveScenario()
 	QCodeEditor* active = nullptr;
 	for ( auto s : scenarios )
 	{
-		if ( path_from_qt( s->fileName ) == )
-		if ( !s->visibleRegion().isEmpty() )
-			return s;
+		auto ext = path_from_qt( s->fileName ).extension_no_dot().str();
+		if ( ext == "scone" ) 
+		{
+			if ( !s->visibleRegion().isEmpty() )
+				return s; // active scone file
+			else if ( active == nullptr )
+				active = s; // could be single .scone file
+			else return nullptr; // multiple .scone files open, none active
+		}
 	}
-	return nullptr;
+	return active; // either single .scone file, or none
 }
 
 QCodeEditor* SconeStudio::getVerifiedActiveScenario()
@@ -520,7 +526,7 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
 			if ( pn.count_unaccessed() > 0 )
 			{
-				QString message = "Invalid scenario settings detected. Please verify and correct the following settings in order to prevent unexpected optimization results:\n\n";
+				QString message = "Invalid scenario settings in " + to_qt( filename.str() ) + ":\n\n";
 				message += to_qt( to_str_unaccessed( pn ) );
 				if ( QMessageBox::warning( this, "Invalid scenario settings", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
 					return nullptr;
@@ -529,7 +535,7 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 		}
 		else
 		{
-			QMessageBox::information( this, "No Scenario Selected", "No Scenario open for editing" );
+			QMessageBox::information( this, "No Scenario Selected", "Please select a .scone file" );
 			return nullptr;
 		}
 	}
@@ -554,9 +560,8 @@ void SconeStudio::runScenario()
 {
 	ui.playControl->stop();
 
-	if ( auto* s = getActiveScenario() )
+	if ( auto* s = getVerifiedActiveScenario() )
 	{
-		requestSaveChanges();
 		runSimulation( s->fileName );
 		if ( model_ )
 			ui.playControl->play();
@@ -566,9 +571,8 @@ void SconeStudio::runScenario()
 void SconeStudio::performanceTest()
 {
 	ui.playControl->stop();
-	if ( auto* s = getActiveScenario() )
+	if ( auto* s = getVerifiedActiveScenario() )
 	{
-		requestSaveChanges();
 		auto scenario_file = FindScenario( xo::path( s->fileName.toStdString() ) );
 		auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		xo::timer real_time;
