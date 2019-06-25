@@ -14,6 +14,7 @@
   	* added body:point_pos and body:point_vel
   	* added functionality to LuaVec3 and LuaQuat (see reference manual)
   * Added warning in folder preferences dialog to avoid network drives (issue #53)
+  * Pressing F5 will now evaluate the currently active scenario (if any)
   * When pressing Ctrl + T or Ctrl + F5 while a .lua file is active, scone tries to open a .scone instead.
   * Updated tutorials and documentation
 

@@ -79,7 +79,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
 	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ), true );
 	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence(), true );
-	addMenuAction( scenarioMenu, "&Run Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
 	addMenuAction( scenarioMenu, "Measure Scenario &Performance", this, &SconeStudio::performanceTest, QKeySequence( "Ctrl+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
@@ -88,7 +88,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
-	addMenuAction( actionMenu, "&Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
+	addMenuAction( actionMenu, "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
 	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_Space );
 	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
@@ -205,7 +205,17 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 
 void SconeStudio::start()
 {
-	ui.osgViewer->stopTimer();
+	auto s = getActiveScenario();
+	if ( s && ( !model_ ||
+		s->document()->isModified() ||
+		( s->hasFocus() && model_->GetFileName() != path_from_qt( s->fileName ) ) ) )
+	{
+		runScenario();
+	}
+	else
+	{
+		ui.osgViewer->stopTimer();
+	}
 }
 
 void SconeStudio::stop()
@@ -459,7 +469,7 @@ bool SconeStudio::requestSaveChanges()
 		for ( auto s : modified_docs )
 			message += "\n" + s->getTitle();
 
-		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
+		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Cancel ) == QMessageBox::Save )
 		{
 			for ( auto s : modified_docs )
 			{
@@ -502,7 +512,7 @@ QCodeEditor* SconeStudio::getActiveScenario()
 	for ( auto s : scenarios )
 	{
 		auto ext = path_from_qt( s->fileName ).extension_no_dot().str();
-		if ( ext == "scone" ) 
+		if ( ext == "scone" )
 		{
 			if ( !s->visibleRegion().isEmpty() )
 				return s; // active scone file
@@ -520,7 +530,9 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 	{
 		if ( auto* s = getActiveScenario() )
 		{
-			requestSaveChanges();
+			if ( !requestSaveChanges() )
+				return nullptr;
+
 			path filename = path( s->fileName.toStdString() );
 			auto pn = xo::load_file( filename );
 			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
