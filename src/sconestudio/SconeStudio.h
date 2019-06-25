@@ -91,6 +91,7 @@ private:
 	QCodeEditor* getVerifiedActiveScenario();
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
+	bool requestSaveChanges();
 	bool requestSaveChanges( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );

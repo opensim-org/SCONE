@@ -41,13 +41,13 @@ using namespace std;
 using namespace xo::literals;
 
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
-QCompositeMainWindow( parent, flags ),
-slomo_factor( 1 ),
-com_delta( Vec3( 0, 1, 0 ) ),
-close_all( false ),
-evaluation_time_step( 1.0 / 8 ),
-captureProcess( nullptr ),
-scene_( true )
+	QCompositeMainWindow( parent, flags ),
+	slomo_factor( 1 ),
+	com_delta( Vec3( 0, 1, 0 ) ),
+	close_all( false ),
+	evaluation_time_step( 1.0 / 8 ),
+	captureProcess( nullptr ),
+	scene_( true )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
@@ -403,7 +403,7 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 			splitDockWidget( r == 0 ? ui.resultsDock : optimizations[ r - 1 ], optimizations[ r ], Qt::Vertical );
 	}
 	else
-	{ 
+	{
 		// organize into columns
 		addDockWidget( Qt::LeftDockWidgetArea, pdw );
 
@@ -445,10 +445,36 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	return true;
 }
 
+bool SconeStudio::requestSaveChanges()
+{
+	std::vector< QCodeEditor* > modified_docs;
+	for ( auto s : scenarios )
+		if ( s->document()->isModified() )
+			modified_docs.push_back( s );
+
+	if ( !modified_docs.empty() )
+	{
+		QString message = "The following files have been modified:\n";
+		for ( auto s : modified_docs )
+			message += "\n" + s->getTitle();
+
+		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
+		{
+			for ( auto s : modified_docs )
+			{
+				s->save();
+				ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+			}
+			return true;
+		}
+		else return false;
+	}
+	else return true;
+}
+
 bool SconeStudio::requestSaveChanges( QCodeEditor* s )
 {
-	xo_assert( s != nullptr );
-	if ( s->document()->isModified() )
+	if ( s && s->document()->isModified() )
 	{
 		QString message = "Save changes to " + s->getTitle() + "?";
 		if ( QMessageBox::warning( this, "Save Changes", message, QMessageBox::Save, QMessageBox::Discard ) == QMessageBox::Save )
@@ -485,7 +511,7 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 	{
 		if ( auto* s = getActiveScenario() )
 		{
-			requestSaveChanges( s );
+			requestSaveChanges();
 			path filename = path( s->fileName.toStdString() );
 			auto pn = xo::load_file( filename );
 			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
@@ -527,7 +553,7 @@ void SconeStudio::runScenario()
 
 	if ( auto* s = getActiveScenario() )
 	{
-		requestSaveChanges( s );
+		requestSaveChanges();
 		runSimulation( s->fileName );
 		if ( model_ )
 			ui.playControl->play();
@@ -539,7 +565,7 @@ void SconeStudio::performanceTest()
 	ui.playControl->stop();
 	if ( auto* s = getActiveScenario() )
 	{
-		requestSaveChanges( s );
+		requestSaveChanges();
 		auto scenario_file = FindScenario( xo::path( s->fileName.toStdString() ) );
 		auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		xo::timer real_time;
