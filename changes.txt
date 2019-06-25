@@ -1,5 +1,30 @@
 ====== What's new ======
 
+==== SCONE 1.2.0 ====
+//Released June 25, 2019//
+
+=== New Features and Updates ===
+  * Contacts forces are now correctly reported and displayed in the SCONE 3D visualizer.
+  * Ground plane visualization now supports tilt and offsets.
+  * GaitMeasure takes into account ground plane slopes when detecting falling.
+  * Improved support for defining symmetric / asymmetric controllsers. The 'symmetric' property now works as expected in all controllers and is inherited from parent controllers if not specified (root controller defaults to true).
+  * Scripting (ScriptMeasure and ScriptController):
+  	* Added support store_data() for writing data to .sto and SCONE analysis window
+  	* Improved error handling and reporting for scripts
+  	* added body:point_pos and body:point_vel
+  	* added functionality to LuaVec3 and LuaQuat (see reference manual)
+  * Added warning in folder preferences dialog to avoid network drives (issue #53)
+  * When pressing Ctrl + T or Ctrl + F5 while a .lua file is active, scone tries to open a .scone instead.
+  * Updated tutorials and documentation
+
+=== Fixes ===
+  * All open files are now checked for modification when running a scenario
+  * Close current tab (Ctrl+W) now works correctly
+  * Jump tutorials now use correct init_file
+  * JumpMeasure now supports both 'body' and 'target_body', matching documentation and maintaining backwards compatibility
+  * Text modification detection now works properly with undo
+  * Text documents are now automatically focused when opened
+
 ==== SCONE 1.1.1 ====
 //Released May 29, 2019//
 
