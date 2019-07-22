@@ -23,15 +23,16 @@ namespace scone
 		INIT_PROP( props, symmetric, target_area.symmetric_ );
 
 		// setup actuator info
-		for ( size_t idx = 0; idx < model.GetMuscles().size(); ++idx )
+		auto& actuators = model.GetActuators();
+		for ( size_t idx = 0; idx < actuators.size(); ++idx )
 		{
 			ActInfo ai;
-			ai.full_name = model.GetMuscles()[ idx ]->GetName();
+			ai.full_name = actuators[ idx ]->GetName();
 			ai.name = GetNameNoSide( ai.full_name );
 			ai.side = GetSideFromName( ai.full_name );
-			ai.muscle_idx = idx;
+			ai.actuator_idx = idx;
 
-			// see if this muscle is on the right side
+			// see if this actuator is on the right side
 			if ( target_area.side_ == NoSide || target_area.side_ == ai.side )
 				m_ActInfos.push_back( ai );
 		}
@@ -69,10 +70,11 @@ namespace scone
 			funcresults[ idx ] = m_Functions[ idx ]->GetValue( time );
 
 		// apply results to all actuators
+		auto& actuators = model.GetActuators();
 		for ( ActInfo& ai : m_ActInfos )
 		{
 			// apply results directly to control value
-			model.GetMuscles()[ ai.muscle_idx ]->AddInput( funcresults[ ai.function_idx ] );
+			actuators[ ai.actuator_idx ]->AddInput( funcresults[ ai.function_idx ] );
 		}
 
 		return false;
@@ -80,8 +82,8 @@ namespace scone
 
 	scone::String FeedForwardController::GetClassSignature() const
 	{
-		String s = "F" + m_Functions.front()->GetSignature();
-
-		return s;
+		if ( !m_Functions.empty() )
+			return "F" + m_Functions.front()->GetSignature();
+		else return String();
 	}
 }
