@@ -165,10 +165,10 @@ namespace scone
 		// Use symmetric offset for left and right; default = 0.
 		bool initial_state_offset_symmetric;
 
-		// Pattern matching the states to include in initial offset (comma seperated); default = "*".
+		// Pattern matching the states to include in initial offset (semicolon seperated); default = "*".
 		String initial_state_offset_include;
 
-		// Pattern matching the states to exclude in initial offset (comma seperated); default = "".
+		// Pattern matching the states to exclude in initial offset (semicolon seperated); default = "".
 		String initial_state_offset_exclude;
 
 		// Maximum integration step size; default = 0.001.
