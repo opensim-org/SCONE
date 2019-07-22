@@ -133,8 +133,7 @@ namespace scone
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		if ( flags( StoreDataTypes::MuscleExcitation ) )
-			frame[ GetName() + ".input" ] = GetInput();
+		Actuator::StoreData( frame, flags );
 
 		if ( flags( StoreDataTypes::MuscleExcitation ) )
 			frame[ GetName() + ".excitation" ] = GetExcitation();

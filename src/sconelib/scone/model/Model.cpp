@@ -34,7 +34,7 @@ namespace scone
 		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
 		m_Measure( nullptr )
 	{
 		// old-style initialization (for backwards compatibility)
@@ -154,8 +154,8 @@ namespace scone
 				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
 		}
 
-		// store muscle data
-		for ( auto& m : GetMuscles() )
+		// store actuator data
+		for ( auto& m : GetActuators() )
 			m->StoreData( frame, flags );
 
 		// store body data

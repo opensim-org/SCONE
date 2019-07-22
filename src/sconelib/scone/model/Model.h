@@ -56,7 +56,7 @@ namespace scone
 
 		// Actuator access
 		std::vector< Actuator* >& GetActuators() { return m_Actuators; }
-		Actuator* GetActuator( index_t i ) { return m_Actuators[ i ]; }
+		const std::vector< Actuator* >& GetActuators() const { return m_Actuators; }
 
 		// Contact geometries
 		const std::vector< ContactGeometryUP >& GetContactGeometries() const { return m_ContactGeometries; }
