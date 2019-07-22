@@ -12,19 +12,26 @@ namespace scone
 	lua_script::lua_script( const PropNode& pn, Params& par, Model& model ) :
 	INIT_MEMBER_REQUIRED( pn, script_file_ )
 	{
-		lua_.open_libraries( sol::lib::base, sol::lib::math );
+		lua_.open_libraries( sol::lib::base, sol::lib::math, sol::lib::package );
 		register_lua_wrappers( lua_ );
+
+		// find script file (folder can be different if playback)
+		auto file = FindFile( script_file_ );
+		auto folder = file.has_parent_path() ? file.parent_path() : path( "." );
+
+		// set path for lua modules to current script file folder
+		lua_[ "package" ][ "path" ] = ( folder / "?.lua" ).c_str();
 
 		// propagate all properties to scone namespace in lua script
 		for ( auto& prop : pn )
 			lua_[ "scone" ][ prop.first ] = prop.second.get<string>();
 
 		// load script
-		auto script = lua_.load_file( FindFile( script_file_ ).str() );
+		auto script = lua_.load_file( file.str() );
 		if ( !script.valid() )
 		{
 			sol::error err = script;
-			SCONE_ERROR( "Error in " + script_file_.str() + ": " + err.what() );
+			SCONE_ERROR( "Error in " + script_file_.filename().str() + ": " + err.what() );
 		}
 
 		// run once to define functions
@@ -32,7 +39,7 @@ namespace scone
 		if ( !res.valid() )
 		{
 			sol::error err = res;
-			SCONE_ERROR( "Error in " + script_file_.str() + ": " + err.what() );
+			SCONE_ERROR( "Error in " + script_file_.filename().str() + ": " + err.what() );
 		}
 	}
 
@@ -42,7 +49,7 @@ namespace scone
 	sol::function lua_script::find_function( const String& name )
 	{
 		sol::function f = lua_[ name ];
-		SCONE_ERROR_IF( !f.valid(), "Error in " + script_file_.str() + ": Could not find function " + xo::quoted( name ) );
+		SCONE_ERROR_IF( !f.valid(), "Error in " + script_file_.filename().str() + ": Could not find function " + xo::quoted( name ) );
 		return f;
 	}
 
