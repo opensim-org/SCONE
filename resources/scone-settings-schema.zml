@@ -30,36 +30,36 @@ data {
 		type = bool
 		label = "Output body data"
 		default = 1
-		description = "Boolean indicating whether to output body position and orientation data (0 or 1)"
+		description = "Output body position and orientation data (0 or 1)"
 	}
 	joint {
 		type = bool
 		label = "Output joint data"
 		default = 1
-		description = "Boolean indicating whether to output joint reaction force"
+		description = "Output joint reaction force"
 	}
 	muscle {
 		type = bool
 		label = "Output muscle data"
 		default = 1
-		description = "Boolean indicating whether to output muscle data"
+		description = "Output muscle data"
 	}
 	sensor {
 		type = bool
 		label = "Output sensor data"
 		default = 1
-		description = "Boolean indicating whether to output sensor data"
+		description = "Output sensor data"
 	}
 	controller {
 		type = bool
 		label = "Output controller data"
 		default = 1
-		description = "Boolean indicating whether to output controller data"
+		description = "Output controller data"
 	}
 	contact {
 		type = bool
 		label = "Output contact forces and moments"
 		default = 1
-		description = "Boolean indicating whether to output contact forces and moments"
+		description = "Output contact forces and moments"
 	}
 }
