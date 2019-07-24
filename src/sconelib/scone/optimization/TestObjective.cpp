@@ -8,7 +8,7 @@
 
 #include "TestObjective.h"
 
-#include "test/test_functions.h"
+#include "spot_test/test_functions.h"
 #include "xo/string/string_tools.h"
 #include "scone/core/string_tools.h"
 
