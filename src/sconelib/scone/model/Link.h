@@ -13,15 +13,22 @@
 #include "scone/core/platform.h"
 #include "scone/core/Exception.h"
 #include "scone/core/types.h"
-#include "memory_tools.h"
 
 namespace scone
 {
 	class SCONE_API Link
 	{
 	public:
-		Link( Body& b, Joint& j, Link* parent = nullptr ) : m_Body( &b ), m_Joint( &j ), m_Parent( parent ), type( UnknownLink ) { };
-		Link( Body& b ) : m_Body( &b ), m_Joint( nullptr ), m_Parent( nullptr ) { };
+		Link(Body& b, Joint& j, Link* parent = nullptr) :
+			m_Body(&b),
+			m_Parent(parent),
+			m_Joint(&j)
+		{}
+		Link( Body& b ) :
+			m_Body( &b ),
+			m_Parent( nullptr ),
+			m_Joint( nullptr )
+		{}
 
 		// serialization, can be used for debug printing
 		String ToString( const String& prefix = "" ) const;
@@ -48,12 +55,9 @@ namespace scone
 		const Link* FindLink( const String& body ) const;
 		Link* FindLink( const String& body );
 
-		// link metadata
-		LinkType type;
-
 	private:
-		Link* m_Parent;
 		Body* m_Body;
+		Link* m_Parent;
 		Joint* m_Joint;
 		std::vector< LinkUP > m_Children;
 
