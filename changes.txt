@@ -1,5 +1,13 @@
 ====== What's new ======
 
+==== SCONE 1.2.1 ====
+//Released July 25, 2019//
+
+=== Fixes ===
+  * ScriptController and ScriptMeasure: Lua scripts now support 'require' for including other scripts located in the same folder
+  * FeedForwardController now supports CoordinateActuators
+  * FeedForwardController no longer crashes when no actuators could be found
+
 ==== SCONE 1.2.0 ====
 //Released June 25, 2019//
 
