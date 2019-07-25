@@ -17,6 +17,7 @@ if (MSVC)
 	target_compile_definitions( sconelua PRIVATE SCONE_LUA_EXPORTS )
 	target_compile_definitions( sconelua PRIVATE SCONE_ENABLE_XO_PROFILING )
 	target_compile_options( sconelua PRIVATE "/MP" ) # multithreaded compilation on MSVC
+	target_compile_options( sconelua PRIVATE "/bigobj" ) # needed to prevent C1128
 endif()
 
 source_group( "" FILES ${SCONE_LUA_FILES} )
