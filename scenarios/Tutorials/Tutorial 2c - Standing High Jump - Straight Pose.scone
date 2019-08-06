@@ -1,7 +1,7 @@
 CmaOptimizer {
 	signature_prefix = DATE_TIME
 	init_file = data/ResultStandingHighJumpFC2.par # use previous result
-
+	
 	SimulationObjective {
 		max_duration = 2
 		
@@ -24,6 +24,7 @@ CmaOptimizer {
 		
 		# Composite measure for straight pose jumping
 		CompositeMeasure {
+			minimize = 0 # Maximize this measure
 			
 			# Fitness measure for jumping
 			JumpMeasure {

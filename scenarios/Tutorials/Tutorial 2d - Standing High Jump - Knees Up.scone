@@ -24,6 +24,7 @@ CmaOptimizer {
 		
 		# Composite measure for straight pose jumping
 		CompositeMeasure {
+			minimize = 0 # Maximize this measure
 			
 			# Fitness measure for jumping
 			JumpMeasure {
