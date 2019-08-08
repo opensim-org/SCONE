@@ -25,8 +25,8 @@ namespace scone
 		INIT_PROP( props, force, Vec3::zero() );
 		INIT_PROP( props, moment, Vec3::zero() );
 		INIT_PROP( props, position_offset, Vec3::zero() );
-		INIT_PROP( props, interval, 0 );
-		INIT_PROP( props, duration, 0.1 );
+		INIT_PROP( props, interval, xo::bounds<TimeInSeconds>( 0, 0 ) );
+		INIT_PROP( props, duration, xo::bounds<TimeInSeconds>( 0.1, 0.1 ) );
 
 		SCONE_THROW_IF( !interval.is_null() && duration.upper > interval.lower, "Duration cannot be longer than interval" );
 
