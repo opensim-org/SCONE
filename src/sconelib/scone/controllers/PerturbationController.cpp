@@ -74,6 +74,6 @@ namespace scone
 
 	String PerturbationController::GetClassSignature() const
 	{
-		return stringf( "P%d", int( force.length() + moment.length() ) );
+		return stringf( "P%d", int( xo::length( force ) + xo::length( moment ) ) );
 	}
 }

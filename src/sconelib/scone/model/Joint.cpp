@@ -19,9 +19,9 @@ namespace scone
 	{
 	}
 
-	scone::Real Joint::GetLoad() const
+	Real Joint::GetLoad() const
 	{
-		return GetReactionForce().length() / m_Body.GetModel().GetBW();
+		return xo::length( GetReactionForce() ) / m_Body.GetModel().GetBW();
 	}
 
 	bool Joint::HasDof( const String& dof_name ) const
@@ -44,7 +44,7 @@ namespace scone
 		return m_Dofs;
 	}
 
-	scone::Joint::~Joint()
+	Joint::~Joint()
 	{
 	}
 }

@@ -167,7 +167,7 @@ namespace scone
 			//SCONE_PROFILE_SCOPE( "InitVariables" );
 			// initialize cached variables to save computation time
 			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
-			m_BW = GetGravity().length() * GetMass();
+			m_BW = xo::length( GetGravity() ) * GetMass();
 			ValidateDofAxes();
 		}
 

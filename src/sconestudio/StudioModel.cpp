@@ -231,7 +231,7 @@ namespace scone
 		for ( auto& cf : model_->GetContactForces() )
 		{
 			auto&[ force, moment, point ] = cf->GetForceMomentPoint();
-			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
+			if ( xo::squared_length( force ) > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
 				UpdateForceVis( force_count++, point, force );
 		}
 

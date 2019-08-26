@@ -10,6 +10,7 @@
 
 #include "scone/core/HasName.h"
 #include "scone/model/Model.h"
+#include "xo/geometry/vec3.h"
 
 namespace scone
 {
@@ -27,7 +28,7 @@ namespace scone
 	{
 		Real leg_load = 0.0f;
 		for ( auto& leg : model.GetLegs() )
-			leg_load += leg->GetContactForce().length() / model.GetBW();
+			leg_load += xo::length( leg->GetContactForce() ) / model.GetBW();
 
 		AddSample( timestamp, leg_load );
 
