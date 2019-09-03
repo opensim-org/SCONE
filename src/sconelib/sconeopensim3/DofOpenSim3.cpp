@@ -39,12 +39,12 @@ namespace scone
 
 	DofOpenSim3::~DofOpenSim3() {}
 
-	scone::Real DofOpenSim3::GetPos() const
+	Real DofOpenSim3::GetPos() const
 	{
 		return m_osCoord.getValue( m_Model.GetTkState() );
 	}
 
-	scone::Real DofOpenSim3::GetVel() const
+	Real DofOpenSim3::GetVel() const
 	{
 		return m_osCoord.getSpeedValue( m_Model.GetTkState() );
 	}
@@ -54,14 +54,14 @@ namespace scone
 		return m_osCoord.getName();
 	}
 
-	scone::Real DofOpenSim3::GetLimitForce() const
+	Real DofOpenSim3::GetLimitForce() const
 	{
 		if ( m_pOsLimitForce )
 			return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );
 		else return 0.0;
 	}
 
-	scone::Real DofOpenSim3::GetMoment() const
+	Real DofOpenSim3::GetMoment() const
 	{
 		SCONE_THROW_NOT_IMPLEMENTED;
 	}
