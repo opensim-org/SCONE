@@ -32,16 +32,16 @@ namespace scone
 
 	double DofMeasure::ComputeResult( Model& model )
 	{
-		double penalty = 0.0;
+		double penalty = 0;
 		if ( !position.IsNull() )
 		{
-			penalty += position.GetResult();
+			penalty += position.GetResult().value;
 			if ( range_count > 1 )
 				GetReport().set( name + ".position_penalty" , stringf( "%g", position.GetResult() ) );
 		}
 		if ( !velocity.IsNull() )
 		{
-			penalty += velocity.GetResult();
+			penalty += velocity.GetResult().value;
 			if ( range_count > 1 )
 				GetReport().set( name + ".velocity_penalty", stringf( "%g", velocity.GetResult() ) );
 		}
@@ -52,7 +52,7 @@ namespace scone
 				GetReport().set( name + ".force_penalty", stringf( "%g", force.GetResult() ) );
 		}
 
-		return  penalty;
+		return penalty;
 	}
 
 	bool DofMeasure::UpdateMeasure( const Model& model, double timestamp )
@@ -71,9 +71,9 @@ namespace scone
 	void DofMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( !position.IsNull() )
-			frame[ dof.GetName() + ".position_penalty" ] = position.GetLatest();
+			frame[ dof.GetName() + ".position_penalty" ] = position.GetLatest().value;
 		if ( !velocity.IsNull() )
-			frame[ dof.GetName() + ".velocity_penalty" ] = velocity.GetLatest();
+			frame[ dof.GetName() + ".velocity_penalty" ] = velocity.GetLatest().value;
 		if ( !force.IsNull() )
 			frame[ dof.GetName() + ".force_penalty" ] = force.GetLatest();
 	}

@@ -27,8 +27,8 @@ namespace scone
 		RangePenalty() : range( xo::constants<T>::lowest(), xo::constants<T>::max() ), abs_penalty( 0 ), squared_penalty( 0 ) { }
 
 		RangePenalty( const PropNode& prop ) :
-			abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, T( 0 ) ) ),
-			squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, T( 0 ) ) ),
+			abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, 0.0 ) ),
+			squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, 0.0 ) ),
 			range( prop ),
 			mode_( prop.get<penalty_mode>( "mode", penalty_mode::average ) )
 		{
@@ -44,13 +44,13 @@ namespace scone
 
 		bool IsNull() const { return abs_penalty == 0.0 && squared_penalty == 0.0; }
 
-		double GetLatest() const { return double( penalty.GetLatest() ); }
+		T GetLatest() const { return penalty.GetLatest(); }
 
-		double GetResult() const {
+		T GetResult() const {
 			switch ( mode_ ) {
-			case penalty_mode::average: return double( penalty.GetAverage() );
-			case penalty_mode::highest: return double( penalty.GetHighest() );
-			case penalty_mode::lowest: return double( penalty.GetLowest() );
+			case penalty_mode::average: return penalty.GetAverage();
+			case penalty_mode::highest: return penalty.GetHighest();
+			case penalty_mode::lowest: return penalty.GetLowest();
 			default: SCONE_THROW( "Invalid mode" );
 			}
 		}
