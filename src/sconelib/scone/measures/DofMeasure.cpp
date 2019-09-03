@@ -57,8 +57,8 @@ namespace scone
 
 	bool DofMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		position.AddSample( timestamp, Radian( dof.GetPos() + ( parent ? parent->GetPos() : 0 ) ) );
-		velocity.AddSample( timestamp, Radian( dof.GetVel() + ( parent ? parent->GetVel() : 0 ) ) );
+		position.AddSample( timestamp, Degree( Radian( dof.GetPos() + ( parent ? parent->GetPos() : 0 ) ) ) );
+		velocity.AddSample( timestamp, Degree( Radian( dof.GetVel() + ( parent ? parent->GetVel() : 0 ) ) ) );
 		force.AddSample( timestamp, dof.GetLimitForce() );
 		return false;
 	}

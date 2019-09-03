@@ -59,8 +59,8 @@ namespace scone
 		{
 			if ( l.squared_range_penalty != 0 || l.abs_range_penalty != 0 )
 			{
-				auto value = l.dof.GetPos() + ( l.parent ? l.parent->GetPos() : 0 );
-				double range_violation = l.range.GetRangeViolation( Radian( value ) ).value;
+				auto value = Radian( l.dof.GetPos() + ( l.parent ? l.parent->GetPos() : 0 ) );
+				double range_violation = l.range.GetRangeViolation( Degree( value ) ).value;
 				double rps = l.squared_range_penalty * GetSquared( range_violation );
 				double rpa = l.abs_range_penalty * std::abs( range_violation );
 				l.penalty.AddSample( timestamp, rps + rpa );
@@ -68,8 +68,8 @@ namespace scone
 
 			if ( l.squared_velocity_range_penalty != 0 || l.abs_velocity_range_penalty != 0 )
 			{
-				auto value = l.dof.GetVel() + ( l.parent ? l.parent->GetVel() : 0 );
-				double range_violation = l.velocity_range.GetRangeViolation( Radian( value ) ).value;
+				auto value = Radian( l.dof.GetVel() + ( l.parent ? l.parent->GetVel() : 0 ) );
+				double range_violation = l.velocity_range.GetRangeViolation( Degree( value ) ).value;
 				double vrps = l.squared_velocity_range_penalty * GetSquared( range_violation );
 				double vrpa = l.abs_velocity_range_penalty * std::abs( range_violation );
 				l.penalty.AddSample( timestamp, vrps + vrpa );
