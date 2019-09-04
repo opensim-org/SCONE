@@ -344,7 +344,7 @@ void SconeStudio::fileOpenTriggered()
 	if ( auto* s = getActiveScenario() )
 		default_path = to_qt( path( s->fileName.toStdString() ).parent_path() );
 
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "SCONE Scenarios (*.scone *.xml *.zml);;Lua Scripts (*.lua)" );
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "Supported file formats (*.scone *.xml *.zml *.lua);;SCONE Scenarios (*.scone *.xml *.zml);;Lua Scripts (*.lua)" );
 	if ( !filename.isEmpty() )
 		openFile( filename );
 }
@@ -370,7 +370,7 @@ void SconeStudio::openFile( const QString& filename )
 
 void SconeStudio::fileSaveTriggered()
 {
-	if ( auto* s = getActiveScenario() )
+	if ( auto* s = getActiveFile() )
 	{
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
@@ -381,7 +381,7 @@ void SconeStudio::fileSaveAsTriggered()
 {
 	if ( auto* s = getActiveScenario() )
 	{
-		QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml)" );
+		QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml);;Lua script (*.lua)" );
 		if ( !filename.isEmpty() )
 		{
 			s->saveAs( filename );
@@ -504,6 +504,16 @@ int SconeStudio::getTabIndex( QCodeEditor* s )
 			return idx;
 	}
 	return -1;
+}
+
+QCodeEditor* SconeStudio::getActiveFile()
+{
+	for ( auto s : scenarios )
+	{
+		if ( !s->visibleRegion().isEmpty() )
+			return s; // active scone file
+	}
+	return nullptr;
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()

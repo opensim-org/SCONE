@@ -87,6 +87,7 @@ public:
 	bool isEvalutating() { return model_ && model_->IsEvaluating(); }
 
 private:
+	QCodeEditor* getActiveFile();
 	QCodeEditor* getActiveScenario();
 	QCodeEditor* getVerifiedActiveScenario();
 	void evaluate();
