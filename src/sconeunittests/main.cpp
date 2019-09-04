@@ -9,7 +9,7 @@
 #include "scone/sconelib_config.h"
 #include "xo/serialization/serialize.h"
 #include "xo/system/log_sink.h"
-#include "xo/system/test_framework.h"
+#include "xo/system/test_case.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 
 int main( int argc, const char* argv[] )

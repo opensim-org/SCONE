@@ -3,7 +3,7 @@
 #include "scone/core/system_tools.h"
 #include "xo/system/log.h"
 #include "scone/optimization/opt_tools.h"
-#include "xo/system/test_framework.h"
+#include "xo/system/test_case.h"
 #include "xo/filesystem/filesystem.h"
 
 namespace fs = std::filesystem;

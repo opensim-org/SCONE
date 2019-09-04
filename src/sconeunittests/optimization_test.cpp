@@ -13,7 +13,7 @@
 #include "scone/core/math.h"
 #include "xo/filesystem/path.h"
 
-#include "xo/system/test_framework.h"
+#include "xo/system/test_case.h"
 #include "xo/filesystem/filesystem.h"
 #include "scone/optimization/CmaOptimizerSpot.h"
 
