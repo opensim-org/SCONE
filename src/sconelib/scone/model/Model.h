@@ -21,7 +21,6 @@
 #include "scone/core/HasExternalResources.h"
 #include "Sensor.h"
 #include "scone/core/Storage.h"
-#include <array>
 #include <type_traits>
 
 #include "ContactGeometry.h"
