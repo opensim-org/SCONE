@@ -66,8 +66,6 @@ set(CS_CONTROLLERS_FILES
 	controllers/FeedForwardController.h
 	controllers/PerturbationController.cpp
 	controllers/PerturbationController.h
-	controllers/ExternalBalanceController.cpp
-	controllers/ExternalBalanceController.h
 	controllers/MirrorController.h
 	controllers/MirrorController.cpp
 	controllers/NoiseController.h

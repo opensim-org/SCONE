@@ -10,7 +10,7 @@
 
 #include "scone/model/Model.h"
 #include "scone/optimization/Params.h"
-#include "xo/geometry/euler_angles.h"
+#include "xo/geometry/quat.h"
 
 namespace scone
 {
