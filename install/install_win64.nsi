@@ -7,7 +7,7 @@
 !define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.1"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
-!define VCREDIST_FILE "vcredist_${MSVC_VERSION}.exe"
+!define VCREDIST_FILE "vc_redist.x64.exe"
 
 ;--------------------------------
 ;Include Modern UI
