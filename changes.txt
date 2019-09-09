@@ -1,5 +1,16 @@
 ====== What's new ======
 
+==== SCONE 1.2.2 ====
+//Released September 9, 2019//
+
+=== Fixes ===
+  * ScriptMeasure / ScriptController: Contact forces are now accessed correctly using contact_force(), contact_moment() and contact_point()
+  * File Save (Ctrl + s) now works with .lua files (closes #77)
+  * Open File (Ctrl + o) now shows all supported file formats by default
+  * Jumping tutorials now explicitly maximize results
+  * Documentation fixes
+  * Minor performance enhancements
+
 ==== SCONE 1.2.1 ====
 //Released July 25, 2019//
 
