@@ -32,7 +32,7 @@
 #include "xo/string/pattern_matcher.h"
 #include "xo/container/container_tools.h"
 #include "xo/utility/file_resource_cache.h"
-#include "xo/geometry/euler_angles.h"
+#include "xo/geometry/quat.h"
 #include "xo/geometry/angle.h"
 
 #include <mutex>

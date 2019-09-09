@@ -16,14 +16,15 @@
 #include "scone/core/Settings.h"
 #include "scone/core/math.h"
 #include "scone/model/Muscle.h"
-#include "xo/geometry/euler_angles.h"
 
 #include "xo/time/timer.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/utility/color.h"
 #include "xo/geometry/path_alg.h"
-#include "StudioSettings.h"
+#include "xo/geometry/quat.h"
 #include "xo/shape/sphere.h"
+
+#include "StudioSettings.h"
 #include "QMessageBox"
 #include "qt_convert.h"
 
