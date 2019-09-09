@@ -385,23 +385,18 @@ namespace scone
 		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
-	scone::Vec3 ModelOpenSim3::GetGravity() const
+	Vec3 ModelOpenSim3::GetGravity() const
 	{
 		return from_osim( m_pOsimModel->getGravity() );
 	}
 
-	bool is_body_equal( BodyUP& body, OpenSim::Body& osBody )
-	{
-		return dynamic_cast<BodyOpenSim3&>( *body ).m_osBody == osBody;
-	}
-
-	scone::LinkUP ModelOpenSim3::CreateLinkHierarchy( OpenSim::Body& osBody, Link* parent )
+	LinkUP ModelOpenSim3::CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent )
 	{
 		LinkUP link;
 
 		// find the Body
-		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(), [&]( BodyUP& body )
-		{ return dynamic_cast<BodyOpenSim3&>( *body ).m_osBody == osBody; } );
+		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(),
+			[&]( BodyUP& body ) { return dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == osBody; } );
 		SCONE_ASSERT( itBody != m_Bodies.end() );
 
 		// find the Joint (if any)
@@ -426,10 +421,10 @@ namespace scone
 		for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
 		{
 			BodyOpenSim3& childBody = dynamic_cast<BodyOpenSim3&>( **iter );
-			if ( childBody.m_osBody.hasJoint() && childBody.m_osBody.getJoint().getParentBody() == osBody )
+			if ( childBody.GetOsBody().hasJoint() && childBody.GetOsBody().getJoint().getParentBody() == osBody )
 			{
 				// create child link
-				link->GetChildren().push_back( CreateLinkHierarchy( childBody.m_osBody, link.get() ) );
+				link->GetChildren().push_back( CreateLinkHierarchy( childBody.GetOsBody(), link.get() ) );
 			}
 		}
 
@@ -621,7 +616,7 @@ namespace scone
 		return str;
 	}
 
-	scone::Real ModelOpenSim3::GetTotalEnergyConsumption() const
+	Real ModelOpenSim3::GetTotalEnergyConsumption() const
 	{
 		if ( m_pProbe )
 			return m_pProbe->getProbeOutputs( GetTkState() )[ 0 ];

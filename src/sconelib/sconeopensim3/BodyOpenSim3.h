@@ -45,9 +45,7 @@ namespace scone
 
 		virtual Vec3 GetContactForce() const override;
 		virtual Vec3 GetContactMoment() const override;
-
-		OpenSim::Body& m_osBody;
-		class ModelOpenSim3& m_Model;
+		virtual Vec3 GetContactPoint() const override;
 
 		virtual Model& GetModel() override;
 		virtual const Model& GetModel() const override;
@@ -64,7 +62,12 @@ namespace scone
 		virtual Vec3 GetExternalMoment() const override;
 		virtual Vec3 GetExternalForcePoint() const override;
 
+		const OpenSim::Body& GetOsBody() const { return m_osBody; }
+
 	private:
+		OpenSim::Body& m_osBody;
+		class ModelOpenSim3& m_Model;
 		Vec3 m_LocalComPos;
+		std::vector< ContactForce* > m_ContactForces;
 	};
 }

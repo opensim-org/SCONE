@@ -41,6 +41,7 @@ namespace scone
 
 		virtual Vec3 GetContactForce() const = 0;
 		virtual Vec3 GetContactMoment() const = 0;
+		virtual Vec3 GetContactPoint() const = 0;
 
 		virtual void SetExternalForce( const Vec3& force ) = 0;
 		virtual void SetExternalForceAtPoint( const Vec3& force, const Vec3& point ) = 0;

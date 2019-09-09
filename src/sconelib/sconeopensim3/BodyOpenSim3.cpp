@@ -19,6 +19,8 @@
 #include "scone/core/Log.h"
 #include "OpenSim/Common/Geometry.h"
 
+#include <numeric>
+
 namespace scone
 {
 	BodyOpenSim3::BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body ) :
@@ -29,6 +31,14 @@ namespace scone
 		SimTK::Vec3 com;
 		m_osBody.getMassCenter( com );
 		m_LocalComPos = from_osim( com );
+
+		// find contact forces attached to this body
+		for ( auto& cf : m_Model.GetContactForces() )
+		{
+			for ( auto& cg : cf->GetContactGeometries() )
+				if ( &cg->GetBody() == this )
+					m_ContactForces.push_back( cf.get() );
+		}
 	}
 
 	BodyOpenSim3::~BodyOpenSim3()
@@ -41,26 +51,33 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetContactForce() const
 	{
-		Vec3 force = Vec3::zero();
-		for ( auto& cf : m_Model.GetContactForces() )
-		{
-			for ( auto& cg : cf->GetContactGeometries() )
-				if ( &cg->GetBody() == this )
-					force += cf->GetForce();
-		}
-		return force;
+		return std::accumulate( m_ContactForces.begin(), m_ContactForces.end(), Vec3::zero(),
+			[&]( const Vec3& v, const ContactForce* cf ) { return v + cf->GetForce(); } );
 	}
 
 	Vec3 BodyOpenSim3::GetContactMoment() const
 	{
-		Vec3 moment = Vec3::zero();
-		for ( auto& cf : m_Model.GetContactForces() )
+		return std::accumulate( m_ContactForces.begin(), m_ContactForces.end(), Vec3::zero(),
+			[&]( const Vec3& v, const ContactForce* cf ) { return v + cf->GetMoment(); } );
+	}
+
+	Vec3 BodyOpenSim3::GetContactPoint() const
+	{
+		if ( m_ContactForces.size() >= 2 )
 		{
-			for ( auto& cg : cf->GetContactGeometries() )
-				if ( &cg->GetBody() == this )
-					moment += cf->GetMoment();
+			// weighted average
+			Vec3 point = Vec3::zero();
+			double total_force = 0.0;
+			for ( auto& cf : m_ContactForces )
+			{
+				auto f = xo::length( cf->GetForce() );
+				point += f * cf->GetPoint();
+				total_force += f;
+			}
+
+			return total_force > 0 ? point / total_force : Vec3::zero();
 		}
-		return moment;
+		else return m_ContactForces.front()->GetPoint();
 	}
 
 	Vec3 BodyOpenSim3::GetOriginPos() const

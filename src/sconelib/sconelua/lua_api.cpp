@@ -31,8 +31,14 @@ namespace scone
 			"name", &LuaBody::name,
 			"com_pos", &LuaBody::com_pos,
 			"com_vel", &LuaBody::com_vel,
+			"point_pos", &LuaBody::point_pos,
+			"point_vel", &LuaBody::point_vel,
+			"ori", &LuaBody::ori,
 			"ang_pos", &LuaBody::ang_pos,
 			"ang_vel", &LuaBody::ang_vel,
+			"contact_force", &LuaBody::contact_force,
+			"contact_moment", &LuaBody::contact_moment,
+			"contact_point", &LuaBody::contact_point,
 			"add_external_force", &LuaBody::add_external_force,
 			"add_external_moment", &LuaBody::add_external_moment
 			);
