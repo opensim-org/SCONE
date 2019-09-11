@@ -31,19 +31,19 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
-	scene_( s ),
-	root( &scene_ ),
-	specular_( GetStudioSetting < float > ( "viewer.specular" ) ),
-	shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
-	ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
-	emissive_( GetStudioSetting< float >( "viewer.emissive" ) ),
-	bone_mat( GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
-	muscle_mat( GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
-	tendon_mat( GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
-	arrow_mat( GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
-	contact_mat( GetStudioSetting< xo::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
-	muscle_gradient( { { 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
-	is_evaluating( false )
+		scene_( s ),
+		root( &scene_ ),
+		specular_( GetStudioSetting < float >( "viewer.specular" ) ),
+		shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
+		ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
+		emissive_( GetStudioSetting< float >( "viewer.emissive" ) ),
+		bone_mat( GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
+		muscle_mat( GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
+		tendon_mat( GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
+		arrow_mat( GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
+		contact_mat( GetStudioSetting< xo::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
+		muscle_gradient( { { 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
+		is_evaluating( false )
 	{
 		// #todo: don't reset this every time, perhaps keep view_flags outside StudioModel
 		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
@@ -95,7 +95,7 @@ namespace scone
 		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
-			auto data_idx = (data.GetChannelIndex( model_state.GetName( state_idx ) ));
+			auto data_idx = ( data.GetChannelIndex( model_state.GetName( state_idx ) ) );
 			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
 			state_data_index[ state_idx ] = data_idx;
 		}
@@ -110,7 +110,7 @@ namespace scone
 		{
 			ground_ = vis::plane( root, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
 			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
-			ground_.pos_ori( gp->GetPos(), xo::quat_from_z_angle( 90_deg ) * gp->GetOri() );
+			ground_.pos_ori( vis::vec3f( gp->GetPos() ), xo::quat_from_z_angle( 90_deg ) * gp->GetOri() );
 		}
 
 		xo::timer t;
@@ -130,8 +130,8 @@ namespace scone
 					{
 						body_meshes.push_back( vis::mesh( bodies.back(), *geom_file ) );
 						body_meshes.back().set_material( bone_mat );
-						body_meshes.back().pos_ori( geom.pos, geom.ori );
-						body_meshes.back().scale( geom.scale );
+						body_meshes.back().pos_ori( vis::vec3f( geom.pos ), vis::quatf( geom.ori ) );
+						body_meshes.back().scale( vis::vec3f( geom.scale ) );
 					}
 					else log::warning( "Could not find ", geom.filename );
 				}
@@ -152,7 +152,7 @@ namespace scone
 				// #todo: add support for other shapes (i.e. planes)
 				contact_geoms.push_back( vis::mesh( parent, cg->GetShape(), xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
 				contact_geoms.back().set_material( contact_mat );
-				contact_geoms.back().pos( cg->GetPos() );
+				contact_geoms.back().pos( vis::vec3f( cg->GetPos() ) );
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace scone
 		for ( index_t i = 0; i < model_bodies.size(); ++i )
 		{
 			auto& b = model_bodies[ i ];
-			vis::transformf trans( b->GetOriginPos(), b->GetOrientation() );
+			vis::transformf trans( vis::vec3f( b->GetOriginPos() ), b->GetOrientation() );
 			bodies[ i ].transform( trans );
 
 			// external forces
@@ -213,7 +213,7 @@ namespace scone
 		}
 
 		// update muscle paths
-		auto &model_muscles = model_->GetMuscles();
+		auto& model_muscles = model_->GetMuscles();
 		for ( index_t i = 0; i < model_muscles.size(); ++i )
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
@@ -231,7 +231,7 @@ namespace scone
 
 		for ( auto& cf : model_->GetContactForces() )
 		{
-			auto&[ force, moment, point ] = cf->GetForceMomentPoint();
+			auto& [force, moment, point] = cf->GetForceMomentPoint();
 			if ( xo::squared_length( force ) > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
 				UpdateForceVis( force_count++, point, force );
 		}
@@ -248,7 +248,7 @@ namespace scone
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
-		forces[ force_idx ].pos( cop, cop + 0.001 * force );
+		forces[ force_idx ].pos( vis::vec3f( cop ), vis::vec3f( cop + 0.001 * force ) );
 	}
 
 	void StudioModel::UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis )

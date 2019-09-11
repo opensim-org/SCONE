@@ -269,7 +269,7 @@ namespace scone
 			const auto& name = cg_osim->getName();
 			auto& bod = *FindByName( m_Bodies, cg_osim->getBodyName() );
 			auto loc = from_osim( cg_osim->getLocation() );
-			xo::vec3radd ea = from_osim( cg_osim->getOrientation() );
+			auto ea = xo::vec3radd( from_osim( cg_osim->getOrientation() ) );
 			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
 
 			if ( auto cs = dynamic_cast< OpenSim::ContactSphere* >( cg_osim ) )

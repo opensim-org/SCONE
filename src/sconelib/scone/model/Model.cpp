@@ -303,8 +303,8 @@ namespace scone
 		auto com = GetComPos();
 		if ( auto* ground = GetGroundPlane() )
 		{
-			xo::rayf r{ xo::vec3f( com ), xo::vec3f( -up ) };
-			xo::transformf t{ ground->GetPos(), ground->GetOri() };
+			auto r = xo::rayf( xo::vec3f( com ), xo::vec3f( -up ) );
+			auto t = xo::transformf( xo::vec3f( ground->GetPos() ), xo::quatf( ground->GetOri() ) );
 			auto p = xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
 			return com.y - p.y;
 		}
