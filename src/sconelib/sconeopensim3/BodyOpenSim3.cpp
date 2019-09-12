@@ -31,14 +31,6 @@ namespace scone
 		SimTK::Vec3 com;
 		m_osBody.getMassCenter( com );
 		m_LocalComPos = from_osim( com );
-
-		// find contact forces attached to this body
-		for ( auto& cf : m_Model.GetContactForces() )
-		{
-			for ( auto& cg : cf->GetContactGeometries() )
-				if ( &cg->GetBody() == this )
-					m_ContactForces.push_back( cf.get() );
-		}
 	}
 
 	BodyOpenSim3::~BodyOpenSim3()

@@ -9,7 +9,7 @@
 
 namespace scone
 {
-	ContactForceOpenSim3::ContactForceOpenSim3( class ModelOpenSim3& model, const OpenSim::HuntCrossleyForce& osForce ) :
+	ContactForceOpenSim3::ContactForceOpenSim3( ModelOpenSim3& model, const OpenSim::HuntCrossleyForce& osForce ) :
 		m_osForce( osForce ),
 		m_Model( model ),
 		m_LastNumDynamicsRealizations( -1 )
@@ -33,6 +33,14 @@ namespace scone
 		for ( int i = 0; i < labels.size(); ++i )
 			m_Labels.push_back( labels[ i ] );
 		m_Values.resize( labels.size() );
+
+		// attach contact force to bodies
+		for ( auto& b : model.GetBodies() )
+		{
+			for ( auto& cg : m_Geometries )
+				if ( &cg->GetBody() == b.get() )
+					dynamic_cast<BodyOpenSim3&>( *b ).AttachContactForce( this );
+		}
 	}
 
 	ContactForceOpenSim3::~ContactForceOpenSim3()

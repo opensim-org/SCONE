@@ -64,6 +64,8 @@ namespace scone
 
 		const OpenSim::Body& GetOsBody() const { return m_osBody; }
 
+		void AttachContactForce( ContactForce* cf ) { m_ContactForces.push_back( cf ); }
+
 	private:
 		OpenSim::Body& m_osBody;
 		class ModelOpenSim3& m_Model;
