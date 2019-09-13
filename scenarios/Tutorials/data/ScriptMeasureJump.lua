@@ -42,5 +42,6 @@ end
 function store_data( frame )
 	-- store some values for analysis
 	frame:set_value( "body_height", body:com_pos().y )
+	frame:set_value( "body_contact_force", body:contact_force().y )
 	frame:set_bool( "has_moved_up", has_moved_up )
 end
