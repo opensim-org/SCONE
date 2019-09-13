@@ -11,8 +11,6 @@ ignore/
 *simulation_test_result*.zml
 /.version
 /doc/upload.bat
-/make_release_win64.bat
-/make_release_win64_nodoc.bat
-/make_changelog.bat
 /install/*.exe
+/*.bat
 *.log
