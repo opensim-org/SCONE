@@ -38,17 +38,17 @@ namespace scone
 		return m_osJoint.numCoordinates();
 	}
 
-	scone::Real JointOpenSim3::GetDofValue( size_t index /*= 0 */ ) const
+	Real JointOpenSim3::GetDofValue( size_t index ) const
 	{
 		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
 	}
 
-	const String& JointOpenSim3::GetDofName( size_t index /*= 0 */ ) const
+	const String& JointOpenSim3::GetDofName( size_t index ) const
 	{
 		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getName();
 	}
 
-	scone::Vec3 JointOpenSim3::GetReactionForce() const
+	Vec3 JointOpenSim3::GetReactionForce() const
 	{
 		auto& model = m_osJoint.getModel();
 		auto& matter = model.getMatterSubsystem();
