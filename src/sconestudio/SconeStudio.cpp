@@ -90,7 +90,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
 	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
-	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, Qt::Key_Space );
+	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, QKeySequence( "Ctrl+Space" ) );
 	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
 	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
 	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ), true );
@@ -210,11 +210,14 @@ void SconeStudio::start()
 		s->document()->isModified() ||
 		( s->hasFocus() && model_->GetFileName() != path_from_qt( s->fileName ) ) ) )
 	{
+		// update the simulation
 		runScenario();
 	}
 	else
 	{
+		// everything is up-to-date, pause idle update timer and focus viewer
 		ui.osgViewer->stopTimer();
+		ui.osgViewer->viewWidget()->setFocus();
 	}
 }
 
