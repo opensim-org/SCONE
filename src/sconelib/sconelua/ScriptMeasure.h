@@ -27,6 +27,6 @@ namespace scone
 		std::function<void( struct LuaModel* )> init_;
 		std::function<bool( struct LuaModel* )> update_;
 		std::function<double( struct LuaModel* )> result_;
-		std::function<double( struct LuaFrame* )> store_;
+		std::function<void( struct LuaFrame* )> store_;
 	};
 }
