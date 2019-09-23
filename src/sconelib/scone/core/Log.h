@@ -61,5 +61,6 @@ namespace scone
 		using xo::log::warning;
 		using xo::log::error;
 		using xo::log::critical;
+		using xo::log::flush;
 	}
 }

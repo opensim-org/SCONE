@@ -36,23 +36,23 @@ int main( int argc, char *argv[] )
 
 	try
 	{
+		// init logging
+#ifdef _DEBUG
+		xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
+#endif
+		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
+		xo::log::file_sink file_sink( xo::log::debug_level, log_file );
+		SCONE_THROW_IF( !file_sink.file_stream().good(), "Could not create file " + log_file.str() );
+		xo::log::debug( "Created log file: ", log_file );
+
+		// init scone file format
+		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
+
 		// init plash screen
 		QPixmap splash_pm( to_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
 		a.processEvents();
-
-		// init logging
-		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
-		xo::log::file_sink file_sink( xo::log::debug_level, log_file );
-		SCONE_THROW_IF( !file_sink.good(), "Could not create file " + log_file.str() );
-		xo::log::debug( "Created log file ", log_file );
-#ifdef _DEBUG
-		xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
-#endif
-
-		// init scone file format
-		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 
 		// register models
 		scone::RegisterModels();
