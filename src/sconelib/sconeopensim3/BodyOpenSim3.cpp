@@ -198,7 +198,6 @@ namespace scone
 
 	Vec3 BodyOpenSim3::GetAngAcc() const
 	{
-
 		// #todo: see if we need to do this call to realize every time (maybe do it once before controls are updated)
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
