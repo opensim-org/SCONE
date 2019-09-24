@@ -330,12 +330,24 @@ namespace scone
 		}
 	}
 
+	template<typename SetT> OpenSim::Object* TryGetOpenSimObject( SetT& set, const String& name ) {
+		auto idx = set.getIndex( name );
+		return idx != -1 ? &set.get( idx ) : nullptr;
+	}
+
 	OpenSim::Object& ModelOpenSim3::FindOpenSimObject( const String& name )
 	{
-		if ( auto idx = m_pOsimModel->updForceSet().getIndex( name ); idx != -1 )
-			return m_pOsimModel->updForceSet().get( idx );
-		if ( auto idx = m_pOsimModel->updBodySet().getIndex( name ); idx != -1 )
-			return m_pOsimModel->updBodySet().get( idx );
+		OpenSim::Object* obj = nullptr;
+		if ( obj = TryGetOpenSimObject( m_pOsimModel->updForceSet(), name ) )
+			return *obj;
+		else if ( obj = TryGetOpenSimObject( m_pOsimModel->updBodySet(), name ) )
+			return *obj;
+		else if ( obj = TryGetOpenSimObject( m_pOsimModel->updJointSet(), name ) )
+			return *obj;
+		else if ( obj = TryGetOpenSimObject( m_pOsimModel->updContactGeometrySet(), name ) )
+			return *obj;
+		else if ( obj = TryGetOpenSimObject( m_pOsimModel->updCoordinateSet(), name ) )
+			return *obj;
 		SCONE_ERROR( "Could not find OpenSim object " + name );
 	}
 
@@ -347,6 +359,8 @@ namespace scone
 			auto& os_object = FindOpenSimObject( object_pn.first );
 			for ( auto& kvp : object_pn.second )
 			{
+				//for ( int i = 0; i < os_object.getNumProperties(); ++i )
+				//	log::debug( os_object.getPropertyByIndex( i ).getName(), " = ", os_object.getPropertyByIndex( i ).getTypeName() );
 				SCONE_ERROR_IF( kvp.second.raw_value().empty(), "Error setting Propertry of " + object_pn.first + ": '" + kvp.first + "' must have a value" );
 				auto[ prop_name, prop_qualifier ] = xo::split_str_at_last( kvp.first, "." );
 				auto& os_prop = os_object.updPropertyByName( prop_name );
