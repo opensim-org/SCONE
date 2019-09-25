@@ -36,13 +36,15 @@ namespace scone
 		specular_( GetStudioSetting < float >( "viewer.specular" ) ),
 		shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 		ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
-		emissive_( GetStudioSetting< float >( "viewer.emissive" ) ),
-		bone_mat( GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_, emissive_ ),
-		muscle_mat( GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_, emissive_ ),
-		tendon_mat( GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_, emissive_ ),
-		arrow_mat( GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_, emissive_ ),
-		contact_mat( GetStudioSetting< xo::color >( "viewer.contact" ), specular_, shininess_, ambient_, emissive_ ),
-		muscle_gradient( { { 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) }, { 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) }, { 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
+		bone_mat( { GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_ } ),
+		muscle_mat( { GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_ } ),
+		tendon_mat( { GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_ } ),
+		arrow_mat( { GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_ } ),
+		contact_mat( { GetStudioSetting< xo::color >( "viewer.contact" ), specular_, shininess_, ambient_ } ),
+		muscle_gradient( {
+			{ 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) },
+			{ 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) },
+			{ 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
 		is_evaluating( false )
 	{
 		// #todo: don't reset this every time, perhaps keep view_flags outside StudioModel
@@ -70,9 +72,7 @@ namespace scone
 			ReadStorageSto( data, file );
 			InitStateDataIndices();
 			log::trace( "Read ", file, " in ", t(), " seconds" );
-		}
-		else
-		{
+		} else {
 			// start evaluation
 			is_evaluating = true;
 			model_->SetStoreData( true );
@@ -106,7 +106,7 @@ namespace scone
 		scone_scene.attach( root );
 
 		// ground plane
-		if ( auto* gp = model_->GetGroundPlane() )
+		if ( auto * gp = model_->GetGroundPlane() )
 		{
 			ground_ = vis::plane( root, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
 			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
@@ -132,8 +132,7 @@ namespace scone
 						body_meshes.back().set_material( bone_mat );
 						body_meshes.back().pos_ori( vis::vec3f( geom.pos ), vis::quatf( geom.ori ) );
 						body_meshes.back().scale( vis::vec3f( geom.scale ) );
-					}
-					else log::warning( "Could not find ", geom.filename );
+					} else log::warning( "Could not find ", geom.filename );
 				}
 				catch ( std::exception& e )
 				{
@@ -261,7 +260,8 @@ namespace scone
 
 		xo::color c = muscle_gradient( float( a ) );
 		vis.mat.diffuse( c );
-		vis.mat.emissive( c );
+		vis.mat.emissive( vis::color() );
+		vis.mat.ambient( c );
 
 		if ( view_flags.get<ShowTendons>() )
 		{
@@ -270,8 +270,7 @@ namespace scone
 			vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
 			vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
 			vis.ten2.set_points( p.begin() + i2, p.end() );
-		}
-		else
+		} else
 		{
 			vis.ce.set_points( p.begin(), p.end() );
 		}

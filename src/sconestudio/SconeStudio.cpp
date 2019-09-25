@@ -48,7 +48,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	close_all( false ),
 	evaluation_time_step( 1.0 / 8 ),
 	captureProcess( nullptr ),
-	scene_( true )
+	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );

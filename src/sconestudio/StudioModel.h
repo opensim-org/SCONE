@@ -83,7 +83,6 @@ namespace scone
 		float specular_;
 		float shininess_;
 		float ambient_;
-		float emissive_;
 
 		vis::scene& scene_;
 		vis::plane ground_;

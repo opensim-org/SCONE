@@ -46,16 +46,16 @@ viewer {
 	tendon { type = color label = "Tendon color" default { h = 40 s = 0.02 v = 0.8 } }
 	force { type = color label = "Force color" default { h = 60 s = 0.8 v = 0.8 } }
 	contact { type = color label = "Contact color" default { h = 180 s = 0.5 v = 0.5 } }
-	muscle_0 { type = color label = "Muscle color at 0% activation" default { h = 240 s = 0.7 v = 0.5 } }
-	muscle_50 { type = color label = "Muscle color at 50% activation" default { h = 0 s = 0.8 v = 0.6 } }
+	muscle_0 { type = color label = "Muscle color at 0% activation" default { h = 240 s = 0.7 v = 0.65 } }
+	muscle_50 { type = color label = "Muscle color at 50% activation" default { h = 0 s = 0.8 v = 0.8 } }
 	muscle_100 { type = color label = "Muscle color at 100% activation" default { h = 0 s = 0.9 v = 1.0 } }
 	specular { type = float label = "Model specular" default = 1 }
 	shininess { type = float label = "Model shininess" default = 30 }
-	ambient { type = float label = "Model ambient" default = 0 }
-	emissive { type = float label = "Model emissive" default = 0.7 }
+	ambient { type = float label = "Model ambient" default = 1 }
+	ambient_intensity { type = color label = "Ambient intensity in scene" default = 0.7 }
 	auto_muscle_width { type = bool label = "Muscle diameter represents PCSA" default = true }
 	auto_muscle_width_factor { type = float label = "Muscle diameter scaling factor" default = 0.25 }
 	muscle_width { type = float label = "Muscle width (if not derived from PCSA)" default = 0.01 }
 	muscle_position { type = float label = "Relative muscle belly position (0-1)" range = [ 0 1 ] default = 0.333 }
-	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.666 }
+	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.618 }
 }
