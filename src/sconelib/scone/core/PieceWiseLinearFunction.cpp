@@ -24,7 +24,7 @@ namespace scone
 		INIT_PROP( props, control_points, size_t( 0 ) );
 		INIT_PROP( props, flat_extrapolation, false );
 
-		for ( int cpidx = 0; cpidx < control_points; ++cpidx )
+		for ( index_t cpidx = 0; cpidx < control_points; ++cpidx )
 		{
 			Real xVal = 0.0;
 			if ( cpidx > 0 )

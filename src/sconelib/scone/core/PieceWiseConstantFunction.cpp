@@ -18,14 +18,14 @@ namespace scone
 	};
 
 	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, Params& par ) :
-	m_pImpl( new Impl ),
-	control_point_y( props.get_child( "control_point_y" ) ),
-	control_point_dt( props.get_child( "control_point_dt" ) )
+		m_pImpl( new Impl ),
+		control_point_y( props.get_child( "control_point_y" ) ),
+		control_point_dt( props.get_child( "control_point_dt" ) )
 	{
 		INIT_PROP_REQUIRED( props, control_points );
 		SCONE_CHECK_RANGE( control_points, 1, 99 );
 
-		for ( int cpidx = 0; cpidx < control_points; ++cpidx )
+		for ( index_t cpidx = 0; cpidx < control_points; ++cpidx )
 		{
 			Real xVal = 0.0;
 			if ( cpidx > 0 )
