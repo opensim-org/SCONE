@@ -80,23 +80,23 @@ namespace scone
 		std::vector< size_t > state_data_index;
 		scone::State model_state;
 
+		vis::scene& scene_;
+		vis::plane ground_;
+		vis::node root;
+
 		float specular_;
 		float shininess_;
 		float ambient_;
 
-		vis::scene& scene_;
-		vis::plane ground_;
-
 		vis::material bone_mat;
-		vis::material arrow_mat;
 		vis::material muscle_mat;
 		vis::material tendon_mat;
+		vis::material arrow_mat;
 		vis::material contact_mat;
 
 		xo::color_gradient muscle_gradient;
 		bool is_evaluating;
 
-		vis::node root;
 		std::vector< vis::mesh > body_meshes;
 		std::vector< vis::mesh > joints;
 		std::vector< MuscleVis > muscles;

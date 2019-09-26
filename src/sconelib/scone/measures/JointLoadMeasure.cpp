@@ -15,6 +15,7 @@ namespace scone
 	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		RangePenalty( props ),
+		joint_load(),
 		joint( *FindByName( model.GetJoints(), props.get< String >( "joint" ) ) )
 	{
 		INIT_PROP( props, method, 1 );

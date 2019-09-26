@@ -16,9 +16,9 @@ namespace scone
 {
 	ConditionalMuscleReflex::ConditionalMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	MuscleReflex( props, par, model, loc ),
+	dof( *FindByLocation( model.GetDofs(), props.get< String >( "dof" ), loc ) ),
 	m_pConditionalDofPos( nullptr ),
-	m_pConditionalDofVel( nullptr ),
-	dof( *FindByLocation( model.GetDofs(), props.get< String >( "dof" ), loc ) )
+	m_pConditionalDofVel( nullptr )
 	{
 		m_pConditionalDofPos = &model.AcquireDelayedSensor< DofPositionSensor >( dof );
 		m_pConditionalDofVel = &model.AcquireDelayedSensor< DofVelocitySensor >( dof );

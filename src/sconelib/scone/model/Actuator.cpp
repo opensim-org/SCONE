@@ -11,13 +11,13 @@
 
 namespace scone
 {
-	Actuator::Actuator() : m_ActuatorControlValue( 0.0 ), m_DelaySamples( 0 )
-	{
-	}
+	Actuator::Actuator() :
+		m_ActuatorControlValue( 0.0 ),
+		m_DelaySamples( 0 )
+	{}
 
 	Actuator::~Actuator()
-	{
-	}
+	{}
 
 	void Actuator::ClearInput()
 	{

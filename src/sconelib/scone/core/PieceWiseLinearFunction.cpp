@@ -17,9 +17,9 @@ namespace scone
 	};
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par ) :
-		m_pImpl( new Impl ),
 		control_point_y( props.get_child( "control_point_y" ) ),
-		control_point_dt( props.get_child( "control_point_dt" ) )
+		control_point_dt( props.get_child( "control_point_dt" ) ),
+		m_pImpl( new Impl )
 	{
 		INIT_PROP( props, control_points, size_t( 0 ) );
 		INIT_PROP( props, flat_extrapolation, false );

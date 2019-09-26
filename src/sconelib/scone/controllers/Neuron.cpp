@@ -39,17 +39,17 @@ namespace scone
 		{ Neuron::contralateral, "contralateral" },
 		{ Neuron::source, "source" },
 		{ Neuron::agonistic, "protagonistic" } // backwards compatibility
-	} );
+		} );
 
 	Neuron::Neuron( const PropNode& pn, const String& name, index_t idx, Side s, const String& default_activation ) :
-	output_(),
-	offset_(),
-	name_( name ),
-	index_( idx ),
-	side_( s ),
-	activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) ),
-	muscle_( nullptr ),
-	input_()
+		side_( s ),
+		index_( idx ),
+		name_( name ),
+		muscle_( nullptr ),
+		offset_(),
+		input_(),
+		output_(),
+		activation_function( GetActivationFunction( pn.get< string >( "activation", default_activation ) ) )
 	{
 		INIT_PROP( pn, symmetric_, true );
 	}
@@ -95,7 +95,7 @@ namespace scone
 			{
 				for ( auto& sp : spvec )
 				{
-					if ( std::find_first_of( mp.dofs.begin(), mp.dofs.end(), sp.dofs.begin(), sp.dofs.end(), 
+					if ( std::find_first_of( mp.dofs.begin(), mp.dofs.end(), sp.dofs.begin(), sp.dofs.end(),
 						[&]( Dof* a, Dof* b ) { return a != b && &a->GetJoint() == &b->GetJoint(); } ) == mp.dofs.end() )
 					{
 						string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
@@ -197,8 +197,7 @@ namespace scone
 									}
 								}
 							}
-						}
-						else
+						} else
 						{
 							// input sensor is no muscle, so we need no breakdown (#todo: a little neater)
 							for ( auto& mp : mpvec )
@@ -212,8 +211,7 @@ namespace scone
 					}
 				}
 			}
-		}
-		else if ( !input_layer.empty() )
+		} else if ( !input_layer.empty() )
 		{
 			// connection from previous interneuron layer
 			size_t input_layer_size = nc.GetLayerSize( input_layer );
@@ -240,8 +238,7 @@ namespace scone
 				default: SCONE_THROW( "Invalid connection type: " + connection_dict( connect ) );
 				}
 			}
-		}
-		else if ( pn.has_key( "offset" ) )
+		} else if ( pn.has_key( "offset" ) )
 		{
 			// this is a channel with only an offset -- used for backwards compatibility
 			for ( auto& mp : mpvec )

@@ -74,8 +74,8 @@ namespace scone
 		virtual Real GetMomentArm( const Dof& dof ) const override;
 
 	private:
-		OpenSim::Muscle& m_osMus;
 		ModelOpenSim3& m_Model;
+		OpenSim::Muscle& m_osMus;
 		mutable xo::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }

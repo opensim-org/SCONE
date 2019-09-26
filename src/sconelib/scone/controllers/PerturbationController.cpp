@@ -15,12 +15,13 @@
 namespace scone
 {
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
-	Controller( props, par, model, target_area ),
-	body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
-	current_force(),
-	active_( false ),
-	random_seed( props.get( "random_seed", 5489 ) ),
-	rng_( random_seed )
+		Controller( props, par, model, target_area ),
+		body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
+		random_seed( props.get( "random_seed", 5489 ) ),
+		rng_( random_seed ),
+		active_( false ),
+		current_force(),
+		current_moment()
 	{
 		INIT_PROP( props, force, Vec3::zero() );
 		INIT_PROP( props, moment, Vec3::zero() );

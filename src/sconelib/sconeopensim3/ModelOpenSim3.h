@@ -129,9 +129,6 @@ namespace scone
 
 		LinkUP CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent = nullptr );
 
-		int m_PrevIntStep;
-		double m_PrevTime;
-
 		std::unique_ptr< OpenSim::Model > m_pOsimModel;
 		std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 		std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
@@ -139,10 +136,13 @@ namespace scone
 		SimTK::State* m_pTkState; // non-owning state reference
 		OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
 		std::vector< OpenSim::ConstantForce* > m_BodyForces;
-		State m_State; // model state
 
 		friend ControllerDispatcher;
 		ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model
+
+		State m_State; // model state
+		int m_PrevIntStep;
+		double m_PrevTime;
 
 		// cached variables
 		Real m_Mass;

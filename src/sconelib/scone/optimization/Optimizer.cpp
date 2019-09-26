@@ -27,15 +27,15 @@
 namespace scone
 {
 	Optimizer::Optimizer( const PropNode& props, const PropNode& root ) :
-	HasSignature( props ),
-	max_threads( 1 ),
-	thread_priority( (int)xo::thread_priority::lowest ),
-	m_ObjectiveProps( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ) ),
-	m_Objective( CreateObjective( m_ObjectiveProps ) ),
-	m_BestFitness( m_Objective->info().worst_fitness() ),
-	output_mode_( no_output ),
-	m_LastFileOutputGen( 0 ),
-	config_copy_( root )
+		HasSignature( props ),
+		max_threads( 1 ),
+		thread_priority( (int)xo::thread_priority::lowest ),
+		m_LastFileOutputGen( 0 ),
+		m_ObjectiveProps( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ) ),
+		m_Objective( CreateObjective( m_ObjectiveProps ) ),
+		m_BestFitness( m_Objective->info().worst_fitness() ),
+		output_mode_( no_output ),
+		config_copy_( root )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
 		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level", xo::log::info_level ) );

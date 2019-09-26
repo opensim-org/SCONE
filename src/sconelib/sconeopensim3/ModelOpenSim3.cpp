@@ -65,10 +65,10 @@ namespace scone
 		Model( props, par ),
 		m_pOsimModel( nullptr ),
 		m_pTkState( nullptr ),
+		m_pProbe( 0 ),
 		m_pControllerDispatcher( nullptr ),
 		m_PrevIntStep( -1 ),
 		m_PrevTime( 0.0 ),
-		m_pProbe( 0 ),
 		m_Mass( 0.0 ),
 		m_BW( 0.0 )
 	{

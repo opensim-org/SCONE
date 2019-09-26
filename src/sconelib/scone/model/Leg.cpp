@@ -19,11 +19,11 @@
 namespace scone
 {
 	Leg::Leg( Link& proximal, Link& foot, size_t index, Side side, size_t rank, const ContactForce* cf ) :
+		m_Side( side ),
+		m_Rank( rank ),
+		m_Index( index ),
 		m_Upper( proximal ),
 		m_Foot( foot ),
-		m_Side( side ),
-		m_Index( index ),
-		m_Rank( rank ),
 		m_Name( stringf( "leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) ),
 		m_ContactForce( cf )
 	{

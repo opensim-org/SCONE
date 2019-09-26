@@ -24,10 +24,10 @@ namespace scone
 	}
 
 	Reflex::Reflex( Actuator& target, TimeInSeconds d, Real min_val, Real max_val ) :
-	actuator_( target ),
-	delay( d ),
 	min_control_value( min_val ),
-	max_control_value( max_val )
+	max_control_value( max_val ),
+	delay( d ),
+	actuator_( target )
 	{}
 
 	Reflex::~Reflex() {}

@@ -23,11 +23,11 @@ namespace scone
 	SensorNeuron::SensorNeuron( const PropNode& pn, Params& par, NeuralController& nc, const String& name, index_t idx, Side side, const String& act_func ) :
 	Neuron( pn, name, idx, side, act_func ),
 	input_sensor_(),
-	sensor_gain_( 1.0 ),
-	type_( pn.get< string >( "type" ) ),
+	use_sample_delay_( false ),
 	sample_delay_frames_( 0 ),
 	sample_delay_window_( 21 ),
-	use_sample_delay_( false )
+	sensor_gain_( 1.0 ),
+	type_( pn.get< string >( "type" ) )
 	{
 		ScopedParamSetPrefixer sp( par, GetParName() );
 		delay_ = pn.get< double >( "delay", nc.GetDelay( GetNameNoSide( name ) ) );

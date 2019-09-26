@@ -18,9 +18,9 @@ namespace scone
 	};
 
 	PieceWiseConstantFunction::PieceWiseConstantFunction( const PropNode& props, Params& par ) :
-		m_pImpl( new Impl ),
 		control_point_y( props.get_child( "control_point_y" ) ),
-		control_point_dt( props.get_child( "control_point_dt" ) )
+		control_point_dt( props.get_child( "control_point_dt" ) ),
+		m_pImpl( new Impl )
 	{
 		INIT_PROP_REQUIRED( props, control_points );
 		SCONE_CHECK_RANGE( control_points, 1, 99 );

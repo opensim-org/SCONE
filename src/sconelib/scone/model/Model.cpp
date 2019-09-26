@@ -30,12 +30,13 @@ namespace scone
 {
 	Model::Model( const PropNode& props, Params& par ) :
 		HasSignature( props ),
+		m_Measure( nullptr ),
+		m_Controller( nullptr ),
 		m_ShouldTerminate( false ),
-		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
+		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } ),
-		m_Measure( nullptr )
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } )
 	{
 		// old-style initialization (for backwards compatibility)
 		if ( auto sio = props.try_get_child( "state_init_optimization" ) )

@@ -48,12 +48,13 @@ namespace scone
 		index_t index_;
 		string name_;
 		Muscle* muscle_;
+		bool symmetric_;
 
 		double offset_;
-		mutable double output_;
 		mutable double input_;
+		mutable double output_;
+
 		activation_func_t activation_function;
-		bool symmetric_;
 
 		std::vector< Input > inputs_;
 

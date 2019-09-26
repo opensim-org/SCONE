@@ -31,9 +31,8 @@ namespace scone
 		virtual TimeInSeconds GetDelay( TimeInSeconds control_step_size );
 
 	protected:
+		double m_ActuatorControlValue;
 		size_t m_DelaySamples;
 		xo::circular_deque< double > m_DelayBuffer;
-
-		double m_ActuatorControlValue;
 	};
 }

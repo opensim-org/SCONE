@@ -23,10 +23,10 @@ namespace scone
 		bool mirrored_;
 
 	private:
+		const class Model& model_;
 		double width_;
 		double beta_;
 		double t0_;
 		double period_;
-		const class Model& model_;
 	};
 }

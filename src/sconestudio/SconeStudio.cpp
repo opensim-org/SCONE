@@ -43,12 +43,13 @@ using namespace xo::literals;
 
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	QCompositeMainWindow( parent, flags ),
-	slomo_factor( 1 ),
-	com_delta( Vec3( 0, 1, 0 ) ),
 	close_all( false ),
+	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) ),
+	slomo_factor( 1 ),
+	current_time(),
 	evaluation_time_step( 1.0 / 8 ),
-	captureProcess( nullptr ),
-	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) )
+	com_delta( Vec3( 0, 1, 0 ) ),
+	captureProcess( nullptr )
 {
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );

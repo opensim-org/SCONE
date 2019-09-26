@@ -16,12 +16,12 @@ namespace scone
 {
 	MuscleReflex::MuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 	Reflex( props, par, model, loc ),
+	source( *FindByLocation( model.GetMuscles(), props.get<string>( "source", target ), loc ) ),
 	m_pForceSensor( nullptr ),
 	m_pLengthSensor( nullptr ),
 	m_pVelocitySensor( nullptr ),
 	m_pSpindleSensor( nullptr ),
-	m_pActivationSensor( nullptr ),
-	source( *FindByLocation( model.GetMuscles(), props.get<string>( "source", target ), loc ) )
+	m_pActivationSensor( nullptr )
 	{
 		// init names
 		String par_name = GetParName( props, loc );

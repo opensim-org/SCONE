@@ -42,11 +42,11 @@ namespace scone
 	private:
 		Real MeasureLength() const;
 		Real m_LegLength;
-		size_t m_Index;
 		Side m_Side; // #todo: use loc instead of side
 		size_t m_Rank;
-		Link& m_Foot;
+		size_t m_Index;
 		Link& m_Upper;
+		Link& m_Foot;
 		String m_Name;
 		const ContactForce* m_ContactForce;
 	};

@@ -57,10 +57,10 @@ namespace scone
 			void AddSample( HighResolutionTime duration );
 			Item& GetOrAddChild( const String& scope );
 			HighResolutionTime GetReport( PropNode& pn );
+			Item* parent;
 			size_t num_samples;
 			HighResolutionTime inclusive_time;
 			HighResolutionTime peak_time;
-			Item* parent;
 			std::map< String, std::unique_ptr< Item > > children;
 		};
 

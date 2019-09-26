@@ -18,8 +18,8 @@ namespace scone
 {
 	PatternNeuron::PatternNeuron( const PropNode& pn, Params& par, NeuralController& nc, int index, bool mirrored ) :
 	Neuron( pn, stringf( "CPG%d", index ), index, mirrored ? RightSide : LeftSide, "linear" ),
-	model_( nc.GetModel() ),
-	mirrored_( mirrored )
+	mirrored_( mirrored ),
+	model_( nc.GetModel() )
 	{
 		side_ = mirrored ? RightSide : LeftSide;
 

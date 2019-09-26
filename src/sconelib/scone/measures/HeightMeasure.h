@@ -44,8 +44,8 @@ namespace scone
 		virtual String GetClassSignature() const override;
 
 	private:
-		enum { InitialState, DownState, UpState } m_JumpState;
 		Body* m_pTargetBody; // non-owning pointer
+		enum { InitialState, DownState, UpState } m_JumpState;
 		Statistic< double > m_Height;
 		bool m_Upward;
 		double m_InitialHeight;

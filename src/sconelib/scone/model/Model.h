@@ -207,10 +207,10 @@ namespace scone
 		std::vector< LegUP > m_Legs;
 		std::vector< ContactGeometryUP > m_ContactGeometries;
 		std::vector< ContactForceUP > m_ContactForces;
-		bool m_ShouldTerminate;
 
 		MeasureUP m_Measure;
 		ControllerUP m_Controller;
+		bool m_ShouldTerminate;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;

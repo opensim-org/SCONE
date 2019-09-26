@@ -27,8 +27,8 @@ namespace scone
 		String side_name() const { return GetSideName( side_ ); }
 		String line_name() const { return line_ != no_index ? stringf( "%d", line_ ) : ""; }
 
+		Side side_;
 		String base_;
 		index_t line_;
-		Side side_;
 	};
 }

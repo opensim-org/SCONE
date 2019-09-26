@@ -18,8 +18,8 @@ namespace scone
 {
 	JointOpenSim3::JointOpenSim3( Body& body, Joint* parent, class ModelOpenSim3& model, OpenSim::Joint& osJoint ) :
 		Joint( body, parent ),
-		m_osJoint( osJoint ),
-		m_Model( model )
+		m_Model( model ),
+		m_osJoint( osJoint )
 	{
 		//log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 	}

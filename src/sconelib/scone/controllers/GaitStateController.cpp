@@ -31,14 +31,15 @@ namespace scone
 
 	GaitStateController::LegState::LegState( Leg& l ) :
 		leg( l ),
+		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) ),
 		state( UnknownState ),
-		allow_stance_transition( false ),
-		allow_swing_transition( false ),
+		leg_load(),
 		sagittal_pos( 0.0 ),
 		coronal_pos( 0.0 ),
-		leg_length( l.GetLength() ),
-		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) )
-	{ }
+		allow_stance_transition( false ),
+		allow_swing_transition( false ),
+		leg_length( l.GetLength() )
+	{}
 
 	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 		Controller( props, par, model, target_area )

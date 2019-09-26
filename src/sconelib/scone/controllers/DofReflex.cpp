@@ -21,9 +21,9 @@ namespace scone
 	source( props.get< String >( "source" ) ),
 	m_SourceDof( *FindByNameTrySided( model.GetDofs(), source, loc.side_ ) ),
 	m_SourceParentDof( props.has_key( "source_parent" ) ? &*FindByNameTrySided( model.GetDofs(), props.get< String >( "source_parent" ), loc.side_ ) : nullptr ),
+	m_pTargetPosSource( nullptr ),
 	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( m_SourceDof, m_SourceParentDof ) ),
-	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) ),
-	m_pTargetPosSource( nullptr )
+	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) )
 	{
 		String par_name = GetParName( props, loc );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
