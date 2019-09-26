@@ -18,7 +18,7 @@ CmaOptimizer {
 			PieceWiseConstant {
 				control_points = 4
 				control_point_y = 0.3~0.01<0,1> # Initial y value of control points
-				control_point_dt = 0.2~0.01<0,1> # initial delta time between control points
+				control_point_dt = 0.2~0.01<0.001,1> # Initial delta time between control points
 			}
 		}
 		
