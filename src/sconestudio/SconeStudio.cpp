@@ -164,7 +164,7 @@ bool SconeStudio::init()
 
 	// add outputText to global sinks (only *after* the ui has been initialized)
 	xo::log::add_sink( ui.outputText );
-	ui.outputText->set_log_level( XO_IS_DEBUG_BUILD ? xo::log::trace_level : xo::log::debug_level );
+	ui.outputText->set_log_level( XO_DEBUG_MODE ? xo::log::trace_level : xo::log::debug_level );
 
 	restoreSettings( "SCONE", "SconeStudio" );
 	ui.messagesDock->raise();
