@@ -17,9 +17,9 @@ namespace scone
 	};
 
 	PieceWiseLinearFunction::PieceWiseLinearFunction( const PropNode& props, Params& par ) :
-	m_pImpl( new Impl ),
-	control_point_y( props.get_child( "control_point_y" ) ),
-	control_point_dt( props.get_child( "control_point_dt" ) )
+		m_pImpl( new Impl ),
+		control_point_y( props.get_child( "control_point_y" ) ),
+		control_point_dt( props.get_child( "control_point_dt" ) )
 	{
 		INIT_PROP( props, control_points, size_t( 0 ) );
 		INIT_PROP( props, flat_extrapolation, false );
@@ -30,6 +30,7 @@ namespace scone
 			if ( cpidx > 0 )
 			{
 				double dt = par.get( stringf( "DT%d", cpidx - 1 ), control_point_dt );
+				xo_assert_msg( dt > 0.0, "control_point_dt must be > 0" );
 				xVal = m_pImpl->m_osFunc.point( cpidx - 1 ).first + dt;
 			}
 			Real yVal = par.get( stringf( "Y%d", cpidx ), control_point_y );

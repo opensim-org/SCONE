@@ -31,6 +31,7 @@ namespace scone
 			if ( cpidx > 0 )
 			{
 				double dt = par.get( stringf( "DT%d", cpidx - 1 ), control_point_dt );
+				xo_assert_msg( dt > 0.0, "control_point_dt must be > 0" );
 				xVal = m_pImpl->m_osFunc.point( cpidx - 1 ).first + dt;
 			}
 			Real yVal = par.get( stringf( "Y%d", cpidx ), control_point_y );
