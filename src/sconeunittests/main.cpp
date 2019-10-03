@@ -11,12 +11,14 @@
 #include "xo/system/log_sink.h"
 #include "xo/system/test_case.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
+#include "tutorial_test.h"
 
 int main( int argc, const char* argv[] )
 {
 	xo::log::console_sink sink( xo::log::info_level );
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 	scone::RegisterModels();
+	scone::add_tutorial_tests();
 
-	return xo::test::run_all_test_cases();
+	return xo::test::run_tests_async();
 }

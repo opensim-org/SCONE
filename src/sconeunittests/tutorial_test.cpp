@@ -8,39 +8,62 @@
 
 namespace fs = std::filesystem;
 
-XO_TEST_CASE( tutorial_test )
+namespace xo
 {
-	auto scone_dir = scone::GetFolder( scone::SCONE_ROOT_FOLDER );
-	auto tutorials_dir = scone_dir / "scenarios/Tutorials";
-	auto results_dir = scone_dir / "resources/unittestdata/tutorial_test" / xo::get_computer_name() + "_results";
-	xo::create_directories( results_dir );
-
-	for ( fs::directory_iterator fileit( tutorials_dir.str() ); fileit!= fs::directory_iterator(); ++fileit )
+	namespace test
 	{
-		auto scenario_file = xo::path( fileit->path().string() );
-		if ( scenario_file.extension_no_dot() == "scone" )
-		{
-			xo::log::info( "TESTING: ", scenario_file.filename() );
-			xo::path report_file = results_dir / scenario_file.stem() + ".zml";
-			auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
-			auto result_pn = scone::EvaluateScenario( scenario_pn, scenario_file, xo::path() );
+		struct scenario_test {
+			scenario_test( const path& scenario_file, const path& report_file ) :
+				scenario_file_( scenario_file ),
+				report_file_( report_file )
+			{}
 
-			if ( xo::file_exists( report_file ) )
-			{
-				auto base_report_pn = xo::load_file( report_file );
-				auto rep1 = result_pn.get_child( "result" );
-				auto rep2 = base_report_pn.get_child( "result" );
-				XO_CHECK( rep1 == rep2 );
-				if ( rep1 != rep2 )
+			void operator()( test_case& XO_ACTIVE_TEST_CASE ) {
+				auto scenario_pn = xo::load_file_with_include( scenario_file_, "INCLUDE" );
+				auto result_pn = scone::EvaluateScenario( scenario_pn, scenario_file_, xo::path() );
+
+				if ( xo::file_exists( report_file_ ) )
 				{
-					xo::log::error( "baseline:\n", rep1 );
-					xo::log::error( "test result:\n", rep2 );
+					auto base_report_pn = xo::load_file( report_file_ );
+					auto rep1 = result_pn.get_child( "result" );
+					auto rep2 = base_report_pn.get_child( "result" );
+					XO_CHECK( rep1 == rep2 );
+					if ( rep1 != rep2 )
+					{
+						xo::log::error( "baseline:\n", rep1 );
+						xo::log::error( "test result:\n", rep2 );
+					}
+				}
+				else
+				{
+					XO_CHECK_MESSAGE( false, "Could not find results for " + report_file_.filename().str() );
+					xo::save_file( result_pn, report_file_ );
 				}
 			}
-			else
+
+			path scenario_file_;
+			path report_file_;
+		};
+	}
+}
+
+namespace scone
+{
+	void add_tutorial_tests()
+	{
+		auto scone_dir = GetFolder( SCONE_ROOT_FOLDER );
+		auto tutorials_dir = scone_dir / "scenarios/Tutorials";
+		auto results_dir = scone_dir / "resources/unittestdata/tutorial_test" / xo::get_computer_name() + "_results";
+		xo::create_directories( results_dir );
+
+		for ( fs::directory_iterator fileit( tutorials_dir.str() ); fileit != fs::directory_iterator(); ++fileit )
+		{
+			auto scenario_file = xo::path( fileit->path().string() );
+			if ( scenario_file.extension_no_dot() == "scone" )
 			{
-				xo::log::warning( "Could not find results for ", report_file.filename() );
-				xo::save_file( result_pn, report_file );
+				xo::log::debug( "Adding test case: ", scenario_file.filename() );
+				xo::path report_file = results_dir / scenario_file.stem() + ".zml";
+				xo::test::add_test_case( scenario_file.stem().str(), xo::test::scenario_test( scenario_file, report_file ) );
 			}
 		}
 	}
