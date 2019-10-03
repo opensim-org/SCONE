@@ -18,5 +18,5 @@ int main( int argc, const char* argv[] )
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 	scone::RegisterModels();
 
-	return xo::test::run_all();
+	return xo::test::run_all_test_cases();
 }
