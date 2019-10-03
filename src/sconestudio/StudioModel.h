@@ -43,13 +43,13 @@ namespace scone
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
 
-		const Storage<>& GetData() { return data; }
+		const Storage<>& GetData() { return storage_; }
 		Model& GetSimModel() { return *model_; }
-		ModelObjective& GetObjective() { return *model_objective; }
+		ModelObjective& GetObjective() { return *model_objective_; }
 
 		bool IsEvaluating() const { return is_evaluating; }
 		TimeInSeconds GetTime() const { return model_->GetTime(); }
-		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective->GetDuration() : data.Back().GetTime(); }
+		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective_->GetDuration() : storage_.Back().GetTime(); }
 
 		void ApplyViewSettings( const ViewFlags& f );
 		const path& GetFileName() { return filename_; }
@@ -68,35 +68,32 @@ namespace scone
 		void UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force );
 		void UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis );
 
-		PropNode scenario_pn_;
-
-		Storage<> data;
-		ModelObjectiveUP model_objective;
+		// model / scenario data
+		Storage<> storage_;
+		ModelObjectiveUP model_objective_;
 		ModelUP model_;
 		path filename_;
+		bool is_evaluating;
 
-		ViewFlags view_flags;
-
+		// model state
 		std::vector< size_t > state_data_index;
 		scone::State model_state;
+		void InitStateDataIndices();
 
+		// view settings
+		ViewFlags view_flags;
 		vis::scene& scene_;
 		vis::plane ground_;
-		vis::node root;
-
+		vis::node root_node_;
 		float specular_;
 		float shininess_;
 		float ambient_;
-
 		vis::material bone_mat;
 		vis::material muscle_mat;
 		vis::material tendon_mat;
 		vis::material arrow_mat;
 		vis::material contact_mat;
-
 		xo::color_gradient muscle_gradient;
-		bool is_evaluating;
-
 		std::vector< vis::mesh > body_meshes;
 		std::vector< vis::mesh > joints;
 		std::vector< MuscleVis > muscles;
@@ -104,6 +101,5 @@ namespace scone
 		std::vector< vis::axes > body_axes;
 		std::vector< vis::node > bodies;
 		std::vector< vis::mesh > contact_geoms;
-		void InitStateDataIndices();
 	};
 }

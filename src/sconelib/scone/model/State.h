@@ -10,16 +10,15 @@
 
 #include "scone/core/platform.h"
 #include "scone/core/memory_tools.h"
-#include <vector>
 #include "scone/core/types.h"
+#include <vector>
 
 namespace scone
 {
 	class SCONE_API State
 	{
 	public:
-		State() {}
-		~State() {}
+		State() = default;
 
 		size_t GetSize() const { return names_.size(); }
 		const std::vector< String >& GetNames() const { return names_; }
@@ -38,11 +37,7 @@ namespace scone
 		void SetValue( index_t i, Real value ) { values_.at( i ) = value; }
 		void SetValues( const std::vector< Real >& v );
 
-		//void AddChildState( State& other );
-		//void CopyChildState( const State& other );
-
 	private:
-		//Index parent_idx_;
 		std::vector< String > names_;
 		std::vector< Real > values_;
 	};

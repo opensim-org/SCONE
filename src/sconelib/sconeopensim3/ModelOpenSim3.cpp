@@ -152,9 +152,8 @@ namespace scone
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
 		{
 			SCONE_PROFILE_SCOPE( "InitSystem" );
-			g_SimBodyMutex.lock();
+			std::scoped_lock lock( g_SimBodyMutex );
 			m_pTkState = &m_pOsimModel->initSystem();
-			g_SimBodyMutex.unlock();
 		}
 
 		// create model component wrappers and sensors
@@ -771,7 +770,6 @@ namespace scone
 		m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 		if ( GetController() )
 			UpdateControlValues();
-
 		if ( GetStoreData() )
 			StoreCurrentFrame();
 	}

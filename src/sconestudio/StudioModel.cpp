@@ -31,8 +31,9 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
+		is_evaluating( false ),
 		scene_( s ),
-		root( &scene_ ),
+		root_node_( &scene_ ),
 		specular_( GetStudioSetting < float >( "viewer.specular" ) ),
 		shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 		ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
@@ -44,22 +45,21 @@ namespace scone
 		muscle_gradient( {
 			{ 0.0f, GetStudioSetting< xo::color >( "viewer.muscle_0" ) },
 			{ 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) },
-			{ 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } ),
-		is_evaluating( false )
+			{ 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } )
 	{
 		// #todo: don't reset this every time, perhaps keep view_flags outside StudioModel
 		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
 
 		// create the objective from par file or config file
-		scenario_pn_ = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
-		model_objective = CreateModelObjective( scenario_pn_, file.parent_path() );
-		log::info( "Created objective ", model_objective->GetSignature(), "; dim=", model_objective->dim(), " source=", file.filename() );
+		auto scenario_pn = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
+		model_objective_ = CreateModelObjective( scenario_pn, file.parent_path() );
+		log::info( "Created objective ", model_objective_->GetSignature(), "; dim=", model_objective_->dim(), " source=", file.filename() );
 
 		// create model from par or with default parameters
 		if ( file.extension_no_dot() == "par" )
-			model_ = model_objective->CreateModelFromParFile( file );
+			model_ = model_objective_->CreateModelFromParFile( file );
 		else
-			model_ = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
+			model_ = model_objective_->CreateModelFromParams( SearchPoint( model_objective_->info() ) );
 
 		// accept filename and clear data
 		filename_ = file;
@@ -69,7 +69,7 @@ namespace scone
 		{
 			xo::timer t;
 			log::debug( "Reading ", file );
-			ReadStorageSto( data, file );
+			ReadStorageSto( storage_, file );
 			InitStateDataIndices();
 			log::trace( "Read ", file, " in ", t(), " seconds" );
 		} else {
@@ -95,7 +95,7 @@ namespace scone
 		state_data_index.resize( model_state.GetSize() );
 		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
-			auto data_idx = ( data.GetChannelIndex( model_state.GetName( state_idx ) ) );
+			auto data_idx = ( storage_.GetChannelIndex( model_state.GetName( state_idx ) ) );
 			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
 			state_data_index[ state_idx ] = data_idx;
 		}
@@ -103,12 +103,12 @@ namespace scone
 
 	void StudioModel::InitVis( vis::scene& scone_scene )
 	{
-		scone_scene.attach( root );
+		scone_scene.attach( root_node_ );
 
 		// ground plane
 		if ( auto * gp = model_->GetGroundPlane() )
 		{
-			ground_ = vis::plane( root, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
+			ground_ = vis::plane( root_node_, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
 			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
 			ground_.pos_ori( vis::vec3f( gp->GetPos() ), xo::quat_from_z_angle( 90_deg ) * gp->GetOri() );
 		}
@@ -116,7 +116,7 @@ namespace scone
 		xo::timer t;
 		for ( auto& body : model_->GetBodies() )
 		{
-			bodies.push_back( vis::node( &root ) );
+			bodies.push_back( vis::node( &root_node_ ) );
 			body_axes.push_back( vis::axes( bodies.back(), vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 
 			auto geoms = body->GetDisplayGeometries();
@@ -145,7 +145,7 @@ namespace scone
 		for ( auto& cg : model_->GetContactGeometries() )
 		{
 			auto idx = FindIndexByName( model_->GetBodies(), cg->GetBody().GetName() );
-			auto& parent = idx != NoIndex ? bodies[ idx ] : root;
+			auto& parent = idx != NoIndex ? bodies[ idx ] : root_node_;
 			if ( std::holds_alternative<xo::sphere>( cg->GetShape() ) )
 			{
 				// #todo: add support for other shapes (i.e. planes)
@@ -165,11 +165,11 @@ namespace scone
 
 			// add path
 			MuscleVis mv;
-			mv.ten1 = vis::trail( root, 1, tendon_radius, xo::color::yellow(), 0.3f );
-			mv.ten2 = vis::trail( root, 1, tendon_radius, xo::color::yellow(), 0.3f );
+			mv.ten1 = vis::trail( root_node_, 1, tendon_radius, xo::color::yellow(), 0.3f );
+			mv.ten2 = vis::trail( root_node_, 1, tendon_radius, xo::color::yellow(), 0.3f );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-			mv.ce = vis::trail( root, 1, muscle_radius, xo::color::red(), 0.5f );
+			mv.ce = vis::trail( root_node_, 1, muscle_radius, xo::color::red(), 0.5f );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
@@ -190,7 +190,7 @@ namespace scone
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
 			for ( index_t i = 0; i < model_state.GetSize(); ++i )
-				model_state[ i ] = data.GetInterpolatedValue( time, state_data_index[ i ] );
+				model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
 			model_->SetState( model_state, time );
 		}
 
@@ -216,25 +216,13 @@ namespace scone
 		for ( index_t i = 0; i < model_muscles.size(); ++i )
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
-		// update ground reaction forces on legs
-#ifdef USE_GRF
-		for ( index_t i = 0; i < model_->GetLegCount(); ++i )
-		{
-			Vec3 force, moment, cop;
-			model_->GetLeg( i ).GetContactForceMomentCop( force, moment, cop );
-
-			if ( force.squared_length() > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
-				UpdateForceVis( force_count++, cop, force );
-		}
-#endif // USE_GRF
-
+		// update forces
 		for ( auto& cf : model_->GetContactForces() )
 		{
 			auto& [force, moment, point] = cf->GetForceMomentPoint();
 			if ( xo::squared_length( force ) > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
 				UpdateForceVis( force_count++, point, force );
 		}
-
 		while ( force_count < forces.size() )
 			forces.pop_back();
 	}
@@ -243,7 +231,7 @@ namespace scone
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.emplace_back( root, 0.01f, 0.02f, xo::color::yellow(), 0.3f );
+			forces.emplace_back( root_node_, 0.01f, 0.02f, xo::color::yellow(), 0.3f );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}
@@ -270,10 +258,8 @@ namespace scone
 			vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
 			vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
 			vis.ten2.set_points( p.begin() + i2, p.end() );
-		} else
-		{
-			vis.ce.set_points( p.begin(), p.end() );
 		}
+		else vis.ce.set_points( p.begin(), p.end() );
 	}
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
@@ -281,7 +267,7 @@ namespace scone
 		SCONE_ASSERT( IsEvaluating() );
 		try
 		{
-			model_objective->AdvanceSimulationTo( *model_, t );
+			model_objective_->AdvanceSimulationTo( *model_, t );
 			if ( model_->HasSimulationEnded() )
 				FinalizeEvaluation( true );
 		}
@@ -298,16 +284,16 @@ namespace scone
 	void StudioModel::FinalizeEvaluation( bool output_results )
 	{
 		// copy data and init data
-		data = model_->GetData();
-		if ( !data.IsEmpty() )
+		storage_ = model_->GetData();
+		if ( !storage_.IsEmpty() )
 			InitStateDataIndices();
 
 		if ( output_results )
 		{
-			auto fitness = model_objective->GetResult( *model_ );
+			auto fitness = model_objective_->GetResult( *model_ );
 			log::info( "fitness = ", fitness );
 			PropNode results;
-			results.push_back( "result", model_objective->GetReport( *model_ ) );
+			results.push_back( "result", model_objective_->GetReport( *model_ ) );
 			model_->WriteResults( filename_ );
 
 			log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );

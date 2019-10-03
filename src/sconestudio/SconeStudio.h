@@ -87,7 +87,7 @@ public:
 	bool isEvalutating() { return model_ && model_->IsEvaluating(); }
 
 private:
-	QCodeEditor* getActiveFile();
+	QCodeEditor* getActiveCodeEditor();
 	QCodeEditor* getActiveScenario();
 	QCodeEditor* getVerifiedActiveScenario();
 	void evaluate();
@@ -113,12 +113,10 @@ private:
 	TimeInSeconds evaluation_time_step;
 	xo::delta< scone::Vec3 > com_delta;
 
-	QString currentParFile;
-
 	std::vector< ProgressDockWidget* > optimizations;
-	std::vector< QCodeEditor* > scenarios;
+	std::vector< QCodeEditor* > codeEditors;
 
-	SconeStorageDataModel storageModel;
+	SconeStorageDataModel analysisStorageModel;
 	QDataAnalysisView* analysisView;
 
 	ResultsFileSystemModel* resultsModel;

@@ -75,7 +75,7 @@ namespace scone
 
 		timer tmr;
 		double result = so.EvaluateModel( *model );
-		auto duration = tmr().seconds<double>();
+		auto duration = tmr().seconds();
 
 		// write results
 		if ( store_data )

@@ -15,7 +15,6 @@
 #include "MuscleOpenSim3.h"
 
 #include <memory>
-#include <map>
 
 namespace OpenSim
 {

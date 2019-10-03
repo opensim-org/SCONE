@@ -109,7 +109,7 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
 
-	analysisView = new QDataAnalysisView( &storageModel, this );
+	analysisView = new QDataAnalysisView( &analysisStorageModel, this );
 	analysisView->setObjectName( "Analysis" );
 	analysisView->setMinSeriesInterval( 0 );
 	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
@@ -181,7 +181,7 @@ void SconeStudio::runSimulation( const QString& filename )
 	if ( createModel( filename.toStdString() ) )
 	{
 		updateViewSettings();
-		storageModel.setStorage( &model_->GetData() );
+		analysisStorageModel.setStorage( &model_->GetData() );
 		analysisView->reset();
 		if ( model_->IsEvaluating() )
 			evaluate();
@@ -191,9 +191,9 @@ void SconeStudio::runSimulation( const QString& filename )
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
-	currentParFile = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
+	QString browserItem = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
 	ui.playControl->reset();
-	runSimulation( currentParFile );
+	runSimulation( browserItem );
 	if ( model_ )
 		ui.playControl->play();
 }
@@ -266,7 +266,7 @@ void SconeStudio::evaluate()
 	}
 
 	// report duration
-	auto real_dur = real_time().seconds<double>();
+	auto real_dur = real_time().seconds();
 	auto sim_time = model_->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
@@ -363,7 +363,7 @@ void SconeStudio::openFile( const QString& filename )
 		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 		ui.tabWidget->setCurrentIndex( idx );
 		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
-		scenarios.push_back( edw );
+		codeEditors.push_back( edw );
 		updateRecentFilesMenu( filename );
 	}
 	catch ( std::exception& e )
@@ -374,7 +374,7 @@ void SconeStudio::openFile( const QString& filename )
 
 void SconeStudio::fileSaveTriggered()
 {
-	if ( auto* s = getActiveFile() )
+	if ( auto* s = getActiveCodeEditor() )
 	{
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
@@ -449,7 +449,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 	try
 	{
 		model_.reset();
-		storageModel.setStorage( nullptr );
+		analysisStorageModel.setStorage( nullptr );
 		model_ = std::make_unique< StudioModel >( scene_, path( par_file ), force_evaluation );
 	}
 	catch ( std::exception& e )
@@ -463,7 +463,7 @@ bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
 bool SconeStudio::requestSaveChanges()
 {
 	std::vector< QCodeEditor* > modified_docs;
-	for ( auto s : scenarios )
+	for ( auto s : codeEditors )
 		if ( s->document()->isModified() )
 			modified_docs.push_back( s );
 
@@ -503,27 +503,23 @@ bool SconeStudio::requestSaveChanges( QCodeEditor* s )
 int SconeStudio::getTabIndex( QCodeEditor* s )
 {
 	for ( int idx = 0; idx < ui.tabWidget->count(); ++idx )
-	{
 		if ( ui.tabWidget->widget( idx ) == (QWidget*)s )
 			return idx;
-	}
 	return -1;
 }
 
-QCodeEditor* SconeStudio::getActiveFile()
+QCodeEditor* SconeStudio::getActiveCodeEditor()
 {
-	for ( auto s : scenarios )
-	{
+	for ( auto s : codeEditors )
 		if ( !s->visibleRegion().isEmpty() )
-			return s; // active scone file
-	}
+			return s;
 	return nullptr;
 }
 
 QCodeEditor* SconeStudio::getActiveScenario()
 {
 	QCodeEditor* active = nullptr;
-	for ( auto s : scenarios )
+	for ( auto s : codeEditors )
 	{
 		auto ext = path_from_qt( s->fileName ).extension_no_dot().str();
 		if ( ext == "scone" )
@@ -610,7 +606,7 @@ void SconeStudio::performanceTest()
 		SCONE_PROFILE_REPORT;
 		auto result = model_objective->GetResult( *model );
 		log::info( "fitness = ", result );
-		auto real_dur = real_time().seconds<double>();
+		auto real_dur = real_time().seconds();
 		auto sim_time = model->GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
@@ -649,9 +645,7 @@ void SconeStudio::abortOptimizations()
 		{
 			close_all = true;
 			for ( auto& o : optimizations )
-			{
 				o->close();
-			}
 			optimizations.clear();
 			close_all = false;
 		}
@@ -693,27 +687,28 @@ void SconeStudio::updateOptimizations()
 
 void SconeStudio::tabCloseRequested( int idx )
 {
-	auto it = xo::find( scenarios, (QCodeEditor*)ui.tabWidget->widget( idx ) );
-	SCONE_THROW_IF( it == scenarios.end(), "Could not find scenario for tab " + to_str( idx ) );
+	auto it = xo::find( codeEditors, (QCodeEditor*)ui.tabWidget->widget( idx ) );
+	SCONE_THROW_IF( it == codeEditors.end(), "Could not find scenario for tab " + to_str( idx ) );
 
 	requestSaveChanges( *it );
-	scenarios.erase( it );
+	codeEditors.erase( it );
 	ui.tabWidget->removeTab( idx );
 }
 
 void SconeStudio::updateViewSettings()
 {
-	StudioModel::ViewFlags f;
-	for ( auto& va : viewActions )
-		f.set( va.first, va.second->isChecked() );
-
 	if ( model_ )
+	{
+		StudioModel::ViewFlags f;
+		for ( auto& va : viewActions )
+			f.set( va.first, va.second->isChecked() );
 		model_->ApplyViewSettings( f );
+	}
 }
 
 void SconeStudio::updateTabTitles()
 {
-	for ( auto s : scenarios )
+	for ( auto s : codeEditors )
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 }
 
