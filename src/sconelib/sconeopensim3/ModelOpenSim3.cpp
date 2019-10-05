@@ -44,8 +44,8 @@ namespace scone
 {
 	std::mutex g_SimBodyMutex;
 
-	xo::file_resource_cache< OpenSim::Model > g_ModelCache( [&]( const path& p ) { return new OpenSim::Model( p.str() ); } );
-	xo::file_resource_cache< OpenSim::Storage > g_StorageCache( [&]( const path& p ) { return new OpenSim::Storage( p.str() ); } );
+	xo::file_resource_cache< OpenSim::Model, std::string > g_ModelCache;
+	xo::file_resource_cache< OpenSim::Storage, std::string > g_StorageCache;
 
 	// OpenSim3 controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
@@ -100,7 +100,7 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( "CreateModel" );
 			model_file = FindFile( model_file );
-			m_pOsimModel = g_ModelCache( model_file );
+			m_pOsimModel = g_ModelCache( model_file.str() );
 			AddExternalResource( model_file );
 		}
 
@@ -655,7 +655,7 @@ namespace scone
 	void ModelOpenSim3::ReadState( const path& file )
 	{
 		// create a copy of the storage
-		auto store = g_StorageCache( file );
+		auto store = g_StorageCache( file.str() );
 		OpenSim::Array< double > data = store->getStateVector( 0 )->getData();
 		OpenSim::Array< std::string > storeLabels = store->getColumnLabels();
 
