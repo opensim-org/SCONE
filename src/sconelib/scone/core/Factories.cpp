@@ -53,9 +53,9 @@ namespace scone
 	ControllerFactory& GetControllerFactory()
 	{
 		static ControllerFactory g_ControllerFactory;
-		if ( g_ControllerFactory.empty() )
-		{
-			// register controllers
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_ControllerFactory.register_type< FeedForwardController >();
 			g_ControllerFactory.register_type< GaitStateController >();
 			g_ControllerFactory.register_type< ReflexController >();
@@ -65,7 +65,7 @@ namespace scone
 			g_ControllerFactory.register_type< CompositeController >();
 			g_ControllerFactory.register_type< SequentialController >();
 			g_ControllerFactory.register_type< NoiseController >();
-		}
+			} );
 		return g_ControllerFactory;
 	}
 
@@ -84,9 +84,9 @@ namespace scone
 	MeasureFactory& GetMeasureFactory()
 	{
 		static MeasureFactory g_MeasureFactory;
-		if ( g_MeasureFactory.empty() )
-		{
-			// register measures
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_MeasureFactory.register_type< HeightMeasure >();
 			g_MeasureFactory.register_type< GaitMeasure >();
 			g_MeasureFactory.register_type< GaitCycleMeasure >();
@@ -101,7 +101,7 @@ namespace scone
 			g_MeasureFactory.register_type< ReactionForceMeasure >();
 			g_MeasureFactory.register_type< BalanceMeasure >();
 			g_MeasureFactory.register_type< MimicMeasure >();
-		}
+			} );
 		return g_MeasureFactory;
 	}
 
@@ -118,13 +118,14 @@ namespace scone
 	ReflexFactory& GetReflexFactory()
 	{
 		static ReflexFactory g_ReflexFactory;
-		if ( g_ReflexFactory.empty() )
-		{
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_ReflexFactory.register_type< MuscleReflex >();
 			g_ReflexFactory.register_type< DofReflex >();
 			g_ReflexFactory.register_type< BodyPointReflex >();
 			g_ReflexFactory.register_type< ConditionalMuscleReflex >();
-		}
+			} );
 		return g_ReflexFactory;
 	}
 
@@ -136,14 +137,15 @@ namespace scone
 	FunctionFactory& GetFunctionFactory()
 	{
 		static FunctionFactory g_FunctionFactory;
-		if ( g_FunctionFactory.empty() )
-		{
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_FunctionFactory.register_type< PieceWiseConstantFunction >();
 			g_FunctionFactory.register_type< PieceWiseConstantFunction >( "PieceWiseConstant" );
 			g_FunctionFactory.register_type< PieceWiseLinearFunction >();
 			g_FunctionFactory.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" );
 			g_FunctionFactory.register_type< Polynomial >();
-		}
+			} );
 		return g_FunctionFactory;
 	}
 
@@ -155,12 +157,13 @@ namespace scone
 	OptimizerFactory& GetOptimizerFactory()
 	{
 		static OptimizerFactory g_OptimizerFactory;
-		if ( g_OptimizerFactory.empty() )
-		{
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_OptimizerFactory.register_type< CmaOptimizerSpot >( "CmaOptimizer" );
 			g_OptimizerFactory.register_type< CmaOptimizerSpot >();
 			g_OptimizerFactory.register_type< CmaPoolOptimizer >();
-		}
+			} );
 		return g_OptimizerFactory;
 	}
 
@@ -173,10 +176,11 @@ namespace scone
 	ModelFactory& GetModelFactory()
 	{
 		static ModelFactory g_ModelFactory;
-		if ( g_ModelFactory.empty() )
-		{
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			// all models are registered externally
-		}
+			} );
 		return g_ModelFactory;
 	}
 
@@ -188,13 +192,14 @@ namespace scone
 	ObjectiveFactory& GetObjectiveFactory()
 	{
 		static ObjectiveFactory g_ObjectiveFactory;
-		if ( g_ObjectiveFactory.empty() )
-		{
+		// register types once, #todo: use XO_FACTORY_REGISTRANT
+		static std::once_flag flag;
+		std::call_once( flag, [] {
 			g_ObjectiveFactory.register_type< SimulationObjective >();
 			g_ObjectiveFactory.register_type< ImitationObjective >();
 			g_ObjectiveFactory.register_type< SimilarityObjective >();
 			g_ObjectiveFactory.register_type< TestObjective >();
-		}
+			} );
 		return g_ObjectiveFactory;
 	}
 
