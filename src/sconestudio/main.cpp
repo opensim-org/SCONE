@@ -38,7 +38,7 @@ int main( int argc, char *argv[] )
 	{
 		// init logging
 #ifdef _DEBUG
-		xo::log::stream_sink console_log_sink( xo::log::trace_level, std::cout );
+		xo::log::console_sink console_log_sink( xo::log::trace_level );
 #endif
 		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
 		xo::log::file_sink file_sink( xo::log::debug_level, log_file );
