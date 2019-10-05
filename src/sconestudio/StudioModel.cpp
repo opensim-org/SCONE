@@ -125,7 +125,7 @@ namespace scone
 				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				try
 				{
-					auto geom_file = xo::try_find_file( { geom.filename, path( "./geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
+					auto geom_file = xo::try_find_file( { geom.filename, path( "geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
 					if ( geom_file )
 					{
 						body_meshes.push_back( vis::mesh( bodies.back(), *geom_file ) );

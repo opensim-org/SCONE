@@ -23,7 +23,8 @@ namespace scone
 	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
 		// create optimizer and report unused parameters
-		xo::current_path( scenario_dir ); // external resources are copied from current path
+		current_path( scenario_dir ); // external resources are copied from current path; #todo: thread safe
+		current_find_file_folder( scenario_dir );
 		OptimizerUP o = CreateOptimizer( scenario_pn );
 
 		// report unused properties
@@ -40,7 +41,7 @@ namespace scone
 	PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
 		bool store_data = !output_base.empty();
-		current_path( par_file.parent_path() );
+		current_find_file_folder( par_file.parent_path() );
 
 		auto optProp = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
 		auto objProp = FindFactoryProps( GetObjectiveFactory(), optProp.props(), "Objective" );

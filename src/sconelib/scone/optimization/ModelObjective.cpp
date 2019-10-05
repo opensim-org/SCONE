@@ -90,7 +90,7 @@ namespace scone
 	ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )
 	{
 		// set current path to scenario path
-		xo::current_path( dir );
+		current_find_file_folder( dir );
 
 		// find objective
 		FactoryProps opt_props = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );

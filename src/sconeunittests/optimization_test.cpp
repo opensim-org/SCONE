@@ -21,8 +21,8 @@ using namespace scone;
 
 XO_TEST_CASE( optimization_test )
 {
-	xo::current_path( scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/optimization_test" );
-	const PropNode pn = load_file( "schwefel_5.xml" );
+	auto test_folder = scone::GetFolder( scone::SCONE_ROOT_FOLDER ) / "resources/unittestdata/optimization_test";
+	const PropNode pn = load_file( test_folder/ "schwefel_5.xml" );
 	OptimizerUP o = CreateOptimizer( pn );
 	o->output_root = xo::temp_directory_path() / "SCONE/optimization_test";
 	xo::log_unaccessed( pn );

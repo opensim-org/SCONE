@@ -71,12 +71,10 @@ namespace scone
 
 	path FindFile( const path& p )
 	{
-		if ( file_exists( p ) )
-			return p; // original path
-		else if ( p.has_filename() && file_exists( p.filename() ) )
-			return p.filename(); // filename in current folder
-		else if ( p.has_filename() && file_exists( path( ".." ) / p.filename() ) )
-			return path( ".." ) / p.filename(); // filename in folder one above current folder
-		else SCONE_THROW( "Could not find " + p.str() + " in " + xo::current_path().str() );
+		return xo::find_file( {
+			p,
+			p.filename(), // filename without rel path
+			path( ".." ) / p.filename() // filename in parent folder
+			} );
 	}
 }
