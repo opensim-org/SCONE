@@ -14,7 +14,6 @@
 namespace OpenSim
 {
 	class Body;
-	class ModelOpenSim3;
 }
 
 namespace scone

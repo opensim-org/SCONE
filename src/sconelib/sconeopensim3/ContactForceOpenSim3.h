@@ -15,7 +15,6 @@
 namespace OpenSim
 {
 	class HuntCrossleyForce;
-	class ModelOpenSim3;
 }
 
 namespace scone
