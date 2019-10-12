@@ -12,6 +12,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
 option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
 option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 option(SCONE_LUA "Support for lua scripting" OFF)
+option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
+mark_as_advanced(SCONE_HYFYDY)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
@@ -54,6 +56,13 @@ add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)
+
+if (SCONE_HYFYDY)
+	find_path( SCONE_HYFYDY_DIR sconehfd/ModelHfd.h )
+	if (SCONE_HYFYDY_DIR)
+		add_subdirectory("${SCONE_HYFYDY_DIR}" "${CMAKE_BINARY_DIR}/sconehfd")
+	endif()
+endif()
 
 #
 # Add tests
