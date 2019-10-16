@@ -518,7 +518,7 @@ QCodeEditor* SconeStudio::getActiveCodeEditor()
 
 QCodeEditor* SconeStudio::getActiveScenario()
 {
-	QCodeEditor* active = nullptr;
+	QCodeEditor* first_scenario = nullptr;
 	for ( auto s : codeEditors )
 	{
 		auto ext = path_from_qt( s->fileName ).extension_no_dot().str();
@@ -526,12 +526,11 @@ QCodeEditor* SconeStudio::getActiveScenario()
 		{
 			if ( !s->visibleRegion().isEmpty() )
 				return s; // active scone file
-			else if ( active == nullptr )
-				active = s; // could be single .scone file
-			else return nullptr; // multiple .scone files open, none active
+			else if ( first_scenario == nullptr )
+				first_scenario = s; // could be single .scone file
 		}
 	}
-	return active; // either single .scone file, or none
+	return first_scenario; // either first .scone file, or none
 }
 
 QCodeEditor* SconeStudio::getVerifiedActiveScenario()
