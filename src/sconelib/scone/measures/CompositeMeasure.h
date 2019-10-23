@@ -14,8 +14,22 @@
 namespace scone
 {
 	/// Measure made up of different weighted Measures.
-	/// Individual child measures can be a added to the Measures group, e.g. ''CompositeMeasure { GaitMeasure { ... } DofMeasure { ... } }''.
-	/// Each measure is evaluated and added together respecting their individual weight, threshold and offset parameters (see Measure).
+	/** Individual child measures are evaluated and summed up, respecting the ''weight'',
+	''threshold'' and ''offset'' parameters of the indiviudal measures (see Measure). Example:
+	\verbatim
+	CompositeMeasure {
+		GaitMeasure {
+			weight = 100
+			threshold = 0.5
+			...
+		}
+		EffortMeasure {
+			weight = 0.1
+			...
+		}
+	}
+	\endverbatim
+	*/
 	class CompositeMeasure : public Measure
 	{
 	public:

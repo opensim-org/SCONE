@@ -15,8 +15,16 @@
 
 namespace scone
 {
-	/// Measure for penalizing when DOFs go out of a specific range.
-	/// Supports penalties based on DOF position, DOF velocity, and restitution force.
+	/// Measure that adds a penalty when a degree of freedom (DOF) is outside a specific range.
+	/** Penalties can be based on DOF position, DOF velocity, and restitution force. Example:
+	\verbatim
+	DofMeasure {
+		dof = pelvis_tilt
+		position { min = -45 max = 0 abs_penalty = 10 } # Penalize leaning backwards
+		velocity { min = -10 max = 10 abs_penalty = 10 } # Penalize upper body motion
+	}
+	\endverbatim
+	*/
 	class DofMeasure : public Measure
 	{
 	public:
@@ -31,13 +39,13 @@ namespace scone
 		Dof* parent;
 
 		/// Penalty for when the DOF position [deg] is out of range.
-		RangePenalty< Degree > position;
+		RangePenalty<Degree> position;
 
 		/// Penalty for when the DOF velocity [deg/s] is out of range.
-		RangePenalty< Degree > velocity;
+		RangePenalty<Degree> velocity;
 
 		/// Penalty for when the DOF limit force [N] is out of range.
-		RangePenalty< double > force;
+		RangePenalty<double> force;
 
 	protected:
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;

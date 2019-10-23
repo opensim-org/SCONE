@@ -8,7 +8,17 @@
 namespace scone
 {
 	/// Measure defined through a Lua script.
-	/// Documentation is in preparation; see Tutorial 6a and 6b for example usage.
+	/** Example:
+	\verbatim
+	# Measure based on lua script
+	ScriptMeasure {
+		minimize = 0 # let the optimizer know we want to maximize this measure
+		target_body = "toes_r" # this parameter will be used in the script
+		script_file = "data/ScriptMeasureJump.lua"
+	}
+	\endverbatim
+	See Tutorial 6a and 6b for more examples.
+	*/
 	class SCONE_LUA_API ScriptMeasure : public Measure
 	{
 	public:
