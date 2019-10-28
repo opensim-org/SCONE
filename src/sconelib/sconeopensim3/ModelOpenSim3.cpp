@@ -74,7 +74,6 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		path model_file;
 		path state_init_file;
 		String probe_class;
 

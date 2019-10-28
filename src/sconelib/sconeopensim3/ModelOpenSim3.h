@@ -48,11 +48,8 @@ namespace scone
 	class SCONE_OPENSIM_3_API ModelOpenSim3 : public Model
 	{
 	public:
-		ModelOpenSim3( const PropNode& props, Params& par );
-		virtual ~ModelOpenSim3();
-
 		/// File containing the OpenSim model.
-		String model_file;
+		path model_file;
 
 		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2 (default), RungeKutta2, RungeKutta3, RungeKuttaMerson.
 		String integration_method;
@@ -65,6 +62,9 @@ namespace scone
 
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
 		bool enable_external_forces;
+
+		ModelOpenSim3( const PropNode& props, Params& par );
+		virtual ~ModelOpenSim3();
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;

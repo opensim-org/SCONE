@@ -122,9 +122,15 @@ if(${Qt5Widgets_FOUND})
 		target_link_libraries(sconestudio sconeopensim3)
 		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_3 )
 	endif()
+
 	if (SCONE_OPENSIM_4)
 		target_link_libraries(sconestudio sconeopensim4)
 		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_4 )
+	endif()
+
+	if (SCONE_HYFYDY)
+		target_link_libraries(sconestudio sconehfd)
+		target_compile_definitions(sconestudio PRIVATE SCONE_HYFYDY)
 	endif()
 
 	if (SCONE_LUA)

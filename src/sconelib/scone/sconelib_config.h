@@ -18,6 +18,10 @@
 #include "sconeopensim4/ModelOpenSim4.h"
 #endif
 
+#ifdef SCONE_HYFYDY
+#include "sconehfd/ModelHfd.h"
+#endif
+
 #ifdef SCONE_LUA
 #include "sconelua/ScriptController.h"
 #include "sconelua/ScriptMeasure.h"
@@ -34,6 +38,9 @@ namespace scone
 #endif
 #ifdef SCONE_OPENSIM_4
 	GetModelFactory().register_type< ModelOpenSim4 >( "OpenSim4Model" );
+#endif
+#ifdef SCONE_HYFYDY
+	GetModelFactory().register_type< ModelHfd >( "HyfydyModel" );
 #endif
 #ifdef SCONE_LUA
 	GetControllerFactory().register_type< ScriptController >( "ScriptController" );
