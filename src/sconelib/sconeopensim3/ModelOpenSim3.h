@@ -123,8 +123,9 @@ namespace scone
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
 		void CreateModelWrappers( const PropNode& pn, Params& par );
-		void SetProperties( const PropNode& pn, Params& par );
 		OpenSim::Object& FindOpenSimObject( const String& name );
+		void SetOpenSimObjectProperies( OpenSim::Object& os_obj, const PropNode& props, Params& par );
+		void SetProperties( const PropNode& pn, Params& par );
 
 		LinkUP CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent = nullptr );
 

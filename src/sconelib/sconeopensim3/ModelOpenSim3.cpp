@@ -35,6 +35,8 @@
 #include "xo/geometry/quat.h"
 #include "xo/geometry/angle.h"
 
+#include "spot/par_tools.h"
+
 #include <mutex>
 
 using std::cout;
@@ -349,24 +351,60 @@ namespace scone
 		SCONE_ERROR( "Could not find OpenSim object " + name );
 	}
 
+	void ModelOpenSim3::SetOpenSimObjectProperies( OpenSim::Object& os_object, const PropNode& props, Params& par )
+	{
+		for ( const auto& [prop_key, prop_val] : props )
+		{
+			for ( int i = 0; i < os_object.getNumProperties(); ++i )
+			{
+				auto& os_prop = os_object.updPropertyByIndex( i );
+				log::debug( os_object.getName() + "." + os_prop.getName(), " (", os_prop.getTypeName(), ") = ", os_prop.toString() );
+			}
+
+			auto [prop_name, prop_qualifier] = xo::split_str_at_last( prop_key, "." );
+			auto& os_prop = os_object.updPropertyByName( prop_name );
+
+			// issue: there doesn't seem to be a way to do this consistently
+			// These calls work:
+			//  - os_prop.updValue<double>() 
+			//  - dynamic_cast<OpenSim::Property<SimTK::Vec3>*>( &os_prop )
+			// but this doesn't: 
+			//  - os_prop.updValue<SimTK::Vec3>()
+			//  - dynamic_cast<OpenSim::Property<double>*>( &os_prop )
+			if ( os_prop.getTypeName() == "double" ) // must we do a string check here? :-(
+			{
+				SCONE_ERROR_IF( prop_val.raw_value().empty(), "Error setting " + os_object.getName() + ": '" + prop_key + "' must have a value" );
+				double scenario_value = par.get( prop_key, prop_val );
+				if ( prop_qualifier == "factor" )
+					os_prop.updValue<double>() *= scenario_value;
+				else if ( prop_qualifier.empty() )
+					os_prop.updValue<double>() = scenario_value;
+				else SCONE_ERROR( "Unsupported qualifier '" + prop_qualifier + "' for " + os_object.getName() + "." + prop_key + "" );
+			}
+			else if ( auto * vec3_prop = dynamic_cast<OpenSim::Property<SimTK::Vec3>*>( &os_prop ) )
+			{
+				auto scenario_value = spot::try_get_par( par, prop_key, props, Vec3::zero() );
+				if ( prop_qualifier == "offset" )
+					vec3_prop->updValue() += to_osim( scenario_value );
+				else if ( prop_qualifier.empty() )
+					vec3_prop->updValue() = to_osim( scenario_value );
+				else SCONE_ERROR( "Unsupported qualifier " + prop_qualifier + " for " + os_object.getName() + "." + prop_key + "" );
+			}
+			else if ( os_prop.isObjectProperty() )
+			{
+				log::debug( "Setting Parameter ", os_prop.getName() );
+				SetOpenSimObjectProperies( os_prop.updValueAsObject(), prop_val, par );
+			}
+		}
+	}
+
 	void ModelOpenSim3::SetProperties( const PropNode& properties_pn, Params& par )
 	{
-		for ( auto& object_pn : properties_pn )
+		for ( const auto& [ object_name, object_props ] : properties_pn )
 		{
-			ScopedParamSetPrefixer prefix( par, object_pn.first + '.' );
-			auto& os_object = FindOpenSimObject( object_pn.first );
-			for ( auto& kvp : object_pn.second )
-			{
-				//for ( int i = 0; i < os_object.getNumProperties(); ++i )
-				//	log::debug( os_object.getPropertyByIndex( i ).getName(), " = ", os_object.getPropertyByIndex( i ).getTypeName() );
-				SCONE_ERROR_IF( kvp.second.raw_value().empty(), "Error setting Propertry of " + object_pn.first + ": '" + kvp.first + "' must have a value" );
-				auto[ prop_name, prop_qualifier ] = xo::split_str_at_last( kvp.first, "." );
-				auto& os_prop = os_object.updPropertyByName( prop_name );
-				double user_value = par.get( kvp.first, kvp.second );
-				if ( prop_qualifier == "factor" )
-					os_prop.updValue< double >() *= user_value;
-				else os_prop.updValue< double >() = user_value;
-			}
+			ScopedParamSetPrefixer prefix( par, object_name + '.' );
+			auto& os_object = FindOpenSimObject( object_name );
+			SetOpenSimObjectProperies( os_object, object_props, par );
 		}
 	}
 
