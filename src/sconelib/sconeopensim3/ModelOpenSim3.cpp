@@ -751,8 +751,8 @@ namespace scone
 
 		if ( abs( force - force_threshold ) / force_threshold > fix_accuracy )
 			log::WarningF( "Could not fix initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
-		else
-			log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+		//else
+		//	log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
 
 	void ModelOpenSim3::InitStateFromTk()
