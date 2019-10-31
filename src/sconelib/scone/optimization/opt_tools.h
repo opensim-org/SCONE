@@ -18,7 +18,12 @@
 
 namespace scone
 {
+	/// Creates Optimizer. Logs unused properties. Sets current_path to scenario_dir.
 	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir );
+
+	/// Creates and evaluates SimulationObjective. Logs unused properties.
 	SCONE_API PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base );
+
+	/// Returns .scone file for a given .par file, or returns argument if already .scone.
 	SCONE_API path FindScenario( const path& scenario_or_par_file );
 }

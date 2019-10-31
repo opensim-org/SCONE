@@ -22,8 +22,9 @@ namespace scone
 {
 	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
-		// create optimizer and report unused parameters
-		current_path( scenario_dir ); // external resources are copied from current path; #todo: thread safe
+		// external resources are copied from current_path
+		// #todo: use a thread safe version based on current_find_file_folder for everything
+		current_path( scenario_dir ); 
 		current_find_file_folder( scenario_dir );
 		OptimizerUP o = CreateOptimizer( scenario_pn );
 
@@ -98,7 +99,6 @@ namespace scone
 	{
 		if ( file.extension_no_dot() == "scone" || file.extension_no_dot() == "xml" )
 			return file;
-
 		auto folder = file.parent_path();
 		return xo::find_file( { path( file ).replace_extension( "scone" ), folder / "config.scone", folder / "config.xml" } );
 	}
