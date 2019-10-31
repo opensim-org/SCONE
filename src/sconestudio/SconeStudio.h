@@ -13,27 +13,32 @@
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
 #include <QtWidgets/QMainWindow>
+#include "QCodeEditor.h"
+#include "QCompositeMainWindow.h"
+#include "QDataAnalysisView.h"
+#include "QGroup.h"
+#include "QValueSlider.h"
 
 #include "ui_SconeStudio.h"
 
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "xo/time/timer.h"
-#include "xo/numerical/delta.h"
+#include "ModelVis.h"
 #include "ProgressDockWidget.h"
-#include "QCodeEditor.h"
-#include "SettingsEditor.h"
-#include "xo/system/log_sink.h"
-#include "QCompositeMainWindow.h"
-#include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
+#include "SconeStorageDataModel.h"
+#include "SettingsEditor.h"
 #include "StudioModel.h"
+
 #include "vis/plane.h"
 #include "vis/vis_api.h"
+#include "vis/scene.h"
+
 #include "xo/container/flat_map.h"
-#include "SconeStorageDataModel.h"
-#include "ModelVis.h"
+#include "xo/numerical/delta.h"
+#include "xo/system/log_sink.h"
+#include "xo/time/timer.h"
 
 using scone::TimeInSeconds;
 
@@ -98,35 +103,43 @@ private:
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
 
-	xo::flat_map< scone::ModelVis::VisOpt, QAction* > viewActions;
+	// ui
+	Ui::SconeStudioClass ui;
+	scone::SettingsEditor settings;
 
-	vis::scene scene_;
+	// model
 	std::unique_ptr< scone::StudioModel > model_;
-
 	bool createModel( const String& par_file, bool force_evaluation = false );
 
-	Ui::SconeStudioClass ui;
-
-	QTimer backgroundUpdateTimer;
-
-	double slomo_factor;
+	// simulation
 	TimeInSeconds current_time;
 	TimeInSeconds evaluation_time_step;
-	xo::delta< scone::Vec3 > com_delta;
 
+	// scenario
 	std::vector< ProgressDockWidget* > optimizations;
+	ResultsFileSystemModel* resultsModel;
 	std::vector< QCodeEditor* > codeEditors;
 
-	SconeStorageDataModel analysisStorageModel;
-	QDataAnalysisView* analysisView;
+	// viewer
+	xo::flat_map< scone::ModelVis::VisOpt, QAction* > viewActions;
+	vis::scene scene_;
+	QTimer backgroundUpdateTimer;
+	double slomo_factor;
+	xo::delta< scone::Vec3 > com_delta;
 
-	ResultsFileSystemModel* resultsModel;
+	// video capture
 	QString captureFilename;
 	QProcess* captureProcess;
 	QDir captureImageDir;
 	void finalizeCapture();
 
-	scone::SettingsEditor settings;
+	// analysis
+	SconeStorageDataModel analysisStorageModel;
+	QDataAnalysisView* analysisView;
+
+	//// dof editor
+	//QFormGroup* dofSliderGroup;
+	//std::vector< QValueSlider* > dofSliders;
 };
 
 #endif // SCONESTUDIO_H
