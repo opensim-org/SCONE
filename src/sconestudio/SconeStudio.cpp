@@ -63,17 +63,17 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	addMenuAction( editMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
-	viewActions[ StudioModel::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowTendons ] = addMenuAction( viewMenu, "Show &Tendons", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowGeometry ] = addMenuAction( viewMenu, "Show &Bone Geometry", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowContactGeom ] = addMenuAction( viewMenu, "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
-	viewActions[ StudioModel::ShowGroundPlane ] = addMenuAction( viewMenu, "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowTendons ] = addMenuAction( viewMenu, "Show &Tendons", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowGeometry ] = addMenuAction( viewMenu, "Show &Bone Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowContactGeom ] = addMenuAction( viewMenu, "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowGroundPlane ] = addMenuAction( viewMenu, "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
-		va.second->setChecked( va.first != StudioModel::ShowAxes );
+		va.second->setChecked( va.first != ModelVis::ShowAxes );
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
@@ -698,7 +698,7 @@ void SconeStudio::updateViewSettings()
 {
 	if ( model_ )
 	{
-		StudioModel::ViewFlags f;
+		scone::ModelVis::ViewSettings f;
 		for ( auto& va : viewActions )
 			f.set( va.first, va.second->isChecked() );
 		model_->ApplyViewSettings( f );

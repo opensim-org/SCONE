@@ -27,19 +27,17 @@
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
 
+#include "ModelVis.h"
+
 namespace scone
 {
 	class StudioModel
 	{
 	public:
-		enum ViewSettings { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
-		typedef xo::flag_set< ViewSettings > ViewFlags;
- 
 		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
-
 		void EvaluateTo( TimeInSeconds t );
 		void FinalizeEvaluation( bool output_results );
 
@@ -51,22 +49,12 @@ namespace scone
 		TimeInSeconds GetTime() const { return model_->GetTime(); }
 		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective_->GetDuration() : storage_.Back().GetTime(); }
 
-		void ApplyViewSettings( const ViewFlags& f );
+		void ApplyViewSettings( const ModelVis::ViewSettings& f );
 		const path& GetFileName() { return filename_; }
 
 	private:
-		struct MuscleVis
-		{
-			vis::trail ten1;
-			vis::trail ten2;
-			vis::trail ce;
-			vis::material mat;
-			float ce_pos = 0.5f;
-		};
-
-		void InitVis( vis::scene& s );
-		void UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force );
-		void UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis );
+		// visualizer
+		u_ptr<ModelVis> vis_;
 
 		// model / scenario data
 		Storage<> storage_;
@@ -79,27 +67,5 @@ namespace scone
 		std::vector< size_t > state_data_index;
 		scone::State model_state;
 		void InitStateDataIndices();
-
-		// view settings
-		ViewFlags view_flags;
-		vis::scene& scene_;
-		vis::plane ground_;
-		vis::node root_node_;
-		float specular_;
-		float shininess_;
-		float ambient_;
-		vis::material bone_mat;
-		vis::material muscle_mat;
-		vis::material tendon_mat;
-		vis::material arrow_mat;
-		vis::material contact_mat;
-		xo::color_gradient muscle_gradient;
-		std::vector< vis::mesh > body_meshes;
-		std::vector< vis::mesh > joints;
-		std::vector< MuscleVis > muscles;
-		std::vector< vis::arrow > forces;
-		std::vector< vis::axes > body_axes;
-		std::vector< vis::node > bodies;
-		std::vector< vis::mesh > contact_geoms;
 	};
 }

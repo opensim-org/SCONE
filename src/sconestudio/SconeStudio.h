@@ -33,6 +33,7 @@
 #include "vis/vis_api.h"
 #include "xo/container/flat_map.h"
 #include "SconeStorageDataModel.h"
+#include "ModelVis.h"
 
 using scone::TimeInSeconds;
 
@@ -97,7 +98,7 @@ private:
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
 
-	xo::flat_map< scone::StudioModel::ViewSettings, QAction* > viewActions;
+	xo::flat_map< scone::ModelVis::VisOpt, QAction* > viewActions;
 
 	vis::scene scene_;
 	std::unique_ptr< scone::StudioModel > model_;

@@ -13,6 +13,8 @@ if(${Qt5Widgets_FOUND})
 		main.cpp
 		StudioModel.cpp
 		StudioModel.h
+		ModelVis.cpp
+		ModelVis.h
 		studio_config.h
 		SconeStudio.cpp
 		SconeStudio.h
