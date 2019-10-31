@@ -13,29 +13,32 @@
 #include <QtCore/QTimer>
 #include <QtCore/QProcess>
 #include <QtWidgets/QMainWindow>
+#include "QCodeEditor.h"
+#include "QCompositeMainWindow.h"
+#include "QDataAnalysisView.h"
+#include "QGroup.h"
+#include "QValueSlider.h"
 
 #include "ui_SconeStudio.h"
 
 #include "scone/core/PropNode.h"
 #include "scone/core/Statistic.h"
 
-#include "xo/time/timer.h"
-#include "xo/numerical/delta.h"
+#include "ModelVis.h"
 #include "ProgressDockWidget.h"
-#include "QCodeEditor.h"
-#include "SettingsEditor.h"
-#include "xo/system/log_sink.h"
-#include "QCompositeMainWindow.h"
-#include "QDataAnalysisView.h"
 #include "ResultsFileSystemModel.h"
+#include "SconeStorageDataModel.h"
+#include "SettingsEditor.h"
 #include "StudioModel.h"
+
 #include "vis/plane.h"
 #include "vis/vis_api.h"
+#include "vis/scene.h"
+
 #include "xo/container/flat_map.h"
-#include "SconeStorageDataModel.h"
-#include "ModelVis.h"
-#include "QFormLayout"
-#include "QValueSlider.h"
+#include "xo/numerical/delta.h"
+#include "xo/system/log_sink.h"
+#include "xo/time/timer.h"
 
 using scone::TimeInSeconds;
 
@@ -134,9 +137,9 @@ private:
 	SconeStorageDataModel analysisStorageModel;
 	QDataAnalysisView* analysisView;
 
-	// dof editor
-	QFormGroup* dofSliderGroup;
-	std::vector< QValueSlider* > dofSliders;
+	//// dof editor
+	//QFormGroup* dofSliderGroup;
+	//std::vector< QValueSlider* > dofSliders;
 };
 
 #endif // SCONESTUDIO_H

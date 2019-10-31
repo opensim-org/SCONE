@@ -131,10 +131,10 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, adw );
 
-	// dof editor
-	dofSliderGroup = new QFormGroup( this );
-	auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( adw, ddw );
+	//// dof editor
+	//dofSliderGroup = new QFormGroup( this );
+	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
+	//tabifyDockWidget( adw, ddw );
 
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );

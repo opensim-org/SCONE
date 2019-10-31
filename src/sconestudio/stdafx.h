@@ -9,9 +9,15 @@
 #pragma once
 
 #include <QWidget>
+#include <QString>
+#include <QColor>
 #include <QTimer>
+#include <QLabel>
+#include <QSlider>
 #include <QApplication>
 #include <QGridLayout>
+#include <QMainWindow>
+#include <QThread>
 
 #include <osgDB/ReadFile>
 #include <osgViewer/CompositeViewer>
