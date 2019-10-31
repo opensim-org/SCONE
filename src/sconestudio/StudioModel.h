@@ -12,17 +12,6 @@
 #include "scone/model/Model.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/Objective.h"
-
-#include "xo/container/flag_set.h"
-#include "xo/utility/color_gradient.h"
-
-#include "vis/scene.h"
-#include "vis/arrow.h"
-#include "vis/axes.h"
-#include "vis/material.h"
-#include "vis/trail.h"
-#include "vis/plane.h"
-
 #include "scone/model/State.h"
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
