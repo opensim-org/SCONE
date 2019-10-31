@@ -44,10 +44,10 @@ using namespace xo::literals;
 SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	QCompositeMainWindow( parent, flags ),
 	close_all( false ),
-	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) ),
-	slomo_factor( 1 ),
 	current_time(),
 	evaluation_time_step( 1.0 / 8 ),
+	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) ),
+	slomo_factor( 1 ),
 	com_delta( Vec3( 0, 1, 0 ) ),
 	captureProcess( nullptr )
 {
@@ -109,24 +109,32 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
 
+	// analysis
 	analysisView = new QDataAnalysisView( &analysisStorageModel, this );
 	analysisView->setObjectName( "Analysis" );
 	analysisView->setMinSeriesInterval( 0 );
 	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
+	// docking
 	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
 	setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
-	//setTabPosition( Qt::AllDockWidgetAreas, QTabWidget::North );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
 	registerDockWidget( ui.resultsDock, "Optimization &Results" );
+
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 	registerDockWidget( ui.messagesDock, "&Messages" );
+
 	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, adw );
+
+	// dof editor
+	dofSliderGroup = new QFormGroup( this );
+	auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( adw, ddw );
 
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );

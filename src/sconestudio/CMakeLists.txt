@@ -50,6 +50,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QFileBrowser.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
+		${QTFX_PATH}/QValueSlider.h
+		${QTFX_PATH}/QValueSlider.cpp
 		${QTFX_PATH}/QDataAnalysisView.h
 		${QTFX_PATH}/QDataAnalysisView.cpp
 		${QTFX_PATH}/QDataAnalysisModel.h
