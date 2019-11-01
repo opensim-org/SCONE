@@ -10,6 +10,7 @@
 
 #include "scone/core/Factories.h"
 #include "xo/container/container_tools.h"
+#include "xo/string/string_tools.h"
 #include "scone/core/Log.h"
 
 namespace scone
@@ -75,6 +76,6 @@ namespace scone
 			if ( xo::find( strset, s ) == strset.end() )
 				strset.emplace_back( s );
 		}
-		return xo::container_to_str( strset, "." );
+		return xo::concatenate_str( strset, "." );
 	}
 }

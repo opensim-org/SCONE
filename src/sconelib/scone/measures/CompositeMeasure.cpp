@@ -77,7 +77,7 @@ namespace scone
 		return total;
 	}
 
-	scone::String CompositeMeasure::GetClassSignature() const
+	String CompositeMeasure::GetClassSignature() const
 	{
 		std::vector< String > strset;
 		for ( auto& m : m_Measures )
@@ -86,6 +86,6 @@ namespace scone
 			if ( xo::find( strset, s ) == strset.end() )
 				strset.emplace_back( s );
 		}
-		return xo::container_to_str( strset, "" );
+		return xo::concatenate_str( strset, "" );
 	}
 }
