@@ -12,9 +12,9 @@
 #include <fstream>
 
 constexpr int SCONE_VERSION_MAJOR = 1;
-constexpr int SCONE_VERSION_MINOR = 2;
-constexpr int SCONE_VERSION_PATCH = 3;
-constexpr const char* SCONE_VERSION_POSTFIX = "";
+constexpr int SCONE_VERSION_MINOR = 3;
+constexpr int SCONE_VERSION_PATCH = 0;
+constexpr const char* SCONE_VERSION_POSTFIX = "PREVIEW RELEASE 1";
 
 namespace scone
 {

@@ -13,7 +13,6 @@ option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
 option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 option(SCONE_LUA "Support for lua scripting" OFF)
 option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
-mark_as_advanced(SCONE_HYFYDY)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
