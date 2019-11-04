@@ -27,6 +27,7 @@ namespace scone
 	ImitationObjective::ImitationObjective( const PropNode& pn ) :
 	ModelObjective( pn )
 	{
+		// #issue84: this model should be kept, but not used by Optimizer
 		auto model = InitializeModelObjective( pn );
 
 		INIT_PROP_REQUIRED( pn, file );

@@ -22,7 +22,7 @@ namespace scone
 {
 	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
-		// external resources are copied from current_path
+		// external resources (e.g. scripts) are copied from current_path
 		// #todo: use a thread safe version based on current_find_file_folder for everything
 		current_path( scenario_dir ); 
 		current_find_file_folder( scenario_dir );

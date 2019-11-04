@@ -21,6 +21,7 @@ namespace scone
 	SimulationObjective::SimulationObjective( const PropNode& props ) :
 	ModelObjective( props )
 	{
+		// #issue84: this model should be kept, but not used by Optimizer
 		auto model = InitializeModelObjective( props );
 
 		INIT_PROP( props, max_duration, 1e12 );
@@ -31,7 +32,7 @@ namespace scone
 	SimulationObjective::~SimulationObjective()
 	{}
 
-	scone::fitness_t SimulationObjective::EvaluateModel( Model& m ) const
+	fitness_t SimulationObjective::EvaluateModel( Model& m ) const
 	{
 		m.SetSimulationEndTime( GetDuration() );
 		AdvanceSimulationTo( m, GetDuration() );

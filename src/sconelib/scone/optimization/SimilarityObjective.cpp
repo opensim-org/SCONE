@@ -20,6 +20,7 @@ namespace scone
 	ModelObjective( pn ),
 	result_( 0 )
 	{
+		// #issue84: this model should be kept, but not used by Optimizer
 		auto model = InitializeModelObjective( pn );
 
 		INIT_PROP_REQUIRED( pn, file_ );
@@ -37,7 +38,7 @@ namespace scone
 		EvaluateModel( m );
 	}
 
-	scone::fitness_t SimilarityObjective::GetResult( Model& m ) const
+	fitness_t SimilarityObjective::GetResult( Model& m ) const
 	{
 		return result_;
 	}
@@ -47,7 +48,7 @@ namespace scone
 		return xo::to_prop_node( GetResult( m ) );
 	}
 
-	scone::fitness_t SimilarityObjective::EvaluateModel( Model& m ) const
+	fitness_t SimilarityObjective::EvaluateModel( Model& m ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 
