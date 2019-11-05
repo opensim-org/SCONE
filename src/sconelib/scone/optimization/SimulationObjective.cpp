@@ -18,16 +18,13 @@
 
 namespace scone
 {
-	SimulationObjective::SimulationObjective( const PropNode& props ) :
-	ModelObjective( props )
+	SimulationObjective::SimulationObjective( const PropNode& pn ) :
+	ModelObjective( pn )
 	{
-		// #issue84: this model should be kept, but not used by Optimizer
-		InitializeModelObjective( props );
-
 		// simulation objectives must have a measure
 		SCONE_THROW_IF( !model_->GetMeasure(), "No Measure defined in ModelObjective" );
 
-		INIT_PROP( props, max_duration, 1e12 );
+		INIT_PROP( pn, max_duration, 1e12 );
 
 		signature_ += stringf( ".D%.0f", max_duration );
 	}

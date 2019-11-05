@@ -47,7 +47,7 @@ namespace scone
 		auto optProp = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
 		auto objProp = FindFactoryProps( GetObjectiveFactory(), optProp.props(), "Objective" );
 		ObjectiveUP obj = CreateObjective( objProp );
-		SimulationObjective& so = dynamic_cast<SimulationObjective&>( *obj );
+		ModelObjective& so = dynamic_cast<ModelObjective&>( *obj );
 
 		// report unused properties
 		if ( objProp.props().count_unaccessed() > 0 )

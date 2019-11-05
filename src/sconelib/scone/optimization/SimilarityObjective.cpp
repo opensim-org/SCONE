@@ -20,9 +20,6 @@ namespace scone
 	ModelObjective( pn ),
 	result_( 0 )
 	{
-		// #issue84: this model should be kept, but not used by Optimizer
-		InitializeModelObjective( pn );
-
 		INIT_PROP_REQUIRED( pn, file_ );
 		AddExternalResource( file_ );
 

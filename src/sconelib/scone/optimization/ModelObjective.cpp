@@ -17,7 +17,27 @@ namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props ) :
 		Objective( props )
-	{}
+	{
+		// create internal model using the ORIGINAL prop_node to flag unused model props and create par_info_
+		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
+		model_ = CreateModel( model_props, info_ );
+
+		// create a controller that's defined OUTSIDE the model prop_node
+		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
+			model_->SetController( CreateController( controller_props, info_, *model_, Location() ) );
+
+		// create a measure that's defined OUTSIDE the model prop_node
+		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
+			model_->SetMeasure( CreateMeasure( measure_props, info_, *model_, Location() ) );
+
+		// update the minimize flag in objective_info
+		if ( model_->GetMeasure() )
+			info_.set_minimize( model_->GetMeasure()->GetMinimize() );
+
+		signature_ = model_->GetSignature();
+
+		AddExternalResources( model_->GetExternalResources() );
+	}
 
 	fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
 	{
@@ -60,28 +80,6 @@ namespace scone
 	{
 		// this does not work because we don't have a model member in Objective
 		SCONE_THROW_NOT_IMPLEMENTED;
-	}
-
-	void ModelObjective::InitializeModelObjective( const PropNode& props )
-	{
-		// create TEMPORARY model using the ORIGINAL prop_node to flag unused model props and create par_info_
-		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
-		model_ = CreateModel( model_props, info_ );
-
-		// create a TEMPORARY controller that's defined OUTSIDE the model prop_node
-		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
-			model_->SetController( CreateController( controller_props, info_, *model_, Location() ) );
-
-		// create a TEMPORARY measure that's defined OUTSIDE the model prop_node
-		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
-			model_->SetMeasure( CreateMeasure( measure_props, info_, *model_, Location() ) );
-
-		if ( model_->GetMeasure() )
-			info_.set_minimize( model_->GetMeasure()->GetMinimize() );
-
-		signature_ = model_->GetSignature();
-
-		AddExternalResources( model_->GetExternalResources() );
 	}
 
 	ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )

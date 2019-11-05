@@ -27,10 +27,7 @@ namespace scone
 	ImitationObjective::ImitationObjective( const PropNode& pn ) :
 	ModelObjective( pn )
 	{
-		// #issue84: this model should be kept, but not used by Optimizer
-		InitializeModelObjective( pn );
-
-		INIT_PROP_REQUIRED( pn, file );
+		file = FindFile( pn.get<path>( "file" ) );
 		INIT_PROP( pn, frame_delta, 1 );
 
 		if ( signature_postfix.empty() )
