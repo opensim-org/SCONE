@@ -18,7 +18,8 @@ int main( int argc, const char* argv[] )
 	xo::log::console_sink sink( xo::log::info_level );
 	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
 	scone::RegisterModels();
-	scone::add_tutorial_tests();
+	scone::add_scenario_tests( "scenarios/Tutorials" );
+	scone::add_scenario_tests( "scenarios/UnitTests" );
 
 	return xo::test::run_tests_async();
 }

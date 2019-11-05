@@ -49,11 +49,11 @@ namespace xo
 
 namespace scone
 {
-	void add_tutorial_tests()
+	void add_scenario_tests( const path& scenario_dir )
 	{
 		auto scone_dir = GetFolder( SCONE_ROOT_FOLDER );
-		auto tutorials_dir = scone_dir / "scenarios/Tutorials";
-		auto results_dir = scone_dir / "resources/unittestdata/tutorial_test" / xo::get_computer_name() + "_results";
+		auto tutorials_dir = scone_dir / scenario_dir;
+		auto results_dir = scone_dir / "resources/unittestdata" / scenario_dir.filename() / xo::get_computer_name() + "_results";
 		xo::create_directories( results_dir );
 
 		for ( fs::directory_iterator fileit( tutorials_dir.str() ); fileit != fs::directory_iterator(); ++fileit )
