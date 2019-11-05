@@ -20,8 +20,10 @@ namespace scone
 		// * model (only ONCE, always part of the objective?)
 		// * current search_point
 
+		scenario_file_ = FindScenario( file );
+
 		// create the objective from par file or config file
-		auto scenario_pn = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
+		auto scenario_pn = xo::load_file_with_include( scenario_file_, "INCLUDE" );
 		model_objective_ = CreateModelObjective( scenario_pn, file.parent_path() );
 		log::info( "Created objective ", model_objective_->GetSignature(), "; dim=", model_objective_->dim(), " source=", file.filename() );
 

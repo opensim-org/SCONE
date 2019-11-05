@@ -41,6 +41,7 @@ namespace scone
 		ModelObjectiveUP model_objective_;
 		ModelUP model_;
 		path filename_;
+		path scenario_file_;
 		bool is_evaluating;
 
 		// model state
