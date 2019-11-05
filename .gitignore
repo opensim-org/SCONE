@@ -7,7 +7,9 @@ ignore/
 /doc/xml/
 /doc/config/NaturalDocs/Working Data/
 /scenarios/Tutorials/*.sto
-/resources/unittestdata/tutorial_test/
+/scenarios/UnitTests/*.sto
+/resources/unittestdata/Tutorials/
+/resources/unittestdata/UnitTests/
 *simulation_test_result*.zml
 /.version
 /doc/upload.bat
