@@ -12,20 +12,22 @@
 #include "Log.h"
 #include "version.h"
 #include "xo/serialization/serialize.h"
+#include "Exception.h"
+#include <mutex>
+#include <atomic>
 
 namespace scone
 {
 	u_ptr< xo::settings > scone_settings;
+	std::mutex load_mutex;
+	std::atomic_bool is_loaded = ATOMIC_VAR_INIT( false );
 
-	xo::settings& GetSconeSettings()
+	void LoadSconeSettings()
 	{
-		if ( !scone_settings )
-		{
-			auto schema_path = GetInstallFolder() / "resources/scone-settings-schema.zml";
-			auto settings_path = GetSettingsFolder() / "scone-settings.zml";
-			scone_settings = std::make_unique< xo::settings >( load_file( schema_path ), settings_path, GetSconeVersion() );
-			log::debug( "Loaded settings from ", settings_path );
-		}
+		auto schema_path = GetInstallFolder() / "resources/scone-settings-schema.zml";
+		auto settings_path = GetSettingsFolder() / "scone-settings.zml";
+		scone_settings = std::make_unique< xo::settings >( load_file( schema_path ), settings_path, GetSconeVersion() );
+		log::debug( "Loaded settings from ", settings_path );
 
 		// set default paths if they don't exist
 		if ( scone_settings->get< path >( "folders.scenarios" ).empty() )
@@ -34,6 +36,20 @@ namespace scone
 			scone_settings->set( "folders.results", GetDataFolder() / "results" );
 		if ( scone_settings->get< path >( "folders.geometry" ).empty() )
 			scone_settings->set( "folders.geometry", GetInstallFolder() / "resources/geometry" );
+	}
+
+	xo::settings& GetSconeSettings()
+	{
+		if ( !is_loaded )
+		{
+			// try to load settings
+			std::scoped_lock lock( load_mutex );
+			if ( !is_loaded ) // make sure no one beat us to it
+			{
+				LoadSconeSettings();
+				is_loaded = true;
+			}
+		}
 
 		return *scone_settings;
 	}
