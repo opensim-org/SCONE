@@ -1,5 +1,6 @@
 CmaOptimizer {
 	signature_prefix = DATE_TIME
+	init_file = data/f0914m.FC2.HighJump.D2.par
 	
 	SimulationObjective {
 		max_duration = 2
@@ -7,22 +8,13 @@ CmaOptimizer {
 		# Model used in simulation
 		OpenSimModel {
 			model_file = data/Human0914.osim
+			
 			Properties {
-				#gastroc_l { max_isometric_force.factor = 0.5 }
-				#gastroc_r { max_isometric_force.factor = 0.5 }
-				r_toe {
-					radius = ~0.06
-					location.offset { x = 0.05~0.01<-1,1> y = 0 z = 0 }
-				}
-				# l_toe { location.offset { x = r_toe.location.offset.x y = 0 z = 0 } }
-				#KneeLimit_r { damping = 0.1 }
-				foot_r {
-					transition_velocity = 0.1
-					contact_parameters { objects {
-							stiffness = 1000000
-						}
-					}
-				}
+				iliopsoas_l { max_isometric_force.factor = 3 }
+				gastroc_r { max_isometric_force.factor = 2 }
+				r_toe { location.offset { x = 0.02~0.01<-1,1> y = 0 z = 0 } }
+				l_toe { radius = 0.03 location.offset { x = r_toe.location.offset.x y = -0.005 z = 0 } }
+				#KneeLimit_r { upper_stiffness = 0.001 damping = 0 }
 			}
 		}
 		
@@ -40,7 +32,8 @@ CmaOptimizer {
 		
 		# Fitness measure for jumping
 		JumpMeasure {
-			termination_height = 0.75
+			termination_height = 0.5
+			terminate_on_peak = 1
 			prepare_time = 0.2
 		}
 	}

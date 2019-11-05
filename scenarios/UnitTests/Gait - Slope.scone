@@ -6,7 +6,7 @@ CmaOptimizer {
 		
 		# Model used in simulation
 		OpenSimModel {
-			model_file = data/Human0914Slope5up.osim
+			model_file = data/Human0914Slope5down.osim
 			
 			# Optimize initial state parameters
 			state_init_file = data/InitStateGait10.sto
