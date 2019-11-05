@@ -28,30 +28,33 @@ namespace scone
 	ModelObjective( pn )
 	{
 		// #issue84: this model should be kept, but not used by Optimizer
-		auto model = InitializeModelObjective( pn );
+		InitializeModelObjective( pn );
 
 		INIT_PROP_REQUIRED( pn, file );
 		INIT_PROP( pn, frame_delta, 1 );
+
+		if ( signature_postfix.empty() )
+			signature_postfix = "Imitation";
 
 		// prepare data
 		ReadStorageSto( m_Storage, file );
 
 		// make sure data and model are compatible
-		auto state = model->GetState();
+		auto state = model_->GetState();
 		SCONE_THROW_IF( state.GetSize() > m_Storage.GetChannelCount(), "File and model are incompatible for ImitationObjective" );
 		for ( index_t i = 0; i < state.GetSize(); ++i )
 			SCONE_THROW_IF( state.GetName( i ) != m_Storage.GetLabels()[ i ], "File and model are incompatible for ImitationObjective" );
 
 		// find excitation channels
-		m_ExcitationChannels.reserve( model->GetMuscles().size() );
-		for ( auto& mus : model->GetMuscles() )
+		m_ExcitationChannels.reserve( model_->GetMuscles().size() );
+		for ( auto& mus : model_->GetMuscles() )
 		{
 			m_ExcitationChannels.push_back( m_Storage.GetChannelIndex( mus->GetName() + ".excitation" ) );
 			SCONE_THROW_IF( m_ExcitationChannels.back() == NoIndex, "Could not find excitation for " + mus->GetName() );
 		}
 
 		// find sensor channels
-		auto& ds = model->GetSensorDelayStorage();
+		auto& ds = model_->GetSensorDelayStorage();
 		m_SensorChannels.reserve( ds.GetChannelCount() );
 		for ( index_t ds_idx = 0; ds_idx < ds.GetChannelCount(); ++ds_idx )
 		{
@@ -113,7 +116,14 @@ namespace scone
 		}
 	}
 
-	scone::fitness_t ImitationObjective::GetResult( Model& m ) const
+	TimeInSeconds ImitationObjective::GetDuration() const
+	{
+		// find last frame, keeping frame_delta in mind
+		auto lastFrame = ( m_Storage.GetFrameCount() - 1 ) / frame_delta * frame_delta;
+		return m_Storage.GetFrame( lastFrame ).GetTime();
+	}
+
+	fitness_t ImitationObjective::GetResult( Model& m ) const
 	{
 		return m.GetUserData().get< fitness_t >( "IM_res" ) / ( m.GetUserData().get< index_t >( "IM_fra" ) );
 	}

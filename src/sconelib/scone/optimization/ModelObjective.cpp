@@ -17,8 +17,7 @@ namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props ) :
 		Objective( props )
-	{
-	}
+	{}
 
 	fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
 	{
@@ -63,28 +62,26 @@ namespace scone
 		SCONE_THROW_NOT_IMPLEMENTED;
 	}
 
-	ModelUP ModelObjective::InitializeModelObjective( const PropNode& props )
+	void ModelObjective::InitializeModelObjective( const PropNode& props )
 	{
 		// create TEMPORARY model using the ORIGINAL prop_node to flag unused model props and create par_info_
 		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
-		ModelUP model = CreateModel( model_props, info_ );
+		model_ = CreateModel( model_props, info_ );
 
 		// create a TEMPORARY controller that's defined OUTSIDE the model prop_node
 		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
-			model->SetController( CreateController( controller_props, info_, *model, Location() ) );
+			model_->SetController( CreateController( controller_props, info_, *model_, Location() ) );
 
 		// create a TEMPORARY measure that's defined OUTSIDE the model prop_node
 		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
-			model->SetMeasure( CreateMeasure( measure_props, info_, *model, Location() ) );
+			model_->SetMeasure( CreateMeasure( measure_props, info_, *model_, Location() ) );
 
-		SCONE_THROW_IF( !model->GetMeasure(), "No Measure defined in ModelObjective" );
+		if ( model_->GetMeasure() )
+			info_.set_minimize( model_->GetMeasure()->GetMinimize() );
 
-		info_.set_minimize( model->GetMeasure()->GetMinimize() );
-		signature_ = model->GetSignature();
+		signature_ = model_->GetSignature();
 
-		AddExternalResources( model->GetExternalResources() );
-
-		return model;
+		AddExternalResources( model_->GetExternalResources() );
 	}
 
 	ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )

@@ -36,7 +36,7 @@ namespace scone
 
 
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
-		virtual TimeInSeconds GetDuration() const override { return m_Storage.Back().GetTime(); }
+		virtual TimeInSeconds GetDuration() const override;
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
 

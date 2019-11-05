@@ -39,8 +39,12 @@ namespace scone
 
 		virtual std::vector<path> WriteResults( const path& file_base ) override;
 
+		const Model& GetModel() const { return *model_; }
+		Model& GetModel() { return *model_; }
+
 	protected:
-		ModelUP InitializeModelObjective( const PropNode& props );
+		void InitializeModelObjective( const PropNode& props );
+		ModelUP model_;
 		String signature_; // cached variable, because we need to create a model to get the signature
 		virtual String GetClassSignature() const override { return signature_; }
 	};
