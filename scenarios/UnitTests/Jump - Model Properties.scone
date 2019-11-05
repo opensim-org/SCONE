@@ -1,0 +1,47 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	
+	SimulationObjective {
+		max_duration = 2
+		
+		# Model used in simulation
+		OpenSimModel {
+			model_file = data/Human0914.osim
+			Properties {
+				#gastroc_l { max_isometric_force.factor = 0.5 }
+				#gastroc_r { max_isometric_force.factor = 0.5 }
+				r_toe {
+					radius = ~0.06
+					location.offset { x = 0.05~0.01<-1,1> y = 0 z = 0 }
+				}
+				# l_toe { location.offset { x = r_toe.location.offset.x y = 0 z = 0 } }
+				#KneeLimit_r { damping = 0.1 }
+				foot_r {
+					transition_velocity = 0.1
+					contact_parameters { objects {
+							stiffness = 1000000
+						}
+					}
+				}
+			}
+		}
+		
+		# Controller for the Model
+		FeedForwardController {
+			symmetric = 1
+			
+			# Function for feed-forward pattern
+			PieceWiseConstant {
+				control_points = 2
+				control_point_y = 0.3~0.01<0,1>
+				control_point_dt = 0.2~0.01<0,1>
+			}
+		}
+		
+		# Fitness measure for jumping
+		JumpMeasure {
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}
