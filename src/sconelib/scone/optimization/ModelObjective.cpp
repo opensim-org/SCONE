@@ -100,11 +100,7 @@ namespace scone
 		}
 
 		// report unused properties
-		if ( obj_props.props().count_unaccessed() > 0 )
-		{
-			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( obj_props.props() );
-		}
+		LogUnusedProperties( obj_props.props() );
 
 		return mob;
 	}

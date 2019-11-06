@@ -20,19 +20,16 @@ using xo::timer;
 
 namespace scone
 {
-	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
+	SCONE_API bool LogUnusedProperties( const PropNode& pn )
 	{
-		OptimizerUP o = CreateOptimizer( scenario_pn, scenario_dir );
-
 		// report unused properties
-		if ( scenario_pn.count_unaccessed() > 0 )
+		if ( pn.count_unaccessed() > 0 )
 		{
 			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( scenario_pn );
+			xo::log_unaccessed( pn );
+			return true;
 		}
-
-		// return created optimizer
-		return std::move( o );
+		else return false;
 	}
 
 	PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
@@ -45,11 +42,7 @@ namespace scone
 		ModelObjective& so = dynamic_cast<ModelObjective&>( *obj );
 
 		// report unused properties
-		if ( objProp.props().count_unaccessed() > 0 )
-		{
-			log::warning( "Warning, unused properties:" );
-			xo::log_unaccessed( objProp.props() );
-		}
+		LogUnusedProperties( objProp.props() );
 
 		// create model
 		ModelUP model;

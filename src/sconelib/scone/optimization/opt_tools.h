@@ -18,8 +18,8 @@
 
 namespace scone
 {
-	/// Creates Optimizer and logs unused properties.
-	SCONE_API OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir );
+	/// Log unused properties
+	SCONE_API bool LogUnusedProperties( const PropNode& pn );
 
 	/// Creates and evaluates SimulationObjective. Logs unused properties.
 	SCONE_API PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base );

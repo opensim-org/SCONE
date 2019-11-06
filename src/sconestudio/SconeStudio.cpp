@@ -552,8 +552,8 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 
 			path filename = path( s->fileName.toStdString() );
 			auto pn = xo::load_file( filename );
-			auto opt = scone::PrepareOptimization( pn, filename.parent_path() );
-			if ( pn.count_unaccessed() > 0 )
+			auto opt = scone::CreateOptimizer( pn, filename.parent_path() );
+			if ( LogUnusedProperties( pn ) )
 			{
 				QString message = "Invalid scenario settings in " + to_qt( filename.str() ) + ":\n\n";
 				message += to_qt( to_str_unaccessed( pn ) );

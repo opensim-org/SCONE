@@ -61,7 +61,8 @@ int main(int argc, char* argv[])
 			// do optimization or evaluation
 			if ( optArg.isSet() )
 			{
-				OptimizerUP o = PrepareOptimization( scenario_pn, scenario_file.parent_path() );
+				OptimizerUP o = CreateOptimizer( scenario_pn, scenario_file.parent_path() );
+				LogUnusedProperties( scenario_pn );
 				if ( statusOutput.getValue() )
 					o->SetOutputMode( Optimizer::status_output );
 				else o->SetOutputMode( quietOutput.getValue() ? Optimizer::no_output : Optimizer::console_output );
