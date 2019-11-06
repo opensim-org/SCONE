@@ -10,16 +10,17 @@
 
 #include "scone/core/Exception.h"
 #include "scone/model/Model.h"
-
 #include "scone/core/version.h"
 #include "scone/core/string_tools.h"
 #include "scone/core/system_tools.h"
 #include "scone/core/Factories.h"
 #include "scone/core/StorageIo.h"
 #include "scone/model/Muscle.h"
-#include <vector>
-#include "xo/container/prop_node.h"
 #include "scone/core/profiler_config.h"
+
+#include <vector>
+
+#include "xo/container/prop_node.h"
 #include "xo/container/container_tools.h"
 
 namespace scone
