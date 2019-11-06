@@ -47,17 +47,17 @@ namespace scone
 	SCONE_API MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, Model& model, const Location& target_area );
 	SCONE_API MeasureUP CreateMeasure( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 
-	using OptimizerFactory = xo::factory< Optimizer, const PropNode&, const PropNode& >;
+	using OptimizerFactory = xo::factory< Optimizer, const PropNode&, const PropNode&, const path& >;
 	SCONE_API OptimizerFactory& GetOptimizerFactory();
-	SCONE_API OptimizerUP CreateOptimizer( const PropNode& props );
+	SCONE_API OptimizerUP CreateOptimizer( const PropNode& props, const path& scenario_dir );
 
 	using ModelFactory = xo::factory< Model, const PropNode&, Params& >;
 	SCONE_API ModelFactory& GetModelFactory();
-	SCONE_API ModelUP CreateModel( const FactoryProps& fp, Params& par );
+	SCONE_API ModelUP CreateModel( const FactoryProps& fp, Params& par, const path& scenario_dir );
 
-	using ObjectiveFactory = xo::factory< Objective, const PropNode& >;
+	using ObjectiveFactory = xo::factory< Objective, const PropNode&, const path& >;
 	SCONE_API ObjectiveFactory& GetObjectiveFactory();
-	SCONE_API ObjectiveUP CreateObjective( const FactoryProps& fp );
+	SCONE_API ObjectiveUP CreateObjective( const FactoryProps& fp, const path& find_file_folder );
 
 	template< typename F >
 	FactoryProps MakeFactoryProps( const F& fac, const PropNode::pair_t& p, const String& fac_name ) {

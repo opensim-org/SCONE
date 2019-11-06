@@ -22,8 +22,8 @@ namespace scone
 		return 418.9829 * v.size() - sum;
 	}
 
-	TestObjective::TestObjective( const PropNode& pn ) :
-	Objective( pn )
+	TestObjective::TestObjective( const PropNode& pn, const path& find_file_folder ) :
+	Objective( pn, find_file_folder )
 	{
 		INIT_PROP( pn, dim_, 10 );
 

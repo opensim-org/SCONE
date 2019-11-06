@@ -20,7 +20,7 @@ namespace scone
 {
 	int GetSconeBuildNumber()
 	{
-		xo::path versionpath( xo::get_application_folder() );
+		xo::path versionpath( xo::get_application_dir() );
 		int build = 0;
 
 		// look for .version file, up to three levels from application folder

@@ -14,8 +14,8 @@ namespace scone
 {
 	const long DEFAULT_RANDOM_SEED = 123;
 
-	CmaOptimizer::CmaOptimizer( const PropNode& props, const PropNode& root ) :
-		Optimizer( props, root ),
+	CmaOptimizer::CmaOptimizer( const PropNode& props, const PropNode& scenario_pn, const path& scenario_dir ) :
+		Optimizer( props, scenario_pn, scenario_dir ),
 		mu_( 0 ),
 		lambda_( 0 ),
 		sigma_( 1.0 ),
@@ -29,15 +29,14 @@ namespace scone
 		INIT_PROP( props, flat_fitness_epsilon_, 1e-6 );
 	}
 
-	scone::String CmaOptimizer::GetClassSignature() const
+	CmaOptimizer::~CmaOptimizer()
+	{}
+
+	String CmaOptimizer::GetClassSignature() const
 	{
 		auto str = Optimizer::GetClassSignature();
 		if ( random_seed != DEFAULT_RANDOM_SEED )
 			str += xo::stringf( ".R%d", random_seed );
 		return str;
-	}
-
-	CmaOptimizer::~CmaOptimizer()
-	{
 	}
 }

@@ -25,8 +25,8 @@
 
 namespace scone
 {
-	ImitationObjective::ImitationObjective( const PropNode& pn ) :
-	ModelObjective( pn )
+	ImitationObjective::ImitationObjective( const PropNode& pn, const path& find_file_folder ) :
+	ModelObjective( pn, find_file_folder )
 	{
 		file = FindFile( pn.get<path>( "file" ) );
 		INIT_PROP( pn, frame_delta, 1 );

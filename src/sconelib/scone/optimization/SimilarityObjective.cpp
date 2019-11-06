@@ -16,8 +16,8 @@
 
 namespace scone
 {
-	SimilarityObjective::SimilarityObjective( const PropNode& pn ) :
-	ModelObjective( pn ),
+	SimilarityObjective::SimilarityObjective( const PropNode& pn, const path& find_file_folder ) :
+	ModelObjective( pn, find_file_folder ),
 	result_( 0 )
 	{
 		INIT_PROP_REQUIRED( pn, file_ );

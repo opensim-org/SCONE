@@ -30,7 +30,7 @@ view_first_gen( 0 ),
 view_last_gen( min_view_gens ),
 best_idx( -1 )
 {
-	QString program = to_qt( xo::get_application_folder() / SCONE_SCONECMD_EXECUTABLE );
+	QString program = to_qt( xo::get_application_dir() / SCONE_SCONECMD_EXECUTABLE );
 	QStringList args;
 	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
 

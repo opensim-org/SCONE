@@ -24,7 +24,7 @@ namespace scone
 	class SCONE_API Optimizer : public HasSignature
 	{
 	public:
-		Optimizer( const PropNode& props, const PropNode& root );
+		Optimizer( const PropNode& props, const PropNode& scenario_pn, const path& scenario_dir );
 		Optimizer( const Optimizer& ) = delete;
 		Optimizer& operator=( const Optimizer& ) = delete;
 
@@ -111,7 +111,7 @@ namespace scone
 		xo::log::level log_level_;
 		u_ptr< xo::log::file_sink > log_sink_;
 
-		PropNode config_copy_;
+		PropNode scenario_pn_copy_; // copy for creating props in output folder
 	};
 
 	template< typename T >

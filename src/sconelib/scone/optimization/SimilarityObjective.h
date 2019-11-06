@@ -16,7 +16,7 @@ namespace scone
 	class SimilarityObjective : public ModelObjective
 	{
 	public:
-		SimilarityObjective( const PropNode& props );
+		SimilarityObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~SimilarityObjective() {}
 		
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;

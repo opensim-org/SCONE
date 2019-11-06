@@ -723,7 +723,7 @@ void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = to_qt( xo::get_application_folder() / SCONE_FFMPEG_EXECUTABLE );
+	QString program = to_qt( xo::get_application_dir() / SCONE_FFMPEG_EXECUTABLE );
 	QStringList args;
 	args << "-r" << to_qt( GetStudioSettings().get<string>( "video.frame_rate" ) )
 		<< "-i" << captureFilename + ".images/image_0_%d.png"

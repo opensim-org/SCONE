@@ -24,7 +24,7 @@ namespace scone
 	class SCONE_API SimulationObjective : public ModelObjective
 	{
 	public:
-		SimulationObjective( const PropNode& props );
+		SimulationObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~SimulationObjective();
 
 		/// Maximum duration after which the evaluation is terminated; default = 1e12 (+/-31000 years)

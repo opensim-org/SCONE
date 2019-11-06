@@ -18,8 +18,8 @@
 
 namespace scone
 {
-	SimulationObjective::SimulationObjective( const PropNode& pn ) :
-	ModelObjective( pn )
+	SimulationObjective::SimulationObjective( const PropNode& pn, const path& find_file_folder ) :
+	ModelObjective( pn, find_file_folder )
 	{
 		// simulation objectives must have a measure
 		SCONE_THROW_IF( !model_->GetMeasure(), "No Measure defined in ModelObjective" );

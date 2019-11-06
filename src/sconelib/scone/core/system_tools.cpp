@@ -30,7 +30,7 @@ namespace scone
 	{
 		if ( g_RootFolder.empty() )
 		{
-			for ( g_RootFolder = xo::get_application_folder(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
+			for ( g_RootFolder = xo::get_application_dir(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
 			{
 				if ( xo::exists( g_RootFolder / ".version" ) )
 					break;
@@ -48,12 +48,12 @@ namespace scone
 
 	path GetSettingsFolder()
 	{
-		return xo::get_config_folder() / "SCONE";
+		return xo::get_config_dir() / "SCONE";
 	}
 
 	path GetDataFolder()
 	{
-		return xo::get_documents_folder() / "SCONE";
+		return xo::get_documents_dir() / "SCONE";
 	}
 
 	path GetFolder( SconeFolder folder )
@@ -71,6 +71,9 @@ namespace scone
 
 	path FindFile( const path& p )
 	{
+		if ( xo::current_find_file_path().empty() )
+			log::warning( "No current find file path set, resorting to global current path" );
+		
 		return xo::find_file( {
 			p,
 			p.filename(), // filename without rel path

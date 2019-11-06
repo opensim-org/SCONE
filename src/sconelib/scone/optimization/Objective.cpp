@@ -11,8 +11,9 @@
 
 namespace scone
 {
-	Objective::Objective( const PropNode& props ) :
-	HasSignature( props )
+	Objective::Objective( const PropNode& props, const path& find_file_folder ) :
+		HasSignature( props ),
+		external_resource_dir_( find_file_folder )
 	{
 		if ( auto p = props.try_get_child( "Parameters" ) )
 		{

@@ -22,11 +22,7 @@ namespace scone
 {
 	OptimizerUP PrepareOptimization( const PropNode& scenario_pn, const path& scenario_dir )
 	{
-		// external resources (e.g. scripts) are copied from current_path
-		// #todo: use a thread safe version based on current_find_file_folder for everything
-		current_path( scenario_dir ); 
-		current_find_file_folder( scenario_dir );
-		OptimizerUP o = CreateOptimizer( scenario_pn );
+		OptimizerUP o = CreateOptimizer( scenario_pn, scenario_dir );
 
 		// report unused properties
 		if ( scenario_pn.count_unaccessed() > 0 )
@@ -42,11 +38,10 @@ namespace scone
 	PropNode EvaluateScenario( const PropNode& scenario_pn, const path& par_file, const path& output_base )
 	{
 		bool store_data = !output_base.empty();
-		current_find_file_folder( par_file.parent_path() );
 
 		auto optProp = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
 		auto objProp = FindFactoryProps( GetObjectiveFactory(), optProp.props(), "Objective" );
-		ObjectiveUP obj = CreateObjective( objProp );
+		ObjectiveUP obj = CreateObjective( objProp, par_file.parent_path() );
 		ModelObjective& so = dynamic_cast<ModelObjective&>( *obj );
 
 		// report unused properties

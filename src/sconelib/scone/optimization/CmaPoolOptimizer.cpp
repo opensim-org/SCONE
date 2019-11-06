@@ -12,8 +12,8 @@
 
 namespace scone
 {
-	CmaPoolOptimizer::CmaPoolOptimizer( const PropNode& pn, const PropNode& root ) :
-	Optimizer( pn, root ),
+	CmaPoolOptimizer::CmaPoolOptimizer( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
+	Optimizer( pn, scenario_pn, scenario_dir ),
 	optimizer_pool( *m_Objective )
 	{
 		INIT_PROP( pn, prediction_window_, 500 );
@@ -32,12 +32,12 @@ namespace scone
 		// fill the pool
 		for ( int i = 0; i < optimizations_; ++i )
 		{
-			props_.push_back( config_copy_ ); // we're reusing the props from CmaPoolOptimizer
+			props_.push_back( scenario_pn_copy_ ); // we're reusing the props from CmaPoolOptimizer
 			props_.back().set( "random_seed", random_seed_ + i );
 			props_.back().set( "type", "CmaOptimizer" );
 			props_.back().set( "output_root", GetOutputFolder() );
 			props_.back().set( "log_level", xo::log::never_log_level );
-			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), config_copy_ ) );
+			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), scenario_pn_copy_, m_Objective->GetExternalResourceDir() ) );
 		}
 
 		// add reporters

@@ -21,9 +21,9 @@ namespace scone
 	using std::cout;
 	using std::endl;
 
-	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& pn_root ) :
-	CmaOptimizer( pn, pn_root ),
-	cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
+	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
+		CmaOptimizer( pn, scenario_pn, scenario_dir ),
+		cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
@@ -31,7 +31,7 @@ namespace scone
 		lambda_ = lambda();
 		mu_ = mu();
 		sigma_ = sigma();
-		set_max_threads( ( int )max_threads );
+		set_max_threads( (int)max_threads );
 		enable_fitness_tracking( window_size );
 
 	}
@@ -74,7 +74,7 @@ namespace scone
 
 	void CmaOptimizerReporter::on_start( const optimizer& opt )
 	{
-		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
+		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 
 		log::info( "Starting optimization ", cma.id(), " dim=", cma.dim(), " lambda=", cma.lambda(), " mu=", cma.mu() );
 		if ( cma.GetStatusOutput() )
@@ -94,19 +94,19 @@ namespace scone
 
 	void CmaOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
 	{
-		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
+		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 		cma.OutputStatus( "finished", s.what() );
 		log::info( "Optimization ", cma.id(), " finished: ", s.what() );
 	}
 
 	void CmaOptimizerReporter::on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop )
 	{
-		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
+		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 	}
 
 	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, bool new_best )
 	{
-		auto& cma = dynamic_cast< const CmaOptimizerSpot& >( opt );
+		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 
 		// report results
 		auto pn = cma.GetStatusPropNode();

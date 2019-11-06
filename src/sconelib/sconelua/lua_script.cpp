@@ -9,17 +9,17 @@
 
 namespace scone
 {
-	lua_script::lua_script( const PropNode& pn, Params& par, Model& model ) :
-	INIT_MEMBER_REQUIRED( pn, script_file_ )
+	lua_script::lua_script( const PropNode& pn, Params& par, Model& model )
 	{
 		lua_.open_libraries( sol::lib::base, sol::lib::math, sol::lib::package );
 		register_lua_wrappers( lua_ );
 
 		// find script file (folder can be different if playback)
-		auto file = FindFile( script_file_ );
-		auto folder = file.has_parent_path() ? file.parent_path() : path( "." );
+		script_file_ = FindFile( pn.get<path>( "script_file" ) );
+		auto folder = script_file_.has_parent_path() ? script_file_.parent_path() : path( "." );
 
 		// set path for lua modules to current script file folder
+		// #todo: add these modules to external resources too!
 		lua_[ "package" ][ "path" ] = ( folder / "?.lua" ).c_str();
 
 		// propagate all properties to scone namespace in lua script
@@ -27,7 +27,7 @@ namespace scone
 			lua_[ "scone" ][ prop.first ] = prop.second.get<string>();
 
 		// load script
-		auto script = lua_.load_file( file.str() );
+		auto script = lua_.load_file( script_file_.str() );
 		if ( !script.valid() )
 		{
 			sol::error err = script;

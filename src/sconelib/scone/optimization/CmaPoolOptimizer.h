@@ -18,7 +18,7 @@ namespace scone
 	class CmaPoolOptimizer : public Optimizer, public spot::optimizer_pool
 	{
 	public:
-		CmaPoolOptimizer( const PropNode& pn, const PropNode& root );
+		CmaPoolOptimizer( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir );
 		virtual ~CmaPoolOptimizer() {}
 
 		virtual void Run() override;

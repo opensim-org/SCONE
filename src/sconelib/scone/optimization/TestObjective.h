@@ -16,7 +16,7 @@ namespace scone
 	class SCONE_API TestObjective : public Objective
 	{
 	public:
-		TestObjective( const PropNode& pn );
+		TestObjective( const PropNode& pn, const path& find_file_folder );
 		virtual ~TestObjective() {}
 
 		/// Dimension of the objective function

@@ -26,16 +26,16 @@
 
 namespace scone
 {
-	Optimizer::Optimizer( const PropNode& props, const PropNode& root ) :
+	Optimizer::Optimizer( const PropNode& props, const PropNode& scenario_pn, const path& scenario_dir ) :
 		HasSignature( props ),
 		max_threads( 1 ),
 		thread_priority( (int)xo::thread_priority::lowest ),
 		m_LastFileOutputGen( 0 ),
 		m_ObjectiveProps( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ) ),
-		m_Objective( CreateObjective( m_ObjectiveProps ) ),
+		m_Objective( CreateObjective( m_ObjectiveProps, scenario_dir ) ),
 		m_BestFitness( m_Objective->info().worst_fitness() ),
 		output_mode_( no_output ),
-		config_copy_( root )
+		scenario_pn_copy_( scenario_pn )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
 		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level", xo::log::info_level ) );
@@ -101,7 +101,7 @@ namespace scone
 	{
 		SCONE_ASSERT( output_folder_.empty() );
 
-		output_folder_ = xo::create_unique_folder( output_root / GetSignature() );
+		output_folder_ = xo::create_unique_directory( output_root / GetSignature() );
 		id_ = output_folder_.filename().str();
 
 		// create log sink if enabled
@@ -109,14 +109,16 @@ namespace scone
 			log_sink_ = std::make_unique< xo::log::file_sink >( log_level_, GetOutputFolder() / "optimization.log" );
 
 		// prepare output folder, and initialize
-		auto outdir = GetOutputFolder();
-		xo::save_file( config_copy_, GetOutputFolder() / "config.scone" );
+		xo::save_file( scenario_pn_copy_, output_folder_ / "config.scone" );
 		if ( use_init_file && !init_file.empty() )
-			xo::copy_file( init_file, GetOutputFolder() / init_file.filename(), true );
+			xo::copy_file( init_file, output_folder_ / init_file.filename(), true );
 
 		// copy all objective resources to output folder
 		for ( auto& f : GetObjective().GetExternalResources() )
-			if ( !xo::copy_file( f, outdir / f.filename(), true ) )
+			if ( !xo::copy_file( f, output_folder_ / f.filename(), true ) )
 				SCONE_ERROR( "Could not copy external resource: " + f.str() );
+
+		// now that all files are copied, we should use these during evaluation
+		GetObjective().SetExternalResourceDir( GetOutputFolder() );
 	}
 }

@@ -6,6 +6,7 @@ set(CORE_BASE_FILES
 	core/HasData.h
 	core/HasName.h
 	core/HasExternalResources.h
+	core/HasExternalResources.cpp
 	core/HasSignature.cpp
 	core/HasSignature.h
 	)

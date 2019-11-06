@@ -22,10 +22,16 @@ namespace scone
 	class SCONE_API Objective : public HasSignature, public HasExternalResources, public spot::objective
 	{
 	public:
-		Objective( const PropNode& props );
+		Objective( const PropNode& props, const path& external_resource_dir );
 		virtual ~Objective();
 
 		// write results and return all files written
 		virtual std::vector< path > WriteResults( const path& file_base ) { return std::vector< path >(); }
+		const path& GetExternalResourceDir() const { return external_resource_dir_; }
+		void SetExternalResourceDir( const path& dir ) { external_resource_dir_ = dir; }
+
+	protected:
+		// this is where external resources of the objective reside
+		path external_resource_dir_;
 	};
 }

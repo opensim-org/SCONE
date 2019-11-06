@@ -15,12 +15,12 @@
 
 namespace scone
 {
-	ModelObjective::ModelObjective( const PropNode& props ) :
-		Objective( props )
+	ModelObjective::ModelObjective( const PropNode& props, const path& find_file_folder ) :
+		Objective( props, find_file_folder )
 	{
 		// create internal model using the ORIGINAL prop_node to flag unused model props and create par_info_
 		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
-		model_ = CreateModel( model_props, info_ );
+		model_ = CreateModel( model_props, info_, GetExternalResourceDir() );
 
 		// create a controller that's defined OUTSIDE the model prop_node
 		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
@@ -36,7 +36,7 @@ namespace scone
 
 		signature_ = model_->GetSignature();
 
-		AddExternalResources( model_->GetExternalResources() );
+		AddExternalResources( *model_ );
 	}
 
 	fitness_t ModelObjective::evaluate( const SearchPoint& point ) const
@@ -55,7 +55,7 @@ namespace scone
 
 	ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
-		auto model = CreateModel( model_props, par );
+		auto model = CreateModel( model_props, par, GetExternalResourceDir() );
 		model->SetSimulationEndTime( GetDuration() );
 
 		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
@@ -84,15 +84,12 @@ namespace scone
 
 	ModelObjectiveUP CreateModelObjective( const PropNode& scenario_pn, const path& dir )
 	{
-		// set current path to scenario path
-		current_find_file_folder( dir );
-
 		// find objective
 		FactoryProps opt_props = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
 		FactoryProps obj_props = FindFactoryProps( GetObjectiveFactory(), opt_props.props(), "Objective" );
 
 		// create ModelObjective object
-		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( obj_props ) );
+		auto mob = dynamic_unique_cast<ModelObjective>( CreateObjective( obj_props, dir ) );
 
 		// read mean / std from init file
 		if ( opt_props.props().has_key( "init_file" ) && opt_props.props().get< bool >( "use_init_file", true ) )

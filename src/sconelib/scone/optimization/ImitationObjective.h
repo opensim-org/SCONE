@@ -25,7 +25,7 @@ namespace scone
 	class SCONE_API ImitationObjective : public ModelObjective
 	{
 	public:
-		ImitationObjective( const PropNode& props );
+		ImitationObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~ImitationObjective();
 
 		/// File containing the existing simulation results (.sto).

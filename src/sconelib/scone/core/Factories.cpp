@@ -47,6 +47,7 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
+#include "xo/filesystem/filesystem.h"
 
 namespace scone
 {
@@ -167,10 +168,10 @@ namespace scone
 		return g_OptimizerFactory;
 	}
 
-	OptimizerUP CreateOptimizer( const PropNode& props )
+	OptimizerUP CreateOptimizer( const PropNode& props, const path& scenario_dir )
 	{
 		auto fp = FindFactoryProps( GetOptimizerFactory(), props, "Optimizer" );
-		return GetOptimizerFactory().create( fp.type(), fp.props(), props );
+		return GetOptimizerFactory().create( fp.type(), fp.props(), props, scenario_dir );
 	}
 
 	ModelFactory& GetModelFactory()
@@ -184,8 +185,9 @@ namespace scone
 		return g_ModelFactory;
 	}
 
-	ModelUP CreateModel( const FactoryProps& fp, Params& par )
+	ModelUP CreateModel( const FactoryProps& fp, Params& par, const path& scenario_dir )
 	{
+		xo::current_find_file_path( scenario_dir );
 		return GetModelFactory().create( fp.type(), fp.props(), par );
 	}
 
@@ -203,8 +205,8 @@ namespace scone
 		return g_ObjectiveFactory;
 	}
 
-	ObjectiveUP CreateObjective( const FactoryProps& fp )
+	ObjectiveUP CreateObjective( const FactoryProps& fp, const path& find_file_folder )
 	{
-		return GetObjectiveFactory().create( fp.type(), fp.props() );
+		return GetObjectiveFactory().create( fp.type(), fp.props(), find_file_folder );
 	}
 }

@@ -18,7 +18,7 @@ namespace scone
 	class SCONE_API ModelObjective : public Objective
 	{
 	public:
-		ModelObjective( const PropNode& props );
+		ModelObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~ModelObjective() {}
 
 		FactoryProps model_props;
