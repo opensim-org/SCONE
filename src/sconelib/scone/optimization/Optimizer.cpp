@@ -116,6 +116,7 @@ namespace scone
 
 		// copy all objective resources to output folder
 		for ( auto& f : GetObjective().GetExternalResources() )
-			xo::copy_file( f, outdir / f.filename(), true );
+			if ( !xo::copy_file( f, outdir / f.filename(), true ) )
+				SCONE_ERROR( "Could not copy external resource: " + f.str() );
 	}
 }
