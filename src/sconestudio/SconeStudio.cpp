@@ -41,7 +41,7 @@ using namespace scone;
 using namespace std;
 using namespace xo::literals;
 
-SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
+SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	QCompositeMainWindow( parent, flags ),
 	close_all( false ),
 	current_time(),
@@ -59,7 +59,8 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	auto editMenu = menuBar()->addMenu( "&Edit" );
 	addMenuAction( editMenu, "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ) );
 	addMenuAction( editMenu, "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
-	addMenuAction( editMenu, "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ), true );
+	addMenuAction( editMenu, "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ) );
+	editMenu->addSeparator();
 	addMenuAction( editMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
@@ -77,15 +78,19 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
+	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
+	scenarioMenu->addSeparator();
 	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::startOptimization, QKeySequence( "Ctrl+F5" ) );
-	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::startMultipleOptimizations, QKeySequence( "Ctrl+Shift+F5" ), true );
-	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence(), true );
-	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::startMultipleOptimizations, QKeySequence( "Ctrl+Shift+F5" ));
+	scenarioMenu->addSeparator();
+	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
+	scenarioMenu->addSeparator();
 	addMenuAction( scenarioMenu, "Measure Scenario &Performance", this, &SconeStudio::performanceTest, QKeySequence( "Ctrl+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
-	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ), true );
+	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
+	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
@@ -94,14 +99,14 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, QKeySequence( "Ctrl+Space" ) );
 	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
 	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
-	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ), true );
+	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
+	actionMenu->addSeparator();
 	addMenuAction( actionMenu, "Step &Back", ui.playControl, &QPlayControl::stepBack, QKeySequence( "Ctrl+Left" ) );
 	addMenuAction( actionMenu, "Step &Forward", ui.playControl, &QPlayControl::stepForward, QKeySequence( "Ctrl+Right" ) );
 	addMenuAction( actionMenu, "Page &Back", ui.playControl, &QPlayControl::pageBack, QKeySequence( "Ctrl+PgUp" ) );
 	addMenuAction( actionMenu, "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
 	addMenuAction( actionMenu, "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
-	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ), true );
-	//addMenuAction( actionMenu, "&Evaluate Current Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
 
 	createWindowMenu();
 	createHelpMenu();
@@ -262,7 +267,7 @@ void SconeStudio::evaluate()
 			}
 			prev_visual_time = rt;
 		}
-		else setTime( t, false ); // 
+		else setTime( t, false );
 	}
 
 	// report duration
@@ -365,9 +370,9 @@ void SconeStudio::openFile( const QString& filename )
 		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
 		codeEditors.push_back( edw );
 		updateRecentFilesMenu( filename );
-		createAndVerifyActiveScenario();
+		createAndVerifyActiveScenario( false );
 	}
-	catch ( std::exception& e )
+	catch ( std::exception & e )
 	{
 		error( "Error opening " + filename, e.what() );
 	}
@@ -379,7 +384,7 @@ void SconeStudio::fileSaveTriggered()
 	{
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-		createAndVerifyActiveScenario();
+		createAndVerifyActiveScenario( true );
 	}
 }
 
@@ -393,6 +398,7 @@ void SconeStudio::fileSaveAsTriggered()
 			s->saveAs( filename );
 			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 			updateRecentFilesMenu( s->fileName );
+			createAndVerifyActiveScenario( true );
 		}
 	}
 }
@@ -448,30 +454,31 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 
 bool SconeStudio::createScenario( const QString& any_file )
 {
+	scenario_.reset();
+	analysisStorageModel.setStorage( nullptr );
+
 	try
 	{
-		scenario_.reset();
-		analysisStorageModel.setStorage( nullptr );
-
 		// create scenario and update viewer
 		scenario_ = std::make_unique< StudioModel >( scene_, path_from_qt( any_file ) );
 		updateViewSettings();
-
-		ui.playControl->reset();
-		ui.playControl->setRange( 0, 0 );
-		ui.osgViewer->repaint();
 
 		// update analysis
 		analysisStorageModel.setStorage( &scenario_->GetData() );
 		analysisView->reset();
 
 	}
-	catch ( std::exception& e )
+	catch ( std::exception & e )
 	{
 		error( "Error loading scenario", e.what() );
-		return false;
 	}
-	return true;
+
+	// always do this, also in case of error
+	ui.playControl->reset();
+	ui.playControl->setRange( 0, 0 );
+	ui.osgViewer->repaint();
+
+	return bool( scenario_ );
 }
 
 std::vector<QCodeEditor*> SconeStudio::changedDocuments()
@@ -551,42 +558,40 @@ QCodeEditor* SconeStudio::getActiveScenario()
 	return first_scenario; // either first .scone file, or none
 }
 
-bool SconeStudio::createAndVerifyActiveScenario()
+bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 {
-	try
+	if ( auto* s = getActiveScenario() )
 	{
-		if ( auto* s = getActiveScenario() )
-		{
-			auto changed_docs = changedDocuments();
-			if ( !requestSaveChanges( changed_docs ) )
-				false;
+		auto changed_docs = changedDocuments();
+		if ( !requestSaveChanges( changed_docs ) )
+			false;
 
-			createScenario( s->fileName );
+		if ( scenario_ && scenario_->GetScenarioFileName() == s->fileName && changed_docs.empty() && !always_create )
+			return true; // we already have a scenario
+
+		if ( createScenario( s->fileName ) )
+		{
 			if ( LogUnusedProperties( scenario_->GetScenarioProps() ) )
 			{
 				QString message = "Invalid scenario settings in " + scenario_->GetScenarioFileName() + ":\n\n";
 				message += to_qt( to_str_unaccessed( scenario_->GetScenarioProps() ) );
 				if ( QMessageBox::warning( this, "Invalid scenario settings", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
-					return false;
+					return false; // user pressed cancel
 			}
-			return true;
+			return true; // everything loaded ok or invalid settings ignored
 		}
-		else
-		{
-			QMessageBox::information( this, "No Scenario Selected", "Please select a .scone file" );
-			return nullptr;
-		}
+		else return false; // failed to create scenario
 	}
-	catch ( std::exception& e )
+	else
 	{
-		QMessageBox::warning( this, "Error in Scenario", e.what() );
+		QMessageBox::information( this, "No Scenario Selected", "Please select a .scone file" );
 		return nullptr;
 	}
 }
 
 void SconeStudio::startOptimization()
 {
-	if ( createAndVerifyActiveScenario() )
+	if ( createAndVerifyActiveScenario( true ) )
 	{
 		ProgressDockWidget* pdw = new ProgressDockWidget( this, scenario_->GetScenarioFileName() );
 		addProgressDock( pdw );
@@ -596,8 +601,7 @@ void SconeStudio::startOptimization()
 
 void SconeStudio::evaluateActiveScenario()
 {
-	ui.playControl->stop();
-	if ( createAndVerifyActiveScenario() )
+	if ( createAndVerifyActiveScenario( false ) )
 	{
 		if ( scenario_->IsEvaluating() )
 			evaluate();
@@ -609,7 +613,7 @@ void SconeStudio::evaluateActiveScenario()
 void SconeStudio::performanceTest()
 {
 	ui.playControl->stop();
-	if ( createAndVerifyActiveScenario() )
+	if ( createAndVerifyActiveScenario( false ) )
 	{
 		xo::timer real_time;
 		SCONE_PROFILE_START;
@@ -627,7 +631,7 @@ void SconeStudio::performanceTest()
 
 void SconeStudio::startMultipleOptimizations()
 {
-	if ( createAndVerifyActiveScenario() )
+	if ( createAndVerifyActiveScenario( true ) )
 	{
 		bool ok = true;
 		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
