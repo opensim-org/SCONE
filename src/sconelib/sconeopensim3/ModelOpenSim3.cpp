@@ -355,11 +355,11 @@ namespace scone
 	{
 		for ( const auto& [prop_key, prop_val] : props )
 		{
-			for ( int i = 0; i < os_object.getNumProperties(); ++i )
-			{
-				auto& os_prop = os_object.updPropertyByIndex( i );
-				log::debug( os_object.getName() + "." + os_prop.getName(), " (", os_prop.getTypeName(), ") = ", os_prop.toString() );
-			}
+			//for ( int i = 0; i < os_object.getNumProperties(); ++i )
+			//{
+			//	auto& os_prop = os_object.updPropertyByIndex( i );
+			//	log::debug( os_object.getName() + "." + os_prop.getName(), " (", os_prop.getTypeName(), ") = ", os_prop.toString() );
+			//}
 
 			auto [prop_name, prop_qualifier] = xo::split_str_at_last( prop_key, "." );
 			auto& os_prop = os_object.updPropertyByName( prop_name );
