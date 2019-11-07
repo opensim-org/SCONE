@@ -15,15 +15,17 @@
 #include "scone/model/State.h"
 #include "scone/core/types.h"
 #include "scone/optimization/ModelObjective.h"
+#include "scone/optimization/Optimizer.h"
 
 #include "ModelVis.h"
+#include "qt_convert.h"
 
 namespace scone
 {
 	class StudioModel
 	{
 	public:
-		StudioModel( vis::scene &s, const path& filename, bool force_evaluation = false );
+		StudioModel( vis::scene &s, const path& filename );
 		virtual ~StudioModel();
 
 		void UpdateVis( TimeInSeconds t );
@@ -32,14 +34,17 @@ namespace scone
 
 		const Storage<>& GetData() { return storage_; }
 		Model& GetSimModel() { return *model_; }
-		ModelObjective& GetObjective() { return *model_objective_; }
+		const ModelObjective& GetModelObjective() const { return *model_objective_; }
 
 		bool IsEvaluating() const { return is_evaluating; }
 		TimeInSeconds GetTime() const { return model_->GetTime(); }
-		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? model_objective_->GetDuration() : storage_.Back().GetTime(); }
+		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? GetModelObjective().GetDuration() : storage_.Back().GetTime(); }
 
 		void ApplyViewSettings( const ModelVis::ViewSettings& f );
-		const path& GetFileName() { return filename_; }
+
+		const path& GetFileName() const { return filename_; }
+		QString GetScenarioFileName() const { return to_qt( scenario_filename_ ); }
+		const PropNode& GetScenarioProps() const { return scenario_pn_; }
 
 	private:
 		// visualizer
@@ -47,9 +52,12 @@ namespace scone
 
 		// model / scenario data
 		Storage<> storage_;
-		ModelObjectiveUP model_objective_;
+		OptimizerUP optimizer_;
+		ModelObjective* model_objective_;
 		ModelUP model_;
 		path filename_;
+		path scenario_filename_;
+		PropNode scenario_pn_;
 		bool is_evaluating;
 
 		// model state

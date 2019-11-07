@@ -77,10 +77,10 @@ SconeStudio::SconeStudio( QWidget *parent, Qt::WindowFlags flags ) :
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
-	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
-	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ), true );
+	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::startOptimization, QKeySequence( "Ctrl+F5" ) );
+	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::startMultipleOptimizations, QKeySequence( "Ctrl+Shift+F5" ), true );
 	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence(), true );
-	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::runScenario, QKeySequence( "Ctrl+T" ) );
+	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+T" ) );
 	addMenuAction( scenarioMenu, "Measure Scenario &Performance", this, &SconeStudio::performanceTest, QKeySequence( "Ctrl+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
@@ -184,26 +184,17 @@ bool SconeStudio::init()
 SconeStudio::~SconeStudio()
 {}
 
-void SconeStudio::runSimulation( const QString& filename )
-{
-	if ( createModel( filename.toStdString() ) )
-	{
-		updateViewSettings();
-		analysisStorageModel.setStorage( &model_->GetData() );
-		analysisView->reset();
-		if ( model_->IsEvaluating() )
-			evaluate();
-		ui.playControl->setRange( 0, model_->GetMaxTime() );
-	}
-}
-
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	QString browserItem = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
 	ui.playControl->reset();
-	runSimulation( browserItem );
-	if ( model_ )
-		ui.playControl->play();
+	if ( createScenario( browserItem ) )
+	{
+		if ( scenario_->IsEvaluating() ) // .par or .sto
+			evaluate();
+		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
+		ui.playControl->play(); // playback after evaluation
+	}
 }
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
@@ -215,12 +206,13 @@ void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& 
 void SconeStudio::start()
 {
 	auto s = getActiveScenario();
-	if ( s && ( !model_ ||
+	if ( s && ( !scenario_ ||
 		s->document()->isModified() ||
-		( s->hasFocus() && model_->GetFileName() != path_from_qt( s->fileName ) ) ) )
+		scenario_->IsEvaluating() ||
+		( s->hasFocus() && scenario_->GetFileName() != path_from_qt( s->fileName ) ) ) )
 	{
 		// update the simulation
-		runScenario();
+		evaluateActiveScenario();
 	}
 	else
 	{
@@ -243,9 +235,9 @@ void SconeStudio::refreshAnalysis()
 
 void SconeStudio::evaluate()
 {
-	SCONE_ASSERT( model_ );
+	SCONE_ASSERT( scenario_ );
 
-	QProgressDialog dlg( ( "Evaluating " + model_->GetFileName().str() ).c_str(), "Abort", 0, 1000, this );
+	QProgressDialog dlg( ( "Evaluating " + scenario_->GetFileName().str() ).c_str(), "Abort", 0, 1000, this );
 	dlg.setWindowModality( Qt::WindowModal );
 	dlg.show();
 	QApplication::processEvents();
@@ -256,16 +248,16 @@ void SconeStudio::evaluate()
 	const xo::time visual_update = 250_ms;
 	xo::time prev_visual_time = xo::time() - visual_update;
 	xo::timer real_time;
-	for ( double t = step_size; model_->IsEvaluating(); t += step_size )
+	for ( double t = step_size; scenario_->IsEvaluating(); t += step_size )
 	{
 		auto rt = real_time();
 		if ( rt - prev_visual_time >= visual_update )
 		{
 			// update 3D visuals and progress bar
 			setTime( t, true );
-			dlg.setValue( int( 1000 * t / model_->GetMaxTime() ) );
+			dlg.setValue( int( 1000 * t / scenario_->GetMaxTime() ) );
 			if ( dlg.wasCanceled() ) {
-				model_->FinalizeEvaluation( false );
+				scenario_->FinalizeEvaluation( false );
 				break;
 			}
 			prev_visual_time = rt;
@@ -275,18 +267,18 @@ void SconeStudio::evaluate()
 
 	// report duration
 	auto real_dur = real_time().seconds();
-	auto sim_time = model_->GetTime();
+	auto sim_time = scenario_->GetTime();
 	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 
 	xo::set_thread_priority( xo::thread_priority::normal );
 
 	dlg.setValue( 1000 );
-	model_->UpdateVis( model_->GetTime() );
+	scenario_->UpdateVis( scenario_->GetTime() );
 }
 
 void SconeStudio::createVideo()
 {
-	if ( !model_ )
+	if ( !scenario_ )
 		return error( "No Scenario", "There is no scenario open" );
 
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
@@ -304,10 +296,10 @@ void SconeStudio::createVideo()
 	ui.stackedWidget->setCurrentIndex( 1 );
 
 	const double step_size = ui.playControl->slowMotionFactor() / GetStudioSettings().get<double>( "video.frame_rate" );
-	for ( double t = 0.0; t <= model_->GetMaxTime(); t += step_size )
+	for ( double t = 0.0; t <= scenario_->GetMaxTime(); t += step_size )
 	{
 		setTime( t, true );
-		ui.progressBar->setValue( int( t / model_->GetMaxTime() * 100 ) );
+		ui.progressBar->setValue( int( t / scenario_->GetMaxTime() * 100 ) );
 		QApplication::processEvents();
 		if ( ui.abortButton->isChecked() )
 			break;
@@ -328,19 +320,19 @@ void SconeStudio::captureImage()
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 {
-	if ( model_ )
+	if ( scenario_ )
 	{
 		// update current time and stop when done
 		current_time = t;
 
 		// update ui and visualization
-		if ( model_->IsEvaluating() )
-			model_->EvaluateTo( t );
+		if ( scenario_->IsEvaluating() )
+			scenario_->EvaluateTo( t );
 
 		if ( update_vis )
 		{
-			model_->UpdateVis( t );
-			auto d = com_delta( model_->GetSimModel().GetComPos() );
+			scenario_->UpdateVis( t );
+			auto d = com_delta( scenario_->GetSimModel().GetComPos() );
 			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
 
@@ -373,6 +365,7 @@ void SconeStudio::openFile( const QString& filename )
 		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
 		codeEditors.push_back( edw );
 		updateRecentFilesMenu( filename );
+		createAndVerifyActiveScenario();
 	}
 	catch ( std::exception& e )
 	{
@@ -386,6 +379,7 @@ void SconeStudio::fileSaveTriggered()
 	{
 		s->save();
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+		createAndVerifyActiveScenario();
 	}
 }
 
@@ -452,29 +446,45 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 	}
 }
 
-bool SconeStudio::createModel( const String& par_file, bool force_evaluation )
+bool SconeStudio::createScenario( const QString& any_file )
 {
 	try
 	{
-		model_.reset();
+		scenario_.reset();
 		analysisStorageModel.setStorage( nullptr );
-		model_ = std::make_unique< StudioModel >( scene_, path( par_file ), force_evaluation );
+
+		// create scenario and update viewer
+		scenario_ = std::make_unique< StudioModel >( scene_, path_from_qt( any_file ) );
+		updateViewSettings();
+
+		ui.playControl->reset();
+		ui.playControl->setRange( 0, 0 );
+		ui.osgViewer->repaint();
+
+		// update analysis
+		analysisStorageModel.setStorage( &scenario_->GetData() );
+		analysisView->reset();
+
 	}
 	catch ( std::exception& e )
 	{
-		error( "Could not create model", e.what() );
+		error( "Error loading scenario", e.what() );
 		return false;
 	}
 	return true;
 }
 
-bool SconeStudio::requestSaveChanges()
+std::vector<QCodeEditor*> SconeStudio::changedDocuments()
 {
 	std::vector< QCodeEditor* > modified_docs;
 	for ( auto s : codeEditors )
 		if ( s->document()->isModified() )
 			modified_docs.push_back( s );
+	return modified_docs;
+}
 
+bool SconeStudio::requestSaveChanges( const std::vector<QCodeEditor*>& modified_docs )
+{
 	if ( !modified_docs.empty() )
 	{
 		QString message = "The following files have been modified:\n";
@@ -541,26 +551,25 @@ QCodeEditor* SconeStudio::getActiveScenario()
 	return first_scenario; // either first .scone file, or none
 }
 
-QCodeEditor* SconeStudio::getVerifiedActiveScenario()
+bool SconeStudio::createAndVerifyActiveScenario()
 {
 	try
 	{
 		if ( auto* s = getActiveScenario() )
 		{
-			if ( !requestSaveChanges() )
-				return nullptr;
+			auto changed_docs = changedDocuments();
+			if ( !requestSaveChanges( changed_docs ) )
+				false;
 
-			path filename = path( s->fileName.toStdString() );
-			auto pn = xo::load_file( filename );
-			auto opt = scone::CreateOptimizer( pn, filename.parent_path() );
-			if ( LogUnusedProperties( pn ) )
+			createScenario( s->fileName );
+			if ( LogUnusedProperties( scenario_->GetScenarioProps() ) )
 			{
-				QString message = "Invalid scenario settings in " + to_qt( filename.str() ) + ":\n\n";
-				message += to_qt( to_str_unaccessed( pn ) );
+				QString message = "Invalid scenario settings in " + scenario_->GetScenarioFileName() + ":\n\n";
+				message += to_qt( to_str_unaccessed( scenario_->GetScenarioProps() ) );
 				if ( QMessageBox::warning( this, "Invalid scenario settings", message, QMessageBox::Ignore, QMessageBox::Cancel ) == QMessageBox::Cancel )
-					return nullptr;
+					return false;
 			}
-			return s;
+			return true;
 		}
 		else
 		{
@@ -575,53 +584,50 @@ QCodeEditor* SconeStudio::getVerifiedActiveScenario()
 	}
 }
 
-void SconeStudio::optimizeScenario()
+void SconeStudio::startOptimization()
 {
-	if ( auto* s = getVerifiedActiveScenario() )
+	if ( createAndVerifyActiveScenario() )
 	{
-		ProgressDockWidget* pdw = new ProgressDockWidget( this, s->fileName );
+		ProgressDockWidget* pdw = new ProgressDockWidget( this, scenario_->GetScenarioFileName() );
 		addProgressDock( pdw );
 		updateOptimizations();
 	}
 }
 
-void SconeStudio::runScenario()
+void SconeStudio::evaluateActiveScenario()
 {
 	ui.playControl->stop();
-
-	if ( auto* s = getVerifiedActiveScenario() )
+	if ( createAndVerifyActiveScenario() )
 	{
-		runSimulation( s->fileName );
-		if ( model_ )
-			ui.playControl->play();
+		if ( scenario_->IsEvaluating() )
+			evaluate();
+		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
+		ui.playControl->play();
 	}
 }
 
 void SconeStudio::performanceTest()
 {
 	ui.playControl->stop();
-	if ( auto* s = getVerifiedActiveScenario() )
+	if ( createAndVerifyActiveScenario() )
 	{
-		auto scenario_file = FindScenario( xo::path( s->fileName.toStdString() ) );
-		auto scenario_pn = xo::load_file_with_include( scenario_file, "INCLUDE" );
 		xo::timer real_time;
-		auto model_objective = CreateModelObjective( scenario_pn, scenario_file.parent_path() );
 		SCONE_PROFILE_START;
-		auto model = model_objective->CreateModelFromParams( SearchPoint( model_objective->info() ) );
-		model->SetStoreData( false );
-		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+		auto& model = scenario_->GetSimModel();
+		model.SetStoreData( false );
+		model.AdvanceSimulationTo( model.GetSimulationEndTime() );
 		SCONE_PROFILE_REPORT;
-		auto result = model_objective->GetResult( *model );
+		auto result = scenario_->GetModelObjective().GetResult( model );
 		log::info( "fitness = ", result );
 		auto real_dur = real_time().seconds();
-		auto sim_time = model->GetTime();
+		auto sim_time = model.GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
 }
 
-void SconeStudio::optimizeScenarioMultiple()
+void SconeStudio::startMultipleOptimizations()
 {
-	if ( auto* s = getVerifiedActiveScenario() )
+	if ( createAndVerifyActiveScenario() )
 	{
 		bool ok = true;
 		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
@@ -631,7 +637,7 @@ void SconeStudio::optimizeScenarioMultiple()
 			{
 				QStringList args;
 				args << QString().sprintf( "#1.random_seed=%d", i );
-				ProgressDockWidget* pdw = new ProgressDockWidget( this, s->fileName, args );
+				ProgressDockWidget* pdw = new ProgressDockWidget( this, scenario_->GetScenarioFileName(), args );
 				addProgressDock( pdw );
 			}
 			updateOptimizations();
@@ -704,12 +710,12 @@ void SconeStudio::tabCloseRequested( int idx )
 
 void SconeStudio::updateViewSettings()
 {
-	if ( model_ )
+	if ( scenario_ )
 	{
 		scone::ModelVis::ViewSettings f;
 		for ( auto& va : viewActions )
 			f.set( va.first, va.second->isChecked() );
-		model_->ApplyViewSettings( f );
+		scenario_->ApplyViewSettings( f );
 	}
 }
 
