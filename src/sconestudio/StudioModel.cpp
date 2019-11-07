@@ -31,7 +31,8 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file ) :
-		is_evaluating( false )
+		is_evaluating_( false ),
+		has_result_( false )
 	{
 		// create the objective from par file or config file
 		filename_ = file;
@@ -57,7 +58,7 @@ namespace scone
 			log::trace( "Read ", file, " in ", t(), " seconds" );
 		} else {
 			// file is a .par or .scone, setup for evaluation
-			is_evaluating = true;
+			is_evaluating_ = true;
 			model_->SetStoreData( true );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
@@ -90,7 +91,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		if ( !is_evaluating )
+		if ( !is_evaluating_ )
 		{
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
@@ -136,11 +137,13 @@ namespace scone
 			results.push_back( "result", model_objective_->GetReport( *model_ ) );
 			auto result_files = model_->WriteResults( filename_ );
 
+			has_result_ = true;
+
 			log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
 			log::info( results );
 		}
 
-		is_evaluating = false;
+		is_evaluating_ = false;
 	}
 
 	void StudioModel::ApplyViewSettings( const ModelVis::ViewSettings& flags )
