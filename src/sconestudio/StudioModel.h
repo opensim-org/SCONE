@@ -37,7 +37,6 @@ namespace scone
 		const ModelObjective& GetModelObjective() const { return *model_objective_; }
 
 		bool IsEvaluating() const { return is_evaluating_; }
-		bool HasResult() const { return has_result_; }
 		TimeInSeconds GetTime() const { return model_->GetTime(); }
 		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? GetModelObjective().GetDuration() : storage_.Back().GetTime(); }
 
@@ -61,7 +60,6 @@ namespace scone
 		PropNode scenario_pn_;
 
 		bool is_evaluating_;
-		bool has_result_;
 
 		// model state
 		std::vector< size_t > state_data_index;

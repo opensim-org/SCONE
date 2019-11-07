@@ -31,8 +31,7 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file ) :
-		is_evaluating_( false ),
-		has_result_( false )
+		is_evaluating_( false )
 	{
 		// create the objective from par file or config file
 		filename_ = file;
@@ -135,12 +134,11 @@ namespace scone
 			log::info( "fitness = ", fitness );
 			PropNode results;
 			results.push_back( "result", model_objective_->GetReport( *model_ ) );
+			if ( !results[ "result" ].empty() )
+				log::info( results );
+
 			auto result_files = model_->WriteResults( filename_ );
-
-			has_result_ = true;
-
 			log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
-			log::info( results );
 		}
 
 		is_evaluating_ = false;
