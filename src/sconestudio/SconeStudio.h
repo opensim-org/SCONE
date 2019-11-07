@@ -55,7 +55,6 @@ public:
 	virtual bool tryExit() override;
 
 public slots:
-	void runSimulation( const QString& filename );
 	void activateBrowserItem( QModelIndex idx );
 	void selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold );
 	void resultsSelectionChanged( const QItemSelection& newitem, const QItemSelection& olditem ) {}
@@ -69,10 +68,10 @@ public slots:
 	virtual void fileCloseTriggered() override;
 
 	void helpAbout() {}
-	void runScenario();
+	void evaluateActiveScenario();
 	void performanceTest();
-	void optimizeScenario();
-	void optimizeScenarioMultiple();
+	void startOptimization();
+	void startMultipleOptimizations();
 	void abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();
@@ -90,15 +89,16 @@ public slots:
 public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
-	bool isEvalutating() { return model_ && model_->IsEvaluating(); }
+	bool isEvalutating() { return scenario_ && scenario_->IsEvaluating(); }
 
 private:
 	QCodeEditor* getActiveCodeEditor();
 	QCodeEditor* getActiveScenario();
-	QCodeEditor* getVerifiedActiveScenario();
+
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
-	bool requestSaveChanges();
+	std::vector< QCodeEditor* > changedDocuments();
+	bool requestSaveChanges( const std::vector<QCodeEditor*>& modified_docs );
 	bool requestSaveChanges( QCodeEditor* s );
 	int getTabIndex( QCodeEditor* s );
 	void addProgressDock( ProgressDockWidget* pdw );
@@ -108,8 +108,9 @@ private:
 	scone::SettingsEditor settings;
 
 	// model
-	std::unique_ptr< scone::StudioModel > model_;
-	bool createModel( const String& par_file, bool force_evaluation = false );
+	std::unique_ptr< scone::StudioModel > scenario_;
+	bool createScenario( const QString& any_file );
+	bool createAndVerifyActiveScenario( bool always_create );
 
 	// simulation
 	TimeInSeconds current_time;

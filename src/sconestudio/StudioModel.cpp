@@ -30,39 +30,41 @@
 
 namespace scone
 {
-	StudioModel::StudioModel( vis::scene& s, const path& file, bool force_evaluation ) :
-		is_evaluating( false )
+	StudioModel::StudioModel( vis::scene& s, const path& file ) :
+		is_evaluating_( false )
 	{
 		// create the objective from par file or config file
-		auto scenario_pn = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
-		model_objective_ = CreateModelObjective( scenario_pn, file.parent_path() );
-		log::info( "Created objective ", model_objective_->GetSignature(), "; dim=", model_objective_->dim(), " source=", file.filename() );
+		filename_ = file;
+		scenario_filename_ = FindScenario( file );
+		scenario_pn_ = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
+		optimizer_ = CreateOptimizer( scenario_pn_, file.parent_path() );
+		model_objective_ = dynamic_cast<ModelObjective*>( &optimizer_->GetObjective() );
 
 		// create model from par or with default parameters
-		if ( file.extension_no_dot() == "par" )
-			model_ = model_objective_->CreateModelFromParFile( file );
-		else
-			model_ = model_objective_->CreateModelFromParams( SearchPoint( model_objective_->info() ) );
+		const auto file_type = file.extension_no_dot();
+		if ( file_type == "par" )
+			model_ = GetModelObjective().CreateModelFromParFile( file );
+		else // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
+			model_ = GetModelObjective().CreateModelFromParams( SearchPoint( GetModelObjective().info() ) );
 
-		// accept filename and clear data
-		filename_ = file;
-
-		// load results if the file is an sto
-		if ( file.extension_no_dot() == "sto" && !force_evaluation )
+		if ( file_type == "sto" )
 		{
+			// file is a .sto, load results
 			xo::timer t;
 			log::debug( "Reading ", file );
 			ReadStorageSto( storage_, file );
 			InitStateDataIndices();
 			log::trace( "Read ", file, " in ", t(), " seconds" );
 		} else {
-			// start evaluation
-			is_evaluating = true;
+			// file is a .par or .scone, setup for evaluation
+			is_evaluating_ = true;
 			model_->SetStoreData( true );
-			log::debug( "Evaluating ", filename_ );
 			EvaluateTo( 0 ); // evaluate one step so we can init vis
 		}
 
+		log::info( "Loaded ", file.filename(), "; dim=", model_objective_->dim() );
+
+		// create and init visualizer
 		vis_ = std::make_unique<ModelVis>( *model_, s );
 		UpdateVis( 0 );
 	}
@@ -88,7 +90,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		if ( !is_evaluating )
+		if ( !is_evaluating_ )
 		{
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
@@ -105,7 +107,7 @@ namespace scone
 		SCONE_ASSERT( IsEvaluating() );
 		try
 		{
-			model_objective_->AdvanceSimulationTo( *model_, t );
+			GetModelObjective().AdvanceSimulationTo( *model_, t );
 			if ( model_->HasSimulationEnded() )
 				FinalizeEvaluation( true );
 		}
@@ -132,13 +134,14 @@ namespace scone
 			log::info( "fitness = ", fitness );
 			PropNode results;
 			results.push_back( "result", model_objective_->GetReport( *model_ ) );
-			auto result_files = model_->WriteResults( filename_ );
+			if ( !results[ "result" ].empty() )
+				log::info( results );
 
+			auto result_files = model_->WriteResults( filename_ );
 			log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
-			log::info( results );
 		}
 
-		is_evaluating = false;
+		is_evaluating_ = false;
 	}
 
 	void StudioModel::ApplyViewSettings( const ModelVis::ViewSettings& flags )
