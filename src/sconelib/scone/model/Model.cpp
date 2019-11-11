@@ -185,7 +185,7 @@ namespace scone
 		}
 
 		// store sensor data
-		if ( flags( StoreDataTypes::SensorData ) )
+		if ( flags( StoreDataTypes::SensorData ) && !m_SensorDelayStorage.IsEmpty() )
 		{
 			auto sf = m_SensorDelayStorage.Back();
 			for ( index_t i = 0; i < m_SensorDelayStorage.GetChannelCount(); ++i )

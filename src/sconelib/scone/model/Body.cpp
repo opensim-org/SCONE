@@ -41,7 +41,7 @@ namespace scone
 		}
 		if ( flags( StoreDataTypes::BodyOrientation ) )
 		{
-			auto ori = rotation_vector_from_quat( GetOrientation() );
+			auto ori = rotation_vector_from_quat( normalized( GetOrientation() ) );
 			frame[ name + ".ori_x" ] = ori.x;
 			frame[ name + ".ori_y" ] = ori.y;
 			frame[ name + ".ori_z" ] = ori.z;
