@@ -724,6 +724,7 @@ void SconeStudio::updateViewSettings()
 		for ( auto& va : viewActions )
 			f.set( va.first, va.second->isChecked() );
 		scenario_->ApplyViewSettings( f );
+		ui.osgViewer->repaint();
 	}
 }
 
