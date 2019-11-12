@@ -1,5 +1,24 @@
 ====== What's new ======
 
+==== SCONE 1.3.0 ====
+//Released November 12, 2019//
+
+=== New Features and Updates ===
+  * SCONE scenarios are now loaded an visualized immediately after a file is opened or saved
+  * Improved support for editing and optimizing more model properties (using ''Properties { ... }'') directly in the SCONE scenario. These include ContactGeometry (position, radius, etc.), Joint, and Coordinate properties. Closes #78
+  * Major performance improvement of the SCONE User Interface when the 3D visualizer is not actively used
+  * 3D viewer now supports keyboard shortcuts for orbit (''Left'', ''Right'', ''PgUp'', ''PgDn''), pan (''Shift + Arrow keys'') and zoom (''Up'' and ''Down'')
+  * ''Ctrl + Space'' now toggles playback
+  * ''Ctrl + E'' now evaluates the currently selected scenario
+  * Visualizer no longer uses emissive component, added ambient_intensity parameter
+  * SCONE Unit tests are now performed in parallel for improved performance
+
+=== Fixes ===
+  * When optimizing a scenario, the *copied* versions of models and scripts are now used, so you can freely edit the originals during an active optimization
+  * Fixed incorrect "Please select a .scone file" error while optimizing or evaluating a scenario
+  * ''PieceWiseLinear'' and ''PieceWiseConstant'' functions now check if ''dt > 0''
+  * ''ImitationObjective'' was broken, now it works again
+
 ==== SCONE 1.2.3 ====
 //Released September 13, 2019//
 
@@ -12,8 +31,8 @@
 
 === Fixes ===
   * ScriptMeasure / ScriptController: Contact forces are now accessed correctly using contact_force(), contact_moment() and contact_point()
-  * File Save (Ctrl + s) now works with .lua files (closes #77)
-  * Open File (Ctrl + o) now shows all supported file formats by default
+  * File Save (''Ctrl + s'') now works with .lua files (closes #77)
+  * Open File (''Ctrl + o'') now shows all supported file formats by default
   * Jumping tutorials now explicitly maximize results
   * Documentation fixes
   * Minor performance enhancements
@@ -80,7 +99,7 @@
     * Support for writing custom data to .sto and SCONE Analysis window
   * The SCONE Studio editor now supports Find (Ctrl+F) and Find Next / Previous (F3 / Shift+F3)
   * The .SCONE file format is now more strict:
-    * Comments using ';' '//' '/*' and '*/' are no longer supported
+    * Comments using '';' ''%%//%%'' ''/*'' and ''*/'' are no longer supported
     * Only single line comments '#' and multi-line comments '###' are supported
   * Improved unit testing
   * Many documentation updates and fixes
