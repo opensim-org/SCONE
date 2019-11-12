@@ -20,12 +20,6 @@ namespace scone
 		return names_.size() - 1;
 	}
 
-	void State::SetValues( const std::vector< Real >& v )
-	{
-		SCONE_ASSERT( values_.size() <= v.size() );
-		copy( v.begin(), v.begin() + values_.size(), values_.begin() );
-	}
-
 	index_t State::GetIndex( const String& name ) const
 	{
 		auto it = std::find( names_.begin(), names_.end(), name );
