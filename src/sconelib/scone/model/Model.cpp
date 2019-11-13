@@ -325,7 +325,7 @@ namespace scone
 		return GetMass() * xo::length( GetGravity() );
 	}
 
-	const scone::ContactGeometry* Model::GetGroundPlane() const
+	const ContactGeometry* Model::GetGroundPlane() const
 	{
 		auto& cg = GetContactGeometries();
 		if ( cg.size() > 0 && std::holds_alternative< xo::plane >( cg.front()->GetShape() ) )
