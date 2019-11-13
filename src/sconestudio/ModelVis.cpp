@@ -31,9 +31,11 @@ namespace scone
 		// ground plane
 		if ( auto* gp = model.GetGroundPlane() )
 		{
+			auto& plane = std::get<xo::plane>( gp->GetShape() );
 			ground_ = vis::plane( root_node_, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
+			auto normal_rot = xo::quat_from_directions( xo::vec3f::unit_y(), plane.normal_ );
 			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
-			ground_.pos_ori( vis::vec3f( gp->GetPos() ), xo::quat_from_z_angle( 90_deg ) * gp->GetOri() );
+			ground_.pos_ori( vis::vec3f( gp->GetPos() ), Quat( normal_rot ) * gp->GetOri() );
 		}
 
 		for ( auto& body : model.GetBodies() )
@@ -67,7 +69,7 @@ namespace scone
 		{
 			auto idx = FindIndexByName( model.GetBodies(), cg->GetBody().GetName() );
 			auto& parent = idx != NoIndex ? bodies[ idx ] : root_node_;
-			if ( std::holds_alternative<xo::sphere>( cg->GetShape() ) )
+			if ( !std::holds_alternative<xo::plane>( cg->GetShape() ) )
 			{
 				// #todo: add support for other shapes (i.e. planes)
 				contact_geoms.push_back( vis::mesh( parent, cg->GetShape(), xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
