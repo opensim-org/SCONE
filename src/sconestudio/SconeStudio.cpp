@@ -353,7 +353,7 @@ void SconeStudio::fileOpenTriggered()
 	if ( auto* s = getActiveScenario() )
 		default_path = to_qt( path( s->fileName.toStdString() ).parent_path() );
 
-	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "Supported file formats (*.scone *.xml *.zml *.lua);;SCONE Scenarios (*.scone *.xml *.zml);;Lua Scripts (*.lua)" );
+	QString filename = QFileDialog::getOpenFileName( this, "Open Scenario", default_path, "Supported file formats (*.scone *.xml *.zml *.lua *.hfd *.osim);;SCONE Scenarios (*.scone *.xml *.zml);;Lua Scripts (*.lua)" );
 	if ( !filename.isEmpty() )
 		openFile( filename );
 }
@@ -390,7 +390,7 @@ void SconeStudio::fileSaveTriggered()
 
 void SconeStudio::fileSaveAsTriggered()
 {
-	if ( auto* s = getActiveScenario() )
+	if ( auto* s = getActiveCodeEditor() )
 	{
 		QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml);;Lua script (*.lua)" );
 		if ( !filename.isEmpty() )
