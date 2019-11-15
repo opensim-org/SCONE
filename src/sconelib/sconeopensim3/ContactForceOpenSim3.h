@@ -31,6 +31,7 @@ namespace scone
 		virtual const Vec3& GetMoment() const override;
 		virtual const Vec3& GetPoint() const override;
 		virtual std::tuple<const Vec3&, const Vec3&, const Vec3&> GetForceMomentPoint() const override;
+		ForceValue GetForceValue() const override;
 
 	private:
 		const OpenSim::HuntCrossleyForce& m_osForce;

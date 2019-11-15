@@ -277,7 +277,11 @@ namespace scone
 		std::vector< ForceValue > fvec;
 		fvec.reserve( GetContactForces().size() );
 		for ( auto& cf : GetContactForces() )
-			fvec.push_back( cf->GetForceValue() );
+		{
+			auto cfv = cf->GetForceValue();
+			if ( xo::squared_length( cfv.force ) > REAL_WIDE_EPSILON )
+				fvec.push_back( cf->GetForceValue() );
+		}
 		return fvec;
 	}
 
