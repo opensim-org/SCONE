@@ -82,8 +82,5 @@ namespace scone
 		SimTK::Vec3 point;
 		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
 		return from_osim( point );
-		
-		// #todo: compute the actual world pos of this joint instead of the pos in the parent frame
-		// OpenSim: how can we get the actual position of a joint
 	}
 }
