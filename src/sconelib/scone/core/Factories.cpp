@@ -53,20 +53,17 @@ namespace scone
 {
 	ControllerFactory& GetControllerFactory()
 	{
-		static ControllerFactory g_ControllerFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_ControllerFactory.register_type< FeedForwardController >();
-			g_ControllerFactory.register_type< GaitStateController >();
-			g_ControllerFactory.register_type< ReflexController >();
-			g_ControllerFactory.register_type< PerturbationController >();
-			g_ControllerFactory.register_type< MirrorController >();
-			g_ControllerFactory.register_type< NeuralController >();
-			g_ControllerFactory.register_type< CompositeController >();
-			g_ControllerFactory.register_type< SequentialController >();
-			g_ControllerFactory.register_type< NoiseController >();
-			} );
+		static ControllerFactory g_ControllerFactory = ControllerFactory()
+			.register_type< FeedForwardController >()
+			.register_type< GaitStateController >()
+			.register_type< ReflexController >()
+			.register_type< PerturbationController >()
+			.register_type< MirrorController >()
+			.register_type< NeuralController >()
+			.register_type< CompositeController >()
+			.register_type< SequentialController >()
+			.register_type< NoiseController >();
+
 		return g_ControllerFactory;
 	}
 
@@ -84,26 +81,23 @@ namespace scone
 
 	MeasureFactory& GetMeasureFactory()
 	{
-		static MeasureFactory g_MeasureFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_MeasureFactory.register_type< HeightMeasure >();
-			g_MeasureFactory.register_type< GaitMeasure >();
-			g_MeasureFactory.register_type< GaitCycleMeasure >();
-			g_MeasureFactory.register_type< EffortMeasure >();
-			g_MeasureFactory.register_type< DofLimitMeasure >();
-			g_MeasureFactory.register_type< DofMeasure >();
-			g_MeasureFactory.register_type< MuscleMeasure >();
-			g_MeasureFactory.register_type< BodyMeasure >();
-			g_MeasureFactory.register_type< CompositeMeasure >();
-			g_MeasureFactory.register_type< JumpMeasure >();
-			g_MeasureFactory.register_type< JointLoadMeasure >();
-			g_MeasureFactory.register_type< ReactionForceMeasure >();
-			g_MeasureFactory.register_type< BalanceMeasure >();
-			g_MeasureFactory.register_type< MimicMeasure >();
-			} );
-		return g_MeasureFactory;
+		static MeasureFactory g_MeasureFactory = MeasureFactory()
+			.register_type< HeightMeasure >()
+			.register_type< GaitMeasure >()
+			.register_type< GaitCycleMeasure >()
+			.register_type< EffortMeasure >()
+			.register_type< DofLimitMeasure >()
+			.register_type< DofMeasure >()
+			.register_type< MuscleMeasure >()
+			.register_type< BodyMeasure >()
+			.register_type< CompositeMeasure >()
+			.register_type< JumpMeasure >()
+			.register_type< JointLoadMeasure >()
+			.register_type< ReactionForceMeasure >()
+			.register_type< BalanceMeasure >()
+			.register_type< MimicMeasure >();
+
+ 		return g_MeasureFactory;
 	}
 
 	MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
@@ -118,15 +112,12 @@ namespace scone
 
 	ReflexFactory& GetReflexFactory()
 	{
-		static ReflexFactory g_ReflexFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_ReflexFactory.register_type< MuscleReflex >();
-			g_ReflexFactory.register_type< DofReflex >();
-			g_ReflexFactory.register_type< BodyPointReflex >();
-			g_ReflexFactory.register_type< ConditionalMuscleReflex >();
-			} );
+		static ReflexFactory g_ReflexFactory = ReflexFactory()
+			.register_type< MuscleReflex >()
+			.register_type< DofReflex >()
+			.register_type< BodyPointReflex >()
+			.register_type< ConditionalMuscleReflex >();
+
 		return g_ReflexFactory;
 	}
 
@@ -137,16 +128,13 @@ namespace scone
 
 	FunctionFactory& GetFunctionFactory()
 	{
-		static FunctionFactory g_FunctionFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_FunctionFactory.register_type< PieceWiseConstantFunction >();
-			g_FunctionFactory.register_type< PieceWiseConstantFunction >( "PieceWiseConstant" );
-			g_FunctionFactory.register_type< PieceWiseLinearFunction >();
-			g_FunctionFactory.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" );
-			g_FunctionFactory.register_type< Polynomial >();
-			} );
+		static FunctionFactory g_FunctionFactory = FunctionFactory()
+			.register_type< PieceWiseConstantFunction >()
+			.register_type< PieceWiseConstantFunction >( "PieceWiseConstant" )
+			.register_type< PieceWiseLinearFunction >()
+			.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" )
+			.register_type< Polynomial >();
+
 		return g_FunctionFactory;
 	}
 
@@ -157,14 +145,11 @@ namespace scone
 
 	OptimizerFactory& GetOptimizerFactory()
 	{
-		static OptimizerFactory g_OptimizerFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_OptimizerFactory.register_type< CmaOptimizerSpot >( "CmaOptimizer" );
-			g_OptimizerFactory.register_type< CmaOptimizerSpot >();
-			g_OptimizerFactory.register_type< CmaPoolOptimizer >();
-			} );
+		static OptimizerFactory g_OptimizerFactory = OptimizerFactory()
+			.register_type< CmaOptimizerSpot >( "CmaOptimizer" )
+			.register_type< CmaOptimizerSpot >()
+			.register_type< CmaPoolOptimizer >();
+
 		return g_OptimizerFactory;
 	}
 
@@ -177,11 +162,9 @@ namespace scone
 	ModelFactory& GetModelFactory()
 	{
 		static ModelFactory g_ModelFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			// all models are registered externally
-			} );
+
+		// all models are registered from different dlls in scone_config.h
+
 		return g_ModelFactory;
 	}
 
@@ -193,15 +176,12 @@ namespace scone
 
 	ObjectiveFactory& GetObjectiveFactory()
 	{
-		static ObjectiveFactory g_ObjectiveFactory;
-		// register types once, #todo: use XO_FACTORY_REGISTRANT
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			g_ObjectiveFactory.register_type< SimulationObjective >();
-			g_ObjectiveFactory.register_type< ImitationObjective >();
-			g_ObjectiveFactory.register_type< SimilarityObjective >();
-			g_ObjectiveFactory.register_type< TestObjective >();
-			} );
+		static ObjectiveFactory g_ObjectiveFactory = ObjectiveFactory()
+			.register_type< SimulationObjective >()
+			.register_type< ImitationObjective >()
+			.register_type< SimilarityObjective >()
+			.register_type< TestObjective >();
+
 		return g_ObjectiveFactory;
 	}
 
