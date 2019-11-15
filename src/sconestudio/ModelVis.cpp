@@ -25,7 +25,7 @@ namespace scone
 			{ 0.5f, GetStudioSetting< xo::color >( "viewer.muscle_50" ) },
 			{ 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } )
 	{
-		// #todo: don't reset this every time, perhaps keep view_flags outside StudioModel
+		// #todo: don't reset this every time, keep view_flags outside ModelVis
 		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
 
 		// ground plane
@@ -132,11 +132,11 @@ namespace scone
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
 
 		// update forces
-		for ( auto& cf : model.GetContactForces() )
+		if ( view_flags.get< ShowForces >() )
 		{
-			auto& [force, moment, point] = cf->GetForceMomentPoint();
-			if ( xo::squared_length( force ) > REAL_WIDE_EPSILON && view_flags.get< ShowForces >() )
-				UpdateForceVis( force_count++, point, force );
+			auto fvec = model.GetContactForceValues();
+			for ( auto& cf : fvec )
+				UpdateForceVis( force_count++, cf.point, cf.force );
 		}
 		while ( force_count < forces.size() )
 			forces.pop_back();
