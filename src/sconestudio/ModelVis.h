@@ -44,6 +44,7 @@ namespace scone
 		float shininess_;
 		float ambient_;
 		vis::material bone_mat;
+		vis::material joint_mat;
 		vis::material muscle_mat;
 		vis::material tendon_mat;
 		vis::material arrow_mat;

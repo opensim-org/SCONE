@@ -46,6 +46,7 @@ viewer {
 	tendon { type = color label = "Tendon color" default { h = 40 s = 0.02 v = 0.8 } }
 	force { type = color label = "Force color" default { h = 60 s = 0.8 v = 0.8 } }
 	contact { type = color label = "Contact color" default { h = 180 s = 0.5 v = 0.5 } }
+	joint { type = color label = "Joint color" default { h = 40 s = 0.2 v = 0.5 } }
 	muscle_0 { type = color label = "Muscle color at 0% activation" default { h = 240 s = 0.7 v = 0.65 } }
 	muscle_50 { type = color label = "Muscle color at 50% activation" default { h = 0 s = 0.8 v = 0.8 } }
 	muscle_100 { type = color label = "Muscle color at 100% activation" default { h = 0 s = 0.9 v = 1.0 } }

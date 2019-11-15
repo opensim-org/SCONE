@@ -5,6 +5,7 @@
 #include "xo/filesystem/filesystem.h"
 #include "scone/core/Log.h"
 #include "scone/model/Muscle.h"
+#include "scone/model/Joint.h"
 #include "xo/geometry/path_alg.h"
 #include "scone/core/math.h"
 
@@ -16,6 +17,7 @@ namespace scone
 		shininess_( GetStudioSetting< float >( "viewer.shininess" ) ),
 		ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
 		bone_mat( { GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_ } ),
+		joint_mat( { GetStudioSetting< xo::color >( "viewer.joint" ), specular_, shininess_, ambient_ } ),
 		muscle_mat( { GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_ } ),
 		tendon_mat( { GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_ } ),
 		arrow_mat( { GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_ } ),
@@ -35,7 +37,7 @@ namespace scone
 			ground_ = vis::plane( root_node_, 128, 128, 0.5f, scone::GetStudioSetting< xo::color >( "viewer.tile1" ), scone::GetStudioSetting< xo::color >( "viewer.tile2" ) );
 			auto normal_rot = xo::quat_from_directions( xo::vec3f::unit_y(), plane.normal_ );
 			//ground_plane = scene_.add< vis::plane >( xo::vec3f( 64, 0, 0 ), xo::vec3f( 0, 0, -64 ), GetFolder( SCONE_UI_RESOURCE_FOLDER ) / "stile160.png", 64, 64 );
-			ground_.pos_ori( vis::vec3f( gp->GetPos() ), Quat( normal_rot ) * gp->GetOri() );
+			ground_.pos_ori( vis::vec3f( gp->GetPos() ), normal_rot * xo::quatf( gp->GetOri() ) );
 		}
 
 		for ( auto& body : model.GetBodies() )
@@ -99,6 +101,12 @@ namespace scone
 			muscles.push_back( std::move( mv ) );
 		}
 
+		for ( auto& j : model.GetJoints() )
+		{
+			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.03 ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
+			joints.back().set_material( joint_mat );
+		}
+
 		ApplyViewSettings( view_flags );
 	}
 
@@ -114,8 +122,7 @@ namespace scone
 		for ( index_t i = 0; i < model_bodies.size(); ++i )
 		{
 			auto& b = model_bodies[ i ];
-			vis::transformf trans( vis::vec3f( b->GetOriginPos() ), b->GetOrientation() );
-			bodies[ i ].transform( trans );
+			bodies[ i ].pos_ori( vis::vec3f( b->GetOriginPos() ), vis::quatf( b->GetOrientation() ) );
 
 			// external forces
 			if ( auto f = b->GetExternalForce(); !f.is_null() )
@@ -130,6 +137,11 @@ namespace scone
 		auto& model_muscles = model.GetMuscles();
 		for ( index_t i = 0; i < model_muscles.size(); ++i )
 			UpdateMuscleVis( *model_muscles[ i ], muscles[ i ] );
+
+		// update joints
+		auto& model_joints = model.GetJoints();
+		for ( index_t i = 0; i < model_joints.size(); ++i )
+			joints[ i ].pos( vis::vec3f( model_joints[ i ]->GetPos() ) );
 
 		// update forces
 		if ( view_flags.get< ShowForces >() )

@@ -79,13 +79,11 @@ namespace scone
 
 	Vec3 JointOpenSim3::GetPos() const
 	{
-		SCONE_THROW_NOT_IMPLEMENTED;
-
+		SimTK::Vec3 point;
+		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
+		return from_osim( point );
+		
 		// #todo: compute the actual world pos of this joint instead of the pos in the parent frame
 		// OpenSim: how can we get the actual position of a joint
-		SimTK::Vec3 p;
-		m_osJoint.getLocationInParent( p );
-		std::cout << GetName() << ": " << p << std::endl;
-		return from_osim( p );
 	}
 }
