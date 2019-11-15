@@ -25,8 +25,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	xo::log::stream_sink console_sink( xo::log::info_level, std::cout );
-	xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
-	scone::RegisterModels();
+	scone::Initialize();
 
 	try
 	{

@@ -17,6 +17,8 @@ set(MODEL_OPENSIM_3_FILES
 	ConstantForce.h
 	simbody_tools.h
 	platform.h
+	sconeopensim3.h
+	sconeopensim3.cpp
 )
 
 find_package( OpenSim 3.3 REQUIRED MODULE )

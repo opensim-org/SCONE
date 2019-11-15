@@ -8,43 +8,46 @@
 
 #pragma once
 
-#include "scone/core/Factories.h"
-
 #ifdef SCONE_OPENSIM_3
-#include "sconeopensim3/ModelOpenSim3.h"
+#include "sconeopensim3/sconeopensim3.h"
 #endif
 
 #ifdef SCONE_OPENSIM_4
-#include "sconeopensim4/ModelOpenSim4.h"
+#include "sconeopensim3/sconeopensim4.h"
 #endif
 
 #ifdef SCONE_HYFYDY
-#include "sconehfd/ModelHfd.h"
+#include "sconehfd/sconehfd.h"
 #endif
 
 #ifdef SCONE_LUA
-#include "sconelua/ScriptController.h"
-#include "sconelua/ScriptMeasure.h"
+#include "sconelua/sconelua.h"
 #endif
+
+#include "xo/serialization/serialize.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
 
 namespace scone
 {
-	void RegisterModels()
+	void Initialize()
 	{
+		// register .scone file format
+		xo::register_file_extension< xo::prop_node_serializer_zml >( "scone" );
+
 #ifdef SCONE_OPENSIM_3
-	GetModelFactory().register_type< ModelOpenSim3 >( "Simbody" ); // backwards compatibility
-	GetModelFactory().register_type< ModelOpenSim3 >( "OpenSim3Model" );
-	GetModelFactory().register_type< ModelOpenSim3 >( "OpenSimModel" );
+		RegisterSconeOpenSim3();
 #endif
+
 #ifdef SCONE_OPENSIM_4
-	GetModelFactory().register_type< ModelOpenSim4 >( "OpenSim4Model" );
+		RegisterSconeOpenSim4();
 #endif
+
 #ifdef SCONE_HYFYDY
-	GetModelFactory().register_type< ModelHfd >( "HyfydyModel" );
+		RegisterSconeHfd();
 #endif
+
 #ifdef SCONE_LUA
-	GetControllerFactory().register_type< ScriptController >( "ScriptController" );
-	GetMeasureFactory().register_type< ScriptMeasure >( "ScriptMeasure" );
+		RegisterSconeLua();
 #endif
 	}
 }

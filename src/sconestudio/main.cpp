@@ -46,16 +46,13 @@ int main( int argc, char *argv[] )
 		xo::log::debug( "Created log file: ", log_file );
 
 		// init scone file format
-		xo::register_serializer< xo::prop_node_serializer_zml >( "scone" );
+		scone::Initialize();
 
 		// init plash screen
 		QPixmap splash_pm( to_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
 		splash.show();
 		a.processEvents();
-
-		// register models
-		scone::RegisterModels();
 
 		// init main window
 		SconeStudio w;

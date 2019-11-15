@@ -15,6 +15,8 @@ set(MODEL_OPENSIM_4_FILES
 	ConstantForce.h
 	simbody_tools.h
 	platform.h
+	sconeopensim4.h
+	sconeopensim4.cpp
 )
 
 if (MSVC)
