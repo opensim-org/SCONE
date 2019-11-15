@@ -175,6 +175,7 @@ set(SIM_MODELCOMPONENTS_FILES
 	model/Body.h
 	model/ContactForce.cpp
 	model/ContactForce.h
+	model/ForceValue.h
 	model/Dof.cpp
 	model/Dof.h
 	model/Joint.cpp

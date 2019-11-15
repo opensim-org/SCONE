@@ -272,6 +272,15 @@ namespace scone
 			RequestTermination();
 	}
 
+	std::vector< ForceValue > Model::GetContactForceValues() const
+	{
+		std::vector< ForceValue > fvec;
+		fvec.reserve( GetContactForces().size() );
+		for ( auto& cf : GetContactForces() )
+			fvec.push_back( cf->GetForceValue() );
+		return fvec;
+	}
+
 	const Link& Model::FindLink( const String& body_name )
 	{
 		const Link* link = GetRootLink().FindLink( body_name );

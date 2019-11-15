@@ -27,6 +27,7 @@
 #include "scone/measures/Measure.h"
 #include "scone/controllers/Controller.h"
 #include "ContactForce.h"
+#include "ForceValue.h"
 
 namespace scone
 {
@@ -62,6 +63,7 @@ namespace scone
 
 		// Contact forces
 		const std::vector< ContactForceUP >& GetContactForces() const { return m_ContactForces; }
+		virtual std::vector< ForceValue > GetContactForceValues() const;
 
 		// link access
 		const Link& FindLink( const String& body_name );
