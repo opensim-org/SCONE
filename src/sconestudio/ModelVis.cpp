@@ -103,7 +103,7 @@ namespace scone
 
 		for ( auto& j : model.GetJoints() )
 		{
-			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.03 ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
+			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.02 ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
 			joints.back().set_material( joint_mat );
 		}
 
@@ -144,7 +144,7 @@ namespace scone
 		{
 			auto pos = model_joints[ i ]->GetPos();
 			joints[ i ].pos( vis::vec3f( pos ) );
-			UpdateForceVis( force_count++, pos, model_joints[ i ]->GetReactionForce() );
+			UpdateForceVis( force_count++, pos, -model_joints[ i ]->GetReactionForce() );
 		}
 
 		// update forces
