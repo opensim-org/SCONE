@@ -23,6 +23,7 @@
 #include "xo/geometry/path_alg.h"
 #include "xo/geometry/quat.h"
 #include "xo/shape/sphere.h"
+#include "xo/serialization/serialize.h"
 
 #include "StudioSettings.h"
 #include "QMessageBox"

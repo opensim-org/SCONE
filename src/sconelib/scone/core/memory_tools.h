@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <memory>
+#include "xo/utility/pointer_types.h"
 
 // class and unique pointer type forward declaration
 #define SCONE_DECLARE_CLASS_AND_PTR( _class_ ) \
@@ -22,6 +22,9 @@ struct _class_; \
 
 namespace scone
 {
+	using xo::u_ptr;
+	using xo::s_ptr;
+
 	// dynamic cast a unique_ptr, throws on failure
 	template <typename To, typename From> 
     std::unique_ptr< To > dynamic_unique_cast( std::unique_ptr< From >&& p )

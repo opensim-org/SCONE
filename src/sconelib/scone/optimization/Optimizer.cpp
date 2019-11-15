@@ -23,6 +23,7 @@
 #	include <windows.h>
 #endif
 #include "xo/system/system_tools.h"
+#include "xo/serialization/serialize.h"
 
 namespace scone
 {

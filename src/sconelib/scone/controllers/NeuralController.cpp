@@ -36,6 +36,7 @@
 #include "SensorNeuron.h"
 #include "activation_functions.h"
 #include "scone/model/MuscleId.h"
+#include "xo/serialization/serialize.h"
 
 namespace scone
 {
@@ -59,7 +60,7 @@ namespace scone
 		}
 		else if ( !delay_file.empty() )
 		{
-			neural_delays = load_file( FindFile( delay_file ), "zml" );
+			neural_delays = xo::load_file( FindFile( delay_file ), "zml" );
 			model.AddExternalResource( delay_file );
 		}
 

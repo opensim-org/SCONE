@@ -8,20 +8,21 @@
 
 #include "Model.h"
 #include "Body.h"
-#include "Joint.h"
 #include "Dof.h"
+#include "Joint.h"
 #include "Muscle.h"
-#include <algorithm>
-#include "scone/core/profiler_config.h"
-#include "scone/core/Log.h"
-#include "scone/core/Factories.h"
 #include "SensorDelayAdapter.h"
-#include "scone/model/State.h"
+#include "State.h"
+#include "scone/controllers/CompositeController.h"
+#include "scone/core/Factories.h"
+#include "scone/core/Log.h"
+#include "scone/core/profiler_config.h"
+#include "scone/core/Settings.h"
 #include "scone/measures/Measure.h"
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
-#include "../controllers/CompositeController.h"
-#include "../core/Settings.h"
+
+#include <algorithm>
 #include <tuple>
 
 using std::endl;

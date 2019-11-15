@@ -1,10 +1,12 @@
 #include <filesystem>
-#include "xo/filesystem/path.h"
+
 #include "scone/core/system_tools.h"
-#include "xo/system/log.h"
 #include "scone/optimization/opt_tools.h"
-#include "xo/system/test_case.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/filesystem/path.h"
+#include "xo/serialization/serialize.h"
+#include "xo/system/log.h"
+#include "xo/system/test_case.h"
 
 namespace fs = std::filesystem;
 
