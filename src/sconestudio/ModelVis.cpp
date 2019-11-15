@@ -141,7 +141,11 @@ namespace scone
 		// update joints
 		auto& model_joints = model.GetJoints();
 		for ( index_t i = 0; i < model_joints.size(); ++i )
-			joints[ i ].pos( vis::vec3f( model_joints[ i ]->GetPos() ) );
+		{
+			auto pos = model_joints[ i ]->GetPos();
+			joints[ i ].pos( vis::vec3f( pos ) );
+			UpdateForceVis( force_count++, pos, model_joints[ i ]->GetReactionForce() );
+		}
 
 		// update forces
 		if ( view_flags.get< ShowForces >() )
