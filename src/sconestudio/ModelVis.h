@@ -18,7 +18,7 @@ namespace scone
 
 		void Update( const Model& model );
 
-		enum VisOpt { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
+		enum VisOpt { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowJoints, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
 		using ViewSettings = xo::flag_set< VisOpt >;
 
 		void ApplyViewSettings( const ViewSettings& f );

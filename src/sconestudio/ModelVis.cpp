@@ -144,7 +144,8 @@ namespace scone
 		{
 			auto pos = model_joints[ i ]->GetPos();
 			joints[ i ].pos( vis::vec3f( pos ) );
-			UpdateForceVis( force_count++, pos, -model_joints[ i ]->GetReactionForce() );
+			if ( view_flags.get< ShowJoints >() )
+				UpdateForceVis( force_count++, pos, -model_joints[ i ]->GetReactionForce() );
 		}
 
 		// update forces
@@ -215,6 +216,9 @@ namespace scone
 
 		for ( auto& e : body_meshes )
 			e.show( view_flags.get< ShowGeometry >() );
+
+		for ( auto& e : joints )
+			e.show( view_flags.get< ShowJoints >() );
 
 		for ( auto& e : body_axes )
 			e.show( view_flags.get< ShowAxes >() );
