@@ -172,7 +172,15 @@ namespace scone
 	void ModelVis::UpdateMuscleVis( const class Muscle& mus, MuscleVis& vis )
 	{
 		auto mlen = mus.GetFiberLength();
-		auto tlen = std::max( 0.0, mus.GetTendonLength() * vis.ce_pos );
+		if ( mlen <= 0.0 ) {
+			log::warning( mus.GetName(), " muscle fiber length: ", mlen, "; clamping to zero" );
+			mlen = 0.0;
+		}
+		auto tlen = mus.GetTendonLength() * vis.ce_pos;
+		if ( tlen <= 0.0 ) {
+			log::warning( mus.GetName(), " muscle tendon length: ", tlen, "; clamping to zero" );
+			tlen = 0.0;
+		}
 		auto a = mus.GetActivation();
 		auto p = mus.GetMusclePath();
 
@@ -185,6 +193,7 @@ namespace scone
 		{
 			auto i1 = insert_path_point( p, tlen );
 			auto i2 = insert_path_point( p, tlen + mlen );
+			SCONE_ASSERT( i1 <= i2 );
 			vis.ten1.set_points( p.begin(), p.begin() + i1 + 1 );
 			vis.ce.set_points( p.begin() + i1, p.begin() + i2 + 1 );
 			vis.ten2.set_points( p.begin() + i2, p.end() );
