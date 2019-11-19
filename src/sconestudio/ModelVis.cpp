@@ -48,12 +48,12 @@ namespace scone
 			auto geoms = body->GetDisplayGeometries();
 			for ( auto geom : geoms )
 			{
-				//log::trace( "Loading geometry for body ", body->GetName(), ": ", geom_file );
 				try
 				{
 					auto geom_file = xo::try_find_file( { geom.filename, path( "geometry" ) / geom.filename, scone::GetFolder( scone::SCONE_GEOMETRY_FOLDER ) / geom.filename } );
 					if ( geom_file )
 					{
+						//log::trace( "Loading geometry for body ", body->GetName(), ": ", *geom_file );
 						body_meshes.push_back( vis::mesh( bodies.back(), *geom_file ) );
 						body_meshes.back().set_material( bone_mat );
 						body_meshes.back().pos_ori( vis::vec3f( geom.pos ), vis::quatf( geom.ori ) );

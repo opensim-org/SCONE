@@ -9,9 +9,16 @@ namespace scone
 {
 	struct DisplayGeometry
 	{
+		DisplayGeometry( const path& file, const Vec3& p, const Quat& q = Quat(), const Vec3& s = Vec3::diagonal( 1 ) ) :
+			filename( file ),
+			pos( p ),
+			ori( q ),
+			scale( s )
+		{}
+
+		xo::path filename;
 		Vec3 pos;
 		Quat ori;
 		Vec3 scale;
-		xo::path filename;
 	};
 }

@@ -239,11 +239,11 @@ namespace scone
 		auto& gset = disp->getGeometrySet();
 		for ( auto i = 0; i < gset.getSize(); ++i )
 		{
-			geoms.emplace_back();
-			geoms.back().filename = gset[ i ].getGeometryFile();
-			geoms.back().pos = disp_pos + from_osim( gset[ i ].getTransform().p() );
-			geoms.back().ori = disp_ori * from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) );
-			geoms.back().scale = xo::multiply( disp_scale, from_osim( gset[ i ].getScaleFactors() ) );
+			geoms.emplace_back(
+				gset[ i ].getGeometryFile(),
+				disp_pos + from_osim( gset[ i ].getTransform().p() ),
+				disp_ori * from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) ),
+				xo::multiply( disp_scale, from_osim( gset[ i ].getScaleFactors() ) ) );
 		}
 
 		return geoms;
