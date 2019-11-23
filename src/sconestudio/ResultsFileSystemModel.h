@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "QFileSystemModel.h"
+#include "QFileSystemModel"
 #include "QDateTime"
 
 class ResultsFileSystemModel : public QFileSystemModel

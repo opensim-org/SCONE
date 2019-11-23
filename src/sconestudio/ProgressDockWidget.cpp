@@ -18,6 +18,7 @@
 #include "StudioSettings.h"
 #include "xo/container/container_tools.h"
 #include "xo/serialization/prop_node_serializer_ini.h"
+#include <sstream>
 
 using namespace scone;
 

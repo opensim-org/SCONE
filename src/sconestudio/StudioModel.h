@@ -34,7 +34,7 @@ namespace scone
 
 		const Storage<>& GetData() { return storage_; }
 		Model& GetSimModel() { return *model_; }
-		const ModelObjective& GetModelObjective() const { return *model_objective_; }
+	        ModelObjective& GetModelObjective() const { return *model_objective_; }
 
 		bool IsEvaluating() const { return is_evaluating_; }
 		TimeInSeconds GetTime() const { return model_->GetTime(); }
@@ -54,7 +54,7 @@ namespace scone
 		Storage<> storage_;
 		OptimizerUP optimizer_;
 		ModelObjective* model_objective_;
-		ModelUP model_;
+	        ModelUP model_;
 		path filename_;
 		path scenario_filename_;
 		PropNode scenario_pn_;

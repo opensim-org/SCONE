@@ -96,15 +96,16 @@ if(${Qt5Widgets_FOUND})
 
 	# setup OpenSceneGraph stuff
 	set(OSG_DIR "" CACHE PATH "Installation directory of OpenSceneGraph")
-	FIND_PACKAGE( osg )
-	FIND_PACKAGE( osgwidget )
-	FIND_PACKAGE( osgqt )
-	FIND_PACKAGE( osgga )
-	FIND_PACKAGE( osgviewer )
-	FIND_PACKAGE( osgutil )
-	FIND_PACKAGE( osgdb )
-	FIND_PACKAGE( osgshadow )
-	FIND_PACKAGE( OpenThreads )
+	FIND_PACKAGE( OpenSceneGraph REQUIRED
+	  osg
+	  osgWidget
+	  osgQt
+	  osgGA
+	  osgViewer
+	  osgUtil
+	  osgDB
+	  osgShadow
+	  OpenThreads )
 
 	# set target include libraries
 	target_include_directories(sconestudio PRIVATE ${VIS_INCLUDE_DIR} ${OSG_INCLUDE_DIR} ${OSGQT_INCLUDE_DIR})

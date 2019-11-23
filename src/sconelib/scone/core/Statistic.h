@@ -10,6 +10,7 @@
 
 #include "platform.h"
 #include "types.h"
+#include <assert.h>
 
 namespace scone
 {
@@ -43,7 +44,8 @@ namespace scone
 				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
 			}
 
-			SCONE_ASSERT( timestamp >= m_PrevTime );
+			// SCONE_ASSERT( timestamp >= m_PrevTime );
+			assert(timestamp >= m_PrevTime);
 
 			// update min / max
 			m_Highest = std::max( m_Highest, value );

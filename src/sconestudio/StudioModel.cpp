@@ -44,10 +44,14 @@ namespace scone
 		// create model from par or with default parameters
 		const auto file_type = file.extension_no_dot();
 		if ( file_type == "par" )
-			model_ = GetModelObjective().CreateModelFromParFile( file );
-		else // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
-			model_ = GetModelObjective().CreateModelFromParams( SearchPoint( GetModelObjective().info() ) );
-
+		{
+		    model_ = GetModelObjective().CreateModelFromParFile( file );
+		}
+		else  // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
+		{
+		    auto par = SearchPoint( GetModelObjective().info() );
+                    model_ = GetModelObjective().CreateModelFromParams(par);
+	        }
 		if ( file_type == "sto" )
 		{
 			// file is a .sto, load results

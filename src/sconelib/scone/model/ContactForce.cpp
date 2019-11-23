@@ -28,7 +28,7 @@ namespace scone
 
 	void ContactForce::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		auto& [ force, moment, point ]= GetForceMomentPoint();
+	        const auto& [ force, moment, point ]= GetForceMomentPoint();
 		frame[ GetName() + ".force_x" ] = force.x;
 		frame[ GetName() + ".force_y" ] = force.y;
 		frame[ GetName() + ".force_z" ] = force.z;
