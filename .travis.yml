@@ -19,14 +19,14 @@ before_install:
   # setup OpenSceneGraph
   - wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
   - tar -xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz $HOME/OpenSceneGraph-3.4
-  - export OSG_DIR=$HOME/OpenSceneGraph-3.4
+  - export OSG_DIR=$HOME
   - export LD_LIBRARY_PATH=$OSG_DIR/lib64:$LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH=$OSG_DIR/lib64/osgPlugins-3.4.2:$LD_LIBRARY_PATH
   - export PATH=$OSG_DIR/bin:$PATH
   - export PKG_CONFIG_PATH=$OSG_DIR/lib64/pkgconfig:$PKG_CONFIG_PATH
   # setup OpenSim v3.3
   - wget https://sourceforge.net/projects/dependencies/files/opensim-core/opensim-core-3.3-ubuntu-18.04.tar.xz
-  - tar -xvf opensim-core-3.3-ubuntu-18.04.tar.xz $HOME/opensim-core
+  - tar -xvf opensim-core-3.3-ubuntu-18.04.tar.xz $HOME
   - export OPENSIM_HOME=$HOME/opensim-core
   - export PATH=$OPENSIM_HOME/bin:$PATH
   - export LD_LIBRARY_PATH=$OPENSIM_HOME/lib:$LD_LIBRARY_PATH
