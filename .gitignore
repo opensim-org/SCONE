@@ -16,3 +16,7 @@ ignore/
 /install/*.exe
 /*.bat
 *.log
+.cquery_cached_index/
+/.dir-locals.el
+*~
+build/
