@@ -4,11 +4,11 @@ dist: bionic
 addons:
   apt:
     sources:
-      - ppa:chris-lea/redis-server
+      - ppa:ubuntu-toolchain-r/test
     packages:
       - build-essential
-      - gcc
-      - g++
+      - gcc-8
+      - g++-8
       - freeglut3-dev
       - libxi-dev
       - libxmu-dev
@@ -39,8 +39,15 @@ script:
   - cmake ../
       -DCMAKE_BUILD_TYPE=Release
       -DCMAKE_INSTALL_PREFIX=../install
-      -DOSG_DIR:PATH=$OSG_DIR
-      -DOSG_INCLUDE_DIR:PATH=$OSG_DIR/include
       -DOPENSIM_INSTALL_DIR:PATH=$OPENSIM_HOME
       -DOPENSIM_INCLUDE_DIR:PATH=$OPENSIM_HOME/sdk/include
-  - make -j8
+      -DOSG_DIR:PATH=$OSG_DIR
+      -DOSG_INCLUDE_DIR:PATH=$OSG_DIR/include
+      -DOSG_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosg.so
+      -DOSGQT_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgQt.so
+      -DOSGVIEWER_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgViewer.so
+      -DOSGUTIL_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgUtil.so
+      -DOSGDB_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgDB.so
+      -DOSGSHADOW_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgShadow.so
+      -DOPENTHREADS_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libOpenThreads.so
+- make -j8
