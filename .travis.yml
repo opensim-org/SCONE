@@ -1,5 +1,4 @@
 language: cpp
-sudo: false
 dist: bionic
 addons:
   apt:
@@ -50,4 +49,4 @@ script:
       -DOSGDB_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgDB.so
       -DOSGSHADOW_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libosgShadow.so
       -DOPENTHREADS_LIBRARY_RELEASE:PATH=$OSG_DIR/lib64/libOpenThreads.so
-- make -j8
+  - make -j8
