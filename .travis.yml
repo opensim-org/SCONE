@@ -18,7 +18,7 @@ addons:
 before_install:
   # setup OpenSceneGraph
   - wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
-  - tar -xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz $HOME/OpenSceneGraph-3.4
+  - tar -xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz $HOME
   - export OSG_DIR=$HOME
   - export LD_LIBRARY_PATH=$OSG_DIR/lib64:$LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH=$OSG_DIR/lib64/osgPlugins-3.4.2:$LD_LIBRARY_PATH
