@@ -14,7 +14,7 @@ addons:
       - libxi-dev
       - libxmu-dev
       - liblapack-dev
-      - libqt5-dev
+      - libqt5widgets5
 before_install:
   # setup OpenSceneGraph
   - wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
