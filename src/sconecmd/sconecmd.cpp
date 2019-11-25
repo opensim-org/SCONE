@@ -20,7 +20,6 @@
 #include "scone/core/version.h"
 
 using namespace scone;
-using namespace std;
 
 int main(int argc, char* argv[])
 {
@@ -86,8 +85,8 @@ int main(int argc, char* argv[])
 
 			if ( statusOutput.isSet() )
 			{
-				cout << std::endl << "*error=" << xo::try_quoted( e.what() ) << std::endl;
-				cout.flush();
+				std::cout << std::endl << "*error=" << xo::try_quoted( e.what() ) << std::endl;
+				std::cout.flush();
 				xo::sleep( 5000 );
 			}
 		}

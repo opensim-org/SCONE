@@ -38,7 +38,6 @@
 #include "qt_convert.h"
 
 using namespace scone;
-using namespace std;
 using namespace xo::literals;
 
 SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
@@ -765,9 +764,10 @@ void SconeStudio::finalizeCapture()
 		<< "-q:v" << to_qt( GetStudioSettings().get<string>( "video.quality" ) )
 		<< captureFilename;
 
-	cout << "starting " << program.toStdString() << endl;
+	std::cout << "starting " << program.toStdString() << endl;
 	auto v = args.toVector();
-	for ( auto arg : v ) cout << arg.toStdString() << endl;
+	for ( auto arg : v )
+		std::cout << arg.toStdString() << endl;
 
 	captureProcess = new QProcess( this );
 	captureProcess->start( program, args );
