@@ -75,7 +75,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
-		va.second->setChecked( va.first != ModelVis::ShowAxes );
+		va.second->setChecked( va.first != ModelVis::ShowAxes && va.first != ModelVis::ShowJoints );
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
@@ -189,6 +189,24 @@ bool SconeStudio::init()
 
 SconeStudio::~SconeStudio()
 {}
+
+void SconeStudio::restoreCustomSettings( QSettings& settings )
+{
+	if ( settings.contains( "viewSettings"))
+	{
+		ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
+		for ( auto& va : viewActions )
+			va.second->setChecked( f.get( va.first ) );
+	}
+}
+
+void SconeStudio::saveCustomSettings( QSettings& settings )
+{
+	ModelVis::ViewSettings f;
+	for ( auto& va : viewActions )
+		f.set( va.first, va.second->isChecked() );
+	settings.setValue( "viewSettings", f.data() );
+}
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
@@ -721,7 +739,7 @@ void SconeStudio::updateViewSettings()
 {
 	if ( scenario_ )
 	{
-		scone::ModelVis::ViewSettings f;
+		ModelVis::ViewSettings f;
 		for ( auto& va : viewActions )
 			f.set( va.first, va.second->isChecked() );
 		scenario_->ApplyViewSettings( f );

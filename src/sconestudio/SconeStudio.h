@@ -94,6 +94,8 @@ public:
 private:
 	QCodeEditor* getActiveCodeEditor();
 	QCodeEditor* getActiveScenario();
+	void restoreCustomSettings( QSettings& settings ) override;
+	void saveCustomSettings( QSettings& settings ) override;
 
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
