@@ -89,6 +89,9 @@ namespace scone
 		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, enable_external_forces, false );
 
+		INIT_PROP( props, leg_upper_body, "femur" );
+		INIT_PROP( props, leg_contact_force, "foot" );
+
 		// always set create_body_forces when there's a PerturbationController
 		// #todo: think of a nicer, more generic way of dealing with this issue
 		if ( auto* controller = props.try_get_child( "Controller" ) )
@@ -312,21 +315,16 @@ namespace scone
 		}
 
 		// create legs and connect stance_contact forces
-		// #todo #issue55: cleanup ConnectContactForce after testing
-		if ( Link* left_femur = m_RootLink->FindLink( "femur_l" ) )
+		for ( auto side : { LeftSide, RightSide } )
 		{
-			Link& left_foot = left_femur->GetChild( 0 ).GetChild( 0 );
-			auto cf_it = TryFindByName( GetContactForces(), "foot_l" );
-			if ( cf_it != GetContactForces().end() )
-				m_Legs.emplace_back( new Leg( *left_femur, left_foot, m_Legs.size(), LeftSide, 0, &**cf_it ) );
-		}
-
-		if ( Link* right_femur = m_RootLink->FindLink( "femur_r" ) )
-		{
-			Link& right_foot = right_femur->GetChild( 0 ).GetChild( 0 );
-			auto cf_it = TryFindByName( GetContactForces(), "foot_r" );
-			if ( cf_it != GetContactForces().end() )
-				m_Legs.emplace_back( new Leg( *right_femur, right_foot, m_Legs.size(), RightSide, 0, &**cf_it ) );
+			Link* femur = m_RootLink->FindLink( GetSidedName( leg_upper_body, side ) );
+			if ( femur && femur->HasChildren() && femur->GetChild().HasChildren() )
+			{
+				Link& foot = femur->GetChild( 0 ).GetChild( 0 );
+				auto cf_it = TryFindByName( GetContactForces(), GetSidedName( leg_contact_force, side ) );
+				if ( femur && cf_it != GetContactForces().end() )
+					m_Legs.emplace_back( new Leg( *femur, foot, m_Legs.size(), side, 0, &**cf_it ) );
+			}
 		}
 	}
 

@@ -45,8 +45,9 @@ namespace scone
 		// get children
 		std::vector< LinkUP >& GetChildren() { return m_Children; }
 		const std::vector< LinkUP >& GetChildren() const { return m_Children; }
-		const Link& GetChild( size_t i ) const { return *m_Children[ i ]; }
-		Link& GetChild( size_t i ) { return *m_Children[ i ]; }
+		const Link& GetChild( size_t i = 0 ) const { return *m_Children[ i ]; }
+		Link& GetChild( size_t i = 0 ) { return *m_Children[ i ]; }
+		bool HasChildren() const { return !m_Children.empty(); }
 
 		// get parent
 		const Link& GetParent() const { return *m_Parent; }
