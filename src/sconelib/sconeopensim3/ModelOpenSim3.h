@@ -66,6 +66,8 @@ namespace scone
 		ModelOpenSim3( const PropNode& props, Params& par );
 		virtual ~ModelOpenSim3();
 
+		virtual path GetModelFile() const { return model_file; }
+
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
 		virtual Vec3 GetComAcc() const override;

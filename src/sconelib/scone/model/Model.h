@@ -10,6 +10,7 @@
 
 #include "scone/core/platform.h"
 #include "scone/core/types.h"
+#include "xo/filesystem/path.h"
 
 #include "scone/controllers/Controller.h"
 #include "Link.h"
@@ -64,6 +65,9 @@ namespace scone
 		// Contact forces
 		const std::vector< ContactForceUP >& GetContactForces() const { return m_ContactForces; }
 		virtual std::vector< ForceValue > GetContactForceValues() const;
+
+		// Model file access
+		virtual path GetModelFile() const { return path(); }
 
 		// link access
 		const Link& FindLink( const String& body_name );
