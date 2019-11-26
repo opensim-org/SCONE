@@ -281,6 +281,12 @@ namespace scone
 			else if ( auto cp = dynamic_cast< OpenSim::ContactHalfSpace* >( cg_osim ) )
 				m_ContactGeometries.emplace_back( new ContactGeometry(
 					name, bod, xo::plane( xo::vec3f::neg_unit_x() ), loc, ori ) );
+			else if ( auto cm = dynamic_cast<OpenSim::ContactMesh*>( cg_osim ) )
+			{
+				// #todo: add support for displaying mesh contacts
+				auto file = FindFile( model_file.parent_path() / cm->getFilename() );
+				AddExternalResource( file );
+			}
 		}
 
 		// Create wrappers for actuators
