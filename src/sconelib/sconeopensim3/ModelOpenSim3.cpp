@@ -708,6 +708,7 @@ namespace scone
 	void ModelOpenSim3::FixTkState( double force_threshold /*= 0.1*/, double fix_accuracy /*= 0.1 */ )
 	{
 		const Real step_size = 0.1;
+		const Real max_range = 10.0; // don't look further than 10 meters up or down
 
 		if ( GetState().GetIndex( initial_load_dof ) == NoIndex )
 		{
@@ -716,8 +717,9 @@ namespace scone
 		}
 
 		// find top
-		double top = GetOsimModel().getStateVariable( GetTkState(), initial_load_dof );
-		while ( abs( GetTotalContactForce() ) > force_threshold )
+		double initial_state = GetOsimModel().getStateVariable( GetTkState(), initial_load_dof );
+		double top = initial_state;
+		while ( abs( GetTotalContactForce() ) > force_threshold && ( top - initial_state < max_range ) )
 		{
 			top += step_size;
 			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, top );
@@ -730,7 +732,7 @@ namespace scone
 			bottom -= step_size;
 			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, bottom );
 		}
-		while ( abs( GetTotalContactForce() ) <= force_threshold );
+		while ( abs( GetTotalContactForce() ) <= force_threshold && ( bottom - initial_state > -max_range ) );
 
 		// find middle ground until we are close enough
 		double force;
@@ -750,7 +752,10 @@ namespace scone
 		}
 
 		if ( abs( force - force_threshold ) / force_threshold > fix_accuracy )
-			log::WarningF( "Could not fix initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+		{
+			log::warning( "Could not find initial state for ", initial_load_dof, " with external force of ", force_threshold );
+			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, initial_state );
+		}
 		//else
 		//	log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
 	}
