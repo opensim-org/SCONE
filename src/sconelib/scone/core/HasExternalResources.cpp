@@ -15,7 +15,8 @@ namespace scone
 
 	void HasExternalResources::AddExternalResource( const xo::path& p )
 	{
-		external_resources_.emplace_back( p );
+		if ( find( external_resources_, p ) == external_resources_.end() )
+			external_resources_.emplace_back( p );
 	}
 
 	void HasExternalResources::AddExternalResources( const HasExternalResources& other )
