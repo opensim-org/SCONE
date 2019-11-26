@@ -15,6 +15,7 @@ addons:
       - libqt5widgets5
       - qt5-default
       - cmake
+      - pkg-config
 install:
   # SCONE requires c++17
   - export CC="gcc-8"
