@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12.0)
 
 project(scone)
-message(${CMAKE_PREFIX_PATH})
+
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
