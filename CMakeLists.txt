@@ -5,6 +5,9 @@ project(scone)
 # To create a folder hierarchy within Visual Studio.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+# compilation database for completion on Linux
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Find dependencies.
 # ------------------
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/CMakeModules")
