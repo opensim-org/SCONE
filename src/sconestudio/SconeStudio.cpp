@@ -204,7 +204,7 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 	ModelVis::ViewSettings f;
 	for ( auto& va : viewActions )
 		f.set( va.first, va.second->isChecked() );
-	settings.setValue( "viewSettings", f.data() );
+	settings.setValue( "viewSettings", QVariant(uint(f.data())));
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
