@@ -40,8 +40,8 @@ script:
   - mkdir build
   - cd build
   - cmake ../
-      -DCMAKE_BUILD_TYPE=Release
-      -DCMAKE_INSTALL_PREFIX=../install
+      -DCMAKE_BUILD_TYPE:STRING=Release
+      -DCMAKE_INSTALL_PREFIX:PATH=../install
       -DOPENSIM_INSTALL_DIR:PATH=$OPENSIM_HOME
       -DOPENSIM_INCLUDE_DIR:PATH=$OPENSIM_HOME/sdk/include
       -DOSG_DIR:PATH=$OSG_DIR
