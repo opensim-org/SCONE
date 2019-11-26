@@ -5,7 +5,6 @@ addons:
     sources:
       - ppa:ubuntu-toolchain-r/test
     packages:
-      - build-essential
       - gcc-8
       - g++-8
       - freeglut3-dev
@@ -13,10 +12,9 @@ addons:
       - libxmu-dev
       - liblapack-dev
       - libqt5widgets5
-      - libqt5opengl5
+      - libqt5opengl5-dev
       - qt5-default
       - cmake
-      - pkg-config
 install:
   # SCONE requires c++17
   - export CC="gcc-8"
