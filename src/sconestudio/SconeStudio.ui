@@ -350,13 +350,13 @@
   <customwidget>
    <class>QOsgViewer</class>
    <extends>QWidget</extends>
-   <header>qosgviewer.h</header>
+   <header>QOsgViewer.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>QPlayControl</class>
    <extends>QWidget</extends>
-   <header>qplaycontrol.h</header>
+   <header>QPlayControl.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -367,7 +367,7 @@
   <customwidget>
    <class>QLogSink</class>
    <extends>QPlainTextEdit</extends>
-   <header>qlogsink.h</header>
+   <header>QLogSink.h</header>
   </customwidget>
  </customwidgets>
  <resources>

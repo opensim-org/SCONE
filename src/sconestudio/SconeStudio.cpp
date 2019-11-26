@@ -29,9 +29,9 @@
 #include "xo/container/container_tools.h"
 
 #include <osgDB/ReadFile>
-#include <QtWidgets/QFileSystemModel.h>
-#include <QtWidgets/QMessageBox.h>
-#include <QtWidgets/QFileDialog>
+#include <QFileSystemModel>
+#include <QMessageBox>
+#include <QFileDialog>
 #include <QTextStream>
 #include <QTabWidget>
 #include "qcustomplot.h"
@@ -607,7 +607,7 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 	else
 	{
 		QMessageBox::information( this, "No Scenario Selected", "Please select a .scone file" );
-		return nullptr;
+		return false;
 	}
 }
 
