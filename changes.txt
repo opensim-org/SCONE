@@ -7,6 +7,8 @@
   * Support for building SCONE on Linux, many thanks to **Dimitar Stanev**
   * Support for Travis-CI build integration, many thanks to **Dimitar Stanev** and **Chris Dembia**
   * Added support for optimizing OpenSim models with ''ContactMesh'' contact geometry
+  * 3D Viewer settings are now remembered when restarting SCONE
+  * Added joint force visualization option to 3D viewer
   * Improved support for the concept of //legs//, which is used by ''GaitController'' and ground reaction force reporting. Model-specific leg elements can now be specified through ''leg_upper_body'' and ''leg_contact_force'' parameters in OpenSim3Model. Previously, these values were hard-coded to their default values ''femur'' and ''foot''.
 
 === Fixes ===
