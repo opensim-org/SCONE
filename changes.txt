@@ -1,4 +1,19 @@
-====== What's new ======
+====== SCONE Version History ======
+
+==== SCONE 1.3.1 ====
+//Released November 27, 2019//
+
+=== New Features and Updates ===
+  * Support for building SCONE on Linux, many thanks to **Dimitar Stanev**
+  * Support for Travis-CI build integration, many thanks to **Dimitar Stanev** and **Chris Dembia**
+  * Added support for optimizing OpenSim models with ''ContactMesh'' contact geometry
+  * Improved support for the concept of //legs//, which is used by ''GaitController'' and ground reaction force reporting. Model-specific leg elements can now be specified through ''leg_upper_body'' and ''leg_contact_force'' parameters in OpenSim3Model. Previously, these values were hard-coded to their default values ''femur'' and ''foot''.
+
+=== Fixes ===
+  * Fixed issue where duplicate external resources would cause an error during optimization
+  * GaitMeasure documentation of upper_body and base_bodies
+  * Fixed infinite loop when no suitable initial state could be found in models that define contact geometry but no contact force
+  * Resolved issue where SCONE could crash if a ContactGeometry for a foot body segment did not exist
 
 ==== SCONE 1.3.0 ====
 //Released November 12, 2019//
@@ -14,7 +29,7 @@
   * SCONE Unit tests are now performed in parallel for improved performance
 
 === Fixes ===
-  * When optimizing a scenario, the *copied* versions of models and scripts are now used, so you can freely edit the originals during an active optimization
+  * When optimizing a scenario, the //copied// versions of models and scripts are now used, so you can freely edit the originals during an active optimization
   * Fixed incorrect "Please select a .scone file" error while optimizing or evaluating a scenario
   * ''PieceWiseLinear'' and ''PieceWiseConstant'' functions now check if ''dt > 0''
   * ''ImitationObjective'' was broken, now it works again

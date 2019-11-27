@@ -13,7 +13,7 @@
 
 constexpr int SCONE_VERSION_MAJOR = 1;
 constexpr int SCONE_VERSION_MINOR = 3;
-constexpr int SCONE_VERSION_PATCH = 0;
+constexpr int SCONE_VERSION_PATCH = 1;
 constexpr const char* SCONE_VERSION_POSTFIX = "";
 
 namespace scone
