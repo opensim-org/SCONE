@@ -45,13 +45,14 @@ namespace scone
 		const auto file_type = file.extension_no_dot();
 		if ( file_type == "par" )
 		{
-		    model_ = GetModelObjective().CreateModelFromParFile( file );
+			model_ = GetModelObjective().CreateModelFromParFile( file );
 		}
 		else  // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
 		{
-		    auto par = SearchPoint( GetModelObjective().info() );
-                    model_ = GetModelObjective().CreateModelFromParams(par);
-	        }
+			auto par = SearchPoint( GetModelObjective().info() );
+			model_ = GetModelObjective().CreateModelFromParams( par );
+		}
+
 		if ( file_type == "sto" )
 		{
 			// file is a .sto, load results
@@ -60,7 +61,9 @@ namespace scone
 			ReadStorageSto( storage_, file );
 			InitStateDataIndices();
 			log::trace( "Read ", file, " in ", t(), " seconds" );
-		} else {
+		}
+		else
+		{
 			// file is a .par or .scone, setup for evaluation
 			is_evaluating_ = true;
 			model_->SetStoreData( true );
@@ -116,7 +119,7 @@ namespace scone
 			if ( model_->HasSimulationEnded() )
 				FinalizeEvaluation( true );
 		}
-		catch ( std::exception& e )
+		catch ( std::exception & e )
 		{
 			FinalizeEvaluation( false );
 			QString title = "Error evaluating " + to_qt( filename_.filename() );
