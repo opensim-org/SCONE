@@ -24,7 +24,7 @@ data {
 		type = float
 		label = "Data output frequency"
 		default = 100
-		range = 10..10000
+		range = 10..1000000
 	}
 	body {
 		type = bool
