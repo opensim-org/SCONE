@@ -30,7 +30,16 @@ namespace scone
 		return *it;
 	}
 
-	/// Access to scone logging in script
+	/// Access to scone logging and parameters
+	/** Use this for logging, or accessing parameters defined in scone. Lua example:
+	\verbatim
+	scone.debug( 'This is a debug message!' )
+	scone.info( 'This is a info message!' )
+	scone.warning( 'This is a warning!' )
+	scone.error( 'This is an error!' )
+	local body_name = scone.body_name -- access parameter defined in ScriptMeasure or ScriptController
+	\endverbatim
+	*/
 	struct LuaScone
 	{
 		/// display trace message
