@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	/// Measure for jumping, supports both high-jump and long-jump. *Work in progress!*
+	/// Measure for jumping
 	class JumpMeasure : public Measure
 	{
 	public:
@@ -25,19 +25,19 @@ namespace scone
 
 		enum JumpType { NoJumpType, HighJump, LongJump };
 
-		/// Type of jump
+		/// Type of jump, currently only HighJump (default) is supported
 		JumpType jump_type;
 
-		/// Relative COM height on which to terminate simulation
+		/// Relative COM height on which to terminate simulation (should be < 1); to detect cases where the model is not jumping but falling; default = 0.5.
 		Real termination_height;
 
-		/// Terminate when peak height is detected
+		/// Terminate when peak height is detected; default = true.
 		bool terminate_on_peak;
 
-		/// Time to prepare for jump
+		/// Time to prepare for jump, in which vertical velocity is ignored; default = 0.2.
 		Real prepare_time;
 
-		/// Time to recover from jump
+		/// Time to recover from jump (experimental).
 		Real recover_time;
 
 		/// Body to measure, leave empty for COM (default).
