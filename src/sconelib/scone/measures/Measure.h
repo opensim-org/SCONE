@@ -32,7 +32,7 @@ namespace scone
 		/// Offset added to measure result; default = 0.
 		Real result_offset;
 
-		/// Indicate whether this measure should be minimized; is set correctly by default.
+		/// Indicate whether this measure should be minimized; default value depends on the measure type (usually true).
 		bool minimize;
 
 		double GetResult( Model& model );
