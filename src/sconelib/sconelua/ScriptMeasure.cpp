@@ -7,9 +7,10 @@
 
 namespace scone
 {
-	ScriptMeasure::ScriptMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Measure( props, par, model, loc ),
-	script_( new lua_script( props, par, model ) )
+	ScriptMeasure::ScriptMeasure( const PropNode& pn, Params& par, Model& model, const Location& loc ) :
+		Measure( pn, par, model, loc ),
+		script_file( FindFile( pn.get<path>( "script_file" ) ) ),
+		script_( new lua_script( script_file, pn, par, model ) )
 	{
 		// optional functions
 		if ( auto f = script_->try_find_function( "init" ) )

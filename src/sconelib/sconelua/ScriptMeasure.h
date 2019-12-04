@@ -4,6 +4,7 @@
 #include <functional>
 #include "xo/utility/pointer_types.h"
 #include "scone/measures/Measure.h"
+#include "scone/core/system_tools.h"
 
 namespace scone
 {
@@ -28,6 +29,9 @@ namespace scone
 		virtual double ComputeResult( Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
+		/// filename of the Lua script, path is relative to the .scone file
+		path script_file;
 
 	protected:
 		virtual String GetClassSignature() const override;

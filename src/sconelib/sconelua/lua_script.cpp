@@ -9,13 +9,13 @@
 
 namespace scone
 {
-	lua_script::lua_script( const PropNode& pn, Params& par, Model& model )
+	lua_script::lua_script( const path& script_file, const PropNode& pn, Params& par, Model& model ) :
+		script_file_( script_file )
 	{
 		lua_.open_libraries( sol::lib::base, sol::lib::math, sol::lib::package );
 		register_lua_wrappers( lua_ );
 
 		// find script file (folder can be different if playback)
-		script_file_ = FindFile( pn.get<path>( "script_file" ) );
 		auto folder = script_file_.has_parent_path() ? script_file_.parent_path() : path( "." );
 
 		// set path for lua modules to current script file folder

@@ -11,7 +11,7 @@ namespace scone
 	class lua_script
 	{
 	public:
-		lua_script( const PropNode& props, Params& par, Model& model );
+		lua_script( const path& script_file, const PropNode& props, Params& par, Model& model );
 		~lua_script();
 
 		sol::function find_function( const String& name );

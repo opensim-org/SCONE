@@ -17,9 +17,10 @@
 
 namespace scone
 {
-	ScriptController::ScriptController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Controller( props, par, model, loc ),
-	script_( new lua_script( props, par, model ) )
+	ScriptController::ScriptController( const PropNode& pn, Params& par, Model& model, const Location& loc ) :
+		Controller( pn, par, model, loc ),
+		script_file( FindFile( pn.get<path>( "script_file" ) ) ),
+		script_( new lua_script( script_file, pn, par, model ) )
 	{
 		// optional functions
 		if ( auto f = script_->try_find_function( "init" ) )
@@ -57,7 +58,7 @@ namespace scone
 	bool ScriptController::ComputeControls( Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
-		
+
 		LuaModel lm( model );
 		return update_( &lm );
 	}
