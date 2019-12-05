@@ -571,8 +571,6 @@ namespace scone
 
 			// start integration loop
 			int number_of_steps = static_cast<int>( 0.5 + ( time - GetTime() ) / fixed_control_step_size );
-			int thread_interuption_steps = static_cast<int>( std::max( 10.0, 0.02 / fixed_control_step_size ) );
-
 			for ( int current_step = 0; current_step < number_of_steps; )
 			{
 				// update controls
