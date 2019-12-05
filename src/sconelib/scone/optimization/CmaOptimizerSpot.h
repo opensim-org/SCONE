@@ -13,6 +13,7 @@
 #include "spot/reporter.h"
 #include "spot/file_reporter.h"
 #include "xo/system/log_sink.h"
+#include "xo/time/timer.h"
 
 namespace scone
 {
@@ -40,5 +41,7 @@ namespace scone
 		virtual void on_stop( const optimizer& opt, const spot::stop_condition& s ) override;
 		virtual void on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop ) override;
 		virtual void on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, bool new_best ) override;
+		xo::timer timer_;
+		size_t number_of_evaluations_;
 	};
 }

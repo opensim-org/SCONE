@@ -90,6 +90,9 @@ namespace scone
 			pn.set( "window_size", cma.window_size );
 			cma.OutputStatus( pn );
 		}
+
+		timer_.reset();
+		number_of_evaluations_ = 0;
 	}
 
 	void CmaOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
@@ -108,6 +111,9 @@ namespace scone
 	{
 		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 
+		number_of_evaluations_ += pop.size();
+		auto t = timer_().seconds();
+
 		// report results
 		auto pn = cma.GetStatusPropNode();
 		pn.set( "step", cma.current_step() );
@@ -115,6 +121,9 @@ namespace scone
 		pn.set( "step_median", xo::median( cma.current_step_fitnesses() ) );
 		pn.set( "trend_offset", cma.fitness_trend().offset() );
 		pn.set( "trend_slope", cma.fitness_trend().slope() );
+		pn.set( "time", t );
+		pn.set( "number_of_evaluations", number_of_evaluations_ );
+		pn.set( "evaluations_per_sec", number_of_evaluations_ / t );
 		if ( new_best )
 		{
 			pn.set( "best", cma.best_fitness() );
