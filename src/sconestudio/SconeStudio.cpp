@@ -643,10 +643,11 @@ void SconeStudio::performanceTest()
 		model.SetStoreData( false );
 		model.AdvanceSimulationTo( model.GetSimulationEndTime() );
 		SCONE_PROFILE_REPORT;
-		auto result = scenario_->GetModelObjective().GetResult( model );
-		log::info( "fitness = ", result );
 		auto real_dur = real_time().seconds();
 		auto sim_time = model.GetTime();
+		log::info( "fitness = ", scenario_->GetModelObjective().GetResult( model ) );
+		if ( auto sim_report = model.GetSimulationReport(); !sim_report.empty() )
+			log::info( sim_report );
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
 }
