@@ -83,7 +83,7 @@ namespace scone
 
 		/// get the name of the actuator
 		LuaString name() { return act_.GetName().c_str(); }
-		/// add a value to the normalized actuator input [0..1]
+		/// add a value to the normalized actuator input
 		void add_input( LuaNumber value ) { act_.AddInput( value ); }
 		/// get the current actuator input [0..1]
 		LuaNumber input() { return act_.GetInput(); }
