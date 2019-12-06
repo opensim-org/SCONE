@@ -63,8 +63,11 @@ namespace scone
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
 		bool enable_external_forces;
 
-		/// Unsided name of the leg upper leg (if any); default = femur
+		/// Unsided name of the leg upper body (if any); default = femur
 		String leg_upper_body;
+
+		/// Unsided name of the leg lower body (if any); default = talus
+		String leg_lower_body;
 
 		/// Unsided name of the leg contact force (if any); default = foot
 		String leg_contact_force;

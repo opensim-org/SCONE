@@ -90,6 +90,7 @@ namespace scone
 		INIT_PROP( props, enable_external_forces, false );
 
 		INIT_PROP( props, leg_upper_body, "femur" );
+		INIT_PROP( props, leg_lower_body, "talus" );
 		INIT_PROP( props, leg_contact_force, "foot" );
 
 		// always set create_body_forces when there's a PerturbationController
@@ -323,14 +324,11 @@ namespace scone
 		// create legs and connect stance_contact forces
 		for ( auto side : { LeftSide, RightSide } )
 		{
-			Link* femur = m_RootLink->FindLink( GetSidedName( leg_upper_body, side ) );
-			if ( femur && femur->HasChildren() && femur->GetChild().HasChildren() )
-			{
-				Link& foot = femur->GetChild( 0 ).GetChild( 0 );
-				auto cf_it = TryFindByName( GetContactForces(), GetSidedName( leg_contact_force, side ) );
-				if ( femur && cf_it != GetContactForces().end() )
-					m_Legs.emplace_back( new Leg( *femur, foot, m_Legs.size(), side, 0, &**cf_it ) );
-			}
+			auto femur_it = TryFindByName( GetBodies(), GetSidedName( leg_upper_body, side ) );
+			auto foot_it = TryFindByName( GetBodies(), GetSidedName( leg_lower_body, side ) );
+			auto cf_it = TryFindByName( GetContactForces(), GetSidedName( leg_contact_force, side ) );
+			if ( femur_it != GetBodies().end() && foot_it != GetBodies().end() && cf_it != GetContactForces().end() )
+				m_Legs.emplace_back( new Leg( **femur_it, **foot_it, m_Legs.size(), side, 0, &**cf_it ) );
 		}
 	}
 
