@@ -15,7 +15,7 @@
 
 namespace scone
 {
-	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc )
 	{
 		INIT_PROP_REQUIRED( props, file );
@@ -68,7 +68,7 @@ namespace scone
 		return false;
 	}
 
-	double MimicMeasure::ComputeResult( Model& model )
+	double MimicMeasure::ComputeResult( const Model& model )
 	{
 		return use_best_match ? result_.GetLowest() : result_.GetAverage();
 	}

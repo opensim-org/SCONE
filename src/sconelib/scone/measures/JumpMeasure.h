@@ -20,8 +20,7 @@ namespace scone
 	class JumpMeasure : public Measure
 	{
 	public:
-		JumpMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~JumpMeasure();
+		JumpMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		enum JumpType { NoJumpType, HighJump, LongJump };
 
@@ -46,7 +45,7 @@ namespace scone
 		/// Offset of body to measure from origin (NOT COM); default = [ 0 0 0 ].
 		Vec3 offset;
 
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;

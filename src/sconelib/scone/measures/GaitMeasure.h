@@ -18,8 +18,7 @@ namespace scone
 	class GaitMeasure : public Measure
 	{
 	public:
-		GaitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~GaitMeasure();
+		GaitMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		/// Relative COM height (wrt initial position) at which to stop the simulation; default = 0.5.
 		Real termination_height;
@@ -47,7 +46,7 @@ namespace scone
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		void AddStep( const Model &model, double timestamp );
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:

@@ -48,7 +48,6 @@ namespace scone
 		const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
 
 		// joint access
-		std::vector< JointUP >& GetJoints() { return m_Joints; }
 		const std::vector< JointUP >& GetJoints() const { return m_Joints; }
 
 		// dof access
@@ -64,6 +63,8 @@ namespace scone
 
 		// Contact forces
 		const std::vector< ContactForceUP >& GetContactForces() const { return m_ContactForces; }
+
+		// Contact force values
 		virtual std::vector< ForceValue > GetContactForceValues() const;
 
 		// Model file access

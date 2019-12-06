@@ -100,12 +100,12 @@ namespace scone
  		return g_MeasureFactory;
 	}
 
-	MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
+	MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, const Model& model, const Location& target_area )
 	{
 		return GetMeasureFactory().create( fp.type(), fp.props(), par, model, target_area );
 	}
 
-	MeasureUP CreateMeasure( const PropNode& pn, Params& par, Model& model, const Location& target_area )
+	MeasureUP CreateMeasure( const PropNode& pn, Params& par, const Model& model, const Location& target_area )
 	{
 		return GetMeasureFactory().create( pn.get< String >( "type" ), pn, par, model, target_area );
 	}

@@ -18,7 +18,7 @@
 
 namespace scone
 {
-	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	GaitMeasure::GaitMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc )
 	{
 		INIT_PROP( props, termination_height, 0.5 );
@@ -42,10 +42,6 @@ namespace scone
 		m_InitialComPos = model.GetComPos();
 	}
 
-	GaitMeasure::~GaitMeasure()
-	{
-	}
-
 	bool GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
@@ -67,7 +63,7 @@ namespace scone
 		return false;
 	}
 
-	double GaitMeasure::ComputeResult( Model& model )
+	double GaitMeasure::ComputeResult( const Model& model )
 	{
 		// add final step and penalty to min_velocity measure
 		// #todo: only when not at the end of the simulation?

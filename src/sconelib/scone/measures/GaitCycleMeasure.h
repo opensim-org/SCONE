@@ -18,10 +18,9 @@ namespace scone
 	class GaitCycleMeasure : public Measure
 	{
 	public:
-		GaitCycleMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~GaitCycleMeasure();
+		GaitCycleMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 		/// Use half gait cycle instead of full cycle; default = false.
 		bool use_half_cycle;

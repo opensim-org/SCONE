@@ -13,11 +13,10 @@
 
 namespace scone
 {
-	Joint::Joint( Body& body, Joint* parent ) :
+	Joint::Joint( const Body& body, Joint* parent ) :
 	m_Body( body ),
 	m_pParent( parent )
-	{
-	}
+	{}
 
 	Real Joint::GetLoad() const
 	{
@@ -45,6 +44,5 @@ namespace scone
 	}
 
 	Joint::~Joint()
-	{
-	}
+	{}
 }

@@ -20,10 +20,9 @@ namespace scone
 	class JointLoadMeasure : public Measure, public RangePenalty< Real >
 	{
 	public:
-		JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~JointLoadMeasure() {}
+		JointLoadMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
 	protected:
@@ -34,6 +33,6 @@ namespace scone
 		enum Method { NoMethod, JointReactionForce };
 		int method;
 		Real joint_load;
-		Joint& joint;
+		const Joint& joint;
 	};
 }

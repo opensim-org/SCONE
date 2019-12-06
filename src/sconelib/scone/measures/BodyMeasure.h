@@ -20,12 +20,11 @@ namespace scone
 	class BodyMeasure : public Measure
 	{
 	public:
-		BodyMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~BodyMeasure() {}
-		virtual double ComputeResult( Model& model ) override;
+		BodyMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
+		virtual double ComputeResult( const Model& model ) override;
 
 		/// Body to which to apply the penalty to.
-		Body& body;
+		const Body& body;
 
 		/// Offset [m] of the point of the body to measure, relative to origin; default = [ 0 0 0 ].
 		Vec3 offset;

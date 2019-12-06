@@ -12,7 +12,7 @@
 namespace scone
 {
 	
-	BalanceMeasure::BalanceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	BalanceMeasure::BalanceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc )
 	{
 		INIT_PROP( props, termination_height, 0.5 );
@@ -32,7 +32,7 @@ namespace scone
 		return false;
 	}
 
-	double BalanceMeasure::ComputeResult( Model& model )
+	double BalanceMeasure::ComputeResult( const Model& model )
 	{
 		return std::max( 0.0, ( model.GetSimulationEndTime() - model.GetTime() ) / model.GetSimulationEndTime() );
 	}

@@ -14,12 +14,12 @@
 
 namespace scone
 {
-	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc ),
 	RangePenalty< Real >( props )
 	{}
 
-	double ReactionForceMeasure::ComputeResult( Model& model )
+	double ReactionForceMeasure::ComputeResult( const Model& model )
 	{
 		return RangePenalty<Real>::GetResult();
 	}

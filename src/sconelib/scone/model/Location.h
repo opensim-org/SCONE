@@ -28,7 +28,7 @@ namespace scone
 	};
 
 	// Find component by name & location
-	template< typename T > T& FindByLocation( std::vector< T >& cont, const String& name, const Location& loc )
+	template< typename T > const T& FindByLocation( const std::vector< T >& cont, const String& name, const Location& loc )
 	{
 		auto side = GetSideFromName( name );
 		if ( side == NoSide ) {

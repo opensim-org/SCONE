@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	DofLimitMeasure::DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	DofLimitMeasure::DofLimitMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc )
 	{
 		if ( const PropNode* lp = props.try_get_child( "Limits" ) )
@@ -32,9 +32,7 @@ namespace scone
 		}
 	}
 
-	DofLimitMeasure::~DofLimitMeasure() {}
-
-	DofLimitMeasure::Limit::Limit( const PropNode& props, Model& model ) :
+	DofLimitMeasure::Limit::Limit( const PropNode& props, const Model& model ) :
 	dof( *FindByName( model.GetDofs(), props.get< String >( "dof" ) ) ),
 	parent( props.has_key( "dof_parent" ) ? &*FindByName( model.GetDofs(), props.get< String >( "dof_parent" ) ) : nullptr ),
 	penalty( Statistic<>::LinearInterpolation )
@@ -87,7 +85,7 @@ namespace scone
 		return false;
 	}
 
-	double DofLimitMeasure::ComputeResult( Model& model )
+	double DofLimitMeasure::ComputeResult( const Model& model )
 	{
 		double result = 0.0;
 		for ( Limit& l : m_Limits )

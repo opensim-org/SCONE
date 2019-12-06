@@ -23,10 +23,9 @@ namespace scone
 	class DofLimitMeasure : public Measure
 	{
 	public:
-		DofLimitMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~DofLimitMeasure();
+		DofLimitMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
@@ -41,9 +40,9 @@ namespace scone
 	private:
 		struct Limit
 		{
-			Limit( const PropNode& props, Model& model );
-			Dof& dof;
-			Dof* parent;
+			Limit( const PropNode& props, const Model& model );
+			const Dof& dof;
+			const Dof* parent;
 			Range< Degree > range;
 			Range< Degree > velocity_range;
 			Real squared_range_penalty;

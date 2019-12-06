@@ -18,10 +18,9 @@ namespace scone
 	class ReactionForceMeasure : public Measure, public RangePenalty< Real >
 	{
 	public:
-		ReactionForceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~ReactionForceMeasure() {}
+		ReactionForceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
 	protected:

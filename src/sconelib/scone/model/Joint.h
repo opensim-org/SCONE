@@ -20,7 +20,7 @@ namespace scone
 	class SCONE_API Joint : public HasName
 	{
 	public:
-		Joint( class Body& body, class Joint* parent = nullptr );
+		Joint( const Body& body, class Joint* parent = nullptr );
 		virtual ~Joint();
 
 		virtual Vec3 GetPos() const = 0;
@@ -36,8 +36,8 @@ namespace scone
 		const std::vector< Dof* >& GetDofs() const;
 
 	protected:
-		Body& m_Body;
-		Joint* m_pParent;
+		const Body& m_Body;
+		const Joint* m_pParent;
 		mutable std::vector< Dof* > m_Dofs;
 	};
 }

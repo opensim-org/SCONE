@@ -42,10 +42,10 @@ namespace scone
 	SCONE_API ControllerUP CreateController( const FactoryProps& fp, Params& par, Model& model, const Location& target_area );
 	SCONE_API ControllerUP CreateController( const PropNode& pn, Params& par, Model& model, const Location& target_area );
 
-	using MeasureFactory = xo::factory< Measure, const PropNode&, Params&, Model&, const Location& >;
+	using MeasureFactory = xo::factory< Measure, const PropNode&, Params&, const Model&, const Location& >;
 	SCONE_API MeasureFactory& GetMeasureFactory();
-	SCONE_API MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, Model& model, const Location& target_area );
-	SCONE_API MeasureUP CreateMeasure( const PropNode& pn, Params& par, Model& model, const Location& target_area );
+	SCONE_API MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, const Model& model, const Location& target_area );
+	SCONE_API MeasureUP CreateMeasure( const PropNode& pn, Params& par, const Model& model, const Location& target_area );
 
 	using OptimizerFactory = xo::factory< Optimizer, const PropNode&, const PropNode&, const path& >;
 	SCONE_API OptimizerFactory& GetOptimizerFactory();

@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	CompositeMeasure::CompositeMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		dual_sided( props.get_any<bool>( { "dual_sided", "symmetric" }, false ) ) // symmetric is for back. comp.
 	{
@@ -48,8 +48,6 @@ namespace scone
 			m->StoreData( frame, flags );
 	}
 
-	CompositeMeasure::~CompositeMeasure() { }
-
 	bool CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
@@ -61,7 +59,7 @@ namespace scone
 		return terminate ? true : false;
 	}
 
-	double CompositeMeasure::ComputeResult( Model& model )
+	double CompositeMeasure::ComputeResult( const Model& model )
 	{
 		double total = 0.0;
 		for ( MeasureUP& m : m_Measures )

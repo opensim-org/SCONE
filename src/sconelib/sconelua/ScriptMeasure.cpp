@@ -7,10 +7,10 @@
 
 namespace scone
 {
-	ScriptMeasure::ScriptMeasure( const PropNode& pn, Params& par, Model& model, const Location& loc ) :
+	ScriptMeasure::ScriptMeasure( const PropNode& pn, Params& par, const Model& model, const Location& loc ) :
 		Measure( pn, par, model, loc ),
 		script_file( FindFile( pn.get<path>( "script_file" ) ) ),
-		script_( new lua_script( script_file, pn, par, model ) )
+		script_( new lua_script( script_file, pn, par, const_cast<Model&>( model ) ) ) // const_cast is needed because Lua doesn't care about const
 	{
 		// optional functions
 		if ( auto f = script_->try_find_function( "init" ) )
@@ -25,17 +25,14 @@ namespace scone
 
 		if ( init_ )
 		{
-			LuaModel lm( model );
+			LuaModel lm( const_cast<Model&>( model ) );
 			init_( &lm );
 		}
 
 		model.AddExternalResource( script_->script_file_ );
 	}
 
-	ScriptMeasure::~ScriptMeasure()
-	{}
-
-	double ScriptMeasure::ComputeResult( Model& model )
+	double ScriptMeasure::ComputeResult( const Model& model )
 	{
 		LuaModel lm( const_cast<Model&>( model ) );
 		return result_( &lm );

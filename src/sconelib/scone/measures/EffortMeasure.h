@@ -19,8 +19,7 @@ namespace scone
 	class EffortMeasure : public Measure
 	{
 	public:
-		EffortMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~EffortMeasure();
+		EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		/// Model for measuring energy
 		enum EnergyMeasureType {
@@ -54,7 +53,7 @@ namespace scone
 		Real min_distance;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;
