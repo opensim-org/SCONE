@@ -7,7 +7,8 @@
 */
 
 #include "Body.h"
-#include "../core/HasData.h"
+#include "Joint.h"
+#include "scone/core/HasData.h"
 
 namespace scone
 {
@@ -22,6 +23,11 @@ namespace scone
 	{
 		SetExternalForce( Vec3::zero() );
 		SetExternalMoment( Vec3::zero() );
+	}
+
+	const Body* Body::GetParentBody() const
+	{
+		return m_Joint ? &m_Joint->GetParentBody() : nullptr;
 	}
 
 	void Body::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

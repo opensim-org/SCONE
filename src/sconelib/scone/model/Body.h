@@ -60,7 +60,9 @@ namespace scone
 
 		virtual const Model& GetModel() const = 0;
 		virtual Model& GetModel() = 0;
-		virtual const Joint* GetJoint() const { return m_Joint; }
+
+		const Joint* GetJoint() const { return m_Joint; }
+		const Body* GetParentBody() const;
 
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
