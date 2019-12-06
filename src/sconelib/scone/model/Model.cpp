@@ -76,14 +76,6 @@ namespace scone
 	{
 	}
 
-	std::ostream& Model::ToStream( std::ostream& str ) const
-	{
-		str << "Links:" << endl;
-		str << GetRootLink().ToString();
-
-		return str;
-	}
-
 	SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 	{
 		auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),

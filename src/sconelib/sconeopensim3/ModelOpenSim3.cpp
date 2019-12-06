@@ -643,25 +643,6 @@ namespace scone
 		return m_PrevTime;
 	}
 
-	std::ostream& ModelOpenSim3::ToStream( std::ostream& str ) const
-	{
-		Model::ToStream( str );
-
-		GetOsimModel().getMultibodySystem().realize( *m_pTkState, SimTK::Stage::Dynamics );
-
-		str << endl << "Forces:" << endl;
-		const OpenSim::ForceSet& fset = GetOsimModel().getForceSet();
-		for ( int i = 0; i < fset.getSize(); ++i )
-		{
-			OpenSim::Force& f = fset.get( i );
-			str << f.getName() << endl;
-			for ( int rec = 0; rec < f.getRecordLabels().size(); ++rec )
-				str << "  " << f.getRecordLabels().get( rec ) << ": " << f.getRecordValues( *m_pTkState ).get( rec ) << endl;
-		}
-
-		return str;
-	}
-
 	Real ModelOpenSim3::GetTotalEnergyConsumption() const
 	{
 		if ( m_pProbe )

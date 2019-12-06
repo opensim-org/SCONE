@@ -110,7 +110,6 @@ namespace scone
 		void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
 
 		virtual const String& GetName() const override;
-		virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		void ValidateDofAxes();
 		void StoreCurrentFrame() override;

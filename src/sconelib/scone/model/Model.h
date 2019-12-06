@@ -12,23 +12,22 @@
 #include "scone/core/types.h"
 #include "xo/filesystem/path.h"
 
-#include "scone/controllers/Controller.h"
-#include "Link.h"
+#include "ContactForce.h"
+#include "ContactGeometry.h"
+#include "ForceValue.h"
 #include "Leg.h"
+#include "Sensor.h"
+#include "Link.h"
 
-#include <vector>
+#include "scone/controllers/Controller.h"
+#include "scone/core/HasExternalResources.h"
 #include "scone/core/HasName.h"
 #include "scone/core/HasSignature.h"
-#include "scone/core/HasExternalResources.h"
-#include "Sensor.h"
 #include "scone/core/Storage.h"
-#include <type_traits>
-
-#include "ContactGeometry.h"
 #include "scone/measures/Measure.h"
-#include "scone/controllers/Controller.h"
-#include "ContactForce.h"
-#include "ForceValue.h"
+
+#include <vector>
+#include <type_traits>
 
 namespace scone
 {
@@ -141,9 +140,6 @@ namespace scone
 		const PropNode* GetModelProps() { return m_pModelProps; }
 		PropNode& GetUserData() { return m_UserData; }
 
-		// streaming operator (for debugging)
-		virtual std::ostream& ToStream( std::ostream& str ) const;
-
 		// acquire a sensor of type SensorT with a source of type SourceT
 		template< typename SensorT, typename... Args > SensorT& AcquireSensor( Args&&... args ) {
 			static_assert( std::is_base_of< Sensor, SensorT >::value, "SensorT is not derived from Sensor" );
@@ -236,6 +232,4 @@ namespace scone
 		TimeInSeconds m_StoreDataInterval;
 		StoreDataFlags m_StoreDataFlags;
 	};
-
-	inline std::ostream& operator<<( std::ostream& str, const Model& model ) { return model.ToStream( str ); }
 }
