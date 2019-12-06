@@ -27,8 +27,8 @@ namespace scone
 		Muscle();
 		virtual ~Muscle();
 
-		virtual const Link& GetOriginLink() const = 0;
-		virtual const Link& GetInsertionLink() const = 0;
+		virtual const Body& GetOriginBody() const = 0;
+		virtual const Body& GetInsertionBody() const = 0;
 		virtual const Model& GetModel() const = 0;
 
 		virtual Real GetMomentArm( const Dof& dof ) const = 0;

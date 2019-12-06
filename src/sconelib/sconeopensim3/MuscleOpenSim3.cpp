@@ -106,16 +106,16 @@ namespace scone
 		return m_osMus.getFiberVelocity( m_Model.GetTkState() ) / m_osMus.getOptimalFiberLength();
 	}
 
-	const Link& MuscleOpenSim3::GetOriginLink() const
+	const Body& MuscleOpenSim3::GetOriginBody() const
 	{
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
-		return m_Model.FindLink( pps.get( 0 ).getBodyName() );
+		return *FindByName( m_Model.GetBodies(), pps.get( 0 ).getBodyName() );
 	}
 
-	const Link& MuscleOpenSim3::GetInsertionLink() const
+	const Body& MuscleOpenSim3::GetInsertionBody() const
 	{
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
-		return m_Model.FindLink( pps.get( pps.getSize() - 1 ).getBodyName() );
+		return *FindByName( m_Model.GetBodies(), pps.get( pps.getSize() - 1 ).getBodyName() );
 	}
 
 	Real MuscleOpenSim3::GetMomentArm( const Dof& dof ) const

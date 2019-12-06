@@ -31,8 +31,8 @@ namespace scone
 		virtual ~MuscleOpenSim3();
 
 		// access to bodies
-		virtual const Link& GetOriginLink() const override;
-		virtual const Link& GetInsertionLink() const override;
+		virtual const Body& GetOriginBody() const override;
+		virtual const Body& GetInsertionBody() const override;
 		virtual const Model& GetModel() const override;
 
 		// muscle parameters
