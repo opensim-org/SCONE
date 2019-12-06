@@ -27,7 +27,7 @@ namespace scone
 	Muscle::~Muscle()
 	{}
 
-	scone::Real Muscle::GetNormalizedMomentArm( const Dof& dof ) const
+	Real Muscle::GetNormalizedMomentArm( const Dof& dof ) const
 	{
 		Real mom = GetMomentArm( dof );
 		if ( mom != 0 )
@@ -41,13 +41,13 @@ namespace scone
 		else return mom;
 	}
 
-	scone::Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
+	Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
 	{
 		// from OpenSim Umberger metabolic energy model docs
 		return ( GetMaxIsometricForce() / specific_tension ) * muscle_density * GetOptimalFiberLength();
 	}
 
-	scone::Real Muscle::GetPCSA( Real specific_tension ) const
+	Real Muscle::GetPCSA( Real specific_tension ) const
 	{
 		return GetMaxIsometricForce() / specific_tension;
 	}
@@ -60,7 +60,7 @@ namespace scone
 		return std::max( 0.0, vel + disp );
 	}
 
-	scone::Side Muscle::GetSide() const
+	Side Muscle::GetSide() const
 	{
 		return GetSideFromName( GetName() );
 	}
