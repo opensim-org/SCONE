@@ -27,7 +27,7 @@ namespace scone
 		virtual Vec3 GetReactionForce() const = 0;
 		virtual Real GetLoad() const;
 
-		const Joint* GetParent() const { return m_pParent; }
+		const Joint* GetParentBody() const { return m_pParent; }
 		const class Body& GetBody() const { return m_Body; }
 		const std::vector< Dof* >& GetDofs() const;
 
