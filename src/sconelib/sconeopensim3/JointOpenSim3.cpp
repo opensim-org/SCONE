@@ -25,27 +25,11 @@ namespace scone
 	}
 
 	JointOpenSim3::~JointOpenSim3()
-	{
-	}
+	{}
 
 	const String& JointOpenSim3::GetName() const
 	{
 		return m_osJoint.getName();
-	}
-
-	size_t JointOpenSim3::GetDofCount() const
-	{
-		return m_osJoint.numCoordinates();
-	}
-
-	Real JointOpenSim3::GetDofValue( size_t index ) const
-	{
-		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
-	}
-
-	const String& JointOpenSim3::GetDofName( size_t index ) const
-	{
-		return m_osJoint.getCoordinateSet().get( static_cast<int>( index ) ).getName();
 	}
 
 	Vec3 JointOpenSim3::GetReactionForce() const

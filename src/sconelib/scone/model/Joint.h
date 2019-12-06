@@ -24,13 +24,9 @@ namespace scone
 		virtual ~Joint();
 
 		virtual Vec3 GetPos() const = 0;
-		virtual size_t GetDofCount() const = 0;
-		virtual Real GetDofValue( size_t index = 0 ) const = 0;
-		virtual const String& GetDofName( size_t index = 0 ) const = 0;
 		virtual Vec3 GetReactionForce() const = 0;
 		virtual Real GetLoad() const;
 
-		bool HasDof( const String& dof_name ) const;
 		const Joint* GetParent() const { return m_pParent; }
 		const class Body& GetBody() const { return m_Body; }
 		const std::vector< Dof* >& GetDofs() const;
