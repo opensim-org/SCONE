@@ -69,10 +69,6 @@ namespace scone
 		// Model file access
 		virtual path GetModelFile() const { return path(); }
 
-		// link access
-		const Link& FindLink( const String& body_name );
-		const Link& GetRootLink() const { return *m_RootLink; }
-
 		// Controller access
 		Controller* GetController() { return m_Controller.get(); }
 		const Controller* GetController() const { return m_Controller.get(); }

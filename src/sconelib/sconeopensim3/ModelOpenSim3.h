@@ -137,6 +137,7 @@ namespace scone
 		void SetOpenSimObjectProperies( OpenSim::Object& os_obj, const PropNode& props, Params& par );
 		void SetProperties( const PropNode& pn, Params& par );
 
+		// #todo: remove this function and just create Joints instead
 		LinkUP CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent = nullptr );
 
 		std::unique_ptr< OpenSim::Model > m_pOsimModel;

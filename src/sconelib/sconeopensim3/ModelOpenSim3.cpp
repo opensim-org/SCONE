@@ -260,6 +260,7 @@ namespace scone
 			m_Bodies.emplace_back( new BodyOpenSim3( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
 		// setup hierarchy and create wrappers
+		// #todo: remove this and just create Joints instead
 		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
 
 		// create wrappers for dofs
