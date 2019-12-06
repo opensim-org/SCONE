@@ -59,7 +59,7 @@ namespace scone
 		Real u_p;
 		Real u_v;
 		Real u_a;
-		Body& body_;
+		const Body& body_;
 		SensorDelayAdapter& m_DelayedPos;
 		SensorDelayAdapter& m_DelayedVel;
 		SensorDelayAdapter& m_DelayedAcc;

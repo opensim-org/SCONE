@@ -94,12 +94,12 @@ namespace scone
 	}
 
 	template< typename T >
-	T& FindByNameTrySided( std::vector< T >& cont, const String& name, const Side& side )
+	const T& FindByNameTrySided( const std::vector< T >& cont, const String& name, const Side& side )
 	{
 		using xo::quoted;
-		auto it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name; } );
+		auto it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name; } );
 		if ( it == cont.end() ) // try sided name
-			it = std::find_if( cont.begin(), cont.end(), [&]( T& item ) { return item->GetName() == name + GetSideName( side ); } );
+			it = std::find_if( cont.begin(), cont.end(), [&]( const T& item ) { return item->GetName() == name + GetSideName( side ); } );
 		if ( it == cont.end() )
 			SCONE_THROW( "Could not find " + quoted( name ) + " or " + quoted( name + GetSideName( side ) ) );
 
