@@ -29,9 +29,9 @@ namespace scone
 		GaitStateController::LandingState, "Landing"
 		);
 
-	GaitStateController::LegState::LegState( Leg& l ) :
+	GaitStateController::LegState::LegState( Model& m, Leg& l ) :
 		leg( l ),
-		load_sensor( l.GetModel().AcquireDelayedSensor< LegLoadSensor >( l ) ),
+		load_sensor( m.AcquireDelayedSensor< LegLoadSensor >( l ) ),
 		state( UnknownState ),
 		leg_load(),
 		sagittal_pos( 0.0 ),
@@ -57,7 +57,7 @@ namespace scone
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )
 		{
-			m_LegStates.push_back( LegStateUP( new LegState( *leg ) ) );
+			m_LegStates.push_back( LegStateUP( new LegState( model, *leg ) ) );
 			if ( override_leg_length != 0.0 )
 				m_LegStates.back()->leg_length = override_leg_length;
 			//log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );

@@ -24,6 +24,7 @@ namespace scone
 		m_Index( index ),
 		m_Upper( proximal ),
 		m_Foot( foot ),
+		m_Base( proximal.GetParent() ),
 		m_Name( stringf( "leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) ),
 		m_ContactForce( cf )
 	{
@@ -69,11 +70,6 @@ namespace scone
 
 	Real Leg::GetLoad() const
 	{
-		return xo::length( GetContactForce() ) / GetModel().GetBW();
-	}
-
-	Model& Leg::GetModel() const
-	{
-		return m_Upper.GetBody().GetModel();
+		return xo::length( GetContactForce() ) / m_Upper.GetBody().GetModel().GetBW();
 	}
 }

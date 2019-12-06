@@ -63,7 +63,7 @@ namespace scone
 	protected:
 		struct LegState
 		{
-			LegState( Leg& l );
+			LegState( Model& m, Leg& l );
 
 			// leg structure
 			const Leg& leg;

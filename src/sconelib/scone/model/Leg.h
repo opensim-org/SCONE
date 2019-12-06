@@ -24,10 +24,8 @@ namespace scone
 
 		const Link& GetUpperLink() const { return m_Upper; }
 		const Link& GetFootLink() const { return m_Foot; }
-		const Link& GetBaseLink() const { return m_Upper.GetParent(); }
-		Model& GetModel() const;
+		const Link& GetBaseLink() const { return m_Base; }
 		Side GetSide() const { return m_Side; }
-		//Locality GetArea() const { return Locality( m_Side ); }
 		size_t GetIndex() const { return m_Index; }
 		size_t GetRank() const { return m_Rank; }
 		const String& GetName() const override { return m_Name; }
@@ -45,8 +43,9 @@ namespace scone
 		Side m_Side; // #todo: use loc instead of side
 		size_t m_Rank;
 		size_t m_Index;
-		Link& m_Upper;
-		Link& m_Foot;
+		const Link& m_Upper;
+		const Link& m_Foot;
+		const Link& m_Base;
 		String m_Name;
 		const ContactForce* m_ContactForce;
 	};
