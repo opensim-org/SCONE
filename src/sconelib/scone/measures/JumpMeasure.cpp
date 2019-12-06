@@ -131,7 +131,7 @@ namespace scone
 			break;
 
 		case Recover:
-			recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetContactCop().x );
+			recover_cop_dist = std::min( recover_cop_dist, model.GetLeg( 0 ).GetFootBody().GetComPos().x );
 
 			if ( timestamp - recover_start_time >= recover_time )
 				return true;
