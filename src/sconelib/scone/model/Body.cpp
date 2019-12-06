@@ -11,13 +11,12 @@
 
 namespace scone
 {
-	Body::Body()
-	{
-	}
+	Body::Body() :
+		m_Joint( nullptr )
+	{}
 
 	Body::~Body()
-	{
-	}
+	{}
 
 	void Body::ClearExternalForceAndMoment()
 	{

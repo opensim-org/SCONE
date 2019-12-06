@@ -453,18 +453,13 @@ namespace scone
 			[&]( BodyUP& body ) { return dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == osBody; } );
 		SCONE_ASSERT( itBody != m_Bodies.end() );
 
-		auto& sconeBody = dynamic_cast<BodyOpenSim3&>( **itBody );
-
 		// find the Joint (if any)
 		if ( osBody.hasJoint() )
 		{
 			// create a joint
-			auto sconeJoint = std::make_unique<JointOpenSim3>(
-				sconeBody, parent ? &parent->GetJoint() : nullptr, *this, osBody.getJoint() );
-
-			link = LinkUP( new Link( **itBody, *sconeJoint, parent ) );
-			sconeBody.SetJoint( sconeJoint.get() );
-			m_Joints.emplace_back( std::move( sconeJoint ) );
+			m_Joints.push_back( std::make_unique<JointOpenSim3>(
+				**itBody, parent->GetBody(), *this, osBody.getJoint() ) );
+			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
 		}
 		else
 		{

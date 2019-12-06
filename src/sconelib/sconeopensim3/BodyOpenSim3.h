@@ -48,7 +48,6 @@ namespace scone
 
 		virtual Model& GetModel() override;
 		virtual const Model& GetModel() const override;
-		virtual const Joint* GetJoint() const override;
 
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const override;
 
@@ -65,12 +64,10 @@ namespace scone
 		const OpenSim::Body& GetOsBody() const { return m_osBody; }
 
 		void AttachContactForce( ContactForce* cf ) { m_ContactForces.push_back( cf ); }
-		void SetJoint( class JointOpenSim3* j ) { m_Joint = j; }
 
 	private:
 		OpenSim::Body& m_osBody;
 		class ModelOpenSim3& m_Model;
-		class JointOpenSim3* m_Joint;
 		Vec3 m_LocalComPos;
 		std::vector< ContactForce* > m_ContactForces;
 	};

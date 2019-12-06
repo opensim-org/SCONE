@@ -13,10 +13,12 @@
 
 namespace scone
 {
-	Joint::Joint( const Body& body, Joint* parent ) :
+	Joint::Joint( Body& body, Body& parent_body ) :
 	m_Body( body ),
-	m_pParent( parent )
-	{}
+	m_ParentBody( parent_body )
+	{
+		m_Body.m_Joint = this;
+	}
 
 	Real Joint::GetLoad() const
 	{

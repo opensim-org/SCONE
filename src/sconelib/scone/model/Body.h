@@ -60,10 +60,14 @@ namespace scone
 
 		virtual const Model& GetModel() const = 0;
 		virtual Model& GetModel() = 0;
-		virtual const Joint* GetJoint() const = 0;
+		virtual const Joint* GetJoint() const { return m_Joint; }
 
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
+	protected:
+		friend Joint;
+		Joint* m_Joint; // set automatically when a Joint is created
 	};
 }

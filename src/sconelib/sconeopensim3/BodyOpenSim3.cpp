@@ -27,8 +27,7 @@ namespace scone
 	BodyOpenSim3::BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body ) :
 		Body(),
 		m_osBody( body ),
-		m_Model( model ),
-		m_Joint( nullptr )
+		m_Model( model )
 	{
 		SimTK::Vec3 com;
 		m_osBody.getMassCenter( com );
@@ -220,11 +219,6 @@ namespace scone
 	const Model& BodyOpenSim3::GetModel() const
 	{
 		return dynamic_cast<const Model&>( m_Model );
-	}
-
-	const Joint* BodyOpenSim3::GetJoint() const
-	{
-		return m_Joint;
 	}
 
 	Model& BodyOpenSim3::GetModel()

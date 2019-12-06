@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	JointOpenSim3::JointOpenSim3( Body& body, Joint* parent, class ModelOpenSim3& model, OpenSim::Joint& osJoint ) :
+	JointOpenSim3::JointOpenSim3( Body& body, Body& parent, class ModelOpenSim3& model, OpenSim::Joint& osJoint ) :
 		Joint( body, parent ),
 		m_Model( model ),
 		m_osJoint( osJoint )
