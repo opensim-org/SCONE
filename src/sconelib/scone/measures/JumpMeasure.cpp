@@ -14,7 +14,7 @@
 
 namespace scone
 {
-	JumpMeasure::JumpMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	JumpMeasure::JumpMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		target_body( nullptr ),
 		state( Prepare ),
@@ -40,14 +40,12 @@ namespace scone
 			init_min_x = std::min( init_min_x, body->GetComPos().x );
 	}
 
-	JumpMeasure::~JumpMeasure() { }
-
-	scone::Vec3 JumpMeasure::GetTargetPos( const Model& m ) const
+	Vec3 JumpMeasure::GetTargetPos( const Model& m ) const
 	{
 		return target_body ? target_body->GetPosOfPointOnBody( offset ) : m.GetComPos();
 	}
 
-	double JumpMeasure::ComputeResult( Model& model )
+	double JumpMeasure::ComputeResult( const Model& model )
 	{
 		switch ( jump_type )
 		{

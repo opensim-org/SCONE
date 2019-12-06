@@ -21,8 +21,7 @@ namespace scone
 	class MimicMeasure : public Measure
 	{
 	public:
-		MimicMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~MimicMeasure() { };
+		MimicMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		/// Filename of storage (sto).
 		xo::path file;
@@ -37,7 +36,7 @@ namespace scone
 		xo::pattern_matcher exclude_states;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:

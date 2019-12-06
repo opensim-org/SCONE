@@ -18,8 +18,7 @@ namespace scone
 	class HeightMeasure : public Measure
 	{
 	public:
-		HeightMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~HeightMeasure() { };
+		HeightMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		/// Body for which to measure the height, leave empty to use COM (default).
 		String target_body;
@@ -38,7 +37,7 @@ namespace scone
 		double downward_velocity_threshold;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

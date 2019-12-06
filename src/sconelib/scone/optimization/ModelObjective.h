@@ -19,7 +19,7 @@ namespace scone
 	{
 	public:
 		ModelObjective( const PropNode& props, const path& find_file_folder );
-		virtual ~ModelObjective() {}
+		virtual ~ModelObjective() = default;
 
 		FactoryProps model_props;
 		FactoryProps controller_props;

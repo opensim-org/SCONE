@@ -12,7 +12,7 @@
 
 namespace scone
 {
-	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	JointLoadMeasure::JointLoadMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		RangePenalty( props ),
 		joint_load(),
@@ -21,7 +21,7 @@ namespace scone
 		INIT_PROP( props, method, 1 );
 	}
 
-	double JointLoadMeasure::ComputeResult( Model& model )
+	double JointLoadMeasure::ComputeResult( const Model& model )
 	{
 		return RangePenalty<Real>::GetResult();
 	}

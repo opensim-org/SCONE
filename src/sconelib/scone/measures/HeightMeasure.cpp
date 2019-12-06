@@ -13,7 +13,7 @@
 
 namespace scone
 {
-	HeightMeasure::HeightMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	HeightMeasure::HeightMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		m_pTargetBody( nullptr ),
 		m_JumpState( InitialState )
@@ -83,7 +83,7 @@ namespace scone
 		return false;
 	}
 
-	double HeightMeasure::ComputeResult( Model& model )
+	double HeightMeasure::ComputeResult( const Model& model )
 	{
 		if ( m_JumpState == InitialState )
 			return 100 * ( termination_height - 1 ) * m_InitialHeight; // same score as just falling

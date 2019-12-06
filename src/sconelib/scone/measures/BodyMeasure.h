@@ -20,9 +20,8 @@ namespace scone
 	class BodyMeasure : public Measure
 	{
 	public:
-		BodyMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~BodyMeasure() {}
-		virtual double ComputeResult( Model& model ) override;
+		BodyMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
+		virtual double ComputeResult( const Model& model ) override;
 
 		/// Body to which to apply the penalty to.
 		const Body& body;

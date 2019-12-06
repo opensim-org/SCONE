@@ -17,8 +17,8 @@ namespace scone
 	class SCONE_API Measure : public Controller
 	{
 	public:
-		Measure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~Measure() { };
+		Measure( const PropNode& props, Params& par, const Model& model, const Location& loc );
+		virtual ~Measure() = default;
 
 		/// Name of the Measure, to be used in reporting; defaults to measure type
 		mutable String name;
@@ -35,8 +35,8 @@ namespace scone
 		/// Indicate whether this measure should be minimized; default value depends on the measure type (usually true).
 		bool minimize;
 
-		double GetResult( Model& model );
-		double GetWeightedResult( Model& model );
+		double GetResult( const Model& model );
+		double GetWeightedResult( const Model& model );
 
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
@@ -48,7 +48,7 @@ namespace scone
 		bool GetMinimize() { return minimize; }
 
 	protected:
-		virtual double ComputeResult( Model& model ) = 0;
+		virtual double ComputeResult( const Model& model ) = 0;
 		virtual bool ComputeControls( Model& model, double timestamp ) override final { return false; }
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override final;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) = 0;

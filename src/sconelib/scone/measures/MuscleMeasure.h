@@ -20,9 +20,8 @@ namespace scone
 	class MuscleMeasure : public Measure
 	{
 	public:
-		MuscleMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~MuscleMeasure() {}
-		virtual double ComputeResult( Model& model ) override;
+		MuscleMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
+		virtual double ComputeResult( const Model& model ) override;
 
 		/// Muscle to which to apply the penalty to.
 		Muscle& muscle;

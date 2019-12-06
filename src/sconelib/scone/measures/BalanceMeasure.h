@@ -16,14 +16,13 @@ namespace scone
 	class BalanceMeasure : public Measure
 	{
 	public:
-		BalanceMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~BalanceMeasure() { };
+		BalanceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		/// Relative COM height (factor of initial COM height) at which to stop the simulation; default = 0.5.
 		double termination_height;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 	protected:
 		virtual String GetClassSignature() const override;

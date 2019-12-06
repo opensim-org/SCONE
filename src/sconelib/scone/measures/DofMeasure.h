@@ -28,9 +28,8 @@ namespace scone
 	class DofMeasure : public Measure
 	{
 	public:
-		DofMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~DofMeasure() {}
-		virtual double ComputeResult( Model& model ) override;
+		DofMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
+		virtual double ComputeResult( const Model& model ) override;
 
 		/// Dof to which to apply the penalty to.
 		Dof& dof;

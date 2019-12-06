@@ -1,6 +1,7 @@
 #include "sconelua.h"
 
 #include "scone/core/Factories.h"
+#include "lua_script.h"
 #include "ScriptController.h"
 #include "ScriptMeasure.h"
 

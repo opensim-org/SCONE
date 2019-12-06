@@ -24,7 +24,7 @@ namespace scone
 		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress"
 		);
 
-	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
@@ -53,10 +53,6 @@ namespace scone
 		slow_twitch_ratio = ratio;
 	}
 
-	EffortMeasure::~EffortMeasure()
-	{
-	}
-
 	bool EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		SCONE_PROFILE_FUNCTION;
@@ -70,7 +66,7 @@ namespace scone
 		return false;
 	}
 
-	double EffortMeasure::ComputeResult( Model& model )
+	double EffortMeasure::ComputeResult( const Model& model )
 	{
 		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
 		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );

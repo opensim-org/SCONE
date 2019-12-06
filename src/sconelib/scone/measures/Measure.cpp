@@ -11,7 +11,8 @@
 
 namespace scone
 {
-	Measure::Measure( const PropNode& props, Params& par, Model& model, const Location& loc ) : Controller( props, par, model, loc )
+	Measure::Measure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
+		Controller( props, par, const_cast<Model&>( model ), loc ) // model is no longer const in Controller parent class
 	{
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, weight, 1.0 );
@@ -20,14 +21,14 @@ namespace scone
 		INIT_PROP( props, minimize, true );
 	}
 
-	double Measure::GetResult( Model& model )
+	double Measure::GetResult( const Model& model )
 	{
 		if ( !result )
 			result = ComputeResult( model );
 		return *result;
 	}
 
-	double Measure::GetWeightedResult( Model& model )
+	double Measure::GetWeightedResult( const Model& model )
 	{
 		if ( !result )
 			result = ComputeResult( model );

@@ -33,13 +33,10 @@ namespace scone
 	class CompositeMeasure : public Measure
 	{
 	public:
-		CompositeMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~CompositeMeasure();
-		CompositeMeasure( CompositeMeasure& other ) = delete;
-		CompositeMeasure& operator=( CompositeMeasure& other ) = delete;
+		CompositeMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 
 		const PropNode* Measures;
 

@@ -23,10 +23,9 @@ namespace scone
 	class SCONE_LUA_API ScriptMeasure : public Measure
 	{
 	public:
-		ScriptMeasure( const PropNode& props, Params& par, Model& model, const Location& loc );
-		virtual ~ScriptMeasure();
+		ScriptMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 		
-		virtual double ComputeResult( Model& model ) override;
+		virtual double ComputeResult( const Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 

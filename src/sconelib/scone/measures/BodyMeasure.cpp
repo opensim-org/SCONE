@@ -13,7 +13,7 @@
 namespace scone
 {
 
-	BodyMeasure::BodyMeasure( const PropNode& props, Params& par, Model& model, const Location& loc ) :
+	BodyMeasure::BodyMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc ),
 	body( *FindByLocation( model.GetBodies(), props.get< String >( "body" ), loc ) ),
 	range_count( 0 )
@@ -29,7 +29,7 @@ namespace scone
 		name = body.GetName();
 	}
 
-	double BodyMeasure::ComputeResult( Model& model )
+	double BodyMeasure::ComputeResult( const Model& model )
 	{
 		double penalty = 0.0;
 		if ( !position.IsNull() )

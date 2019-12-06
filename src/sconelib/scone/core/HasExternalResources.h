@@ -20,10 +20,10 @@ namespace scone
 		HasExternalResources();
 		virtual ~HasExternalResources();
 		const std::vector< xo::path >& GetExternalResources() const;
-		void AddExternalResource( const xo::path& p );
+		void AddExternalResource( const xo::path& p ) const;
 		void AddExternalResources( const HasExternalResources& other );
 		
 	protected:
-		std::vector< xo::path > external_resources_;
+		mutable std::vector< xo::path > external_resources_;
 	};
 }
