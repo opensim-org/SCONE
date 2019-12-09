@@ -90,7 +90,7 @@ namespace scone
 		INIT_PROP( props, enable_external_forces, false );
 
 		INIT_PROP( props, leg_upper_body, "femur" );
-		INIT_PROP( props, leg_lower_body, "talus" );
+		INIT_PROP( props, leg_lower_body, "" );
 		INIT_PROP( props, leg_contact_force, "foot" );
 
 		// always set create_body_forces when there's a PerturbationController
@@ -325,11 +325,23 @@ namespace scone
 		// create legs and connect stance_contact forces
 		for ( auto side : { LeftSide, RightSide } )
 		{
-			auto femur_it = TryFindByName( GetBodies(), GetSidedName( leg_upper_body, side ) );
-			auto foot_it = TryFindByName( GetBodies(), GetSidedName( leg_lower_body, side ) );
+			Body* upper_body = nullptr;
+			Body* lower_body = nullptr;
+			if ( auto upper_it = TryFindByName( GetBodies(), GetSidedName( leg_upper_body, side ) ); upper_it != GetBodies().end() )
+			{
+				upper_body = upper_it->get();
+				if ( auto lower_it = TryFindByName( GetBodies(), GetSidedName( leg_lower_body, side ) ); lower_it != GetBodies().end() )
+					lower_body = lower_it->get();
+				else // try finding a body whose grandparent is upper_body (backwards compatibility)
+					for ( auto& b : GetBodies() )
+						if ( b->GetParentBody() && b->GetParentBody()->GetParentBody() == upper_body )
+							lower_body = b.get(); // bingo!
+			}
 			auto cf_it = TryFindByName( GetContactForces(), GetSidedName( leg_contact_force, side ) );
-			if ( femur_it != GetBodies().end() && foot_it != GetBodies().end() && cf_it != GetContactForces().end() )
-				m_Legs.emplace_back( new Leg( **femur_it, **foot_it, m_Legs.size(), side, 0, &**cf_it ) );
+
+			if ( upper_body && lower_body && cf_it != GetContactForces().end() )
+				m_Legs.emplace_back( new Leg( *upper_body, *lower_body, m_Legs.size(), side, 0, &**cf_it ) );
+			else log::warning( "Could not define leg using ", leg_upper_body, ", ", leg_lower_body, " and ", leg_contact_force );
 		}
 	}
 

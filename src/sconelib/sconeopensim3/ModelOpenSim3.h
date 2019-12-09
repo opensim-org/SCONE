@@ -66,7 +66,7 @@ namespace scone
 		/// Unsided name of the leg upper body (if any); default = femur
 		String leg_upper_body;
 
-		/// Unsided name of the leg lower body (if any); default = talus
+		/// Unsided name of the leg lower body (if any), leave empty to use two bodies down from leg_upper_body; default = ""
 		String leg_lower_body;
 
 		/// Unsided name of the leg contact force (if any); default = foot
