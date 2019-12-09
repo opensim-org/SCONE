@@ -96,7 +96,7 @@ namespace scone
 				for ( auto& sp : spvec )
 				{
 					if ( std::find_first_of( mp.dofs.begin(), mp.dofs.end(), sp.dofs.begin(), sp.dofs.end(),
-						[&]( Dof* a, Dof* b ) { return a != b && &a->GetJoint() == &b->GetJoint(); } ) == mp.dofs.end() )
+						[&]( Dof* a, Dof* b ) { return a != b && a->GetJoint() == b->GetJoint(); } ) == mp.dofs.end() )
 					{
 						string parname = ( mp.name == sp.name ? mp.name : mp.name + '.' + sp.name ) + '.' + sensor->type_;
 						auto factor = mp.correlation * sp.correlation;

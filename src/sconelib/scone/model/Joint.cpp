@@ -30,7 +30,7 @@ namespace scone
 		if ( m_Dofs.empty() )
 		{
 			for ( auto& dof : m_Body.GetModel().GetDofs() )
-				if ( this == &dof->GetJoint() )
+				if ( this == dof->GetJoint() )
 					m_Dofs.push_back( dof.get() );
 		}
 		return m_Dofs;

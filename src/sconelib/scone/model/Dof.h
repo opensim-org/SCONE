@@ -15,10 +15,12 @@
 
 namespace scone
 {
+	class Joint;
+
 	class SCONE_API Dof : public Actuator
 	{
 	public:
-		Dof( class Joint& j );
+		Dof( const Joint* j );
 		virtual ~Dof();
 
 		virtual Real GetPos() const = 0;
@@ -31,10 +33,10 @@ namespace scone
 		virtual void SetVel( Real vel ) = 0;
 
 		virtual Vec3 GetRotationAxis() const = 0;
-		virtual const class Joint& GetJoint() const { return m_Joint; }
+		virtual const Joint* GetJoint() const { return m_Joint; }
 		virtual Range< Real > GetRange() const = 0;
 
 	private:
-		class Joint& m_Joint;
+		const Joint* m_Joint;
 	};
 }
