@@ -48,7 +48,11 @@ namespace scone
 
 	void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
 	{
-		std::tie( force, moment, cop ) = m_ContactForce->GetForceMomentPoint();
+		// #todo: use ForceAtPoint struct
+		if ( m_ContactForce )
+			std::tie( force, moment, cop ) = m_ContactForce->GetForceMomentPoint();
+		else 
+			force = m_Foot.GetContactForce(), moment = m_Foot.GetContactMoment(), cop = m_Foot.GetContactPoint();
 	}
 
 	Real Leg::MeasureLength() const
