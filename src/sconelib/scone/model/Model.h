@@ -99,7 +99,6 @@ namespace scone
 
 		// Model state access
 		virtual const State& GetState() const = 0;
-		virtual State& GetState() = 0;
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) = 0;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) = 0;
 		void SetNullState();

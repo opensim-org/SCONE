@@ -118,7 +118,6 @@ namespace scone
 		OpenSim::ConstantForce* GetOsimBodyForce( index_t idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
-		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 

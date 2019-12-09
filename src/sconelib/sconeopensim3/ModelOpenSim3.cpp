@@ -744,7 +744,7 @@ namespace scone
 		auto osnames = GetOsimModel().getStateVariableNames();
 		auto osvalues = GetOsimModel().getStateValues( GetTkState() );
 		for ( int i = 0; i < osnames.size(); ++i )
-			GetState().AddVariable( osnames[ i ], osvalues[ i ] );
+			m_State.AddVariable( osnames[ i ], osvalues[ i ] );
 	}
 
 	void ModelOpenSim3::CopyStateFromTk()
