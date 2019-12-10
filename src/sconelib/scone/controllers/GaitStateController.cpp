@@ -54,6 +54,17 @@ namespace scone
 		INIT_PROP( props, override_leg_length, 0.0 );
 		INIT_PROP( props, symmetric, true );
 
+		// show a helpful error message when no legs are defined
+		if ( model.GetLegs().empty() )
+		{
+			string msg = "GaitStateController could not find any legs in " + model.GetName() + ".\n\n";
+			msg += "Please make sure the following values are setup correctly in the Model:\n";
+			msg += " - leg_upper_body (default is 'femur')\n";
+			msg += " - leg_lower_body (default is two bodies below leg_upper_body)\n";
+			msg += " - leg_contact_force (default is 'foot')\n";
+			SCONE_ERROR( msg );
+		}
+
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )
 		{
