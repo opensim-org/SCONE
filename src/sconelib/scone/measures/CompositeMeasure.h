@@ -29,6 +29,26 @@ namespace scone
 		}
 	}
 	\endverbatim
+
+	The ''dual_sided'' parameter can be used to create equal measures for both sides of the body, for example:
+	\verbatim
+	CompositeMeasure {
+		dual_sided = 1
+		# this next measure is created for both ankle_angle_l and ankle_angle_r:
+		DofMeasure { 
+			weight = 0.1
+			dof = ankle_angle 
+			position { min = -60 max = 60 squared_penalty = 1 }
+		}
+		# this next measure is created for both knee_angle_l and knee_angle_r:
+		DofMeasure {
+			weight = 0.01
+			threshold = 5
+			dof = knee_angle
+			force { min = 0 max = 0 abs_penalty = 1 }
+		}
+	}
+	\endverbatim
 	*/
 	class CompositeMeasure : public Measure
 	{

@@ -15,8 +15,16 @@
 
 namespace scone
 {
-	/// Measure for penalizing when DOFs go out of a specific range.
-	/// Supports penalties based on DOF position, DOF velocity, and restitution force.
+	/// Measure for penalizing specific muscle parameters.
+	/** Penalties can be based on muscle activation, length and velocity. Example:
+	\verbatim
+	MuscleMeasure {
+		muscle = gastroc
+		activation { max = 0 squared_penalty = 1 } # penalize squared activation
+		length { max = 1 abs_penalty = 1 } # Penalize when ( length > optimizal fiber length )
+	}
+	\endverbatim
+	*/
 	class MuscleMeasure : public Measure
 	{
 	public:
@@ -27,13 +35,13 @@ namespace scone
 		Muscle& muscle;
 
 		/// Penalty for when the normalized muscle activation [0..1] is out of range.
-		RangePenalty< double > activation;
+		RangePenalty<Real> activation;
 
 		/// Penalty for when the normalized muscle length [L_opt] is out of range.
-		RangePenalty< double > length;
+		RangePenalty<Real> length;
 
 		/// Penalty for when the normalized muscle contraction velocity [L_opt/s] is out of range.
-		RangePenalty< double > velocity;
+		RangePenalty<Real> velocity;
 
 	protected:
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;

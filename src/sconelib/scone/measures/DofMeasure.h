@@ -44,7 +44,7 @@ namespace scone
 		RangePenalty<Degree> velocity;
 
 		/// Penalty for when the DOF limit force [N] is out of range.
-		RangePenalty<double> force;
+		RangePenalty<Real> force;
 
 	protected:
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
