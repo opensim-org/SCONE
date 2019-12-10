@@ -21,9 +21,9 @@ namespace scone
 		if ( props.try_get< String >( "parent" ) )
 			parent = FindByLocation( model.GetDofs(), props.get< String >( "parent" ), loc ).get();
 
-		INIT_PROP( props, position, RangePenalty< Degree >() );
-		INIT_PROP( props, velocity, RangePenalty< Degree >() );
-		INIT_PROP( props, force, RangePenalty< double >() );
+		INIT_PROP( props, position, RangePenalty<Degree>() );
+		INIT_PROP( props, velocity, RangePenalty<Degree>() );
+		INIT_PROP( props, force, RangePenalty<Real>() );
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !force.IsNull() );
 		if ( name.empty() )

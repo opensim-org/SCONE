@@ -21,7 +21,7 @@ namespace scone
 	class SCONE_OPENSIM_3_API JointOpenSim3 : public Joint
 	{
 	public:
-		JointOpenSim3( Body& body, Joint* parent, class ModelOpenSim3& model, OpenSim::Joint& osJoint );
+		JointOpenSim3( Body& body, Body& parent, class ModelOpenSim3& model, OpenSim::Joint& osJoint );
 		virtual ~JointOpenSim3();
 
 		virtual const String& GetName() const;

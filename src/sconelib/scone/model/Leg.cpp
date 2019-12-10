@@ -7,7 +7,6 @@
 */
 
 #include "Leg.h"
-#include "Link.h"
 #include "Body.h"
 #include "Joint.h"
 #include "scone/core/profiler_config.h"
@@ -15,16 +14,17 @@
 #include "Model.h"
 #include "model_tools.h"
 #include "scone/core/Log.h"
+#include "xo/utility/memory_tools.h"
 
 namespace scone
 {
-	Leg::Leg( Link& proximal, Link& foot, size_t index, Side side, size_t rank, const ContactForce* cf ) :
+	Leg::Leg( Body& proximal, Body& foot, size_t index, Side side, size_t rank, const ContactForce* cf ) :
 		m_Side( side ),
 		m_Rank( rank ),
 		m_Index( index ),
 		m_Upper( proximal ),
 		m_Foot( foot ),
-		m_Base( proximal.GetParent() ),
+		m_Base( xo::dereference_or_throw( proximal.GetParentBody(), proximal.GetName() + "is an upper leg body without a parent" ) ),
 		m_Name( stringf( "leg%d", index ) + ( ( side == LeftSide ) ? "_l" : "_r" ) ),
 		m_ContactForce( cf )
 	{
@@ -38,22 +38,21 @@ namespace scone
 
 	Vec3 Leg::GetContactForce() const
 	{
-		return m_ContactForce->GetForce();
-	}
-
-	Vec3 Leg::GetContactCop() const
-	{
-		return m_ContactForce->GetPoint();
+		return m_ContactForce ? m_ContactForce->GetForce() : m_Foot.GetContactForce();
 	}
 
 	Vec3 Leg::GetRelFootPos() const
 	{
-		return GetFootLink().GetBody().GetComPos() - GetBaseLink().GetBody().GetComPos();
+		return GetFootBody().GetComPos() - GetBaseBody().GetComPos();
 	}
 
 	void Leg::GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const
 	{
-		std::tie( force, moment, cop ) = m_ContactForce->GetForceMomentPoint();
+		// #todo: use ForceAtPoint struct
+		if ( m_ContactForce )
+			std::tie( force, moment, cop ) = m_ContactForce->GetForceMomentPoint();
+		else 
+			force = m_Foot.GetContactForce(), moment = m_Foot.GetContactMoment(), cop = m_Foot.GetContactPoint();
 	}
 
 	Real Leg::MeasureLength() const
@@ -62,14 +61,14 @@ namespace scone
 		// OpenSim: how can we get the actual position of a joint
 		// add all distances from foot to upper, using body origins
 		double d = 0.0;
-		for ( const Link* body = &m_Foot; body != &m_Upper; body = &body->GetParent() )
-			d += length( body->GetBody().GetOriginPos() - body->GetParent().GetBody().GetOriginPos() );
+		for ( const Body* body = &m_Foot; body && body->GetParentBody() && body != &m_Upper; body = body->GetParentBody() )
+			d += length( body->GetOriginPos() - body->GetParentBody()->GetOriginPos() );
 
 		return d;
 	}
 
 	Real Leg::GetLoad() const
 	{
-		return xo::length( GetContactForce() ) / m_Upper.GetBody().GetModel().GetBW();
+		return xo::length( GetContactForce() ) / m_Upper.GetModel().GetBW();
 	}
 }

@@ -8,7 +8,6 @@
 
 #include "Muscle.h"
 
-#include "Link.h"
 #include "Joint.h"
 #include "Dof.h"
 #include "xo/numerical/math.h"
@@ -27,7 +26,7 @@ namespace scone
 	Muscle::~Muscle()
 	{}
 
-	scone::Real Muscle::GetNormalizedMomentArm( const Dof& dof ) const
+	Real Muscle::GetNormalizedMomentArm( const Dof& dof ) const
 	{
 		Real mom = GetMomentArm( dof );
 		if ( mom != 0 )
@@ -41,13 +40,13 @@ namespace scone
 		else return mom;
 	}
 
-	scone::Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
+	Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
 	{
 		// from OpenSim Umberger metabolic energy model docs
 		return ( GetMaxIsometricForce() / specific_tension ) * muscle_density * GetOptimalFiberLength();
 	}
 
-	scone::Real Muscle::GetPCSA( Real specific_tension ) const
+	Real Muscle::GetPCSA( Real specific_tension ) const
 	{
 		return GetMaxIsometricForce() / specific_tension;
 	}
@@ -60,7 +59,7 @@ namespace scone
 		return std::max( 0.0, vel + disp );
 	}
 
-	scone::Side Muscle::GetSide() const
+	Side Muscle::GetSide() const
 	{
 		return GetSideFromName( GetName() );
 	}
@@ -76,10 +75,10 @@ namespace scone
 
 		if ( m_Joints.empty() )
 		{
-			const Link* orgLink = &GetOriginLink();
-			const Link* insLink = &GetInsertionLink();
-			for ( const Link* l = insLink; l && l != orgLink; l = &l->GetParent() )
-				m_Joints.push_back( &l->GetJoint() );
+			const Body* orgBody = &GetOriginBody();
+			const Body* insBody = &GetInsertionBody();
+			for ( const Body* b = insBody; b && b != orgBody; b = b->GetParentBody() )
+				m_Joints.push_back( b->GetJoint() );
 		}
 
 		return m_Joints;
@@ -115,7 +114,7 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		for ( auto& dof : GetOriginLink().GetBody().GetModel().GetDofs() )
+		for ( auto& dof : GetOriginBody().GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
 				return true;
@@ -125,10 +124,10 @@ namespace scone
 
 	bool Muscle::HasSharedBodies( const Muscle& other ) const
 	{
-		return &GetOriginLink() == &other.GetOriginLink()
-			|| &GetOriginLink() == &other.GetInsertionLink()
-			|| &GetInsertionLink() == &other.GetOriginLink()
-			|| &GetInsertionLink() == &other.GetInsertionLink();
+		return &GetOriginBody() == &other.GetOriginBody()
+			|| &GetOriginBody() == &other.GetInsertionBody()
+			|| &GetInsertionBody() == &other.GetOriginBody()
+			|| &GetInsertionBody() == &other.GetInsertionBody();
 	}
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

@@ -76,14 +76,6 @@ namespace scone
 	{
 	}
 
-	std::ostream& Model::ToStream( std::ostream& str ) const
-	{
-		str << "Links:" << endl;
-		str << GetRootLink().ToString();
-
-		return str;
-	}
-
 	SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 	{
 		auto it = std::find_if( m_SensorDelayAdapters.begin(), m_SensorDelayAdapters.end(),
@@ -283,13 +275,6 @@ namespace scone
 				fvec.push_back( cf->GetForceValue() );
 		}
 		return fvec;
-	}
-
-	const Link& Model::FindLink( const String& body_name )
-	{
-		const Link* link = GetRootLink().FindLink( body_name );
-		SCONE_THROW_IF( link == nullptr, "Could not find link " + body_name );
-		return *link;
 	}
 
 	void Model::SetNullState()

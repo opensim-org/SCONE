@@ -44,12 +44,11 @@ namespace scone
 		virtual Range< Real > GetRange() const override;
 
 	private:
+		friend class ModelOpenSim3;
 		ModelOpenSim3& m_Model;
 		OpenSim::Coordinate& m_osCoord;
 		const OpenSim::CoordinateLimitForce* m_pOsLimitForce;
 		const OpenSim::CoordinateActuator* m_OsCoordAct;
 		Vec3 m_RotationAxis;
-
-		friend class ModelOpenSim3;
 	};
 }

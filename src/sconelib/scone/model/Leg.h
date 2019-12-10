@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Link.h"
 #include "memory_tools.h"
 #include "scone/core/HasName.h"
 #include "Body.h"
@@ -19,19 +18,18 @@ namespace scone
 	class SCONE_API Leg : public HasName
 	{
 	public:
-		Leg( Link& upper, Link& foot, size_t index, Side side = NoSide, size_t rank = 0, const ContactForce* cf = nullptr );
+		Leg( Body& upper, Body& foot, size_t index, Side side = NoSide, size_t rank = 0, const ContactForce* cf = nullptr );
 		virtual ~Leg();
 
-		const Link& GetUpperLink() const { return m_Upper; }
-		const Link& GetFootLink() const { return m_Foot; }
-		const Link& GetBaseLink() const { return m_Base; }
+		const Body& GetUpperBody() const { return m_Upper; }
+		const Body& GetFootBody() const { return m_Foot; }
+		const Body& GetBaseBody() const { return m_Base; }
 		Side GetSide() const { return m_Side; }
 		size_t GetIndex() const { return m_Index; }
 		size_t GetRank() const { return m_Rank; }
 		const String& GetName() const override { return m_Name; }
 
 		Vec3 GetContactForce() const;
-		Vec3 GetContactCop() const;
 		Vec3 GetRelFootPos() const;
 		void GetContactForceMomentCop( Vec3& force, Vec3& moment, Vec3& cop ) const;
 		Real GetLoad() const;
@@ -43,9 +41,9 @@ namespace scone
 		Side m_Side; // #todo: use loc instead of side
 		size_t m_Rank;
 		size_t m_Index;
-		const Link& m_Upper;
-		const Link& m_Foot;
-		const Link& m_Base;
+		const Body& m_Upper;
+		const Body& m_Foot;
+		const Body& m_Base;
 		String m_Name;
 		const ContactForce* m_ContactForce;
 	};

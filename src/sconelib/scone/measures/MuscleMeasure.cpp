@@ -17,9 +17,9 @@ namespace scone
 		muscle( *FindByLocation( model.GetMuscles(), props.get< String >( "muscle" ), loc ) ),
 		range_count( 0 )
 	{
-		INIT_PROP( props, activation, RangePenalty< double >() );
-		INIT_PROP( props, length, RangePenalty< double >() );
-		INIT_PROP( props, velocity, RangePenalty< double >() );
+		INIT_PROP( props, activation, RangePenalty<Real>() );
+		INIT_PROP( props, length, RangePenalty<Real>() );
+		INIT_PROP( props, velocity, RangePenalty<Real>() );
 
 		range_count = int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
 		if ( name.empty() )

@@ -13,10 +13,12 @@
 
 namespace scone
 {
-	Joint::Joint( const Body& body, Joint* parent ) :
+	Joint::Joint( Body& body, Body& parent_body ) :
 	m_Body( body ),
-	m_pParent( parent )
-	{}
+	m_ParentBody( parent_body )
+	{
+		m_Body.m_Joint = this;
+	}
 
 	Real Joint::GetLoad() const
 	{
@@ -28,7 +30,7 @@ namespace scone
 		if ( m_Dofs.empty() )
 		{
 			for ( auto& dof : m_Body.GetModel().GetDofs() )
-				if ( this == &dof->GetJoint() )
+				if ( this == dof->GetJoint() )
 					m_Dofs.push_back( dof.get() );
 		}
 		return m_Dofs;

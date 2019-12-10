@@ -13,6 +13,7 @@
 #include <OpenSim/Actuators/PointActuator.h>
 
 #include "ModelOpenSim3.h"
+#include "JointOpenSim3.h"
 #include "ConstantForce.h"
 #include "scone/core/profiler_config.h"
 #include "simbody_tools.h"

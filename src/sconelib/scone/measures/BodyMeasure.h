@@ -36,13 +36,13 @@ namespace scone
 		bool relative_to_model_com;
 
 		/// Penalty for when the DOF position [deg] is out of range.
-		RangePenalty< Real > position;
+		RangePenalty<Real> position;
 
 		/// Penalty for when the DOF velocity [deg/s] is out of range.
-		RangePenalty< Real > velocity;
+		RangePenalty<Real> velocity;
 
 		/// Penalty for when the DOF limit force [N] is out of range.
-		RangePenalty< Real > acceleration;
+		RangePenalty<Real> acceleration;
 
 	protected:
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;

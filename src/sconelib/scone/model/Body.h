@@ -17,6 +17,9 @@
 
 namespace scone
 {
+	class Model;
+	class Joint;
+
 	class SCONE_API Body : public HasName, HasData
 	{
 	public:
@@ -55,11 +58,18 @@ namespace scone
 
 		virtual void ClearExternalForceAndMoment();
 
-		virtual const class Model& GetModel() const = 0;
-		virtual class Model& GetModel() = 0;
+		virtual const Model& GetModel() const = 0;
+		virtual Model& GetModel() = 0;
+
+		const Joint* GetJoint() const { return m_Joint; }
+		const Body* GetParentBody() const;
 
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
+	protected:
+		friend Joint;
+		Joint* m_Joint; // set automatically when a Joint is created
 	};
 }

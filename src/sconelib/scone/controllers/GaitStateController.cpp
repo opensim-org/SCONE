@@ -140,8 +140,8 @@ namespace scone
 			ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
 			ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > stance_load_threshold;
 			ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
-			ls.sagittal_pos = ls.leg.GetFootLink().GetBody().GetComPos().x - ls.leg.GetBaseLink().GetBody().GetComPos().x;
-			ls.coronal_pos = ls.leg.GetFootLink().GetBody().GetComPos().z - ls.leg.GetBaseLink().GetBody().GetComPos().z;
+			ls.sagittal_pos = ls.leg.GetFootBody().GetComPos().x - ls.leg.GetBaseBody().GetComPos().x;
+			ls.coronal_pos = ls.leg.GetFootBody().GetComPos().z - ls.leg.GetBaseBody().GetComPos().z;
 			ls.allow_late_stance_transition = ls.sagittal_pos < ls.leg_length * late_stance_threshold;
 			ls.allow_liftoff_transition = ls.sagittal_pos < ls.leg_length * liftoff_threshold;
 			ls.allow_landing_transition = ls.sagittal_pos > ls.leg_length * landing_threshold;

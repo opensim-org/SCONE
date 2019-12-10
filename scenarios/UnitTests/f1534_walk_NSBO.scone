@@ -1,0 +1,53 @@
+Optimizer = {
+	type = CmaOptimizer
+	signature_prefix = SCONE_BUILD
+	init_file = data/f1534m_NSBOV_S10.par
+	use_init_file = 1
+	init_file_std_factor = 0.02
+	init_file_std_offset = 0.001
+	use_init_file_std = 0
+	max_generations = 30000
+	Objective = {
+		type = SimulationObjective
+		max_duration = 3
+		Model = {
+			type = Simbody
+			model_file = data/f1534m.osim
+			state_init_file = data/init_gait_S12.sto
+			state_init_optimization = {
+				include_states = *
+				exclude_states = "*_tx;*_ty;*_tz;*_u;pelvis_list"
+				offset = ~0.01<-0.5,0.5>
+			}
+			integration_method = SemiExplicitEuler2
+			integration_accuracy = 0.001
+			use_fixed_control_step_size = 1
+			fixed_control_step_size = 0.001
+			sensor_delay_scaling_factor = 1.0
+			Controllers = {
+				Controller = {
+					type = NeuralController
+					signature_prefix = NSBOV
+					par_mode = virtual
+					use_neutral_pose = 1
+					delay_file = data/neural_delays_FEA.pn
+					delay_factor = 1
+					activation = rectifier
+					SensorNeuronLayer = {
+						SensorNeuron = { type = F source = * offset = 0 activation = rectifier }
+						SensorNeuron = { type = L source = * offset = 1 activation = linear }
+						SensorNeuron = { type = DPV source = pelvis_tilt activation = linear }
+						SensorNeuron = { type = DPV source = pelvis_list activation = linear }
+					}
+					MotorNeuronLayer = {
+						MotorNeuron = { include = * offset = 0~0.01 }
+						MotorNeuron = { input_layer = 0 connect = synergetic_dof type = F gain = 0~0.01<-10,10> }
+						MotorNeuron = { input_layer = 0 connect = synergetic_dof type = L gain = 0~0.01<-10,10> }
+						MotorNeuron = { input_layer = 0 connect = ipsilateral type = DPV gain = 0~0.01<-10,10> }
+					}
+				}
+				INCLUDE = { file = data/M_gait3d_S10.scone }
+			}
+		}
+	}
+}

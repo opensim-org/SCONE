@@ -21,9 +21,9 @@ namespace scone
 		INIT_PROP( props, offset, Vec3::zero() );
 		INIT_PROP( props, axes_weights, Vec3::zero() );
 		INIT_PROP( props, relative_to_model_com, false );
-		INIT_PROP( props, position, RangePenalty< Real >() );
-		INIT_PROP( props, velocity, RangePenalty< Real >() );
-		INIT_PROP( props, acceleration, RangePenalty< Real >() );
+		INIT_PROP( props, position, RangePenalty<Real>() );
+		INIT_PROP( props, velocity, RangePenalty<Real>() );
+		INIT_PROP( props, acceleration, RangePenalty<Real>() );
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !acceleration.IsNull() );
 		name = body.GetName();

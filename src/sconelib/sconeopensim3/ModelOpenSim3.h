@@ -63,8 +63,11 @@ namespace scone
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
 		bool enable_external_forces;
 
-		/// Unsided name of the leg upper leg (if any); default = femur
+		/// Unsided name of the leg upper body (if any); default = femur
 		String leg_upper_body;
+
+		/// Unsided name of the leg lower body (if any), leave empty to use two bodies down from leg_upper_body; default = ""
+		String leg_lower_body;
 
 		/// Unsided name of the leg contact force (if any); default = foot
 		String leg_contact_force;
@@ -107,7 +110,6 @@ namespace scone
 		void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
 
 		virtual const String& GetName() const override;
-		virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		void ValidateDofAxes();
 		void StoreCurrentFrame() override;
@@ -116,7 +118,6 @@ namespace scone
 		OpenSim::ConstantForce* GetOsimBodyForce( index_t idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
-		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 
@@ -135,8 +136,8 @@ namespace scone
 		void SetOpenSimObjectProperies( OpenSim::Object& os_obj, const PropNode& props, Params& par );
 		void SetProperties( const PropNode& pn, Params& par );
 
-		LinkUP CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent = nullptr );
-
+		// internal data
+		// #todo: leave storage to children and create wrappers on request instead
 		std::unique_ptr< OpenSim::Model > m_pOsimModel;
 		std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 		std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;

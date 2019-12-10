@@ -15,7 +15,16 @@
 namespace scone
 {
 	/// Measures the energy consumption of a model during simulation, according to various models.
-	/// Can also be used to minimize cost-of-transfer, i.e. energy / distance.
+	/** Supported effort models:
+		- ''Constant'': constant energy measure
+		- ''TotalForce'': total muscle force
+		- ''Wang2012'': metabolic energy measure as defined in [Wang et al. 2012]
+		- ''Uchida2016'': metabolic energy measure as defined in [Uchida et al. 2012]
+		- ''SquaredMuscleStress'': summed squared muscle stress: (force / PCSA)^2
+
+		This can also be used for cost-of-transport, using the ''use_cost_of_transport'' parameter.
+	*/
+
 	class EffortMeasure : public Measure
 	{
 	public:
@@ -31,7 +40,7 @@ namespace scone
 			SquaredMuscleStress ///< Use the summed squared muscle stress as a measure
 		};
 
-		/// Energy model to be used, can be: TotalForce, Wang2012, Uchida2016, or Constant; default = UnknownMeasure.
+		/// Energy model to be used, can be: ''TotalForce'', ''Wang2012'', ''Uchida2016'', or ''Constant''; default = ''UnknownMeasure''.
 		EnergyMeasureType measure_type; 
 
 		/// Flag indicating to use (energy / distance) as a result; default = 0.
@@ -43,10 +52,10 @@ namespace scone
 		/// Value to use for muscle density; default = 1059.7.
 		Real muscle_density; 
 
-		/// Default slow / twitch ratio, if not defined per muscle; default = 0.5.
+		/// Default slow / twitch ratio if not defined per muscle (used by Uchida2016); default = 0.5.
 		Real default_muscle_slow_twitch_ratio;
 
-		/// Indicate if fiber ratios are the same for left and right; default = true.
+		/// Indicate if fiber ratios are the same for left and right (used by Uchida2016); default = true.
 		bool use_symmetric_fiber_ratios;
 
 		/// Minimum distance used for cost of transport computation; default = 1.0.

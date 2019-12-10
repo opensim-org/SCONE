@@ -12,6 +12,6 @@
 
 namespace scone
 {
-	Dof::Dof( Joint& j ) : m_Joint( j ) {}
+	Dof::Dof( const Joint* j ) : m_Joint( j ) {}
 	Dof::~Dof() {}
 }
