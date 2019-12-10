@@ -212,9 +212,11 @@ if(${Qt5Widgets_FOUND})
 		# Copy osg png plugin
 		set(OSG_PLUGINS_FOLDER "osgPlugins-3.4.1" CACHE STRING "Prefix of OpenSceneGraph Plugins folder. Yes, you need to set this by hand :-(" )
 		add_custom_command(TARGET sconestudio POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}" )
-		add_custom_command(TARGET sconestudio POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${OSG_PLUGINS_FOLDER}/osgdb_png$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}"
-		)
-
+		set(OSG_PLUGINS osgdb_png osgdb_obj osgdb_stl)
+		foreach(osgplugin ${OSG_PLUGINS})
+			add_custom_command(TARGET sconestudio POST_BUILD
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${OSG_PLUGINS_FOLDER}/${osgplugin}$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}"
+			)
+		endforeach()
 	endif()
 endif()
