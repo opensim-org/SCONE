@@ -1,5 +1,18 @@
 ====== SCONE Version History ======
 
+==== SCONE 1.3.2 ====
+//Released December 10, 2019//
+
+=== New Features and Updates ===
+  * Added support for displaying .obj and .stl files
+  * Display geometries that exist in the model folder are now automatically copied to the output folder during optimization. **To prevent excessive copies, please copy the display geometries to the shared 'geometries' folder**.
+  * Optimizer report now includes time, number_of_evals, evals_per_sec
+
+=== Fixes ===
+  * Fixed issue causing the initial parameter file (''init_file'') of an optimization not to be copied to the output folder, making it impossible to playback optimization results that use ''init_file''
+  * ''GaitStateController'' now displays a proper warning message when no legs are defined in the model
+  * Increased maximum data output frequency to 1e6
+
 ==== SCONE 1.3.1 ====
 //Released November 27, 2019//
 
