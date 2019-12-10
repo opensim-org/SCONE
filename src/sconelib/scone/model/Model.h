@@ -17,7 +17,6 @@
 #include "ForceValue.h"
 #include "Leg.h"
 #include "Sensor.h"
-#include "Link.h"
 
 #include "scone/controllers/Controller.h"
 #include "scone/core/HasExternalResources.h"
@@ -198,7 +197,6 @@ namespace scone
 		virtual void StoreCurrentFrame();
 
 	protected:
-		LinkUP m_RootLink;
 		std::vector< MuscleUP > m_Muscles;
 		std::vector< BodyUP > m_Bodies;
 		std::vector< JointUP > m_Joints;

@@ -210,8 +210,6 @@ set(SIM_TOPOLOGY_FILES
 	model/Location.h
 	model/Leg.cpp
 	model/Leg.h
-	model/Link.cpp
-	model/Link.h
 	model/Side.h
 	)
 

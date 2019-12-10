@@ -43,8 +43,8 @@ namespace scone
 		const Joint& GetJoint() const { return *m_Joint; }
 
 		// get children
-		std::vector< LinkUP >& GetChildren() { return m_Children; }
-		const std::vector< LinkUP >& GetChildren() const { return m_Children; }
+		std::vector< std::unique_ptr<Link> >& GetChildren() { return m_Children; }
+		const std::vector< std::unique_ptr<Link> >& GetChildren() const { return m_Children; }
 		const Link& GetChild( size_t i = 0 ) const { return *m_Children[ i ]; }
 		Link& GetChild( size_t i = 0 ) { return *m_Children[ i ]; }
 		bool HasChildren() const { return !m_Children.empty(); }
@@ -60,7 +60,7 @@ namespace scone
 		Body* m_Body;
 		Link* m_Parent;
 		Joint* m_Joint;
-		std::vector< LinkUP > m_Children;
+		std::vector< std::unique_ptr<Link> > m_Children;
 
 	private: // noncopyable
 		Link( const Link& );

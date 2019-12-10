@@ -256,18 +256,30 @@ namespace scone
 		SCONE_ASSERT( m_pOsimModel && m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Muscles.empty() );
 
 		// Create wrappers for bodies
+		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			m_Bodies.emplace_back( new BodyOpenSim3( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
-		// setup hierarchy and create wrappers
-		// #todo: remove this and just create Joints instead
-		m_RootLink = CreateLinkHierarchy( m_pOsimModel->getGroundBody() );
+		// Create wrappers for joints
+		m_Joints.reserve( m_pOsimModel->getJointSet().getSize() );
+		for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
+		{
+			auto& joint_osim = m_pOsimModel->getJointSet().get( idx );
+			auto body_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
+				{ return &dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == &joint_osim.getBody(); } );
+			auto parent_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
+				{ return &dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == &joint_osim.getParentBody(); } );
+			SCONE_ASSERT( body_it != m_Bodies.end() && parent_it != m_Bodies.end() );
+			m_Joints.emplace_back( new JointOpenSim3( **body_it, **parent_it, *this, joint_osim ) );
+		}
 
 		// create wrappers for dofs
+		m_Dofs.reserve( m_pOsimModel->getCoordinateSet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
 			m_Dofs.emplace_back( new DofOpenSim3( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
 
 		// create contact geometries
+		m_ContactGeometries.reserve( m_pOsimModel->getContactGeometrySet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
 		{
 			OpenSim::ContactGeometry* cg_osim = &m_pOsimModel->getContactGeometrySet().get( idx );
@@ -292,6 +304,7 @@ namespace scone
 		}
 
 		// Create wrappers for actuators
+		m_Muscles.reserve( m_pOsimModel->getMuscles().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getActuators().getSize(); ++idx )
 		{
 			// OpenSim: Set<T>::get( idx ) is const but returns non-const reference, is this a bug?
@@ -453,43 +466,6 @@ namespace scone
 	Vec3 ModelOpenSim3::GetGravity() const
 	{
 		return from_osim( m_pOsimModel->getGravity() );
-	}
-
-	LinkUP ModelOpenSim3::CreateLinkHierarchy( const OpenSim::Body& osBody, Link* parent )
-	{
-		LinkUP link;
-
-		// find the Body
-		auto itBody = std::find_if( m_Bodies.begin(), m_Bodies.end(),
-			[&]( BodyUP& body ) { return dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == osBody; } );
-		SCONE_ASSERT( itBody != m_Bodies.end() );
-
-		// find the Joint (if any)
-		if ( osBody.hasJoint() )
-		{
-			// create a joint
-			m_Joints.push_back( std::make_unique<JointOpenSim3>(
-				**itBody, parent->GetBody(), *this, osBody.getJoint() ) );
-			link = LinkUP( new Link( **itBody, *m_Joints.back(), parent ) );
-		}
-		else
-		{
-			// this is the root Link
-			link = LinkUP( new Link( **itBody ) );
-		}
-
-		// add children
-		for ( auto iter = m_Bodies.begin(); iter != m_Bodies.end(); ++iter )
-		{
-			BodyOpenSim3& childBody = dynamic_cast<BodyOpenSim3&>( **iter );
-			if ( childBody.GetOsBody().hasJoint() && childBody.GetOsBody().getJoint().getParentBody() == osBody )
-			{
-				// create child link
-				link->GetChildren().push_back( CreateLinkHierarchy( childBody.GetOsBody(), link.get() ) );
-			}
-		}
-
-		return link;
 	}
 
 	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
