@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <tuple>
+#include "xo/filesystem/filesystem.h"
 
 using std::endl;
 
@@ -330,5 +331,16 @@ namespace scone
 		if ( cg.size() > 0 && std::holds_alternative< xo::plane >( cg.front()->GetShape() ) )
 			return cg.front().get();
 		else return nullptr;
+	}
+
+	void Model::AddExternalDisplayGeometries( const path& model_path )
+	{
+		for ( const auto& b : GetBodies() )
+		{
+			auto geoms = b->GetDisplayGeometries();
+			for ( auto& g : geoms )
+				if ( xo::file_exists( model_path / g.filename ) )
+					AddExternalResource( model_path / g.filename );
+		}
 	}
 }

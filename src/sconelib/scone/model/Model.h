@@ -196,6 +196,8 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual void StoreCurrentFrame();
 
+		virtual void AddExternalDisplayGeometries( const path& model_path );
+
 	protected:
 		std::vector< MuscleUP > m_Muscles;
 		std::vector< BodyUP > m_Bodies;

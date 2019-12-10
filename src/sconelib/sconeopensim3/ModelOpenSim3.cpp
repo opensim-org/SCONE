@@ -165,6 +165,7 @@ namespace scone
 		{
 			//SCONE_PROFILE_SCOPE( "CreateWrappers" );
 			CreateModelWrappers( props, par );
+			AddExternalDisplayGeometries( model_file.parent_path() );
 		}
 
 		{
@@ -354,7 +355,7 @@ namespace scone
 
 			if ( upper_body && lower_body && cf_it != GetContactForces().end() )
 				m_Legs.emplace_back( new Leg( *upper_body, *lower_body, m_Legs.size(), side, 0, &**cf_it ) );
-			else log::warning( "Could not define leg using ", leg_upper_body, ", ", leg_lower_body, " and ", leg_contact_force );
+			//else log::warning( "Could not define leg using ", leg_upper_body, ", ", leg_lower_body, " and ", leg_contact_force );
 		}
 	}
 
