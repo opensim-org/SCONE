@@ -37,7 +37,7 @@ namespace scone
 		bool use_init_file;
 
 		/// Use the standard deviations from the init_file; when set to false, the initial standard deviation is 
-		/// computed as follows: STDEV = parameter value * init_std_factor + init_std_offset; default = true.
+		/// computed as follows: STDEV = parameter value * init_file_std_factor + init_file_std_offset; default = true.
 		bool use_init_file_std;
 
 		/// Factor by which to multiply the standard deviations from the init_file; default = 1.0.
