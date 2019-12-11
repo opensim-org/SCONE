@@ -113,7 +113,7 @@ namespace scone
 
 		// Model data
 		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
-		virtual std::vector<path> WriteResults( const path& file_base ) const = 0;
+		virtual std::vector<path> WriteResults( const path& file_base ) const;
 
 		// get dynamic model statistics
 		virtual Vec3 GetComPos() const = 0;

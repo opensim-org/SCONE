@@ -437,18 +437,6 @@ namespace scone
 		}
 	}
 
-	std::vector<path> ModelOpenSim3::WriteResults( const path& file ) const
-	{
-		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
-		files.push_back( file + ".sto" );
-
-		if ( GetController() ) xo::append( files, GetController()->WriteResults( file ) );
-		if ( GetMeasure() ) xo::append( files, GetMeasure()->WriteResults( file ) );
-
-		return files;
-	}
-
 	Vec3 ModelOpenSim3::GetComPos() const
 	{
 		return from_osim( m_pOsimModel->calcMassCenterPosition( GetTkState() ) );

@@ -18,13 +18,15 @@
 #include "scone/core/Log.h"
 #include "scone/core/profiler_config.h"
 #include "scone/core/Settings.h"
+#include "scone/core/StorageIo.h"
 #include "scone/measures/Measure.h"
+
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
+#include "xo/filesystem/filesystem.h"
 
 #include <algorithm>
 #include <tuple>
-#include "xo/filesystem/filesystem.h"
 
 using std::endl;
 
@@ -297,6 +299,20 @@ namespace scone
 			dof->SetPos( dof->GetRange().GetCenter() );
 			dof->SetVel( 0 );
 		}
+	}
+
+	std::vector<scone::path> Model::WriteResults( const path& file ) const
+	{
+		std::vector<path> files;
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
+		files.push_back( file + ".sto" );
+
+		if ( GetController() )
+			xo::append( files, GetController()->WriteResults( file ) );
+		if ( GetMeasure() )
+			xo::append( files, GetMeasure()->WriteResults( file ) );
+
+		return files;
 	}
 
 	Real Model::GetComHeight( const Vec3& up ) const
