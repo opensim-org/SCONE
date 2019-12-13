@@ -69,7 +69,8 @@ public slots:
 
 	void helpAbout() {}
 	void evaluateActiveScenario();
-	void performanceTest();
+	void performanceTestProfile() { performanceTest( true ); }
+	void performanceTestNoProfile() { performanceTest( false ); }
 	void startOptimization();
 	void startMultipleOptimizations();
 	void abortOptimizations();
@@ -97,6 +98,7 @@ private:
 	void restoreCustomSettings( QSettings& settings ) override;
 	void saveCustomSettings( QSettings& settings ) override;
 
+	void performanceTest( bool do_profile );
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
 	std::vector< QCodeEditor* > changedDocuments();
