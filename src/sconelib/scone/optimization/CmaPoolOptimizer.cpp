@@ -32,7 +32,7 @@ namespace scone
 		// fill the pool
 		for ( int i = 0; i < optimizations_; ++i )
 		{
-			props_.push_back( scenario_pn_copy_ ); // we're reusing the props from CmaPoolOptimizer
+			props_.push_back( scenario_pn_copy_.get_child( "CmaPoolOptimizer" ) ); // we're reusing the props from CmaPoolOptimizer
 			props_.back().set( "random_seed", random_seed_ + i );
 			props_.back().set( "type", "CmaOptimizer" );
 			props_.back().set( "output_root", GetOutputFolder() );
