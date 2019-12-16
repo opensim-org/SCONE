@@ -68,6 +68,7 @@ namespace scone
 		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );
 		auto& flags = GetStoreDataFlags();
 		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
+		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSettings().get< bool >( "data.muscle" ) );
 		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSettings().get< bool >( "data.joint" ) );
 		flags.set( StoreDataTypes::SensorData, GetSconeSettings().get< bool >( "data.sensor" ) );

@@ -140,6 +140,13 @@ namespace scone
 		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
 			frame[ GetName() + ".activation" ] = GetActivation();
 
+
+		if ( flags( StoreDataTypes::MuscleTendonProperties ) )
+		{
+			frame[ GetName() + ".tendon_length" ] = GetTendonLength();
+			frame[ GetName() + ".T" ] = GetTendonLength() / GetTendonSlackLength();
+		}
+
 		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
 		{
 			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
