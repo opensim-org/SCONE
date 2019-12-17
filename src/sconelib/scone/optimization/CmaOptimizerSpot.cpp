@@ -41,10 +41,10 @@ namespace scone
 		case scone::Optimizer::no_output:
 			break;
 		case scone::Optimizer::console_output:
-			add_new_reporter< spot::console_reporter >();
+			add_reporter( std::make_unique<spot::console_reporter>() );
 			break;
 		case scone::Optimizer::status_output:
-			add_new_reporter< CmaOptimizerReporter >();
+			add_reporter( std::make_unique<CmaOptimizerReporter>() );
 			break;
 		default: SCONE_THROW( "Unknown output mode" );
 		}
@@ -56,13 +56,14 @@ namespace scone
 		PrepareOutputFolder();
 
 		// reporters
-		auto rep = add_new_reporter< spot::file_reporter >( GetOutputFolder() );
+		auto rep = std::make_unique< spot::file_reporter >( GetOutputFolder() );
 		rep->min_improvement_for_file_output = min_improvement_for_file_output;
 		rep->max_steps_without_file_output = max_generations_without_file_output;
+		add_reporter( std::move( rep ) );
 
 		// stop conditions
-		add_new_stop_condition< spot::max_steps_condition >( max_generations );
-		add_new_stop_condition< spot::min_progress_condition >( min_progress, min_progress_samples );
+		add_stop_condition( std::make_unique< spot::max_steps_condition >( max_generations ) );
+		add_stop_condition( std::make_unique< spot::min_progress_condition >( min_progress, min_progress_samples ) );
 		find_stop_condition< spot::flat_fitness_condition >().epsilon_ = flat_fitness_epsilon_;
 
 		run();
