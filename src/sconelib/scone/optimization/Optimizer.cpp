@@ -14,16 +14,13 @@
 #include "scone/core/Factories.h"
 #include "scone/core/math.h"
 #include "scone/optimization/Objective.h"
+
 #include "xo/filesystem/filesystem.h"
 #include "xo/container/prop_node_tools.h"
-
-#if defined(_MSC_VER)
-#	define NOMINMAX
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#endif
 #include "xo/system/system_tools.h"
 #include "xo/serialization/serialize.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
+#include "xo/system/error_code.h"
 
 namespace scone
 {
@@ -32,8 +29,7 @@ namespace scone
 		max_threads( 1 ),
 		thread_priority( (int)xo::thread_priority::lowest ),
 		m_LastFileOutputGen( 0 ),
-		m_ObjectiveProps( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ) ),
-		m_Objective( CreateObjective( m_ObjectiveProps, scenario_dir ) ),
+		m_Objective( CreateObjective( FindFactoryProps( GetObjectiveFactory(), props, "Objective" ), scenario_dir ) ),
 		m_BestFitness( m_Objective->info().worst_fitness() ),
 		output_mode_( no_output ),
 		scenario_pn_copy_( scenario_pn )

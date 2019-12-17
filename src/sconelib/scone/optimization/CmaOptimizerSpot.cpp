@@ -8,7 +8,6 @@
 
 #include "CmaOptimizerSpot.h"
 
-#include <random>
 #include "spot/stop_condition.h"
 #include "spot/file_reporter.h"
 #include "spot/console_reporter.h"
@@ -18,9 +17,6 @@
 
 namespace scone
 {
-	using std::cout;
-	using std::endl;
-
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
 		CmaOptimizer( pn, scenario_pn, scenario_dir ),
 		cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )

@@ -32,11 +32,12 @@ namespace scone
 		// fill the pool
 		for ( int i = 0; i < optimizations_; ++i )
 		{
-			props_.push_back( scenario_pn_copy_.get_child( "CmaPoolOptimizer" ) ); // we're reusing the props from CmaPoolOptimizer
-			props_.back().set( "random_seed", random_seed_ + i );
-			props_.back().set( "type", "CmaOptimizer" );
-			props_.back().set( "output_root", GetOutputFolder() );
-			props_.back().set( "log_level", xo::log::never_log_level );
+			// reuse the props from CmaPoolOptimizer
+			props_.push_back( scenario_pn_copy_.get_child( "CmaPoolOptimizer" ) ); 
+			props_.back().set( "random_seed", random_seed_ + i ); // new seed
+			props_.back().set( "type", "CmaOptimizer" ); // change type
+			props_.back().set( "output_root", GetOutputFolder() ); // make sure output is written to subdirectory
+			props_.back().set( "log_level", xo::log::never_log_level ); // children don't log?
 			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), scenario_pn_copy_, m_Objective->GetExternalResourceDir() ) );
 		}
 

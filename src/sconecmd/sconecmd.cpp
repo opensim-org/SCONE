@@ -7,17 +7,18 @@
 */
 
 #include <tclap/CmdLine.h>
-#include "scone/core/Log.h"
-#include "scone/optimization/opt_tools.h"
-#include "xo/system/system_tools.h"
-#include "xo/system/log_sink.h"
-#include "xo/container/prop_node_tools.h"
-#include "spot/optimizer_pool.h"
-#include "xo/serialization/serialize.h"
-#include "xo/serialization/prop_node_serializer_zml.h"
 #include "scone/core/Exception.h"
-#include "scone/sconelib_config.h"
+#include "scone/core/Factories.h"
+#include "scone/core/Log.h"
 #include "scone/core/version.h"
+#include "scone/optimization/opt_tools.h"
+#include "scone/sconelib_config.h"
+#include "spot/optimizer_pool.h"
+#include "xo/container/prop_node_tools.h"
+#include "xo/serialization/prop_node_serializer_zml.h"
+#include "xo/serialization/serialize.h"
+#include "xo/system/log_sink.h"
+#include "xo/system/system_tools.h"
 
 using namespace scone;
 
