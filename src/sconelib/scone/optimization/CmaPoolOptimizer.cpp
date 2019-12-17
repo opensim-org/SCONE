@@ -33,19 +33,24 @@ namespace scone
 		for ( int i = 0; i < optimizations_; ++i )
 		{
 			// reuse the props from CmaPoolOptimizer
-			props_.push_back( scenario_pn_copy_.get_child( "CmaPoolOptimizer" ) ); 
+			props_.push_back( scenario_pn_copy_.get_child( "CmaPoolOptimizer" ) );
 			props_.back().set( "random_seed", random_seed_ + i ); // new seed
 			props_.back().set( "type", "CmaOptimizer" ); // change type
 			props_.back().set( "output_root", GetOutputFolder() ); // make sure output is written to subdirectory
 			props_.back().set( "log_level", xo::log::never_log_level ); // children don't log?
-			push_back( std::make_unique< CmaOptimizerSpot >( props_.back(), scenario_pn_copy_, m_Objective->GetExternalResourceDir() ) );
+
+			// create optimizer
+			auto o = std::make_unique< CmaOptimizerSpot >( props_.back(), scenario_pn_copy_, m_Objective->GetExternalResourceDir() );
+			o->PrepareOutputFolder();
+			o->add_reporter( std::make_unique< spot::file_reporter >(
+				o->GetOutputFolder(), o->min_improvement_for_file_output, o->max_generations_without_file_output ) );
+			o->SetOutputMode( output_mode_ );
+			push_back( std::move( o ) );
 		}
 
 		// add reporters
-		auto rep = std::make_unique< spot::file_reporter >( GetOutputFolder() );
-		rep->min_improvement_for_file_output = min_improvement_for_file_output;
-		rep->max_steps_without_file_output = max_generations_without_file_output;
-		add_reporter( std::move( rep ) );
+		add_reporter( std::make_unique< spot::file_reporter >(
+			GetOutputFolder(), min_improvement_for_file_output, max_generations_without_file_output ) );
 		add_reporter( std::make_unique< CmaPoolOptimizerReporter >() );
 
 		// reset the id, so that the ProgressDock can interpret OutputStatus() as a general message

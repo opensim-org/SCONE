@@ -90,11 +90,11 @@ namespace scone
 		bool show_optimization_time;
 		bool output_objective_result_files;
 
+		void PrepareOutputFolder();
+
 	protected:
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
-
-		void PrepareOutputFolder();
 
 		// current status
 		double m_BestFitness;
