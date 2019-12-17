@@ -21,7 +21,7 @@ namespace scone
 		Actuator();
 		virtual ~Actuator();
 
-		virtual void AddInput( double v ) { m_ActuatorControlValue += v; }
+		virtual double AddInput( double v ) { return m_ActuatorControlValue += v; }
 		virtual void ClearInput();
 		virtual double GetInput() const;
 
