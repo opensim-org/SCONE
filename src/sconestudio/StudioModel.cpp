@@ -163,6 +163,7 @@ namespace scone
 				log::info( "fitness = ", fitness );
 				PropNode results;
 				results.push_back( "result", model_objective_->GetReport( *model_ ) );
+				results.append( model_->GetSimulationReport() );
 				if ( !results[ "result" ].empty() )
 					log::info( results );
 
