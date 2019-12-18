@@ -353,10 +353,10 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 		if ( scenario_->IsEvaluating() )
 			scenario_->EvaluateTo( t );
 
-		if ( update_vis )
+		if ( update_vis && scenario_->HasModel() )
 		{
 			scenario_->UpdateVis( t );
-			auto d = com_delta( scenario_->GetSimModel().GetComPos() );
+			auto d = com_delta( scenario_->GetModel().GetComPos() );
 			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
 
@@ -641,7 +641,7 @@ void SconeStudio::performanceTest( bool profile )
 		xo::timer real_time;
 		if ( profile )
 			SCONE_PROFILE_START;
-		auto& model = scenario_->GetSimModel();
+		auto& model = scenario_->GetModel();
 		model.SetStoreData( false );
 		model.AdvanceSimulationTo( model.GetSimulationEndTime() );
 		auto real_dur = real_time().seconds();

@@ -9,14 +9,10 @@
 #pragma once
 
 #include "Objective.h"
+#include "Params.h"
 #include "scone/core/HasSignature.h"
 #include "scone/core/types.h"
-#include "Params.h"
-#include "xo/serialization/prop_node_serializer_zml.h"
-#include "xo/system/error_code.h"
-#include <iostream>
 #include "xo/system/log_sink.h"
-#include "../core/Factories.h"
 
 namespace scone
 {
@@ -94,12 +90,11 @@ namespace scone
 		bool show_optimization_time;
 		bool output_objective_result_files;
 
+		void PrepareOutputFolder();
+
 	protected:
-		const FactoryProps m_ObjectiveProps;
 		ObjectiveUP m_Objective;
 		virtual String GetClassSignature() const override;
-
-		void PrepareOutputFolder();
 
 		// current status
 		double m_BestFitness;
