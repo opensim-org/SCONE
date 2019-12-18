@@ -96,6 +96,11 @@ namespace scone
 		return m_osMus.getNormalizedFiberLength( m_Model.GetTkState() );
 	}
 
+	Real MuscleOpenSim3::GetCosPennationAngle() const
+	{
+		return m_osMus.getCosPennationAngle( m_Model.GetTkState() );
+	}
+
 	Real MuscleOpenSim3::GetFiberVelocity() const
 	{
 		return m_osMus.getFiberVelocity( m_Model.GetTkState() );
