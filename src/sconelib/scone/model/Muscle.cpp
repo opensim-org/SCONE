@@ -149,6 +149,7 @@ namespace scone
 
 		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
 		{
+			frame[ GetName() + ".cos_pennation_angle" ] = GetCosPennationAngle();
 			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
 			frame[ GetName() + ".L" ] = GetNormalizedFiberLength();
 			frame[ GetName() + ".V" ] = GetNormalizedFiberVelocity();

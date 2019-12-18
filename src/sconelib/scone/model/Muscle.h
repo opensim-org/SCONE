@@ -55,6 +55,8 @@ namespace scone
 		virtual Real GetFiberLength() const = 0;
 		virtual Real GetNormalizedFiberLength() const = 0;
 
+		virtual Real GetCosPennationAngle() const = 0;
+
 		virtual Real GetFiberVelocity() const = 0;
 		virtual Real GetNormalizedFiberVelocity() const = 0;
 
