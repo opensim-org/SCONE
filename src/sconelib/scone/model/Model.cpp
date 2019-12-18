@@ -74,6 +74,7 @@ namespace scone
 		flags.set( StoreDataTypes::SensorData, GetSconeSettings().get< bool >( "data.sensor" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSettings().get< bool >( "data.controller" ) );
 		flags.set( StoreDataTypes::ContactForce, GetSconeSettings().get< bool >( "data.contact" ) );
+		flags.set( StoreDataTypes::SimulationStatistics );
 	}
 
 	Model::~Model()
@@ -150,6 +151,14 @@ namespace scone
 		{
 			for ( size_t i = 0; i < GetState().GetSize(); ++i )
 				frame[ GetState().GetName( i ) ] = GetState().GetValue( i );
+		}
+
+		// store simulation statistics
+		if ( flags( StoreDataTypes::SimulationStatistics ) )
+		{
+			auto dt = GetTime() - GetPreviousTime();
+			auto step_count = GetIntegrationStep() - GetPreviousIntegrationStep();
+			frame[ "simulation_frequency" ] = dt > 0 ? step_count / dt : 0.0;
 		}
 
 		// store actuator data

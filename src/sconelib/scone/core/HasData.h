@@ -16,6 +16,7 @@ namespace scone
 	enum class StoreDataTypes {
 		Unknown,
 		State,
+		SimulationStatistics,
 		ActuatorInput,
 		MuscleExcitation,
 		MuscleActivation,
