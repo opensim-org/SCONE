@@ -33,12 +33,13 @@ namespace scone
 		void FinalizeEvaluation( bool output_results );
 
 		const Storage<>& GetData() { return storage_; }
-		Model& GetSimModel() { return *model_; }
+		bool HasModel() const { return bool( model_ ); }
+		Model& GetModel() { return *model_; }
 		ModelObjective& GetModelObjective() const { return *model_objective_; }
 
 		bool IsEvaluating() const { return is_evaluating_; }
-		TimeInSeconds GetTime() const { return model_->GetTime(); }
-		TimeInSeconds GetMaxTime() const { return IsEvaluating() ? GetModelObjective().GetDuration() : storage_.Back().GetTime(); }
+		TimeInSeconds GetTime() const { return model_ ? model_->GetTime() : 0.0; }
+		TimeInSeconds GetMaxTime() const;
 
 		void ApplyViewSettings( const ModelVis::ViewSettings& f );
 
@@ -53,6 +54,7 @@ namespace scone
 		// model / scenario data
 		Storage<> storage_;
 		OptimizerUP optimizer_;
+		Objective* objective_;
 		ModelObjective* model_objective_;
 		ModelUP model_;
 		path filename_;
