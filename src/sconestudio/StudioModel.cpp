@@ -167,8 +167,9 @@ namespace scone
 				if ( !results[ "result" ].empty() )
 					log::info( results );
 
+				xo::timer t;
 				auto result_files = model_->WriteResults( filename_ );
-				log::debug( "Results written to ", path( filename_ ).replace_extension( "sto" ) );
+				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
 			}
 		}
 
