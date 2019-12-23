@@ -10,35 +10,56 @@
 
 #include "xo/string/string_tools.h"
 #include "xo/filesystem/path.h"
+#include <sstream>
+#include <fstream>
+
+#ifdef XO_COMP_MSVC
+#pragma warning( disable: 4996 )
+#endif
 
 namespace scone
 {
-	
-	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::ofstream& str )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::ostream& str )
 	{
 		// write data
 		str << "time";
 		for ( const String& label : storage.GetLabels() )
 			str << "\t" << label;
-		str << std::endl;
+		str << "\n";
 
 		for ( auto& frame : storage.GetData() )
 		{
 			str << frame->GetTime();
 			for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
 				str << "\t" << ( *frame )[idx];
-			str << std::endl;
+			str << "\n";
 		}
 	}
 
-	void WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f )
+	{
+		fprintf( f, "time" );
+		for ( const String& label : storage.GetLabels() )
+			fprintf( f, "\t%s", label.c_str() );
+		fprintf( f, "\n" );
+
+		for ( auto& frame : storage.GetData() )
+		{
+			fprintf( f, "%g", frame->GetTime() );
+			for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
+				fprintf( f, "\t%g", ( *frame )[ idx ] );
+			fprintf( f, "\n" );
+		}
+	}
+
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
 		std::ofstream ofs( file.str() );
 		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
 		WriteStorageTxt( storage, ofs );
 	}
 
-	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ofstream& str, const String& name )
+	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& name )
 	{
 		// write header
 		str << name << std::endl;
@@ -52,21 +73,37 @@ namespace scone
 		WriteStorageTxt( storage, str );
 	}
 
-	void WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name )
+	void SCONE_API WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& name )
 	{
-		std::ofstream str( file.str() );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
-		WriteStorageSto( storage, str, name );
+		fprintf( f, "%s\nversion=1\nnRows=%zd\nnColumns=%zd\ninDegrees=no\nendheader\n", 
+			name.c_str(), storage.GetFrameCount(), storage.GetChannelCount() + 1 );
+		WriteStorageTxt( storage, f );
 	}
 
-	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
+	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& name )
+	{
+#ifdef XO_COMP_MSVC
+		FILE* f = fopen( file.c_str(), "w" );
+		SCONE_ASSERT_MSG( f, "Error opening file " + file.str() );
+		WriteStorageSto( storage, f, name );
+		fclose( f );
+#else
+		std::ofstream ofs( file.str() );
+		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
+		WriteStorageSto( storage, ofs, name );
+#endif
+
+
+	}
+
+	void ReadStorageSto( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		ReadStorageSto( storage, str );
 	}
 
-	void ReadStorageSto( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str )
+	void ReadStorageSto( Storage<Real, TimeInSeconds>& storage, xo::char_stream& str )
 	{
 		// skip the header since we don't need it
 		String s;
@@ -77,14 +114,14 @@ namespace scone
 			ReadStorageTxt( storage, str ); // read as txt once we have found the header
 	}
 
-	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const xo::path& file )
+	void ReadStorageTxt( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
 		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
 		ReadStorageTxt( storage, str );
 	}
 
-	void ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str )
+	void ReadStorageTxt( Storage<Real, TimeInSeconds>& storage, xo::char_stream& str )
 	{
 		storage.Clear();
 

@@ -10,16 +10,19 @@
 
 #include "platform.h"
 #include "Storage.h"
-#include <fstream>
 #include "xo/serialization/char_stream.h"
+#include <iosfwd>
+#include <cstdio>
 
 namespace scone
 {
-	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::ofstream& str );
+	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::ostream& str );
+	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::FILE* f );
 	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file );
 
 	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name );
-	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ofstream& str, const String& name );
+	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::FILE*, const String& name );
+	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ostream& str, const String& name );
 
 	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const xo::path& file );
 	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str );
