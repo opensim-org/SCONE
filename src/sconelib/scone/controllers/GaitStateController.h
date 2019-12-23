@@ -50,7 +50,7 @@ namespace scone
 		/// Threshold load [bw] for detecting stance phase; default = 0.
 		Real stance_load_threshold;
 
-		/// Threshold load [bw] for detecting stance phase; default = stance_load_threshold.
+		/// Threshold load [bw] for detecting swing phase; default = stance_load_threshold.
 		Real swing_load_threshold;
 
 		/// Bool indicating if control parameters should be the same for left and right; default = true.

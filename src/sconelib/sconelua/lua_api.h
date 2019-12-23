@@ -188,7 +188,7 @@ namespace scone
 
 		/// get the current simulation time [s]
 		LuaNumber time() { return mod_.GetTime(); }
-		/// get the current simulation time [s]
+		/// get the previous simulation delta time [s]
 		LuaNumber delta_time() { return mod_.GetDeltaTime(); }
 		/// get the current com position [m]
 		LuaVec3 com_pos() { return mod_.GetComPos(); }
