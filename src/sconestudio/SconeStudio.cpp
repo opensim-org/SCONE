@@ -391,10 +391,7 @@ void SconeStudio::openFile( const QString& filename )
 		updateRecentFilesMenu( filename );
 		createAndVerifyActiveScenario( false );
 	}
-	catch ( std::exception & e )
-	{
-		error( "Error opening " + filename, e.what() );
-	}
+	catch ( std::exception & e ) { error( "Error opening " + filename, e.what() ); }
 }
 
 void SconeStudio::fileSaveTriggered()
@@ -409,17 +406,21 @@ void SconeStudio::fileSaveTriggered()
 
 void SconeStudio::fileSaveAsTriggered()
 {
-	if ( auto* s = getActiveCodeEditor() )
+	try
 	{
-		QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml);;Lua script (*.lua)" );
-		if ( !filename.isEmpty() )
+		if ( auto* s = getActiveCodeEditor() )
 		{
-			s->saveAs( filename );
-			ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
-			updateRecentFilesMenu( s->fileName );
-			createAndVerifyActiveScenario( true );
+			QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml);;Lua script (*.lua)" );
+			if ( !filename.isEmpty() )
+			{
+				s->saveAs( filename );
+				ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+				updateRecentFilesMenu( s->fileName );
+				createAndVerifyActiveScenario( true );
+			}
 		}
 	}
+	catch ( std::exception& e ) { error( "Error saving file", e.what() ); }
 }
 
 void SconeStudio::fileCloseTriggered()
@@ -607,7 +608,7 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 	}
 	else
 	{
-		QMessageBox::information( this, "No Scenario Selected", "Please select a .scone file" );
+		information( "No Scenario Selected", "Please select a .scone file" );
 		return false;
 	}
 }
