@@ -21,9 +21,13 @@
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "xo/system/error_code.h"
+#include <mutex>
+#include <sstream>
 
 namespace scone
 {
+	std::mutex g_status_output_mutex;
+
 	Optimizer::Optimizer( const PropNode& props, const PropNode& scenario_pn, const path& scenario_dir ) :
 		HasSignature( props ),
 		max_threads( 1 ),
@@ -83,7 +87,13 @@ namespace scone
 	void Optimizer::OutputStatus( const PropNode& pn ) const
 	{
 		xo::error_code ec;
-		std::cout << "*" << xo::prop_node_serializer_zml_concise( pn, &ec ) << std::endl;
+		std::ostringstream str;
+		str << xo::prop_node_serializer_zml_concise( pn, &ec );
+		auto message = "*" + str.str();
+
+		g_status_output_mutex.lock();
+		std::cout << message << std::endl;
+		g_status_output_mutex.unlock();
 	}
 
 	scone::String Optimizer::GetClassSignature() const
