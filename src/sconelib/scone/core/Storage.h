@@ -11,6 +11,7 @@
 #include "platform.h"
 #include "types.h"
 #include "Exception.h"
+#include "Vec3.h"
 
 #include <memory>
 #include <map>
@@ -54,7 +55,13 @@ namespace scone
 				return m_Values[ idx ];
 			}
 
-			const std::vector< ValueT > GetValues() { return m_Values; }
+			const std::vector< ValueT > GetValues() const { return m_Values; }
+
+			void SetVec3( const String& label, const Vec3& vec ) {
+				(*this)[ label + "_x" ] = vec.x;
+				(*this)[ label + "_y" ] = vec.y;
+				(*this)[ label + "_z" ] = vec.z;
+			}
 
 		private:
 			Storage< ValueT, TimeT >& m_Store;
