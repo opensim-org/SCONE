@@ -28,7 +28,7 @@ namespace scone
 		INIT_PROP( pn, dim_, 10 );
 
 		for ( index_t i = 0; i < dim_; ++i )
-			info_.add( ParInfo( stringf( "P%d", i ), 0, 100, -500, 500 ) );
+			info_.add( ParInfo( stringf( "P%d", i ), 0, 200, -500, 500 ) );
 	}
 
 	fitness_t TestObjective::evaluate( const SearchPoint& point ) const
