@@ -39,7 +39,7 @@ namespace scone
 		scenario_pn_copy_( scenario_pn )
 	{
 		INIT_PROP( props, output_root, GetFolder( SCONE_RESULTS_FOLDER ) );
-		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level", xo::log::info_level ) );
+		log_level_ = static_cast<xo::log::level>( props.get<int>( "log_level", (int)xo::log::level::info ) );
 
 		INIT_PROP( props, max_threads, size_t( 32 ) );
 		INIT_PROP( props, thread_priority, (int)xo::thread_priority::lowest );
@@ -113,7 +113,7 @@ namespace scone
 		id_ = output_folder_.filename().str();
 
 		// create log sink if enabled
-		if ( log_level_ < xo::log::never_log_level )
+		if ( log_level_ < xo::log::level::never )
 			log_sink_ = std::make_unique< xo::log::file_sink >( log_level_, GetOutputFolder() / "optimization.log" );
 
 		// prepare output folder, and initialize

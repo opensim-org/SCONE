@@ -39,7 +39,7 @@ namespace scone
 			props_.back().set( "random_seed", random_seed_ + i ); // new seed
 			props_.back().set( "type", "CmaOptimizer" ); // change type
 			props_.back().set( "output_root", GetOutputFolder() ); // make sure output is written to subdirectory
-			props_.back().set( "log_level", xo::log::never_log_level ); // children don't log?
+			props_.back().set( "log_level", (int)xo::log::level::never ); // children don't log?
 
 			// create optimizer
 			auto o = std::make_unique< CmaOptimizerSpot >( props_.back(), scenario_pn_copy_, m_Objective->GetExternalResourceDir() );

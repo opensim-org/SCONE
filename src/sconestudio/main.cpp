@@ -38,10 +38,10 @@ int main( int argc, char *argv[] )
 	{
 		// init logging
 #ifdef _DEBUG
-		xo::log::console_sink console_log_sink( xo::log::trace_level );
+		xo::log::console_sink console_log_sink( xo::log::level::trace );
 #endif
 		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
-		xo::log::file_sink file_sink( xo::log::debug_level, log_file );
+		xo::log::file_sink file_sink( xo::log::level::debug, log_file );
 		SCONE_THROW_IF( !file_sink.file_stream().good(), "Could not create file " + log_file.str() );
 		xo::log::debug( "Created log file: ", log_file );
 
