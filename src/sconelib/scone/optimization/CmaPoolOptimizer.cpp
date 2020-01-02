@@ -20,7 +20,7 @@ namespace scone
 		INIT_PROP( pn, prediction_window_, 300 );
 		INIT_PROP( pn, prediction_start_, 100 );
 		INIT_PROP( pn, prediction_look_ahead_, 1000 );
-		INIT_PROP( pn, optimizations_, 12 );
+		INIT_PROP( pn, optimizations_, 6 );
 		INIT_PROP( pn, active_optimizations_, 6 );
 		INIT_PROP( pn, concurrent_optimizations_, 2 );
 		INIT_PROP( pn, random_seed_, 1 );
