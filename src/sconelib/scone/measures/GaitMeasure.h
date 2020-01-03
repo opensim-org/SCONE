@@ -14,19 +14,24 @@
 
 namespace scone
 {
-	/// Measure for efficient locomotion at a predefined speed.
+	/// Measure for locomotion at a predefined speed, defined by the parameters ''min_velocity'' and (optionally) ''max_velocity''.
+	/** The measure returns a value between ''0'' (velocity conditions are met) and ''1'' (model falls over immediately).
+	In order to save simulation time and increasing optimization performance, the ''termination_height'' parameter is used to detect if the model has fallen,
+	after which the simulation is terminated early (assuming it will not recover). It does so by comparing the center of mass (COM) height
+	to the initial state, and terminates when ''(COM-height / initial-COM-height) < termination_height''. See Tutorials 4 and 5 for examples.
+	*/
 	class GaitMeasure : public Measure
 	{
 	public:
 		GaitMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		/// Relative COM height (wrt initial position) at which to stop the simulation; default = 0.5.
+		/// Relative COM height at which to terminate the simulation, as a factor of the initial COM height; default = 0.5
 		Real termination_height;
 
 		/// Minimum velocity [m/s]; default = 0 m/s.
 		Real min_velocity;
 
-		/// Maximum velocity [m/s]; default = 299792458 m/s.
+		/// Optional maximum velocity [m/s]; default = 299792458 m/s.
 		Real max_velocity;
 
 		/// Load threshold for step detection; default = 0.1.
