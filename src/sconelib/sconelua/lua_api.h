@@ -169,6 +169,10 @@ namespace scone
 
 		/// get the name of the body
 		LuaString name() { return bod_.GetName().c_str(); }
+		/// get the mass of the body [kg]
+		LuaNumber mass() { return bod_.GetMass(); }
+		/// get the diagonal of the inertia tensor of the body
+		LuaVec3 inertia_diagonal() { return bod_.GetInertiaTensorDiagonal(); }
 		/// get the current com position [m]
 		LuaVec3 com_pos() { return bod_.GetComPos(); }
 		/// get the current com velocity [m/s]
@@ -193,7 +197,6 @@ namespace scone
 		void add_external_force( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalForce( Vec3d( x, y, z ) ); }
 		/// add external moment [Nm] to body
 		void add_external_moment( LuaNumber x, LuaNumber y, LuaNumber z ) { bod_.AddExternalMoment( Vec3d( x, y, z ) ); }
-
 
 		Body& bod_;
 	};

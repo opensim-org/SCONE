@@ -38,6 +38,8 @@ namespace scone
 
 		lua.new_usertype<LuaBody>( "LuaBody", sol::constructors<>(),
 			"name", &LuaBody::name,
+			"mass", &LuaBody::mass,
+			"inertia_diagonal", &LuaBody::inertia_diagonal, 
 			"com_pos", &LuaBody::com_pos,
 			"com_vel", &LuaBody::com_vel,
 			"point_pos", &LuaBody::point_pos,
