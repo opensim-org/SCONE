@@ -1,5 +1,26 @@
 ====== SCONE Version History ======
 
+==== SCONE 1.3.3 ====
+//Released January 7, 2020//
+
+=== New Features and Updates ===
+
+  * Updates to ScriptController and ScriptMeasure:
+    * LuaBody now has support for mass(), inertia_diagonal(), closes #176
+    * LuaDofs can now be used as actuators, through is_actuated(), add_input(), input(), min_input(), max_input(), min_torque(), max_torque(). See online documentation for details. closes #177
+    * Added Lua string library to ScriptController and ScriptMeasure, closes #95
+    * ScriptController init function now has 'side' parameter, which denotes if the controller is for a specific side (-1 = left, 0 = any, 1 = right). closes #96 
+    * Documentation updates
+  * Added support for concurrent_optimizations in CmaPoolOptimizer
+  * New output channels for muscles: mtu_length, mtu_velocity
+  * Improved performance of writing .sto output
+  * Added simulation statistics in output
+
+=== Fixes ===
+  * StudioModel no longer crashes when objective is no ModelObjective
+  * Fixed crash when trying to save as an unknown file format
+  * Improved error message when an invalid state is entered in GaitStateController. closes #179
+
 ==== SCONE 1.3.2 ====
 //Released December 10, 2019//
 
