@@ -37,6 +37,18 @@ namespace scone
 	BodyOpenSim3::~BodyOpenSim3()
 	{}
 
+	Real BodyOpenSim3::GetMass() const
+	{
+		return m_osBody.getMass();
+	}
+
+	Vec3 BodyOpenSim3::GetInertiaTensorDiagonal() const
+	{
+		SimTK::Mat33 inertia;
+		m_osBody.getInertia( inertia );
+		return Vec3( inertia( 0, 0 ), inertia( 1, 1 ), inertia( 2, 2 ) );
+	}
+
 	const String& BodyOpenSim3::GetName() const
 	{
 		return m_osBody.getName();

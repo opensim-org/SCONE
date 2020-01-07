@@ -26,6 +26,9 @@ namespace scone
 		Body();
 		virtual ~Body();
 
+		virtual Real GetMass() const = 0;
+		virtual Vec3 GetInertiaTensorDiagonal() const = 0;
+
 		virtual Vec3 GetOriginPos() const = 0;
 		virtual Vec3 GetComPos() const = 0;
 		virtual Vec3 GetLocalComPos() const = 0;

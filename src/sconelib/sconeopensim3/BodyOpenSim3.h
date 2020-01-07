@@ -24,6 +24,9 @@ namespace scone
 		BodyOpenSim3( class ModelOpenSim3& model, OpenSim::Body& body );
 		virtual ~BodyOpenSim3();
 
+		virtual Real GetMass() const override;
+		virtual Vec3 GetInertiaTensorDiagonal() const override;
+
 		virtual Vec3 GetOriginPos() const override;
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetLocalComPos() const override;
