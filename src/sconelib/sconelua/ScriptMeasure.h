@@ -10,7 +10,7 @@ namespace scone
 {
 	/// Measure defined through a Lua script.
 	/** Runs the script defined in the file defined by ''script_file'', which is relative to the folder of the scone scenario.
-	See also LuaModel, LuaBody, LuaJoint, LuaDof, LuaActuator, LuaMuscle, LuaFrame. Example of a Lua measure script:
+	See also LuaModel, LuaBody, LuaDof, LuaActuator, LuaMuscle, LuaFrame. Example of a Lua measure script:
 	\verbatim
 	function init( model )
 		-- This function is called at the start of the simulation

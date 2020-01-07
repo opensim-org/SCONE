@@ -8,7 +8,7 @@ namespace scone
 {
 	/// Controller defined through a Lua script.
 	/** Runs the script defined in the file defined by ''script_file'', which is relative to the folder of the scone scenario.
-	See also LuaModel, LuaBody, LuaJoint, LuaDof, LuaActuator, LuaMuscle, LuaFrame. Example of a Lua controller script:
+	See also LuaModel, LuaBody, LuaDof, LuaActuator, LuaMuscle, LuaFrame. Example of a Lua controller script:
 	\verbatim
 	function init( model, par, side )
 		-- This function is called at the start of the simulation
