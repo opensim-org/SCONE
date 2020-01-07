@@ -18,13 +18,22 @@ namespace scone
 		lua.new_usertype<LuaActuator>( "LuaActuator", sol::constructors<>(),
 			"name", &LuaActuator::name,
 			"add_input", &LuaActuator::add_input,
-			"input", &LuaActuator::input
+			"input", &LuaActuator::input,
+			"min_input", &LuaActuator::min_input,
+			"max_input", &LuaActuator::max_input
 			);
 
 		lua.new_usertype<LuaDof>( "LuaDof", sol::constructors<>(),
 			"name", &LuaDof::name,
 			"position", &LuaDof::position,
-			"velocity", &LuaDof::velocity
+			"velocity", &LuaDof::velocity,
+			"is_actuated", &LuaDof::is_actuated,
+			"add_input", &LuaDof::add_input,
+			"input", &LuaDof::input,
+			"min_input", &LuaDof::min_input,
+			"max_input", &LuaDof::max_input,
+			"min_torque", &LuaDof::min_torque,
+			"max_torque", &LuaDof::max_torque
 			);
 
 		lua.new_usertype<LuaBody>( "LuaBody", sol::constructors<>(),

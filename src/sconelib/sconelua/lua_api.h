@@ -85,8 +85,12 @@ namespace scone
 		LuaString name() { return act_.GetName().c_str(); }
 		/// add a value to the normalized actuator input
 		void add_input( LuaNumber value ) { act_.AddInput( value ); }
-		/// get the current actuator input [0..1]
+		/// get the current actuator input
 		LuaNumber input() { return act_.GetInput(); }
+		/// get minimum allowed value for actuator input
+		LuaNumber min_input() { return act_.GetMinInput(); }
+		/// get maximum allowed value for actuator input
+		LuaNumber max_input() { return act_.GetMaxInput(); }
 
 		Actuator& act_;
 	};
@@ -103,6 +107,20 @@ namespace scone
 		LuaNumber position() { return dof_.GetPos(); }
 		/// get the current velocity of the dof in [m/s] or [rad/s]
 		LuaNumber velocity() { return dof_.GetVel(); }
+		/// check if this dof is actuated
+		bool is_actuated() { return dof_.IsActuated(); }
+		/// add a value to the actuator input (only for actuated dofs)
+		void add_input( LuaNumber value ) { dof_.AddInput( value ); }
+		/// get the current actuator input (only for actuated dofs)
+		LuaNumber input() { return dof_.GetInput(); }
+		/// get minimum allowed value for actuator input
+		LuaNumber min_input() { return dof_.GetMinInput(); }
+		/// get maximum allowed value for actuator input
+		LuaNumber max_input() { return dof_.GetMaxInput(); }
+		/// get lowest (possibly negative) possible actuator torque [Nm] for this dof
+		LuaNumber min_torque() { return dof_.GetMinTorque(); }
+		/// get highest possible actuator torque [Nm] for this dof
+		LuaNumber max_torque() { return dof_.GetMaxTorque(); }
 
 		Dof& dof_;
 	};
