@@ -24,15 +24,12 @@ namespace scone
 		virtual double AddInput( double v ) { return m_ActuatorControlValue += v; }
 		virtual void ClearInput();
 		virtual double GetInput() const;
+		virtual Real GetMinInput() const = 0;
+		virtual Real GetMaxInput() const = 0;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
-		virtual void SetActuatorDelay( TimeInSeconds d, TimeInSeconds control_step_size );
-		virtual TimeInSeconds GetDelay( TimeInSeconds control_step_size );
-
 	protected:
 		double m_ActuatorControlValue;
-		size_t m_DelaySamples;
-		xo::circular_deque< double > m_DelayBuffer;
 	};
 }

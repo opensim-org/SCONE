@@ -27,6 +27,9 @@ namespace scone
 		Muscle();
 		virtual ~Muscle();
 
+		virtual Real GetMinInput() const override { return 0.0; }
+		virtual Real GetMaxInput() const override { return 1.0; }
+
 		virtual const Body& GetOriginBody() const = 0;
 		virtual const Body& GetInsertionBody() const = 0;
 		virtual const Model& GetModel() const = 0;

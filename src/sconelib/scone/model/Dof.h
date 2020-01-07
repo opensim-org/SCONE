@@ -23,6 +23,14 @@ namespace scone
 		Dof( const Joint* j );
 		virtual ~Dof();
 
+		virtual Real GetMinInput() const override { return -1.0; }
+		virtual Real GetMaxInput() const override { return 1.0; }
+
+		virtual Real GetMinTorque() const { return 0.0; }
+		virtual Real GetMaxTorque() const { return 0.0; }
+
+		virtual bool IsActuated() const { return false; }
+
 		virtual Real GetPos() const = 0;
 		virtual Real GetVel() const = 0;
 

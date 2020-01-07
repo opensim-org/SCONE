@@ -16,10 +16,11 @@
 namespace scone
 {
 	DofOpenSim3::DofOpenSim3( ModelOpenSim3& model, OpenSim::Coordinate& coord ) :
-	Dof( FindByName( model.GetJoints(), coord.getJoint().getName() ).get() ),
-	m_Model( model ),
-	m_osCoord( coord ),
-	m_pOsLimitForce( nullptr )
+		Dof( FindByName( model.GetJoints(), coord.getJoint().getName() ).get() ),
+		m_Model( model ),
+		m_osCoord( coord ),
+		m_pOsLimitForce( nullptr ),
+		m_OsCoordAct( nullptr )
 	{
 		// find corresponding CoordinateLimitForce
 		auto& forceSet = model.GetOsimModel().getForceSet();
@@ -30,7 +31,6 @@ namespace scone
 			if ( clf && clf->getProperty_coordinate().getValue() == coord.getName() )
 			{
 				// we have found a match!
-				//log::Trace( "Found limit force " + clf->getName() + " for coord " + coord.getName() );
 				m_pOsLimitForce = clf;
 				break;
 			}
@@ -86,5 +86,25 @@ namespace scone
 	Range< Real > DofOpenSim3::GetRange() const
 	{
 		return Range< Real >( m_osCoord.get_range( 0 ), m_osCoord.get_range( 1 ) );
+	}
+
+	Real DofOpenSim3::GetMinInput() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMinControl() : 0.0;
+	}
+
+	Real DofOpenSim3::GetMaxInput() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMaxControl() : 0.0;
+	}
+
+	Real DofOpenSim3::GetMinTorque() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMinControl() * m_OsCoordAct->getOptimalForce() : 0.0;
+	}
+
+	Real DofOpenSim3::GetMaxTorque() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMaxControl() * m_OsCoordAct->getOptimalForce() : 0.0;
 	}
 }
