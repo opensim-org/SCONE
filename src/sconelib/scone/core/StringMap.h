@@ -48,14 +48,14 @@ namespace scone
 
 		const String& GetString( T e ) const {
 			auto iter = m_Map.find( e );
-			SCONE_THROW_IF( iter == m_Map.end(), "Could not find value " + to_str( e ) );
+			SCONE_ERROR_IF( iter == m_Map.end(), "Invalid value: " + to_str( e ) );
 			return iter->second;
 		}
 
 		T GetValue( const String& s ) const
 		{
 			auto iter = std::find_if( m_Map.begin(), m_Map.end(), [&]( const typename MapType::value_type& v) { return v.second == s; } );
-			SCONE_THROW_IF( iter == m_Map.end(), "Could not find " + s );
+			SCONE_ERROR_IF( iter == m_Map.end(), "Invalid string: " + s );
 			return iter->first;
 		}
 

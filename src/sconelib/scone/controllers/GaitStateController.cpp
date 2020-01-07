@@ -81,7 +81,7 @@ namespace scone
 			// get state masks
 			String state_masks = ccIt->second.get< String >( "states" );
 			auto state_tokens = xo::split_str( state_masks, ";," );
-			for ( const String& instance_states : state_tokens )
+			for ( const String& instance_states_str : state_tokens )
 			{
 				// automatically create controllers for all legs (sides)
 				for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
@@ -90,9 +90,10 @@ namespace scone
 					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController() ) );
 					ConditionalController& cc = *m_ConditionalControllers.back();
 
-					// initialize state_mask based on names in instance_states (#todo: use tokenizer?)
-					for ( int i = 0; i < StateCount; ++i )
-						cc.state_mask.set( i, instance_states.find( m_StateNames.GetString( GaitState( i ) ) ) != String::npos );
+					// initialize state_mask based on names in instance_states_str
+					auto instance_states = xo::split_str( instance_states_str, " " );
+					for ( const auto& state : instance_states )
+						cc.state_mask.set( m_StateNames.GetValue( state ) );
 					SCONE_THROW_IF( !cc.state_mask.any(), "Conditional Controller has empty state mask" );
 
 					// initialize leg index
