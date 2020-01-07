@@ -9,16 +9,32 @@
 namespace scone
 {
 	/// Measure defined through a Lua script.
-	/** Example:
+	/** Runs the script defined in the file defined by ''script_file'', which is relative to the folder of the scone scenario.
+	See also LuaModel, LuaBody, LuaJoint, LuaDof, LuaActuator, LuaMuscle, LuaFrame. Example of a Lua measure script:
 	\verbatim
-	# Measure based on lua script
-	ScriptMeasure {
-		minimize = 0 # let the optimizer know we want to maximize this measure
-		target_body = "toes_r" # this parameter will be used in the script
-		script_file = "data/ScriptMeasureJump.lua"
-	}
+	function init( model )
+		-- This function is called at the start of the simulation
+		-- 'model' can be used to initialize the measure parameters (see LuaModel)
+	end
+
+	function update( model )
+		-- This function is called at each simulation timestep
+		-- Use it to update the internal variables of the measure (if needed)
+		return false -- change to 'return true' to terminate the simulation early
+	end
+
+	function result( model )
+		-- This function is called at the end of the simulation
+		-- It should return the result of the measure
+		return 0.0
+	end
+
+	function store_data( current_frame )
+		-- This function is called at each simulation timestep
+		-- 'current_frame' can be used to store values for analysis (see LuaFrame)
+	end
 	\endverbatim
-	See Tutorial 6a and 6b for more examples.
+	See Tutorial 6a and 6b for more information.
 	*/
 	class SCONE_LUA_API ScriptMeasure : public Measure
 	{
