@@ -96,7 +96,7 @@ namespace scone
 		g_status_output_mutex.unlock();
 	}
 
-	scone::String Optimizer::GetClassSignature() const
+	String Optimizer::GetClassSignature() const
 	{
 		String s = GetObjective().GetSignature();
 		if ( use_init_file && !init_file.empty() )
