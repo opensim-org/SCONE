@@ -60,6 +60,7 @@ namespace scone
 		}
 		else if ( !delay_file.empty() )
 		{
+			delay_file = FindFile( delay_file );
 			neural_delays = xo::load_file( FindFile( delay_file ), "zml" );
 			model.AddExternalResource( delay_file );
 		}
