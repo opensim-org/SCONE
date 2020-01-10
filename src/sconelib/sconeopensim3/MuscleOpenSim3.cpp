@@ -125,7 +125,7 @@ namespace scone
 
 	Real MuscleOpenSim3::GetMomentArm( const Dof& dof ) const
 	{
-			auto iter = m_MomentArmCache.find( &dof );
+		auto iter = m_MomentArmCache.find( &dof );
 		if ( iter == m_MomentArmCache.end() )
 		{
 			const DofOpenSim3& dof_sb = dynamic_cast<const DofOpenSim3&>( dof );
