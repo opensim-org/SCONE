@@ -36,6 +36,13 @@ namespace scone
 		return m_Dofs;
 	}
 
+	void Joint::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		// store joint reaction force magnitude
+		if ( flags( StoreDataTypes::JointReactionForce ) )
+			frame[ GetName() + ".load" ] = GetLoad();
+	}
+
 	Joint::~Joint()
 	{}
 }

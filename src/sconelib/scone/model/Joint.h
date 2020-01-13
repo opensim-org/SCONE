@@ -9,6 +9,7 @@
 #pragma once
 
 #include "scone/core/HasName.h"
+#include "scone/core/HasData.h"
 #include "scone/core/Vec3.h"
 
 namespace scone
@@ -17,7 +18,7 @@ namespace scone
 	class Body;
 	class Joint;
 
-	class SCONE_API Joint : public HasName
+	class SCONE_API Joint : public HasName, HasData
 	{
 	public:
 		Joint( Body& body, Body& parent_body );
@@ -31,6 +32,7 @@ namespace scone
 		const Body& GetParentBody() const { return m_ParentBody; }
 
 		const std::vector< Dof* >& GetDofs() const;
+		void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		Body& m_Body;
