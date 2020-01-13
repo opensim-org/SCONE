@@ -130,8 +130,6 @@ namespace scone
 		virtual const ContactGeometry* GetGroundPlane() const;
 
 		// custom model properties
-		const PropNode* GetCustomProps() { return m_pCustomProps; }
-		const PropNode* GetModelProps() { return m_pModelProps; }
 		PropNode& GetUserData() { return m_UserData; }
 
 		// acquire a sensor of type SensorT with a source of type SourceT

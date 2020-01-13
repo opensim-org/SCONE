@@ -37,8 +37,6 @@ namespace scone
 		m_Measure( nullptr ),
 		m_Controller( nullptr ),
 		m_ShouldTerminate( false ),
-		m_pModelProps( props.try_get_child( "ModelProperties" ) ),
-		m_pCustomProps( props.try_get_child( "CustomProperties" ) ),
 		m_StoreData( false ),
 		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } )
 	{
@@ -169,12 +167,9 @@ namespace scone
 		for ( auto& b : GetBodies() )
 			b->StoreData( frame, flags );
 
-		// store joint reaction force magnitude
-		if ( flags( StoreDataTypes::JointReactionForce ) )
-		{
-			for ( auto& joint : GetJoints() )
-				frame[ joint->GetName() + ".load" ] = joint->GetLoad();
-		}
+		// store joint data
+		for ( auto& j : GetJoints() )
+			j->StoreData( frame, flags );
 
 		// store dof data
 		if ( flags( StoreDataTypes::DofMoment ) )
