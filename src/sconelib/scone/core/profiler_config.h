@@ -16,7 +16,7 @@
 #	define SCONE_PROFILE_FUNCTION xo::scope_profiler unique_scoped_profile( __FUNCTION__, xo::profiler::instance() )
 #	define SCONE_PROFILE_SCOPE( scope_name_arg ) xo::scope_profiler unique_scoped_profile( scope_name_arg, xo::profiler::instance() )
 #	define SCONE_PROFILE_START xo::profiler::instance().start()
-#	define SCONE_PROFILE_REPORT log::info( xo::profiler::instance().report() )
+#	define SCONE_PROFILE_REPORT xo::profiler::instance().log_results()
 #else 
 #	define SCONE_PROFILE_FUNCTION
 #	define SCONE_PROFILE_SCOPE( scope_name_arg )
