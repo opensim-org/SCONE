@@ -11,6 +11,7 @@
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
 #include "scone/core/Storage.h"
+#include "scone/core/PropNode.h"
 #include "xo/container/circular_deque.h"
 
 namespace scone
@@ -28,6 +29,7 @@ namespace scone
 		virtual Real GetMaxInput() const = 0;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
+		virtual PropNode GetInfo() const;
 
 	protected:
 		double m_ActuatorControlValue;

@@ -10,6 +10,7 @@
 
 #include "scone/core/HasName.h"
 #include "scone/core/HasData.h"
+#include "scone/core/PropNode.h"
 #include "scone/core/Vec3.h"
 
 namespace scone
@@ -33,6 +34,7 @@ namespace scone
 
 		const std::vector< Dof* >& GetDofs() const;
 		void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+		virtual PropNode GetInfo() const;
 
 	protected:
 		Body& m_Body;

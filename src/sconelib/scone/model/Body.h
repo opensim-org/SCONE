@@ -14,6 +14,7 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/HasData.h"
 #include "DisplayGeometry.h"
+#include "scone/core/PropNode.h"
 
 namespace scone
 {
@@ -70,6 +71,7 @@ namespace scone
 		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const { return std::vector< DisplayGeometry >(); }
 
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+		virtual PropNode GetInfo() const;
 
 	protected:
 		friend Joint;

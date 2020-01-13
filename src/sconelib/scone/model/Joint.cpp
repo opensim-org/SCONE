@@ -43,6 +43,14 @@ namespace scone
 			frame[ GetName() + ".load" ] = GetLoad();
 	}
 
+	PropNode Joint::GetInfo() const
+	{
+		PropNode pn;
+		for ( auto& d : GetDofs() )
+			pn[ d->GetName() ] = d->GetInfo();
+		return pn;
+	}
+
 	Joint::~Joint()
 	{}
 }

@@ -78,6 +78,7 @@ public slots:
 	void updateOptimizations();
 	void createVideo();
 	void captureImage();
+	void showModelInfo();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }

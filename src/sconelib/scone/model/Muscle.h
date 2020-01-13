@@ -83,6 +83,7 @@ namespace scone
 		virtual bool HasSharedBodies( const Muscle& other ) const;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
+		virtual PropNode GetInfo() const;
 
 	private:
 		mutable std::vector< const Joint* > m_Joints;

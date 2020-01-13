@@ -158,4 +158,13 @@ namespace scone
 			frame[ GetName() + ".S" ] = GetNormalizedSpindleRate();
 		}
 	}
+
+	PropNode Muscle::GetInfo() const
+	{
+		PropNode pn;
+		pn[ "max_isometric_force" ] = GetMaxIsometricForce();
+		pn[ "optimal_fiber_length" ] = GetOptimalFiberLength();
+		pn[ "tendon_slack_length" ] = GetTendonSlackLength();
+		return pn;
+	}
 }

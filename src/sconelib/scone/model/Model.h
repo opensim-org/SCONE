@@ -131,6 +131,7 @@ namespace scone
 
 		// custom model properties
 		PropNode& GetUserData() { return m_UserData; }
+		virtual PropNode GetInfo() const;
 
 		// acquire a sensor of type SensorT with a source of type SourceT
 		template< typename SensorT, typename... Args > SensorT& AcquireSensor( Args&&... args ) {

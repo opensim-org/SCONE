@@ -33,4 +33,9 @@ namespace scone
 		if ( flags( StoreDataTypes::ActuatorInput ) )
 			frame[ GetName() + ".input" ] = GetInput();
 	}
+
+	PropNode Actuator::GetInfo() const
+	{
+		return PropNode();
+	}
 }

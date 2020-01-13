@@ -36,6 +36,7 @@
 #include <QTabWidget>
 #include "qcustomplot.h"
 #include "qt_convert.h"
+#include "xo/container/prop_node_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -91,6 +92,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
+	addMenuAction( toolsMenu, "Print &Model Info...", this, &SconeStudio::showModelInfo );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -340,6 +342,12 @@ void SconeStudio::captureImage()
 	QString filename = QFileDialog::getSaveFileName( this, "Image Filename", QString(), "png files (*.png)" );
 	if ( !filename.isEmpty() )
 		ui.osgViewer->captureCurrentFrame( filename.toStdString() );
+}
+
+void SconeStudio::showModelInfo()
+{
+	if ( scenario_ && scenario_->HasModel() )
+		xo::log_prop_node( scenario_->GetModel().GetInfo() );
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

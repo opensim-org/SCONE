@@ -354,6 +354,22 @@ namespace scone
 		else return nullptr;
 	}
 
+	PropNode Model::GetInfo() const
+	{
+		PropNode pn;
+
+		for ( const auto& item : GetBodies() )
+			pn[ "Bodies" ].push_back( item->GetName(), item->GetInfo() ); 
+
+		for ( const auto& item : GetJoints() )
+			pn[ "Joints" ].push_back( item->GetName(), item->GetInfo() );
+
+		for ( const auto& item : GetActuators() )
+			pn[ "Actuators" ].push_back( item->GetName(), item->GetInfo() );
+
+		return pn;
+	}
+
 	void Model::AddExternalDisplayGeometries( const path& model_path )
 	{
 		for ( const auto& b : GetBodies() )

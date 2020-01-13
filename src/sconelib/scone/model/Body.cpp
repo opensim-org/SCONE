@@ -56,4 +56,12 @@ namespace scone
 			frame[ name + ".ang_vel_z" ] = ang_vel.z;
 		}
 	}
+
+	PropNode Body::GetInfo() const
+	{
+		PropNode pn;
+		pn[ "mass" ] = GetMass();
+		pn[ "inertia" ] = GetInertiaTensorDiagonal();
+		return pn;
+	}
 }
