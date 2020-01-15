@@ -24,7 +24,7 @@ namespace scone
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
 
 		// explicit conversion constructor
-		template< typename U > explicit Range( Range<U>& o ) : min( T( o.min ) ), max( T( o.max) ) {}
+		template< typename U > explicit Range( const Range<U>& o ) : min( T( o.min ) ), max( T( o.max) ) {}
 
 		// test if a value is inside the range
 		bool Test( const T& value ) { return ( value >= min ) && ( value <= max ); }
