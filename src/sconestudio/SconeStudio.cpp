@@ -37,6 +37,7 @@
 #include "qcustomplot.h"
 #include "qt_convert.h"
 #include "xo/container/prop_node_tools.h"
+#include "scone/model/muscle_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -92,7 +93,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
-	addMenuAction( toolsMenu, "Print &Model Info...", this, &SconeStudio::showModelInfo );
+	toolsMenu->addSeparator();
+	addMenuAction( toolsMenu, "Print &Model Info", this, &SconeStudio::showModelInfo );
+	addMenuAction( toolsMenu, "Write M&uscle Info", this, &SconeStudio::writeMuscleInfo );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -348,6 +351,12 @@ void SconeStudio::showModelInfo()
 {
 	if ( scenario_ && scenario_->HasModel() )
 		xo::log_prop_node( scenario_->GetModel().GetInfo() );
+}
+
+void SconeStudio::writeMuscleInfo()
+{
+	if ( scenario_ && scenario_->HasModel() )
+		scone::WriteMuscleInfo( scenario_->GetModel() );
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

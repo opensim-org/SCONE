@@ -204,6 +204,8 @@ set(SIM_SIMULATIONANDCONTROL_FILES
 set(SIM_SYSTEM_FILES
 	model/model_tools.cpp
 	model/model_tools.h
+	model/muscle_tools.cpp
+	model/muscle_tools.h
 	)
 set(SIM_TOPOLOGY_FILES
 	model/Location.cpp

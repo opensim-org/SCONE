@@ -71,8 +71,6 @@ namespace scone
 
 	const std::vector< const Joint* >& Muscle::GetJoints() const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		if ( m_Joints.empty() )
 		{
 			const Body* orgBody = &GetOriginBody();
@@ -80,8 +78,17 @@ namespace scone
 			for ( const Body* b = insBody; b && b != orgBody; b = b->GetParentBody() )
 				m_Joints.push_back( b->GetJoint() );
 		}
-
 		return m_Joints;
+	}
+
+	const std::vector<const Dof*>& Muscle::GetDofs() const
+	{
+		if ( m_Dofs.empty() )
+			for ( auto& d : GetModel().GetDofs() )
+				if ( HasMomentArm( *d ) )
+					m_Dofs.push_back( d.get() );
+
+		return m_Dofs;
 	}
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const

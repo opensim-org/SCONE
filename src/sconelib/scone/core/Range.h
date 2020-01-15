@@ -19,8 +19,12 @@ namespace scone
 	{
 	public:
 		Range() : min( T() ), max( T() ) {}
+		Range( const Range& other ) = default;
 		Range( const PropNode& props ) : min( props.get< T >( "min", xo::constants<T>::lowest() ) ), max( props.get< T >( "max", xo::constants<T>::max() ) ) {}
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
+
+		// explicit conversion constructor
+		template< typename U > explicit Range( Range<U>& o ) : min( T( o.min ) ), max( T( o.max) ) {}
 
 		// test if a value is inside the range
 		bool Test( const T& value ) { return ( value >= min ) && ( value <= max ); }
@@ -33,7 +37,8 @@ namespace scone
 			else return T( 0 );
 		}
 
-		T GetCenter() { return ( min + max ) / 2; }
+		T GetCenter() const { return ( min + max ) / 2; }
+		T GetLength() const { return max - min; }
 
 		T min;
 		T max;

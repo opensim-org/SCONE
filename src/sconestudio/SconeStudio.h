@@ -79,6 +79,7 @@ public slots:
 	void createVideo();
 	void captureImage();
 	void showModelInfo();
+	void writeMuscleInfo();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }

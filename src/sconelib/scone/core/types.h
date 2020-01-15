@@ -55,15 +55,20 @@ namespace scone
 	typedef double Real;
 #endif
 
-	using String = std::string;
-
-	// index type
+	// xo types
 	using xo::index_t;
 	using xo::no_index;
-	using std::string;
-	const index_t NoIndex = size_t( -1 );
+	using xo::path;
 	using namespace xo::literals;
 
-	typedef double TimeInSeconds;
-	typedef double Frequency;
+	// string types
+	using std::string;
+	using String = std::string;
+
+	// constants
+	const index_t NoIndex = size_t( -1 );
+
+	// time related types
+	using TimeInSeconds = double;
+	using Frequency = double;
 }

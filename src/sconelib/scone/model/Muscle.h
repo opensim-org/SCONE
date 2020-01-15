@@ -77,6 +77,7 @@ namespace scone
 
 		virtual bool HasMomentArm( const Dof& dof ) const;
 		virtual const std::vector< const Joint* >& GetJoints() const;
+		virtual const std::vector< const Dof* >& GetDofs() const;
 		virtual bool IsAntagonist( const Muscle& other ) const;
 		virtual bool IsAgonist( const Muscle& other ) const;
 		virtual bool HasSharedDofs( const Muscle& other ) const;
@@ -87,5 +88,6 @@ namespace scone
 
 	private:
 		mutable std::vector< const Joint* > m_Joints;
+		mutable std::vector< const Dof* > m_Dofs;
 	};
 }
