@@ -40,6 +40,7 @@
 #include "scone/model/muscle_tools.h"
 #include "scone/core/storage_tools.h"
 #include "scone/core/StorageIo.h"
+#include "GaitAnalysis.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -98,7 +99,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
 	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
-	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::gaitAnalysis );
+	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -129,6 +130,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	analysisView->setMinSeriesInterval( 0 );
 	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
+	// gait analysis
+	gaitAnalysis = new GaitAnalysis( this );
+
 	// docking
 	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
@@ -142,13 +146,16 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 	registerDockWidget( ui.messagesDock, "&Messages" );
 
-	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( ui.messagesDock, adw );
+	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, analysis_dock );
+
+	auto* ga_dock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::RightDockWidgetArea );
+	tabifyDockWidget( ui.viewerDock, ga_dock );
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
 	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
-	//tabifyDockWidget( adw, ddw );
+	//tabifyDockWidget( analysis_dock, ddw );
 
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );
@@ -368,15 +375,10 @@ void SconeStudio::muscleAnalysis()
 		scone::WriteMuscleInfo( scenario_->GetModel() );
 }
 
-void SconeStudio::gaitAnalysis()
+void SconeStudio::updateGaitAnalysis()
 {
 	if ( scenario_ && !scenario_->IsEvaluating() )
-	{
-		auto sto = scone::ExtractGaitCycle( scenario_->GetData(), "leg1_r.grf_norm_y" );
-		auto filename = scenario_->GetFileName() + ".GaitCycle.txt";
-		scone::WriteStorageTxt( sto, filename, "" );
-		log::info( "Results written to ", filename );
-	}
+		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

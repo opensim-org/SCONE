@@ -25,6 +25,7 @@
 #include "scone/core/Statistic.h"
 
 #include "ModelVis.h"
+#include "GaitAnalysis.h"
 #include "ProgressDockWidget.h"
 #include "ResultsFileSystemModel.h"
 #include "SconeStorageDataModel.h"
@@ -39,6 +40,7 @@
 #include "xo/numerical/delta.h"
 #include "xo/system/log_sink.h"
 #include "xo/time/timer.h"
+#include "GaitAnalysis.h"
 
 using scone::TimeInSeconds;
 
@@ -80,7 +82,7 @@ public slots:
 	void captureImage();
 	void modelAnalysis();
 	void muscleAnalysis();
-	void gaitAnalysis();
+	void updateGaitAnalysis();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
@@ -144,6 +146,9 @@ private:
 	// analysis
 	SconeStorageDataModel analysisStorageModel;
 	QDataAnalysisView* analysisView;
+
+	// gait analysis
+	scone::GaitAnalysis* gaitAnalysis;
 
 	//// dof editor
 	//QFormGroup* dofSliderGroup;
