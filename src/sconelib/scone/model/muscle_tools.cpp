@@ -89,7 +89,7 @@ namespace scone
 			{
 				str << sto;
 				str << std::endl;
-				log::debug( "Written ", dof->GetName(), " to ", file );
+				log::info( "Results of ", dof->GetName(), " written to ", file );
 			}
 		}
 	}
