@@ -38,6 +38,8 @@
 #include "qt_convert.h"
 #include "xo/container/prop_node_tools.h"
 #include "scone/model/muscle_tools.h"
+#include "scone/core/storage_tools.h"
+#include "scone/core/StorageIo.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -94,8 +96,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
 	toolsMenu->addSeparator();
-	addMenuAction( toolsMenu, "Print &Model Info", this, &SconeStudio::showModelInfo );
-	addMenuAction( toolsMenu, "Write M&uscle Info", this, &SconeStudio::writeMuscleInfo );
+	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
+	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
+	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::gaitAnalysis );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -353,16 +356,27 @@ void SconeStudio::captureImage()
 		ui.osgViewer->captureCurrentFrame( filename.toStdString() );
 }
 
-void SconeStudio::showModelInfo()
+void SconeStudio::modelAnalysis()
 {
 	if ( scenario_ && scenario_->HasModel() )
 		xo::log_prop_node( scenario_->GetModel().GetInfo() );
 }
 
-void SconeStudio::writeMuscleInfo()
+void SconeStudio::muscleAnalysis()
 {
 	if ( scenario_ && scenario_->HasModel() )
 		scone::WriteMuscleInfo( scenario_->GetModel() );
+}
+
+void SconeStudio::gaitAnalysis()
+{
+	if ( scenario_ && !scenario_->IsEvaluating() )
+	{
+		auto sto = scone::ExtractGaitCycle( scenario_->GetData(), "leg1_r.grf_norm_y" );
+		auto filename = scenario_->GetFileName() + ".GaitCycle.txt";
+		scone::WriteStorageTxt( sto, filename, "" );
+		log::info( "Results written to ", filename );
+	}
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

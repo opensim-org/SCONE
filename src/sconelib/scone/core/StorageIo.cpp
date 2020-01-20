@@ -19,10 +19,10 @@
 
 namespace scone
 {
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::ostream& str )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& time_label )
 	{
 		// write data
-		str << "time";
+		str << time_label;
 		for ( const String& label : storage.GetLabels() )
 			str << "\t" << label;
 		str << "\n";
@@ -36,9 +36,9 @@ namespace scone
 		}
 	}
 
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& time_label )
 	{
-		fprintf( f, "time" );
+		fprintf( f, time_label.c_str() );
 		for ( const String& label : storage.GetLabels() )
 			fprintf( f, "\t%s", label.c_str() );
 		fprintf( f, "\n" );
@@ -52,11 +52,18 @@ namespace scone
 		}
 	}
 
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, const xo::path& file )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& time_label )
 	{
+#ifdef XO_COMP_MSVC
+		FILE* f = fopen( file.c_str(), "w" );
+		SCONE_ASSERT_MSG( f, "Error opening file " + file.str() );
+		WriteStorageTxt( storage, f, time_label );
+		fclose( f );
+#else
 		std::ofstream ofs( file.str() );
 		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
-		WriteStorageTxt( storage, ofs );
+		WriteStorageTxt( storage, ofs, time_label );
+#endif
 	}
 
 	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& name )
@@ -92,8 +99,6 @@ namespace scone
 		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
 		WriteStorageSto( storage, ofs, name );
 #endif
-
-
 	}
 
 	void ReadStorageSto( Storage<Real, TimeInSeconds>& storage, const xo::path& file )

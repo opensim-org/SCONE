@@ -78,8 +78,9 @@ public slots:
 	void updateOptimizations();
 	void createVideo();
 	void captureImage();
-	void showModelInfo();
-	void writeMuscleInfo();
+	void modelAnalysis();
+	void muscleAnalysis();
+	void gaitAnalysis();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog() { settings.showDialog( this ); }
