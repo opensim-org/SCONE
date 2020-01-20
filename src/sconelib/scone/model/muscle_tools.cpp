@@ -81,16 +81,16 @@ namespace scone
 								WriteMuscleInfo( sto, name + postfix, *dof, *mus, range );
 							}
 						}
+					}
+					else WriteMuscleInfo( sto, name, *dof, *mus, range );
 				}
-				else WriteMuscleInfo( sto, name, *dof, *mus, range );
+			}
+			if ( !sto.empty() )
+			{
+				str << sto;
+				str << std::endl;
+				log::debug( "Written ", dof->GetName(), " to ", file );
 			}
 		}
-		if ( !sto.empty() )
-		{
-			str << sto;
-			str << std::endl;
-			log::debug( "Written ", dof->GetName(), " to ", file );
-		}
 	}
-}
 }
