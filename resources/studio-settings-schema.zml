@@ -20,21 +20,11 @@ progress {
 
 video {
 	label = "Video settings"
-	path_to_ffmpeg {
-		type = folder
-		default = ""
-		label = "Location of ffmpeg.exe (required for videos)"
-	}
-	frame_rate {
-		type = float
-		label = "Video output frame rate"
-		default = 30
-	}
-	quality {
-		type = int
-		default = 3
-		label = "Quality for video output"
-	}
+	path_to_ffmpeg { type = folder default = "" label = "Location of ffmpeg.exe (required for videos)" }
+	frame_rate { type = float label = "Video output frame rate" default = 30 }
+	quality { type = int default = 2 label = "Quality for video output" }
+	width { type = int default = 1024 label = "Horizontal resolution (only when Viewer is not docked)" }
+	height { type = int default = 768 label = "Vertical resolution (only when Viewer is not docked)" }
 }
 
 viewer {

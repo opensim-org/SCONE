@@ -131,7 +131,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
 	setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
-	setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+	setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
 	registerDockWidget( ui.resultsDock, "Optimization &Results" );
@@ -309,6 +309,12 @@ void SconeStudio::createVideo()
 {
 	if ( !scenario_ )
 		return error( "No Scenario", "There is no scenario open" );
+
+	if ( ui.viewerDock->isFloating() ) {
+		auto borderSize = ui.viewerDock->size() - ui.osgViewer->size();
+		auto videoSize = QSize( GetStudioSettings().get<int>( "video.width" ), GetStudioSettings().get<int>( "video.height" ) );
+		ui.viewerDock->resize( borderSize + videoSize + QSize( 2, 2 ) );
+	}
 
 	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
 	if ( captureFilename.isEmpty() )
