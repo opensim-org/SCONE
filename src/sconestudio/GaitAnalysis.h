@@ -13,7 +13,6 @@ namespace scone
 		void update( const Storage<>& sto, const path& filename );
 
 	private:
-		void createChart( const String& channel, int row, int col );
 		Storage<> sto_;
 		QGridLayout* grid_;
 		std::vector< class GaitPlot* > plots_;
