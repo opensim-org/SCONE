@@ -15,6 +15,8 @@ namespace scone
 		QWidget( parent )
 	{
 		grid_ = new QGridLayout( this );
+		grid_->setContentsMargins( 0, 0, 0, 0 );
+		grid_->setSpacing( 0 );
 
 		auto file = GetFolder( SCONE_RESOURCE_FOLDER ) / "gaitanalysis/default.zml";
 		auto plot_pn = xo::load_file( file );
