@@ -149,8 +149,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, analysis_dock );
 
-	auto* ga_dock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::RightDockWidgetArea );
-	tabifyDockWidget( ui.viewerDock, ga_dock );
+	auto* ga_dock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, ga_dock );
+	ga_dock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
