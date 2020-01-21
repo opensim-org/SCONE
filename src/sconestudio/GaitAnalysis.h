@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QWidget>
-#include <QWindow>
 #include "scone/core/Storage.h"
 #include <QGridLayout>
 
@@ -17,5 +16,6 @@ namespace scone
 		void createChart( const String& channel, int row, int col );
 		Storage<> sto_;
 		QGridLayout* grid_;
+		std::vector< class GaitPlot* > plots_;
 	};
 }

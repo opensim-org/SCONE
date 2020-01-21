@@ -99,7 +99,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
 	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
-	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis );
+	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -149,9 +149,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, analysis_dock );
 
-	auto* ga_dock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( ui.messagesDock, ga_dock );
-	ga_dock->hide();
+	gaitAnalysisDock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, gaitAnalysisDock );
+	gaitAnalysisDock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
@@ -379,7 +379,10 @@ void SconeStudio::muscleAnalysis()
 void SconeStudio::updateGaitAnalysis()
 {
 	if ( scenario_ && !scenario_->IsEvaluating() )
+	{
 		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
+		gaitAnalysisDock->raise();
+	}
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

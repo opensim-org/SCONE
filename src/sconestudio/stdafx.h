@@ -19,6 +19,8 @@
 #include <QMainWindow>
 #include <QThread>
 
+#include "qcustomplot/qcustomplot.h"
+
 #include <osgDB/ReadFile>
 #include <osgViewer/CompositeViewer>
 #include <osgQt/GraphicsWindowQt>

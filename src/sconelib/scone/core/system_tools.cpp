@@ -60,11 +60,12 @@ namespace scone
 	{
 		switch ( folder )
 		{
-		case scone::SCONE_ROOT_FOLDER: return GetInstallFolder();
-		case scone::SCONE_RESULTS_FOLDER: return GetFolder( "results" );
-		case scone::SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios" );
-		case scone::SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry" );
-		case scone::SCONE_UI_RESOURCE_FOLDER: return GetInstallFolder() / "resources/ui";
+		case SCONE_ROOT_FOLDER: return GetInstallFolder();
+		case SCONE_RESULTS_FOLDER: return GetFolder( "results" );
+		case SCONE_SCENARIO_FOLDER: return GetFolder( "scenarios" );
+		case SCONE_GEOMETRY_FOLDER: return GetFolder( "geometry" );
+		case SCONE_RESOURCE_FOLDER: return GetInstallFolder() / "resources";
+		case SCONE_UI_RESOURCE_FOLDER: return GetInstallFolder() / "resources/ui";
 		default: SCONE_THROW( "Unknown folder type" );
 		}
 	}

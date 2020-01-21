@@ -18,6 +18,7 @@
 #include "QDataAnalysisView.h"
 #include "QGroup.h"
 #include "QValueSlider.h"
+#include "QDockWidget"
 
 #include "ui_SconeStudio.h"
 
@@ -149,6 +150,7 @@ private:
 
 	// gait analysis
 	scone::GaitAnalysis* gaitAnalysis;
+	QDockWidget* gaitAnalysisDock;
 
 	//// dof editor
 	//QFormGroup* dofSliderGroup;

@@ -30,6 +30,8 @@ if(${Qt5Widgets_FOUND})
 		ResultsFileSystemModel.cpp
 		GaitAnalysis.h
 		GaitAnalysis.cpp
+		GaitPlot.h
+		GaitPlot.cpp
 		)
 	
 	set(QTFILES
