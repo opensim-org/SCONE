@@ -110,7 +110,7 @@ QVariant ResultsFileSystemModel::data( const QModelIndex &idx, int role ) const
 Qt::ItemFlags ResultsFileSystemModel::flags( const QModelIndex &index ) const
 {
 	if ( index.column() < QFileSystemModel::columnCount() )
-		return QFileSystemModel::flags( index );
+		return Qt::ItemIsEditable | QFileSystemModel::flags( index );
 
 	return QFileSystemModel::flags( index );
 }

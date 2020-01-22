@@ -55,7 +55,7 @@ namespace scone
 				return m_Values[ idx ];
 			}
 
-			const std::vector< ValueT > GetValues() const { return m_Values; }
+			const std::vector< ValueT >& GetValues() const { return m_Values; }
 
 			void SetVec3( const String& label, const Vec3& vec ) {
 				(*this)[ label + "_x" ] = vec.x;
@@ -70,13 +70,17 @@ namespace scone
 		};
 		typedef std::unique_ptr< Frame > FrameUP;
 
-		Storage() { };
+		Storage() {}
 		Storage( const Storage& other ) {
 			*this = other;
 		};
 		Storage( Storage&& other ) {
 			*this = std::move( other );
 		};
+		Storage( const std::vector< String >& labels ) : m_Labels( labels ) {
+			for ( index_t i = 0; i < m_Labels.size(); ++i )
+				m_LabelIndexMap[ m_Labels[ i ] ] = i;
+		}
 		Storage& operator=( const Storage& other ) {
 			m_Labels = other.m_Labels;
 			m_LabelIndexMap = other.m_LabelIndexMap;
@@ -94,7 +98,6 @@ namespace scone
 			m_InterpolationCache.clear();
 			return *this;
 		};
-		~Storage() { };
 
 		void Clear() { m_Labels.clear(); m_LabelIndexMap.clear(); m_Data.clear(); m_InterpolationCache.clear(); }
 

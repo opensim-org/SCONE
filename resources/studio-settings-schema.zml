@@ -8,6 +8,11 @@ analysis {
 	}
 }
 
+gait_analysis {
+	label = "Gait Analysis settings"
+	templates { type = folder default = "" label = "Folder containing gait analysis templates" }
+}
+
 progress {
 	label = "Optimization progress settings"
 	line_width {

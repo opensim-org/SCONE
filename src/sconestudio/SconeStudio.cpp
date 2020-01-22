@@ -38,6 +38,9 @@
 #include "qt_convert.h"
 #include "xo/container/prop_node_tools.h"
 #include "scone/model/muscle_tools.h"
+#include "scone/core/storage_tools.h"
+#include "scone/core/StorageIo.h"
+#include "GaitAnalysis.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -94,8 +97,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
 	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
 	toolsMenu->addSeparator();
-	addMenuAction( toolsMenu, "Print &Model Info", this, &SconeStudio::showModelInfo );
-	addMenuAction( toolsMenu, "Write M&uscle Info", this, &SconeStudio::writeMuscleInfo );
+	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
+	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
+	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -126,6 +130,9 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	analysisView->setMinSeriesInterval( 0 );
 	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
+	// gait analysis
+	gaitAnalysis = new GaitAnalysis( this );
+
 	// docking
 	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
@@ -139,13 +146,17 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 	registerDockWidget( ui.messagesDock, "&Messages" );
 
-	auto* adw = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( ui.messagesDock, adw );
+	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, analysis_dock );
+
+	gaitAnalysisDock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, gaitAnalysisDock );
+	gaitAnalysisDock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
 	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
-	//tabifyDockWidget( adw, ddw );
+	//tabifyDockWidget( analysis_dock, ddw );
 
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );
@@ -215,14 +226,21 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
-	QString browserItem = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
-	ui.playControl->reset();
-	if ( createScenario( browserItem ) )
+	auto info = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
+	if ( !info.isDir() )
 	{
-		if ( scenario_->IsEvaluating() ) // .par or .sto
-			evaluate();
-		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
-		ui.playControl->play(); // playback after evaluation
+		ui.playControl->reset();
+		if ( createScenario( info.absoluteFilePath() ) )
+		{
+			if ( scenario_->IsEvaluating() ) // .par or .sto
+				evaluate();
+
+			ui.playControl->setRange( 0, scenario_->GetMaxTime() );
+			ui.playControl->play(); // automatic playback after evaluation
+
+			if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
+				updateGaitAnalysis(); // automatic gait analysis if visible
+		}
 	}
 }
 
@@ -353,16 +371,26 @@ void SconeStudio::captureImage()
 		ui.osgViewer->captureCurrentFrame( filename.toStdString() );
 }
 
-void SconeStudio::showModelInfo()
+void SconeStudio::modelAnalysis()
 {
 	if ( scenario_ && scenario_->HasModel() )
 		xo::log_prop_node( scenario_->GetModel().GetInfo() );
 }
 
-void SconeStudio::writeMuscleInfo()
+void SconeStudio::muscleAnalysis()
 {
 	if ( scenario_ && scenario_->HasModel() )
 		scone::WriteMuscleInfo( scenario_->GetModel() );
+}
+
+void SconeStudio::updateGaitAnalysis()
+{
+	if ( scenario_ && !scenario_->IsEvaluating() )
+	{
+		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
+		gaitAnalysisDock->show();
+		gaitAnalysisDock->raise();
+	}
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )

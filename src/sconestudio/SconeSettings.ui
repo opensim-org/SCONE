@@ -60,7 +60,7 @@
           <item row="3" column="1">
            <widget class="QLineEdit" name="geometryFolder"/>
           </item>
-          <item row="4" column="0" colspan="2">
+          <item row="7" column="0" colspan="2">
            <widget class="QLabel" name="label_2">
             <property name="text">
              <string>For optimal performance, please avoid folders located on network drives!</string>
@@ -69,6 +69,16 @@
              <set>Qt::AlignCenter</set>
             </property>
            </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Gait Analysis Templates</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="gaitAnalysisFolder"/>
           </item>
          </layout>
         </widget>
