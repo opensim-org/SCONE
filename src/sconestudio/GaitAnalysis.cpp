@@ -4,10 +4,12 @@
 #include "xo/filesystem/path.h"
 #include "scone/core/Log.h"
 
-#include "qcustomplot/qcustomplot.h"
+#include "StudioSettings.h"
 #include "scone/core/system_tools.h"
 #include "GaitPlot.h"
 #include "xo/serialization/serialize.h"
+
+#include "qcustomplot/qcustomplot.h"
 
 namespace scone
 {
@@ -18,8 +20,7 @@ namespace scone
 		grid_->setContentsMargins( 0, 0, 0, 0 );
 		grid_->setSpacing( 0 );
 
-		auto file = GetFolder( SCONE_RESOURCE_FOLDER ) / "gaitanalysis/default.zml";
-		auto plot_pn = xo::load_file( file );
+		auto plot_pn = xo::load_file( GetStudioSetting<path>( "gait_analysis.templates" ) / "default.zml" );
 		for ( const auto& pn : plot_pn )
 		{
 			auto plot = new GaitPlot( pn.second );
