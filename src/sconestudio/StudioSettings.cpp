@@ -16,22 +16,27 @@
 
 namespace scone
 {
-	xo::settings& GetStudioSettings()
-	{
-		static xo::settings s = xo::settings(
+	StudioSettings::StudioSettings() :
+		xo::settings(
 			load_file( GetInstallFolder() / "resources/studio-settings-schema.zml" ),
 			GetSettingsFolder() / "studio-settings.zml",
-			GetSconeVersion() );
+			GetSconeVersion()
+		)
+	{
+		if ( data_version() < version( 0, 17, 0 ) )
+		{
+			log::warning( "Restoring studio settings to default" );
+			reset(); // ignore settings from version < 0.17.0
+		}
 
-		static std::once_flag flag;
-		std::call_once( flag, [] {
-			if ( s.data_version() < version( 0, 17, 0 ) )
-			{
-				log::warning( "Restoring studio settings to default" );
-				s.reset(); // ignore settings from version < 0.17.0
-			}
-		} );
+		// set defaults
+		if ( get<path>( "gait_analysis.templates" ).empty() )
+			set<path>( "gait_analysis.templates", GetFolder(SCONE_RESOURCE_FOLDER) / "gaitanalysis" );
+	}
 
-		return s;
+	xo::settings& GetStudioSettings()
+	{
+		static StudioSettings settings;
+		return settings;
 	}
 }
