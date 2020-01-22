@@ -226,18 +226,21 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
-	QString browserItem = ui.resultsBrowser->fileSystemModel()->fileInfo( idx ).absoluteFilePath();
-	ui.playControl->reset();
-	if ( createScenario( browserItem ) )
+	auto info = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
+	if ( !info.isDir() )
 	{
-		if ( scenario_->IsEvaluating() ) // .par or .sto
-			evaluate();
+		ui.playControl->reset();
+		if ( createScenario( info.absoluteFilePath() ) )
+		{
+			if ( scenario_->IsEvaluating() ) // .par or .sto
+				evaluate();
 
-		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
-		ui.playControl->play(); // automatic playback after evaluation
+			ui.playControl->setRange( 0, scenario_->GetMaxTime() );
+			ui.playControl->play(); // automatic playback after evaluation
 
-		if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
-			updateGaitAnalysis(); // automatic gait analysis if visible
+			if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
+				updateGaitAnalysis(); // automatic gait analysis if visible
+		}
 	}
 }
 
