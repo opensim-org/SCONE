@@ -232,8 +232,12 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	{
 		if ( scenario_->IsEvaluating() ) // .par or .sto
 			evaluate();
+
 		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
-		ui.playControl->play(); // playback after evaluation
+		ui.playControl->play(); // automatic playback after evaluation
+
+		if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
+			updateGaitAnalysis(); // automatic gait analysis if visible
 	}
 }
 
@@ -381,6 +385,7 @@ void SconeStudio::updateGaitAnalysis()
 	if ( scenario_ && !scenario_->IsEvaluating() )
 	{
 		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
+		gaitAnalysisDock->show();
 		gaitAnalysisDock->raise();
 	}
 }

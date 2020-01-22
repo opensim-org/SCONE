@@ -55,13 +55,13 @@ namespace scone
 			}
 			top->setPen( Qt::NoPen );
 			bot->setPen( Qt::NoPen );
-			top->setBrush( QColor( 0, 0, 0, 50 ) );
+			top->setBrush( QColor( 0, 0, 0, 30.0 ) );
 			top->setChannelFillGraph( bot );
 		}
 
 		// graph line
 		auto* graph = plot_->addGraph();
-		graph->setPen( QPen( Qt::red, 1.5 ) );
+		graph->setPen( QPen( Qt::black, 1.5 ) );
 
 		// labels
 		plot_->xAxis->setLabel( x_label_.c_str() );
