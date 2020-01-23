@@ -635,7 +635,7 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 	{
 		auto changed_docs = changedDocuments();
 		if ( !requestSaveChanges( changed_docs ) )
-			false;
+			return false;
 
 		if ( scenario_
 			&& scenario_->GetScenarioFileName() == s->fileName
