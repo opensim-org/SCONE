@@ -1,11 +1,13 @@
 #include "GaitAnalysis.h"
+
 #include "scone/core/storage_tools.h"
 #include "scone/core/StorageIo.h"
-#include "xo/filesystem/path.h"
+#include "scone/core/system_tools.h"
 #include "scone/core/Log.h"
 
+#include "xo/filesystem/path.h"
+
 #include "StudioSettings.h"
-#include "scone/core/system_tools.h"
 #include "GaitPlot.h"
 #include "xo/serialization/serialize.h"
 
