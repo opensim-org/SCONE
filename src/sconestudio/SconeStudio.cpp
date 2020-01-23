@@ -620,7 +620,7 @@ QCodeEditor* SconeStudio::getActiveScenario()
 		auto ext = path_from_qt( s->fileName ).extension_no_dot().str();
 		if ( ext == "scone" )
 		{
-			if ( !s->visibleRegion().isEmpty() )
+			if ( !s->visibleRegion().isEmpty() && !s->document()->find( "Optimizer" ).isNull() )
 				return s; // active scone file
 			else if ( first_scenario == nullptr )
 				first_scenario = s; // could be single .scone file
