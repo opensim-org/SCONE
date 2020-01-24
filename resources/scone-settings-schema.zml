@@ -63,3 +63,12 @@ data {
 		description = "Output contact forces and moments"
 	}
 }
+
+results {
+	controller {
+		type = bool
+		label = "Write Controller and Measure results"
+		default = 0
+		label = "Write custom Controller and Measure results to file"
+	}
+}

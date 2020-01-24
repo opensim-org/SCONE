@@ -312,10 +312,13 @@ namespace scone
 		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
 		files.push_back( file + ".sto" );
 
-		if ( GetController() )
-			xo::append( files, GetController()->WriteResults( file ) );
-		if ( GetMeasure() )
-			xo::append( files, GetMeasure()->WriteResults( file ) );
+		if ( GetSconeSetting<bool>( "results.controller" ) )
+		{
+			if ( GetController() )
+				xo::append( files, GetController()->WriteResults( file ) );
+			if ( GetMeasure() )
+				xo::append( files, GetMeasure()->WriteResults( file ) );
+		}
 
 		return files;
 	}

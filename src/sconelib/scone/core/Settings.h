@@ -10,9 +10,12 @@
 
 #include "platform.h"
 #include "xo/system/settings.h"
+#include "types.h"
 
 namespace scone
 {
 	SCONE_API xo::settings& GetSconeSettings();
 	SCONE_API void SaveSconeSettings();
+
+	template< typename T > T GetSconeSetting( const String& key ) { return GetSconeSettings().get< T >( key ); }
 }
