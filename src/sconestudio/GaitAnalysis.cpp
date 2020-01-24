@@ -35,8 +35,8 @@ namespace scone
 	void GaitAnalysis::update( const Storage<>& sto, const path& filename )
 	{
 		sto_ = ExtractGaitCycle( sto, "leg1_r.grf_norm_y" , threshold_ );
-		WriteStorageTxt( sto_, filename + ".GaitCycle.txt", "" );
-		log::info( "Results written to ", filename + ".GaitCycle.txt" );
+		//WriteStorageTxt( sto_, filename + ".GaitCycle.txt", "" );
+		//log::info( "Results written to ", filename + ".GaitCycle.txt" );
 
 		for ( auto* p : plots_ )
 			p->update( sto_ );
