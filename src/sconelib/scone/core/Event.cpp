@@ -52,9 +52,4 @@ namespace scone
 
 		return e;
 	}
-
-	SCONE_API Storage<> SliceData( const Storage<>& sto, const std::vector< Event >& events, Event e )
-	{
-		SCONE_THROW_NOT_IMPLEMENTED;
-	}
 }
