@@ -263,9 +263,8 @@ void SconeStudio::start()
 	}
 	else
 	{
-		// everything is up-to-date, pause idle update timer and focus viewer
+		// everything is up-to-date, pause idle update timer
 		ui.osgViewer->stopTimer();
-		ui.osgViewer->viewWidget()->setFocus();
 	}
 }
 
