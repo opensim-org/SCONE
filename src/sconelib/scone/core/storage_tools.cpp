@@ -1,5 +1,6 @@
 #include "storage_tools.h"
 #include "xo/utility/frange.h"
+#include "Log.h"
 
 namespace scone
 {
@@ -16,7 +17,7 @@ namespace scone
 		return new_sto;
 	}
 
-	Storage<> ExtractGaitCycle( const Storage<>& sto, const String& force_channel, index_t cycle, const Real threshold )
+	Storage<> ExtractGaitCycle( const Storage<>& sto, const String& force_channel, const Real threshold )
 	{
 		SCONE_ASSERT( sto.GetFrameCount() > 0 );
 		auto force_idx = sto.GetChannelIndex( force_channel );
@@ -26,13 +27,15 @@ namespace scone
 		{
 			auto force = sto.GetFrame( idx )[ force_idx ];
 			if ( prev_force <= threshold && force > threshold )
+			{
 				cycle_start_times.push_back( sto.GetFrame( idx ).GetTime() );
+				//log::debug( "Cycle ", cycle_start_times.size() - 1, ": ", cycle_start_times.back() );
+			}
 			prev_force = force;
 		}
 
-		if ( cycle == no_index ) // take middle cycle by default
-			cycle = cycle_start_times.size() / 2;
-		SCONE_ERROR_IF( cycle + 1 >= cycle_start_times.size(), "Invalid cycle" );
+		auto cycle = cycle_start_times.size() / 2;
+		//log::debug( "Picked cycle ", cycle, ": ", cycle_start_times[ cycle ], " - ", cycle_start_times[ cycle + 1 ] );
 
 		return ExtractNormalized( sto, cycle_start_times[ cycle ], cycle_start_times[ cycle + 1 ] );
 	}

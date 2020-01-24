@@ -16,7 +16,8 @@
 namespace scone
 {
 	GaitAnalysis::GaitAnalysis( QWidget* parent ) :
-		QWidget( parent )
+		QWidget( parent ),
+		threshold_( 0.01 )
 	{
 		grid_ = new QGridLayout( this );
 		grid_->setContentsMargins( 0, 0, 0, 0 );
@@ -33,7 +34,7 @@ namespace scone
 
 	void GaitAnalysis::update( const Storage<>& sto, const path& filename )
 	{
-		sto_ = ExtractGaitCycle( sto, "leg1_r.grf_norm_y" );
+		sto_ = ExtractGaitCycle( sto, "leg1_r.grf_norm_y" , threshold_ );
 		WriteStorageTxt( sto_, filename + ".GaitCycle.txt", "" );
 		log::info( "Results written to ", filename + ".GaitCycle.txt" );
 

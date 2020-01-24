@@ -12,6 +12,8 @@ namespace scone
 		GaitAnalysis( QWidget* parent = nullptr );
 		void update( const Storage<>& sto, const path& filename );
 
+		Real threshold_;
+
 	private:
 		Storage<> sto_;
 		QGridLayout* grid_;
