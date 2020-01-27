@@ -58,6 +58,13 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	xo::log::debug( "Constructing UI elements" );
 	ui.setupUi( this );
 
+	// analysis
+	analysisView = new QDataAnalysisView( &analysisStorageModel, this );
+	analysisView->setObjectName( "Analysis" );
+	analysisView->setMinSeriesInterval( 0 );
+	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
+
+	// menu
 	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
 	auto editMenu = menuBar()->addMenu( "&Edit" );
@@ -100,6 +107,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
 	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
 	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
+	addMenuAction( toolsMenu, "&Hold Graphs in Analysis", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+H" ) );
 	toolsMenu->addSeparator();
 	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
 
@@ -123,12 +131,6 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
-
-	// analysis
-	analysisView = new QDataAnalysisView( &analysisStorageModel, this );
-	analysisView->setObjectName( "Analysis" );
-	analysisView->setMinSeriesInterval( 0 );
-	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
 	// gait analysis
 	gaitAnalysis = new GaitAnalysis( this );
