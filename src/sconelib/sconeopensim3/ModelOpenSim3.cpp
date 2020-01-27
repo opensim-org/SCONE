@@ -822,7 +822,7 @@ namespace scone
 
 		// Initialize muscle dynamics STEP 1
 		// equilibrate with initial small actuation so we can update the sensor delay adapters (needed for reflex controllers)
-		InitializeOpenSimMuscleActivations( 0.05 );
+		InitializeOpenSimMuscleActivations( initial_equilibration_activation );
 		UpdateSensorDelayAdapters();
 
 		// Initialize muscle dynamics STEP 2

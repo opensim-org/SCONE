@@ -61,6 +61,7 @@ namespace scone
 		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
 		INIT_PROP( props, initial_load, 0.2 );
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
+		INIT_PROP( props, initial_equilibration_activation, 0.05 );
 
 		// set store data info from settings
 		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );

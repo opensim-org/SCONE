@@ -182,6 +182,9 @@ namespace scone
 		/// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
 
+		/// Activation used to equilibrate muscles before control inputs are known; default = 0.05
+		Real initial_equilibration_activation;
+
 		void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
