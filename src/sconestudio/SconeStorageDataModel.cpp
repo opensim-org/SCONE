@@ -63,12 +63,15 @@ double SconeStorageDataModel::timeStart() const
 
 xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 {
-	SCONE_ASSERT( storage );
-	double reltime = time / storage->Back().GetTime();
-	return xo::index_t( xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ) + 0.5, 0, storage->GetFrameCount() - 1 ) );
+	if ( storage && !storage->IsEmpty() )
+	{
+		double reltime = time / storage->Back().GetTime();
+		return xo::index_t( xo::clamped< int >( reltime * ( storage->GetFrameCount() - 1 ) + 0.5, 0, storage->GetFrameCount() - 1 ) );
+	}
+	else return xo::no_index;
 }
 
 double SconeStorageDataModel::timeValue( xo::index_t idx ) const
 {
-	return storage->GetFrame( idx ).GetTime();
+	return idx != xo::no_index ? storage->GetFrame( idx ).GetTime() : 0.0;
 }
