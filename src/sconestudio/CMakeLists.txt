@@ -99,7 +99,6 @@ if(${Qt5Widgets_FOUND})
 	set_target_properties(sconestudio PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
 	# setup OpenSceneGraph stuff
-	set(OSG_DIR "" CACHE PATH "Installation directory of OpenSceneGraph")
 	FIND_PACKAGE( OpenSceneGraph REQUIRED
 	  osg
 	  osgWidget
@@ -201,6 +200,10 @@ if(${Qt5Widgets_FOUND})
 		endif()
 
 		# Copy OSG DLLs
+		# get OSG_INSTALL_DIR
+		get_filename_component( OSG_INSTALL_DIR ${OSG_INCLUDE_DIR} DIRECTORY )
+		set(OSG_DLL_DIR ${OSG_INSTALL_DIR}/bin CACHE PATH "Installation directory of OpenSceneGraph")
+
 		set(OSG_DLL_PREFIX "osg131-" CACHE STRING "Prefix of OpenSceneGraph DLLs. Yes, you need to set this by hand :-(" )
 		SET(OSG_DLLS
 			${OSG_DLL_PREFIX}osg ${OSG_DLL_PREFIX}osgwidget ${OSG_DLL_PREFIX}osgqt
@@ -209,7 +212,7 @@ if(${Qt5Widgets_FOUND})
 			ot20-OpenThreads zlib libpng)
 		foreach(osgdll ${OSG_DLLS})
 			add_custom_command(TARGET sconestudio POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${osgdll}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DLL_DIR}/${osgdll}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
 			)
 		endforeach()
 
@@ -219,7 +222,7 @@ if(${Qt5Widgets_FOUND})
 		set(OSG_PLUGINS osgdb_png osgdb_obj osgdb_stl)
 		foreach(osgplugin ${OSG_PLUGINS})
 			add_custom_command(TARGET sconestudio POST_BUILD
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DIR}/bin/${OSG_PLUGINS_FOLDER}/${osgplugin}$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}"
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OSG_DLL_DIR}/${OSG_PLUGINS_FOLDER}/${osgplugin}$<$<CONFIG:debug>:d>.dll "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}"
 			)
 		endforeach()
 	endif()
