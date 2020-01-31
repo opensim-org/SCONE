@@ -27,7 +27,7 @@ namespace scone
 	{
 	}
 
-	scone::Real Polynomial::GetValue( Real x )
+	Real Polynomial::GetValue( Real x )
 	{
 		Real r = 0;
 		Real c = 1;
