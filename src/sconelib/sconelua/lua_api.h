@@ -148,9 +148,9 @@ namespace scone
 		/// get the optimal fiber length [m]
 		LuaNumber optimal_fiber_length() { return mus_.GetOptimalFiberLength(); }
 		/// get the current muscle force [N]
-		LuaNumber fiber_force() { return mus_.GetFiberForce(); }
+		LuaNumber force() { return mus_.GetForce(); }
 		/// get the normalized muscle force [0..1]
-		LuaNumber normalized_fiber_force() { return mus_.GetNormalizedFiberForce(); }
+		LuaNumber normalized_force() { return mus_.GetNormalizedForce(); }
 		/// get the maximum isometric force [N]
 		LuaNumber max_isometric_force() { return mus_.GetMaxIsometricForce(); }
 		/// get the contraction velocity [m/s]

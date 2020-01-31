@@ -1,4 +1,5 @@
 #include "lua_api.h"
+
 #include "sol/sol.hpp"
 #include "xo_lua/lua_register.h"
 
@@ -63,8 +64,8 @@ namespace scone
 			"fiber_length", &LuaMuscle::fiber_length,
 			"normalized_fiber_length", &LuaMuscle::normalized_fiber_length,
 			"optimal_fiber_length", &LuaMuscle::optimal_fiber_length,
-			"fiber_force", &LuaMuscle::fiber_force,
-			"normalized_fiber_force", &LuaMuscle::normalized_fiber_force,
+			"force", &LuaMuscle::force,
+			"normalized_force", &LuaMuscle::normalized_force,
 			"max_isometric_force", &LuaMuscle::max_isometric_force,
 			"contraction_velocity", &LuaMuscle::contraction_velocity,
 			"normalized_contraction_velocity", &LuaMuscle::normalized_contraction_velocity
