@@ -151,7 +151,7 @@ namespace scone
 		if ( flags( StoreDataTypes::MuscleTendonProperties ) )
 		{
 			frame[ GetName() + ".tendon_length" ] = GetTendonLength();
-			frame[ GetName() + ".T" ] = GetTendonLength() / GetTendonSlackLength() - 1;
+			frame[ GetName() + ".tendon_length_norm" ] = GetNormalizedTendonLength() - 1;
 			frame[ GetName() + ".mtu_length" ] = GetLength();
 			frame[ GetName() + ".mtu_velocity" ] = GetVelocity();
 		}
@@ -159,7 +159,9 @@ namespace scone
 		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
 		{
 			frame[ GetName() + ".cos_pennation_angle" ] = GetCosPennationAngle();
-			frame[ GetName() + ".F" ] = GetNormalizedFiberForce();
+			frame[ GetName() + ".force_length_multiplier" ] = GetActiveForceLengthMultipler();
+			frame[ GetName() + ".passive_fiber_force" ] = GetPassiveFiberForce() / GetMaxIsometricForce();
+			frame[ GetName() + ".F" ] = GetNormalizedForce();
 			frame[ GetName() + ".L" ] = GetNormalizedFiberLength();
 			frame[ GetName() + ".V" ] = GetNormalizedFiberVelocity();
 			frame[ GetName() + ".S" ] = GetNormalizedSpindleRate();

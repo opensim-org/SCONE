@@ -52,8 +52,8 @@ namespace scone
 		virtual Real GetNormalizedSpindleRate() const;
 
 		virtual Real GetFiberForce() const = 0;
-		virtual Real GetNormalizedFiberForce() const = 0;
 		virtual Real GetActiveFiberForce() const = 0;
+		virtual Real GetPassiveFiberForce() const = 0;
 
 		virtual Real GetFiberLength() const = 0;
 		virtual Real GetNormalizedFiberLength() const = 0;
@@ -64,10 +64,12 @@ namespace scone
 		virtual Real GetNormalizedFiberVelocity() const = 0;
 
 		virtual Real GetTendonLength() const = 0;
-		virtual std::vector< Vec3 > GetMusclePath() const = 0;
+		virtual Real GetNormalizedTendonLength() const = 0;
 
 		virtual Real GetActiveForceLengthMultipler() const = 0;
 		virtual Real GetMaxContractionVelocity() const = 0;
+
+		virtual std::vector< Vec3 > GetMusclePath() const = 0;
 
 		virtual Real GetActivation() const = 0;
 		virtual Real GetExcitation() const = 0;

@@ -48,8 +48,8 @@ namespace scone
 		virtual Real GetVelocity() const override;
 
 		virtual Real GetFiberForce() const override;
-		virtual Real GetNormalizedFiberForce() const override;
 		virtual Real GetActiveFiberForce() const override;
+		virtual Real GetPassiveFiberForce() const override;
 
 		virtual Real GetFiberLength() const override;
 		virtual Real GetNormalizedFiberLength() const override;
@@ -60,6 +60,7 @@ namespace scone
 		virtual Real GetNormalizedFiberVelocity() const override;
 
 		virtual Real GetTendonLength() const override;
+		virtual Real GetNormalizedTendonLength() const override;
 
 		virtual Real GetActiveForceLengthMultipler() const override;
 		virtual Real GetMaxContractionVelocity() const override;

@@ -75,14 +75,14 @@ namespace scone
 		return m_osMus.getFiberForce( m_Model.GetTkState() );
 	}
 
-	Real MuscleOpenSim3::GetNormalizedFiberForce() const
-	{
-		return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
-	}
-
 	Real MuscleOpenSim3::GetActiveFiberForce() const
 	{
 		return m_osMus.getActiveFiberForce( m_Model.GetTkState() );
+	}
+
+	Real MuscleOpenSim3::GetPassiveFiberForce() const
+	{
+		return m_osMus.getPassiveFiberForce( m_Model.GetTkState() );
 	}
 
 	Real MuscleOpenSim3::GetFiberLength() const
@@ -146,6 +146,11 @@ namespace scone
 	Real MuscleOpenSim3::GetTendonLength() const
 	{
 		return m_osMus.getTendonLength( m_Model.GetTkState() );
+	}
+
+	Real MuscleOpenSim3::GetNormalizedTendonLength() const
+	{
+		return m_osMus.getTendonLength( m_Model.GetTkState() ) / m_osMus.getTendonSlackLength();
 	}
 
 	Real MuscleOpenSim3::GetActiveForceLengthMultipler() const
