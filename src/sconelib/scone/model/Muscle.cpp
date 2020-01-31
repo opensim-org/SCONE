@@ -151,7 +151,7 @@ namespace scone
 		if ( flags( StoreDataTypes::MuscleTendonProperties ) )
 		{
 			frame[ GetName() + ".tendon_length" ] = GetTendonLength();
-			frame[ GetName() + ".T" ] = GetTendonLength() / GetTendonSlackLength();
+			frame[ GetName() + ".T" ] = GetTendonLength() / GetTendonSlackLength() - 1;
 			frame[ GetName() + ".mtu_length" ] = GetLength();
 			frame[ GetName() + ".mtu_velocity" ] = GetVelocity();
 		}

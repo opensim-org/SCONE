@@ -162,7 +162,7 @@ namespace scone
 				auto fitness = model_objective_->GetResult( *model_ );
 				log::info( "fitness = ", fitness );
 				PropNode results;
-				results.push_back( "result", model_objective_->GetReport( *model_ ) );
+				results.add_child( "result", model_objective_->GetReport( *model_ ) );
 				results.append( model_->GetSimulationReport() );
 				if ( !results[ "result" ].empty() )
 					log::info( results );

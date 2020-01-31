@@ -67,7 +67,7 @@ namespace scone
 			double res_org = m->GetResult( model );
 			double res_final = m->GetWeightedResult( model );
 			total += res_final;
-			GetReport().push_back( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", res_final, m->GetWeight(), res_org, m->GetOffset(), m->GetThreshold() ) );
+			GetReport().add_child( m->GetName(), m->GetReport() ).set_value( stringf( "%g\t%g * (%g + %g if > %g)", res_final, m->GetWeight(), res_org, m->GetOffset(), m->GetThreshold() ) );
 		}
 
 		GetReport().set_value( total );

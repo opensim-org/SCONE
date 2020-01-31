@@ -363,13 +363,13 @@ namespace scone
 		PropNode pn;
 
 		for ( const auto& item : GetBodies() )
-			pn[ "Bodies" ].push_back( item->GetName(), item->GetInfo() ); 
+			pn[ "Bodies" ].add_child( item->GetName(), item->GetInfo() ); 
 
 		for ( const auto& item : GetJoints() )
-			pn[ "Joints" ].push_back( item->GetName(), item->GetInfo() );
+			pn[ "Joints" ].add_child( item->GetName(), item->GetInfo() );
 
 		for ( const auto& item : GetActuators() )
-			pn[ "Actuators" ].push_back( item->GetName(), item->GetInfo() );
+			pn[ "Actuators" ].add_child( item->GetName(), item->GetInfo() );
 
 		return pn;
 	}
