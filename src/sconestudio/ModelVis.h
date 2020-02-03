@@ -18,17 +18,18 @@ namespace scone
 
 		void Update( const Model& model );
 
+		// IMPORTANT: Always add new settings at the end, to preserve load/save settings
 		enum VisOpt {
 			ShowForces,
 			ShowMuscles,
 			ShowTendons,
 			ShowBodyGeom,
-			ShowBodyAxes,
-			ShowBodyCom,
 			ShowJoints,
+			ShowBodyAxes,
 			ShowContactGeom,
 			ShowGroundPlane,
-			EnableShadows };
+			EnableShadows,
+			ShowBodyCom	};
 		using ViewSettings = xo::flag_set< VisOpt >;
 
 		void ApplyViewSettings( const ViewSettings& f );

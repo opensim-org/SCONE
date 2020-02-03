@@ -87,7 +87,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
-		va.second->setChecked( va.first != ModelVis::ShowBodyAxes&& va.first != ModelVis::ShowJoints );
+		va.second->setChecked( va.first != ModelVis::ShowBodyAxes && va.first != ModelVis::ShowJoints && va.first != ModelVis::ShowBodyCom );
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
@@ -211,12 +211,12 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::restoreCustomSettings( QSettings& settings )
 {
-	if ( settings.contains( "viewSettings"))
-	{
-		ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
-		for ( auto& va : viewActions )
-			va.second->setChecked( f.get( va.first ) );
-	}
+	//if ( settings.contains( "viewSettings"))
+	//{
+	//	ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
+	//	for ( auto& va : viewActions )
+	//		va.second->setChecked( f.get( va.first ) );
+	//}
 }
 
 void SconeStudio::saveCustomSettings( QSettings& settings )
