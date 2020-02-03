@@ -75,6 +75,7 @@ if(${Qt5Widgets_FOUND})
 		SconeStudio.ui
 		ProgressDockWidget.ui
 		SconeSettings.ui
+		../../resources/studio-settings-schema.zml
 		)
 
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
