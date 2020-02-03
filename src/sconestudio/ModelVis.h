@@ -18,7 +18,17 @@ namespace scone
 
 		void Update( const Model& model );
 
-		enum VisOpt { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, ShowJoints, ShowAxes, ShowContactGeom, ShowGroundPlane, EnableShadows };
+		enum VisOpt {
+			ShowForces,
+			ShowMuscles,
+			ShowTendons,
+			ShowBodyGeom,
+			ShowBodyAxes,
+			ShowBodyCom,
+			ShowJoints,
+			ShowContactGeom,
+			ShowGroundPlane,
+			EnableShadows };
 		using ViewSettings = xo::flag_set< VisOpt >;
 
 		void ApplyViewSettings( const ViewSettings& f );
@@ -45,6 +55,7 @@ namespace scone
 		float ambient_;
 		vis::material bone_mat;
 		vis::material joint_mat;
+		vis::material com_mat;
 		vis::material muscle_mat;
 		vis::material tendon_mat;
 		vis::material arrow_mat;
@@ -55,6 +66,7 @@ namespace scone
 		std::vector< MuscleVis > muscles;
 		std::vector< vis::arrow > forces;
 		std::vector< vis::axes > body_axes;
+		std::vector< vis::mesh > body_com;
 		std::vector< vis::node > bodies;
 		std::vector< vis::mesh > contact_geoms;
 	};

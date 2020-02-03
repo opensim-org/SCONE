@@ -78,15 +78,16 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	viewActions[ ModelVis::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowTendons ] = addMenuAction( viewMenu, "Show &Tendons", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowGeometry ] = addMenuAction( viewMenu, "Show &Bone Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyGeom ] = addMenuAction( viewMenu, "Show &Body Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyCom] = addMenuAction( viewMenu, "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowJoints ] = addMenuAction( viewMenu, "Show &Joints", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowContactGeom ] = addMenuAction( viewMenu, "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowGroundPlane ] = addMenuAction( viewMenu, "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
-		va.second->setChecked( va.first != ModelVis::ShowAxes && va.first != ModelVis::ShowJoints );
+		va.second->setChecked( va.first != ModelVis::ShowBodyAxes&& va.first != ModelVis::ShowJoints );
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );

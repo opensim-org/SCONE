@@ -18,6 +18,7 @@ namespace scone
 		ambient_( GetStudioSetting< float >( "viewer.ambient" ) ),
 		bone_mat( { GetStudioSetting< xo::color >( "viewer.bone" ), specular_, shininess_, ambient_ } ),
 		joint_mat( { GetStudioSetting< xo::color >( "viewer.joint" ), specular_, shininess_, ambient_ } ),
+		com_mat( { GetStudioSetting< xo::color >( "viewer.com" ), specular_, shininess_, ambient_ } ),
 		muscle_mat( { GetStudioSetting< xo::color >( "viewer.muscle_0" ), specular_, shininess_, ambient_ } ),
 		tendon_mat( { GetStudioSetting< xo::color >( "viewer.tendon" ), specular_, shininess_, ambient_ } ),
 		arrow_mat( { GetStudioSetting< xo::color >( "viewer.force" ), specular_, shininess_, ambient_ } ),
@@ -28,7 +29,7 @@ namespace scone
 			{ 1.0f, GetStudioSetting< xo::color >( "viewer.muscle_100" ) } } )
 	{
 		// #todo: don't reset this every time, keep view_flags outside ModelVis
-		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowGeometry, EnableShadows } );
+		view_flags.set( { ShowForces, ShowMuscles, ShowTendons, ShowBodyGeom, EnableShadows } );
 
 		// ground plane
 		if ( auto* gp = model.GetGroundPlane() )
@@ -44,6 +45,12 @@ namespace scone
 		{
 			bodies.push_back( vis::node( &root_node_ ) );
 			body_axes.push_back( vis::axes( bodies.back(), vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+			if ( body->GetMass() > 0 )
+			{
+				body_com.push_back( vis::mesh( bodies.back(), xo::sphere( 0.02 ), xo::color::green(), xo::vec3f::zero(), 0.75f ) );
+				body_com.back().set_material( com_mat );
+				body_com.back().pos( xo::vec3f( body->GetLocalComPos() ) );
+			}
 
 			auto geoms = body->GetDisplayGeometries();
 			for ( auto geom : geoms )
@@ -206,28 +213,31 @@ namespace scone
 	{
 		view_flags = f;
 		for ( auto& f : forces )
-			f.show( view_flags.get< ShowForces >() );
+			f.show( view_flags.get<ShowForces>() );
 
 		for ( auto& m : muscles )
 		{
-			m.ce.show( view_flags.get< ShowMuscles >() );
-			m.ten1.show( view_flags.get< ShowMuscles >() && view_flags.get< ShowTendons >() );
-			m.ten2.show( view_flags.get< ShowMuscles >() && view_flags.get< ShowTendons >() );
+			m.ce.show( view_flags.get<ShowMuscles>() );
+			m.ten1.show( view_flags.get<ShowMuscles>() && view_flags.get<ShowTendons>() );
+			m.ten2.show( view_flags.get<ShowMuscles>() && view_flags.get<ShowTendons>() );
 		}
 
-		for ( auto& e : body_meshes )
-			e.show( view_flags.get< ShowGeometry >() );
-
 		for ( auto& e : joints )
-			e.show( view_flags.get< ShowJoints >() );
+			e.show( view_flags.get<ShowJoints>() );
+
+		for ( auto& e : body_meshes )
+			e.show( view_flags.get<ShowBodyGeom>() );
 
 		for ( auto& e : body_axes )
-			e.show( view_flags.get< ShowAxes >() );
+			e.show( view_flags.get<ShowBodyAxes>() );
+
+		for ( auto& e : body_com )
+			e.show( view_flags.get<ShowBodyCom>() );
 
 		for ( auto& e : contact_geoms )
-			e.show( view_flags.get< ShowContactGeom >() );
+			e.show( view_flags.get<ShowContactGeom>() );
 
 		if ( ground_.node_id() )
-			ground_.show( view_flags.get< ShowGroundPlane >() );
+			ground_.show( view_flags.get<ShowGroundPlane>() );
 	}
 }
