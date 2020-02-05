@@ -745,9 +745,12 @@ void SconeStudio::abortOptimizations()
 		if ( QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
 			close_all = true;
-			for ( auto& o : optimizations )
-				o->close();
-			optimizations.clear();
+			while ( !optimizations.empty() )
+			{
+				optimizations.back()->close();
+				optimizations.pop_back();
+				QApplication::processEvents();
+			}
 			close_all = false;
 		}
 	}
