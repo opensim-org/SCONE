@@ -22,27 +22,15 @@
 
 using namespace scone;
 
-ProgressDockWidget::ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& extra_args ) :
+ProgressDockWidget::ProgressDockWidget( SconeStudio* s, scone::OptimizerTask* t ) :
 studio( s ),
-process( nullptr ),
+task_( t ),
 state( StartingState ),
 min_view_gens( 20 ),
 view_first_gen( 0 ),
 view_last_gen( min_view_gens ),
 best_idx( -1 )
 {
-	QString program = to_qt( xo::get_application_dir() / SCONE_SCONECMD_EXECUTABLE );
-	QStringList args;
-	args << "-o" << config_file << "-s" << "-q" << "-l" << "7" << extra_args;
-
-	process = new QProcess( this );
-	process->setReadChannel( QProcess::StandardOutput );
-	process->start( program, args );
-	fileName = config_file.toStdString();
-
-	xo_error_if( !process->waitForStarted( 5000 ), "Could not start scenario " + fileName );
-	scone::log::info( "Started scenario ", fileName );
-
 	ui.setupUi( this );
 
 	//ui.plot->xAxis->setLabel( "Generation" );
@@ -78,8 +66,8 @@ ProgressDockWidget::~ProgressDockWidget()
 	if ( state != ClosedState )
 	{
 		log::critical( "Deleting Progress Dock that is not closed: ", getIdentifier().toStdString() );
-		if ( process )
-			delete process;
+		if ( task_ )
+			delete task_;
 	}
 }
 
@@ -157,40 +145,19 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 
 ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 {
-	SCONE_ASSERT( process );
-
-	if ( !process->isOpen() )
+	if ( !task_->isActive() )
 	{
 		close();
 		return IsClosedResult;
 	}
 
-	if ( state == StartingState )
+	while ( task_->hasMessage() )
 	{
-		if ( process->waitForReadyRead( 1000 ) )
-			state = InitializingState;
-		else return OkResult;
-	}
-
-	while ( process->canReadLine() )
-	{
-		char buf[ 1024 ];
-		process->readLine( buf, 1023 );
-		string s( buf );
-
-		if ( s.empty() || s[ 0 ] != '*' )
-			continue; // this is no message for us
-		//log::trace( s );
-
-		std::stringstream str( s.substr( 1 ) );
-		xo::prop_node pn;
 		xo::error_code ec;
-		xo::prop_node_serializer_zml zml( pn, &ec ) ;
-		str >> zml;
-
+		auto pn = task_->message( &ec );
 		if ( ec.bad() )
 		{
-			log::warning( "Error parsing message: ", s );
+			log::warning( "Error parsing message: ", ec.message() );
 			continue;
 		}
 
@@ -261,7 +228,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			{
 				state = ErrorState;
 				updateText();
-				log::error( "Error optimizing ", fileName, ": ", message );
+				log::error( "Error optimizing ", task_->scenario_file_.toStdString(), ": ", message );
 				return ShowErrorResult;
 			}
 			else if ( pn.try_get( message, "finished" ) )
@@ -325,9 +292,10 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 		}
 	}
 
-	process->close();
-	delete process;
-	process = nullptr;
+	log::debug( "Closing optimization ", getIdentifier().toStdString() );
+	task_->close();
+	delete task_;
+	task_ = nullptr;
 
 	state = ClosedState;
 

@@ -74,8 +74,8 @@ public slots:
 	void evaluateActiveScenario();
 	void performanceTestProfile() { performanceTest( true ); }
 	void performanceTestNoProfile() { performanceTest( false ); }
-	void startOptimization();
-	void startMultipleOptimizations();
+	void optimizeScenario();
+	void optimizeScenarioMultiple();
 	void abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();

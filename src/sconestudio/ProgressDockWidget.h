@@ -16,6 +16,7 @@
 #include "xo/numerical/polynomial.h"
 #include "scone/core/types.h"
 #include "qt_convert.h"
+#include "OptimizerTask.h"
 
 using scone::String;
 using scone::PropNode;
@@ -29,7 +30,7 @@ public:
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
 
-	ProgressDockWidget( SconeStudio* s, const QString& config_file, const QStringList& args = QStringList() );
+	ProgressDockWidget( SconeStudio* s, scone::OptimizerTask* task );
 	virtual ~ProgressDockWidget();
 
 	QString getIdentifier() { return optimizations.empty() ? "" : to_qt( optimizations.front().name ); }
@@ -38,9 +39,8 @@ public:
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
 
 	SconeStudio* studio;
-	QProcess* process;
+	scone::OptimizerTask* task_;
 	Ui::ProgressDockWidget ui;
-	String fileName;
 	State state;
 	String message;
 	PropNode tooltipProps;

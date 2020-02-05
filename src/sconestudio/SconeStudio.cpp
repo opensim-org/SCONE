@@ -41,6 +41,7 @@
 #include "scone/core/storage_tools.h"
 #include "scone/core/StorageIo.h"
 #include "GaitAnalysis.h"
+#include "OptimizerTaskExternal.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -93,8 +94,8 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
 	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
 	scenarioMenu->addSeparator();
-	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::startOptimization, QKeySequence( "Ctrl+F5" ) );
-	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::startMultipleOptimizations, QKeySequence( "Ctrl+Shift+F5" ));
+	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
+	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ));
 	scenarioMenu->addSeparator();
 	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
 	scenarioMenu->addSeparator();
@@ -666,11 +667,12 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 	}
 }
 
-void SconeStudio::startOptimization()
+void SconeStudio::optimizeScenario()
 {
 	if ( createAndVerifyActiveScenario( true ) )
 	{
-		ProgressDockWidget* pdw = new ProgressDockWidget( this, scenario_->GetScenarioFileName() );
+		auto* task = new scone::OptimizerTaskExternal( scenario_->GetScenarioFileName() );
+		ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
 		addProgressDock( pdw );
 		updateOptimizations();
 	}
@@ -709,7 +711,7 @@ void SconeStudio::performanceTest( bool profile )
 	}
 }
 
-void SconeStudio::startMultipleOptimizations()
+void SconeStudio::optimizeScenarioMultiple()
 {
 	if ( createAndVerifyActiveScenario( true ) )
 	{
@@ -721,8 +723,10 @@ void SconeStudio::startMultipleOptimizations()
 			{
 				QStringList args;
 				args << QString().sprintf( "#1.random_seed=%d", i );
-				ProgressDockWidget* pdw = new ProgressDockWidget( this, scenario_->GetScenarioFileName(), args );
+				auto* task = new scone::OptimizerTaskExternal( scenario_->GetScenarioFileName(), args );
+				ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
 				addProgressDock( pdw );
+				QApplication::processEvents();
 			}
 			updateOptimizations();
 		}
@@ -773,7 +777,7 @@ void SconeStudio::updateOptimizations()
 	{
 		if ( o->updateProgress() == ProgressDockWidget::ShowErrorResult )
 		{
-			QString title = to_qt( "Error optimizing " + o->fileName );
+			QString title = "Error optimizing " + o->task_->scenario_file_;
 			QString msg = o->message.c_str();
 			o->close();
 			QMessageBox::critical( this, title, msg );
