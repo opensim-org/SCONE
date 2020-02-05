@@ -76,6 +76,8 @@ namespace scone
 		virtual const String& GetName() const override;
 		virtual Real GetMomentArm( const Dof& dof ) const override;
 
+		void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
 	private:
 		ModelOpenSim3& m_Model;
 		OpenSim::Muscle& m_osMus;

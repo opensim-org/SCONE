@@ -138,6 +138,18 @@ namespace scone
 		else return iter->second;
 	}
 
+	void MuscleOpenSim3::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		Muscle::StoreData( frame, flags );
+
+#if XO_IS_DEBUG_BUILD
+		auto f_t = m_osMus.getTendonForce( m_Model.GetTkState() ) / m_osMus.getCosPennationAngle( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
+		auto f_pe = m_osMus.getPassiveFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
+		auto f_ce = m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() ) * m_osMus.getActivation( m_Model.GetTkState() );
+		frame[ GetName() + ".inv_ce_vel" ] = ( f_t - f_pe ) / f_ce;
+#endif
+	}
+
 	const Model& MuscleOpenSim3::GetModel() const
 	{
 		return m_Model;
