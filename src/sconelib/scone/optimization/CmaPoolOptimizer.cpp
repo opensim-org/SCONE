@@ -77,7 +77,7 @@ namespace scone
 		pn.set( "dim", cma.GetObjective().dim() );
 		pn.set( "minimize", cma.IsMinimizing() );
 		pn.set( "prediction_window", cma.prediction_window_ );
-		cma.OutputStatus( pn );
+		cma.OutputStatus( std::move( pn ) );
 	}
 
 	void CmaPoolOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )

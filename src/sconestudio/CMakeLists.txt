@@ -32,6 +32,12 @@ if(${Qt5Widgets_FOUND})
 		GaitAnalysis.cpp
 		GaitPlot.h
 		GaitPlot.cpp
+		OptimizerTask.h
+		OptimizerTask.cpp
+		OptimizerTaskExternal.h
+		OptimizerTaskExternal.cpp
+		OptimizerTaskThreaded.h
+		OptimizerTaskThreaded.cpp
 		)
 	
 	set(QTFILES

@@ -151,10 +151,10 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		return IsClosedResult;
 	}
 
-	while ( task_->hasMessage() )
+	xo::error_code ec;
+	while ( auto optional_message = task_->tryGetMessage( &ec ) )
 	{
-		xo::error_code ec;
-		auto pn = task_->message( &ec );
+		auto pn = *optional_message;
 		if ( ec.bad() )
 		{
 			log::warning( "Error parsing message: ", ec.message() );

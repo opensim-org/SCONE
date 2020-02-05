@@ -42,6 +42,7 @@
 #include "scone/core/StorageIo.h"
 #include "GaitAnalysis.h"
 #include "OptimizerTaskExternal.h"
+#include "OptimizerTaskThreaded.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -671,10 +672,32 @@ void SconeStudio::optimizeScenario()
 {
 	if ( createAndVerifyActiveScenario( true ) )
 	{
-		auto* task = new scone::OptimizerTaskExternal( scenario_->GetScenarioFileName() );
+		auto* task = new scone::OptimizerTaskThreaded( scenario_->GetScenarioFileName() );
 		ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
 		addProgressDock( pdw );
 		updateOptimizations();
+	}
+}
+
+void SconeStudio::optimizeScenarioMultiple()
+{
+	if ( createAndVerifyActiveScenario( true ) )
+	{
+		bool ok = true;
+		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
+		if ( ok )
+		{
+			for ( int i = 1; i <= count; ++i )
+			{
+				QStringList args;
+				args << QString().sprintf( "#1.random_seed=%d", i );
+				auto* task = new scone::OptimizerTaskThreaded( scenario_->GetScenarioFileName(), args );
+				ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
+				addProgressDock( pdw );
+				QApplication::processEvents();
+			}
+			updateOptimizations();
+		}
 	}
 }
 
@@ -708,28 +731,6 @@ void SconeStudio::performanceTest( bool profile )
 		if ( auto sim_report = model.GetSimulationReport(); !sim_report.empty() )
 			log::info( sim_report );
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
-	}
-}
-
-void SconeStudio::optimizeScenarioMultiple()
-{
-	if ( createAndVerifyActiveScenario( true ) )
-	{
-		bool ok = true;
-		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
-		if ( ok )
-		{
-			for ( int i = 1; i <= count; ++i )
-			{
-				QStringList args;
-				args << QString().sprintf( "#1.random_seed=%d", i );
-				auto* task = new scone::OptimizerTaskExternal( scenario_->GetScenarioFileName(), args );
-				ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
-				addProgressDock( pdw );
-				QApplication::processEvents();
-			}
-			updateOptimizations();
-		}
 	}
 }
 

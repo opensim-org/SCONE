@@ -13,6 +13,7 @@
 #include "scone/core/HasSignature.h"
 #include "scone/core/types.h"
 #include "xo/system/log_sink.h"
+#include <deque>
 
 namespace scone
 {
@@ -74,14 +75,14 @@ namespace scone
 
 		virtual double GetBestFitness() const = 0;
 
-		enum OutputMode { no_output, console_output, status_output };
+		// #todo: move this to reporter
+		enum OutputMode { no_output, console_output, status_console_output, status_queue_output };
 		virtual void SetOutputMode( OutputMode m ) { output_mode_ = m; }
-		bool GetProgressOutput() const { return output_mode_ == console_output; }
-		bool GetStatusOutput() const { return output_mode_ == status_output; }
-
+		bool GetStatusOutput() const { return output_mode_ == status_console_output || output_mode_ == status_queue_output; }
 		PropNode GetStatusPropNode() const;
-		void OutputStatus( const PropNode& pn ) const;
+		void OutputStatus( PropNode&& pn ) const;
 		template< typename T > void OutputStatus( const String& key, const T& value ) const;
+		xo::optional<PropNode> TryPopStatus();
 
 		const String& id() const { return id_; }
 
@@ -98,7 +99,9 @@ namespace scone
 
 		// current status
 		double m_BestFitness;
+
 		OutputMode output_mode_;
+		mutable std::deque<PropNode> status_queue_; // #todo: move this to reporter
 
 		mutable path output_folder_;
 		mutable String id_;
@@ -114,7 +117,6 @@ namespace scone
 	{
 		PropNode pn = GetStatusPropNode();
 		pn.set( key, value );
-		OutputStatus( pn );
+		OutputStatus( std::move( pn ) );
 	}
-
 }

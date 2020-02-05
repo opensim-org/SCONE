@@ -55,26 +55,23 @@ namespace scone
 		return process_->isOpen();
 	}
 
-	bool OptimizerTaskExternal::hasMessage()
+	xo::optional<PropNode> OptimizerTaskExternal::tryGetMessage( xo::error_code* ec )
 	{
-		return process_->canReadLine();
-	}
-
-	PropNode OptimizerTaskExternal::message( xo::error_code* ec )
-	{
-		char buf[ 4096 ];
-		string msg;
-
-		while ( msg.empty() || !xo::str_begins_with( msg, '*' ) )
+		if ( process_->canReadLine() )
 		{
-			process_->readLine( buf, sizeof( buf ) - 1 );
-			msg = buf;
+			char buf[ 4096 ];
+			string msg;
+			while ( msg.empty() || !xo::str_begins_with( msg, '*' ) )
+			{
+				process_->readLine( buf, sizeof( buf ) - 1 );
+				msg = buf;
+			}
+			std::stringstream str( msg.substr( 1 ) );
+			xo::prop_node pn;
+			xo::prop_node_serializer_zml zml( pn, ec );
+			str >> zml;
+			return pn;
 		}
-
-		std::stringstream str( msg.substr( 1 ) );
-		xo::prop_node pn;
-		xo::prop_node_serializer_zml zml( pn, ec );
-		str >> zml;
-		return pn;
+		else return {};
 	}
 }

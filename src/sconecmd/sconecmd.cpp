@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 				OptimizerUP o = CreateOptimizer( scenario_pn, scenario_file.parent_path() );
 				LogUnusedProperties( scenario_pn );
 				if ( statusOutput.getValue() )
-					o->SetOutputMode( Optimizer::status_output );
+					o->SetOutputMode( Optimizer::status_console_output );
 				else o->SetOutputMode( quietOutput.getValue() ? Optimizer::no_output : Optimizer::console_output );
 				o->Run();
 			}

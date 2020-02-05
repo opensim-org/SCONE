@@ -15,8 +15,7 @@ namespace scone
 		
 		void close() override;
 		bool isActive() override;
-		bool hasMessage() override;
-		PropNode message( xo::error_code* ec ) override;
+		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
 
 	protected:
 		QProcess* process_;
