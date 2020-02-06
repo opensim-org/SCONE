@@ -56,3 +56,8 @@ viewer {
 	muscle_position { type = float label = "Relative muscle belly position (0-1)" range = [ 0 1 ] default = 0.333 }
 	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.618 }
 }
+
+optimization {
+	label = "Optimization settings"
+	use_external_process { type = bool default = 1 label = "Perform optimizations using external process" }
+}

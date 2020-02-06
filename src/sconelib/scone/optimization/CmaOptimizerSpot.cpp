@@ -47,7 +47,8 @@ namespace scone
 		case scone::Optimizer::console_output:
 			add_reporter( std::make_unique<spot::console_reporter>() );
 			break;
-		case scone::Optimizer::status_output:
+		case scone::Optimizer::status_console_output:
+		case scone::Optimizer::status_queue_output:
 			add_reporter( std::make_unique<CmaOptimizerReporter>() );
 			break;
 		default: SCONE_THROW( "Unknown output mode" );
@@ -82,7 +83,7 @@ namespace scone
 			pn.set( "max_generations", cma.max_generations );
 			pn.set( "minimize", cma.IsMinimizing() );
 			pn.set( "window_size", cma.window_size );
-			cma.OutputStatus( pn );
+			cma.OutputStatus( std::move( pn ) );
 		}
 
 		timer_.reset();
@@ -123,8 +124,7 @@ namespace scone
 			pn.set( "best", cma.best_fitness() );
 			pn.set( "best_gen", cma.current_step() );
 		}
-
-		cma.OutputStatus( pn );
+		cma.OutputStatus( std::move( pn ) );
 
 		//cma.OutputStatus( "generation", xo::stringf( "%d %g %g %g %g %g", cma.current_step(), cma.current_step_best(), cma.current_step_median(), cma.current_step_average(), cma.fitness_trend().offset(), cma.fitness_trend().slope() ) );
 		//if ( new_best )

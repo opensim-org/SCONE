@@ -84,16 +84,35 @@ namespace scone
 		return pn;
 	}
 
-	void Optimizer::OutputStatus( const PropNode& pn ) const
+	void Optimizer::OutputStatus( PropNode&& pn ) const
 	{
-		xo::error_code ec;
-		std::ostringstream str;
-		str << xo::prop_node_serializer_zml_concise( pn, &ec );
-		auto message = "*" + str.str();
+		if ( output_mode_ == status_console_output )
+		{
+			xo::error_code ec;
+			std::ostringstream str;
+			str << xo::prop_node_serializer_zml_concise( pn, &ec );
+			auto message = "*" + str.str();
+			g_status_output_mutex.lock();
+			std::cout << message << std::endl;
+			g_status_output_mutex.unlock();
+		}
+		else if ( output_mode_ == status_queue_output )
+		{
+			auto lock = std::scoped_lock( g_status_output_mutex );
+			status_queue_.push_back( std::move( pn ) );
+		}
+	}
 
-		g_status_output_mutex.lock();
-		std::cout << message << std::endl;
-		g_status_output_mutex.unlock();
+	xo::optional<PropNode> Optimizer::TryPopStatus()
+	{
+		xo::optional<PropNode> r;
+		auto lock = std::scoped_lock( g_status_output_mutex );
+		if ( !status_queue_.empty() )
+		{
+			r = std::move( status_queue_.front() );
+			status_queue_.pop_front();
+		}
+		return r;
 	}
 
 	String Optimizer::GetClassSignature() const
