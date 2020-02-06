@@ -22,9 +22,9 @@
 
 using namespace scone;
 
-ProgressDockWidget::ProgressDockWidget( SconeStudio* s, scone::OptimizerTask* t ) :
+ProgressDockWidget::ProgressDockWidget( SconeStudio* s, std::unique_ptr<scone::OptimizerTask> t ) :
 studio( s ),
-task_( t ),
+task_( std::move( t ) ),
 state( StartingState ),
 min_view_gens( 20 ),
 view_first_gen( 0 ),
@@ -64,11 +64,7 @@ best_idx( -1 )
 ProgressDockWidget::~ProgressDockWidget()
 {
 	if ( state != ClosedState )
-	{
 		log::critical( "Deleting Progress Dock that is not closed: ", getIdentifier().toStdString() );
-		if ( task_ )
-			delete task_;
-	}
 }
 
 void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
@@ -294,8 +290,7 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 
 	log::debug( "Closing optimization ", getIdentifier().toStdString() );
 	task_->close();
-	delete task_;
-	task_ = nullptr;
+	task_.reset();
 
 	state = ClosedState;
 

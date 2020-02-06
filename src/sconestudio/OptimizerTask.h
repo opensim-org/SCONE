@@ -25,4 +25,6 @@ namespace scone
 		const QString scenario_file_;
 		const QStringList options_;
 	};
+
+	u_ptr<OptimizerTask> createOptimizerTask( const QString& scenario, const QStringList& args = QStringList() );
 }

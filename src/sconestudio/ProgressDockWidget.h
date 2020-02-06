@@ -30,7 +30,7 @@ public:
 	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
 	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
 
-	ProgressDockWidget( SconeStudio* s, scone::OptimizerTask* task );
+	ProgressDockWidget( SconeStudio* s, std::unique_ptr<scone::OptimizerTask> task );
 	virtual ~ProgressDockWidget();
 
 	QString getIdentifier() { return optimizations.empty() ? "" : to_qt( optimizations.front().name ); }
@@ -39,7 +39,7 @@ public:
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
 
 	SconeStudio* studio;
-	scone::OptimizerTask* task_;
+	std::unique_ptr<scone::OptimizerTask> task_;
 	Ui::ProgressDockWidget ui;
 	State state;
 	String message;

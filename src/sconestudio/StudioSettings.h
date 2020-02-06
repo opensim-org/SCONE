@@ -11,6 +11,7 @@
 #include "scone/core/platform.h"
 #include "xo/system/settings.h"
 #include "scone/core/types.h"
+#include "scone/core/Exception.h"
 
 namespace scone
 {
@@ -21,5 +22,8 @@ namespace scone
 	};
 
 	xo::settings& GetStudioSettings();
-	template< typename T > T GetStudioSetting( const String& key ) { return GetStudioSettings().get< T >( key ); }
+	template< typename T > T GetStudioSetting( const String& key ) {
+		try	{ return GetStudioSettings().get< T >( key ); }
+		catch ( const std::exception& e ) { SCONE_ERROR( "Could not read setting \"" + key + "\" (" + e.what() + ")" ); }
+	}
 }

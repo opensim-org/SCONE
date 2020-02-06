@@ -670,34 +670,46 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 
 void SconeStudio::optimizeScenario()
 {
-	if ( createAndVerifyActiveScenario( true ) )
+	try
 	{
-		auto* task = new scone::OptimizerTaskThreaded( scenario_->GetScenarioFileName() );
-		ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
-		addProgressDock( pdw );
-		updateOptimizations();
+		if ( createAndVerifyActiveScenario( true ) )
+		{
+			auto task = scone::createOptimizerTask( scenario_->GetScenarioFileName() );
+			addProgressDock( new ProgressDockWidget( this, std::move( task ) ) );
+			updateOptimizations();
+		}
+
+	}
+	catch ( const std::exception& e )
+	{
+		error( "Error optimizing " + scenario_->GetScenarioFileName(), e.what() );
 	}
 }
 
 void SconeStudio::optimizeScenarioMultiple()
 {
-	if ( createAndVerifyActiveScenario( true ) )
+	try
 	{
-		bool ok = true;
-		int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
-		if ( ok )
+		if ( createAndVerifyActiveScenario( true ) )
 		{
-			for ( int i = 1; i <= count; ++i )
+			bool ok = true;
+			int count = QInputDialog::getInt( this, "Run Multiple Optimizations", "Enter number of optimization instances: ", 3, 1, 100, 1, &ok );
+			if ( ok )
 			{
-				QStringList args;
-				args << QString().sprintf( "#1.random_seed=%d", i );
-				auto* task = new scone::OptimizerTaskThreaded( scenario_->GetScenarioFileName(), args );
-				ProgressDockWidget* pdw = new ProgressDockWidget( this, task );
-				addProgressDock( pdw );
-				QApplication::processEvents();
+				for ( int i = 1; i <= count; ++i )
+				{
+					QStringList args( QString().sprintf( "#1.random_seed=%d", i ) );
+					auto task = createOptimizerTask( scenario_->GetScenarioFileName(), args );
+					addProgressDock( new ProgressDockWidget( this, std::move( task ) ) );
+					QApplication::processEvents();
+				}
+				updateOptimizations();
 			}
-			updateOptimizations();
 		}
+	}
+	catch ( const std::exception& e )
+	{
+		error( "Error optimizing " + scenario_->GetScenarioFileName(), e.what() );
 	}
 }
 
