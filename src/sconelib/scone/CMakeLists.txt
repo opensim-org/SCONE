@@ -61,6 +61,8 @@ set(CORE_TOOL_FILES
 	core/storage_tools.cpp
 	core/string_tools.cpp
 	core/string_tools.h
+	core/GaitCycle.cpp
+	core/GaitCycle.h
 	)
 set(CS_CONTROLLERS_FILES
 	controllers/Controller.cpp

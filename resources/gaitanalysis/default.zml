@@ -1,6 +1,7 @@
 GaitPlot {
 	title = "Hip Flexion"
-	channel = hip_flexion_r
+	left_channel = hip_flexion_l
+	right_channel = hip_flexion_r
 	channel_multiply = 57.3
 	x_label = "Gait Cycle (%)"
 	y_label = "<- ext / flex ->"
@@ -14,7 +15,8 @@ GaitPlot {
 }
 GaitPlot {
 	title = "Knee Flexion"
-	channel = knee_angle_r
+	left_channel = knee_angle_l
+	right_channel = knee_angle_r
 	channel_multiply = -57.3
 	x_label = "Gait Cycle (%)"
 	y_label = "<- ext / flex ->"
@@ -28,7 +30,8 @@ GaitPlot {
 }
 GaitPlot {
 	title = "Ankle Flexion"
-	channel = ankle_angle_r
+	left_channel = ankle_angle_l
+	right_channel = ankle_angle_r
 	channel_multiply = 57.3
 	x_label = "Gait Cycle (%)"
 	y_label = "<- plantar / dorsi ->"
@@ -42,8 +45,9 @@ GaitPlot {
 	column = 3
 }
 GaitPlot {
-	title = "Ground Reaction Force"
-	channel = leg1_r.grf_norm_y
+	title = "Vertical Ground Reaction Force"
+	left_channel = leg0_l.grf_norm_y
+	right_channel = leg1_r.grf_norm_y
 	x_label = "Gait Cycle (%)"
 	y_label = "Force (BW)"
 	norm_min = 	[	0.00	0.31	0.41	0.45	0.47	0.51	0.56	0.62	0.69	0.75	0.81	0.86	0.91	0.94	0.96	0.97	0.97	0.96	0.94	0.92	0.89	0.85	0.82	0.80	0.77	0.75	0.74	0.73	0.72	0.72	0.72	0.72	0.73	0.74	0.76	0.78	0.81	0.83	0.86	0.89	0.91	0.94	0.96	0.99	1.01	1.03	1.05	1.06	1.07	1.06	1.05	1.01	0.95	0.87	0.76	0.62	0.47	0.32	0.19	0.10	0.02	-0.02	-0.03	-0.03	-0.02	-0.02	-0.01	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00	0.00 ]

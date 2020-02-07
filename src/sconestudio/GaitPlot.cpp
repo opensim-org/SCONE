@@ -6,13 +6,15 @@
 #include "xo/numerical/bounds.h"
 #include "xo/numerical/math.h"
 #include "scone/core/math.h"
+#include "xo/utility/frange.h"
 
 namespace scone
 {
 	GaitPlot::GaitPlot( const PropNode& pn, QWidget* parent ) :
 		QWidget( parent ),
 		INIT_MEMBER( pn, title_, "" ),
-		INIT_MEMBER_REQUIRED( pn, channel_ ),
+		INIT_MEMBER_REQUIRED( pn, left_channel_ ),
+		INIT_MEMBER_REQUIRED( pn, right_channel_ ),
 		INIT_MEMBER_REQUIRED( pn, row_ ),
 		INIT_MEMBER_REQUIRED( pn, column_ ),
 		INIT_MEMBER( pn, x_label_, "x" ),
@@ -60,8 +62,8 @@ namespace scone
 		}
 
 		// graph line
-		auto* graph = plot_->addGraph();
-		graph->setPen( QPen( Qt::black, 1.5 ) );
+// 		auto* graph = plot_->addGraph();
+// 		graph->setPen( QPen( Qt::black, 1.5 ) );
 
 		// labels
 		plot_->xAxis->setLabel( x_label_.c_str() );
@@ -77,17 +79,25 @@ namespace scone
 		plot_->replot();
 	}
 
-	void GaitPlot::update( const Storage<>& sto )
+	void GaitPlot::update( const Storage<>& sto, const std::vector<GaitCycle>& cycles )
 	{
-		auto channel_idx = sto.GetChannelIndex( channel_ );
-		if ( channel_idx != no_index )
+		while ( plot_->graphCount() > 2 )
+			plot_->removeGraph( plot_->graphCount() - 1 );
+
+		for ( const auto& cycle : cycles )
 		{
-			auto* graph = plot_->graph( 2 );
-			graph->clearData();
-			for ( const auto& f : sto.GetData() )
+			bool right = cycle.side_ == RightSide;
+			auto channel_idx = sto.GetChannelIndex( right ? right_channel_ : left_channel_ );
+			if ( channel_idx != no_index )
 			{
-				auto value = f->GetValues()[ channel_idx ];
-				graph->addData( f->GetTime(), channel_offset_ + channel_multiply_ * value );
+				auto* graph = plot_->addGraph();
+				graph->setPen( QPen( right ? Qt::red : Qt::blue, 1.5 ) );
+
+				for ( Real perc : xo::frange<Real>( 0.0, 100.0, 0.5 ) )
+				{
+					auto f = sto.GetInterpolatedFrame( cycle.begin_ + perc * cycle.duration() / 100.0 );
+					graph->addData( perc, channel_offset_ + channel_multiply_ * f.value( channel_idx ) );
+				}
 			}
 		}
 		plot_->replot();

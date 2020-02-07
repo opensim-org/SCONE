@@ -12,6 +12,7 @@
 #include "xo/serialization/serialize.h"
 
 #include "qcustomplot/qcustomplot.h"
+#include "scone/core/GaitCycle.h"
 
 namespace scone
 {
@@ -34,11 +35,8 @@ namespace scone
 
 	void GaitAnalysis::update( const Storage<>& sto, const path& filename )
 	{
-		sto_ = ExtractGaitCycle( sto, "leg1_r.grf_norm_y" , threshold_ );
-		//WriteStorageTxt( sto_, filename + ".GaitCycle.txt", "" );
-		//log::info( "Results written to ", filename + ".GaitCycle.txt" );
-
+		auto cycles = ExtractGaitCycles( sto, threshold_, 0.2 );
 		for ( auto* p : plots_ )
-			p->update( sto_ );
+			p->update( sto, cycles );
 	}
 }

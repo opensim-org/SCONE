@@ -6,6 +6,7 @@
 #include "scone/core/Storage.h"
 #include "scone/core/PropNode.h"
 #include "scone/core/types.h"
+#include "scone/core/GaitCycle.h"
 
 class QCustomPlot;
 
@@ -17,10 +18,11 @@ namespace scone
 		GaitPlot( const PropNode& pn, QWidget* parent = nullptr );
 		virtual ~GaitPlot() {}
 
-		void update( const Storage<>& sto );
+		void update( const Storage<>& sto, const std::vector<GaitCycle>& cycles );
 
 		String title_;
-		String channel_;
+		String left_channel_;
+		String right_channel_;
 		int row_;
 		int column_;
 		String x_label_;

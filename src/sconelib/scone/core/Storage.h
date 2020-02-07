@@ -63,6 +63,11 @@ namespace scone
 				(*this)[ label + "_z" ] = vec.z;
 			}
 
+			Vec3 GetVec3( index_t idx ) const {
+				SCONE_ASSERT( idx != NoIndex && idx + 2 < m_Values.size() );
+				return Vec3( m_Values[ idx ], m_Values[ idx + 1 ], m_Values[ idx + 2 ] );
+			}
+
 		private:
 			Storage< ValueT, TimeT >& m_Store;
 			TimeT m_Time;
