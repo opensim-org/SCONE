@@ -24,7 +24,7 @@ using namespace scone;
 
 int main(int argc, char* argv[])
 {
-	xo::log::stream_sink console_sink( xo::log::level::info, std::cout );
+	xo::log::stream_sink console_sink( std::cout, xo::log::level::info );
 	scone::Initialize();
 
 	try

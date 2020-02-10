@@ -133,7 +133,8 @@ namespace scone
 
 		// create log sink if enabled
 		if ( log_level_ < xo::log::level::never )
-			log_sink_ = std::make_unique< xo::log::file_sink >( log_level_, GetOutputFolder() / "optimization.log" );
+			log_sink_ = std::make_unique<xo::log::file_sink>(
+				GetOutputFolder() / "optimization.log", log_level_, xo::log::sink_mode::current_thread );
 
 		// prepare output folder, and initialize
 		xo::save_file( scenario_pn_copy_, output_folder_ / "config.scone" );

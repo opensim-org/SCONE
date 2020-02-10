@@ -200,6 +200,7 @@ bool SconeStudio::init()
 
 	// add outputText to global sinks (only *after* the ui has been initialized)
 	xo::log::add_sink( ui.outputText );
+	ui.outputText->set_sink_mode( xo::log::sink_mode::current_thread );
 	ui.outputText->set_log_level( XO_IS_DEBUG_BUILD ? xo::log::level::trace : xo::log::level::debug );
 
 	restoreSettings( "SCONE", "SconeStudio" );
@@ -213,12 +214,12 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::restoreCustomSettings( QSettings& settings )
 {
-	//if ( settings.contains( "viewSettings"))
-	//{
-	//	ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
-	//	for ( auto& va : viewActions )
-	//		va.second->setChecked( f.get( va.first ) );
-	//}
+	if ( settings.contains( "viewSettings"))
+	{
+		ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
+		for ( auto& va : viewActions )
+			va.second->setChecked( f.get( va.first ) );
+	}
 }
 
 void SconeStudio::saveCustomSettings( QSettings& settings )
