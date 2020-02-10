@@ -49,6 +49,8 @@ namespace scone
 				else cycles.emplace_back( GaitCycle{ side, begin_time, swing_time, end_time, begin_pos, end_pos } );
 			}
 		}
+		std::sort( cycles.begin(), cycles.end(), []( auto&& a, auto&& b ) { return a.begin_ < b.begin_; } );
+
 		return cycles;
 	}
 }

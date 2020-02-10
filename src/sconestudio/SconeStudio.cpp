@@ -393,6 +393,7 @@ void SconeStudio::updateGaitAnalysis()
 	if ( scenario_ && !scenario_->IsEvaluating() )
 	{
 		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
+		gaitAnalysisDock->setWindowTitle( gaitAnalysis->info() );
 		gaitAnalysisDock->show();
 		gaitAnalysisDock->raise();
 	}

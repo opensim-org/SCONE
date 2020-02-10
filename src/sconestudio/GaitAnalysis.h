@@ -14,9 +14,12 @@ namespace scone
 
 		Real threshold_;
 
+		QString info() const { return info_; }
+
 	private:
 		Storage<> sto_;
 		QGridLayout* grid_;
+		QString info_;
 		std::vector< class GaitPlot* > plots_;
 	};
 }
