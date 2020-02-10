@@ -18,11 +18,8 @@
 #include "Log.h"
 #include "Exception.h"
 
-#include <mutex>
-
 namespace scone
 {
-	std::mutex g_SystemMutex;
 	String g_Version;
 	path g_RootFolder;
 

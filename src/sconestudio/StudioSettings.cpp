@@ -11,7 +11,6 @@
 #include "scone/core/system_tools.h"
 #include "scone/core/version.h"
 #include "scone/core/Log.h"
-#include <mutex>
 #include "xo/serialization/serialize.h"
 
 namespace scone
