@@ -7,6 +7,7 @@
 #include "xo/numerical/math.h"
 #include "scone/core/math.h"
 #include "xo/utility/frange.h"
+#include "xo/container/flat_map.h"
 
 namespace scone
 {
@@ -84,6 +85,9 @@ namespace scone
 		while ( plot_->graphCount() > 2 )
 			plot_->removeGraph( plot_->graphCount() - 1 );
 
+		xo::flat_map< double, double > avg_data;
+		auto s = 1.0 / cycles.size();
+
 		for ( const auto& cycle : cycles )
 		{
 			bool right = cycle.side_ == RightSide;
@@ -91,15 +95,24 @@ namespace scone
 			if ( channel_idx != no_index )
 			{
 				auto* graph = plot_->addGraph();
-				graph->setPen( QPen( right ? Qt::red : Qt::blue, 1.5 ) );
+				graph->setPen( QPen( right ? Qt::red : Qt::blue, 1 ) );
 
 				for ( Real perc : xo::frange<Real>( 0.0, 100.0, 0.5 ) )
 				{
 					auto f = sto.GetInterpolatedFrame( cycle.begin_ + perc * cycle.duration() / 100.0 );
-					graph->addData( perc, channel_offset_ + channel_multiply_ * f.value( channel_idx ) );
+					auto value = channel_offset_ + channel_multiply_ * f.value( channel_idx );
+					graph->addData( perc, value );
+					avg_data[ perc ] += s * value;
 				}
 			}
 		}
+
+		// add average data plot
+		auto* avg_graph = plot_->addGraph();
+		avg_graph->setPen( QPen( Qt::black, 1.5 ) );
+		for ( auto& e : avg_data )
+			avg_graph->addData( e.first, e.second );
+
 		plot_->replot();
 	}
 }
