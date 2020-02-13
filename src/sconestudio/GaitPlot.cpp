@@ -8,6 +8,7 @@
 #include "scone/core/math.h"
 #include "xo/utility/frange.h"
 #include "xo/container/flat_map.h"
+#include "StudioSettings.h"
 
 namespace scone
 {
@@ -62,9 +63,19 @@ namespace scone
 			top->setChannelFillGraph( bot );
 		}
 
-		// graph line
-// 		auto* graph = plot_->addGraph();
-// 		graph->setPen( QPen( Qt::black, 1.5 ) );
+		// margins
+		plot_->plotLayout()->setMargins( QMargins( 2, 2, 2, 2 ) );
+		plot_->axisRect()->setMinimumMargins( QMargins( 1, 1, 1, 1 ) );
+		plot_->yAxis->setLabelPadding( 2 );
+		plot_->yAxis->setTickLabelPadding( 2 );
+		plot_->xAxis->setLabelPadding( 2 );
+		plot_->xAxis->setTickLabelPadding( 2 );
+
+		// fonts
+		auto labelFont = plot_->xAxis->labelFont();
+		labelFont.setPointSize( 10 );
+		plot_->xAxis->setLabelFont( labelFont );
+		plot_->yAxis->setLabelFont( labelFont );
 
 		// labels
 		plot_->xAxis->setLabel( x_label_.c_str() );
@@ -76,6 +87,9 @@ namespace scone
 		plot_->xAxis->setAutoSubTicks( false );
 		plot_->xAxis->setAutoTickCount( 4 );
 		plot_->yAxis->setRange( y_min_, y_max_ );
+		plot_->yAxis->setAutoTickStep( true );
+		plot_->yAxis->setAutoSubTicks( false );
+		plot_->yAxis->setAutoTickCount( 4 );
 
 		plot_->replot();
 	}
@@ -88,20 +102,22 @@ namespace scone
 		xo::flat_map< double, double > avg_data;
 		auto s = 1.0 / cycles.size();
 
+		bool plot_cycles = GetStudioSetting<bool>( "gait_analysis.plot_individual_cycles" );
+
 		for ( const auto& cycle : cycles )
 		{
 			bool right = cycle.side_ == RightSide;
 			auto channel_idx = sto.GetChannelIndex( right ? right_channel_ : left_channel_ );
 			if ( channel_idx != no_index )
 			{
-				auto* graph = plot_->addGraph();
-				graph->setPen( QPen( right ? Qt::red : Qt::blue, 1 ) );
+				auto* graph = plot_cycles ? plot_->addGraph() : nullptr;
 
+				if ( graph ) graph->setPen( QPen( right ? Qt::red : Qt::blue, 1 ) );
 				for ( Real perc : xo::frange<Real>( 0.0, 100.0, 0.5 ) )
 				{
 					auto f = sto.GetInterpolatedFrame( cycle.begin_ + perc * cycle.duration() / 100.0 );
 					auto value = channel_offset_ + channel_multiply_ * f.value( channel_idx );
-					graph->addData( perc, value );
+					if ( graph ) graph->addData( perc, value );
 					avg_data[ perc ] += s * value;
 				}
 			}

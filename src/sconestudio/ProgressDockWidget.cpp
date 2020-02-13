@@ -43,8 +43,7 @@ best_idx( -1 )
 	ui.plot->yAxis->setLabel( "Fitness" );
 	ui.plot->yAxis->setLabelPadding( 1 );
 	ui.plot->yAxis->setTickLabelPadding( 2 );
-	ui.plot->setContentsMargins( 0, 0, 0, 0 );
-	ui.plot->xAxis->marginSideToAxisType( QCP::msNone );
+	ui.plot->setContentsMargins( 1, 1, 1, 1 );
 	QFont font = ui.plot->font();
 	font.setPointSize( 7 );
 	ui.plot->xAxis->setTickLabelFont( font );

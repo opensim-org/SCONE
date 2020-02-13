@@ -146,7 +146,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	setCorner( Qt::BottomRightCorner, Qt::BottomDockWidgetArea );
 
 	addDockWidget( Qt::LeftDockWidgetArea, ui.resultsDock );
-	registerDockWidget( ui.resultsDock, "Optimization &Results" );
+	registerDockWidget( ui.resultsDock, "&Optimization Results" );
 
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 	registerDockWidget( ui.messagesDock, "&Messages" );
