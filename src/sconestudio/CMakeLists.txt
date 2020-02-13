@@ -82,6 +82,7 @@ if(${Qt5Widgets_FOUND})
 		ProgressDockWidget.ui
 		SconeSettings.ui
 		../../resources/studio-settings-schema.zml
+		../../resources/gaitanalysis/default.zml
 		)
 
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
