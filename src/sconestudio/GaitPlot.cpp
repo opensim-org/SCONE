@@ -2,13 +2,14 @@
 
 #include "qcustomplot/qcustomplot.h"
 
+#include "StudioSettings.h"
+#include "scone/core/math.h"
+#include "xo/container/flat_map.h"
 #include "xo/container/prop_node_tools.h"
 #include "xo/numerical/bounds.h"
+#include "xo/numerical/interpolation.h"
 #include "xo/numerical/math.h"
-#include "scone/core/math.h"
 #include "xo/utility/frange.h"
-#include "xo/container/flat_map.h"
-#include "StudioSettings.h"
 
 namespace scone
 {
@@ -25,7 +26,9 @@ namespace scone
 		INIT_MEMBER( pn, y_max_, 0 ),
 		INIT_MEMBER( pn, channel_offset_, 0 ),
 		INIT_MEMBER( pn, channel_multiply_, 1.0 ),
-		INIT_MEMBER( pn, norm_offset_, 0 )
+		INIT_MEMBER( pn, norm_offset_, 0 ),
+		plot_( nullptr ),
+		plot_title_( nullptr )
 	{
 		auto l = new QHBoxLayout( this );
 		l->setContentsMargins( 0, 0, 0, 0 );
@@ -34,11 +37,9 @@ namespace scone
 		l->addWidget( plot_ );
 
 		// title
-		if ( !title_.empty() )
-		{
-			plot_->plotLayout()->insertRow( 0 ); // inserts an empty row above the default axis rect
-			plot_->plotLayout()->addElement( 0, 0, new QCPPlotTitle( plot_, title_.c_str() ) );
-		}
+		plot_->plotLayout()->insertRow( 0 ); // inserts an empty row above the default axis rect
+		plot_title_ = new QCPPlotTitle( plot_, title_.c_str() );
+		plot_->plotLayout()->addElement( 0, 0, plot_title_ );
 
 		// norm data
 		auto norm_min = pn.try_get_child( "norm_min" );
@@ -47,6 +48,7 @@ namespace scone
 		{
 			auto* top = plot_->addGraph();
 			auto* bot = plot_->addGraph();
+			norm_data_.reserve( norm_min->size() );
 			for ( index_t i = 0; i < norm_min->size(); ++i )
 			{
 				auto yt = norm_max->get<double>( i ) + norm_offset_;
@@ -56,6 +58,7 @@ namespace scone
 				double x = 100.0 * i / ( norm_min->size() - 1 );
 				top->addData( x, yt );
 				bot->addData( x, yb );
+				norm_data_[ x ] = { yb, yt };
 			}
 			top->setPen( Qt::NoPen );
 			bot->setPen( Qt::NoPen );
@@ -129,6 +132,15 @@ namespace scone
 		for ( auto& e : avg_data )
 			avg_graph->addData( e.first, e.second );
 
+		// compute average error in STD
+		double error = 0.0;
+		for ( const auto& [x, r] : norm_data_ )
+			error += xo::abs( r.get_violation( xo::lerp_map( avg_data, x ) ) ) / xo::max( 0.01, r.range() );
+		error /= norm_data_.size();
+		auto fit_perc = 100.0 * xo::clamped( 1.0 - error, 0.0, 1.0 );
+
+		if ( plot_title_&& GetStudioSetting<bool>( "gait_analysis.show_fit" ) )
+			plot_title_->setText( title_.c_str() + QString::asprintf( " (%.1f%%)", fit_perc ) );
 		plot_->replot();
 	}
 }

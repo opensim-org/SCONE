@@ -7,8 +7,8 @@
 #include "scone/core/PropNode.h"
 #include "scone/core/types.h"
 #include "scone/core/GaitCycle.h"
-
-class QCustomPlot;
+#include "xo/container/flat_map.h"
+#include "xo/numerical/bounds.h"
 
 namespace scone
 {
@@ -33,8 +33,11 @@ namespace scone
 		double channel_offset_;
 		double channel_multiply_;
 		double norm_offset_;
+
+		xo::flat_map<double, xo::bounds<double>> norm_data_;
 		
 	private:
-		QCustomPlot* plot_;
+		class QCustomPlot* plot_;
+		class QCPPlotTitle* plot_title_;
 	};
 }

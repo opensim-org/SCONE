@@ -7,6 +7,7 @@ gait_analysis {
 	label = "Gait Analysis settings"
 	templates { type = folder default = "" label = "Folder containing gait analysis templates" }
 	plot_individual_cycles { type = bool default = 1 label = "Plot individual gait cycles" }
+	show_fit { type = bool default = 1 label = "Show data fit" }
 }
 
 progress {
