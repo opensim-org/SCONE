@@ -42,6 +42,7 @@ namespace scone
 		TimeInSeconds GetMaxTime() const;
 
 		void ApplyViewSettings( const ModelVis::ViewSettings& f );
+		Vec3 GetFollowPoint() const;
 
 		const path& GetFileName() const { return filename_; }
 		QString GetScenarioFileName() const { return to_qt( scenario_filename_ ); }

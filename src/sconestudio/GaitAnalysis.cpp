@@ -50,7 +50,8 @@ namespace scone
 				[]( const auto& v, const auto& c ) { return v + c.length();  } );
 			auto avg_dur = f * std::accumulate( cycles.begin(), cycles.end(), 0.0,
 				[]( const auto& v, const auto& c ) { return v + c.duration();  } );
-			info_.sprintf( "Gait Analysis - N=%d LEN=%.2fm DUR=%.2fs", cycles.size(), avg_length, avg_dur );
+			auto avg_speed = avg_length / avg_dur;
+			info_.sprintf( "Gait Analysis - %d steps; %.2fm; %.2fs; %0.2fm/s", cycles.size(), avg_length, avg_dur, avg_speed );
 		}
 		else log::warning( "Could not extract enough gait cycles from " + filename.str() );
 	}

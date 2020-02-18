@@ -191,4 +191,18 @@ namespace scone
 			vis_->Update( *model_ );
 		}
 	}
+
+	Vec3 StudioModel::GetFollowPoint() const
+	{
+		auto com = model_->GetComPos();
+		if ( auto gp = model_->GetGroundPlane() )
+		{
+			auto l = xo::linef( xo::vec3f( com ), xo::vec3f::neg_unit_y() );
+			auto& p = std::get<xo::plane>( gp->GetShape() );
+			auto t = xo::transformf( xo::vec3f( gp->GetPos() ), xo::quatf( gp->GetOri() ) );
+			com.y = xo::intersection( l, p, t ).y;
+		}
+		else com.y = 0;
+		return com;
+	}
 }

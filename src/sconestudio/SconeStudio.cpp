@@ -54,7 +54,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	evaluation_time_step( 1.0 / 8 ),
 	scene_( true, GetStudioSetting< float >( "viewer.ambient_intensity" ) ),
 	slomo_factor( 1 ),
-	com_delta( Vec3( 0, 1, 0 ) ),
+	com_delta( Vec3( 0, 0, 0 ) ),
 	captureProcess( nullptr )
 {
 	xo::log::debug( "Constructing UI elements" );
@@ -413,8 +413,8 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 		if ( update_vis && scenario_->HasModel() )
 		{
 			scenario_->UpdateVis( t );
-			auto d = com_delta( scenario_->GetModel().GetComPos() );
-			ui.osgViewer->moveCamera( osg::Vec3( d.x, 0, d.z ) );
+			auto d = com_delta( scenario_->GetFollowPoint() );
+			ui.osgViewer->moveCamera( osg::Vec3( d.x, d.y, d.z ) );
 			ui.osgViewer->setFrameTime( current_time );
 
 			if ( analysisView->isVisible() ) // #todo: not update so much when not playing (it's slow)
