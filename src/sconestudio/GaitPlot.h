@@ -10,6 +10,9 @@
 #include "xo/container/flat_map.h"
 #include "xo/numerical/bounds.h"
 
+class QCustomPlot;
+class QCPPlotTitle;
+
 namespace scone
 {
 	class GaitPlot : public QWidget
@@ -37,7 +40,7 @@ namespace scone
 		xo::flat_map<double, xo::bounds<double>> norm_data_;
 		
 	private:
-		class QCustomPlot* plot_;
-		class QCPPlotTitle* plot_title_;
+		QCustomPlot* plot_;
+		QCPPlotTitle* plot_title_;
 	};
 }
