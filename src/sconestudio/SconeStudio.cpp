@@ -339,7 +339,7 @@ void SconeStudio::createVideo()
 		ui.viewerDock->resize( borderSize + videoSize + QSize( 2, 2 ) );
 	}
 
-	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "avi files (*.avi)" );
+	captureFilename = QFileDialog::getSaveFileName( this, "Video Filename", QString(), "mp4 files (*.mp4);;avi files (*.avi);;mov files (*.mov)" );
 	if ( captureFilename.isEmpty() )
 		return;
 
