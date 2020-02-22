@@ -112,7 +112,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
 	addMenuAction( toolsMenu, "&Hold Graphs in Analysis", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+H" ) );
 	toolsMenu->addSeparator();
-	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
+	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
 
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	addMenuAction( actionMenu, "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
