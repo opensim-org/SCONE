@@ -1,7 +1,9 @@
 set(SCONE_CONFIG_FILES
 	sconelib_config.h
 	)
-
+set(SCONE_RESOURCE_FILES
+	../../../resources/scone-settings-schema.zml
+	)
 set(CORE_BASE_FILES
 	core/HasData.h
 	core/HasName.h
@@ -253,7 +255,7 @@ include( PrecompiledHeaders )
 use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "stdafx.cpp" 256 )
 
 # add sources to single lib
-add_library(sconelib SHARED ${SCONELIB_FILES} )
+add_library(sconelib SHARED ${SCONELIB_FILES} ${SCONE_RESOURCE_FILES} )
 
 # Require C++17 standard
 set_target_properties(sconelib PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
@@ -301,3 +303,4 @@ source_group("model" FILES ${SIM_TOPOLOGY_FILES})
 
 source_group("" FILES ${PRECOMPILED_HEADER_FILES})
 source_group("" FILES ${SCONE_CONFIG_FILES})
+source_group("" FILES ${SCONE_RESOURCE_FILES})
