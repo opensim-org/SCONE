@@ -64,15 +64,16 @@ namespace scone
 		INIT_PROP( props, initial_equilibration_activation, 0.05 );
 
 		// set store data info from settings
-		m_StoreDataInterval = 1.0 / GetSconeSettings().get< double >( "data.frequency" );
+		m_StoreDataInterval = 1.0 / GetSconeSetting<double>( "data.frequency" );
 		auto& flags = GetStoreDataFlags();
-		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSettings().get< bool >( "data.muscle" ) );
-		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSettings().get< bool >( "data.muscle" ) );
-		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSettings().get< bool >( "data.body" ) );
-		flags.set( StoreDataTypes::JointReactionForce, GetSconeSettings().get< bool >( "data.joint" ) );
-		flags.set( StoreDataTypes::SensorData, GetSconeSettings().get< bool >( "data.sensor" ) );
-		flags.set( StoreDataTypes::ControllerData, GetSconeSettings().get< bool >( "data.controller" ) );
-		flags.set( StoreDataTypes::ContactForce, GetSconeSettings().get< bool >( "data.contact" ) );
+		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSetting<bool>( "data.muscle" ) );
+		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSetting<bool>( "data.muscle" ) );
+		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
+		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
+		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
+		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
+		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
+		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
 		flags.set( StoreDataTypes::SimulationStatistics );
 	}
 

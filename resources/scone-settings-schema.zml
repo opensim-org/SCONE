@@ -62,6 +62,12 @@ data {
 		default = 1
 		description = "Output contact forces and moments"
 	}
+	debug {
+		type = bool
+		label = "Output debug data"
+		default = 0
+		description = "Output debug data"
+	}
 }
 
 results {

@@ -32,7 +32,8 @@ namespace scone
 		ExternalForce,
 		CenterOfMass,
 		SensorData,
-		ControllerData
+		ControllerData,
+		DebugData
 	};
 
 	using StoreDataFlags = xo::flag_set< StoreDataTypes >;
