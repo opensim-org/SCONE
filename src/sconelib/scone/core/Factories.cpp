@@ -25,6 +25,7 @@
 #include "scone/core/PieceWiseConstantFunction.h"
 #include "scone/core/PieceWiseLinearFunction.h"
 #include "scone/core/Polynomial.h"
+#include "scone/core/SineWave.h"
 
 #include "scone/measures/BalanceMeasure.h"
 #include "scone/measures/BodyMeasure.h"
@@ -133,7 +134,8 @@ namespace scone
 			.register_type< PieceWiseConstantFunction >( "PieceWiseConstant" )
 			.register_type< PieceWiseLinearFunction >()
 			.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" )
-			.register_type< Polynomial >();
+			.register_type< Polynomial >()
+			.register_type< SineWave >();
 
 		return g_FunctionFactory;
 	}

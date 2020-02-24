@@ -28,6 +28,8 @@ set(CORE_MATH_FILES
 	core/PieceWiseLinearFunction.h
 	core/Polynomial.h	
 	core/Polynomial.cpp
+	core/SineWave.h	
+	core/SineWave.cpp
 	)
 set(CORE_SYSTEM_FILES
 	core/Factories.h
