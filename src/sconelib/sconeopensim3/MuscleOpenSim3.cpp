@@ -149,6 +149,9 @@ namespace scone
 			frame[ GetName() + ".inv_ce_vel" ] = ( f_t - f_pe ) / f_ce;
 			frame[ GetName() + ".ce_vel_norm" ] = m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
 			frame[ GetName() + ".ce_vel" ] = m_osMus.getFiberVelocity( m_Model.GetTkState() );
+			frame[ GetName() + ".inv_ce_vel_ft" ] = f_t;
+			frame[ GetName() + ".inv_ce_vel_fpe" ] = f_pe;
+			frame[ GetName() + ".inv_ce_vel_fce" ] = f_ce;
 		}
 	}
 
