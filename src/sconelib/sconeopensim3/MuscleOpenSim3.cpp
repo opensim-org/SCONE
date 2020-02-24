@@ -147,6 +147,8 @@ namespace scone
 			auto f_pe = m_osMus.getPassiveFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
 			auto f_ce = m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() ) * m_osMus.getActivation( m_Model.GetTkState() );
 			frame[ GetName() + ".inv_ce_vel" ] = ( f_t - f_pe ) / f_ce;
+			frame[ GetName() + ".ce_vel_norm" ] = m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
+			frame[ GetName() + ".ce_vel" ] = m_osMus.getFiberVelocity( m_Model.GetTkState() );
 		}
 	}
 
