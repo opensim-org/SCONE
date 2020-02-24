@@ -80,6 +80,7 @@ namespace scone
 		double step_dist = 0.0;
 		double step_time = 0.0;
 		int start_step = xo::clamped( int( step_count ) - initiation_steps, 0, initiation_steps );
+		size_t counted_steps = 0;
 		for ( int step = 0; step < step_count; ++step )
 		{
 			double dt = step > 0 ? steps_[ step ].time - steps_[ step - 1 ].time : steps_[ step ].time;
@@ -95,6 +96,7 @@ namespace scone
 				step_measure += dt * norm_vel;
 				step_time += dt;
 				step_dist += steps_[ step ].length;
+				counted_steps++;
 			}
 		}
 
@@ -104,8 +106,8 @@ namespace scone
 		// set results
 		GetReport().set( "speed", speed );
 		GetReport().set( "step_count", step_count );
-		GetReport().set( "step_length", step_dist / ( step_dist - start_step ) );
-		GetReport().set( "step_duration", steps_.empty() ? 0 : ( steps_.back().time - steps_[ start_step ].time ) / ( step_dist - start_step ) );
+		GetReport().set( "step_length", counted_steps > 0 ? step_dist / counted_steps : 0.0 );
+		GetReport().set( "step_duration", counted_steps > 0 ? step_time / counted_steps : 0.0 );
 
 		return 1.0 - step_measure / step_time;
 	}
