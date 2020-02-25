@@ -112,7 +112,7 @@ namespace scone
 		virtual PropNode GetSimulationReport() const { return PropNode(); }
 
 		// Model data
-		virtual const Storage< Real, TimeInSeconds > GetData() { return m_Data; }
+		virtual const Storage< Real, TimeInSeconds > GetData() const { return m_Data; }
 		virtual std::vector<path> WriteResults( const path& file_base ) const;
 
 		// get dynamic model statistics
