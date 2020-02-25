@@ -1,6 +1,8 @@
 #include "SineWave.h"
 
 #include "spot/par_tools.h"
+#include "xo/numerical/constants.h"
+#include <cmath>
 
 namespace scone
 {
