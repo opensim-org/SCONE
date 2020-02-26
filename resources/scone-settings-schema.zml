@@ -28,7 +28,7 @@ data {
 	}
 	body {
 		type = bool
-		label = "Output body data"
+		label = "Output body position and orientation"
 		default = 1
 		description = "Output body position and orientation data (0 or 1)"
 	}
@@ -76,5 +76,15 @@ results {
 		label = "Write Controller and Measure results"
 		default = 0
 		label = "Write custom Controller and Measure results to file"
+	}
+	extract_channels {
+		type = bool
+		label = "Extract specific channels to separate file"
+		default = 0
+	}
+	extract_channel_names {
+		type = string
+		label = "Channels to extract to separate file"
+		default = "*.activation;*.excitation"
 	}
 }

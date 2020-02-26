@@ -27,6 +27,9 @@
 
 #include <algorithm>
 #include <tuple>
+#include "xo/container/storage.h"
+#include "xo/container/flat_map.h"
+#include <fstream>
 
 using std::endl;
 
@@ -320,6 +323,18 @@ namespace scone
 				xo::append( files, GetController()->WriteResults( file ) );
 			if ( GetMeasure() )
 				xo::append( files, GetMeasure()->WriteResults( file ) );
+		}
+
+		// extract specific channels for debugging / analysis
+		if ( GetSconeSetting<bool>( "results.extract_channels" ) )
+		{
+			xo::storage< Real > sto;
+			sto.resize( GetData().GetFrameCount(), 0 );
+			xo::pattern_matcher match( GetSconeSetting<string>( "results.extract_channel_names" ) );
+			for ( index_t idx = 0; idx < GetData().GetChannelCount(); ++idx )
+				if ( const auto& label = GetData().GetLabels()[ idx ]; match( label ) )
+					sto.add_channel( label, GetData().GetChannelData( idx ) );
+			std::ofstream( file.str() + ".channels.txt" ) << sto;
 		}
 
 		return files;
