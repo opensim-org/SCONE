@@ -2,4 +2,5 @@
 
 #include <string>
 #include <vector>
-#include <sol/sol.hpp>
+
+#include "sol_config.h"

@@ -1,16 +1,17 @@
 #pragma once
 
-#include <string>
+#include "scone/core/types.h"
 #include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Muscle.h"
 #include "scone/model/Dof.h"
+#include "scone/core/Log.h"
+#include "scone/core/Storage.h"
+
 #include "xo/geometry/vec3_type.h"
 #include "xo/string/string_cast.h"
-#include "scone/core/Log.h"
 #include "xo/geometry/quat_type.h"
-#include "scone/core/Storage.h"
 
 namespace sol { class state; }
 

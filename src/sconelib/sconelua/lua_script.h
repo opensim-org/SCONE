@@ -4,7 +4,7 @@
 #include "scone/model/Model.h"
 #include "platform.h"
 
-#include <sol/sol.hpp>
+#include "sol_config.h"
 
 namespace scone
 {
