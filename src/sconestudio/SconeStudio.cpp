@@ -467,7 +467,17 @@ void SconeStudio::fileSaveAsTriggered()
 	{
 		if ( auto* s = getActiveCodeEditor() )
 		{
-			QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, "SCONE file (*.scone);;XML file (*.xml);;Lua script (*.lua)" );
+			// apparently, the mess below is needed to setup the (trivially) correct file filter in Qt
+			QString scone_file = "SCONE scenario (*.scone *.xml)";
+			QString lua_file = "Lua script (*.lua)";
+			QString ext = QFileInfo( s->fileName ).suffix();
+			QString filter = scone_file + ";;" + lua_file;
+			QString* default_filter = nullptr;
+			if ( ext == "scone" ) default_filter = &scone_file;
+			else if ( ext == "lua" ) default_filter = &lua_file;
+
+			// we can finally make the actual call
+			QString filename = QFileDialog::getSaveFileName( this, "Save File As", s->fileName, filter, default_filter );
 			if ( !filename.isEmpty() )
 			{
 				s->saveAs( filename );
