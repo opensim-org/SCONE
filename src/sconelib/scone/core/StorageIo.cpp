@@ -56,12 +56,12 @@ namespace scone
 	{
 #ifdef XO_COMP_MSVC
 		FILE* f = fopen( file.c_str(), "w" );
-		SCONE_ASSERT_MSG( f, "Error opening file " + file.str() );
+		SCONE_ERROR_IF( !f, "Could not open file " + file.str() );
 		WriteStorageTxt( storage, f, time_label );
 		fclose( f );
 #else
 		std::ofstream ofs( file.str() );
-		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
+		SCONE_ASSERT_MSG( ofs.good(), "Could not open file " + file.str() );
 		WriteStorageTxt( storage, ofs, time_label );
 #endif
 	}
@@ -91,12 +91,12 @@ namespace scone
 	{
 #ifdef XO_COMP_MSVC
 		FILE* f = fopen( file.c_str(), "w" );
-		SCONE_ASSERT_MSG( f, "Error opening file " + file.str() );
+		SCONE_ERROR_IF( !f, "Could not open file " + file.str() );
 		WriteStorageSto( storage, f, name );
 		fclose( f );
 #else
 		std::ofstream ofs( file.str() );
-		SCONE_ASSERT_MSG( ofs.good(), "Error opening file " + file.str() );
+		SCONE_ASSERT_MSG( ofs.good(), "Could not open file " + file.str() );
 		WriteStorageSto( storage, ofs, name );
 #endif
 	}
@@ -104,7 +104,7 @@ namespace scone
 	void ReadStorageSto( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
+		SCONE_ERROR_IF( !str.good(), "Could not open file " + file.str() );
 		ReadStorageSto( storage, str );
 	}
 
@@ -122,7 +122,7 @@ namespace scone
 	void ReadStorageTxt( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
 		auto str = xo::char_stream( file );
-		SCONE_ASSERT_MSG( str.good(), "Error opening file " + file.str() );
+		SCONE_ERROR_IF( !str.good(), "Could not open file " + file.str() );
 		ReadStorageTxt( storage, str );
 	}
 
@@ -133,10 +133,10 @@ namespace scone
 		// read time label
 		String dummy;
 		str >> dummy;
-		SCONE_ASSERT_MSG( dummy == "time", "First column should be labeled 'time'" );
+		SCONE_ERROR_IF( dummy != "time", "First column should be labeled 'time'" );
 
 		String header = str.get_line();
-		SCONE_ASSERT_MSG( !str.fail(), "Error reading file labels" );
+		SCONE_ERROR_IF( str.fail(), "Error reading file labels" );
 		auto labels = xo::split_str( header, "\t " );
 
 		// add channels to storage

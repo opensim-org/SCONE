@@ -104,13 +104,14 @@ namespace scone
 				state_data_index[ state_idx ] = data_idx;
 			}
 		}
+		else log::warning( "Unexpected call to StudioModel::InitStateDataIndices()" );
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		if ( !is_evaluating_ && model_ )
+		if ( model_ && !is_evaluating_ )
 		{
 			// update model state from data
 			SCONE_ASSERT( !state_data_index.empty() );
@@ -125,17 +126,14 @@ namespace scone
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
-		if ( model_ )
+		if ( model_ && is_evaluating_ )
 		{
-			SCONE_ASSERT( IsEvaluating() );
-			try
-			{
+			try {
 				model_objective_->AdvanceSimulationTo( *model_, t );
 				if ( model_->HasSimulationEnded() )
 					FinalizeEvaluation( true );
 			}
-			catch ( std::exception & e )
-			{
+			catch ( std::exception & e ) {
 				FinalizeEvaluation( false );
 				QString title = "Error evaluating " + to_qt( filename_.filename() );
 				QString msg = e.what();
@@ -143,6 +141,7 @@ namespace scone
 				QMessageBox::critical( nullptr, title, msg );
 			}
 		}
+		else log::warning( "Unexpected call to StudioModel::EvaluateTo()" );
 	}
 
 	void StudioModel::FinalizeEvaluation( bool output_results )
@@ -167,9 +166,14 @@ namespace scone
 				if ( !results[ "result" ].empty() )
 					log::info( results );
 
-				xo::timer t;
-				auto result_files = model_->WriteResults( filename_ );
-				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
+				try {
+					xo::timer t;
+					auto result_files = model_->WriteResults( filename_ );
+					log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
+				}
+				catch ( const std::exception& e ) {
+					log::error( "Error writing results: ", e.what() );
+				}
 			}
 		}
 
