@@ -4,6 +4,8 @@
 #include "scone/controllers/Controller.h"
 #include "scone/core/system_tools.h"
 
+#include <vector>
+
 namespace scone
 {
 	/// Controller defined through a Lua script.
@@ -39,6 +41,9 @@ namespace scone
 
 		/// filename of the Lua script, path is relative to the .scone file
 		path script_file;
+
+		/// Array of files used by the Lua script; files included by 'require' should be added here
+		std::vector<path> external_files;
 
 	protected:
 		virtual bool ComputeControls( Model& model, double timestamp ) override;

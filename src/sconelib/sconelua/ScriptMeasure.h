@@ -1,10 +1,11 @@
 #pragma once
 
 #include "platform.h"
-#include <functional>
 #include "xo/utility/pointer_types.h"
 #include "scone/measures/Measure.h"
 #include "scone/core/system_tools.h"
+#include <functional>
+#include <vector>
 
 namespace scone
 {
@@ -47,6 +48,9 @@ namespace scone
 
 		/// filename of the Lua script, path is relative to the .scone file
 		path script_file;
+
+		/// Array of files used by the Lua script; files included by 'require' should be added here
+		std::vector<path> external_files;
 
 	protected:
 		virtual String GetClassSignature() const override;

@@ -14,12 +14,14 @@
 #include "lua_api.h"
 #include "scone/core/Log.h"
 #include "scone/core/profiler_config.h"
+#include "xo/container/prop_node_tools.h"
 
 namespace scone
 {
 	ScriptController::ScriptController( const PropNode& pn, Params& par, Model& model, const Location& loc ) :
 		Controller( pn, par, model, loc ),
 		script_file( FindFile( pn.get<path>( "script_file" ) ) ),
+		INIT_MEMBER( pn, external_files, std::vector<path>() ),
 		script_( new lua_script( script_file, pn, par, model ) )
 	{
 		// optional functions
@@ -39,7 +41,10 @@ namespace scone
 			init_( &lm, &lp, side );
 		}
 
+		// add lua files as external resources
 		model.AddExternalResource( script_->script_file_ );
+		for ( auto& f : external_files )
+			model.AddExternalResource( FindFile( f ) );
 	}
 
 	ScriptController::~ScriptController()
