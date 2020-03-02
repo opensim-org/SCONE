@@ -24,28 +24,29 @@ size_t SconeStorageDataModel::seriesCount() const
 
 QString SconeStorageDataModel::label( int idx ) const
 {
-	SCONE_ASSERT( storage );
-	return QString( storage->GetLabels()[ idx ].c_str() );
+	return storage ? QString( storage->GetLabels()[ idx ].c_str() ) : QString();
 }
 
 double SconeStorageDataModel::value( int idx, double time ) const
 {
-	return storage->GetFrame( timeIndex( time ) )[ idx ];
+	return storage ? storage->GetFrame( timeIndex( time ) )[ idx ] : 0;
 }
 
 std::vector< std::pair< float, float > > SconeStorageDataModel::getSeries( int idx, double min_interval ) const
 {
-	SCONE_ASSERT( storage );
 	std::vector< std::pair< float, float > > series;
-	series.reserve( storage->GetFrameCount() ); // this may be a little much, but ensures no reallocation
-	double last_time = timeStart() - 2 * min_interval;
-	for ( size_t i = 0; i < storage->GetFrameCount(); ++i )
+	if ( storage )
 	{
-		auto& f = storage->GetFrame( i );
-		if ( f.GetTime() - last_time >= min_interval )
+		series.reserve( storage->GetFrameCount() ); // this may be a little much, but ensures no reallocation
+		double last_time = timeStart() - 2 * min_interval;
+		for ( size_t i = 0; i < storage->GetFrameCount(); ++i )
 		{
-			series.emplace_back( static_cast< float >( f.GetTime() ), static_cast< float >( f[ idx ] ) );
-			last_time = f.GetTime();
+			auto& f = storage->GetFrame( i );
+			if ( f.GetTime() - last_time >= min_interval )
+			{
+				series.emplace_back( static_cast<float>( f.GetTime() ), static_cast<float>( f[ idx ] ) );
+				last_time = f.GetTime();
+			}
 		}
 	}
 	return series;
@@ -73,5 +74,5 @@ xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 
 double SconeStorageDataModel::timeValue( xo::index_t idx ) const
 {
-	return idx != xo::no_index ? storage->GetFrame( idx ).GetTime() : 0.0;
+	return storage && idx != xo::no_index ? storage->GetFrame( idx ).GetTime() : 0.0;
 }
