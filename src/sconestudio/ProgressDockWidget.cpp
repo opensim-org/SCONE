@@ -314,7 +314,11 @@ void ProgressDockWidget::updateText()
 		break;
 	case ProgressDockWidget::FinishedState:
 		if ( opt )
-			s = xo::stringf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
+		{
+			if ( opt->cur_gen > 0 )
+				s = xo::stringf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
+			else s = "Could not optimize " + opt->name + "\nPlease evaluate the scenario and check for errors";
+		}
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
