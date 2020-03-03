@@ -70,22 +70,22 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
 
 	auto editMenu = menuBar()->addMenu( "&Edit" );
-	addMenuAction( editMenu, "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ) );
-	addMenuAction( editMenu, "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
-	addMenuAction( editMenu, "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ) );
+	editMenu->addAction( "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ) );
+	editMenu->addAction( "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
+	editMenu->addAction( "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ) );
 	editMenu->addSeparator();
-	addMenuAction( editMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog );
+	editMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
-	viewActions[ ModelVis::ShowForces ] = addMenuAction( viewMenu, "Show External &Forces", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowMuscles ] = addMenuAction( viewMenu, "Show &Muscles", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowTendons ] = addMenuAction( viewMenu, "Show &Tendons", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowBodyGeom ] = addMenuAction( viewMenu, "Show &Body Geometry", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowBodyAxes ] = addMenuAction( viewMenu, "Show Body &Axes", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowBodyCom] = addMenuAction( viewMenu, "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowJoints ] = addMenuAction( viewMenu, "Show &Joints", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowContactGeom ] = addMenuAction( viewMenu, "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowGroundPlane ] = addMenuAction( viewMenu, "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowForces ] = viewMenu->addAction( "Show External &Forces", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowMuscles ] = viewMenu->addAction( "Show &Muscles", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowTendons ] = viewMenu->addAction( "Show &Tendons", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyGeom ] = viewMenu->addAction( "Show &Body Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyAxes ] = viewMenu->addAction( "Show Body &Axes", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyCom] = viewMenu->addAction( "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowJoints ] = viewMenu->addAction( "Show &Joints", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowContactGeom ] = viewMenu->addAction( "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowGroundPlane ] = viewMenu->addAction( "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
@@ -93,41 +93,41 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	}
 
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
-	addMenuAction( scenarioMenu, "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
+	scenarioMenu->addAction( "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
 	scenarioMenu->addSeparator();
-	addMenuAction( scenarioMenu, "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
-	addMenuAction( scenarioMenu, "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ));
+	scenarioMenu->addAction( "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
+	scenarioMenu->addAction( "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ));
 	scenarioMenu->addSeparator();
-	addMenuAction( scenarioMenu, "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
+	scenarioMenu->addAction( "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
 	scenarioMenu->addSeparator();
-	addMenuAction( scenarioMenu, "&Performance Test (Profile)", this, &SconeStudio::performanceTestProfile, QKeySequence( "Ctrl+P" ) );
-	addMenuAction( scenarioMenu, "Performance Test (&Raw)", this, &SconeStudio::performanceTestNoProfile, QKeySequence( "Ctrl+Shift+P" ) );
+	scenarioMenu->addAction( "&Performance Test (Profile)", this, &SconeStudio::performanceTestProfile, QKeySequence( "Ctrl+P" ) );
+	scenarioMenu->addAction( "Performance Test (&Raw)", this, &SconeStudio::performanceTestNoProfile, QKeySequence( "Ctrl+Shift+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
-	addMenuAction( toolsMenu, "Generate &Video...", this, &SconeStudio::createVideo );
-	addMenuAction( toolsMenu, "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
+	toolsMenu->addAction( "Generate &Video...", this, &SconeStudio::createVideo );
+	toolsMenu->addAction( "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
 	toolsMenu->addSeparator();
-	addMenuAction( toolsMenu, "&Model Analysis", this, &SconeStudio::modelAnalysis );
-	addMenuAction( toolsMenu, "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
-	addMenuAction( toolsMenu, "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
-	addMenuAction( toolsMenu, "&Hold Graphs in Analysis", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+H" ) );
+	toolsMenu->addAction( "&Model Analysis", this, &SconeStudio::modelAnalysis );
+	toolsMenu->addAction( "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
+	toolsMenu->addAction( "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
+	toolsMenu->addAction( "&Keep Current Analysis Graphs", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+Shift+K" ) );
 	toolsMenu->addSeparator();
-	addMenuAction( toolsMenu, "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
+	toolsMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
 
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
-	addMenuAction( actionMenu, "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
-	addMenuAction( actionMenu, "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
-	addMenuAction( actionMenu, "Toggle Play", ui.playControl, &QPlayControl::togglePlay, QKeySequence( "Ctrl+Space" ) );
-	addMenuAction( actionMenu, "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
-	addMenuAction( actionMenu, "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
-	addMenuAction( actionMenu, "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
+	actionMenu->addAction( "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
+	actionMenu->addAction( "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
+	actionMenu->addAction( "Toggle Play", ui.playControl, &QPlayControl::togglePlay, QKeySequence( "Ctrl+Space" ) );
+	actionMenu->addAction( "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
+	actionMenu->addAction( "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
+	actionMenu->addAction( "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
 	actionMenu->addSeparator();
-	addMenuAction( actionMenu, "Step &Back", ui.playControl, &QPlayControl::stepBack, QKeySequence( "Ctrl+Left" ) );
-	addMenuAction( actionMenu, "Step &Forward", ui.playControl, &QPlayControl::stepForward, QKeySequence( "Ctrl+Right" ) );
-	addMenuAction( actionMenu, "Page &Back", ui.playControl, &QPlayControl::pageBack, QKeySequence( "Ctrl+PgUp" ) );
-	addMenuAction( actionMenu, "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
-	addMenuAction( actionMenu, "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
-	addMenuAction( actionMenu, "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
+	actionMenu->addAction( "Step &Back", ui.playControl, &QPlayControl::stepBack, QKeySequence( "Ctrl+Left" ) );
+	actionMenu->addAction( "Step &Forward", ui.playControl, &QPlayControl::stepForward, QKeySequence( "Ctrl+Right" ) );
+	actionMenu->addAction( "Page &Back", ui.playControl, &QPlayControl::pageBack, QKeySequence( "Ctrl+PgUp" ) );
+	actionMenu->addAction( "Page &Forward", ui.playControl, &QPlayControl::pageForward, QKeySequence( "Ctrl+PgDown" ) );
+	actionMenu->addAction( "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
+	actionMenu->addAction( "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
 
 	createWindowMenu();
 	createHelpMenu();
