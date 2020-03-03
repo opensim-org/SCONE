@@ -25,6 +25,8 @@
   * Pressing ''F2'' in Optimization Results now allows renaming files and folders
 
 === Fixes ===
+  * Fix several crashes related to scenario or script errors
+  * Progress window now report error message in case of flat fitness on first generation
   * Fixed message "Could not find Optimizer": SCONE no longer tries to evaluate a .scone file that doesn't have the word "Optimizer" in it
   * Pressing "Cancel" when asked to "Save Changes" now works correctly
   * Fixed default file type when using "File -> Save As...", closes #186
