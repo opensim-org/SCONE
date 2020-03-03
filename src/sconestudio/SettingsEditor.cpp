@@ -38,7 +38,7 @@ namespace scone
 		ui.scenariosFolder->setText( to_qt( xo::path( GetFolder( SCONE_SCENARIO_FOLDER ) ).make_preferred() ) );
 		ui.resultsFolder->setText( to_qt( xo::path( GetFolder( SCONE_RESULTS_FOLDER ) ).make_preferred() ) );
 		ui.geometryFolder->setText( to_qt( xo::path( GetFolder( SCONE_GEOMETRY_FOLDER ) ).make_preferred() ) );
-		ui.gaitAnalysisFolder->setText( to_qt( GetStudioSetting<xo::path>( "gait_analysis.templates" ).make_preferred() ) );
+		ui.gaitAnalysisFolder->setText( to_qt( GetStudioSetting<xo::path>( "gait_analysis.template" ).make_preferred() ) );
 
 		// data checkboxes
 		xo::flat_map< string, QListWidgetItem* > data_checkboxes;
@@ -77,7 +77,7 @@ namespace scone
 			scone_settings.set( "folders.scenarios", ui.scenariosFolder->text().toStdString() );
 			scone_settings.set( "folders.results", ui.resultsFolder->text().toStdString() );
 			scone_settings.set( "folders.geometry", ui.geometryFolder->text().toStdString() );
-			studio_settings.set( "gait_analysis.templates", ui.gaitAnalysisFolder->text().toStdString() );
+			studio_settings.set( "gait_analysis.template", ui.gaitAnalysisFolder->text().toStdString() );
 
 			// copy checkboxes
 			for ( auto& item : data_checkboxes )

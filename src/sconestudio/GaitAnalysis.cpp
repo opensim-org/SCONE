@@ -25,7 +25,7 @@ namespace scone
 		grid_->setContentsMargins( 0, 0, 0, 0 );
 		grid_->setSpacing( 0 );
 
-		auto plot_pn = xo::load_file( GetStudioSetting<path>( "gait_analysis.templates" ) / "default.zml" );
+		auto plot_pn = xo::load_file( GetStudioSetting<path>( "gait_analysis.template" ) );
 		for ( const auto& pn : plot_pn )
 		{
 			auto plot = new GaitPlot( pn.second );

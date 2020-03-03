@@ -29,8 +29,8 @@ namespace scone
 		}
 
 		// set defaults
-		if ( get<path>( "gait_analysis.templates" ).empty() )
-			set<path>( "gait_analysis.templates", GetFolder(SCONE_RESOURCE_FOLDER) / "gaitanalysis" );
+		if ( get<path>( "gait_analysis.template" ).empty() )
+			set<path>( "gait_analysis.template", GetFolder( SCONE_RESOURCE_FOLDER ).make_preferred() / "gaitanalysis/default.zml" );
 	}
 
 	xo::settings& GetStudioSettings()
