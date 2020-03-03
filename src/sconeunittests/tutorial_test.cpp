@@ -22,24 +22,24 @@ namespace xo
 
 			void operator()( test_case& XO_ACTIVE_TEST_CASE ) {
 				auto scenario_pn = xo::load_file_with_include( scenario_file_, "INCLUDE" );
-				auto result_pn = scone::EvaluateScenario( scenario_pn, scenario_file_, xo::path() );
+				auto eval_pn = scone::EvaluateScenario( scenario_pn, scenario_file_, xo::path() );
 
 				if ( xo::file_exists( report_file_ ) )
 				{
-					auto base_report_pn = xo::load_file( report_file_ );
-					auto rep1 = result_pn.get_child( "result" );
-					auto rep2 = base_report_pn.get_child( "result" );
-					XO_CHECK( rep1 == rep2 );
-					if ( rep1 != rep2 )
+					auto base_pn = xo::load_file( report_file_ );
+					auto eval_result = eval_pn.get_child( "result" );
+					auto base_result = base_pn.get_child( "result" );
+					XO_CHECK( eval_result == base_result );
+					if ( eval_result != base_result )
 					{
-						xo::log::error( "baseline:\n", rep1 );
-						xo::log::error( "test result:\n", rep2 );
+						xo::log::info( "baseline:\n", base_result );
+						xo::log::info( "evaluated:\n", eval_result );
 					}
 				}
 				else
 				{
 					XO_CHECK_MESSAGE( false, "Could not find results for " + report_file_.filename().str() );
-					xo::save_file( result_pn, report_file_ );
+					xo::save_file( eval_pn, report_file_ );
 				}
 			}
 
