@@ -32,7 +32,7 @@
 namespace scone
 {
 	StudioModel::StudioModel( vis::scene& s, const path& file ) :
-		is_evaluating_( false )
+		status_( Status::Initializing )
 	{
 		// create the objective from par file or config file
 		filename_ = file;
@@ -44,39 +44,46 @@ namespace scone
 
 		if ( model_objective_ )
 		{
+			try
+			{
+				// create model from par or with default parameters
+				const auto file_type = file.extension_no_dot();
+				if ( file_type == "par" )
+				{
+					model_ = model_objective_->CreateModelFromParFile( file );
+				}
+				else  // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
+				{
+					auto par = SearchPoint( model_objective_->info() );
+					model_ = model_objective_->CreateModelFromParams( par );
+				}
 
-			// create model from par or with default parameters
-			const auto file_type = file.extension_no_dot();
-			if ( file_type == "par" )
-			{
-				model_ = model_objective_->CreateModelFromParFile( file );
-			}
-			else  // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
-			{
-				auto par = SearchPoint( model_objective_->info() );
-				model_ = model_objective_->CreateModelFromParams( par );
-			}
+				if ( file_type == "sto" )
+				{
+					// file is a .sto, load results
+					xo::timer t;
+					log::debug( "Reading ", file );
+					ReadStorageSto( storage_, file );
+					InitStateDataIndices();
+					log::trace( "Read ", file, " in ", t(), " seconds" );
+					status_ = Status::Ready;
+				}
+				else
+				{
+					// file is a .par or .scone, setup for evaluation
+					status_ = Status::Evaluating;
+					model_->SetStoreData( true );
+					EvaluateTo( 0 ); // evaluate one step so we can init vis
+				}
 
-			if ( file_type == "sto" )
-			{
-				// file is a .sto, load results
-				xo::timer t;
-				log::debug( "Reading ", file );
-				ReadStorageSto( storage_, file );
-				InitStateDataIndices();
-				log::trace( "Read ", file, " in ", t(), " seconds" );
+				// create and init visualizer
+				vis_ = std::make_unique<ModelVis>( *model_, s );
+				UpdateVis( 0 );
 			}
-			else
+			catch ( const std::exception& e )
 			{
-				// file is a .par or .scone, setup for evaluation
-				is_evaluating_ = true;
-				model_->SetStoreData( true );
-				EvaluateTo( 0 ); // evaluate one step so we can init vis
+				InvokeError( e.what() );
 			}
-
-			// create and init visualizer
-			vis_ = std::make_unique<ModelVis>( *model_, s );
-			UpdateVis( 0 );
 		}
 		else
 		{
@@ -91,30 +98,26 @@ namespace scone
 
 	void StudioModel::InitStateDataIndices()
 	{
-		if ( model_ )
+		SCONE_ASSERT( model_ );
+		SCONE_ASSERT( state_data_index.empty() );
+		SCONE_ERROR_IF( storage_.IsEmpty(), "Could not find any data" );
+		model_state = model_->GetState();
+		state_data_index.resize( model_state.GetSize() );
+		for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
 		{
-			// setup state_data_index (lazy init)
-			SCONE_ASSERT( state_data_index.empty() );
-			model_state = model_->GetState();
-			state_data_index.resize( model_state.GetSize() );
-			for ( size_t state_idx = 0; state_idx < state_data_index.size(); state_idx++ )
-			{
-				auto data_idx = ( storage_.GetChannelIndex( model_state.GetName( state_idx ) ) );
-				SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
-				state_data_index[ state_idx ] = data_idx;
-			}
+			auto data_idx = ( storage_.GetChannelIndex( model_state.GetName( state_idx ) ) );
+			SCONE_ASSERT_MSG( data_idx != NoIndex, "Could not find state channel " + model_state.GetName( state_idx ) );
+			state_data_index[ state_idx ] = data_idx;
 		}
-		else log::warning( "Unexpected call to StudioModel::InitStateDataIndices()" );
 	}
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
 		SCONE_PROFILE_FUNCTION;
 
-		if ( model_ && !is_evaluating_ )
+		if ( model_ && !storage_.IsEmpty() && !state_data_index.empty() )
 		{
 			// update model state from data
-			SCONE_ASSERT( !state_data_index.empty() );
 			for ( index_t i = 0; i < model_state.GetSize(); ++i )
 				model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
 			model_->SetState( model_state, time );
@@ -126,64 +129,80 @@ namespace scone
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
 	{
-		if ( model_ && is_evaluating_ )
+		if ( model_ && IsEvaluating() )
 		{
-			try {
+			try
+			{
 				model_objective_->AdvanceSimulationTo( *model_, t );
 				if ( model_->HasSimulationEnded() )
-					FinalizeEvaluation( true );
+					FinalizeEvaluation();
 			}
-			catch ( std::exception & e ) {
-				FinalizeEvaluation( false );
-				QString title = "Error evaluating " + to_qt( filename_.filename() );
-				QString msg = e.what();
-				log::error( title.toStdString(), msg.toStdString() );
-				QMessageBox::critical( nullptr, title, msg );
+			catch ( std::exception& e )
+			{
+				InvokeError( e.what() );
 			}
 		}
 		else log::warning( "Unexpected call to StudioModel::EvaluateTo()" );
 	}
 
-	void StudioModel::FinalizeEvaluation( bool output_results )
+	void StudioModel::AbortEvaluation()
 	{
-		if ( model_ )
+		try
 		{
-			// copy data and init data
+			status_ = Status::Aborted;
 			storage_ = model_->GetData();
-			if ( !storage_.IsEmpty() )
-				InitStateDataIndices();
-		}
+			InitStateDataIndices();
 
-		if ( output_results )
+		}
+		catch ( const std::exception& e )
 		{
-			if ( model_objective_ )
-			{
-				auto fitness = model_objective_->GetResult( *model_ );
-				log::info( "fitness = ", fitness );
-				PropNode results;
-				results.add_child( "result", model_objective_->GetReport( *model_ ) );
-				results.append( model_->GetSimulationReport() );
-				if ( !results[ "result" ].empty() )
-					log::info( results );
-
-				try {
-					xo::timer t;
-					auto result_files = model_->WriteResults( filename_ );
-					log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
-				}
-				catch ( const std::exception& e ) {
-					log::error( "Error writing results: ", e.what() );
-				}
-			}
+			InvokeError( e.what() );
 		}
+	}
 
-		is_evaluating_ = false;
+	void StudioModel::FinalizeEvaluation()
+	{
+		SCONE_ERROR_IF( !model_objective_, "No model objective" );
+
+		// fetch data
+		storage_ = model_->GetData();
+		InitStateDataIndices();
+
+		// show fitness results
+		auto fitness = model_objective_->GetResult( *model_ );
+		log::info( "fitness = ", fitness );
+		PropNode results;
+		results.add_child( "result", model_objective_->GetReport( *model_ ) );
+		results.append( model_->GetSimulationReport() );
+		if ( !results[ "result" ].empty() )
+			log::info( results );
+
+		// write results to file(s)
+		xo::timer t;
+		auto result_files = model_->WriteResults( filename_ );
+		log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
+
+		// we're done!
+		status_ = Status::Ready;
+	}
+
+	void StudioModel::InvokeError( const String& message )
+	{
+		if ( status_ != Status::Error )
+		{
+			status_ = Status::Error;
+			log::error( "Error in ", filename_.filename(), ": ", message );
+			QMessageBox::critical( nullptr, "Error in " + to_qt( filename_.filename() ), message.c_str() );
+		}
+		else log::warning( "Duplicate error: ", message );
 	}
 
 	TimeInSeconds StudioModel::GetMaxTime() const
 	{
-		if ( model_objective_ )
-			return IsEvaluating() ? model_objective_->GetDuration() : storage_.Back().GetTime();
+		if ( model_objective_ && IsEvaluating() )
+			return model_objective_->GetDuration();
+		else if ( !storage_.IsEmpty() )
+			return storage_.Back().GetTime();
 		else return 0.0;
 	}
 

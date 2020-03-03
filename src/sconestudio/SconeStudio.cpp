@@ -308,8 +308,10 @@ void SconeStudio::evaluate()
 			// update 3D visuals and progress bar
 			setTime( t, true );
 			dlg.setValue( int( 1000 * t / scenario_->GetMaxTime() ) );
-			if ( dlg.wasCanceled() ) {
-				scenario_->FinalizeEvaluation( false );
+			if ( dlg.wasCanceled() )
+			{
+				// user pressed cancel: update data so that user can see results so far
+				scenario_->AbortEvaluation();
 				break;
 			}
 			prev_visual_time = rt;
@@ -318,9 +320,12 @@ void SconeStudio::evaluate()
 	}
 
 	// report duration
-	auto real_dur = real_time().seconds();
-	auto sim_time = scenario_->GetTime();
-	log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+	if ( scenario_->IsReady() )
+	{
+		auto real_dur = real_time().seconds();
+		auto sim_time = scenario_->GetTime();
+		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+	}
 
 	xo::set_thread_priority( xo::thread_priority::normal );
 

@@ -30,14 +30,19 @@ namespace scone
 
 		void UpdateVis( TimeInSeconds t );
 		void EvaluateTo( TimeInSeconds t );
-		void FinalizeEvaluation( bool output_results );
+
+		void AbortEvaluation();
 
 		const Storage<>& GetData() { return storage_; }
 		bool HasModel() const { return bool( model_ ); }
+		bool HasData() const { return !storage_.IsEmpty() && !state_data_index.empty(); }
+
 		Model& GetModel() { return *model_; }
 		ModelObjective& GetModelObjective() const { return *model_objective_; }
 
-		bool IsEvaluating() const { return is_evaluating_; }
+		bool IsEvaluating() const { return status_ == Status::Evaluating; }
+		bool IsReady() const { return status_ == Status::Ready; }
+
 		TimeInSeconds GetTime() const { return model_ ? model_->GetTime() : 0.0; }
 		TimeInSeconds GetMaxTime() const;
 
@@ -48,7 +53,13 @@ namespace scone
 		QString GetScenarioFileName() const { return to_qt( scenario_filename_ ); }
 		const PropNode& GetScenarioProps() const { return scenario_pn_; }
 
+		enum class Status { Initializing, Evaluating, Ready, Aborted, Error };
+		Status GetStatus() const { return status_; }
+
 	private:
+		void FinalizeEvaluation();
+		void InvokeError( const String& message );
+
 		// visualizer
 		u_ptr<ModelVis> vis_;
 
@@ -62,7 +73,9 @@ namespace scone
 		path scenario_filename_;
 		PropNode scenario_pn_;
 
-		bool is_evaluating_;
+		Status status_;
+
+		//bool is_evaluating_;
 
 		// model state
 		std::vector< size_t > state_data_index;
