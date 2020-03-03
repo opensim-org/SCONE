@@ -1,6 +1,41 @@
 ~~NOCACHE~~
 ====== SCONE Version History ======
 
+==== SCONE 1.4.0 ====
+//Released March 3, 2020//
+
+=== New Features and Updates ===
+  * Gait Analysis support, allowing users to extract gait cycles from simulation results, and compare gait parameters to norm data
+  * Scripting improvements and updates:
+    * Greatly improved error handling in Lua scripts, closes #184, closes #80, closes #81
+    * ScriptMeasure and ScriptController now support 'external_files', which can be used to add files included by a 'require' keyword. closes 
+    * Support for automatic indentation when editing Lua files
+    * Renamed LuaMuscle::fiber_force() to LuaMuscle:force()
+  * Video output and visualization:
+    * Add option to automatically set resolution of a video by resizing the viewer window (floating windows only)
+    * Video output now supports mp4 (default), avi and mov container formats
+    * Added optional visualization of Body Center of Mass (COM)
+  * Data analysis:
+    * Added option to permanently 'Keep' specific graphs in the Analysis window (''Ctrl+Shift+k''), allowing easy comparison between different results
+    * Added option to extract specific channels to separate tab-separated file, via ''Tools -> Preferences -> Advanced''
+    * Added option to output relation between dof and muscle length to file, via ''Tools -> Muscle Analysis''
+    * Added option to show model information to the messages window, via ''Tools -> &Model Analysis''
+  * FeedForwardController now supports ''SineWave'', with parameterizable ''amplitude'', ''frequency'', ''phase'', and ''offset''
+  * Added ''initial_equilibration_activation'' parameter for to Model
+  * Pressing ''F2'' in Optimization Results now allows renaming files and folders
+
+=== Fixes ===
+  * Fixed message "Could not find Optimizer": SCONE no longer tries to evaluate a .scone file that doesn't have the word "Optimizer" in it
+  * Pressing "Cancel" when asked to "Save Changes" now works correctly
+  * Fixed default file type when using "File -> Save As...", closes #186
+  * Fixed crash when trying that write to an .sto that is open in anther program, closes #185
+  * Fixed GaitMeasure step length and step duration reporting
+  * EffortMeasure Wang2012 is now guaranteed to be non-negative
+  * Fixed potential crashes in SconeStorageDataModel::timeValue(), SconeStorageDataModel::label() and SconeStorageDataModel::getSeries()
+  * Many documentation fixes and updates
+  * Viewer no longer gets keyboard focus after evaluating a .par file
+  * Double-clicking a folder in "Optimization Results" now opens the folder instead of showing an error
+
 ==== SCONE 1.3.3 ====
 //Released January 7, 2020//
 
