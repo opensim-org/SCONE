@@ -20,7 +20,7 @@ namespace scone
 	using spot::optimizer;
 	using spot::search_point;
 	using spot::search_point_vec;
-	using spot::fitness_vec_t;
+	using spot::fitness_vec;
 	using xo::index_t;
 
 	/// Optimizer based on the CMA-ES algorithm by [Hansen].
@@ -40,7 +40,7 @@ namespace scone
 		virtual void on_start( const optimizer& opt ) override;
 		virtual void on_stop( const optimizer& opt, const spot::stop_condition& s ) override;
 		virtual void on_pre_evaluate_population( const optimizer& opt, const search_point_vec& pop ) override;
-		virtual void on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, bool new_best ) override;
+		virtual void on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec& fitnesses, bool new_best ) override;
 		xo::timer timer_;
 		size_t number_of_evaluations_;
 	};

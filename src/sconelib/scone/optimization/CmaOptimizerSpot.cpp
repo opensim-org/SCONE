@@ -102,7 +102,7 @@ namespace scone
 		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 	}
 
-	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec_t& fitnesses, bool new_best )
+	void CmaOptimizerReporter::on_post_evaluate_population( const optimizer& opt, const search_point_vec& pop, const fitness_vec& fitnesses, bool new_best )
 	{
 		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 
