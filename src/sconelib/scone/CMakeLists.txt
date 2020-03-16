@@ -152,6 +152,8 @@ set(MEASURE_FILES
 	measures/RangePenalty.h
 	measures/Measure.cpp
 	measures/Measure.h
+	measures/StepLengthMeasure.cpp
+	measures/StepLengthMeasure.h
 	)
 set(OPT_API_FILES
 	optimization/CmaOptimizer.cpp
