@@ -27,7 +27,11 @@ namespace scone
 		lambda_ = lambda();
 		mu_ = mu();
 		sigma_ = sigma();
+
+#if !SPOT_EVALUATOR_ENABLED
 		set_max_threads( (int)max_threads );
+#endif // !SPOT_EVALUATOR_ENABLED
+
 		enable_fitness_tracking( window_size );
 
 		// stop conditions
