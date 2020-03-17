@@ -1,6 +1,6 @@
 #include "GaitCycle.h"
 #include "Log.h"
-
+#include "iostream"
 namespace scone
 {
 	index_t FindNextTouch( const Storage<>& sto, index_t idx, const index_t channel_idx, const Real threshold ) {
@@ -50,12 +50,14 @@ namespace scone
 						cycles.back().end_ = end_time;
 						cycles.back().end_pos_ = end_pos;
 						log::trace( "U: ", cycles.back() );
+						std::cout << "U: " << leg_name + " " << cycles.back().begin_ << " " << cycles.back().end_ << std::endl;
 					}
 				}
 				else
 				{
 					cycles.emplace_back( GaitCycle{ side, begin_time, swing_time, end_time, begin_pos, end_pos } );
 					log::trace( "N: ", cycles.back() );
+					std::cout << "N: " << leg_name + " " << cycles.back().begin_ << " " << cycles.back().end_ << std::endl;
 				}
 			}
 		}

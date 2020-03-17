@@ -39,7 +39,7 @@
 #include "scone/measures/MimicMeasure.h"
 #include "scone/measures/ReactionForceMeasure.h"
 #include "scone/measures/MuscleMeasure.h"
-#include "scone/measures/StepLengthMeasure.h"
+#include "scone/measures/StepMeasure.h"
 
 #include "scone/model/Sensors.h"
 
@@ -98,7 +98,7 @@ namespace scone
 			.register_type< ReactionForceMeasure >()
 			.register_type< BalanceMeasure >()
 			.register_type< MimicMeasure >()
-			.register_type< StepLengthMeasure >();
+			.register_type< StepMeasure >();
 
  		return g_MeasureFactory;
 	}
