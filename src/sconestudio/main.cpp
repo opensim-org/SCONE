@@ -37,7 +37,7 @@ int main( int argc, char *argv[] )
 	try
 	{
 		// init logging
-#ifdef _DEBUG
+#if !defined( _MSC_VER ) || defined( _DEBUG )
 		xo::log::console_sink console_log_sink( xo::log::level::trace );
 #endif
 		xo::path log_file = scone::GetSettingsFolder() / "log" / xo::path( xo::get_date_time_str( "%Y%m%d_%H%M%S" ) + ".log" );
