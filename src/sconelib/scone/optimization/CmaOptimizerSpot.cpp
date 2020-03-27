@@ -19,7 +19,7 @@ namespace scone
 {
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
 		CmaOptimizer( pn, scenario_pn, scenario_dir ),
-		cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
+		cma_optimizer( *m_Objective, spot::cma_options{ lambda_, CmaOptimizer::random_seed, spot::cma_weights::log } )
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
