@@ -55,6 +55,8 @@ namespace scone
 			}
 		}
 
+		size_t GetNumSamples() const { return penalty.GetNumSamples(); }
+
 		/// Specify the valid range, set through parameters 'min' and 'max'; defaults to { min = -inf max = inf }
 		Range< T > range;
 

@@ -88,6 +88,7 @@ namespace scone
 		T GetInitial() const { return m_Initial; }
 		T GetLatest() const { return m_PrevValue; }
 		T GetTotal() const { return m_Total; }
+		size_t GetNumSamples() const { return m_nSamples; }
 
 	private:
 		T m_Total, m_Initial, m_Highest, m_Lowest, m_PrevValue;
