@@ -37,35 +37,35 @@ namespace scone
 		Real KF;
 		/// Force feedback offset; default = 0.
 		Real F0;
-		/// Allow this reflex to be negative; default = 1.
+		/// Allow this reflex to be negative; default = 0.
 		bool allow_neg_F;
 
 		/// Length feedback gain, based on normalized CE length (L / Lopt); default = 0.
 		Real KL;
 		/// Length feedback offset; default = 1.
 		Real L0;
-		/// Allow this reflex to be negative; default = 1.
+		/// Allow this reflex to be negative; default = 0.
 		bool allow_neg_L;
 
 		/// Velocity feedback gain, based on normalized CE velocity ((L / Lopt) / s); default = 0.
 		Real KV;
 		/// Velocity feedback offset; default = 0.
 		Real V0;
-		/// Allow this reflex to be negative; default = 1.
+		/// Allow this reflex to be negative; default = 0.
 		bool allow_neg_V;
 
 		/// Muscle activation feedback gain, based on normalized activation; default = 0.
 		Real KA;
 		/// Activation feedback offset; default = 0.
 		Real A0;
-		/// Allow this reflex to be negative; default = 1.
+		/// Allow this reflex to be negative; default = 0.
 		bool allow_neg_A;
 
 		/// Spindle feedback gain, based on [Prochazka 1999], p.135; default = 0.
 		Real KS;
 		/// Spindle feedback offset; default = 0.
 		Real S0;
-		/// Allow this reflex to be negative; default = 1.
+		/// Allow this reflex to be negative; default = 0.
 		bool allow_neg_S;
 
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
