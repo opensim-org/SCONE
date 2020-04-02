@@ -10,7 +10,6 @@
 
 #include "Reflex.h"
 #include "scone/model/SensorDelayAdapter.h"
-#include "scone/core/Range.h"
 
 namespace scone
 {
@@ -44,7 +43,7 @@ namespace scone
 		Real KL;
 		/// Length feedback offset; default = 1.
 		Real L0;
-		/// Allow this reflex to be negative; default = 0.
+		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_L;
 
 		/// Velocity feedback gain, based on normalized CE velocity ((L / Lopt) / s); default = 0.
@@ -79,8 +78,13 @@ namespace scone
 		Real u_a = 0;
 		Real u_total = 0;
 
-	private:
-		Real GetValue( SensorDelayAdapter* s, Real gain, Real ofs, bool allow_neg ) {
+		SensorDelayAdapter* m_pForceSensor;
+		SensorDelayAdapter* m_pLengthSensor;
+		SensorDelayAdapter* m_pVelocitySensor;
+		SensorDelayAdapter* m_pSpindleSensor;
+		SensorDelayAdapter* m_pActivationSensor;
+
+		virtual Real GetValue( SensorDelayAdapter* s, Real gain, Real ofs, bool allow_neg ) {
 			if ( s ) {
 				Real sensoryFeedback = ( s->GetValue( delay ) - ofs );
 				sensoryFeedback = ( !allow_neg && sensoryFeedback < 0.0 ) ? 0.0 : sensoryFeedback;
@@ -88,11 +92,5 @@ namespace scone
 			}
 			else return 0.0;
 		}
-
-		SensorDelayAdapter* m_pForceSensor;
-		SensorDelayAdapter* m_pLengthSensor;
-		SensorDelayAdapter* m_pVelocitySensor;
-		SensorDelayAdapter* m_pSpindleSensor;
-		SensorDelayAdapter* m_pActivationSensor;
 	};
 }

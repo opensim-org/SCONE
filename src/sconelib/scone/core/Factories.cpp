@@ -21,6 +21,7 @@
 #include "scone/controllers/ReflexController.h"
 #include "scone/controllers/SequentialController.h"
 #include "scone/controllers/BodyPointReflex.h"
+#include "scone/controllers/AverageCPGMuscleReflex.h"
 
 #include "scone/core/PieceWiseConstantFunction.h"
 #include "scone/core/PieceWiseLinearFunction.h"
@@ -119,7 +120,8 @@ namespace scone
 			.register_type< MuscleReflex >()
 			.register_type< DofReflex >()
 			.register_type< BodyPointReflex >()
-			.register_type< ConditionalMuscleReflex >();
+			.register_type< ConditionalMuscleReflex >()
+			.register_type< AverageCPGMuscleReflex >();
 
 		return g_ReflexFactory;
 	}
