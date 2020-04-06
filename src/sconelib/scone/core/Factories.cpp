@@ -42,7 +42,7 @@
 #include "scone/measures/MuscleMeasure.h"
 #include "scone/measures/StepMeasure.h"
 
-#include "scone/model/Sensors.h"
+#include "scone/model/MorphedOscillator.h"
 
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/optimization/CmaPoolOptimizer.h"
@@ -169,8 +169,6 @@ namespace scone
 	{
 		static ModelFactory g_ModelFactory;
 
-		// all models are registered from different dlls in scone_config.h
-
 		return g_ModelFactory;
 	}
 
@@ -178,6 +176,19 @@ namespace scone
 	{
 		xo::current_find_file_path( scenario_dir );
 		return GetModelFactory().create( fp.type(), fp.props(), par );
+	}
+
+	StateComponentFactory& GetStateComponentFactory()
+	{
+		static StateComponentFactory g_StateComponentFactory = StateComponentFactory()
+			.register_type< MorphedOscillator >();
+
+		return g_StateComponentFactory;
+	}
+
+	StateComponentUP CreateStateComponent( const FactoryProps& fp, Params& par )
+	{
+		return GetStateComponentFactory().create( fp.type(), fp.props(), par );
 	}
 
 	ObjectiveFactory& GetObjectiveFactory()

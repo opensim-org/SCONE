@@ -17,4 +17,9 @@ namespace scone
 	{
 		return amplitude_ * std::sin( xo::constantsd::two_pi() * frequency_ * x + phase_ ) + offset_;
 	}
+
+	Real SineWave::GetDerivativeValue( Real x )
+	{
+		return -xo::constantsd::two_pi() * frequency_ * amplitude_ * std::cos( xo::constantsd::two_pi() * frequency_ * x + phase_ );
+	}
 }

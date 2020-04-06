@@ -41,6 +41,17 @@ namespace scone
 		return r;
 	}
 
+	Real Polynomial::GetDerivativeValue( Real x )
+	{
+		Real r = 0, c = 1;
+		for ( int i = 1; i < m_Coeffs.size(); i++ )
+		{
+			r += m_Coeffs[i] * c;
+			c *= (i + 1) * x / i;
+		}
+		return r;
+	}
+
 	void Polynomial::SetCoefficient( size_t idx, Real value )
 	{
 		m_Coeffs[ idx ] = value;

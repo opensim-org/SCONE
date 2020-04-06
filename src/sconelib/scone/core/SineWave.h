@@ -28,6 +28,7 @@ namespace scone
 
 		// value
 		virtual Real GetValue( Real x ) override;
+		virtual Real GetDerivativeValue( Real x ) override;
 
 		// a signature describing the function
 		virtual String GetSignature() override { return "S"; }
