@@ -88,3 +88,21 @@ results {
 		default = "*.activation;*.excitation"
 	}
 }
+
+optimizer {
+	evaluator {
+		type = number
+		label = "Evaluator: 0 = sequential, 1 = async (default), 2 = pooled"
+		default = 1
+	}
+	max_threads {
+		type = number
+		label = "Number of parallel optimizations, 0 = hardware dependent (default)"
+		default = 0
+	}
+	thread_priority {
+		type = number
+		label = "thread priority: 0 - 6; default = 2"
+		default = 2
+	}
+}

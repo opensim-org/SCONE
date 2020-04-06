@@ -32,6 +32,7 @@ namespace scone
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
 		virtual double GetBestFitness() const override { return best_fitness(); }
+		static spot::evaluator& GetEvaluator();
 	};
 
 	class SCONE_API CmaOptimizerReporter : public spot::reporter
