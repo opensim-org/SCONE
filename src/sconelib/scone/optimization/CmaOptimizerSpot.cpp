@@ -86,7 +86,8 @@ namespace scone
 		}
 		else if ( eval == 1 )
 		{
-			static spot::async_evaluator async_eval( 32 );
+			static spot::async_evaluator async_eval( max_threads );
+			async_eval.set_max_threads( max_threads, thread_prio );
 			return async_eval;
 		}
 		else if ( eval == 2 )

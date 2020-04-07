@@ -97,7 +97,7 @@ optimizer {
 	}
 	max_threads {
 		type = number
-		label = "Number of parallel optimizations, 0 = hardware dependent (default)"
+		label = "Max optimization threads, 0 = hardware (default)"
 		default = 0
 	}
 	thread_priority {
