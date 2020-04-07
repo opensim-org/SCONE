@@ -49,13 +49,13 @@ namespace scone
 		output_mode_ = m;
 		switch ( output_mode_ )
 		{
-		case scone::Optimizer::no_output:
+		case Optimizer::no_output:
 			break;
-		case scone::Optimizer::console_output:
+		case Optimizer::console_output:
 			add_reporter( std::make_unique<spot::console_reporter>() );
 			break;
-		case scone::Optimizer::status_console_output:
-		case scone::Optimizer::status_queue_output:
+		case Optimizer::status_console_output:
+		case Optimizer::status_queue_output:
 			add_reporter( std::make_unique<CmaOptimizerReporter>() );
 			break;
 		default: SCONE_THROW( "Unknown output mode" );

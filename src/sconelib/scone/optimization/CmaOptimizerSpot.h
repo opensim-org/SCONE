@@ -11,7 +11,6 @@
 #include "CmaOptimizer.h"
 #include "spot/cma_optimizer.h"
 #include "spot/reporter.h"
-#include "spot/file_reporter.h"
 #include "xo/system/log_sink.h"
 #include "xo/time/timer.h"
 
