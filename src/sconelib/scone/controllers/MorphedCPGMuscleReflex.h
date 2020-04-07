@@ -1,5 +1,5 @@
 /*
-** AverageCPGMuscleReflex.h
+** MorphedCPGMuscleReflex.h
 **
 ** Copyright (C) 2013-2019 Thomas Geijtenbeek and contributors. All rights reserved.
 **
@@ -20,25 +20,26 @@ namespace scone
 	///
 	/// ''U = alpha * U_cpg + (1 - alpha) * U_reflex'',
 	////
-	/// where a in [0, 1], U_cpg is the average feedback signal. The average
-	/// feedback signal is calculated only when the feedback is active.
-	class AverageCPGMuscleReflex : public MuscleReflex
+	/// where a in [0, 1], U_cpg is computed from the state output of
+	/// a morphed oscillator.
+	class MorphedCPGMuscleReflex : public MuscleReflex
 	{
 	public:
-		AverageCPGMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
+		MorphedCPGMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 
-		/// Constant reflecting the contribution of CPG input to the output; default = 0.
+		/// Constant reflecting the contribution of CPG input to the
+		/// output; default = 0.
 		Real alpha;
+
+		/// The output state name of the morphed oscillator. If
+		/// oscillator name is CPG and it has two states with the
+		/// second being its output, then cpg_output = CPG_1.
+		String cpg_output;
 
 		virtual void ComputeControls( double timestamp ) override;
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
-	protected:
-		struct AverageCPG {
-			Real sum = 0;
-			Real n = 0;
-			void append(Real value) { sum += value; n++; }
-			Real average() const { return sum / n; }
-		} u_cpg;
+	private:
+		Model* m_model;
 	};
 }

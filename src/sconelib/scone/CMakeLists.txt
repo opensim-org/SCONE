@@ -28,7 +28,7 @@ set(CORE_MATH_FILES
 	core/PieceWiseLinearFunction.h
 	core/Polynomial.h
 	core/Polynomial.cpp
-	core/SineWave.h	
+	core/SineWave.h
 	core/SineWave.cpp
 	)
 set(CORE_SYSTEM_FILES
@@ -99,6 +99,8 @@ set(CS_CONTROLLERS_NC_FILES
 set(CS_CONTROLLERS_REFLEX_FILES
 	controllers/AverageCPGMuscleReflex.cpp
 	controllers/AverageCPGMuscleReflex.h
+	controllers/MorphedCPGMuscleReflex.cpp
+	controllers/MorphedCPGMuscleReflex.h
 	controllers/ConditionalMuscleReflex.cpp
 	controllers/ConditionalMuscleReflex.h
 	controllers/DofReflex.cpp

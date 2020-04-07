@@ -49,6 +49,7 @@ namespace scone
 			r += m_Coeffs[i] * c;
 			c *= (i + 1) * x / i;
 		}
+
 		return r;
 	}
 

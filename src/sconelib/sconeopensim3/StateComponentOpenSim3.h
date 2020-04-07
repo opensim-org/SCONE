@@ -10,15 +10,18 @@
 
 #include <OpenSim/Simulation/Model/ModelComponent.h>
 #include "scone/model/StateComponent.h"
-// #include "scone/core/HasData.h"
 
 namespace OpenSim
 {
-	class StateComponentOpenSim3 : public OpenSim::ModelComponent//, public virtual HasData
+	/// Transforms a scone::StateComponent, that implements a
+	/// differential equation, into an OpenSim::ModelComponent so that
+	/// the differential equation can be integrated numerically by
+	/// OpenSim.
+	class StateComponentOpenSim3 : public OpenSim::ModelComponent
 	{
 		OpenSim_DECLARE_CONCRETE_OBJECT(StateComponentOpenSim3, ModelComponent);
 	public:
-		/// Takes ownership of the pointer.
+		/// Takes ownership of the StateComponent pointer.
 		StateComponentOpenSim3( scone::StateComponent* stateComponent );
 		~StateComponentOpenSim3() { delete m_stateComponent; };
 
@@ -32,9 +35,7 @@ namespace OpenSim
 		void initStateFromProperties( SimTK::State& s ) const override;
 		/// Add state variables to the system.
 		void addToSystem( SimTK::MultibodySystem& system ) const override;
-		// /// From HasData.
-		// void StoreData( scone::Storage< scone::Real >::Frame& frame,
-		// 				const scone::StoreDataFlags& flags ) const override;
+
 	private:
 		scone::StateComponent* m_stateComponent;
 		std::vector< scone::String > m_stateVariables;

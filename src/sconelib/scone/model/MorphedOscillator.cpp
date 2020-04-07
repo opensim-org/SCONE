@@ -13,12 +13,11 @@
 namespace scone
 {
 	MorphedOscillator::MorphedOscillator( const PropNode& props, Params& par ) :
-	StateComponent()
+		StateComponent(props, par)
 	{
 		// initialize parameters
-		name = props.get<string>( "name" );
-		INIT_PAR( props, par, omega, 0.2 );
-		INIT_PAR( props, par, gamma, 10.0 );
+		INIT_PAR( props, par, omega, 1 );
+		INIT_PAR( props, par, gamma, 100.0 );
 		INIT_PAR( props, par, K, 0.0 );
 		INIT_PAR( props, par, theta0, 0.0 );
 		INIT_PAR( props, par, x0, 0.0 );
