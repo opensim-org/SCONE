@@ -9,22 +9,36 @@
 #pragma once
 
 #include <OpenSim/Simulation/Model/ModelComponent.h>
+#include "SimTKcommon/internal/ReferencePtr.h"
 #include "scone/model/StateComponent.h"
 
 namespace OpenSim
 {
 	/// Transforms a scone::StateComponent, that implements a
-	/// differential equation, into an OpenSim::ModelComponent so that
-	/// the differential equation can be integrated numerically by
-	/// OpenSim.
+	/// differential equation (continuous or hybrid), into an
+	/// OpenSim::ModelComponent so that the differential equation can
+	/// be integrated numerically by OpenSim.
 	class StateComponentOpenSim3 : public OpenSim::ModelComponent
 	{
+	private:
 		OpenSim_DECLARE_CONCRETE_OBJECT(StateComponentOpenSim3, ModelComponent);
+		/// A class that introduces event detection and handling for
+		/// hybrid systems.
+		class EventHandler : public SimTK::TriggeredEventHandler
+		{
+		public:
+			EventHandler(StateComponentOpenSim3*, scone::StateComponent*);
+			SimTK::Real getValue(const SimTK::State& s) const override;
+			void handleEvent(SimTK::State& s,
+							 SimTK::Real accuracy,
+							 bool& shouldTerminate) const override;
+		private:
+			SimTK::ReferencePtr<StateComponentOpenSim3> m_modelComponent;
+			SimTK::ReferencePtr<scone::StateComponent> m_stateComponent;
+		};
 	public:
 		/// Takes ownership of the StateComponent pointer.
 		StateComponentOpenSim3( scone::StateComponent* stateComponent );
-		~StateComponentOpenSim3() { delete m_stateComponent; };
-
 		/// Extract the state of this component from global state.
 		std::vector< scone::Real > getStateVariables( const SimTK::State& s ) const;
 		/// Extract the state of this component from global state.
@@ -37,7 +51,7 @@ namespace OpenSim
 		void addToSystem( SimTK::MultibodySystem& system ) const override;
 
 	private:
-		scone::StateComponent* m_stateComponent;
+		SimTK::ReferencePtr<scone::StateComponent> m_stateComponent;
 		std::vector< scone::String > m_stateVariables;
 	};
 }

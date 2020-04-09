@@ -27,12 +27,12 @@ namespace scone
 		m_shapeFunctio = CreateFunction( fp, par );
 	}
 
-	std::vector< Real > MorphedOscillator::getInitialCondition() const
+	std::vector< Real > MorphedOscillator::GetInitialCondition() const
 	{
 		return std::vector< Real >{theta0, x0};
 	}
 
-	std::vector< Real > MorphedOscillator::calcStateDerivatives( Real t, std::vector< Real > x0 ) const
+	std::vector< Real > MorphedOscillator::CalcStateDerivatives( Real t, std::vector< Real > x0 ) const
 	{
 		auto theta = x0[0];
 		auto x = x0[1];
@@ -40,5 +40,27 @@ namespace scone
 		auto dx = gamma * (m_shapeFunctio->GetValue(theta) - x) +
 			m_shapeFunctio->GetDerivativeValue(theta) * omega + K;
 		return std::vector< Real >{dtheta, dx};
+	}
+
+	bool MorphedOscillator::HasDiscreteEvent() const
+	{
+		return true;
+	}
+
+	int MorphedOscillator::TriggeredOnSign() const
+	{
+		return 0;
+	}
+
+	Real MorphedOscillator::CheckForEvent( Real t, std::vector< Real > x ) const
+	{
+		return sin(x[0]);
+	}
+
+	std::vector< Real > MorphedOscillator::EventHandler( Real t, std::vector< Real > x ) const
+	{
+		auto xNew = x;
+		xNew[0] = theta0;
+		return xNew;
 	}
 }

@@ -28,13 +28,30 @@ namespace scone
 		StateComponent( const PropNode& props, Params& par )
 			: INIT_MEMBER_REQUIRED( props, name ) {};
 
-		/// Name of the state component. Required parameter.
+		/// Name of the state component (required).
 		String name;
 		virtual const String& GetName() const override { return name; }
 
 		/// interface
-		virtual std::vector< Real > getInitialCondition() const { SCONE_THROW_NOT_IMPLEMENTED }
-		virtual std::vector< Real > calcStateDerivatives( Real t, std::vector< Real > x0 ) const
-		{ SCONE_THROW_NOT_IMPLEMENTED}
+
+		/// Return the initial conditions of this component.
+		virtual std::vector< Real > GetInitialCondition() const
+		{ SCONE_THROW_NOT_IMPLEMENTED }
+		/// Calculates the state derivative xdot = f(t, x).
+		virtual std::vector< Real > CalcStateDerivatives( Real t, std::vector< Real > x0 ) const
+		{ SCONE_THROW_NOT_IMPLEMENTED }
+		/// If this component models a hybrid system (discrete events) then one
+		/// should make this function true.
+		virtual bool HasDiscreteEvent() const { return false; }
+		/// If +1 then triggered on rising sign transition. If -1 triggered on
+		/// falling sign transition. If 0 triggered on both transitions.
+		virtual int TriggeredOnSign() const { return 0; }
+		/// Implements a zero crossing function that signifies an event.
+		virtual Real CheckForEvent( Real t, std::vector< Real > x ) const
+		{ SCONE_THROW_NOT_IMPLEMENTED }
+		/// A function that is called when an event is detected and returns a
+		/// the new state. It is assumed that any event modifies only the state.
+		virtual std::vector< Real > EventHandler( Real t, std::vector< Real > x ) const
+		{ SCONE_THROW_NOT_IMPLEMENTED }
 	};
 }

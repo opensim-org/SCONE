@@ -34,7 +34,11 @@ namespace scone
 		// be any function supported in SCONE.
 		FunctionUP m_shapeFunctio;
 
-		std::vector< Real > getInitialCondition() const override;
-		std::vector< Real > calcStateDerivatives( Real t, std::vector< Real > x0 ) const override;
+		std::vector< Real > GetInitialCondition() const override;
+		std::vector< Real > CalcStateDerivatives( Real t, std::vector< Real > x0 ) const override;
+		bool HasDiscreteEvent() const;
+		int TriggeredOnSign() const;
+		Real CheckForEvent( Real t, std::vector< Real > x ) const;
+		std::vector< Real > EventHandler( Real t, std::vector< Real > x ) const;
 	};
 }

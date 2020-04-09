@@ -7,17 +7,54 @@
 */
 
 #include "StateComponentOpenSim3.h"
+#include "SimTKcommon/internal/EventHandler.h"
 #include "scone/model/StateComponent.h"
 
 using namespace scone;
 
 namespace OpenSim
 {
+	StateComponentOpenSim3::EventHandler::EventHandler(
+		StateComponentOpenSim3* modelComponent, StateComponent* stateComponent)
+		: SimTK::TriggeredEventHandler(SimTK::Stage::Dynamics),
+		  m_modelComponent(modelComponent), m_stateComponent(stateComponent)
+	{
+		if (m_stateComponent->TriggeredOnSign() > 0)
+		{
+			getTriggerInfo().setTriggerOnRisingSignTransition(true);
+			getTriggerInfo().setTriggerOnFallingSignTransition(false);
+		}
+		else if (m_stateComponent->TriggeredOnSign() < 0)
+		{
+			getTriggerInfo().setTriggerOnRisingSignTransition(false);
+			getTriggerInfo().setTriggerOnFallingSignTransition(true);
+		}
+		else
+		{
+			getTriggerInfo().setTriggerOnRisingSignTransition(true);
+			getTriggerInfo().setTriggerOnFallingSignTransition(true);
+		}
+	}
+
+	SimTK::Real StateComponentOpenSim3::EventHandler::getValue(const SimTK::State& s) const
+	{
+		auto x = m_modelComponent->getStateVariables(s);
+		return m_stateComponent->CheckForEvent(s.getTime(), x);
+	}
+	void StateComponentOpenSim3::EventHandler::handleEvent(SimTK::State& s,
+														   SimTK::Real accuracy,
+														   bool& shouldTerminate) const
+	{
+		auto x = m_modelComponent->getStateVariables(s);
+		auto xNew = m_stateComponent->EventHandler(s.getTime(), x);
+		m_modelComponent->setStateVariables(s, xNew);
+	}
+
 	StateComponentOpenSim3::StateComponentOpenSim3( StateComponent* stateComponent ) :
  	ModelComponent(),
 	m_stateComponent( stateComponent )
 	{
-		for (int i = 0; i < m_stateComponent->getInitialCondition().size(); i++)
+		for (int i = 0; i < m_stateComponent->GetInitialCondition().size(); i++)
 			m_stateVariables.push_back(m_stateComponent->GetName() + "_" + std::to_string(i));
 	}
 
@@ -39,7 +76,7 @@ namespace OpenSim
 	SimTK::Vector StateComponentOpenSim3::computeStateVariableDerivatives( const SimTK::State& s ) const
 	{
 		auto x0 = getStateVariables(s);
-		auto dxdt = m_stateComponent->calcStateDerivatives(s.getTime(), x0);
+		auto dxdt = m_stateComponent->CalcStateDerivatives(s.getTime(), x0);
 		SimTK::Vector result(dxdt.size(), 0.0);
 		for (int i = 0; i < dxdt.size(); i++)
 			result[i] = dxdt[i];
@@ -50,14 +87,24 @@ namespace OpenSim
 	void StateComponentOpenSim3::initStateFromProperties(SimTK::State& s) const
 	{
 		Super::initStateFromProperties(s);
-		setStateVariables(s, m_stateComponent->getInitialCondition());
+		setStateVariables(s, m_stateComponent->GetInitialCondition());
 	}
 
     void StateComponentOpenSim3::addToSystem(SimTK::MultibodySystem& system) const
     {
         Super::addToSystem(system);
+
+		// define state variables
 		for (auto stateVariable : m_stateVariables)
 			addStateVariable(stateVariable, SimTK::Stage::Dynamics);
+
+		// add an event function if the system is hybrid
+		if (m_stateComponent->HasDiscreteEvent())
+		{
+			auto self = const_cast<StateComponentOpenSim3*>(this);
+			auto event = new EventHandler(self, self->m_stateComponent);
+			system.addEventHandler(event);
+		}
     }
 
 
