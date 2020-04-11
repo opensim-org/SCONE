@@ -767,7 +767,7 @@ void SconeStudio::abortOptimizations()
 {
 	if ( optimizations.size() > 0 )
 	{
-		QString message = QString().sprintf( "Are you sure you want to abort the following optimizations:\n\n", optimizations.size() );
+		QString message = QString().sprintf( "Are you sure you want to abort the following optimizations:\n\n" );
 
 		for ( auto& o : optimizations )
 			message += o->getIdentifier() + "\n";
