@@ -14,9 +14,10 @@
 
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/Settings.h"
 #include "spot/async_evaluator.h"
 #include "spot/pooled_evaluator.h"
-#include "scone/core/Settings.h"
+#include "spot/batch_evaluator.h"
 
 namespace scone
 {
@@ -86,11 +87,16 @@ namespace scone
 		}
 		else if ( eval == 1 )
 		{
+			static spot::batch_evaluator batch_eval;
+			return batch_eval;
+		}
+		else if ( eval == 2 )
+		{
 			static spot::async_evaluator async_eval( max_threads );
 			async_eval.set_max_threads( max_threads, thread_prio );
 			return async_eval;
 		}
-		else if ( eval == 2 )
+		else if ( eval == 3 )
 		{
 			static spot::pooled_evaluator pooled_eval;
 			pooled_eval.set_max_threads( max_threads, thread_prio );

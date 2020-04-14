@@ -23,7 +23,7 @@ namespace scone
 		virtual fitness_t GetResult( Model& m ) const override;
 		virtual PropNode GetReport( Model& m ) const override;
 		virtual TimeInSeconds GetDuration() const override { return 0.0; }
-		virtual fitness_t EvaluateModel( Model& m ) const override;
+		virtual result<fitness_t> EvaluateModel( Model& m, const xo::stop_token& st ) const override;
 
 	private:
 		path file_;

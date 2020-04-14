@@ -92,17 +92,17 @@ results {
 optimizer {
 	evaluator {
 		type = number
-		label = "Evaluator: 0 = sequential, 1 = async (default), 2 = pooled"
-		default = 1
+		label = "Evaluator: 0=sequential, 1=batch, 2=async, 3=pooled"
+		default = 2
 	}
 	max_threads {
 		type = number
-		label = "Max optimization threads, 0 = hardware (default)"
+		label = "Max optimization threads (0=hardware)"
 		default = 0
 	}
 	thread_priority {
 		type = number
-		label = "thread priority: 0 - 6; default = 2"
+		label = "thread priority: 0-6 (default=2)"
 		default = 2
 	}
 }

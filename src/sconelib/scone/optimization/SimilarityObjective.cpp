@@ -33,7 +33,7 @@ namespace scone
 
 	void SimilarityObjective::AdvanceSimulationTo( Model& m, TimeInSeconds t ) const
 	{
-		EvaluateModel( m );
+		EvaluateModel( m, xo::stop_token() );
 	}
 
 	fitness_t SimilarityObjective::GetResult( Model& m ) const
@@ -46,7 +46,7 @@ namespace scone
 		return xo::to_prop_node( GetResult( m ) );
 	}
 
-	fitness_t SimilarityObjective::EvaluateModel( Model& m ) const
+	result<fitness_t> SimilarityObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
 		SCONE_PROFILE_FUNCTION;
 

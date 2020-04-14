@@ -30,7 +30,7 @@ namespace scone
 		/// Maximum duration after which the evaluation is terminated; default = 1e12 (+/-31000 years)
 		double max_duration;
 
-		virtual fitness_t EvaluateModel( Model& m ) const override;
+		virtual result<fitness_t> EvaluateModel( Model& m, const xo::stop_token& st ) const override;
 		virtual TimeInSeconds GetDuration() const override { return max_duration; }
 
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
