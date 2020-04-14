@@ -37,14 +37,14 @@ namespace scone
 		Real KF;
 		/// Force feedback offset; default = 0.
 		Real F0;
-		/// Allow this reflex to be negative; default = 0.
+		/// Allow this reflex to be negative; default = 1 (please note that you might want this to be 0 if offset is defined).
 		bool allow_neg_F;
 
 		/// Length feedback gain, based on normalized CE length (L / Lopt); default = 0.
 		Real KL;
 		/// Length feedback offset; default = 1.
 		Real L0;
-		/// Allow this reflex to be negative; default = 0.
+		/// Allow this reflex to be negative; default = 1 (please note that you might want this to be 0 if offset is defined).
 		bool allow_neg_L;
 
 		/// Velocity feedback gain, based on normalized CE velocity ((L / Lopt) / s); default = 0.
