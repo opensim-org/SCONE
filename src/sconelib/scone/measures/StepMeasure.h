@@ -12,10 +12,12 @@
 
 namespace scone
 {
-	/// Measure for locomotion that enforces a constant stride length.
+	/// Measure for locomotion that penalizes the stride length and/or
+	/// step duration.
 	/** Example:
 	\verbatim
 	StepMeasure {
+		stride_duration { min = 0.2 max = 0.5 abs_penalty = 1 }
 		stride_length { min = 1.0 max = 1.4 abs_penalty = 1 }
 	}
 	\endverbatim
@@ -25,23 +27,27 @@ namespace scone
 	public:
 		StepMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
-		/// Penalty for stride length [m] when out of range.
+		/// Penalty for stride length [m] when out of range
+		/// (Optional); default range [-inf, inf].
 		RangePenalty<double> stride_length;
+
+		/// Penalty for stride duration [s] when out of range
+		/// (Optional); default range [-inf, inf].
+		RangePenalty<double> stride_duration;
 
 		/// Load threshold for step detection; default = 0.01.
 		Real load_threshold;
 
-		/// Minimum duration [s] of a step, used for step detection; default = 0.2.
-		Real min_step_duration;
+		/// Minimum duration threshold [s] of a stride used for step detection;
+		/// default = 0.2.
+		Real min_stride_duration_threshold;
 
 		/// Number of initial gait cycles of which the calculation is
-		/// disregarded in the final measure; default = 1.
+		/// disregarded in the final measure; default = 1 (>0).
 		int initiation_cycles;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double ComputeResult( const Model& model ) override;
-
-	protected:
 		virtual String GetClassSignature() const override;
 
 	private:
