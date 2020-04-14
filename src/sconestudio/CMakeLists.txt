@@ -191,7 +191,19 @@ if(${Qt5Widgets_FOUND})
 	
 		# Copy all OpenSim3 DLLs
 		if (SCONE_OPENSIM_3)
-			SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon SimTKsimbody SimTKmath SimTKcommon)
+			# check if platform is x86 or x64 (OpenSim has different names for dynamic library depending on the ABI)
+			if(${CMAKE_SIZEOF_VOID_P} EQUAL 8) # check if x64
+				set(PTHREAD pthreadVC2_x64)
+				set(LIBGCC libgcc_s_sjlj-1)
+				set(NameSpace "")
+			else() # else x86
+				set(PTHREAD pthreadVC2)
+				set(LIBGCC libgcc_s_dw2-1)
+				set(NameSpace "OpenSim_")
+			endif()
+
+			SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon 
+				${NameSpace}SimTKsimbody ${NameSpace}SimTKmath ${NameSpace}SimTKcommon)
 			foreach(opensimdll ${OPENSIM_DLLS})
 				add_custom_command(TARGET sconestudio POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}$<$<CONFIG:debug>:_d>.dll ${DLL_TARGET_DIR}
@@ -199,7 +211,7 @@ if(${Qt5Widgets_FOUND})
 			endforeach()
 
 			# Copy extra opensim files
-			SET(OPENSIM_EXTRA_DLLS libblas liblapack libgcc_s_sjlj-1 libgfortran-3 libquadmath-0 pthreadVC2_x64)
+			SET(OPENSIM_EXTRA_DLLS libblas liblapack ${LIBGCC} libgfortran-3 libquadmath-0 ${PTHREAD})
 			foreach(opensimdll ${OPENSIM_EXTRA_DLLS})
 				add_custom_command(TARGET sconestudio POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}.dll ${DLL_TARGET_DIR}

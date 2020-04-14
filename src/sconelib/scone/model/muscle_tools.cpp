@@ -26,7 +26,13 @@ namespace scone
 	DofRangeVec GetDofRangeVec( const Dof& dof, Real increment )
 	{
 		auto range = xo::frange( GetDofBounds( dof ), increment );
-		return DofRangeVec( range.begin(), range.end() );
+
+		// DofRangeVec{ range.begin(), range.end() } does not work with MVSC 2017
+		DofRangeVec result;
+		for (auto r : range)
+			result.push_back(r);
+
+		return result;
 	}
 
 	std::vector<Real> GetDofInfo( Dof& dof, const DofRangeVec& range, std::function<Real()> func ) {
