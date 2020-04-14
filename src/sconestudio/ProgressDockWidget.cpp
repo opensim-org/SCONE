@@ -274,9 +274,18 @@ bool ProgressDockWidget::readyForDestruction()
 	return state == ClosedState;
 }
 
+void ProgressDockWidget::interrupt()
+{
+	if ( state == StartingState || state == RunningState )
+	{
+		task_->interrupt();
+		state = InterruptedState;
+	}
+}
+
 void ProgressDockWidget::closeEvent( QCloseEvent *e )
 {
-	if ( !studio->close_all && !( state == FinishedState || state == ErrorState ) )
+	if ( !( state == InterruptedState || state == FinishedState || state == ErrorState ) )
 	{
 		// allow user to cancel close
 		QString message = "Are you sure you want to abort optimization " + getIdentifier();
@@ -288,7 +297,8 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 	}
 
 	log::debug( "Closing optimization ", getIdentifier().toStdString() );
-	task_->close();
+	task_->interrupt();
+	task_->waitUntilDone();
 	task_.reset();
 
 	state = ClosedState;

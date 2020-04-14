@@ -11,8 +11,9 @@ namespace scone
 		OptimizerTaskThreaded( const QString& scenario, const QStringList& options = QStringList() );
 		virtual ~OptimizerTaskThreaded();
 
-		void close() override;
-		bool isActive() override;
+		virtual void interrupt() override;
+		virtual void waitUntilDone() override;
+		virtual bool isActive() override;
 
 		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
 
@@ -20,5 +21,6 @@ namespace scone
 		PropNode scenario_pn_;
 		OptimizerUP optimizer_;
 		std::thread thread_;
+		std::atomic_bool active_;
 	};
 }

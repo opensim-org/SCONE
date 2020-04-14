@@ -774,14 +774,17 @@ void SconeStudio::abortOptimizations()
 
 		if ( QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
-			close_all = true;
+			for ( const auto& o : optimizations )
+				o->interrupt();
+
+			QApplication::processEvents();
+
 			while ( !optimizations.empty() )
 			{
 				optimizations.back()->close();
 				optimizations.pop_back();
 				QApplication::processEvents();
 			}
-			close_all = false;
 		}
 	}
 }

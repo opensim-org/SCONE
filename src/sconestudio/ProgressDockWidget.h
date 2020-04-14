@@ -27,13 +27,16 @@ class ProgressDockWidget : public QDockWidget
 	Q_OBJECT
 
 public:
-	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
+	enum State { StartingState, InitializingState, RunningState, InterruptedState, FinishedState, ClosedState, ErrorState };
 	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
 
 	ProgressDockWidget( SconeStudio* s, std::unique_ptr<scone::OptimizerTask> task );
 	virtual ~ProgressDockWidget();
 
 	QString getIdentifier() { return optimizations.empty() ? "" : to_qt( optimizations.front().name ); }
+	ProgressResult updateProgress();
+	bool readyForDestruction();
+	void interrupt();
 
 	enum AxisScaleType { Linear, Logarithmic };
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
@@ -80,16 +83,12 @@ public:
 
 	std::vector< Optimization > optimizations;
 
-	ProgressResult updateProgress();
-	bool readyForDestruction();
-
 public slots:
 	void rangeChanged( const QCPRange &newRange, const QCPRange &oldRange );
 	void fixRangeY();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
-
 
 private:
 	void updateText();

@@ -8,7 +8,8 @@
 namespace scone
 {
 	OptimizerTaskThreaded::OptimizerTaskThreaded( const QString& scenario, const QStringList& options ) :
-		OptimizerTask( scenario, options )
+		OptimizerTask( scenario, options ),
+		active_( true )
 	{
 		xo::path scenario_path( scenario_file_.toStdString() );
 		scenario_pn_ = xo::load_file_with_include( scenario_path, "INCLUDE" );
@@ -23,24 +24,34 @@ namespace scone
 		// do optimization
 		optimizer_ = CreateOptimizer( scenario_pn_, scenario_path.parent_path() );
 		optimizer_->SetOutputMode( Optimizer::status_queue_output );
-		thread_ = std::thread( &Optimizer::Run, optimizer_.get() );
+		thread_ = std::thread( [&]() { optimizer_->Run(); active_ = false; } );
 	}
 
 	OptimizerTaskThreaded::~OptimizerTaskThreaded()
 	{
+		if ( active_ )
+		{
+			log::warning( "Destroying task while optimizer is active" );
+			interrupt();
+		}
+
 		if ( thread_.joinable() )
-			close();
+			thread_.join();
 	}
 
-	void OptimizerTaskThreaded::close()
+	void OptimizerTaskThreaded::interrupt()
 	{
 		dynamic_cast<spot::optimizer&>( *optimizer_ ).interrupt();
+	}
+
+	void OptimizerTaskThreaded::waitUntilDone()
+	{
 		thread_.join();
 	}
 
 	bool OptimizerTaskThreaded::isActive()
 	{
-		return thread_.joinable();
+		return active_;
 	}
 
 	xo::optional<PropNode> OptimizerTaskThreaded::tryGetMessage( xo::error_code* ec )

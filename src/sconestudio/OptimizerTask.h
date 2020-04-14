@@ -18,7 +18,8 @@ namespace scone
 		OptimizerTask( const QString& scenario, const QStringList& args );
 		virtual ~OptimizerTask();
 
-		virtual void close() = 0;
+		virtual void interrupt() = 0;
+		virtual void waitUntilDone() = 0;
 		virtual bool isActive() = 0;
 		virtual xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) = 0;
 

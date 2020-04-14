@@ -37,17 +37,23 @@ namespace scone
 		if ( process_ )
 		{
 			if ( process_->isOpen() )
-			{
+ 			{
 				scone::log::warning( "Deleting OptimizerTaskExternal with open process" );
-				close();
+				interrupt();
 			}
 			delete process_;
 		}
 	}
 
-	void OptimizerTaskExternal::close()
+	void OptimizerTaskExternal::interrupt()
 	{
 		process_->close();
+	}
+
+	void OptimizerTaskExternal::waitUntilDone()
+	{
+		if ( process_->isOpen() )
+			log::error( "waitUntilDone() called while external process is still open" );
 	}
 
 	bool OptimizerTaskExternal::isActive()
