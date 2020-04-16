@@ -503,8 +503,14 @@ void SconeStudio::fileCloseTriggered()
 
 bool SconeStudio::tryExit()
 {
-	abortOptimizations();
-	return optimizations.empty();
+	if ( abortOptimizations() )
+	{
+		// wait until all optimizations are actually done
+		while ( !optimizations.empty() )
+			updateOptimizations();
+		return true;
+	}
+	else return false;
 }
 
 void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
@@ -563,6 +569,8 @@ bool SconeStudio::createScenario( const QString& any_file )
 	catch ( std::exception & e )
 	{
 		error( "Error loading scenario", e.what() );
+		scenario_.reset();
+		return false;
 	}
 
 	// always do this, also in case of error
@@ -570,7 +578,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 	ui.playControl->setRange( 0, 0 );
 	ui.osgViewer->repaint();
 
-	return bool( scenario_ );
+	return scenario_->IsValid();
 }
 
 std::vector<QCodeEditor*> SconeStudio::changedDocuments()
@@ -718,7 +726,7 @@ void SconeStudio::optimizeScenarioMultiple()
 					QStringList args( QString().sprintf( "#1.random_seed=%d", i ) );
 					auto task = createOptimizerTask( scenario_->GetScenarioFileName(), args );
 					addProgressDock( new ProgressDockWidget( this, std::move( task ) ) );
-					QApplication::processEvents();
+					QApplication::processEvents(); // needed for the ProgressDockWidgets to be evenly sized
 				}
 				updateOptimizations();
 			}
@@ -763,27 +771,30 @@ void SconeStudio::performanceTest( bool profile )
 	}
 }
 
-void SconeStudio::abortOptimizations()
+bool SconeStudio::abortOptimizations()
 {
 	if ( optimizations.size() > 0 )
 	{
+		bool showWarning = false;
 		QString message = QString().sprintf( "Are you sure you want to abort the following optimizations:\n\n" );
-
 		for ( auto& o : optimizations )
-			message += o->getIdentifier() + "\n";
-
-		if ( QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
 		{
-			close_all = true;
-			while ( !optimizations.empty() )
-			{
-				optimizations.back()->close();
-				optimizations.pop_back();
-				QApplication::processEvents();
-			}
-			close_all = false;
+			showWarning |= !o->canCloseWithoutWarning();
+			message += o->getIdentifier() + "\n";
 		}
+
+		if ( !showWarning || QMessageBox::warning( this, "Abort Optimizations", message, QMessageBox::Abort, QMessageBox::Cancel ) == QMessageBox::Abort )
+		{
+			for ( const auto& o : optimizations )
+			{
+				o->disableCloseWarning();
+				o->close();
+			}
+			return true;
+		}
+		else return false;
 	}
+	else return true;
 }
 
 void SconeStudio::updateBackgroundTimer()

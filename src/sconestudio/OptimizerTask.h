@@ -9,6 +9,7 @@
 #include "xo/filesystem/path.h"
 #include "xo/utility/optional.h"
 #include "scone/core/types.h"
+#include <deque>
 
 namespace scone
 {
@@ -18,9 +19,9 @@ namespace scone
 		OptimizerTask( const QString& scenario, const QStringList& args );
 		virtual ~OptimizerTask();
 
-		virtual void close() = 0;
-		virtual bool isActive() = 0;
-		virtual xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) = 0;
+		virtual bool interrupt() = 0;
+		virtual void finish() = 0;
+		virtual std::deque<PropNode> getMessages() = 0;
 
 		const QString scenario_file_;
 		const QStringList options_;

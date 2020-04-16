@@ -18,6 +18,12 @@
 
 namespace scone
 {
+#ifdef _DEBUG
+	constexpr double SIMULATION_STEP = 0.01;
+#else
+	constexpr double SIMULATION_STEP = 0.25;
+#endif
+
 	SimulationObjective::SimulationObjective( const PropNode& pn, const path& find_file_folder ) :
 	ModelObjective( pn, find_file_folder )
 	{
@@ -34,12 +40,11 @@ namespace scone
 
 	result<fitness_t> SimulationObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
-		constexpr double step_size = 0.5;
 		m.SetSimulationEndTime( GetDuration() );
-		for ( TimeInSeconds t = step_size; !m.HasSimulationEnded(); t += step_size )
+		for ( TimeInSeconds t = SIMULATION_STEP; !m.HasSimulationEnded(); t += SIMULATION_STEP )
 		{
 			if ( st.stop_requested() )
-				return xo::error_message( "Simulation canceled" );
+				return xo::error_message( "Optimization Canceled" );
 			AdvanceSimulationTo( m, t );
 		}
 		return m.GetMeasure()->GetWeightedResult( m );

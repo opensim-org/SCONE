@@ -11,14 +11,18 @@ namespace scone
 		OptimizerTaskThreaded( const QString& scenario, const QStringList& options = QStringList() );
 		virtual ~OptimizerTaskThreaded();
 
-		void close() override;
-		bool isActive() override;
+		virtual bool interrupt() override;
+		virtual void finish() override;
 
-		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
+		std::deque<PropNode> getMessages() override;
 
 	protected:
+		void thread_func();
+
 		PropNode scenario_pn_;
 		OptimizerUP optimizer_;
+		std::atomic_bool has_optimizer_; // required because unique_ptr can't be atomic
 		std::thread thread_;
+		std::atomic_bool active_;
 	};
 }

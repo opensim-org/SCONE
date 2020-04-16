@@ -13,11 +13,12 @@ namespace scone
 		OptimizerTaskExternal( const QString& scenario, const QStringList& options = QStringList() );
 		virtual ~OptimizerTaskExternal();
 		
-		void close() override;
-		bool isActive() override;
-		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
+		bool interrupt() override;
+		void finish() override;
+		std::deque<PropNode> getMessages() override;
 
 	protected:
 		QProcess* process_;
+		bool send_process_closed_mesage_;
 	};
 }
