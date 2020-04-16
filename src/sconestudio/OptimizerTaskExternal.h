@@ -15,7 +15,7 @@ namespace scone
 		
 		bool interrupt() override;
 		void finish() override;
-		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
+		std::deque<PropNode> getMessages() override;
 
 	protected:
 		QProcess* process_;

@@ -64,10 +64,12 @@ namespace scone
 			process_->close();
 	}
 
-	xo::optional<PropNode> OptimizerTaskExternal::tryGetMessage( xo::error_code* ec )
+	std::deque<PropNode> OptimizerTaskExternal::getMessages()
 	{
-		if ( process_->canReadLine() )
+		std::deque<PropNode> messages;
+		while ( process_->canReadLine() )
 		{
+			xo::error_code ec;
 			char buf[ 4096 ];
 			string msg;
 			while ( msg.empty() || !xo::str_begins_with( msg, '*' ) )
@@ -77,16 +79,20 @@ namespace scone
 			}
 			std::stringstream str( msg.substr( 1 ) );
 			xo::prop_node pn;
-			xo::prop_node_serializer_zml zml( pn, ec );
+			xo::prop_node_serializer_zml zml( pn, &ec );
 			str >> zml;
-			return pn;
+			if ( ec.good() )
+				messages.push_back( std::move( pn ) );
+			else xo::log::warning( "Error parsing external message: ", ec.message() );
 		}
-		else if ( send_process_closed_mesage_ )
+
+		if ( send_process_closed_mesage_ )
 		{
 			// send a single message to acknowledge gui
 			send_process_closed_mesage_ = false;
-			return PropNode( { { "finished", PropNode( "Task interrupted" ) } } );
+			messages.emplace_back( PropNode( { { "finished", PropNode( "Task interrupted" ) } } ) );
 		}
-		else return {};
+
+		return messages;
 	}
 }

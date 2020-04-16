@@ -152,16 +152,9 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
  		return IsClosedResult;
 	}
 
-	xo::error_code ec;
-	while ( auto optional_message = task_->tryGetMessage( &ec ) )
+	for ( auto messages = task_->getMessages(); !messages.empty(); messages.pop_front() )
 	{
-		auto pn = *optional_message;
-		if ( ec.bad() )
-		{
-			log::warning( "Error parsing message: ", ec.message() );
-			continue;
-		}
-
+		const auto& pn = messages.front();
 		if ( auto id = pn.try_get< string >( "id" ) )
 		{
 			auto it = xo::find_if( optimizations, [&]( auto& o ) { return o.name == *id; } );

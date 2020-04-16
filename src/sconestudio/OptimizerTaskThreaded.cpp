@@ -63,10 +63,11 @@ namespace scone
 		thread_.join();
 	}
 
-	xo::optional<PropNode> OptimizerTaskThreaded::tryGetMessage( xo::error_code* ec )
+	std::deque<PropNode> OptimizerTaskThreaded::getMessages()
 	{
+		std::deque<PropNode> results;
 		if ( has_optimizer_ )
-			return optimizer_->TryPopStatus();
-		else return {};
+			return results = optimizer_->GetStatusMessages();
+		return results;
 	}
 }

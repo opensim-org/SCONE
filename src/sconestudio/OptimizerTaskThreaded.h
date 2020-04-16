@@ -14,7 +14,7 @@ namespace scone
 		virtual bool interrupt() override;
 		virtual void finish() override;
 
-		xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) override;
+		std::deque<PropNode> getMessages() override;
 
 	protected:
 		void thread_func();

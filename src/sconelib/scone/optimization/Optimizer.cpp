@@ -103,16 +103,18 @@ namespace scone
 		}
 	}
 
-	xo::optional<PropNode> Optimizer::TryPopStatus()
+	std::deque<PropNode> Optimizer::GetStatusMessages()
 	{
-		xo::optional<PropNode> r;
-		auto lock = std::scoped_lock( g_status_output_mutex );
-		if ( !status_queue_.empty() )
+		std::deque<PropNode> results;
 		{
-			r = std::move( status_queue_.front() );
-			status_queue_.pop_front();
+			auto lock = std::scoped_lock( g_status_output_mutex );
+			if ( !status_queue_.empty() )
+			{
+				results = std::move( status_queue_ );
+				status_queue_.clear();
+			}
 		}
-		return r;
+		return results;
 	}
 
 	String Optimizer::GetClassSignature() const

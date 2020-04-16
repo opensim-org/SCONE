@@ -9,6 +9,7 @@
 #include "xo/filesystem/path.h"
 #include "xo/utility/optional.h"
 #include "scone/core/types.h"
+#include <deque>
 
 namespace scone
 {
@@ -20,7 +21,7 @@ namespace scone
 
 		virtual bool interrupt() = 0;
 		virtual void finish() = 0;
-		virtual xo::optional<PropNode> tryGetMessage( xo::error_code* ec ) = 0;
+		virtual std::deque<PropNode> getMessages() = 0;
 
 		const QString scenario_file_;
 		const QStringList options_;
