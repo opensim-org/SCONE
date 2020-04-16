@@ -22,7 +22,7 @@ namespace scone
 		INIT_PROP( props, stride_length, RangePenalty<Real>() );
 		INIT_PROP( props, stride_duration, RangePenalty<Real>() );
 		INIT_PROP( props, load_threshold, 0.01 );
-		INIT_PROP( props, min_stride_duration_threshold, 0.2 );
+		INIT_PROP( props, min_stance_duration_threshold, 0.2 );
 		INIT_PROP( props, initiation_cycles, 1 );
 
 		SCONE_THROW_IF(initiation_cycles < 1, "initiation_cycles should be >= 1");
@@ -56,7 +56,7 @@ namespace scone
 	{
 		auto cycles = ExtractGaitCycles( stored_data_,
 										 load_threshold,
-										 min_stride_duration_threshold );
+										 min_stance_duration_threshold );
 
 		// calculate stride length or stride duration
 		for (int cycle = initiation_cycles; cycle < cycles.size(); cycle++) {
