@@ -3,6 +3,7 @@
 #include "qt_convert.h"
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/string_tools.h"
 #include "studio_config.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
@@ -14,7 +15,8 @@ namespace scone
 {
 	OptimizerTaskExternal::OptimizerTaskExternal( const QString& scenario, const QStringList& options ) :
 		OptimizerTask( scenario, options ),
-		process_( nullptr )
+		process_( nullptr ),
+		send_process_closed_mesage_( false )
 	{
 		QString program = to_qt( xo::get_application_dir() / SCONE_SCONECMD_EXECUTABLE );
 		QStringList args;
@@ -45,20 +47,21 @@ namespace scone
 		}
 	}
 
-	void OptimizerTaskExternal::interrupt()
-	{
-		process_->close();
-	}
-
-	void OptimizerTaskExternal::waitUntilDone()
+	bool OptimizerTaskExternal::interrupt()
 	{
 		if ( process_->isOpen() )
-			log::error( "waitUntilDone() called while external process is still open" );
+		{
+			process_->close();
+			send_process_closed_mesage_ = true;
+			return true;
+		}
+		else return false;
 	}
 
-	bool OptimizerTaskExternal::isActive()
+	void OptimizerTaskExternal::finish()
 	{
-		return process_->isOpen();
+		if ( process_->isOpen() )
+			process_->close();
 	}
 
 	xo::optional<PropNode> OptimizerTaskExternal::tryGetMessage( xo::error_code* ec )
@@ -77,6 +80,12 @@ namespace scone
 			xo::prop_node_serializer_zml zml( pn, ec );
 			str >> zml;
 			return pn;
+		}
+		else if ( send_process_closed_mesage_ )
+		{
+			// send a single message to acknowledge gui
+			send_process_closed_mesage_ = false;
+			return PropNode( { { "finished", PropNode( "Task interrupted" ) } } );
 		}
 		else return {};
 	}

@@ -76,7 +76,7 @@ public slots:
 	void performanceTestNoProfile() { performanceTest( false ); }
 	void optimizeScenario();
 	void optimizeScenarioMultiple();
-	void abortOptimizations();
+	bool abortOptimizations();
 	void updateBackgroundTimer();
 	void updateOptimizations();
 	void createVideo();

@@ -11,7 +11,7 @@
 #include "xo/system/system_tools.h"
 #include "xo/system/assert.h"
 #include "scone/core/Log.h"
-#include "xo/string/string_tools.h"
+#include "scone/core/string_tools.h"
 #include "studio_config.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
@@ -23,13 +23,15 @@
 using namespace scone;
 
 ProgressDockWidget::ProgressDockWidget( SconeStudio* s, std::unique_ptr<scone::OptimizerTask> t ) :
-studio( s ),
-task_( std::move( t ) ),
-state( StartingState ),
-min_view_gens( 20 ),
-view_first_gen( 0 ),
-view_last_gen( min_view_gens ),
-best_idx( -1 )
+	studio( s ),
+	task_( std::move( t ) ),
+	state( StartingState ),
+	showCloseWarning( true ),
+	closeWhenFinished( false ),
+	min_view_gens( 20 ),
+	view_first_gen( 0 ),
+	view_last_gen( min_view_gens ),
+	best_idx( -1 )
 {
 	ui.setupUi( this );
 
@@ -64,6 +66,7 @@ ProgressDockWidget::~ProgressDockWidget()
 {
 	if ( state != ClosedState )
 		log::critical( "Deleting Progress Dock that is not closed: ", getIdentifier().toStdString() );
+	else log::debug( "Closed optimization ", getIdentifier().toStdString() );
 }
 
 void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
@@ -73,7 +76,7 @@ void ProgressDockWidget::SetAxisScaleType( AxisScaleType ast, double log_base )
 	//ui.plot->yAxis->setScaleLogBase( log_base );
 }
 
-void ProgressDockWidget::rangeChanged( const QCPRange &newRange, const QCPRange &oldRange )
+void ProgressDockWidget::rangeChanged( const QCPRange& newRange, const QCPRange& oldRange )
 {
 	auto it = std::max_element( optimizations.begin(), optimizations.end(), [&]( auto& a, auto& b ) { return a.cur_gen < b.cur_gen; } );
 
@@ -106,6 +109,7 @@ void ProgressDockWidget::fixRangeY()
 
 void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 {
+	//log::debug( "Messsage:\n", pn );
 	pn.try_get( max_generations, "max_generations" );
 	pn.try_get( window_size, "window_size" );
 	pn.try_get( is_minimizing, "minimize" );
@@ -122,11 +126,12 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 
 	pn.try_get( best, "best" );
 	pn.try_get( best_gen, "best_gen" );
+	pn.try_get( duration, "time" );
 
 	if ( pn.try_get( message, "finished" ) )
 	{
 		state = FinishedState;
-		log::info( "Optimization ", name, " finished: ", message );
+		log::info( "Finished ", name, stringf( " (%.2fs)", duration ), ": ", message );
 	}
 
 	if ( pn.try_get( message, "error" ) )
@@ -140,10 +145,11 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 
 ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 {
-	if ( !task_->isActive() )
+	// check if there was a request to close and the optimizer is finished
+	if ( closeWhenFinished && ( state == FinishedState || state == ErrorState ) )
 	{
-		close();
-		return IsClosedResult;
+ 		close();
+ 		return IsClosedResult;
 	}
 
 	xo::error_code ec;
@@ -269,23 +275,19 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 	return OkResult;
 }
 
-bool ProgressDockWidget::readyForDestruction()
+bool ProgressDockWidget::readyForDestruction() const
 {
 	return state == ClosedState;
 }
 
-void ProgressDockWidget::interrupt()
+bool ProgressDockWidget::canCloseWithoutWarning() const
 {
-	if ( state == StartingState || state == RunningState )
-	{
-		task_->interrupt();
-		state = InterruptedState;
-	}
+	return !showCloseWarning || state == FinishedState || state == ErrorState;
 }
 
-void ProgressDockWidget::closeEvent( QCloseEvent *e )
+void ProgressDockWidget::closeEvent( QCloseEvent* e )
 {
-	if ( !( state == InterruptedState || state == FinishedState || state == ErrorState ) )
+	if ( !canCloseWithoutWarning() )
 	{
 		// allow user to cancel close
 		QString message = "Are you sure you want to abort optimization " + getIdentifier();
@@ -296,14 +298,23 @@ void ProgressDockWidget::closeEvent( QCloseEvent *e )
 		}
 	}
 
-	log::debug( "Closing optimization ", getIdentifier().toStdString() );
-	task_->interrupt();
-	task_->waitUntilDone();
-	task_.reset();
+	if ( state == StartingState || state == RunningState )
+	{
+		// send interrupt signal, window will close once done
+		log::debug( "Canceling optimization ", getIdentifier().toStdString() );
+		task_->interrupt();
+		closeWhenFinished = true;
+		updateText();
+		e->ignore();
+	}
 
-	state = ClosedState;
-
-	e->accept();
+	if ( state == FinishedState || state == ErrorState )
+	{
+		// task is done, close widget
+		task_->finish();
+		state = ClosedState;
+		e->accept();
+	}
 }
 
 void ProgressDockWidget::updateText()
@@ -317,18 +328,17 @@ void ProgressDockWidget::updateText()
 	case ProgressDockWidget::StartingState:
 		s = "Initializing optimization...";
 		break;
-	case ProgressDockWidget::RunningState: 
-		if ( opt )
+	case ProgressDockWidget::RunningState:
+		if ( closeWhenFinished )
+			s = "Canceling optimization...";
+		else if ( opt )
 			s = xo::stringf( "Gen %d; Best=%.3f (Gen %d); P=%.3f", opt->cur_gen, opt->best, opt->best_gen, opt->cur_pred );
 		else s = "Waiting for first evaluation...";
 		break;
 	case ProgressDockWidget::FinishedState:
 		if ( opt )
-		{
-			if ( opt->cur_gen > 0 )
-				s = xo::stringf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
-			else s = "Could not optimize " + opt->name + "\nPlease evaluate the scenario and check for errors";
-		}
+			s = xo::stringf( "Finished (Gen %d); Best=%.3f (Gen %d)", opt->cur_gen, opt->best, opt->best_gen ) + "\n" + message;
+		else s = message;
 		break;
 	case ProgressDockWidget::ClosedState:
 		break;
