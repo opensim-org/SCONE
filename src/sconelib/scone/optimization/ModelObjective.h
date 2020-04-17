@@ -25,9 +25,8 @@ namespace scone
 		FactoryProps controller_props;
 		FactoryProps measure_props;
 
-		virtual fitness_t evaluate( const SearchPoint& point ) const override;
-
-		virtual fitness_t EvaluateModel( Model& m ) const;
+		virtual result<fitness_t> evaluate( const SearchPoint& point, const xo::stop_token& st ) const override;
+		virtual result<fitness_t> EvaluateModel( Model& m, const xo::stop_token& st ) const;
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const = 0;
 
 		virtual fitness_t GetResult( Model& m ) const = 0;

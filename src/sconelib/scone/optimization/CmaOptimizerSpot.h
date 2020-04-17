@@ -11,7 +11,6 @@
 #include "CmaOptimizer.h"
 #include "spot/cma_optimizer.h"
 #include "spot/reporter.h"
-#include "spot/file_reporter.h"
 #include "xo/system/log_sink.h"
 #include "xo/time/timer.h"
 
@@ -32,6 +31,7 @@ namespace scone
 		virtual ~CmaOptimizerSpot() {}
 		virtual void Run() override;
 		virtual double GetBestFitness() const override { return best_fitness(); }
+		static spot::evaluator& GetEvaluator();
 	};
 
 	class SCONE_API CmaOptimizerReporter : public spot::reporter

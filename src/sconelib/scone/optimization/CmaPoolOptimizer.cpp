@@ -14,7 +14,7 @@ namespace scone
 {
 	CmaPoolOptimizer::CmaPoolOptimizer( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
 	Optimizer( pn, scenario_pn, scenario_dir ),
-	optimizer_pool( *m_Objective, pn )
+	optimizer_pool( *m_Objective, CmaOptimizerSpot::GetEvaluator(), pn )
 	{
 		// re-initialize these parameters because we want different defaults
 		INIT_PROP( pn, prediction_window_, 300 );

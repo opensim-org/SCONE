@@ -14,12 +14,16 @@
 
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/Settings.h"
+#include "spot/async_evaluator.h"
+#include "spot/pooled_evaluator.h"
+#include "spot/batch_evaluator.h"
 
 namespace scone
 {
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
 		CmaOptimizer( pn, scenario_pn, scenario_dir ),
-		cma_optimizer( *m_Objective, lambda_, CmaOptimizer::random_seed )
+		cma_optimizer( *m_Objective, GetEvaluator(), spot::cma_options{ CmaOptimizer::lambda_, CmaOptimizer::random_seed, spot::cma_weights::log } )
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
@@ -46,13 +50,13 @@ namespace scone
 		output_mode_ = m;
 		switch ( output_mode_ )
 		{
-		case scone::Optimizer::no_output:
+		case Optimizer::no_output:
 			break;
-		case scone::Optimizer::console_output:
+		case Optimizer::console_output:
 			add_reporter( std::make_unique<spot::console_reporter>() );
 			break;
-		case scone::Optimizer::status_console_output:
-		case scone::Optimizer::status_queue_output:
+		case Optimizer::status_console_output:
+		case Optimizer::status_queue_output:
 			add_reporter( std::make_unique<CmaOptimizerReporter>() );
 			break;
 		default: SCONE_THROW( "Unknown output mode" );
@@ -69,6 +73,36 @@ namespace scone
 			GetOutputFolder(), min_improvement_for_file_output, max_generations_without_file_output ) );
 
 		run();
+	}
+
+	spot::evaluator& CmaOptimizerSpot::GetEvaluator()
+	{
+		auto eval = GetSconeSetting<int>( "optimizer.evaluator" );
+		auto max_threads = GetSconeSetting<int>( "optimizer.max_threads" );
+		auto thread_prio = static_cast<xo::thread_priority>( GetSconeSetting<int>( "optimizer.thread_priority" ) );
+		if ( eval == 0 )
+		{
+			static spot::sequential_evaluator sequential_eval;
+			return sequential_eval;
+		}
+		else if ( eval == 1 )
+		{
+			static spot::batch_evaluator batch_eval;
+			return batch_eval;
+		}
+		else if ( eval == 2 )
+		{
+			static spot::async_evaluator async_eval( max_threads );
+			async_eval.set_max_threads( max_threads, thread_prio );
+			return async_eval;
+		}
+		else if ( eval == 3 )
+		{
+			static spot::pooled_evaluator pooled_eval;
+			pooled_eval.set_max_threads( max_threads, thread_prio );
+			return pooled_eval;
+		}
+		else SCONE_THROW( "Invalid evaluator setting" );
 	}
 
 	void CmaOptimizerReporter::on_start( const optimizer& opt )

@@ -37,7 +37,7 @@ namespace scone
 
 		INIT_PAR( props, par, KF, 0.0 );
 		INIT_PAR( props, par, F0, 0.0 );
-		INIT_PROP( props, allow_neg_F, false );
+		INIT_PROP( props, allow_neg_F, true );
 
 		INIT_PAR( props, par, KS, 0.0 );
 		INIT_PAR( props, par, S0, 0.0 );

@@ -38,7 +38,7 @@ namespace scone
 
 	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& time_label )
 	{
-		fprintf( f, time_label.c_str() );
+		fprintf( f, "%s", time_label.c_str() );
 		for ( const String& label : storage.GetLabels() )
 			fprintf( f, "\t%s", label.c_str() );
 		fprintf( f, "\n" );

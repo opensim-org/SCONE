@@ -64,7 +64,7 @@ namespace scone
 		model->SetStoreData( store_data );
 
 		timer tmr;
-		double result = so.EvaluateModel( *model );
+		auto result = so.EvaluateModel( *model, xo::stop_token() );
 		auto duration = tmr().seconds();
 
 		// write results

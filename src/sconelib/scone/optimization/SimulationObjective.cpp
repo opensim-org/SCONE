@@ -32,10 +32,16 @@ namespace scone
 	SimulationObjective::~SimulationObjective()
 	{}
 
-	fitness_t SimulationObjective::EvaluateModel( Model& m ) const
+	result<fitness_t> SimulationObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
+		constexpr double step_size = 0.5;
 		m.SetSimulationEndTime( GetDuration() );
-		AdvanceSimulationTo( m, GetDuration() );
+		for ( TimeInSeconds t = step_size; !m.HasSimulationEnded(); t += step_size )
+		{
+			if ( st.stop_requested() )
+				return xo::error_message( "Simulation canceled" );
+			AdvanceSimulationTo( m, t );
+		}
 		return m.GetMeasure()->GetWeightedResult( m );
 	}
 
