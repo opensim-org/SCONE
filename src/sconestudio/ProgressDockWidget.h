@@ -27,13 +27,17 @@ class ProgressDockWidget : public QDockWidget
 	Q_OBJECT
 
 public:
-	enum State { StartingState, InitializingState, RunningState, FinishedState, ClosedState, ErrorState };
+	enum State { StartingState, RunningState, FinishedState, ClosedState, ErrorState };
 	enum ProgressResult { OkResult, IsClosedResult, FailureResult, ShowErrorResult };
 
 	ProgressDockWidget( SconeStudio* s, std::unique_ptr<scone::OptimizerTask> task );
 	virtual ~ProgressDockWidget();
 
 	QString getIdentifier() { return optimizations.empty() ? "" : to_qt( optimizations.front().name ); }
+	ProgressResult updateProgress();
+	bool readyForDestruction() const;
+	bool canCloseWithoutWarning() const;
+	void disableCloseWarning() { showCloseWarning = false; }
 
 	enum AxisScaleType { Linear, Logarithmic };
 	void SetAxisScaleType( AxisScaleType ast, double log_base = 2.0 );
@@ -62,6 +66,8 @@ public:
 		float cur_pred = 0.0f;
 		xo::linear_function< float > cur_reg;
 
+		double duration;
+
 		QVector< double > bestvec;
 		QVector< double > medvec;
 		QVector< double > genvec;
@@ -69,6 +75,9 @@ public:
 		void Update( const PropNode& pn );
 		bool has_update_flag = false;
 	};
+
+	bool showCloseWarning;
+	bool closeWhenFinished;
 
 	int min_view_gens;
 	int view_first_gen;
@@ -80,16 +89,12 @@ public:
 
 	std::vector< Optimization > optimizations;
 
-	ProgressResult updateProgress();
-	bool readyForDestruction();
-
 public slots:
 	void rangeChanged( const QCPRange &newRange, const QCPRange &oldRange );
 	void fixRangeY();
 
 protected:
 	virtual void closeEvent( QCloseEvent * ) override;
-
 
 private:
 	void updateText();

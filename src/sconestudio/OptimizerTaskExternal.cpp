@@ -3,6 +3,7 @@
 #include "qt_convert.h"
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
+#include "scone/core/string_tools.h"
 #include "studio_config.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
@@ -14,7 +15,8 @@ namespace scone
 {
 	OptimizerTaskExternal::OptimizerTaskExternal( const QString& scenario, const QStringList& options ) :
 		OptimizerTask( scenario, options ),
-		process_( nullptr )
+		process_( nullptr ),
+		send_process_closed_mesage_( false )
 	{
 		QString program = to_qt( xo::get_application_dir() / SCONE_SCONECMD_EXECUTABLE );
 		QStringList args;
@@ -37,28 +39,37 @@ namespace scone
 		if ( process_ )
 		{
 			if ( process_->isOpen() )
-			{
+ 			{
 				scone::log::warning( "Deleting OptimizerTaskExternal with open process" );
-				close();
+				interrupt();
 			}
 			delete process_;
 		}
 	}
 
-	void OptimizerTaskExternal::close()
+	bool OptimizerTaskExternal::interrupt()
 	{
-		process_->close();
-	}
-
-	bool OptimizerTaskExternal::isActive()
-	{
-		return process_->isOpen();
-	}
-
-	xo::optional<PropNode> OptimizerTaskExternal::tryGetMessage( xo::error_code* ec )
-	{
-		if ( process_->canReadLine() )
+		if ( process_->isOpen() )
 		{
+			process_->close();
+			send_process_closed_mesage_ = true;
+			return true;
+		}
+		else return false;
+	}
+
+	void OptimizerTaskExternal::finish()
+	{
+		if ( process_->isOpen() )
+			process_->close();
+	}
+
+	std::deque<PropNode> OptimizerTaskExternal::getMessages()
+	{
+		std::deque<PropNode> messages;
+		while ( process_->canReadLine() )
+		{
+			xo::error_code ec;
 			char buf[ 4096 ];
 			string msg;
 			while ( msg.empty() || !xo::str_begins_with( msg, '*' ) )
@@ -68,10 +79,20 @@ namespace scone
 			}
 			std::stringstream str( msg.substr( 1 ) );
 			xo::prop_node pn;
-			xo::prop_node_serializer_zml zml( pn, ec );
+			xo::prop_node_serializer_zml zml( pn, &ec );
 			str >> zml;
-			return pn;
+			if ( ec.good() )
+				messages.push_back( std::move( pn ) );
+			else xo::log::warning( "Error parsing external message: ", ec.message() );
 		}
-		else return {};
+
+		if ( send_process_closed_mesage_ )
+		{
+			// send a single message to acknowledge gui
+			send_process_closed_mesage_ = false;
+			messages.emplace_back( PropNode( { { "finished", PropNode( "Task interrupted" ) } } ) );
+		}
+
+		return messages;
 	}
 }

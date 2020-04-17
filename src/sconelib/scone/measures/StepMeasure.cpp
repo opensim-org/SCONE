@@ -19,10 +19,15 @@ namespace scone
 							  const Model& model, const Location& loc ) :
 	Measure( props, par, model, loc )
 	{
-		INIT_PROP_REQUIRED( props, stride_length );
+		INIT_PROP( props, stride_length, RangePenalty<Real>() );
+		INIT_PROP( props, stride_duration, RangePenalty<Real>() );
 		INIT_PROP( props, load_threshold, 0.01 );
-		INIT_PROP( props, min_step_duration, 0.2 );
+		INIT_PROP( props, min_stance_duration_threshold, 0.2 );
 		INIT_PROP( props, initiation_cycles, 1 );
+
+		SCONE_THROW_IF(initiation_cycles < 1, "initiation_cycles should be >= 1");
+		SCONE_THROW_IF(stride_length.IsNull() && stride_duration.IsNull() ,
+					   "stride_length and/or stride_duration should be defined");
 	}
 
 	bool StepMeasure::UpdateMeasure( const Model& model, double timestamp )
@@ -50,23 +55,36 @@ namespace scone
 	double StepMeasure::ComputeResult( const Model& model )
 	{
 		auto cycles = ExtractGaitCycles( stored_data_,
-										 load_threshold, min_step_duration );
+										 load_threshold,
+										 min_stance_duration_threshold );
 
-		// calculate step length
-		double penalty = 0;
+		// calculate stride length or stride duration
 		for (int cycle = initiation_cycles; cycle < cycles.size(); cycle++) {
 			auto t = cycles[cycle].begin_;
+			auto stride_dur = cycles[cycle].end_ - cycles[cycle].begin_;
 			auto stride_len = cycles[cycle].length();
-			stride_length.AddSample( t, stride_len );
-			// log::TraceF("%d %.3f @ %.3f", cycle, t, stride_len );
+
+			if ( !stride_length.IsNull() )
+				 stride_length.AddSample( t, stride_len );
+
+			if ( !stride_duration.IsNull() )
+				stride_duration.AddSample( t, stride_dur );
 		}
 
 		// calculate penalty
-		if ( !stride_length.IsNull() && stride_length.GetNumSamples() > 0 )
+		double penalty = 0;
+		if ( !stride_length.IsNull() )
 		{
 			penalty += stride_length.GetResult();
 			GetReport().set( "stride_length_penalty" ,
 							 stringf( "%g", stride_length.GetResult() ) );
+		}
+
+		if ( !stride_duration.IsNull() )
+		{
+			penalty += stride_duration.GetResult();
+			GetReport().set( "stride_duration_penalty" ,
+							 stringf( "%g", stride_duration.GetResult() ) );
 		}
 
 		return penalty;

@@ -41,9 +41,13 @@ namespace scone
 
 	result<fitness_t> ModelObjective::evaluate( const SearchPoint& point, const xo::stop_token& st ) const
 	{
-		SearchPoint params( point );
-		auto model = CreateModelFromParams( params );
-		return EvaluateModel( *model, st );
+		if ( !st.stop_requested() )
+		{
+			SearchPoint params( point );
+			auto model = CreateModelFromParams( params );
+			return EvaluateModel( *model, st );
+		}
+		else return xo::error_message( "Optimization canceled" );
 	}
 
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
