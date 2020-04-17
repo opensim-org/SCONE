@@ -36,6 +36,7 @@ namespace OpenSim
 			SimTK::ReferencePtr<StateComponentOpenSim3> m_modelComponent;
 			SimTK::ReferencePtr<scone::StateComponent> m_stateComponent;
 		};
+
 	public:
 		/// Takes ownership of the StateComponent pointer.
 		StateComponentOpenSim3( scone::StateComponent* stateComponent );

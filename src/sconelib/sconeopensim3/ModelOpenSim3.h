@@ -75,7 +75,7 @@ namespace scone
 		ModelOpenSim3( const PropNode& props, Params& par );
 		virtual ~ModelOpenSim3();
 
-		virtual path GetModelFile() const { return model_file; }
+		virtual path GetModelFile() const override { return model_file; }
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
@@ -91,7 +91,7 @@ namespace scone
 		virtual double GetSimulationEndTime() const override;
 		virtual void SetSimulationEndTime( double t ) override;
 
-		virtual void RequestTermination();
+		virtual void RequestTermination() override;
 
 		virtual double GetTime() const override;
 		virtual double GetPreviousTime() const override;

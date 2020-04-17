@@ -159,7 +159,7 @@ namespace scone
 			// into OpenSim's subsystem.
 			for (auto& cpn : props) {
 				if ( auto fp = MakeFactoryProps( GetStateComponentFactory(), cpn, "StateComponent" ) ) {
-					auto stateComponent = CreateStateComponent( fp, par );
+					auto stateComponent = CreateStateComponent( fp, par, *this );
 					// modelComponent takes ownership of the stateComponent
 					auto modelComponent = new OpenSim::StateComponentOpenSim3(stateComponent.release());
 					m_pOsimModel->addComponent(modelComponent);

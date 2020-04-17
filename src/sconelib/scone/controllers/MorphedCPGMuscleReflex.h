@@ -28,7 +28,7 @@ namespace scone
 		MorphedCPGMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc );
 
 		/// Constant reflecting the contribution of CPG input to the
-		/// output; default = 0.
+		/// output; default = 0 (0 <= alpha <= 1).
 		Real alpha;
 
 		/// The output state name of the morphed oscillator. If
@@ -40,6 +40,6 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	private:
-		Model* m_model;
+		Model& m_model;
 	};
 }

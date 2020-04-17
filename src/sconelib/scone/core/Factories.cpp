@@ -188,9 +188,9 @@ namespace scone
 		return g_StateComponentFactory;
 	}
 
-	StateComponentUP CreateStateComponent( const FactoryProps& fp, Params& par )
+	StateComponentUP CreateStateComponent( const FactoryProps& fp, Params& par, Model& model )
 	{
-		return GetStateComponentFactory().create( fp.type(), fp.props(), par );
+		return GetStateComponentFactory().create( fp.type(), fp.props(), par, model );
 	}
 
 	ObjectiveFactory& GetObjectiveFactory()

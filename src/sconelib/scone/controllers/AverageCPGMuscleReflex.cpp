@@ -7,6 +7,7 @@
 */
 
 #include "AverageCPGMuscleReflex.h"
+#include "scone/core/Exception.h"
 #include "scone/model/Muscle.h"
 
 namespace scone
@@ -15,6 +16,7 @@ namespace scone
 	MuscleReflex( props, par, model, loc )
 	{
 		INIT_PAR( props, par, alpha, 0.0 );
+		SCONE_THROW_IF(alpha < 0 || alpha > 1, "alpha parameter should be 0 <= alpha <= 1");
 	}
 
 	void AverageCPGMuscleReflex::ComputeControls( double timestamp )
@@ -34,7 +36,7 @@ namespace scone
 		// add spindle reflex
 		u_a = GetValue( m_pActivationSensor, KA, A0, allow_neg_A );
 
-		// sum it up
+		// sum up reflex contribution
 		u_total = u_l + u_v + u_f + u_s + u_a + C0;
 
 		// append CPG

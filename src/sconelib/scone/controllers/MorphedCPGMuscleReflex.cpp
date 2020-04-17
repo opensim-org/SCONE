@@ -13,11 +13,11 @@ namespace scone
 {
 	MorphedCPGMuscleReflex::MorphedCPGMuscleReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
 		MuscleReflex( props, par, model, loc ),
-		INIT_MEMBER_REQUIRED( props, cpg_output )
+		INIT_MEMBER_REQUIRED( props, cpg_output ),
+		m_model( model )
 	{
 		INIT_PAR( props, par, alpha, 0.0 );
-		// get a reference of the model
-		m_model = &model;
+		SCONE_THROW_IF(alpha < 0 || alpha > 1, "alpha parameter should be 0 <= alpha <= 1");
 	}
 
 	void MorphedCPGMuscleReflex::ComputeControls( double timestamp )
@@ -40,7 +40,7 @@ namespace scone
 		// sum it up
 		u_total = u_l + u_v + u_f + u_s + u_a + C0;
 
-		auto u_cpg = m_model->GetState().GetValue(cpg_output);
+		auto u_cpg = m_model.GetState().GetValue(cpg_output);
 
 		AddTargetControlValue( alpha * u_cpg + (1 - alpha) * u_total );
 	}
@@ -49,6 +49,6 @@ namespace scone
 	{
 		MuscleReflex::StoreData(frame, flags);
 		auto name = GetReflexName( actuator_.GetName(), source.GetName() );
-		frame[ name + ".cpg_morphed" ] = m_model->GetState().GetValue(cpg_output);
+		frame[ name + ".cpg_morphed" ] = m_model.GetState().GetValue(cpg_output);
 	}
 }

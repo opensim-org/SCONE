@@ -54,7 +54,7 @@ namespace OpenSim
  	ModelComponent(),
 	m_stateComponent( stateComponent )
 	{
-		for (int i = 0; i < m_stateComponent->GetInitialCondition().size(); i++)
+		for (int i = 0; i < m_stateComponent->GetInitialConditions().size(); i++)
 			m_stateVariables.push_back(m_stateComponent->GetName() + "_" + std::to_string(i));
 	}
 
@@ -87,7 +87,7 @@ namespace OpenSim
 	void StateComponentOpenSim3::initStateFromProperties(SimTK::State& s) const
 	{
 		Super::initStateFromProperties(s);
-		setStateVariables(s, m_stateComponent->GetInitialCondition());
+		setStateVariables(s, m_stateComponent->GetInitialConditions());
 	}
 
     void StateComponentOpenSim3::addToSystem(SimTK::MultibodySystem& system) const
