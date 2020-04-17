@@ -257,9 +257,9 @@ namespace scone
 		for ( Actuator* a : GetActuators() )
 			a->ClearInput();
 
-		// update all controllers
 		bool terminate = false;
-		terminate |= GetController()->UpdateControls( *this, GetTime() );
+		if ( auto* c = GetController() )
+			terminate |= c->UpdateControls( *this, GetTime() );
 
 		if ( terminate )
 			RequestTermination();
@@ -270,8 +270,10 @@ namespace scone
 		SCONE_PROFILE_FUNCTION;
 
 		bool terminate = false;
-		terminate |= GetController()->UpdateAnalysis( *this, GetTime() );
-		terminate |= GetMeasure()->UpdateAnalysis( *this, GetTime() );
+		if ( auto* c = GetController() )
+			terminate |= c->UpdateAnalysis( *this, GetTime() );
+		if ( auto* m = GetMeasure() )
+			terminate |= m->UpdateAnalysis( *this, GetTime() );
 
 		if ( terminate )
 			RequestTermination();
