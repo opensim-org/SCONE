@@ -710,8 +710,8 @@ namespace scone
 			log::warning( "Could not find initial state for ", initial_load_dof, " with external force of ", force_threshold );
 			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, initial_state );
 		}
-		//else
-		//	log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+		else
+			log::trace( "Moved ", initial_load_dof, " to ", new_ty, "; force=", force, "; goal=", force_threshold );
 	}
 
 	void ModelOpenSim3::InitStateFromTk()
