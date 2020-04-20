@@ -86,7 +86,6 @@ namespace scone
 		INIT_PROP( props, state_init_file, path() );
 		INIT_PROP( props, probe_class, String() );
 
-		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, enable_external_forces, false );
 
 		INIT_PROP( props, leg_upper_body, "femur" );

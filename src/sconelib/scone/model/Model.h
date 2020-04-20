@@ -179,6 +179,9 @@ namespace scone
 		/// Initial load [BW] at which to place the model initially; default = 0.2;
 		Real initial_load;
 
+		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = pelvis_ty.
+		String initial_load_dof;
+
 		/// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
 

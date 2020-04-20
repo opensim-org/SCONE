@@ -57,9 +57,6 @@ namespace scone
 		/// Accuracy parameter for integration; default = 0.001.
 		double integration_accuracy;
 
-		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = pelvis_ty.
-		String initial_load_dof;
-
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
 		bool enable_external_forces;
 
