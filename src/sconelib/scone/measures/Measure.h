@@ -40,7 +40,7 @@ namespace scone
 
 		PropNode& GetReport() { return report; }
 		const PropNode& GetReport() const { return report; }
-	
+
 		virtual const String& GetName() const override;
 		Real GetWeight() { return weight; }
 		Real GetThreshold() { return threshold; }

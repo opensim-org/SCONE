@@ -9,6 +9,7 @@
 #include "BodyMeasure.h"
 #include "scone/model/Model.h"
 #include "scone/core/string_tools.h"
+#include "scone/model/Side.h"
 
 namespace scone
 {
@@ -27,6 +28,19 @@ namespace scone
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !acceleration.IsNull() );
 		name = body.GetName();
+
+		// Determine the active state.
+		String states;
+		props.try_get< String >(states, "states" );
+		auto state_tokens = xo::split_str( states, ";," );
+		for ( const String& instance_states_str : state_tokens )
+		{
+			auto instance_states = xo::split_str( instance_states_str, " " );
+			for ( const auto& state : instance_states )
+				active_state.set(GaitStateController::m_StateNames.GetValue(state));
+		}
+		if (!active_state.any()) // if states are not defined then make always active
+			active_state.flip();
 	}
 
 	double BodyMeasure::ComputeResult( const Model& model )
@@ -56,25 +70,55 @@ namespace scone
 
 	bool BodyMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		if ( !position.IsNull() )
+		// Determine if the measure is in active state.
+		bool isInActiveState = true;
+		auto side = (body.GetName().find("_r") != std::string::npos) ? Side::RightSide : Side::LeftSide;
+		auto gaitController = dynamic_cast<const GaitStateController*>(model.GetController());
+		if (gaitController != nullptr) // check if GaitStateController exists
 		{
-			auto pos = body.GetPosOfPointOnBody( offset );
-			if ( relative_to_model_com ) pos -= model.GetComPos();
-			position.AddSample( timestamp, dot_product( axes_weights, pos ) );
+			const auto& legStates = gaitController->GetLegStates();
+			for (const auto& legState : legStates) // iterate over each leg to find the side
+				if (legState.get()->leg.GetSide() == side)
+					if (!active_state.test(legState->state)) // if not active skip following calculations
+						isInActiveState = false;
 		}
 
-		if ( !velocity.IsNull() )
+		if (!isInActiveState)
 		{
-			auto vel = body.GetLinVelOfPointOnBody( offset );
-			if ( relative_to_model_com ) vel -= model.GetComVel();
-			velocity.AddSample( timestamp, dot_product( axes_weights, vel ) );
-		}
+			// We want to append min in the measures in case we are
+			// not in active state. Otherwise, StoreData will report
+			// the last value.
+			if ( !position.IsNull() )
+				position.AddSample( timestamp, position.range.min );
 
-		if ( !acceleration.IsNull() )
+			if ( !velocity.IsNull() )
+				velocity.AddSample( timestamp, velocity.range.min );
+
+			if ( !acceleration.IsNull() )
+				acceleration.AddSample( timestamp, acceleration.range.min );
+		}
+		else
 		{
-			auto acc = body.GetLinAccOfPointOnBody( offset );
-			if ( relative_to_model_com ) acc -= model.GetComAcc();
-			acceleration.AddSample( timestamp, dot_product( axes_weights, acc ) );
+			if ( !position.IsNull() )
+			{
+				auto pos = body.GetPosOfPointOnBody( offset );
+				if ( relative_to_model_com ) pos -= model.GetComPos();
+				position.AddSample( timestamp, dot_product( axes_weights, pos ) );
+			}
+
+			if ( !velocity.IsNull() )
+			{
+				auto vel = body.GetLinVelOfPointOnBody( offset );
+				if ( relative_to_model_com ) vel -= model.GetComVel();
+				velocity.AddSample( timestamp, dot_product( axes_weights, vel ) );
+			}
+
+			if ( !acceleration.IsNull() )
+			{
+				auto acc = body.GetLinAccOfPointOnBody( offset );
+				if ( relative_to_model_com ) acc -= model.GetComAcc();
+				acceleration.AddSample( timestamp, dot_product( axes_weights, acc ) );
+			}
 		}
 
 		return false;

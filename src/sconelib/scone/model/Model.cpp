@@ -379,7 +379,7 @@ namespace scone
 		PropNode pn;
 
 		for ( const auto& item : GetBodies() )
-			pn[ "Bodies" ].add_child( item->GetName(), item->GetInfo() ); 
+			pn[ "Bodies" ].add_child( item->GetName(), item->GetInfo() );
 
 		for ( const auto& item : GetJoints() )
 			pn[ "Joints" ].add_child( item->GetName(), item->GetInfo() );

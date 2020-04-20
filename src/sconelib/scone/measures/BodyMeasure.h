@@ -12,6 +12,8 @@
 #include "RangePenalty.h"
 #include "scone/core/Angle.h"
 #include "scone/model/Dof.h"
+#include "scone/controllers/GaitStateController.h"
+#include <bitset>
 
 namespace scone
 {
@@ -51,5 +53,6 @@ namespace scone
 
 	private:
 		int range_count;
+		std::bitset< GaitStateController::GaitState::StateCount > active_state;
 	};
 }

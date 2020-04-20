@@ -28,6 +28,8 @@ namespace scone
 		enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1,
 						 LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
 
+		static StringMap< GaitState > m_StateNames;
+
 		struct LegState
 		{
 			LegState( Model& m, Leg& l );
@@ -109,7 +111,6 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
-		static StringMap< GaitState > m_StateNames;
 
 		virtual void UpdateLegStates( Model& model, double timestamp );
 		void UpdateControllerStates( Model& model, double timestamp );
