@@ -210,6 +210,10 @@ namespace scone
 			frame[ "com_x_u" ] = com_u.x;
 			frame[ "com_y_u" ] = com_u.y;
 			frame[ "com_z_u" ] = com_u.z;
+
+			const auto mom = GetLinAngMom();
+			frame.SetVec3( "lin_mom", mom.first );
+			frame.SetVec3( "ang_mom", mom.second );
 		}
 
 		// store GRF data (measured in BW)

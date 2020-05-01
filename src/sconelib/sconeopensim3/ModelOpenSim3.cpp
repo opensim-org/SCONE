@@ -451,6 +451,22 @@ namespace scone
 		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
+	Vec3 ModelOpenSim3::GetLinMom() const
+	{
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[1] );
+	}
+
+	Vec3 ModelOpenSim3::GetAngMom() const
+	{
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[0] );
+	}
+
+	std::pair<Vec3, Vec3> ModelOpenSim3::GetLinAngMom() const
+	{
+		auto cm = m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() );
+		return std::pair<Vec3, Vec3>( from_osim( cm[ 1 ] ), from_osim( cm[ 0 ] ) );
+	}
+
 	Vec3 ModelOpenSim3::GetGravity() const
 	{
 		return from_osim( m_pOsimModel->getGravity() );

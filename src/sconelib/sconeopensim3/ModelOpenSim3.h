@@ -77,6 +77,9 @@ namespace scone
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
 		virtual Vec3 GetComAcc() const override;
+		virtual Vec3 GetLinMom() const override;
+		virtual Vec3 GetAngMom() const override;
+		virtual std::pair<Vec3, Vec3> GetLinAngMom() const override;
 		virtual Real GetTotalEnergyConsumption() const override;
 
 		virtual Real GetMass() const override final { return m_Mass; }

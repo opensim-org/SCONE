@@ -27,6 +27,7 @@
 
 #include <vector>
 #include <type_traits>
+#include <utility>
 
 namespace scone
 {
@@ -120,6 +121,9 @@ namespace scone
 		virtual Vec3 GetComVel() const = 0;
 		virtual Vec3 GetComAcc() const = 0;
 		virtual Real GetComHeight( const Vec3& up = Vec3::unit_y() ) const;
+		virtual Vec3 GetLinMom() const = 0;
+		virtual Vec3 GetAngMom() const = 0;
+		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
 
