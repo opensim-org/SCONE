@@ -20,8 +20,6 @@
 
 #include "xo/string/string_tools.h"
 
-using namespace xo;
-
 namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
@@ -63,9 +61,9 @@ namespace scone
 		return false;
 	}
 
-	scone::String ReflexController::GetClassSignature() const
+	String ReflexController::GetClassSignature() const
 	{
-		return "R" + to_str( m_Reflexes.size() );
+		return "R" + xo::to_str( m_Reflexes.size() );
 	}
 
 	void ReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
