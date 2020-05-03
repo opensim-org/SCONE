@@ -17,15 +17,12 @@ namespace scone
 	{
 		INIT_PROP( props, termination_height, 0.5 );
 
-		m_InitialHeight = model.GetComPos()[ 1 ];
+		m_InitialHeight = model.GetComHeight();
 	}
 
 	bool BalanceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		double pos = model.GetComPos()[ 1 ];
-		double vel = model.GetComVel()[ 1 ];
-
-		// check if the height is still high enough
+		double pos = model.GetComHeight();
 		if ( pos < termination_height * m_InitialHeight )
 			return true;
 
