@@ -89,9 +89,10 @@ public slots:
 	void showSettingsDialog() { settings.showDialog( this ); }
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void updateTabTitles();
-	void findDialog() { if ( auto* e = getActiveScenario() ) e->findDialog(); }
-	void findNext() { if ( auto* e = getActiveScenario() ) e->findNext(); }
-	void findPrevious() { if ( auto* e = getActiveScenario() ) e->findNext( true ); }
+	void findDialog() { if ( auto* e = getActiveCodeEditor() ) e->findDialog(); }
+	void findNext() { if ( auto* e = getActiveCodeEditor() ) e->findNext(); }
+	void findPrevious() { if ( auto* e = getActiveCodeEditor() ) e->findNext( true ); }
+	void toggleComments() { if ( auto* e = getActiveCodeEditor() ) e->toggleComments(); }
 
 public:
 	bool close_all;

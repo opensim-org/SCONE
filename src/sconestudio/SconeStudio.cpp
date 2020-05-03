@@ -74,7 +74,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	editMenu->addAction( "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
 	editMenu->addAction( "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ) );
 	editMenu->addSeparator();
-	editMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog );
+	editMenu->addAction( "&Toggle Comments", this, &SconeStudio::toggleComments, QKeySequence( "Ctrl+/" ) );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
 	viewActions[ ModelVis::ShowForces ] = viewMenu->addAction( "Show External &Forces", this, &SconeStudio::updateViewSettings );
