@@ -35,6 +35,10 @@ namespace scone
 		/// (Optional); default range [-inf, inf].
 		RangePenalty<double> stride_duration;
 
+		/// Penalty for velocity [m/s] when out of range
+		/// (Optional); default range [-inf, inf].
+		RangePenalty<double> stride_velocity;
+
 		/// Load threshold for step detection; default = 0.01.
 		Real load_threshold;
 
