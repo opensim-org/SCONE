@@ -330,6 +330,15 @@ namespace scone
 				str << "\t" << par.name << "\t" << par.correlation;
 			str << std::endl;
 		}
+		str << std::endl;
+
+		// output actual gains
+		for ( auto& mn : m_MotorNeurons )
+		{
+			str << mn->GetName() + ".C0" + '\t' << mn->offset_ << std::endl;
+			for ( auto& in : mn->GetInputs() )
+				str << mn->GetName() + '.' + in.neuron->GetName() << '\t' << in.gain << std::endl;
+		}
 
 		return files;
 	}
