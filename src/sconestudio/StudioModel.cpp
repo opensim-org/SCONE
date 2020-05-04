@@ -173,9 +173,9 @@ namespace scone
 		log::info( "fitness = ", fitness );
 		PropNode results;
 		results.add_child( "result", model_objective_->GetReport( *model_ ) );
-		results.append( model_->GetSimulationReport() );
 		if ( !results[ "result" ].empty() )
 			log::info( results );
+		log::info( model_->GetSimulationReport() );
 
 		// write results to file(s)
 		xo::timer t;
