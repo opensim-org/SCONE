@@ -27,12 +27,12 @@ namespace scone
 
 		virtual result<fitness_t> evaluate( const SearchPoint& point, const xo::stop_token& st ) const override;
 		virtual result<fitness_t> EvaluateModel( Model& m, const xo::stop_token& st ) const;
-		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const = 0;
 
+		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const = 0;
+		virtual TimeInSeconds GetDuration() const = 0;
 		virtual fitness_t GetResult( Model& m ) const = 0;
 		virtual PropNode GetReport( Model& m ) const = 0;
 
-		virtual TimeInSeconds GetDuration() const = 0;
 		virtual ModelUP CreateModelFromParams( Params& point ) const;
 		ModelUP CreateModelFromParFile( const path& parfile ) const;
 
@@ -45,6 +45,7 @@ namespace scone
 		ModelUP model_;
 		String signature_; // cached variable, because we need to create a model to get the signature
 		virtual String GetClassSignature() const override { return signature_; }
+		TimeInSeconds evaluation_step_size_;
 	};
 
 	/// Create ModelObjective from a PropNode

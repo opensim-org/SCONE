@@ -16,7 +16,8 @@
 namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props, const path& find_file_folder ) :
-		Objective( props, find_file_folder )
+		Objective( props, find_file_folder ),
+		evaluation_step_size_( XO_IS_DEBUG_BUILD ? 0.01 : 0.25 )
 	{
 		// create internal model using the ORIGINAL prop_node to flag unused model props and create par_info_
 		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
@@ -53,7 +54,12 @@ namespace scone
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
 		m.SetSimulationEndTime( GetDuration() );
-		AdvanceSimulationTo( m, GetDuration() );
+		for ( TimeInSeconds t = evaluation_step_size_; !m.HasSimulationEnded(); t += evaluation_step_size_ )
+		{
+			if ( st.stop_requested() )
+				return xo::error_message( "Optimization canceled" );
+			AdvanceSimulationTo( m, t );
+		}
 		return GetResult( m );
 	}
 

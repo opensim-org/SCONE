@@ -34,7 +34,6 @@ namespace scone
 		/// Number of frames to skip during each evaluation step; default = 1.
 		size_t frame_delta;
 
-
 		virtual void AdvanceSimulationTo( Model& m, TimeInSeconds t ) const override;
 		virtual TimeInSeconds GetDuration() const override;
 		virtual fitness_t GetResult( Model& m ) const override;
