@@ -1,6 +1,6 @@
-analysis {
-	label = "Analysis settings"
-	line_width { type = float default = 1.5 label = "Line width of analysis graphs" range = [ 1 10 ] }
+optimization {
+	label = "Optimization settings"
+	use_external_process { type = bool default = 1 label = "Perform optimizations using external process" }
 }
 
 gait_analysis {
@@ -8,6 +8,15 @@ gait_analysis {
 	template { type = path default = "" label = "Template used for gait analysis" }
 	plot_individual_cycles { type = bool default = 1 label = "Plot individual gait cycles" }
 	show_fit { type = bool default = 1 label = "Show data fit" }
+}
+
+video {
+	label = "Video settings"
+	path_to_ffmpeg { type = folder default = "" label = "Location of ffmpeg.exe (required for videos)" }
+	frame_rate { type = float label = "Video output frame rate" default = 30 }
+	quality { type = int default = 2 label = "Quality for video output" }
+	width { type = int default = 1024 label = "Horizontal resolution (only when Viewer is not docked)" }
+	height { type = int default = 768 label = "Vertical resolution (only when Viewer is not docked)" }
 }
 
 progress {
@@ -20,13 +29,9 @@ progress {
 	}
 }
 
-video {
-	label = "Video settings"
-	path_to_ffmpeg { type = folder default = "" label = "Location of ffmpeg.exe (required for videos)" }
-	frame_rate { type = float label = "Video output frame rate" default = 30 }
-	quality { type = int default = 2 label = "Quality for video output" }
-	width { type = int default = 1024 label = "Horizontal resolution (only when Viewer is not docked)" }
-	height { type = int default = 768 label = "Vertical resolution (only when Viewer is not docked)" }
+analysis {
+	label = "Analysis settings"
+	line_width { type = float default = 1.5 label = "Line width of analysis graphs" range = [ 1 10 ] }
 }
 
 viewer {
@@ -52,9 +57,4 @@ viewer {
 	muscle_width { type = float label = "Muscle width (if not derived from PCSA)" default = 0.01 }
 	muscle_position { type = float label = "Relative muscle belly position (0-1)" range = [ 0 1 ] default = 0.333 }
 	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.618 }
-}
-
-optimization {
-	label = "Optimization settings"
-	use_external_process { type = bool default = 1 label = "Perform optimizations using external process" }
 }

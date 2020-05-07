@@ -154,7 +154,7 @@ if(${Qt5Widgets_FOUND})
 		target_compile_definitions( sconestudio PRIVATE SCONE_LUA )
 	endif()
 
-	target_compile_definitions( sconestudio PRIVATE SCONE_ENABLE_XO_PROFILING )
+	target_compile_definitions( sconestudio PRIVATE $<$<BOOL:${SCONE_ENABLE_PROFILER}>:SCONE_ENABLE_XO_PROFILING> )
 
 	if(MSVC)
 		# no console in release mode

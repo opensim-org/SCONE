@@ -18,8 +18,8 @@
 #	define SCONE_PROFILE_START xo::profiler::instance().start()
 #	define SCONE_PROFILE_REPORT xo::profiler::instance().log_results()
 #else 
-#	define SCONE_PROFILE_FUNCTION
+#	define SCONE_PROFILE_FUNCTION void()
 #	define SCONE_PROFILE_SCOPE( scope_name_arg )
-#	define SCONE_PROFILE_START
+#	define SCONE_PROFILE_START void()
 #	define SCONE_PROFILE_REPORT PropNode()
 #endif
