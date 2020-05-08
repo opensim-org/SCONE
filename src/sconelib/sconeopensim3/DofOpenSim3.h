@@ -43,8 +43,7 @@ namespace scone
 		virtual Vec3 GetRotationAxis() const override;
 		virtual Range< Real > GetRange() const override;
 
-		virtual bool IsActuated() const { return m_OsCoordAct != nullptr; }
-
+		virtual bool IsActuated() const override { return m_OsCoordAct != nullptr; }
 		Real GetMinInput() const override;
 		Real GetMaxInput() const override;
 		Real GetMinTorque() const override;

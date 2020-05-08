@@ -23,14 +23,6 @@ namespace scone
 		Dof( const Joint* j );
 		virtual ~Dof();
 
-		virtual Real GetMinInput() const override { return -1.0; }
-		virtual Real GetMaxInput() const override { return 1.0; }
-
-		virtual Real GetMinTorque() const { return 0.0; }
-		virtual Real GetMaxTorque() const { return 0.0; }
-
-		virtual bool IsActuated() const { return false; }
-
 		virtual Real GetPos() const = 0;
 		virtual Real GetVel() const = 0;
 
@@ -43,6 +35,12 @@ namespace scone
 		virtual Vec3 GetRotationAxis() const = 0;
 		virtual const Joint* GetJoint() const { return m_Joint; }
 		virtual Range< Real > GetRange() const = 0;
+
+		virtual bool IsActuated() const { return false; }
+		virtual Real GetMinInput() const override { return -1.0; }
+		virtual Real GetMaxInput() const override { return 1.0; }
+		virtual Real GetMinTorque() const { return 0.0; }
+		virtual Real GetMaxTorque() const { return 0.0; }
 
 	private:
 		const Joint* m_Joint;
