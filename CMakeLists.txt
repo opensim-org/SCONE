@@ -28,8 +28,7 @@ find_package(Qt5Widgets)
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.
 get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
-set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 
 # Silence CMake warning on OSX.
 set(CMAKE_MACOSX_RPATH ON)

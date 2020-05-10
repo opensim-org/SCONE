@@ -166,12 +166,9 @@ if(${Qt5Widgets_FOUND})
 		source_group("Studio Files" FILES ${STUDIOFILES} )
 		source_group("Resource Files" FILES ${RESOURCEFILES} )
 	
-		# copy dlls
-		# get the VS version, the shabby cmake way.
-		string(SUBSTRING ${CMAKE_VS_PLATFORM_TOOLSET} 1 3 VS_PLATFORM_TOOLSET_NUMBER)
-
+		# Copy DLLs
 		# Set DLL target
-		SET(DLL_TARGET_DIR ${EXECUTABLE_OUTPUT_PATH}/$<CONFIGURATION>)
+		SET(DLL_TARGET_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
 		add_custom_command(TARGET sconestudio POST_BUILD
 			COMMENT "Updating DLLs" VERBATIM
 		)
