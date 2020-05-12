@@ -79,6 +79,8 @@ set(CS_CONTROLLERS_FILES
 	controllers/MirrorController.cpp
 	controllers/NoiseController.h
 	controllers/NoiseController.cpp
+	controllers/NeuralNetworkController.h
+	controllers/NeuralNetworkController.cpp
 	)
 set(CS_CONTROLLERS_NC_FILES
 	controllers/NeuralController.cpp
