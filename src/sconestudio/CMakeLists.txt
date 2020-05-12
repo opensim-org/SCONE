@@ -165,9 +165,11 @@ if(${Qt5Widgets_FOUND})
 		source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
 		source_group("Studio Files" FILES ${STUDIOFILES} )
 		source_group("Resource Files" FILES ${RESOURCEFILES} )
+
+		# Write .sconeroot to build folder
+		file(WRITE "${CMAKE_BINARY_DIR}/.sconeroot" ${CMAKE_SOURCE_DIR})
 	
 		# Copy DLLs
-		# Set DLL target
 		SET(DLL_TARGET_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIGURATION>)
 		add_custom_command(TARGET sconestudio POST_BUILD
 			COMMENT "Updating DLLs" VERBATIM
