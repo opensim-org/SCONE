@@ -7,6 +7,7 @@
 #include "scone/model/Sensors.h"
 #include "xo/utility/irange.h"
 #include "scone/core/HasName.h"
+#include "scone/model/MuscleId.h"
 
 namespace scone::NN
 {
@@ -45,13 +46,13 @@ namespace scone::NN
 			{
 				const auto& sname = xo::split_str_at_last( sensor_links_[ sidx ].sensor_->GetName(), "." );
 				const auto& aname = motor_links_[ aidx ].actuator_->GetName();
-				auto sside = GetSideFromName( sname.first );
-				auto aside = GetSideFromName( aname );
-				if ( sside == NoSide || sside == aside )
+				auto smi = MuscleId( sname.first );
+				auto ami = MuscleId( aname );
+				if ( smi.side_ == NoSide || smi.side_ == ami.side_ )
 				{
 					// do some name stuff
-					auto parname = GetNameNoSide( aname );
-					auto sparname = GetNameNoSide( sname.first );
+					auto parname = ami.base_;
+					auto sparname = smi.base_;
 					if ( parname != sparname )
 						parname += '.' + sparname;
 					parname += '.' + sname.second;
