@@ -2,6 +2,8 @@
 
 #include "xo/string/string_tools.h"
 #include "scone/model/Model.h"
+#include "scone/model/Muscle.h"
+#include "scone/model/Dof.h"
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Sensors.h"
