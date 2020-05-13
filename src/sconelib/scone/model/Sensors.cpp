@@ -67,11 +67,11 @@ namespace scone
 
 	String BodyOrientationSensor::GetName() const { return body_.GetName() + id_ + ".BO"; }
 	Real BodyOrientationSensor::GetValue() const {
-		return xo::dot_product( dir_, xo::rotation_vector_from_quat( body_.GetOrientation() ) );
+		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) ) );
 	}
 
 	String BodyAngularVelocitySensor::GetName() const { return body_.GetName() + id_ + ".BAV"; }
 	Real BodyAngularVelocitySensor::GetValue() const {
-		return xo::dot_product( dir_, body_.GetAngVel() );
+		return xo::dot_product( body_.GetOrientation() * dir_, body_.GetAngVel() );
 	}
 }
