@@ -33,11 +33,13 @@ namespace scone
 			double offset_;
 			double sign_;
 			index_t neuron_idx_;
+			const Muscle* muscle_;
 		};
 
 		struct MotorNeuronLink {
 			Actuator* actuator_;
 			index_t neuron_idx_;
+			const Muscle* muscle_;
 		};
 
 		inline void update_output( Neuron& n ) { n.output_ = std::max( 0.0, n.input_ + n.offset_ ); }

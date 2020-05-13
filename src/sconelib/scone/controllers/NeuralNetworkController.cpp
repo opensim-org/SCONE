@@ -45,13 +45,14 @@ namespace scone::NN
 
 	Neuron& NeuralNetworkController::AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset )
 	{
-		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, offset, 1, neurons_.front().size() } );
+		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor->GetInputSensor() );
+		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, offset, 1, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
 		return neurons_.front().emplace_back( Neuron{ 0, offset, 0 } );
 	}
 
 	Neuron& NeuralNetworkController::AddActuator( Actuator* actuator )
 	{
-		motor_links_.push_back( MotorNeuronLink{ actuator, neurons_.back().size() } );
+		motor_links_.push_back( MotorNeuronLink{ actuator, neurons_.back().size(), dynamic_cast<Muscle*>( actuator ) } );
 		return neurons_.back().emplace_back();
 	}
 
