@@ -189,14 +189,14 @@ namespace scone::NN
 		}
 		case "Link"_hash:
 		{
-			auto input_layer_idx = pn.get<index_t>( "input_layer" );
-			auto output_layer_idx = pn.get<index_t>( "output_layer" );
+			auto input_layer_idx = pn.get<index_t>( "input_layer", 0 );
+			auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
 			auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
 			bool source_is_sensor = input_layer_idx == 0;
 			bool target_is_motor = output_layer_idx == neurons_.size() - 1;
-			for ( index_t source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
+			for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
 			{
-				for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
+				for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
 				{
 					auto source_name_full = source_is_sensor ? sensor_links_[ source_neuron_idx ].sensor_->GetName() :
 						xo::stringf( "I%d.%d.value", input_layer_idx, source_neuron_idx );
