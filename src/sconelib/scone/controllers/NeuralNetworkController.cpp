@@ -119,10 +119,12 @@ namespace scone::NN
 		return xo::stringf( "NN%d", neurons_.size() );
 	}
 
-	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type )
+	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool use_muscle_lines )
 	{
-		auto tns = GetNameNoSide( target );
-		auto sns = GetNameNoSide( source );
+		auto sid = MuscleId( source );
+		auto tid = MuscleId( target );
+		auto sns = use_muscle_lines ? sid.base_line_name() : sid.base_;
+		auto tns = use_muscle_lines ? tid.base_line_name() : tid.base_;
 		if ( tns == sns )
 			return tns + '.' + type;
 		else return tns + '.' + sns + '.' + type;
@@ -165,9 +167,16 @@ namespace scone::NN
 		}
 		case "DofPosVelSensor"_hash:
 		{
-			auto dof = pn.get<String>( "dof" );
-			auto kv = par.try_get( dof + ".DPV.DV", pn, "velocity_gain", 0.1 );
-			AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( *FindByName( model.GetDofs(), dof ), kv ), neural_delays_[ dof ], 0 );
+			auto dof_name = pn.get<String>( "dof" );
+			auto kv = par.try_get( dof_name + ".DPV.DV", pn, "velocity_gain", 0.1 );
+			const auto& dof = *FindByName( model.GetDofs(), dof_name );
+			Dof* parent_dof = pn.has_key( "parent_dof" ) ? &*FindByName( model.GetDofs(), pn.get<String>( "parent_dof" ) ) : nullptr;
+			if ( pn.get<bool>( "dual_sided", false ) )
+			{
+				AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof, LeftSide ), neural_delays_[ dof_name ], 0 );
+				AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof, RightSide ), neural_delays_[ dof_name ], 0 );
+			}
+			else AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof ), neural_delays_[ dof_name ], 0 );
 			break;
 		}
 		case "InterNeurons"_hash:
@@ -195,23 +204,27 @@ namespace scone::NN
 			auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
 			bool source_is_sensor = input_layer_idx == 0;
 			bool target_is_motor = output_layer_idx == neurons_.size() - 1;
+			bool use_muscle_lines = pn.get<bool>( "use_muscle_lines", true );
 			for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
 			{
 				for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
 				{
-					auto source_name_full = source_is_sensor ? sensor_links_[ source_neuron_idx ].sensor_->GetName() :
-						xo::stringf( "I%d.%d.value", input_layer_idx, source_neuron_idx );
-					auto target_name = target_is_motor ? motor_links_[ target_neuron_idx ].actuator_->GetName() :
-						xo::stringf( "I%d.%d.value", output_layer_idx, source_neuron_idx );
-					auto [source_name, source_type] = xo::split_str_at_last( source_name_full, "." );
-
 					if ( source_is_sensor && target_is_motor )
 					{
+						const auto& sl = sensor_links_[ source_neuron_idx ];
+						const auto& ml = motor_links_[ target_neuron_idx ];
+						auto [source_name, source_type] = xo::split_str_at_last( sl.sensor_->GetName(), "." );
+						auto target_name = ml.actuator_->GetName();
 						auto smi = MuscleId( source_name );
 						auto ami = MuscleId( target_name );
-						if ( smi.side_ == NoSide || smi.side_ == ami.side_ )
+						bool connect = true;
+						if ( pn.get<bool>( "shared_joint", false ) )
+							connect &= !( sl.muscle_ && ml.muscle_ ) || sl.muscle_->HasSharedJoints( *ml.muscle_ );
+						if ( pn.get<bool>( "same_side", true ) )
+							connect &= smi.side_ == NoSide || smi.side_ == ami.side_;
+						if ( connect )
 						{
-							auto parname = GetParName( source_name, target_name, source_type );
+							auto parname = GetParName( source_name, target_name, source_type, use_muscle_lines );
 							double weight = par.get( parname, pn.get_child( "weight" ) );
 							link_layer.links_.push_back( Link{ source_neuron_idx, target_neuron_idx, weight } );
 						}

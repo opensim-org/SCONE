@@ -137,6 +137,17 @@ namespace scone
 			|| &GetInsertionBody() == &other.GetInsertionBody();
 	}
 
+	bool Muscle::HasSharedJoints( const Muscle& other ) const
+	{
+		const Body* org1 = &GetOriginBody();
+		const Body* org2 = &other.GetOriginBody();
+		for ( const Body* b1 = &GetInsertionBody(); b1 != org1; b1 = b1->GetParentBody() )
+			for ( const Body* b2 = &other.GetInsertionBody(); b2 != org2; b2 = b2->GetParentBody() )
+				if ( b1->GetJoint() == b2->GetJoint() )
+					return true;
+		return false;
+	}
+
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		Actuator::StoreData( frame, flags );
