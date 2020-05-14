@@ -59,10 +59,8 @@ namespace scone
 		{
 			if ( !stride_length.IsNull() )
 				 stride_length.AddSample( 1.0, cycles[ idx ].length() );
-
 			if ( !stride_duration.IsNull() )
 				stride_duration.AddSample( 1.0, cycles[ idx ].duration() );
-
 			if ( !stride_velocity.IsNull() )
 				stride_velocity.AddSample( 1.0, cycles[ idx ].velocity() );
 		}
@@ -71,18 +69,22 @@ namespace scone
 		double penalty = 0;
 		if ( !stride_length.IsNull() )
 		{
+			if ( stride_length.IsEmpty() )
+				stride_length.AddSample( 1, 0 );
 			penalty += stride_length.GetResult();
 			GetReport().set( "stride_length_penalty", stride_length.GetResult() );
 		}
-
 		if ( !stride_duration.IsNull() )
 		{
+			if ( stride_duration.IsEmpty() )
+				stride_duration.AddSample( 1, 0 );
 			penalty += stride_duration.GetResult();
 			GetReport().set( "stride_duration_penalty", stride_duration.GetResult() );
 		}
-
 		if ( !stride_velocity.IsNull() )
 		{
+			if ( stride_velocity.IsEmpty() )
+				stride_velocity.AddSample( 1, 0 );
 			penalty += stride_velocity.GetResult();
 			GetReport().set( "stride_velocity_penalty", stride_velocity.GetResult() );
 		}

@@ -11,6 +11,7 @@
 #include "Sensor.h"
 #include "scone/core/types.h"
 #include "scone/core/Vec3.h"
+#include "scone/model/Side.h"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -97,10 +98,12 @@ namespace scone
 
 	struct SCONE_API DofPosVelSensor : public DofSensor
 	{
-		DofPosVelSensor( const Dof& dof, double kv, const Dof* root_dof = nullptr ) : DofSensor( dof, root_dof ), kv_( kv ) {}
+		DofPosVelSensor( const Dof& dof, double kv, const Dof* root_dof = nullptr, Side side = NoSide ) :
+			DofSensor( dof, root_dof ), kv_( kv ), side_( side ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
 		double kv_;
+		Side side_;
 	};
 
 	// Sensor for normalized leg load, based on target_area
@@ -138,7 +141,7 @@ namespace scone
 
 	struct SCONE_API BodyPointAccelerationSensor : public BodyPointSensor
 	{
-		BodyPointAccelerationSensor( const Body& body, Vec3 ofs, Vec3 dir) : BodyPointSensor( body, ofs, dir ) {}
+		BodyPointAccelerationSensor( const Body& body, Vec3 ofs, Vec3 dir ) : BodyPointSensor( body, ofs, dir ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
 	};

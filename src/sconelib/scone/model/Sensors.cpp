@@ -43,11 +43,11 @@ namespace scone
 	String DofVelocitySensor::GetName() const { return dof_.GetName() + ".DV"; }
 	Real DofVelocitySensor::GetValue() const { return root_dof_ ? root_dof_->GetVel() + dof_.GetVel() : dof_.GetVel(); }
 
-	String DofPosVelSensor::GetName() const { return dof_.GetName() + ".DPV"; }
+	String DofPosVelSensor::GetName() const { return GetSidedName( dof_.GetName(), side_ ) + ".DPV"; }
 	Real DofPosVelSensor::GetValue() const {
-		if ( root_dof_ )
-			return root_dof_->GetPos() + dof_.GetPos() + kv_ * ( root_dof_->GetVel() + dof_.GetVel() );
-		else return dof_.GetPos() + kv_ * dof_.GetVel();
+		Real value = root_dof_ ? root_dof_->GetPos() + dof_.GetPos() + kv_ * ( root_dof_->GetVel() + dof_.GetVel() ) :
+			dof_.GetPos() + kv_ * dof_.GetVel();
+		return side_ == RightSide ? -value : value; // mirror for right side, see SensorNeuron.cpp
 	}
 
 	String BodyPointPositionSensor::GetName() const { return body_.GetName() + ".PP"; }
