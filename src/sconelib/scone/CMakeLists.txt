@@ -225,6 +225,7 @@ set(SIM_TOPOLOGY_FILES
 	model/Leg.cpp
 	model/Leg.h
 	model/Side.h
+	model/MuscleId.h
 	)
 
 set (SCONELIB_FILES
