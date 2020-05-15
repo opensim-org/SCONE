@@ -9,9 +9,11 @@ namespace scone
 	namespace NN
 	{
 		struct Neuron {
-			double input_ = 0;
-			double offset_ = 0;
-			double output_ = 0;
+			Neuron() : input_(), offset_(), output_() {}
+			Neuron( double offset ) : input_(), offset_( offset ), output_() {}
+			double input_;
+			double offset_;
+			double output_;
 		};
 		using NeuronLayer = std::vector<Neuron>;
 
@@ -62,8 +64,9 @@ namespace scone
 			NeuronLayer& AddNeuronLayer( index_t layer );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
-			Neuron& AddActuator( Actuator* actuator );
+			Neuron& AddActuator( Actuator* actuator, double offset );
 			String GetParName( const String& target, const String& source, const String& type, bool use_muscle_lines );
+			String GetNeuronName( index_t layer_idx, index_t neuron_idx );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
 
 			const xo::flat_map< String, TimeInSeconds > neural_delays_;
