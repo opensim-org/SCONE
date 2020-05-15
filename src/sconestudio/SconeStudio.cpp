@@ -82,7 +82,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	viewActions[ ModelVis::ShowTendons ] = viewMenu->addAction( "Show &Tendons", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowBodyGeom ] = viewMenu->addAction( "Show &Body Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowBodyAxes ] = viewMenu->addAction( "Show Body &Axes", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowBodyCom] = viewMenu->addAction( "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyCom ] = viewMenu->addAction( "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowJoints ] = viewMenu->addAction( "Show &Joints", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowContactGeom ] = viewMenu->addAction( "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowGroundPlane ] = viewMenu->addAction( "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
@@ -96,7 +96,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	scenarioMenu->addAction( "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
 	scenarioMenu->addSeparator();
 	scenarioMenu->addAction( "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
-	scenarioMenu->addAction( "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ));
+	scenarioMenu->addAction( "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ) );
 	scenarioMenu->addSeparator();
 	scenarioMenu->addAction( "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
 	scenarioMenu->addSeparator();
@@ -135,9 +135,6 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
 
-	// gait analysis
-	gaitAnalysis = new GaitAnalysis( this );
-
 	// docking
 	setDockNestingEnabled( true );
 	setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
@@ -154,9 +151,20 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, analysis_dock );
 
+	// gait analysis
+	gaitAnalysis = new GaitAnalysis( this );
 	gaitAnalysisDock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, gaitAnalysisDock );
 	gaitAnalysisDock->hide();
+
+	// parameter view
+	parView = new QTableView( this );
+	parModel = new ParTableModel();
+	parView->setModel( parModel );
+	for ( int i = 0; i < parView->horizontalHeader()->count(); ++i )
+		parView->horizontalHeader()->setSectionResizeMode( i, i == 0 ? QHeaderView::Stretch : QHeaderView::ResizeToContents );
+	parViewDock = createDockWidget( "&Parameters", parView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.resultsDock, parViewDock );
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
@@ -214,7 +222,7 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::restoreCustomSettings( QSettings& settings )
 {
-	if ( settings.contains( "viewSettings"))
+	if ( settings.contains( "viewSettings" ) )
 	{
 		ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
 		for ( auto& va : viewActions )
@@ -227,7 +235,7 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 	ModelVis::ViewSettings f;
 	for ( auto& va : viewActions )
 		f.set( va.first, va.second->isChecked() );
-	settings.setValue( "viewSettings", QVariant(uint(f.data())));
+	settings.setValue( "viewSettings", QVariant( uint( f.data() ) ) );
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
@@ -456,7 +464,7 @@ void SconeStudio::openFile( const QString& filename )
 		updateRecentFilesMenu( filename );
 		createAndVerifyActiveScenario( false );
 	}
-	catch ( std::exception & e ) { error( "Error opening " + filename, e.what() ); }
+	catch ( std::exception& e ) { error( "Error opening " + filename, e.what() ); }
 }
 
 void SconeStudio::fileSaveTriggered()
@@ -569,7 +577,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 		analysisView->reset();
 
 	}
-	catch ( std::exception & e )
+	catch ( std::exception& e )
 	{
 		error( "Error loading scenario", e.what() );
 		scenario_.reset();

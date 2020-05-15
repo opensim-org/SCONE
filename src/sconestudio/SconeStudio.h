@@ -42,6 +42,7 @@
 #include "xo/system/log_sink.h"
 #include "xo/time/timer.h"
 #include "GaitAnalysis.h"
+#include "ParTableModel.h"
 
 using scone::TimeInSeconds;
 
@@ -152,6 +153,11 @@ private:
 	// gait analysis
 	scone::GaitAnalysis* gaitAnalysis;
 	QDockWidget* gaitAnalysisDock;
+
+	// parameters
+	QTableView* parView;
+	ParTableModel* parModel;
+	QDockWidget* parViewDock;
 
 	//// dof editor
 	//QFormGroup* dofSliderGroup;
