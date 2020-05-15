@@ -338,6 +338,9 @@ void SconeStudio::createVideo()
 	if ( !scenario_ )
 		return error( "No Scenario", "There is no scenario open" );
 
+	if ( auto p = GetStudioSetting<path>( "video.path_to_ffmpeg" ); !xo::file_exists( p ) )
+		return error( "Could not find ffmpeg", to_qt( "Could not find " + p.str() ) );
+
 	if ( ui.viewerDock->isFloating() ) {
 		auto borderSize = ui.viewerDock->size() - ui.osgViewer->size();
 		auto videoSize = QSize( GetStudioSettings().get<int>( "video.width" ), GetStudioSettings().get<int>( "video.height" ) );
@@ -862,7 +865,11 @@ void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = to_qt( xo::get_application_dir() / SCONE_FFMPEG_EXECUTABLE );
+	const auto ffmpeg = GetStudioSetting<path>( "video.path_to_ffmpeg" );
+	if ( !xo::file_exists( ffmpeg ) )
+		return error( "Could not find ffmpeg", to_qt( "Could not find " + ffmpeg.str() ) );
+
+	QString program = to_qt( ffmpeg );
 	QStringList args;
 	args << "-r" << to_qt( GetStudioSettings().get<string>( "video.frame_rate" ) )
 		<< "-i" << captureFilename + ".images/image_0_%d.png"
