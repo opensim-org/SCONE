@@ -28,6 +28,8 @@ if(${Qt5Widgets_FOUND})
 		SconeStorageDataModel.cpp
 		ResultsFileSystemModel.h
 		ResultsFileSystemModel.cpp
+		ParTableModel.h
+		ParTableModel.cpp
 		GaitAnalysis.h
 		GaitAnalysis.cpp
 		GaitPlot.h

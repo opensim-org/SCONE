@@ -163,8 +163,11 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	parView->setModel( parModel );
 	for ( int i = 0; i < parView->horizontalHeader()->count(); ++i )
 		parView->horizontalHeader()->setSectionResizeMode( i, i == 0 ? QHeaderView::Stretch : QHeaderView::ResizeToContents );
-	parViewDock = createDockWidget( "&Parameters", parView, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( ui.resultsDock, parViewDock );
+	parView->verticalHeader()->setSectionResizeMode( QHeaderView::Fixed );
+	parView->verticalHeader()->setDefaultSectionSize( 24 );
+	parViewDock = createDockWidget( "Optimization &Parameters", parView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, parViewDock );
+	parViewDock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
@@ -565,6 +568,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 {
 	scenario_.reset();
 	analysisStorageModel.setStorage( nullptr );
+	parModel->setObjectiveInfo( nullptr );
 
 	try
 	{
@@ -572,10 +576,10 @@ bool SconeStudio::createScenario( const QString& any_file )
 		scenario_ = std::make_unique< StudioModel >( scene_, path_from_qt( any_file ) );
 		updateViewSettings();
 
-		// update analysis
+		// update analysis and parview
 		analysisStorageModel.setStorage( &scenario_->GetData() );
 		analysisView->reset();
-
+		parModel->setObjectiveInfo( &scenario_->GetOjective().info() );
 	}
 	catch ( std::exception& e )
 	{
