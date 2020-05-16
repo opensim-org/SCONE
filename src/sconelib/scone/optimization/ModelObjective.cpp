@@ -12,6 +12,7 @@
 #include "scone/core/Log.h"
 #include "xo/filesystem/filesystem.h"
 #include "opt_tools.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {
@@ -53,6 +54,7 @@ namespace scone
 
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
+		SCONE_PROFILE_FUNCTION;
 		m.SetSimulationEndTime( GetDuration() );
 		for ( TimeInSeconds t = evaluation_step_size_; !m.HasSimulationEnded(); t += evaluation_step_size_ )
 		{
@@ -65,6 +67,7 @@ namespace scone
 
 	ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
+		SCONE_PROFILE_FUNCTION;
 		auto model = CreateModel( model_props, par, GetExternalResourceDir() );
 		model->SetSimulationEndTime( GetDuration() );
 
