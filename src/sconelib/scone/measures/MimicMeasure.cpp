@@ -25,7 +25,7 @@ namespace scone
 		INIT_MEMBER( pn, average_error_limit, 1e9 ),
 		INIT_MEMBER( pn, peak_error_limit, 1e9 )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 		ReadStorageSto( storage_, file );
 
 		auto& s = model.GetState();

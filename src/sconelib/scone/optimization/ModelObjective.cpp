@@ -26,11 +26,11 @@ namespace scone
 
 		// create a controller that's defined OUTSIDE the model prop_node
 		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
-			model_->SetController( CreateController( controller_props, info_, *model_, Location() ) );
+			model_->CreateController( controller_props, info_ );
 
 		// create a measure that's defined OUTSIDE the model prop_node
 		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
-			model_->SetMeasure( CreateMeasure( measure_props, info_, *model_, Location() ) );
+			model_->CreateMeasure( measure_props, info_ );
 
 		// update the minimize flag in objective_info
 		if ( model_->GetMeasure() )
@@ -54,7 +54,6 @@ namespace scone
 
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
-		SCONE_PROFILE_FUNCTION;
 		m.SetSimulationEndTime( GetDuration() );
 		for ( TimeInSeconds t = evaluation_step_size_; !m.HasSimulationEnded(); t += evaluation_step_size_ )
 		{
@@ -67,15 +66,14 @@ namespace scone
 
 	ModelUP ModelObjective::CreateModelFromParams( Params& par ) const
 	{
-		SCONE_PROFILE_FUNCTION;
 		auto model = CreateModel( model_props, par, GetExternalResourceDir() );
 		model->SetSimulationEndTime( GetDuration() );
 
 		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
-			model->SetController( CreateController( controller_props, par, *model, Location() ) );
+			model->CreateController( controller_props, par );
 
 		if ( measure_props ) // A measure was defined OUTSIDE the model prop_node
-			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location() ) );
+			model->CreateMeasure( measure_props, par );
 
 		return model;
 	}

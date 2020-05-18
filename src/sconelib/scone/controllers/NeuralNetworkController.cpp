@@ -12,7 +12,8 @@
 #include "scone/core/HasName.h"
 #include "scone/model/MuscleId.h"
 #include "xo/utility/hash.h"
-#include <numeric>
+#include "scone/core/profiler_config.h"
+#include <algorithm>
 
 namespace scone::NN
 {
@@ -20,6 +21,8 @@ namespace scone::NN
 		Controller( pn, par, model, area ),
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ )
 	{
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
+
 		for ( const auto& [key, child_pn] : pn )
 		{
 			try {
@@ -59,6 +62,8 @@ namespace scone::NN
 
 	bool NeuralNetworkController::ComputeControls( Model& model, double timestamp )
 	{
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
+
 		// clear neuron inputs
 		for ( auto& layer : neurons_ )
 			for ( auto& n : layer )
@@ -224,52 +229,59 @@ namespace scone::NN
 			break;
 		}
 		case "Link"_hash:
-		{
-			auto input_layer_idx = pn.get<index_t>( "input_layer", 0 );
-			auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
-			auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
-			bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
-			bool use_muscle_lines = pn.get<bool>( "use_muscle_lines", true );
-			auto input_include = pn.try_get<xo::pattern_matcher>( "input_include" );
-			auto output_include = pn.try_get<xo::pattern_matcher>( "output_include" );
-			for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
-			{
-				const auto target_name = GetNeuronName( output_layer_idx, target_neuron_idx );
-				if ( output_include && !output_include->match( target_name ) )
-					continue; // skip this neuron
-
-				for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
-				{
-					const auto source_name_full = GetNeuronName( input_layer_idx, source_neuron_idx );
-					if ( input_include && !input_include->match( source_name_full ) )
-						continue; // skip this neuron
-
-					auto [source_name, source_type] = xo::split_str_at_last( source_name_full, "." );
-					auto src_side = GetSideFromName( source_name );
-					auto trg_side = GetSideFromName( target_name );
-
-					if ( pn.get<bool>( "same_side", true ) )
-						if ( !src_side == NoSide && src_side != trg_side )
-							continue; // neuron not on same side
-
-					if ( sensor_motor_link )
-					{
-						const auto& sl = sensor_links_[ source_neuron_idx ];
-						const auto& ml = motor_links_[ target_neuron_idx ];
-						if ( pn.get<bool>( "shared_joint", false ) )
-							if ( sl.muscle_ && ml.muscle_ && !sl.muscle_->HasSharedJoints( *ml.muscle_ ) )
-								continue;
-					}
-
-					// if we arrive here there's actually a connection
-					auto parname = GetParName( source_name, target_name, source_type, use_muscle_lines );
-					double weight = par.get( parname, pn.get_child( "weight" ) );
-					link_layer.links_.push_back( Link{ source_neuron_idx, target_neuron_idx, weight } );
-				}
-			}
-		}
+			CreateLinkComponent( pn, par, model );
+			break;
 		default:
 			break;
 		}
 	}
+
+	void NeuralNetworkController::CreateLinkComponent( const PropNode& pn, Params& par, Model& model )
+	{
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
+
+		auto input_layer_idx = pn.get<index_t>( "input_layer", 0 );
+		auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
+		auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
+		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
+		bool use_muscle_lines = pn.get<bool>( "use_muscle_lines", true );
+		auto input_include = pn.try_get<xo::pattern_matcher>( "input_include" );
+		auto output_include = pn.try_get<xo::pattern_matcher>( "output_include" );
+		for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
+		{
+			const auto target_name = GetNeuronName( output_layer_idx, target_neuron_idx );
+			if ( output_include && !output_include->match( target_name ) )
+				continue; // skip this neuron
+
+			for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
+			{
+				const auto source_name_full = GetNeuronName( input_layer_idx, source_neuron_idx );
+				if ( input_include && !input_include->match( source_name_full ) )
+					continue; // skip this neuron
+
+				auto [source_name, source_type] = xo::split_str_at_last( source_name_full, "." );
+				auto src_side = GetSideFromName( source_name );
+				auto trg_side = GetSideFromName( target_name );
+
+				if ( pn.get<bool>( "same_side", true ) )
+					if ( !src_side == NoSide && src_side != trg_side )
+						continue; // neuron not on same side
+
+				if ( sensor_motor_link )
+				{
+					const auto& sl = sensor_links_[ source_neuron_idx ];
+					const auto& ml = motor_links_[ target_neuron_idx ];
+					if ( pn.get<bool>( "shared_joint", false ) )
+						if ( sl.muscle_ && ml.muscle_ && !sl.muscle_->HasSharedJoints( *ml.muscle_ ) )
+							continue;
+				}
+
+				// if we arrive here there's actually a connection
+				auto parname = GetParName( source_name, target_name, source_type, use_muscle_lines );
+				double weight = par.get( parname, pn.get_child( "weight" ) );
+				link_layer.links_.push_back( Link{ source_neuron_idx, target_neuron_idx, weight } );
+			}
+		}
+	}
+
 }

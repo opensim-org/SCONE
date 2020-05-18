@@ -11,6 +11,7 @@
 #include "scone/core/platform.h"
 #include "scone/core/types.h"
 #include "xo/filesystem/path.h"
+#include "xo/system/profiler.h"
 
 #include "ContactForce.h"
 #include "ContactGeometry.h"
@@ -28,6 +29,7 @@
 #include <vector>
 #include <type_traits>
 #include <utility>
+#include "scone/core/Factories.h"
 
 namespace scone
 {
@@ -73,11 +75,13 @@ namespace scone
 		Controller* GetController() { return m_Controller.get(); }
 		const Controller* GetController() const { return m_Controller.get(); }
 		virtual void SetController( ControllerUP c ) { SCONE_ASSERT( !m_Controller ); m_Controller = std::move( c ); }
+		void CreateController( const FactoryProps& controller_fp, Params& par );
 
 		// Measure access
 		Measure* GetMeasure() { return m_Measure.get(); }
 		const Measure* GetMeasure() const { return m_Measure.get(); }
 		void SetMeasure( MeasureUP m ) { SCONE_ASSERT( !m_Measure ); m_Measure = std::move( m ); }
+		void CreateMeasure( const FactoryProps& measure_fp, Params& par );
 
 		void UpdateControlValues();
 		void UpdateAnalyses();
@@ -197,6 +201,8 @@ namespace scone
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
+		xo::profiler& GetProfiler() const { return m_Profiler; }
+
 	protected:
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
@@ -208,6 +214,8 @@ namespace scone
 		virtual void AddExternalDisplayGeometries( const path& model_path );
 
 	protected:
+		mutable xo::profiler m_Profiler;
+
 		std::vector< MuscleUP > m_Muscles;
 		std::vector< BodyUP > m_Bodies;
 		std::vector< JointUP > m_Joints;

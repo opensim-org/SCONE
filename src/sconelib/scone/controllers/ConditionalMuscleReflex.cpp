@@ -10,6 +10,7 @@
 #include "scone/model/Location.h"
 #include "scone/model/Sensors.h"
 #include "scone/model/Dof.h"
+#include "scone/model/Model.h"
 #include "scone/core/Range.h"
 
 namespace scone

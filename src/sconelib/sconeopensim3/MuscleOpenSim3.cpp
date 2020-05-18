@@ -187,7 +187,6 @@ namespace scone
 
 	std::vector< Vec3 > MuscleOpenSim3::GetMusclePath() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 		auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );

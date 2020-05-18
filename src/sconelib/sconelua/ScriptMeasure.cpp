@@ -44,7 +44,7 @@ namespace scone
 
 	bool ScriptMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		if ( update_ )
 		{
@@ -56,8 +56,6 @@ namespace scone
 
 	void ScriptMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		if ( store_ )
 		{
 			LuaFrame lf( frame );

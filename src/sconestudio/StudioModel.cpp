@@ -113,18 +113,20 @@ namespace scone
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
-		SCONE_PROFILE_FUNCTION;
-
-		if ( model_ && !storage_.IsEmpty() && !state_data_index.empty() )
+		if ( model_ && vis_ )
 		{
-			// update model state from data
-			for ( index_t i = 0; i < model_state.GetSize(); ++i )
-				model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
-			model_->SetState( model_state, time );
-		}
+			SCONE_PROFILE_FUNCTION( model_->GetProfiler() );
 
-		if ( vis_ )
+			if ( !storage_.IsEmpty() && !state_data_index.empty() )
+			{
+				// update model state from data
+				for ( index_t i = 0; i < model_state.GetSize(); ++i )
+					model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
+				model_->SetState( model_state, time );
+			}
+
 			vis_->Update( *model_ );
+		}
 	}
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )

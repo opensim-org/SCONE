@@ -124,7 +124,7 @@ namespace scone
 			cma.OutputStatus( std::move( pn ) );
 		}
 
-		timer_.reset();
+		timer_.restart();
 		number_of_evaluations_ = 0;
 	}
 

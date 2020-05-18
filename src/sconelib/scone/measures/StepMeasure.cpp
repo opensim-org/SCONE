@@ -33,7 +33,7 @@ namespace scone
 
 	bool StepMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		auto& frame = stored_data_.AddFrame( timestamp );
 		for ( const auto& leg : model.GetLegs() )

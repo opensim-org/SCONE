@@ -51,7 +51,7 @@ namespace scone
 
 	bool DofLimitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		for ( Limit& l : m_Limits )
 		{

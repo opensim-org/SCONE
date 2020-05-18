@@ -21,10 +21,6 @@ namespace scone
 		ModelObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~ModelObjective() = default;
 
-		FactoryProps model_props;
-		FactoryProps controller_props;
-		FactoryProps measure_props;
-
 		virtual result<fitness_t> evaluate( const SearchPoint& point, const xo::stop_token& st ) const override;
 		virtual result<fitness_t> EvaluateModel( Model& m, const xo::stop_token& st ) const;
 
@@ -42,6 +38,10 @@ namespace scone
 		Model& GetModel() { return *model_; }
 
 	protected:
+		FactoryProps model_props;
+		FactoryProps controller_props;
+		FactoryProps measure_props;
+
 		ModelUP model_;
 		String signature_; // cached variable, because we need to create a model to get the signature
 		virtual String GetClassSignature() const override { return signature_; }

@@ -62,7 +62,7 @@ namespace scone
 
 	bool FeedForwardController::ComputeControls( Model& model, double time )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// evaluate functions
 		std::vector< double > funcresults( m_Functions.size() );

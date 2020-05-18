@@ -120,7 +120,7 @@ namespace scone
 
 	bool GaitStateController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 		{
@@ -143,7 +143,7 @@ namespace scone
 
 	void GaitStateController::UpdateLegStates( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// update statuses
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )

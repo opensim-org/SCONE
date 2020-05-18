@@ -52,7 +52,7 @@ namespace scone
 
 	bool ReflexController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 		for ( ReflexUP& r : m_Reflexes )
