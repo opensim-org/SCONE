@@ -74,7 +74,7 @@ namespace scone
 		m_Mass( 0.0 ),
 		m_BW( 0.0 )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		path state_init_file;
 		String probe_class;
@@ -102,7 +102,7 @@ namespace scone
 
 		// create new OpenSim Model using resource cache
 		{
-			SCONE_PROFILE_SCOPE( "CreateModel" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
 			model_file = FindFile( model_file );
 			m_pOsimModel = g_ModelCache( model_file.str() );
 			AddExternalResource( model_file );
@@ -111,7 +111,7 @@ namespace scone
 		// create torque and point actuators
 		if ( enable_external_forces )
 		{
-			SCONE_PROFILE_SCOPE( "SetupBodyForces" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "SetupBodyForces" );
 			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
 				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
@@ -124,7 +124,7 @@ namespace scone
 		}
 
 		{
-			//SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "SetupOpenSimParameters" );
 
 			// change model properties
 			if ( auto* model_pars = props.try_get_child( "Properties" ) )
@@ -155,20 +155,20 @@ namespace scone
 		// Initialize the system
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
 		{
-			SCONE_PROFILE_SCOPE( "InitSystem" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "InitSystem" );
 			std::scoped_lock lock( g_SimBodyMutex );
 			m_pTkState = &m_pOsimModel->initSystem();
 		}
 
 		// create model component wrappers and sensors
 		{
-			//SCONE_PROFILE_SCOPE( "CreateWrappers" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "CreateWrappers" );
 			CreateModelWrappers( props, par );
 			AddExternalDisplayGeometries( model_file.parent_path() );
 		}
 
 		{
-			//SCONE_PROFILE_SCOPE( "InitVariables" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "InitVariables" );
 			// initialize cached variables to save computation time
 			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 			m_BW = xo::length( GetGravity() ) * GetMass();
@@ -177,7 +177,7 @@ namespace scone
 
 		// Create the integrator for the simulation.
 		{
-			//SCONE_PROFILE_SCOPE( "InitIntegrators" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "InitIntegrators" );
 			if ( integration_method == "RungeKuttaMerson" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
 			else if ( integration_method == "RungeKutta2" )
@@ -197,7 +197,7 @@ namespace scone
 
 		// read initial state
 		{
-			SCONE_PROFILE_SCOPE( "InitState" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
 			{
@@ -233,7 +233,7 @@ namespace scone
 
 		// Realize acceleration because controllers may need it and in this way the results are consistent
 		{
-			SCONE_PROFILE_SCOPE( "RealizeSystem" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "RealizeSystem" );
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
 			m_pOsimManager->setWriteToStorage( false );
@@ -527,7 +527,7 @@ namespace scone
 
 	void ModelOpenSim3::StoreCurrentFrame()
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		// store scone data
 		Model::StoreCurrentFrame();
@@ -535,7 +535,7 @@ namespace scone
 
 	void ModelOpenSim3::AdvanceSimulationTo( double time )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		SCONE_ASSERT( m_pOsimManager );
 
@@ -569,7 +569,7 @@ namespace scone
 				double target_time = GetTime() + fixed_control_step_size;
 
 				{
-					SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
+					SCONE_PROFILE_SCOPE( GetProfiler(), "SimTK::TimeStepper::stepTo" );
 					auto status = m_pTkTimeStepper->stepTo( target_time );
 					if ( status == SimTK::Integrator::EndOfSimulation )
 						RequestTermination();
@@ -583,7 +583,7 @@ namespace scone
 				// Realize Acceleration, analysis components may need it
 				// this way the results are always consistent
 				{
-					SCONE_PROFILE_SCOPE( "SimTK::MultibodySystem::realize" );
+					SCONE_PROFILE_SCOPE( GetProfiler(), "SimTK::MultibodySystem::realize" );
 					m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 				}
 
@@ -831,8 +831,6 @@ namespace scone
 
 	void ModelOpenSim3::SetController( ControllerUP c )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		Model::SetController( std::move( c ) );
 
 		// Initialize muscle dynamics STEP 1

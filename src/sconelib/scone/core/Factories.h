@@ -10,8 +10,9 @@
 
 #include "xo/utility/factory.h"
 
-#include "scone/core/PropNode.h"
 #include "scone/core/types.h"
+#include "scone/core/PropNode.h"
+#include "scone/core/FactoryProps.h"
 
 #include "scone/optimization/Params.h"
 
@@ -21,14 +22,6 @@
 
 namespace scone
 {
-	struct FactoryProps {
-		const PropNode& props() const { SCONE_THROW_IF( !props_, "Invalid Factory Properties" ); return *props_; }
-		const String& type() const { SCONE_THROW_IF( !props_, "Invalid Factory Properties" ); return type_; }
-		operator bool() const { return props_; }
-		String type_;
-		const PropNode* props_ = nullptr;
-	};
-
 	using ReflexFactory = xo::factory< Reflex, const PropNode&, Params&, Model&, const Location& >;
 	SCONE_API ReflexFactory& GetReflexFactory();
 	SCONE_API ReflexUP CreateReflex( const FactoryProps& fp, Params& par, Model& model, const Location& target_area );

@@ -42,7 +42,7 @@ namespace scone
 
 	bool HeightMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		double pos = m_pTargetBody ? m_pTargetBody->GetComPos()[ 1 ] : model.GetComPos()[ 1 ];
 		double vel = m_pTargetBody ? m_pTargetBody->GetComVel()[ 1 ] : model.GetComVel()[ 1 ];

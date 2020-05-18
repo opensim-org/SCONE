@@ -32,6 +32,7 @@ set(CORE_MATH_FILES
 	core/SineWave.cpp
 	)
 set(CORE_SYSTEM_FILES
+	core/FactoryProps.h
 	core/Factories.h
 	core/Factories.cpp
 	core/memory_tools.h

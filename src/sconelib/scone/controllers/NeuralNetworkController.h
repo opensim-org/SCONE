@@ -67,6 +67,8 @@ namespace scone
 			Neuron& AddActuator( Actuator* actuator, double offset );
 			String GetParName( const String& target, const String& source, const String& type, bool use_muscle_lines );
 			String GetNeuronName( index_t layer_idx, index_t neuron_idx );
+
+			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
 
 			const xo::flat_map< String, TimeInSeconds > neural_delays_;

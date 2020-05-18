@@ -770,15 +770,16 @@ void SconeStudio::performanceTest( bool profile )
 	{
 		auto par = SearchPoint( scenario_->GetModelObjective().info() );
 		xo::timer real_time;
-		if ( profile )
-			SCONE_PROFILE_START;
+// 		if ( profile )
+// 			SCONE_PROFILE_START;
 		auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
 		model->SetStoreData( false );
 		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
 		auto real_dur = real_time().seconds();
 		auto sim_time = model->GetTime();
 		if ( profile )
-			SCONE_PROFILE_REPORT;
+			model->GetProfiler().log_results();
+
 		log::info( "fitness = ", scenario_->GetModelObjective().GetResult( *model ) );
 		if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
 			log::info( sim_report );

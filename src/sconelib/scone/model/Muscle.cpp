@@ -93,8 +93,6 @@ namespace scone
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& dof : GetModel().GetDofs() )
 		{
 			auto mom1 = GetMomentArm( *dof );
@@ -119,8 +117,6 @@ namespace scone
 
 	bool Muscle::HasSharedDofs( const Muscle& other ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& dof : GetOriginBody().GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )

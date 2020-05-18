@@ -50,7 +50,7 @@ namespace scone
 
 	bool CompositeMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		bool terminate = false;
 		for ( MeasureUP& m : m_Measures )
