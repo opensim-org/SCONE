@@ -50,11 +50,13 @@ namespace scone
 		std::vector< TimeInSeconds > transition_intervals;
 
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
+		void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 
 	protected:
 		virtual bool PerformAnalysis( const Model& model, double timestamp ) override;
 		index_t GetActiveIdx( double timestamp );
 		virtual String GetClassSignature() const override;
 		std::vector< TimeInSeconds > transition_times;
+		index_t active_idx_;
 	};
 }
