@@ -115,6 +115,7 @@ namespace scone
 		virtual bool HasSimulationEnded() { return m_ShouldTerminate || GetTime() >= GetSimulationEndTime(); }
 		virtual void RequestTermination() { m_ShouldTerminate = true; }
 		virtual PropNode GetSimulationReport() const { return PropNode(); }
+		virtual void UpdatePerformanceStats( const path& filename ) {}
 
 		// Model data
 		virtual const Storage< Real, TimeInSeconds >& GetData() const { return m_Data; }

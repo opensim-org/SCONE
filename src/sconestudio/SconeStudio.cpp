@@ -100,8 +100,8 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	scenarioMenu->addSeparator();
 	scenarioMenu->addAction( "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
 	scenarioMenu->addSeparator();
-	scenarioMenu->addAction( "&Performance Test (Profile)", this, &SconeStudio::performanceTestProfile, QKeySequence( "Ctrl+P" ) );
-	scenarioMenu->addAction( "Performance Test (&Raw)", this, &SconeStudio::performanceTestNoProfile, QKeySequence( "Ctrl+Shift+P" ) );
+	scenarioMenu->addAction( "&Performance Test", this, &SconeStudio::performanceTestNormal, QKeySequence( "Ctrl+P" ) );
+	scenarioMenu->addAction( "Performance Test (Write Stats)", this, &SconeStudio::performanceTestWriteStats, QKeySequence( "Ctrl+Shift+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	toolsMenu->addAction( "Generate &Video...", this, &SconeStudio::createVideo );
@@ -764,25 +764,25 @@ void SconeStudio::evaluateActiveScenario()
 	}
 }
 
-void SconeStudio::performanceTest( bool profile )
+void SconeStudio::performanceTest( bool write_stats )
 {
 	if ( createAndVerifyActiveScenario( false ) )
 	{
 		auto par = SearchPoint( scenario_->GetModelObjective().info() );
 		xo::timer real_time;
-// 		if ( profile )
-// 			SCONE_PROFILE_START;
 		auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
 		model->SetStoreData( false );
 		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
 		auto real_dur = real_time().seconds();
 		auto sim_time = model->GetTime();
-		if ( profile )
+		if ( model->GetProfiler().enabled() )
 			model->GetProfiler().log_results();
 
 		log::info( "fitness = ", scenario_->GetModelObjective().GetResult( *model ) );
 		if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
 			log::info( sim_report );
+		if ( write_stats )
+			model->UpdatePerformanceStats( scenario_->GetFileName() );
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
 }
