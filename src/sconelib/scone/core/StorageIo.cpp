@@ -10,6 +10,7 @@
 
 #include "xo/string/string_tools.h"
 #include "xo/filesystem/path.h"
+#include "xo/filesystem/filesystem.h"
 #include <sstream>
 #include <fstream>
 
@@ -103,7 +104,7 @@ namespace scone
 
 	void ReadStorageSto( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
-		auto str = xo::char_stream( file );
+		auto str = xo::char_stream( xo::load_string( file ) );
 		SCONE_ERROR_IF( !str.good(), "Could not open file " + file.str() );
 		ReadStorageSto( storage, str );
 	}
@@ -121,7 +122,7 @@ namespace scone
 
 	void ReadStorageTxt( Storage<Real, TimeInSeconds>& storage, const xo::path& file )
 	{
-		auto str = xo::char_stream( file );
+		auto str = xo::char_stream( xo::load_string( file ) );
 		SCONE_ERROR_IF( !str.good(), "Could not open file " + file.str() );
 		ReadStorageTxt( storage, str );
 	}
