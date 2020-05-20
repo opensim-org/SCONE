@@ -43,6 +43,7 @@
 #include "GaitAnalysis.h"
 #include "OptimizerTaskExternal.h"
 #include "OptimizerTaskThreaded.h"
+#include "scone/core/version.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -782,7 +783,11 @@ void SconeStudio::performanceTest( bool write_stats )
 		if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
 			log::info( sim_report );
 		if ( write_stats )
-			model->UpdatePerformanceStats( scenario_->GetFileName() );
+		{
+			auto p = scenario_->GetFileName();
+			p = p.parent_path() / "perf" / xo::get_computer_name() / xo::to_str( scone::GetSconeVersion() ) + "-" + p.stem();
+			model->UpdatePerformanceStats( p );
+		}
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
 }
