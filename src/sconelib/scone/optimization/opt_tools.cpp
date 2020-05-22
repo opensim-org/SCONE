@@ -36,35 +36,20 @@ namespace scone
 	{
 		bool store_data = !output_base.empty();
 
-		auto optProp = FindFactoryProps( GetOptimizerFactory(), scenario_pn, "Optimizer" );
-		auto objProp = FindFactoryProps( GetObjectiveFactory(), optProp.props(), "Objective" );
-		ObjectiveUP obj = CreateObjective( objProp, par_file.parent_path() );
-		ModelObjective& so = dynamic_cast<ModelObjective&>( *obj );
+		auto opt = CreateOptimizer( scenario_pn, par_file.parent_path() );
+		auto mo = dynamic_cast<ModelObjective*>( &opt->GetObjective() );
 
 		// report unused properties
-		LogUnusedProperties( objProp.props() );
+		LogUnusedProperties( scenario_pn );
 
 		// create model
-		ModelUP model;
-		if ( par_file.empty() || par_file.extension_no_dot() == "scone" )
-		{
-			// no par file was given, try to use init_file
-			// IMPORTANT: this uses the parameter MEAN of the init_file
-			// as to be consistent with running a scenario from inside SCONE studio
-			// #todo: combine this code with CreateModelObjective, since the same is happening there
-			if ( auto init_file = optProp.props().try_get< path >( "init_file" ) )
-				so.info().import_mean_std( *init_file, optProp.props().get< bool >( "use_init_file_std", true ) );
-			SearchPoint searchPoint( so.info() );
-			model = so.CreateModelFromParams( searchPoint );
-		}
-		else model = so.CreateModelFromParFile( par_file );
+		bool has_par_file = par_file.extension_no_dot() == "par";
+		ModelUP model = has_par_file ? mo->CreateModelFromParFile( par_file ) : mo->CreateModelFromParams( mo->info() );
 
-		// set data storage
-		SCONE_ASSERT( model );
 		model->SetStoreData( store_data );
 
 		timer tmr;
-		auto result = so.EvaluateModel( *model, xo::stop_token() );
+		auto result = mo->EvaluateModel( *model, xo::stop_token() );
 		auto duration = tmr().seconds();
 
 		// write results
@@ -76,11 +61,33 @@ namespace scone
 
 		// collect statistics
 		PropNode statistics;
-		statistics.set( "result", so.GetReport( *model ) );
+		statistics.set( "result", mo->GetReport( *model ) );
 		statistics.set( "simulation time", model->GetTime() );
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
 		return statistics;
+	} 
+
+	void BenchmarkScenario( const PropNode& scenario_pn, const path& file, size_t evals )
+	{
+		auto opt = CreateOptimizer( scenario_pn, file.parent_path() );
+		auto mo = dynamic_cast<ModelObjective*>( &opt->GetObjective() );
+		auto par = SearchPoint( mo->info() );
+
+		static auto first_run_time = scone::GetDateTimeAsString();
+		auto stats_file = file.parent_path() / "perf" / xo::get_computer_name() / first_run_time + "." + file.stem();
+		for ( index_t idx = 0; idx < evals; ++idx )
+		{
+			log::info( file, " --> ", idx );
+			auto model = mo->CreateModelFromParams( par );
+			model->SetStoreData( false );
+			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+			if ( evals > 1 )
+				model->UpdatePerformanceStats( stats_file );
+		}
+
+		auto res = load_string( stats_file + ".stats" );
+		log::info( "Benchmark results:\n" + res );
 	}
 
 	path FindScenario( const path& file )

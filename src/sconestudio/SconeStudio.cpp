@@ -770,26 +770,25 @@ void SconeStudio::performanceTest( bool write_stats )
 	if ( createAndVerifyActiveScenario( false ) )
 	{
 		auto par = SearchPoint( scenario_->GetModelObjective().info() );
-		xo::timer real_time;
-		auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
-		model->SetStoreData( false );
-		model->AdvanceSimulationTo( model->GetSimulationEndTime() );
-		auto real_dur = real_time().seconds();
-		auto sim_time = model->GetTime();
-		if ( model->GetProfiler().enabled() )
-			model->GetProfiler().log_results();
-
-		log::info( "fitness = ", scenario_->GetModelObjective().GetResult( *model ) );
-		if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
-			log::info( sim_report );
-		if ( write_stats )
+		if ( !write_stats )
 		{
-			static auto first_run_time = scone::GetDateTimeAsString();
-			auto p = scenario_->GetFileName();
-			p = p.parent_path() / "perf" / xo::get_computer_name() / first_run_time + "." + p.stem();
-			model->UpdatePerformanceStats( p );
+			xo::timer real_time;
+			auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
+			model->SetStoreData( false );
+			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+			auto real_dur = real_time().seconds();
+			auto sim_time = model->GetTime();
+			if ( model->GetProfiler().enabled() )
+				model->GetProfiler().log_results();
+			log::info( "fitness = ", scenario_->GetModelObjective().GetResult( *model ) );
+			if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
+				log::info( sim_report );
+			log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 		}
-		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+		else
+		{
+			scone::BenchmarkScenario( scenario_->GetScenarioProps(), scenario_->GetFileName(), 8 );
+		}
 	}
 }
 
