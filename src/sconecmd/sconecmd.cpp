@@ -91,7 +91,7 @@ int main(int argc, char* argv[])
 				path scenario_file = FindScenario( benchArg.getValue() );
 				auto scenario_pn = load_scenario( scenario_file, propArg );
 				log::info( "Benchmarking ", benchArg.getValue() );
-				BenchmarkScenario( scenario_pn, path( benchArg.getValue() ), 12 );
+				BenchmarkScenario( scenario_pn, path( benchArg.getValue() ), 8 );
 			}
 		}
 		catch ( std::exception& e )

@@ -108,7 +108,7 @@ namespace scone
 					if ( meanstd < -1 ) l = log::level::warning;
 					else if ( meanstd > 1 ) l = log::level::error;
 					else l = log::level::info;
-					log::message( l, xo::stringf( "%-28s\t%7.2f\t%+7.2f\t%+6.2f%%\t%+6.2fS\t%6.2f", rname.c_str(),
+					log::message( l, xo::stringf( "%-32s\t%5.0fns\t%+5.0fns\t%+6.2f%%\t%+6.2fS\t%6.2f", rname.c_str(),
 						rmean, rmean - bmean, meanperc, meanstd, rstd ) );
 				}
 			}
