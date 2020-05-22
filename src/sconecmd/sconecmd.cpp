@@ -50,7 +50,9 @@ int main(int argc, char* argv[])
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output full status updates", cmd, false );
 		TCLAP::SwitchArg quietOutput( "q", "quiet", "Do not output simulation progress", cmd, false );
 		TCLAP::UnlabeledMultiArg< string > propArg( "property", "Override specific scenario property, using <key>=<value>", false, "<key>=<value>", cmd, true );
-		cmd.xorAdd( std::vector<TCLAP::Arg*>{ &optArg, &parArg , &benchArg } );
+
+		auto xor_args = std::vector<TCLAP::Arg*>{ &optArg, &parArg , &benchArg };
+		cmd.xorAdd( xor_args );
 		cmd.parse( argc, argv );
 
 		try
