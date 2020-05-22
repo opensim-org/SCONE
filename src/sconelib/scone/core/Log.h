@@ -55,6 +55,7 @@ namespace scone
 	namespace log
 	{
 		using xo::log::level;
+		using xo::log::message;
 		using xo::log::trace;
 		using xo::log::debug;
 		using xo::log::info;
