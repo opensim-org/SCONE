@@ -784,8 +784,9 @@ void SconeStudio::performanceTest( bool write_stats )
 			log::info( sim_report );
 		if ( write_stats )
 		{
+			static auto first_run_time = scone::GetDateTimeAsString();
 			auto p = scenario_->GetFileName();
-			p = p.parent_path() / "perf" / xo::get_computer_name() / xo::to_str( scone::GetSconeVersion() ) + "-" + p.stem();
+			p = p.parent_path() / "perf" / xo::get_computer_name() / first_run_time + "." + p.stem();
 			model->UpdatePerformanceStats( p );
 		}
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
