@@ -15,6 +15,7 @@
 #include "xo/time/timer.h"
 #include "xo/container/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/serialization/char_stream.h"
 
 using xo::timer;
 
@@ -66,7 +67,7 @@ namespace scone
 		statistics.set( "performance (x real-time)", model->GetTime() / duration );
 
 		return statistics;
-	} 
+	}
 
 	void BenchmarkScenario( const PropNode& scenario_pn, const path& file, size_t evals )
 	{
@@ -76,9 +77,10 @@ namespace scone
 
 		static auto first_run_time = scone::GetDateTimeAsString();
 		auto stats_file = file.parent_path() / "perf" / xo::get_computer_name() / first_run_time + "." + file.stem();
+		auto stats_base_file = file.parent_path() / "perf" / xo::get_computer_name() / file.stem();
 		for ( index_t idx = 0; idx < evals; ++idx )
 		{
-			log::info( file, " --> ", idx );
+			//log::info( file, " --> ", idx );
 			auto model = mo->CreateModelFromParams( par );
 			model->SetStoreData( false );
 			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
@@ -87,7 +89,31 @@ namespace scone
 		}
 
 		auto res = load_string( stats_file + ".stats" );
-		log::info( "Benchmark results:\n" + res );
+		if ( xo::file_exists( stats_base_file + ".stats" ) )
+		{
+			xo::char_stream rstr( std::move( res ) );
+			xo::char_stream bstr( load_string( stats_base_file + ".stats" ) );
+			while ( rstr.good() )
+			{
+				string rname, bname;
+				double rbest, rmean, rstd;
+				double bbest, bmean, bstd;
+				rstr >> rname >> rbest >> rmean >> rstd;
+				bstr >> bname >> bbest >> bmean >> bstd;
+				if ( rstr.good() )
+				{
+					auto meanperc = 100 * ( rmean - bmean ) / bmean;
+					auto meanstd = ( rmean - bmean ) / rstd;
+					log::level l;
+					if ( meanstd < -1 ) l = log::level::warning;
+					else if ( meanstd > 1 ) l = log::level::error;
+					else l = log::level::info;
+					log::message( l, xo::stringf( "%-28s\t%7.2f\t%+7.2f\t%+6.2f%%\t%+6.2fS\t%6.2f", rname.c_str(),
+						rmean, rmean - bmean, meanperc, meanstd, rstd ) );
+				}
+			}
+		}
+		else log::info( "Benchmark results:\n" + res );
 	}
 
 	path FindScenario( const path& file )
