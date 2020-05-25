@@ -86,6 +86,7 @@ namespace scone
 			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
 			if ( evals > 1 )
 				model->UpdatePerformanceStats( stats_file );
+			xo::sleep( 100 );
 		}
 
 		auto res = load_string( stats_file + ".stats" );
@@ -96,10 +97,10 @@ namespace scone
 			while ( rstr.good() )
 			{
 				string rname, bname;
-				double rbest, rmean, rstd;
-				double bbest, bmean, bstd;
-				rstr >> rname >> rbest >> rmean >> rstd;
-				bstr >> bname >> bbest >> bmean >> bstd;
+				double rmedian, rmean, rstd;
+				double bmedian, bmean, bstd;
+				rstr >> rname >> rmedian >> rmean >> rstd;
+				bstr >> bname >> bmedian >> bmean >> bstd;
 				if ( rstr.good() )
 				{
 					auto meanperc = 100 * ( rmean - bmean ) / bmean;
@@ -109,7 +110,7 @@ namespace scone
 					else if ( meanstd > 1 ) l = log::level::error;
 					else l = log::level::info;
 					log::message( l, xo::stringf( "%-32s\t%5.0fns\t%+5.0fns\t%+6.2f%%\t%+6.2fS\t%6.2f", rname.c_str(),
-						rmean, rmean - bmean, meanperc, meanstd, rstd ) );
+						rmedian, rmedian - bmedian, meanperc, meanstd, rstd ) );
 				}
 			}
 		}

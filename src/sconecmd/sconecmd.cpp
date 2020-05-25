@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
 		TCLAP::ValueArg< String > optArg( "o", "optimize", "Optimize a scenario file", true, "", "*.scone" );
 		TCLAP::ValueArg< String > parArg( "e", "evaluate", "Evaluate a result from an optimization", false, "", "*.par" );
 		TCLAP::ValueArg< String > benchArg( "b", "benchmark", "Benchmark a scenario or parameter file", false, "", "*.scone" );
+		TCLAP::ValueArg< int > bxArg( "x", "benchmarkx", "Number of benchmarks to perform", false, 8, ">0", cmd );
 		TCLAP::ValueArg< String > outArg( "r", "result", "Output file for evaluation result", false, "", "Output file (*.sto)", cmd );
 		TCLAP::ValueArg< int > logArg( "l", "log", "Set the log level", false, 1, "1-7", cmd );
 		TCLAP::SwitchArg statusOutput( "s", "status", "Output full status updates", cmd, false );
@@ -97,7 +98,6 @@ int main(int argc, char* argv[])
 		catch ( std::exception& e )
 		{
 			log::Critical( e.what() );
-
 			if ( statusOutput.isSet() )
 			{
 				std::cout << std::endl << "*error=" << xo::try_quoted( e.what() ) << std::endl;
@@ -105,6 +105,11 @@ int main(int argc, char* argv[])
 				xo::sleep( 5000 );
 			}
 		}
+	}
+	catch ( std::exception& e )
+	{
+		log::critical( e.what() );
+		return -1;
 	}
 	catch ( TCLAP::ExitException& e )
 	{
