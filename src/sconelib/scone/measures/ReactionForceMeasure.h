@@ -20,6 +20,9 @@ namespace scone
 	public:
 		ReactionForceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc );
 
+		/// measure force per leg instead of sum of forces; defaut = false.
+		bool use_force_per_leg;
+
 		virtual double ComputeResult( const Model& model ) override;
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 
