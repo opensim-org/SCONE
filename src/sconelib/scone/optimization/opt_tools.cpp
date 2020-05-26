@@ -16,6 +16,8 @@
 #include "xo/container/prop_node_tools.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/serialization/char_stream.h"
+#include "xo/utility/irange.h"
+#include "xo/container/container_algorithms.h"
 
 using xo::timer;
 
@@ -75,46 +77,60 @@ namespace scone
 		auto mo = dynamic_cast<ModelObjective*>( &opt->GetObjective() );
 		auto par = SearchPoint( mo->info() );
 
-		static auto first_run_time = scone::GetDateTimeAsString();
-		auto stats_file = file.parent_path() / "perf" / xo::get_computer_name() / first_run_time + "." + file.stem();
-		auto stats_base_file = file.parent_path() / "perf" / xo::get_computer_name() / file.stem();
+		// run simulations
+		xo::flat_map<string, std::vector<TimeInSeconds>> bm_samples;
 		for ( index_t idx = 0; idx < evals; ++idx )
 		{
-			//log::info( file, " --> ", idx );
+			xo::timer t;
 			auto model = mo->CreateModelFromParams( par );
 			model->SetStoreData( false );
+			auto create_model_time = t();
 			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
-			if ( evals > 1 )
-				model->UpdatePerformanceStats( stats_file );
+			auto total_time = t();
+			auto timings = model->GetBenchmarks();
+			for ( const auto& t : timings )
+				bm_samples[ t.first ].push_back( t.second.first.seconds() / t.second.second );
+			bm_samples[ "TotalTime" ].push_back( total_time.seconds() );
+			bm_samples[ "TotalSimTime" ].push_back( ( total_time - create_model_time ).seconds() );
+			bm_samples[ "ModelSimTime" ].push_back( timings.front().second.first.seconds() );
 			xo::sleep( 100 );
 		}
 
-		auto res = load_string( stats_file + ".stats" );
-		if ( xo::file_exists( stats_base_file + ".stats" ) )
+		// read baseline
+		auto baseline_file = file.parent_path() / "perf" / xo::get_computer_name() / file.stem() + ".stats";
+		bool has_baseline = xo::file_exists( baseline_file );
+		xo::flat_map<string, TimeInSeconds> baseline_medians;
+		if ( has_baseline )
 		{
-			xo::char_stream rstr( std::move( res ) );
-			xo::char_stream bstr( load_string( stats_base_file + ".stats" ) );
-			while ( rstr.good() )
+			xo::char_stream bstr( load_string( baseline_file ) );
+			while ( bstr.good() )
 			{
-				string rname, bname;
-				double rmedian, rmean, rstd;
+				string bname;
 				double bmedian, bmean, bstd;
-				rstr >> rname >> rmedian >> rmean >> rstd;
 				bstr >> bname >> bmedian >> bmean >> bstd;
-				if ( rstr.good() )
-				{
-					auto meanperc = 100 * ( rmean - bmean ) / bmean;
-					auto meanstd = ( rmean - bmean ) / rstd;
-					log::level l;
-					if ( meanstd < -1 ) l = log::level::warning;
-					else if ( meanstd > 1 ) l = log::level::error;
-					else l = log::level::info;
-					log::message( l, xo::stringf( "%-32s\t%5.0fns\t%+5.0fns\t%+6.2f%%\t%+6.2fS\t%6.2f", rname.c_str(),
-						rmedian, rmedian - bmedian, meanperc, meanstd, rstd ) );
-				}
+				if ( bstr.good() )
+					baseline_medians[ bname ] = bmedian;
 			}
 		}
-		else log::info( "Benchmark results:\n" + res );
+
+		// report
+		for ( const auto& bms : bm_samples )
+		{
+			auto rmedian = xo::median( bms.second );
+			auto rmeanstd = xo::mean_std( bms.second );
+			auto bmedian = baseline_medians[ bms.first ];
+			auto medianperc = 100 * ( ( rmedian - bmedian ) / bmedian );
+			auto medianstd = ( rmedian - bmedian ) / rmeanstd.second;
+
+			log::info( xo::stringf( "%-32s\t%5.0fns\t%+5.0fns\t%+6.2f%%\t%+6.2fS\t%6.2f", bms.first.c_str(),
+				rmedian, rmedian - bmedian, medianperc, medianstd, rmeanstd.second ) );
+
+			if ( !has_baseline )
+			{
+				auto ostr = std::ofstream( baseline_file.str(), std::ios_base::app );
+				ostr << xo::stringf( "%-32s\t%8.2f\t%8.2f\t%8.2f\n", bms.first.c_str(), rmedian, rmeanstd.first, rmeanstd.second );
+			}
+		}
 	}
 
 	path FindScenario( const path& file )
