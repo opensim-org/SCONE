@@ -19,6 +19,7 @@
 #include "xo/serialization/serialize.h"
 #include "xo/system/log_sink.h"
 #include "xo/system/system_tools.h"
+#include "scone/core/Benchmark.h"
 
 using namespace scone;
 
@@ -92,7 +93,7 @@ int main(int argc, char* argv[])
 				path scenario_file = FindScenario( benchArg.getValue() );
 				auto scenario_pn = load_scenario( scenario_file, propArg );
 				log::info( "Benchmarking ", benchArg.getValue() );
-				BenchmarkScenario( scenario_pn, path( benchArg.getValue() ), 8 );
+				BenchmarkScenario( scenario_pn, path( benchArg.getValue() ), bxArg.getValue() );
 			}
 		}
 		catch ( std::exception& e )

@@ -44,6 +44,7 @@
 #include "OptimizerTaskExternal.h"
 #include "OptimizerTaskThreaded.h"
 #include "scone/core/version.h"
+#include "scone/core/Benchmark.h"
 
 using namespace scone;
 using namespace xo::literals;

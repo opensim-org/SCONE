@@ -62,6 +62,8 @@ set(CORE_STORAGE_FILES
 set(CORE_TOOL_FILES
 	core/Event.cpp
 	core/Event.h
+	core/Benchmark.h
+	core/Benchmark.cpp
 	core/storage_tools.h
 	core/storage_tools.cpp
 	core/string_tools.cpp

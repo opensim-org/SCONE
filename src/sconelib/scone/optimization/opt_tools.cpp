@@ -71,68 +71,6 @@ namespace scone
 		return statistics;
 	}
 
-	void BenchmarkScenario( const PropNode& scenario_pn, const path& file, size_t evals )
-	{
-		auto opt = CreateOptimizer( scenario_pn, file.parent_path() );
-		auto mo = dynamic_cast<ModelObjective*>( &opt->GetObjective() );
-		auto par = SearchPoint( mo->info() );
-
-		// run simulations
-		xo::flat_map<string, std::vector<TimeInSeconds>> bm_samples;
-		for ( index_t idx = 0; idx < evals; ++idx )
-		{
-			xo::timer t;
-			auto model = mo->CreateModelFromParams( par );
-			model->SetStoreData( false );
-			auto create_model_time = t();
-			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
-			auto total_time = t();
-			auto timings = model->GetBenchmarks();
-			for ( const auto& t : timings )
-				bm_samples[ t.first ].push_back( t.second.first.seconds() / t.second.second );
-			bm_samples[ "TotalTime" ].push_back( total_time.seconds() );
-			bm_samples[ "TotalSimTime" ].push_back( ( total_time - create_model_time ).seconds() );
-			bm_samples[ "ModelSimTime" ].push_back( timings.front().second.first.seconds() );
-			xo::sleep( 100 );
-		}
-
-		// read baseline
-		auto baseline_file = file.parent_path() / "perf" / xo::get_computer_name() / file.stem() + ".stats";
-		bool has_baseline = xo::file_exists( baseline_file );
-		xo::flat_map<string, TimeInSeconds> baseline_medians;
-		if ( has_baseline )
-		{
-			xo::char_stream bstr( load_string( baseline_file ) );
-			while ( bstr.good() )
-			{
-				string bname;
-				double bmedian, bmean, bstd;
-				bstr >> bname >> bmedian >> bmean >> bstd;
-				if ( bstr.good() )
-					baseline_medians[ bname ] = bmedian;
-			}
-		}
-
-		// report
-		for ( const auto& bms : bm_samples )
-		{
-			auto rmedian = xo::median( bms.second );
-			auto rmeanstd = xo::mean_std( bms.second );
-			auto bmedian = baseline_medians[ bms.first ];
-			auto medianperc = 100 * ( ( rmedian - bmedian ) / bmedian );
-			auto medianstd = ( rmedian - bmedian ) / rmeanstd.second;
-
-			log::info( xo::stringf( "%-32s\t%5.0fns\t%+5.0fns\t%+6.2f%%\t%+6.2fS\t%6.2f", bms.first.c_str(),
-				rmedian, rmedian - bmedian, medianperc, medianstd, rmeanstd.second ) );
-
-			if ( !has_baseline )
-			{
-				auto ostr = std::ofstream( baseline_file.str(), std::ios_base::app );
-				ostr << xo::stringf( "%-32s\t%8.2f\t%8.2f\t%8.2f\n", bms.first.c_str(), rmedian, rmeanstd.first, rmeanstd.second );
-			}
-		}
-	}
-
 	path FindScenario( const path& file )
 	{
 		if ( file.extension_no_dot() == "scone" || file.extension_no_dot() == "xml" )
