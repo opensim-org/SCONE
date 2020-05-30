@@ -20,8 +20,11 @@ namespace scone
 	public:
 		Range() : min( T() ), max( T() ) {}
 		Range( const Range& other ) = default;
-		Range( const PropNode& props ) : min( props.get< T >( "min", xo::constants<T>::lowest() ) ), max( props.get< T >( "max", xo::constants<T>::max() ) ) {}
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
+		Range( const PropNode& props ) :
+			min( props.get<T>( "min", T( -xo::constantsd::infinity() ) ) ), // compatible with angle_
+			max( props.get<T>( "max", T( xo::constantsd::infinity() ) ) ) // compatible with angle_
+		{}
 
 		// explicit conversion constructor
 		template< typename U > explicit Range( const Range<U>& o ) : min( T( o.min ) ), max( T( o.max) ) {}
@@ -44,5 +47,5 @@ namespace scone
 		T max;
 	};
 
-	typedef Range< Real > RealRange;
+	typedef Range<Real> RealRange;
 }
