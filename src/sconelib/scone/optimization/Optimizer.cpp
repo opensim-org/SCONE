@@ -64,7 +64,7 @@ namespace scone
 		{
 			init_file = FindFile( init_file );
 			auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
-			log::info( "Imported ", result.first, " of ", GetObjective().info().dim(), ", skipped ", result.second, " parameters from ", init_file );
+			log::debug( "Imported ", result.first, " of ", GetObjective().info().dim(), ", skipped ", result.second, " parameters from ", init_file );
 		}
 	}
 
