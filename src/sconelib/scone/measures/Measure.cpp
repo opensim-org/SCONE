@@ -17,6 +17,7 @@ namespace scone
 		INIT_PROP( props, name, "" );
 		INIT_PROP( props, weight, 1.0 );
 		INIT_PROP( props, threshold, 0.0 );
+		INIT_PROP( props, threshold_transition, 0.0 );
 		INIT_PROP( props, result_offset, 0.0 );
 		INIT_PROP( props, minimize, true );
 	}
@@ -33,9 +34,15 @@ namespace scone
 		if ( !result )
 			result = ComputeResult( model );
 
-		if ( minimize && GetThreshold() != 0 && ( *result + GetOffset() ) < GetThreshold() )
-			return 0;
-		else return GetWeight() * ( *result + GetOffset() );
+		Real m = *result + GetOffset();
+		if ( minimize && GetThreshold() != 0 )
+		{
+			if ( m < GetThreshold() )
+				m = 0;
+			else if ( m < GetThreshold() + threshold_transition )
+				m = m * ( m - GetThreshold() ) / threshold_transition;
+		}
+		return GetWeight() * m;
 	}
 
 	const String& Measure::GetName() const

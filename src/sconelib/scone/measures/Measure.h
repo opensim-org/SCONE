@@ -29,6 +29,9 @@ namespace scone
 		/// Threshold above / below which the measure becomes zero; default = 0.
 		Real threshold;
 
+		/// Transition range above ''threshold'' between which the measure linearly decreases to zero; default = 0.
+		Real threshold_transition;
+
 		/// Offset added to measure result; default = 0.
 		Real result_offset;
 
