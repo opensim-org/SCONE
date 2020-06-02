@@ -41,7 +41,7 @@ namespace scone
 		virtual ~RangePenalty() = default;
 
 		void AddSample( TimeInSeconds timestamp, const T& value ) {
-			auto range_violation = GetRangeViolation( value );
+			auto range_violation = this->GetRangeViolation( value );
 			auto abs_pen = abs( range_violation );
 			auto pen = abs_penalty * abs( range_violation ) + squared_penalty * GetSquared( range_violation );
 			penalty.AddSample( timestamp, pen );
