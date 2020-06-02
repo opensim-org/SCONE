@@ -185,6 +185,7 @@ namespace scone
 
 		/// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
+		double fixed_analysis_step_size;
 
 		/// Initial load [BW] at which to place the model initially; default = 0.2;
 		Real initial_load;
@@ -229,6 +230,11 @@ namespace scone
 		MeasureUP m_Measure;
 		ControllerUP m_Controller;
 		bool m_ShouldTerminate;
+
+		// step size
+		double fixed_step_size;
+		int fixed_control_step_interval;
+		int fixed_analysis_step_interval;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;
