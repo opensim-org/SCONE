@@ -29,16 +29,16 @@ namespace scone
 			abs_penalty( 0 ),
 			squared_penalty( 0 ),
 			mode_( penalty_mode::average )
-		{ }
+		{}
 
 		RangePenalty( const PropNode& prop ) :
-			Range( prop ),
+			Range<T>( prop ),
 			abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, 0.0 ) ),
 			squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, 0.0 ) ),
 			mode_( prop.get<penalty_mode>( "mode", penalty_mode::average ) )
-		{
-		}
-		virtual ~RangePenalty() {}
+		{}
+
+		virtual ~RangePenalty() = default;
 
 		void AddSample( TimeInSeconds timestamp, const T& value ) {
 			auto range_violation = GetRangeViolation( value );
