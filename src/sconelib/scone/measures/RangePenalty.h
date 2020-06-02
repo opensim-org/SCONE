@@ -25,7 +25,7 @@ namespace scone
 	{
 	public:
 		RangePenalty() :
-			Range( T( -xo::constantsd::infinity() ), T( xo::constantsd::infinity() ) ), // compatible with angle_
+			Range<T>( T( -xo::constantsd::infinity() ), T( xo::constantsd::infinity() ) ), // compatible with angle_
 			abs_penalty( 0 ),
 			squared_penalty( 0 ),
 			mode_( penalty_mode::average )
