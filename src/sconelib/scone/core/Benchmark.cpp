@@ -30,7 +30,7 @@ namespace scone
 		// run simulations
 		xo::flat_map<string, std::vector<xo::time>> bm_components;
 		xo::flat_map<string, std::vector<xo::time>> bm_totals;
-		xo::time duration = xo::time_from_seconds( mo->GetDuration() );
+		xo::time duration;
 		for ( index_t idx = 0; idx < evals; ++idx )
 		{
 			xo::timer t;
@@ -46,6 +46,7 @@ namespace scone
 			bm_components[ "EvalSim" ].push_back( ( total_time - create_model_time ) );
 			if ( !timings.empty() )
 				bm_components[ "EvalSimModel" ].push_back( timings.front().second.first );
+			duration = xo::time_from_seconds( model->GetTime() );
 			xo::sleep( 100 );
 		}
 
