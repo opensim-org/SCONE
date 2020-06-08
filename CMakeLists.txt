@@ -44,6 +44,7 @@ endif()
 # Build lua if SCONE_LUA is set
 if (SCONE_LUA)
 	add_subdirectory(contrib/lua-5.3.5)
+	set_target_properties(liblua PROPERTIES FOLDER "lib" )
 endif()
 
 #
@@ -60,7 +61,7 @@ add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)
 
-set (LIB_PROJECTS xo xo_test spot spot_test liblua vis-osg)
+set (LIB_PROJECTS xo xo_test spot spot_test vis-osg)
 foreach(lib_project ${LIB_PROJECTS})
 	set_target_properties(${lib_project} PROPERTIES FOLDER "lib" )
 endforeach()
