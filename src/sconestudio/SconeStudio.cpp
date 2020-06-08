@@ -7,44 +7,46 @@
 */
 
 #include "SconeStudio.h"
+
 #include "StudioSettings.h"
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
-
-#include "scone/core/system_tools.h"
-#include "scone/core/Log.h"
-#include "scone/core/profiler_config.h"
-#include "scone/core/Settings.h"
-#include "scone/core/Factories.h"
-#include "scone/optimization/Optimizer.h"
-#include "scone/optimization/opt_tools.h"
-
-#include "vis/plane.h"
-#include "vis-osg/osg_tools.h"
-#include "vis-osg/osg_object_manager.h"
-
-#include "xo/utility/color.h"
-#include "xo/filesystem/filesystem.h"
-#include "xo/system/system_tools.h"
-#include "xo/container/container_tools.h"
-
-#include <osgDB/ReadFile>
-#include <QFileSystemModel>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QTextStream>
-#include <QTabWidget>
-#include "qcustomplot.h"
-#include "qt_convert.h"
-#include "xo/container/prop_node_tools.h"
-#include "scone/model/muscle_tools.h"
-#include "scone/core/storage_tools.h"
-#include "scone/core/StorageIo.h"
 #include "GaitAnalysis.h"
 #include "OptimizerTaskExternal.h"
 #include "OptimizerTaskThreaded.h"
-#include "scone/core/version.h"
+
+#include "xo/container/container_tools.h"
+#include "xo/container/prop_node_tools.h"
+#include "xo/filesystem/filesystem.h"
+#include "xo/system/system_tools.h"
+#include "xo/utility/color.h"
+
 #include "scone/core/Benchmark.h"
+#include "scone/core/Factories.h"
+#include "scone/core/Log.h"
+#include "scone/core/Settings.h"
+#include "scone/core/StorageIo.h"
+#include "scone/core/profiler_config.h"
+#include "scone/core/storage_tools.h"
+#include "scone/core/system_tools.h"
+#include "scone/core/version.h"
+#include "scone/model/muscle_tools.h"
+#include "scone/optimization/Optimizer.h"
+#include "scone/optimization/opt_tools.h"
+
+#include <QFileDialog>
+#include <QFileSystemModel>
+#include <QMessageBox>
+#include <QTabWidget>
+#include <QTextStream>
+#include <osgDB/ReadFile>
+
+#include "qcustomplot.h"
+#include "qt_convert.h"
+
+#include "vis-osg/osg_object_manager.h"
+#include "vis-osg/osg_tools.h"
+#include "vis/plane.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -571,6 +573,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 	scenario_.reset();
 	analysisStorageModel.setStorage( nullptr );
 	parModel->setObjectiveInfo( nullptr );
+	parViewDock->setWindowTitle( "Optimization Parameters" );
 
 	try
 	{
@@ -582,6 +585,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 		analysisStorageModel.setStorage( &scenario_->GetData() );
 		analysisView->reset();
 		parModel->setObjectiveInfo( &scenario_->GetOjective().info() );
+		parViewDock->setWindowTitle( QString( "Optimization Parameters (%1)" ).arg( scenario_->GetOjective().info().size() ) );
 	}
 	catch ( std::exception& e )
 	{
