@@ -4,7 +4,7 @@
 
 !define SCONE_VERSION "1.4.0"
 !define MSVC_VERSION "vc2019-x64"
-!define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
+!define BIN_FOLDER "\Build\scone\${MSVC_VERSION}\bin\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.1"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
 !define VCREDIST_FILE "vc_redist.x64.exe"
