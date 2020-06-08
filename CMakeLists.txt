@@ -60,6 +60,11 @@ add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
 add_subdirectory(src/sconeunittests)
 
+set (LIB_PROJECTS xo xo_test spot spot_test liblua vis-osg)
+foreach(lib_project ${LIB_PROJECTS})
+	set_target_properties(${lib_project} PROPERTIES FOLDER "lib" )
+endforeach()
+
 if (SCONE_HYFYDY)
 	find_path( SCONE_HYFYDY_DIR "sconehfd/ModelHfd.h" HINTS "../sconehfd" )
 	add_subdirectory("${SCONE_HYFYDY_DIR}" "${CMAKE_BINARY_DIR}/sconehfd")
