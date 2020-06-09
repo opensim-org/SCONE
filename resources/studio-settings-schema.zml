@@ -58,3 +58,8 @@ viewer {
 	muscle_position { type = float label = "Relative muscle belly position (0-1)" range = [ 0 1 ] default = 0.333 }
 	relative_tendon_width { type = float label = "Tendon diameter relative to muscle" range = [ 0.1 1 ] default = 0.618 }
 }
+
+ui {
+	label = "User Interface Settings"
+	reset_layout { type = bool default = 0 label = "Reset window layout on start" }
+}

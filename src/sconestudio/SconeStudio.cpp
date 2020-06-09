@@ -178,6 +178,10 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
 	//tabifyDockWidget( analysis_dock, ddw );
 
+	// add window menu option
+	windowMenu->addSeparator();
+	windowMenu->addAction( "Reset Window Layout", this, &SconeStudio::resetWindowLayout );
+
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );
 }
@@ -218,7 +222,14 @@ bool SconeStudio::init()
 	ui.outputText->set_sink_mode( xo::log::sink_mode::current_thread );
 	ui.outputText->set_log_level( XO_IS_DEBUG_BUILD ? xo::log::level::trace : xo::log::level::debug );
 
-	restoreSettings( "SCONE", "SconeStudio" );
+	createSettings( "SCONE", "SconeStudio" );
+	if ( GetStudioSetting<bool>( "ui.reset_layout" ) )
+	{
+		GetStudioSettings().set( "ui.reset_layout", false );
+		GetStudioSettings().save();
+	}
+	else restoreSettings();
+
 	ui.messagesDock->raise();
 
 	return true;
@@ -882,6 +893,13 @@ void SconeStudio::updateTabTitles()
 {
 	for ( auto s : codeEditors )
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
+}
+
+void SconeStudio::resetWindowLayout()
+{
+	GetStudioSettings().set( "ui.reset_layout", true );
+	GetStudioSettings().save();
+	information( "Reset Window Layout", "Please restart SCONE for the changes to take effect" );
 }
 
 void SconeStudio::finalizeCapture()

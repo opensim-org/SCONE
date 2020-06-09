@@ -94,6 +94,7 @@ public slots:
 	void findNext() { if ( auto* e = getActiveCodeEditor() ) e->findNext(); }
 	void findPrevious() { if ( auto* e = getActiveCodeEditor() ) e->findNext( true ); }
 	void toggleComments() { if ( auto* e = getActiveCodeEditor() ) e->toggleComments(); }
+	void resetWindowLayout();
 
 public:
 	bool close_all;

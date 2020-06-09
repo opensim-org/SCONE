@@ -76,6 +76,6 @@ namespace scone
 	FactoryProps FindFactoryProps( const F& fac, const PropNode& pn, const String& fac_name ) {
 		if ( auto r = TryFindFactoryProps( fac, pn, fac_name ) )
 			return r;
-		SCONE_THROW( "Could not find " + fac_name );
+		SCONE_ERROR( "Could not find " + fac_name );
 	}
 }
