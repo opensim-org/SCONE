@@ -8,6 +8,7 @@
   * New ''Parameter View'' window that shows all optimization parameters in the current scenario.
   * Context-sensitive help: pressing F1 in the scenario shows on-line help for the keyword under the cursor.
   * New ''StepMeasure'' for penalizing stride length and/or step duration, thanks to **Dimitar Stanev**.
+  * ''GaitStateController'' can now have single-sided controllers, using the ''legs'' parameter.
   * Help menu now has links for ''About...'' and ''User Forum''
   * New (very useful!) text editor option: Press ''Ctrl + /'' to toggle comments for the current selection.
   * ''.scone'' files now support // and /* */ style comments.
