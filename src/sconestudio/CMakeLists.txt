@@ -16,6 +16,8 @@ if(${Qt5Widgets_FOUND})
 		ModelVis.cpp
 		ModelVis.h
 		studio_config.h
+		help_tools.h
+		help_tools.cpp
 		SconeStudio.cpp
 		SconeStudio.h
 		ProgressDockWidget.h
