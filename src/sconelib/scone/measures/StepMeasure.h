@@ -12,8 +12,7 @@
 
 namespace scone
 {
-	/// Measure for locomotion that penalizes the stride length and/or
-	/// step duration.
+	/// Measure for locomotion that penalizes stride length, stride duration, and/or stride velocity.
 	/** Example:
 	\verbatim
 	StepMeasure {
