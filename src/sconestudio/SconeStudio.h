@@ -71,7 +71,9 @@ public slots:
 	virtual void fileSaveAsTriggered() override;
 	virtual void fileCloseTriggered() override;
 
-	void helpAbout() {}
+	void helpSearch();
+	void helpForum();
+	void helpAbout();
 	void evaluateActiveScenario();
 	void performanceTestNormal() { performanceTest( false ); }
 	void performanceTestWriteStats() { performanceTest( true ); }

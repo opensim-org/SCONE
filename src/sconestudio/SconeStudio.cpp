@@ -47,6 +47,7 @@
 #include "vis-osg/osg_object_manager.h"
 #include "vis-osg/osg_tools.h"
 #include "vis/plane.h"
+#include "help_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -134,7 +135,12 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	actionMenu->addAction( "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
 
 	createWindowMenu();
-	createHelpMenu();
+
+	auto helpMenu = menuBar()->addMenu( ( "&Help" ) );
+	helpMenu->addAction( "View &Help...", this, &SconeStudio::helpSearch, QKeySequence( "F1" ) );
+	helpMenu->addAction( "User &Forum...", this, &SconeStudio::helpSearch );
+	helpMenu->addSeparator();
+	helpMenu->addAction( "&About...", this, &SconeStudio::helpAbout );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
@@ -528,6 +534,30 @@ void SconeStudio::fileCloseTriggered()
 {
 	if ( auto idx = ui.tabWidget->currentIndex(); idx >= 0 )
 		tabCloseRequested( idx );
+}
+
+void SconeStudio::helpSearch()
+{
+	if ( auto* s = getActiveCodeEditor() )
+	{
+		auto cursor = s->textCursor();
+		cursor.select( QTextCursor::WordUnderCursor );
+		QDesktopServices::openUrl( scone::GetHelpUrl( cursor.selectedText() ) );
+	}
+	else QDesktopServices::openUrl( scone::GetHelpUrl( "" ) );
+}
+
+void SconeStudio::helpForum()
+{
+	QDesktopServices::openUrl( QUrl( "https://simtk.org/plugins/phpBB/indexPhpbb.php?group_id=1180&pluginname=phpBB" ) );
+}
+
+void SconeStudio::helpAbout()
+{
+	QString title = to_qt( "SCONE version " + xo::to_str( GetSconeVersion() ) );
+	QString author = "Copyright (C) 2013 - 2020 Thomas Geijtenbeek and contributors. All rights reserved.";
+	QString license = "SCONE is licensed under the GNU General Public License. It depends on the following libraries):\n\tOpenSim 3.3 (Apache 2.0)\n\tSimbody (Apache 2.0)\n\tQt (GPL / LGPL)\n\tQCustomPlot (GPL v3)\n\tOpenSceneGraph (OSGPL)\n\tLua (MIT)\n\tSol 3 (MIT)\n\tTCLAP (MIT)\n\txo (Apache 2.0)\n\tspot (Apache 2.0)\n\tvis (Apache 2.0)\n\tqtfx (Apache 2.0";
+	information( "About SCONE", title + "\n\n" + author + "\n\n" + license );
 }
 
 bool SconeStudio::tryExit()
