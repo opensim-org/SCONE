@@ -17,7 +17,9 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 target_link_libraries(sconeunittests sconelib xo ${FILESYSTEM_LIB})
-target_compile_options(sconeunittests PRIVATE "/MP" ) # multithreaded compilation on MSVC
+if (MSVC)
+	target_compile_options(sconeunittests PRIVATE "/MP" ) # multithreaded compilation on MSVC
+endif()
 
 if (SCONE_OPENSIM_3)
 	target_link_libraries(sconeunittests sconeopensim3)
