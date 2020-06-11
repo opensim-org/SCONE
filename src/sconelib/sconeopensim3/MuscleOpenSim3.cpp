@@ -6,7 +6,9 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Model.h>
+#include <OpenSim/Simulation/Model/Muscle.h>
+#include <OpenSim/Simulation/SimbodyEngine/Body.h>
 
 #include "MuscleOpenSim3.h"
 #include "ModelOpenSim3.h"

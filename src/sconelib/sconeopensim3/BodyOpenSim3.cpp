@@ -9,12 +9,12 @@
 #include "BodyOpenSim3.h"
 #include "scone/core/Exception.h"
 
-#include <OpenSim/OpenSim.h>
-#include <OpenSim/Actuators/PointActuator.h>
+#include <OpenSim/Simulation/SimbodyEngine/Body.h>
+#include <OpenSim/Simulation/Model/Model.h>
 
 #include "ModelOpenSim3.h"
-#include "JointOpenSim3.h"
 #include "ConstantForce.h"
+#include "JointOpenSim3.h"
 #include "scone/core/profiler_config.h"
 #include "simbody_tools.h"
 #include "scone/core/Log.h"

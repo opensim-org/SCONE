@@ -1,7 +1,8 @@
 #include "ContactForceOpenSim3.h"
 
-#include "OpenSim/Simulation/Model/HuntCrossleyForce.h"
-#include "OpenSim/Simulation/Model/Model.h"
+#include <OpenSim/Simulation/Model/HuntCrossleyForce.h>
+#include <OpenSim/Simulation/Model/Model.h>
+
 #include "ModelOpenSim3.h"
 #include "scone/model/model_tools.h"
 #include <variant>

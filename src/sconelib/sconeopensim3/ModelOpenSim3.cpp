@@ -14,7 +14,6 @@
 #include "ModelOpenSim3.h"
 #include "BodyOpenSim3.h"
 #include "MuscleOpenSim3.h"
-#include "SimulationOpenSim3.h"
 #include "JointOpenSim3.h"
 #include "DofOpenSim3.h"
 #include "ConstantForce.h"
