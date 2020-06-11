@@ -7,6 +7,13 @@ target_include_directories(sconecmd PRIVATE ${CMAKE_SOURCE_DIR}/contrib/tclap-1.
 
 target_link_libraries(sconecmd sconelib)
 
+if (MSVC)
+	target_precompile_headers(sconecmd PRIVATE <string> <vector> <algorithm> <memory> <limits> <fstream>)
+	file (GLOB_RECURSE PRECOMPILED_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.*)
+	source_group("CMakePCH" FILES ${PRECOMPILED_HEADER_FILES})
+	source_group("" FILES sconecmd.cpp)
+endif()
+
 if (SCONE_OPENSIM_3)
 	target_link_libraries(sconecmd sconeopensim3)
 	target_compile_definitions(sconecmd PRIVATE SCONE_OPENSIM_3)

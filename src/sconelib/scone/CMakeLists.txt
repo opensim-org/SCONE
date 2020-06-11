@@ -260,10 +260,6 @@ set (SCONELIB_FILES
 	${SIM_TOPOLOGY_FILES}
 	)
 
-# specify precompiled headers for MSVC
-include( PrecompiledHeaders )
-use_precompiled_headers( SCONELIB_FILES "${CMAKE_CURRENT_SOURCE_DIR}/stdafx.h" "stdafx.cpp" 256 )
-
 # add sources to single lib
 add_library(sconelib SHARED ${SCONELIB_FILES} ${SCONE_RESOURCE_FILES} )
 
@@ -277,6 +273,10 @@ target_link_libraries(sconelib xo spot)
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 
 if (MSVC)
+	target_precompile_headers(sconelib PRIVATE <string> <vector> <algorithm> <memory> <limits> <fstream>)
+	file (GLOB_RECURSE PRECOMPILED_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.*)
+	source_group("CMakePCH" FILES ${PRECOMPILED_HEADER_FILES})
+
 	target_compile_definitions( sconelib PRIVATE SCONE_EXPORTS )
 	target_compile_definitions( sconelib PRIVATE _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS )
 	target_compile_definitions( sconelib PRIVATE $<$<BOOL:${SCONE_ENABLE_PROFILER}>:SCONE_ENABLE_XO_PROFILING> )
@@ -310,6 +310,5 @@ source_group("model" FILES ${SIM_SIMULATIONANDCONTROL_FILES})
 source_group("model" FILES ${SIM_SYSTEM_FILES})
 source_group("model" FILES ${SIM_TOPOLOGY_FILES})
 
-source_group("" FILES ${PRECOMPILED_HEADER_FILES})
 source_group("" FILES ${SCONE_CONFIG_FILES})
 source_group("" FILES ${SCONE_RESOURCE_FILES})
