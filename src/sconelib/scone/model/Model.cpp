@@ -64,11 +64,11 @@ namespace scone
 
 		INIT_PROP( props, max_step_size, 0.001 );
 		INIT_PROP( props, fixed_control_step_size, 0.001 );
-		INIT_PROP( props, fixed_analysis_step_size, fixed_control_step_size );
+		INIT_PROP( props, fixed_measure_step_size, fixed_control_step_size );
 		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
-		fixed_step_size = std::min( fixed_control_step_size, fixed_analysis_step_size );
+		fixed_step_size = std::min( fixed_control_step_size, fixed_measure_step_size );
 		fixed_control_step_interval = static_cast<int>( std::round( fixed_control_step_size / fixed_step_size ) );
-		fixed_analysis_step_interval = static_cast<int>( std::round( fixed_analysis_step_size / fixed_step_size ) );
+		fixed_analysis_step_interval = static_cast<int>( std::round( fixed_measure_step_size / fixed_step_size ) );
 
 		INIT_PROP( props, initial_load, 0.2 );
 		INIT_PROP( props, initial_load_dof, "pelvis_ty" );

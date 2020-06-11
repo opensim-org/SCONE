@@ -185,7 +185,9 @@ namespace scone
 
 		/// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
-		double fixed_analysis_step_size;
+
+		/// Step size used for measures (not supported by all model types); default = ''fixed_control_step_size''.
+		double fixed_measure_step_size;
 
 		/// Initial load [BW] at which to place the model initially; default = 0.2;
 		Real initial_load;
