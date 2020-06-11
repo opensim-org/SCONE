@@ -28,8 +28,8 @@ QVariant ParTableModel::data( const QModelIndex& index, int role ) const
 		switch ( index.column() )
 		{
 		case 0: return to_qt( par_info.name );
-		case 1: return QString().sprintf("%.6f", par_info.mean );
-		case 2: return QString().sprintf( "%.6f", par_info.std );
+		case 1: return QString::asprintf("%.6f", par_info.mean );
+		case 2: return QString::asprintf( "%.6f", par_info.std );
 		default: return "???";
 		}
 	}
@@ -44,7 +44,7 @@ QVariant ParTableModel::headerData( int section, Qt::Orientation orientation, in
 	{
 		if ( orientation == Qt::Horizontal )
 			return column_names[ section ];
-		else return QString().sprintf( "%d", section + 1 );
+		else return QString::asprintf( "%d", section + 1 );
 	}
 	return QVariant();
 }
