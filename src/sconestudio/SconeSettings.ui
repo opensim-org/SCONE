@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>457</width>
-    <height>371</height>
+    <width>413</width>
+    <height>288</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="foldersTab">
       <attribute name="title">
        <string>General</string>
       </attribute>
@@ -98,7 +98,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="dataTab">
       <attribute name="title">
        <string>Data</string>
       </attribute>
@@ -108,7 +108,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
+     <widget class="QWidget" name="advancedTab">
       <attribute name="title">
        <string>Advanced</string>
       </attribute>
@@ -118,7 +118,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
+     <widget class="QWidget" name="studioTab">
       <attribute name="title">
        <string>User Interface</string>
       </attribute>
@@ -132,6 +132,53 @@
           <bool>true</bool>
          </attribute>
         </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="hfdTab">
+      <attribute name="title">
+       <string>Hyfydy</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Hyfydy is state-of-the-art software for high-performance musculoskeletal simulation. A valid license key is required in order to use Hyfydy in SCONE.</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="hfdEnabled">
+         <property name="text">
+          <string>Enable Hyfydy (requires license key)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="hfdLicenseKey">
+         <property name="placeholderText">
+          <string>Copy license key here</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>50</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>

@@ -64,6 +64,13 @@ namespace scone
 		ui.studioTree->setModel( studioModel );
 		ui.studioTree->expandAll();
 
+#ifdef SCONE_HYFYDY
+		ui.hfdEnabled->setCheckState( scone_settings.get<bool>( "hyfydy.enabled" ) ? Qt::Checked : Qt::Unchecked );
+		ui.hfdLicenseKey->setPlainText( QString( scone_settings.get<String>( "hyfydy.license" ).c_str() ) );
+#else
+		ui.tabWidget->removeTab( ui.tabWidget->indexOf( ui.hfdTab ) );
+#endif
+
 		for ( int i = 0; i < 3; i++ )
 		{
 			ui.advancedTree->resizeColumnToContents( i );
@@ -83,6 +90,10 @@ namespace scone
 			for ( auto& item : data_checkboxes )
 				scone_settings.set< bool >( "data." + item.first, item.second->checkState() == Qt::Checked );
 
+#ifdef SCONE_HYFYDY
+			scone_settings.set( "hyfydy.enabled", ui.hfdEnabled->isChecked() );
+			scone_settings.set( "hyfydy.license", ui.hfdLicenseKey->toPlainText().toStdString() );
+#endif
 			scone_settings.save();
 			studio_settings.save();
 		}
