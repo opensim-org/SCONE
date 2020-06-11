@@ -96,8 +96,6 @@ if(${Qt5Widgets_FOUND})
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
 	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )
-	include( PrecompiledHeaders )
-	use_precompiled_headers( SOURCE_FILES "stdafx.h" "stdafx.cpp" 256 )
 
 	add_executable(sconestudio ${STUDIOFILES} ${QTFILES} ${PRECOMPILED_HEADER_FILES} ${UI_HEADERS} ${RESOURCEFILES} )
 
@@ -140,12 +138,12 @@ if(${Qt5Widgets_FOUND})
 
 	if (SCONE_OPENSIM_3)
 		target_link_libraries(sconestudio sconeopensim3)
-		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_3 )
+		target_compile_definitions(sconestudio PRIVATE SCONE_OPENSIM_3)
 	endif()
 
 	if (SCONE_OPENSIM_4)
 		target_link_libraries(sconestudio sconeopensim4)
-		target_compile_definitions( sconestudio PRIVATE SCONE_OPENSIM_4 )
+		target_compile_definitions(sconestudio PRIVATE SCONE_OPENSIM_4)
 	endif()
 
 	if (SCONE_HYFYDY)
@@ -155,20 +153,29 @@ if(${Qt5Widgets_FOUND})
 
 	if (SCONE_LUA)
 		target_link_libraries(sconestudio sconelua)
-		target_compile_definitions( sconestudio PRIVATE SCONE_LUA )
+		target_compile_definitions(sconestudio PRIVATE SCONE_LUA)
 	endif()
 
-	target_compile_definitions( sconestudio PRIVATE $<$<BOOL:${SCONE_ENABLE_PROFILER}>:SCONE_ENABLE_XO_PROFILING> )
+	target_compile_definitions(sconestudio PRIVATE $<$<BOOL:${SCONE_ENABLE_PROFILER}>:SCONE_ENABLE_XO_PROFILING>)
 
 	if(MSVC)
-		# no console in release mode
-		set_target_properties( sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS" )
-		target_compile_options( sconestudio PRIVATE "/MP" ) # multithreaded compilation on MSVC
+		# precompiled headers
+		target_precompile_headers(sconestudio PRIVATE
+			<string> <vector> <algorithm> <memory> <limits> <fstream>
+			<QWidget> <QString> <QColor> <QTimer> <QLabel> <QSlider> <QCheckBox> <QApplication> <QGridLayout> <QMainWindow> <QThread> <QMessageBox>
+			[["qcustomplot/qcustomplot.h"]]
+			<osgDB/ReadFile> <osgViewer/CompositeViewer> <osgQt/GraphicsWindowQt>
+		)
+		file (GLOB_RECURSE PRECOMPILED_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.*)
+		source_group("CMakePCH" FILES ${PRECOMPILED_HEADER_FILES})
 
-		source_group("Precompiled Header Files" FILES ${PRECOMPILED_HEADER_FILES} )
-		source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp" )
-		source_group("Studio Files" FILES ${STUDIOFILES} )
-		source_group("Resource Files" FILES ${RESOURCEFILES} )
+		# no console in release mode
+		set_target_properties(sconestudio PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:WINDOWS")
+		target_compile_options(sconestudio PRIVATE "/MP") # multithreaded compilation on MSVC
+
+		source_group("Qt Files" FILES ${QTFILES} ${UI_HEADERS} ${RESOURCES} "${CMAKE_CURRENT_BINARY_DIR}/sconestudio_automoc.cpp")
+		source_group("Studio Files" FILES ${STUDIOFILES})
+		source_group("Resource Files" FILES ${RESOURCEFILES})
 
 		# Write .sconeroot to build folder
 		file(WRITE "${CMAKE_BINARY_DIR}/.sconeroot" ${CMAKE_SOURCE_DIR})
@@ -180,7 +187,7 @@ if(${Qt5Widgets_FOUND})
 		)
 
 		# Copy Qt DLLs to the binary directory.
-		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport )
+		SET(QT5_LIBS Qt5Widgets Qt5Core Qt5Gui Qt5OpenGl Qt5PrintSupport)
 		foreach(qt5lib ${QT5_LIBS})
 			add_custom_command(TARGET sconestudio POST_BUILD
 				COMMAND ${CMAKE_COMMAND} -E copy_if_different ${Qt5Widgets_DIR}/../../../bin/${qt5lib}$<$<CONFIG:debug>:d>.dll ${DLL_TARGET_DIR}
@@ -224,10 +231,10 @@ if(${Qt5Widgets_FOUND})
 
 		# Copy OSG DLLs
 		# get OSG_INSTALL_DIR
-		get_filename_component( OSG_INSTALL_DIR ${OSG_INCLUDE_DIR} DIRECTORY )
+		get_filename_component(OSG_INSTALL_DIR ${OSG_INCLUDE_DIR} DIRECTORY)
 		set(OSG_DLL_DIR ${OSG_INSTALL_DIR}/bin CACHE PATH "Installation directory of OpenSceneGraph")
 
-		set(OSG_DLL_PREFIX "osg131-" CACHE STRING "Prefix of OpenSceneGraph DLLs. Yes, you need to set this by hand :-(" )
+		set(OSG_DLL_PREFIX "osg131-" CACHE STRING "Prefix of OpenSceneGraph DLLs. Yes, you need to set this by hand :-(")
 		SET(OSG_DLLS
 			${OSG_DLL_PREFIX}osg ${OSG_DLL_PREFIX}osgwidget ${OSG_DLL_PREFIX}osgqt
 			${OSG_DLL_PREFIX}osgga ${OSG_DLL_PREFIX}osgviewer ${OSG_DLL_PREFIX}osgutil
@@ -240,8 +247,8 @@ if(${Qt5Widgets_FOUND})
 		endforeach()
 
 		# Copy osg png plugin
-		set(OSG_PLUGINS_FOLDER "osgPlugins-3.4.1" CACHE STRING "Prefix of OpenSceneGraph Plugins folder. Yes, you need to set this by hand :-(" )
-		add_custom_command(TARGET sconestudio POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}" )
+		set(OSG_PLUGINS_FOLDER "osgPlugins-3.4.1" CACHE STRING "Prefix of OpenSceneGraph Plugins folder. Yes, you need to set this by hand :-(")
+		add_custom_command(TARGET sconestudio POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "${DLL_TARGET_DIR}/${OSG_PLUGINS_FOLDER}")
 		set(OSG_PLUGINS osgdb_png osgdb_obj osgdb_stl)
 		foreach(osgplugin ${OSG_PLUGINS})
 			add_custom_command(TARGET sconestudio POST_BUILD
