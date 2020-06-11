@@ -2,9 +2,7 @@
 
 #include "xo/container/prop_node_tools.h"
 #include "scone/core/Log.h"
-#include "scone/model/Model.h"
 #include "scone/model/Actuator.h"
-#include "scone/optimization/Params.h"
 #include "lua_api.h"
 
 namespace scone
