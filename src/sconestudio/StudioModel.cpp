@@ -26,7 +26,8 @@
 #include "xo/serialization/serialize.h"
 
 #include "StudioSettings.h"
-#include "QMessageBox"
+
+#include <QMessageBox>
 #include "qt_convert.h"
 
 namespace scone

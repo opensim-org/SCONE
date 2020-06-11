@@ -9,7 +9,7 @@
 #include "ResultsFileSystemModel.h"
 #include "xo/system/log.h"
 #include <algorithm>
-#include "QDirIterator"
+#include <QDirIterator>
 #include <iostream>
 #include "xo/container/prop_node_tools.h"
 #include "xo/system/error_code.h"

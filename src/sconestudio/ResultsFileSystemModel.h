@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "QFileSystemModel"
-#include "QDateTime"
+#include <QFileSystemModel>
+#include <QDateTime>
 
 class ResultsFileSystemModel : public QFileSystemModel
 {

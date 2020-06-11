@@ -35,7 +35,6 @@
 #include "scone/optimization/opt_tools.h"
 
 #include <QFileDialog>
-#include <QFileSystemModel>
 #include <QMessageBox>
 #include <QTabWidget>
 #include <QTextStream>
