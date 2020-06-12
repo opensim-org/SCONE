@@ -43,9 +43,6 @@ namespace scone
 		/// Number of initial steps of which the velocity is disregarded in the final measure; default = 2.
 		int initiation_steps;
 
-		/// Name of the upper body, used for gait detection; default = "torso"
-		String upper_body;
-
 		/// Name of the base bodies (i.e. feet), used for gait detection; default = "toes_l toes_r"
 		String base_bodies;
 
@@ -64,8 +61,7 @@ namespace scone
 		};
 		std::vector< Step > steps_;
 
-		Body* m_UpperBody;
-		std::vector< Body* > m_BaseBodies;
+		std::vector< const Body* > m_BaseBodies;
 		Real GetGaitDist( const Model &model );
 
 		bool HasNewFootContact( const Model& model );
