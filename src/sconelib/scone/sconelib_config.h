@@ -30,7 +30,7 @@
 
 namespace scone
 {
-	void Initialize()
+	inline void Initialize()
 	{
 		// register .scone file format
 		xo::register_file_extension< xo::prop_node_serializer_zml >( "scone" );

@@ -22,6 +22,7 @@
 #include "xo/container/flat_map.h"
 #include "StudioSettings.h"
 #include "QSettingsItemModel.h"
+#include "scone/sconelib_config.h"
 
 namespace scone
 {
@@ -65,8 +66,10 @@ namespace scone
 		ui.studioTree->expandAll();
 
 #ifdef SCONE_HYFYDY
-		ui.hfdEnabled->setCheckState( scone_settings.get<bool>( "hyfydy.enabled" ) ? Qt::Checked : Qt::Unchecked );
-		ui.hfdLicenseKey->setPlainText( QString( scone_settings.get<String>( "hyfydy.license" ).c_str() ) );
+		bool hfd_enabled = scone_settings.get<bool>( "hyfydy.enabled" );
+		auto hfd_license = scone_settings.get<String>( "hyfydy.license" );
+		ui.hfdEnabled->setCheckState( hfd_enabled ? Qt::Checked : Qt::Unchecked );
+		ui.hfdLicenseKey->setPlainText( to_qt( hfd_license ) );
 #else
 		ui.tabWidget->removeTab( ui.tabWidget->indexOf( ui.hfdTab ) );
 #endif
@@ -91,8 +94,15 @@ namespace scone
 				scone_settings.set< bool >( "data." + item.first, item.second->checkState() == Qt::Checked );
 
 #ifdef SCONE_HYFYDY
-			scone_settings.set( "hyfydy.enabled", ui.hfdEnabled->isChecked() );
-			scone_settings.set( "hyfydy.license", ui.hfdLicenseKey->toPlainText().toStdString() );
+			auto hfd_new_license = ui.hfdLicenseKey->toPlainText().toStdString();
+			auto hfd_new_enabled = ui.hfdEnabled->isChecked();
+			if ( hfd_new_license != hfd_license || hfd_enabled != hfd_new_enabled )
+			{
+				scone_settings.set( "hyfydy.license", hfd_new_license );
+				scone_settings.set( "hyfydy.enabled", hfd_new_enabled );
+				if ( hfd_new_enabled )
+					RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ).c_str() );
+			}
 #endif
 			scone_settings.save();
 			studio_settings.save();
