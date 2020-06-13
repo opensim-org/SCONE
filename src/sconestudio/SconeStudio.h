@@ -98,6 +98,11 @@ public slots:
 	void toggleComments() { if ( auto* e = getActiveCodeEditor() ) e->toggleComments(); }
 	void resetWindowLayout();
 
+	void deleteSelectedFileOrFolder();
+	void sortFileOrFolderByDate();
+	void sortFileOrFolderByName();
+	void onResultBrowserCustomContextMenu(const QPoint &);
+
 public:
 	bool close_all;
 	bool isRecording() { return !captureFilename.isEmpty(); }
@@ -156,6 +161,8 @@ private:
 	// gait analysis
 	scone::GaitAnalysis* gaitAnalysis;
 	QDockWidget* gaitAnalysisDock;
+
+	QModelIndex currResultModelIdx;
 
 	// parameters
 	QTableView* parView;
