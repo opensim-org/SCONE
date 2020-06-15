@@ -32,6 +32,12 @@ namespace scone
 		/// Bool indicating if function should be the same for left and right; default = true.
 		bool symmetric;
 
+		/// Actuator names to include (semicolon separated); default = "*"
+		String include;
+
+		/// Actuator names to exclude (semicolon separated); default = ""
+		String exclude;
+
 		virtual bool ComputeControls( Model& model, double timestamp ) override;
 		virtual String GetClassSignature() const override;
 
