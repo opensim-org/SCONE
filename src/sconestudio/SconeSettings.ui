@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>413</width>
-    <height>288</height>
+    <width>558</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -162,8 +162,27 @@
        </item>
        <item>
         <widget class="QPlainTextEdit" name="hfdLicenseKey">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="placeholderText">
-          <string>Copy license key here</string>
+          <string>Enter license key here</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="hfdRequest">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Request Hyfydy License</string>
          </property>
         </widget>
        </item>

@@ -9,6 +9,7 @@
 #include "SettingsEditor.h"
 
 #include <QDialog>
+#include <QMessageBox>
 #include "qt_convert.h"
 #include "QPropNodeItemModel.h"
 
@@ -70,6 +71,11 @@ namespace scone
 		auto hfd_license = scone_settings.get<String>( "hyfydy.license" );
 		ui.hfdEnabled->setCheckState( hfd_enabled ? Qt::Checked : Qt::Unchecked );
 		ui.hfdLicenseKey->setPlainText( to_qt( hfd_license ) );
+		QObject::connect( ui.hfdRequest, &QPushButton::clicked, []() {
+			auto hid = to_qt( GetHardwareId() );
+			QApplication::clipboard()->setText( hid );
+			auto message = "Please send the following hardware ID along with your request (copied to clipboard):\n\n" + hid;
+			QMessageBox::information( NULL, "Hyfydy License Request", message ); });
 #else
 		ui.tabWidget->removeTab( ui.tabWidget->indexOf( ui.hfdTab ) );
 #endif
