@@ -18,23 +18,32 @@
 namespace scone
 {
 	FeedForwardController::FeedForwardController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
-	Controller( props, par, model, target_area )
+		Controller( props, par, model, target_area ),
+		INIT_MEMBER( props, symmetric, target_area.symmetric_ ),
+		INIT_MEMBER( props, include, "*" ),
+		INIT_MEMBER( props, exclude, "" )
 	{
 		INIT_PROP( props, symmetric, target_area.symmetric_ );
 
 		// setup actuator info
+		auto incl = xo::pattern_matcher( include );
+		auto excl = xo::pattern_matcher( exclude );
 		auto& actuators = model.GetActuators();
 		for ( size_t idx = 0; idx < actuators.size(); ++idx )
 		{
-			ActInfo ai;
-			ai.full_name = actuators[ idx ]->GetName();
-			ai.name = GetNameNoSide( ai.full_name );
-			ai.side = GetSideFromName( ai.full_name );
-			ai.actuator_idx = idx;
+			const auto& name = actuators[ idx ]->GetName();
+			if ( incl( name ) && !excl( name ) )
+			{
+				ActInfo ai;
+				ai.full_name = actuators[ idx ]->GetName();
+				ai.name = GetNameNoSide( ai.full_name );
+				ai.side = GetSideFromName( ai.full_name );
+				ai.actuator_idx = idx;
 
-			// see if this actuator is on the right side
-			if ( target_area.side_ == NoSide || target_area.side_ == ai.side )
-				m_ActInfos.push_back( ai );
+				// see if this actuator is on the right side
+				if ( target_area.side_ == NoSide || target_area.side_ == ai.side )
+					m_ActInfos.push_back( ai );
+			}
 		}
 
 		for ( ActInfo& ai : m_ActInfos )

@@ -92,7 +92,7 @@ results {
 optimizer {
 	evaluator {
 		type = number
-		label = "Evaluator: 0=sequential, 1=batch, 2=async, 3=pooled"
+		label = "Evaluate sync=0, batch=1, async=2, pool=3"
 		default = 2
 	}
 	max_threads {
