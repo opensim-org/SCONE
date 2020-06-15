@@ -7,10 +7,11 @@
 */
 
 #include "BodyPointReflex.h"
-#include "../model/Sensors.h"
-#include "../model/SensorDelayAdapter.h"
-#include "../model/Actuator.h"
-#include "../core/HasName.h"
+#include "scone/model/Sensors.h"
+#include "scone/model/Model.h"
+#include "scone/model/SensorDelayAdapter.h"
+#include "scone/model/Actuator.h"
+#include "scone/core/HasName.h"
 
 namespace scone
 {

@@ -14,7 +14,8 @@
 namespace scone
 {
 	SequentialController::SequentialController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	CompositeController( props, par, model, loc )
+		CompositeController( props, par, model, loc ),
+		active_idx_( 0 )
 	{
 		const PropNode& trans_pn = props.get_child( "transition_intervals" );
 		SCONE_ERROR_IF( controllers_.empty(), "No Controllers defined in SequentialController" );
@@ -32,7 +33,14 @@ namespace scone
 
 	bool SequentialController::ComputeControls( Model& model, double timestamp )
 	{
-		return controllers_[ GetActiveIdx( timestamp ) ]->UpdateControls( model, timestamp );
+		active_idx_ = GetActiveIdx( timestamp );
+		return controllers_[ active_idx_ ]->UpdateControls( model, timestamp );
+	}
+
+	void SequentialController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		auto name = GetName().empty() ? "SequentialController" : GetName();
+		frame[ name + ".active_index" ] = static_cast<double>( active_idx_ );
 	}
 
 	bool SequentialController::PerformAnalysis( const Model& model, double timestamp )

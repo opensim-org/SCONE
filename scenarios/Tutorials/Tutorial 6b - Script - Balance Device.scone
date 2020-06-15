@@ -5,7 +5,7 @@ CmaOptimizer {
 		max_duration = 10
 		
 		# Model used in simulation
-		OpenSimModel {
+		ModelOpenSim3 {
 			model_file = data/Human0914.osim
 			fixed_control_step_size = 0.005 # higher step sizes give better performance
 			enable_external_forces = 1 # Required when applying external forces

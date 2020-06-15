@@ -7,42 +7,46 @@
 */
 
 #include "SconeStudio.h"
+
 #include "StudioSettings.h"
 #include "studio_config.h"
 #include "ui_SconeSettings.h"
-
-#include "scone/core/system_tools.h"
-#include "scone/core/Log.h"
-#include "scone/core/profiler_config.h"
-#include "scone/core/Settings.h"
-#include "scone/core/Factories.h"
-#include "scone/optimization/Optimizer.h"
-#include "scone/optimization/opt_tools.h"
-
-#include "vis/plane.h"
-#include "vis-osg/osg_tools.h"
-#include "vis-osg/osg_object_manager.h"
-
-#include "xo/utility/color.h"
-#include "xo/filesystem/filesystem.h"
-#include "xo/system/system_tools.h"
-#include "xo/container/container_tools.h"
-
-#include <osgDB/ReadFile>
-#include <QFileSystemModel>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QTextStream>
-#include <QTabWidget>
-#include "qcustomplot.h"
-#include "qt_convert.h"
-#include "xo/container/prop_node_tools.h"
-#include "scone/model/muscle_tools.h"
-#include "scone/core/storage_tools.h"
-#include "scone/core/StorageIo.h"
 #include "GaitAnalysis.h"
 #include "OptimizerTaskExternal.h"
 #include "OptimizerTaskThreaded.h"
+
+#include "xo/container/container_tools.h"
+#include "xo/container/prop_node_tools.h"
+#include "xo/filesystem/filesystem.h"
+#include "xo/system/system_tools.h"
+#include "xo/utility/color.h"
+
+#include "scone/core/Benchmark.h"
+#include "scone/core/Factories.h"
+#include "scone/core/Log.h"
+#include "scone/core/Settings.h"
+#include "scone/core/StorageIo.h"
+#include "scone/core/profiler_config.h"
+#include "scone/core/storage_tools.h"
+#include "scone/core/system_tools.h"
+#include "scone/core/version.h"
+#include "scone/model/muscle_tools.h"
+#include "scone/optimization/Optimizer.h"
+#include "scone/optimization/opt_tools.h"
+
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTabWidget>
+#include <QTextStream>
+#include <osgDB/ReadFile>
+
+#include "qcustomplot.h"
+#include "qt_convert.h"
+
+#include "vis-osg/osg_object_manager.h"
+#include "vis-osg/osg_tools.h"
+#include "vis/plane.h"
+#include "help_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -74,7 +78,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	editMenu->addAction( "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
 	editMenu->addAction( "Find &Previous", this, &SconeStudio::findPrevious, QKeySequence( "Shift+F3" ) );
 	editMenu->addSeparator();
-	editMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog );
+	editMenu->addAction( "&Toggle Comments", this, &SconeStudio::toggleComments, QKeySequence( "Ctrl+/" ) );
 
 	auto viewMenu = menuBar()->addMenu( "&View" );
 	viewActions[ ModelVis::ShowForces ] = viewMenu->addAction( "Show External &Forces", this, &SconeStudio::updateViewSettings );
@@ -82,7 +86,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	viewActions[ ModelVis::ShowTendons ] = viewMenu->addAction( "Show &Tendons", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowBodyGeom ] = viewMenu->addAction( "Show &Body Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowBodyAxes ] = viewMenu->addAction( "Show Body &Axes", this, &SconeStudio::updateViewSettings );
-	viewActions[ ModelVis::ShowBodyCom] = viewMenu->addAction( "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowBodyCom ] = viewMenu->addAction( "Show Body Cente&r of Mass", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowJoints ] = viewMenu->addAction( "Show &Joints", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowContactGeom ] = viewMenu->addAction( "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowGroundPlane ] = viewMenu->addAction( "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
@@ -96,12 +100,12 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	scenarioMenu->addAction( "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
 	scenarioMenu->addSeparator();
 	scenarioMenu->addAction( "&Optimize Scenario", this, &SconeStudio::optimizeScenario, QKeySequence( "Ctrl+F5" ) );
-	scenarioMenu->addAction( "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ));
+	scenarioMenu->addAction( "Run &Multiple Optimizations", this, &SconeStudio::optimizeScenarioMultiple, QKeySequence( "Ctrl+Shift+F5" ) );
 	scenarioMenu->addSeparator();
 	scenarioMenu->addAction( "&Abort Optimizations", this, &SconeStudio::abortOptimizations, QKeySequence() );
 	scenarioMenu->addSeparator();
-	scenarioMenu->addAction( "&Performance Test (Profile)", this, &SconeStudio::performanceTestProfile, QKeySequence( "Ctrl+P" ) );
-	scenarioMenu->addAction( "Performance Test (&Raw)", this, &SconeStudio::performanceTestNoProfile, QKeySequence( "Ctrl+Shift+P" ) );
+	scenarioMenu->addAction( "&Performance Test", this, &SconeStudio::performanceTestNormal, QKeySequence( "Ctrl+P" ) );
+	scenarioMenu->addAction( "Performance Test (Write Stats)", this, &SconeStudio::performanceTestWriteStats, QKeySequence( "Ctrl+Shift+P" ) );
 
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	toolsMenu->addAction( "Generate &Video...", this, &SconeStudio::createVideo );
@@ -130,13 +134,15 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	actionMenu->addAction( "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
 
 	createWindowMenu();
-	createHelpMenu();
+
+	auto helpMenu = menuBar()->addMenu( ( "&Help" ) );
+	helpMenu->addAction( "View &Help...", this, &SconeStudio::helpSearch, QKeySequence( "F1" ) );
+	helpMenu->addAction( "User &Forum...", this, &SconeStudio::helpSearch );
+	helpMenu->addSeparator();
+	helpMenu->addAction( "&About...", this, &SconeStudio::helpAbout );
 
 	ui.stackedWidget->setCurrentIndex( 0 );
 	ui.playControl->setDigits( 6, 3 );
-
-	// gait analysis
-	gaitAnalysis = new GaitAnalysis( this );
 
 	// docking
 	setDockNestingEnabled( true );
@@ -154,14 +160,32 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, analysis_dock );
 
+	// gait analysis
+	gaitAnalysis = new GaitAnalysis( this );
 	gaitAnalysisDock = createDockWidget( "&Gait Analysis", gaitAnalysis, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, gaitAnalysisDock );
 	gaitAnalysisDock->hide();
+
+	// parameter view
+	parView = new QTableView( this );
+	parModel = new ParTableModel();
+	parView->setModel( parModel );
+	for ( int i = 0; i < parView->horizontalHeader()->count(); ++i )
+		parView->horizontalHeader()->setSectionResizeMode( i, i == 0 ? QHeaderView::Stretch : QHeaderView::ResizeToContents );
+	parView->verticalHeader()->setSectionResizeMode( QHeaderView::Fixed );
+	parView->verticalHeader()->setDefaultSectionSize( 24 );
+	parViewDock = createDockWidget( "Optimization &Parameters", parView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, parViewDock );
+	parViewDock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
 	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
 	//tabifyDockWidget( analysis_dock, ddw );
+
+	// add window menu option
+	windowMenu->addSeparator();
+	windowMenu->addAction( "Reset Window Layout", this, &SconeStudio::resetWindowLayout );
 
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );
@@ -203,7 +227,14 @@ bool SconeStudio::init()
 	ui.outputText->set_sink_mode( xo::log::sink_mode::current_thread );
 	ui.outputText->set_log_level( XO_IS_DEBUG_BUILD ? xo::log::level::trace : xo::log::level::debug );
 
-	restoreSettings( "SCONE", "SconeStudio" );
+	createSettings( "SCONE", "SconeStudio" );
+	if ( GetStudioSetting<bool>( "ui.reset_layout" ) )
+	{
+		GetStudioSettings().set( "ui.reset_layout", false );
+		GetStudioSettings().save();
+	}
+	else restoreSettings();
+
 	ui.messagesDock->raise();
 
 	return true;
@@ -214,7 +245,7 @@ SconeStudio::~SconeStudio()
 
 void SconeStudio::restoreCustomSettings( QSettings& settings )
 {
-	if ( settings.contains( "viewSettings"))
+	if ( settings.contains( "viewSettings" ) )
 	{
 		ModelVis::ViewSettings f( settings.value( "viewSettings" ).toULongLong() );
 		for ( auto& va : viewActions )
@@ -227,7 +258,7 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 	ModelVis::ViewSettings f;
 	for ( auto& va : viewActions )
 		f.set( va.first, va.second->isChecked() );
-	settings.setValue( "viewSettings", QVariant(uint(f.data())));
+	settings.setValue( "viewSettings", QVariant( uint( f.data() ) ) );
 }
 
 void SconeStudio::activateBrowserItem( QModelIndex idx )
@@ -337,6 +368,9 @@ void SconeStudio::createVideo()
 {
 	if ( !scenario_ )
 		return error( "No Scenario", "There is no scenario open" );
+
+	if ( auto p = GetStudioSetting<path>( "video.path_to_ffmpeg" ); !xo::file_exists( p ) )
+		return error( "Could not find ffmpeg", to_qt( "Could not find " + p.str() ) );
 
 	if ( ui.viewerDock->isFloating() ) {
 		auto borderSize = ui.viewerDock->size() - ui.osgViewer->size();
@@ -453,7 +487,7 @@ void SconeStudio::openFile( const QString& filename )
 		updateRecentFilesMenu( filename );
 		createAndVerifyActiveScenario( false );
 	}
-	catch ( std::exception & e ) { error( "Error opening " + filename, e.what() ); }
+	catch ( std::exception& e ) { error( "Error opening " + filename, e.what() ); }
 }
 
 void SconeStudio::fileSaveTriggered()
@@ -499,6 +533,30 @@ void SconeStudio::fileCloseTriggered()
 {
 	if ( auto idx = ui.tabWidget->currentIndex(); idx >= 0 )
 		tabCloseRequested( idx );
+}
+
+void SconeStudio::helpSearch()
+{
+	if ( auto* s = getActiveCodeEditor() )
+	{
+		auto cursor = s->textCursor();
+		cursor.select( QTextCursor::WordUnderCursor );
+		QDesktopServices::openUrl( scone::GetHelpUrl( cursor.selectedText() ) );
+	}
+	else QDesktopServices::openUrl( scone::GetHelpUrl( "" ) );
+}
+
+void SconeStudio::helpForum()
+{
+	QDesktopServices::openUrl( QUrl( "https://simtk.org/plugins/phpBB/indexPhpbb.php?group_id=1180&pluginname=phpBB" ) );
+}
+
+void SconeStudio::helpAbout()
+{
+	QString title = to_qt( "SCONE version " + xo::to_str( GetSconeVersion() ) );
+	QString author = "Copyright (C) 2013 - 2020 Thomas Geijtenbeek and contributors. All rights reserved.";
+	QString license = "SCONE is licensed under the GNU General Public License. It depends on the following libraries):\n\tOpenSim 3.3 (Apache 2.0)\n\tSimbody (Apache 2.0)\n\tQt (GPL / LGPL)\n\tQCustomPlot (GPL v3)\n\tOpenSceneGraph (OSGPL)\n\tLua (MIT)\n\tSol 3 (MIT)\n\tTCLAP (MIT)\n\txo (Apache 2.0)\n\tspot (Apache 2.0)\n\tvis (Apache 2.0)\n\tqtfx (Apache 2.0";
+	information( "About SCONE", title + "\n\n" + author + "\n\n" + license );
 }
 
 bool SconeStudio::tryExit()
@@ -554,6 +612,8 @@ bool SconeStudio::createScenario( const QString& any_file )
 {
 	scenario_.reset();
 	analysisStorageModel.setStorage( nullptr );
+	parModel->setObjectiveInfo( nullptr );
+	parViewDock->setWindowTitle( "Optimization Parameters" );
 
 	try
 	{
@@ -561,12 +621,13 @@ bool SconeStudio::createScenario( const QString& any_file )
 		scenario_ = std::make_unique< StudioModel >( scene_, path_from_qt( any_file ) );
 		updateViewSettings();
 
-		// update analysis
+		// update analysis and parview
 		analysisStorageModel.setStorage( &scenario_->GetData() );
 		analysisView->reset();
-
+		parModel->setObjectiveInfo( &scenario_->GetOjective().info() );
+		parViewDock->setWindowTitle( QString( "Optimization Parameters (%1)" ).arg( scenario_->GetOjective().info().size() ) );
 	}
-	catch ( std::exception & e )
+	catch ( std::exception& e )
 	{
 		error( "Error loading scenario", e.what() );
 		scenario_.reset();
@@ -749,25 +810,30 @@ void SconeStudio::evaluateActiveScenario()
 	}
 }
 
-void SconeStudio::performanceTest( bool profile )
+void SconeStudio::performanceTest( bool write_stats )
 {
-	ui.playControl->stop();
 	if ( createAndVerifyActiveScenario( false ) )
 	{
-		xo::timer real_time;
-		if ( profile )
-			SCONE_PROFILE_START;
-		auto& model = scenario_->GetModel();
-		model.SetStoreData( false );
-		model.AdvanceSimulationTo( model.GetSimulationEndTime() );
-		auto real_dur = real_time().seconds();
-		auto sim_time = model.GetTime();
-		if ( profile )
-			SCONE_PROFILE_REPORT;
-		log::info( "fitness = ", scenario_->GetModelObjective().GetResult( model ) );
-		if ( auto sim_report = model.GetSimulationReport(); !sim_report.empty() )
-			log::info( sim_report );
-		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+		auto par = SearchPoint( scenario_->GetModelObjective().info() );
+		if ( !write_stats )
+		{
+			xo::timer real_time;
+			auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
+			model->SetStoreData( false );
+			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
+			auto real_dur = real_time().seconds();
+			auto sim_time = model->GetTime();
+			if ( model->GetProfiler().enabled() )
+				model->GetProfiler().log_results();
+			log::info( "fitness = ", scenario_->GetModelObjective().GetResult( *model ) );
+			if ( auto sim_report = model->GetSimulationReport(); !sim_report.empty() )
+				log::info( sim_report );
+			log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+		}
+		else
+		{
+			scone::BenchmarkScenario( scenario_->GetScenarioProps(), scenario_->GetFileName(), 8 );
+		}
 	}
 }
 
@@ -858,11 +924,22 @@ void SconeStudio::updateTabTitles()
 		ui.tabWidget->setTabText( getTabIndex( s ), s->getTitle() );
 }
 
+void SconeStudio::resetWindowLayout()
+{
+	GetStudioSettings().set( "ui.reset_layout", true );
+	GetStudioSettings().save();
+	information( "Reset Window Layout", "Please restart SCONE for the changes to take effect" );
+}
+
 void SconeStudio::finalizeCapture()
 {
 	ui.osgViewer->stopCapture();
 
-	QString program = to_qt( xo::get_application_dir() / SCONE_FFMPEG_EXECUTABLE );
+	const auto ffmpeg = GetStudioSetting<path>( "video.path_to_ffmpeg" );
+	if ( !xo::file_exists( ffmpeg ) )
+		return error( "Could not find ffmpeg", to_qt( "Could not find " + ffmpeg.str() ) );
+
+	QString program = to_qt( ffmpeg );
 	QStringList args;
 	args << "-r" << to_qt( GetStudioSettings().get<string>( "video.frame_rate" ) )
 		<< "-i" << captureFilename + ".images/image_0_%d.png"

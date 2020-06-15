@@ -124,7 +124,7 @@ namespace scone
 			cma.OutputStatus( std::move( pn ) );
 		}
 
-		timer_.reset();
+		timer_.restart();
 		number_of_evaluations_ = 0;
 	}
 
@@ -154,6 +154,7 @@ namespace scone
 		pn.set( "step_median", xo::median( cma.current_step_fitnesses() ) );
 		pn.set( "trend_offset", cma.fitness_trend().offset() );
 		pn.set( "trend_slope", cma.fitness_trend().slope() );
+		pn.set( "progress", cma.progress() );
 		pn.set( "time", t );
 		pn.set( "number_of_evaluations", number_of_evaluations_ );
 		pn.set( "evaluations_per_sec", number_of_evaluations_ / t );

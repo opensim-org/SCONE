@@ -18,25 +18,30 @@ namespace scone
 {
 	xo_smart_enum_class( penalty_mode, average, lowest, highest );
 
-	/// Helper class to compute penalty if a value is outside a specific range. The penalty corresponds to
+	/// Helper type to compute penalty if a value is outside a specific Range. The penalty corresponds to
 	/// ''abs_penalty * | _E_ | + squared_penalty * _E_^2'',
-	/// where _E_ is the amount a value is out of the specified range.
-	template< typename T > class RangePenalty
+	/// where _E_ is the amount a value is out of the specified Range.
+	template< typename T > class RangePenalty : public Range<T>
 	{
 	public:
-		RangePenalty() : range( xo::constants<T>::lowest(), xo::constants<T>::max() ), abs_penalty( 0 ), squared_penalty( 0 ) { }
+		RangePenalty() :
+			Range<T>( T( -xo::constantsd::infinity() ), T( xo::constantsd::infinity() ) ), // compatible with angle_
+			abs_penalty( 0 ),
+			squared_penalty( 0 ),
+			mode_( penalty_mode::average )
+		{}
 
 		RangePenalty( const PropNode& prop ) :
-			range( prop ),
+			Range<T>( prop ),
 			abs_penalty( prop.get_any( { "abs_penalty", "abs_range_penalty" }, 0.0 ) ),
 			squared_penalty( prop.get_any( { "squared_penalty", "squared_range_penalty" }, 0.0 ) ),
 			mode_( prop.get<penalty_mode>( "mode", penalty_mode::average ) )
-		{
-		}
-		virtual ~RangePenalty() {}
+		{}
+
+		virtual ~RangePenalty() = default;
 
 		void AddSample( TimeInSeconds timestamp, const T& value ) {
-			auto range_violation = range.GetRangeViolation( value );
+			auto range_violation = this->GetRangeViolation( value );
 			auto abs_pen = abs( range_violation );
 			auto pen = abs_penalty * abs( range_violation ) + squared_penalty * GetSquared( range_violation );
 			penalty.AddSample( timestamp, pen );
@@ -57,8 +62,7 @@ namespace scone
 
 		size_t GetNumSamples() const { return penalty.GetNumSamples(); }
 
-		/// Specify the valid range, set through parameters 'min' and 'max'; defaults to { min = -inf max = inf }
-		Range< T > range;
+		bool IsEmpty() const { return penalty.GetNumSamples() == 0; }
 
 		/// Absolute penalty factor when value is out of range; default = 0.
 		Real abs_penalty;

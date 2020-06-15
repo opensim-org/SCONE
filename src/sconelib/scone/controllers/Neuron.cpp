@@ -154,8 +154,6 @@ namespace scone
 
 	void Neuron::AddInputs( const PropNode& pn, Params& par, NeuralController& nc )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		// see if there's an input
 		connection_t connect = connection_dict( pn.get< string >( "connect", pn.has_key( "source" ) ? "source" : "none" ) );
 		string input_type = pn.get< string >( "type", "*" );

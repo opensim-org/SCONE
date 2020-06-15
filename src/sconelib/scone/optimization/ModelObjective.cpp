@@ -12,11 +12,13 @@
 #include "scone/core/Log.h"
 #include "xo/filesystem/filesystem.h"
 #include "opt_tools.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {
 	ModelObjective::ModelObjective( const PropNode& props, const path& find_file_folder ) :
-		Objective( props, find_file_folder )
+		Objective( props, find_file_folder ),
+		evaluation_step_size_( XO_IS_DEBUG_BUILD ? 0.01 : 0.25 )
 	{
 		// create internal model using the ORIGINAL prop_node to flag unused model props and create par_info_
 		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
@@ -24,11 +26,11 @@ namespace scone
 
 		// create a controller that's defined OUTSIDE the model prop_node
 		if ( controller_props = TryFindFactoryProps( GetControllerFactory(), props, "Controller" ) )
-			model_->SetController( CreateController( controller_props, info_, *model_, Location() ) );
+			model_->CreateController( controller_props, info_ );
 
 		// create a measure that's defined OUTSIDE the model prop_node
 		if ( measure_props = TryFindFactoryProps( GetMeasureFactory(), props, "Measure" ) )
-			model_->SetMeasure( CreateMeasure( measure_props, info_, *model_, Location() ) );
+			model_->CreateMeasure( measure_props, info_ );
 
 		// update the minimize flag in objective_info
 		if ( model_->GetMeasure() )
@@ -53,7 +55,12 @@ namespace scone
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
 		m.SetSimulationEndTime( GetDuration() );
-		AdvanceSimulationTo( m, GetDuration() );
+		for ( TimeInSeconds t = evaluation_step_size_; !m.HasSimulationEnded(); t += evaluation_step_size_ )
+		{
+			if ( st.stop_requested() )
+				return xo::error_message( "Optimization canceled" );
+			AdvanceSimulationTo( m, t );
+		}
 		return GetResult( m );
 	}
 
@@ -63,10 +70,10 @@ namespace scone
 		model->SetSimulationEndTime( GetDuration() );
 
 		if ( controller_props ) // A controller was defined OUTSIDE the model prop_node
-			model->SetController( CreateController( controller_props, par, *model, Location() ) );
+			model->CreateController( controller_props, par );
 
 		if ( measure_props ) // A measure was defined OUTSIDE the model prop_node
-			model->SetMeasure( CreateMeasure( measure_props, par, *model, Location() ) );
+			model->CreateMeasure( measure_props, par );
 
 		return model;
 	}

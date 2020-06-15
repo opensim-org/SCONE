@@ -20,8 +20,6 @@
 
 #include "xo/string/string_tools.h"
 
-using namespace xo;
-
 namespace scone
 {
 	ReflexController::ReflexController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
@@ -54,7 +52,7 @@ namespace scone
 
 	bool ReflexController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// IMPORTANT: delayed storage must have been updated in through Model::UpdateSensorDelayAdapters()
 		for ( ReflexUP& r : m_Reflexes )
@@ -63,9 +61,9 @@ namespace scone
 		return false;
 	}
 
-	scone::String ReflexController::GetClassSignature() const
+	String ReflexController::GetClassSignature() const
 	{
-		return "R" + to_str( m_Reflexes.size() );
+		return "R" + xo::to_str( m_Reflexes.size() );
 	}
 
 	void ReflexController::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

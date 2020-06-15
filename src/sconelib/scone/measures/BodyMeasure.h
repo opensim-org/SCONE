@@ -31,19 +31,25 @@ namespace scone
 		/// Offset [m] of the point of the body to measure, relative to origin; default = [ 0 0 0 ].
 		Vec3 offset;
 
-		/// Weights to apply to each axis; default = [ 0 0 0 ].
-		Vec3 axes_weights;
+		/// Direction vector [m3] in which to measure (global coordinate frame), or zero when measuring magnitude (default);
+		Vec3 direction;
+
+		/// Measure the magnitude instead of dot product; default = true if direction equals zero
+		bool magnitude;
 
 		/// Offset is measured relative to model COM; default = false.
 		bool relative_to_model_com;
 
-		/// Penalty for when the DOF position [deg] is out of range.
+		/// When measurring acceleration, take the magnitude along the axes weights instead of dot product; default = true.
+		bool acceleration_magnitude;
+
+		/// Penalty for when the point position [m] is out of range.
 		RangePenalty<Real> position;
 
-		/// Penalty for when the DOF velocity [deg/s] is out of range.
+		/// Penalty for when the point velocity [m/s] is out of range.
 		RangePenalty<Real> velocity;
 
-		/// Penalty for when the DOF limit force [N] is out of range.
+		/// Penalty for when the point acceleration [m/s^2] is out of range.
 		RangePenalty<Real> acceleration;
 
 	protected:

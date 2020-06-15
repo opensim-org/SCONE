@@ -21,6 +21,7 @@ namespace scone
 		TimeInSeconds swing_duration() const { return end_ - swing_; }
 		TimeInSeconds duration() const { return end_ - begin_; }
 		Real length() const { return xo::length( end_pos_ - begin_pos_ ); }
+		Real velocity() const { return length() / duration(); }
 	};
 
 	SCONE_API std::vector<GaitCycle> ExtractGaitCycles( const Storage<>& sto, Real threshold, TimeInSeconds min_stance );

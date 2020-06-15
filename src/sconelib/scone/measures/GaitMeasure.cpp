@@ -27,16 +27,21 @@ namespace scone
 		INIT_PROP( props, load_threshold, 0.1 );
 		INIT_PROP( props, min_step_duration, 0.1 );
 		INIT_PROP( props, initiation_steps, 2 );
+		INIT_PROP( props, base_bodies, "" );
 
-		INIT_PROP( props, upper_body, "torso" );
-		INIT_PROP( props, base_bodies, "toes_l toes_r" );
-
-		m_UpperBody = &( *FindByName( model.GetBodies(), upper_body ) );
-
-		// extract individual body names from gait_bodies string
-		auto tokens = xo::split_str( base_bodies, ";, " );
-		for ( const String& t : tokens )
-			m_BaseBodies.push_back( &( *FindByName( model.GetBodies(), t ) ) );
+		if ( !base_bodies.empty() )
+		{
+			// extract individual body names from gait_bodies string
+			auto tokens = xo::split_str( base_bodies, ";, " );
+			for ( const String& t : tokens )
+				m_BaseBodies.push_back( &( *FindByName( model.GetBodies(), t ) ) );
+		}
+		else 
+		{
+			// use foot_body for base bodies
+			for ( const auto& l : model.GetLegs() )
+				m_BaseBodies.push_back( &l->GetFootBody() );
+		}
 
 		m_InitGaitDist = m_PrevGaitDist = GetGaitDist( model );
 		m_InitialComPos = model.GetComPos();
@@ -44,7 +49,7 @@ namespace scone
 
 	bool GaitMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// make sure this is a new step
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
@@ -131,17 +136,12 @@ namespace scone
 	scone::Real GaitMeasure::GetGaitDist( const Model &model )
 	{
 		// compute average of feet and Com (smallest 2 values)
-		auto com_x = model.GetComPos().x;
-		auto base1_x = m_BaseBodies[ 0 ]->GetComPos().x;
-		auto base2_x = m_BaseBodies[ 1 ]->GetComPos().x;
-#if 1
-		xo::sorted_vector< double > distances{ com_x, base1_x, base2_x };
+		xo::sorted_vector< double > distances;
+		distances.reserve( 3 );
+		distances.insert( model.GetComPos().x );
+		distances.insert( m_BaseBodies[ 0 ]->GetComPos().x );
+		distances.insert( m_BaseBodies[ 1 ]->GetComPos().x );
 		return ( distances[ 0 ] + distances[ 1 ] ) / 2;
-#else
-		auto upper_x = m_UpperBody ? m_UpperBody->GetComPos().x : com_x;
-		auto front_toe = xo::max( base1_x, base2_x );
-		return xo::min( upper_x, front_toe );
-#endif
 	}
 
 	String GaitMeasure::GetClassSignature() const

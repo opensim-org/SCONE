@@ -21,18 +21,19 @@ namespace scone
 	{
 		INIT_PROP( props, stride_length, RangePenalty<Real>() );
 		INIT_PROP( props, stride_duration, RangePenalty<Real>() );
+		INIT_PROP( props, stride_velocity, RangePenalty<Real>() );
 		INIT_PROP( props, load_threshold, 0.01 );
 		INIT_PROP( props, min_stance_duration_threshold, 0.2 );
 		INIT_PROP( props, initiation_cycles, 1 );
 
-		SCONE_THROW_IF(initiation_cycles < 1, "initiation_cycles should be >= 1");
-		SCONE_THROW_IF(stride_length.IsNull() && stride_duration.IsNull() ,
-					   "stride_length and/or stride_duration should be defined");
+		SCONE_THROW_IF( initiation_cycles < 1, "initiation_cycles should be >= 1" );
+		SCONE_THROW_IF( stride_length.IsNull() && stride_duration.IsNull() && stride_velocity.IsNull(),
+			"Any of stride_length / stride_duration / stride_velocity should be defined" );
 	}
 
 	bool StepMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		auto& frame = stored_data_.AddFrame( timestamp );
 		for ( const auto& leg : model.GetLegs() )
@@ -40,13 +41,8 @@ namespace scone
 			Vec3 force, moment, cop;
 			leg->GetContactForceMomentCop( force, moment, cop );
 			Vec3 grf = force / model.GetBW();
-
-			frame[ leg->GetName() + ".grf_norm_x" ] = grf.x;
-			frame[ leg->GetName() + ".grf_norm_y" ] = grf.y;
-			frame[ leg->GetName() + ".grf_norm_z" ] = grf.z;
-			frame[ leg->GetName() + ".cop_x" ] = cop.x;
-			frame[ leg->GetName() + ".cop_y" ] = cop.y;
-			frame[ leg->GetName() + ".cop_z" ] = cop.z;
+			frame.SetVec3( leg->GetName() + ".grf_norm", grf );
+			frame.SetVec3( leg->GetName() + ".cop", cop );
 		}
 
 		return false;
@@ -58,33 +54,39 @@ namespace scone
 										 load_threshold,
 										 min_stance_duration_threshold );
 
-		// calculate stride length or stride duration
-		for (int cycle = initiation_cycles; cycle < cycles.size(); cycle++) {
-			auto t = cycles[cycle].begin_;
-			auto stride_dur = cycles[cycle].end_ - cycles[cycle].begin_;
-			auto stride_len = cycles[cycle].length();
-
+		// calculate stride length / duration / velocity
+		for ( index_t idx = initiation_cycles; idx < cycles.size(); ++idx )
+		{
 			if ( !stride_length.IsNull() )
-				 stride_length.AddSample( t, stride_len );
-
+				 stride_length.AddSample( 1.0, cycles[ idx ].length() );
 			if ( !stride_duration.IsNull() )
-				stride_duration.AddSample( t, stride_dur );
+				stride_duration.AddSample( 1.0, cycles[ idx ].duration() );
+			if ( !stride_velocity.IsNull() )
+				stride_velocity.AddSample( 1.0, cycles[ idx ].velocity() );
 		}
 
 		// calculate penalty
 		double penalty = 0;
 		if ( !stride_length.IsNull() )
 		{
+			if ( stride_length.IsEmpty() )
+				stride_length.AddSample( 1, 0 );
 			penalty += stride_length.GetResult();
-			GetReport().set( "stride_length_penalty" ,
-							 stringf( "%g", stride_length.GetResult() ) );
+			GetReport().set( "stride_length_penalty", stride_length.GetResult() );
 		}
-
 		if ( !stride_duration.IsNull() )
 		{
+			if ( stride_duration.IsEmpty() )
+				stride_duration.AddSample( 1, 0 );
 			penalty += stride_duration.GetResult();
-			GetReport().set( "stride_duration_penalty" ,
-							 stringf( "%g", stride_duration.GetResult() ) );
+			GetReport().set( "stride_duration_penalty", stride_duration.GetResult() );
+		}
+		if ( !stride_velocity.IsNull() )
+		{
+			if ( stride_velocity.IsEmpty() )
+				stride_velocity.AddSample( 1, 0 );
+			penalty += stride_velocity.GetResult();
+			GetReport().set( "stride_velocity_penalty", stride_velocity.GetResult() );
 		}
 
 		return penalty;

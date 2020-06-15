@@ -26,7 +26,8 @@
 #include "xo/serialization/serialize.h"
 
 #include "StudioSettings.h"
-#include "QMessageBox"
+
+#include <QMessageBox>
 #include "qt_convert.h"
 
 namespace scone
@@ -113,18 +114,20 @@ namespace scone
 
 	void StudioModel::UpdateVis( TimeInSeconds time )
 	{
-		SCONE_PROFILE_FUNCTION;
-
-		if ( model_ && !storage_.IsEmpty() && !state_data_index.empty() )
+		if ( model_ && vis_ )
 		{
-			// update model state from data
-			for ( index_t i = 0; i < model_state.GetSize(); ++i )
-				model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
-			model_->SetState( model_state, time );
-		}
+			SCONE_PROFILE_FUNCTION( model_->GetProfiler() );
 
-		if ( vis_ )
+			if ( !storage_.IsEmpty() && !state_data_index.empty() )
+			{
+				// update model state from data
+				for ( index_t i = 0; i < model_state.GetSize(); ++i )
+					model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
+				model_->SetState( model_state, time );
+			}
+
 			vis_->Update( *model_ );
+		}
 	}
 
 	void StudioModel::EvaluateTo( TimeInSeconds t )
@@ -173,9 +176,9 @@ namespace scone
 		log::info( "fitness = ", fitness );
 		PropNode results;
 		results.add_child( "result", model_objective_->GetReport( *model_ ) );
-		results.append( model_->GetSimulationReport() );
 		if ( !results[ "result" ].empty() )
 			log::info( results );
+		log::info( model_->GetSimulationReport() );
 
 		// write results to file(s)
 		xo::timer t;

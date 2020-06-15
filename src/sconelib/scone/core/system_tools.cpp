@@ -29,7 +29,12 @@ namespace scone
 		{
 			for ( g_RootFolder = xo::get_application_dir(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
 			{
-				if ( xo::exists( g_RootFolder / ".version" ) )
+				if ( xo::exists( g_RootFolder / ".sconeroot" ) )
+				{
+					g_RootFolder = xo::load_string( g_RootFolder / ".sconeroot" );
+					break;
+				}
+				else if ( xo::exists( g_RootFolder / ".version" ) )
 					break;
 			}
 			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat or .updateversion.sh" );

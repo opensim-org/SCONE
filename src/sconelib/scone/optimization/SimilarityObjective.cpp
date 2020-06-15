@@ -48,7 +48,7 @@ namespace scone
 
 	result<fitness_t> SimilarityObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( m.GetProfiler() );
 
 		auto& c1 = dynamic_cast<const NeuralController&>( *target_model_->GetController() );
 		auto& c2 = dynamic_cast<const NeuralController&>( *m.GetController() );

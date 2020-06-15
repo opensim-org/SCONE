@@ -38,6 +38,7 @@ namespace scone
 		bool HasData() const { return !storage_.IsEmpty() && !state_data_index.empty(); }
 
 		Model& GetModel() { return *model_; }
+		const Objective& GetOjective() const { return *objective_; }
 		ModelObjective& GetModelObjective() const { return *model_objective_; }
 
 		bool IsEvaluating() const { return status_ == Status::Evaluating; }

@@ -45,8 +45,9 @@ namespace scone
 				if ( swing_time - begin_time < min_stance )
 				{
 					// the stance was just a bump
-					if ( !cycles.empty() )
+					if ( !cycles.empty() && cycles.back().side_ == side )
 					{
+						// add it to the previous cycle
 						cycles.back().end_ = end_time;
 						cycles.back().end_pos_ = end_pos;
 						log::trace( "U: ", cycles.back() );

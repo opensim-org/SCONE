@@ -11,6 +11,7 @@
 #include "scone/model/Location.h"
 #include "scone/model/Dof.h"
 #include "scone/model/Sensors.h"
+#include "scone/model/Model.h"
 
 namespace scone
 {

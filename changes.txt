@@ -1,6 +1,40 @@
 ~~NOCACHE~~
 ====== SCONE Version History ======
 
+==== SCONE 1.5.0 ====
+//Released June 10, 2020//
+
+=== New Features ===
+  * New ''Parameter View'' window that shows all optimization parameters in the current scenario.
+  * Context-sensitive help: pressing F1 in the scenario shows on-line help for the keyword under the cursor.
+  * New ''StepMeasure'' for penalizing stride length and/or step duration, thanks to **Dimitar Stanev**.
+  * ''GaitStateController'' can now have single-sided controllers, using the ''legs'' parameter.
+  * Help menu now has links for ''About...'' and ''User Forum''
+  * New (very useful!) text editor option: Press ''Ctrl + /'' to toggle comments for the current selection.
+  * ''.scone'' files now support // and /* */ style comments.
+  * New menu option ''Window -> Reset Window Layout'' to restore the original window layout.
+  * SequentialController now outputs which controller is active in the AnalysisWindow, as 'active_index'. Closes #200.
+  * Measures now have a ''threshold_transition setting'' for gradually decreasing the measure if they approach the threshold (if any). 
+  * New command line option -b for benchmarking a scenario
+  * MimicMeasure now has ''average_error_limit'' and ''peak_error_limit'' options for early termination
+  * Option to store linear and angular momentum.
+
+=== Updates and Fixes ===
+  * ''Edit -> Find'' and ''Find Next'' now also work with .lua files.
+  * Find Text now starts at the next occurrence. Added a hint for using F3 / Shift + F3. Closes #188.
+  * ''RangePenalty'' documentation now shows min and max parameters instead of 'range'.
+  * The ''RangePenalty'' default of (-inf, inf) now works correctly with angle types, such as in ''DofMeasure'' postion / velocity.
+  * When creating a video while ffmpeg is not found, an error message is shown instead of a silent exit.
+  * Fixed issue where loading an invalid OpenSim model could crash SCONE.
+  * Fixed tab order in AnalysisView tab order between filter and select checkbox.
+  * Error for unnamed child controllers is now warning again.
+  * Fixed rare invalid cycle detection in Gait Analysis.
+  * Fixed Lua automatic indentation when using 'for' or 'while'.
+  * Simulation no longer crashes when no controller is defined.
+  * Models are now called ModelOpenSim3 / ModelOpenSim4 to be consistent with the online help. Tutorials have been updated.
+  * Current optimization progress is now shown in optimization window tooltip.
+  * SCONE now always logs to the terminal under Linux.
+
 ==== SCONE 1.4.0 ====
 //Released March 3, 2020//
 

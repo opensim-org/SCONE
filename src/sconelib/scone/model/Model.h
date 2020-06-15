@@ -11,6 +11,7 @@
 #include "scone/core/platform.h"
 #include "scone/core/types.h"
 #include "xo/filesystem/path.h"
+#include "xo/system/profiler.h"
 
 #include "ContactForce.h"
 #include "ContactGeometry.h"
@@ -27,6 +28,8 @@
 
 #include <vector>
 #include <type_traits>
+#include <utility>
+#include "scone/core/Factories.h"
 
 namespace scone
 {
@@ -72,11 +75,13 @@ namespace scone
 		Controller* GetController() { return m_Controller.get(); }
 		const Controller* GetController() const { return m_Controller.get(); }
 		virtual void SetController( ControllerUP c ) { SCONE_ASSERT( !m_Controller ); m_Controller = std::move( c ); }
+		void CreateController( const FactoryProps& controller_fp, Params& par );
 
 		// Measure access
 		Measure* GetMeasure() { return m_Measure.get(); }
 		const Measure* GetMeasure() const { return m_Measure.get(); }
 		void SetMeasure( MeasureUP m ) { SCONE_ASSERT( !m_Measure ); m_Measure = std::move( m ); }
+		void CreateMeasure( const FactoryProps& measure_fp, Params& par );
 
 		void UpdateControlValues();
 		void UpdateAnalyses();
@@ -110,6 +115,8 @@ namespace scone
 		virtual bool HasSimulationEnded() { return m_ShouldTerminate || GetTime() >= GetSimulationEndTime(); }
 		virtual void RequestTermination() { m_ShouldTerminate = true; }
 		virtual PropNode GetSimulationReport() const { return PropNode(); }
+		virtual void UpdatePerformanceStats( const path& filename ) const {}
+		virtual std::vector<std::pair<String, std::pair<xo::time, size_t>>> GetBenchmarks() const { return {}; }
 
 		// Model data
 		virtual const Storage< Real, TimeInSeconds >& GetData() const { return m_Data; }
@@ -120,6 +127,9 @@ namespace scone
 		virtual Vec3 GetComVel() const = 0;
 		virtual Vec3 GetComAcc() const = 0;
 		virtual Real GetComHeight( const Vec3& up = Vec3::unit_y() ) const;
+		virtual Vec3 GetLinMom() const = 0;
+		virtual Vec3 GetAngMom() const = 0;
+		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
 
@@ -176,8 +186,14 @@ namespace scone
 		/// Step size used for controllers; default = 0.001.
 		double fixed_control_step_size;
 
+		/// Step size used for measures (not supported by all model types); default = ''fixed_control_step_size''.
+		double fixed_measure_step_size;
+
 		/// Initial load [BW] at which to place the model initially; default = 0.2;
 		Real initial_load;
+
+		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = pelvis_ty.
+		String initial_load_dof;
 
 		/// Scaling factor to apply to all sensor delays; default = 1.
 		Real sensor_delay_scaling_factor;
@@ -190,6 +206,8 @@ namespace scone
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
 
+		xo::profiler& GetProfiler() const { return m_Profiler; }
+
 	protected:
 		virtual String GetClassSignature() const override;
 		void UpdateSensorDelayAdapters();
@@ -201,6 +219,8 @@ namespace scone
 		virtual void AddExternalDisplayGeometries( const path& model_path );
 
 	protected:
+		mutable xo::profiler m_Profiler;
+
 		std::vector< MuscleUP > m_Muscles;
 		std::vector< BodyUP > m_Bodies;
 		std::vector< JointUP > m_Joints;
@@ -212,6 +232,11 @@ namespace scone
 		MeasureUP m_Measure;
 		ControllerUP m_Controller;
 		bool m_ShouldTerminate;
+
+		// step size
+		double fixed_step_size;
+		int fixed_control_step_interval;
+		int fixed_analysis_step_interval;
 
 		// non-owning storage
 		std::vector< Actuator* > m_Actuators;

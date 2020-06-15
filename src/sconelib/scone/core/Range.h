@@ -14,14 +14,24 @@
 
 namespace scone
 {
+	/// Type that defines a range, mostly for use in RangePenalty.
 	template< typename T >
 	class Range
 	{
 	public:
 		Range() : min( T() ), max( T() ) {}
 		Range( const Range& other ) = default;
-		Range( const PropNode& props ) : min( props.get< T >( "min", xo::constants<T>::lowest() ) ), max( props.get< T >( "max", xo::constants<T>::max() ) ) {}
 		Range( const T& i_min, const T& i_max ) : min( i_min ), max( i_max ) {}
+		Range( const PropNode& props ) :
+			min( props.get<T>( "min", T( -xo::constantsd::infinity() ) ) ), // compatible with angle_
+			max( props.get<T>( "max", T( xo::constantsd::infinity() ) ) ) // compatible with angle_
+		{}
+
+		/// Minimum value or lower bound of the range; default = -inf
+		T min;
+
+		/// Maximum value or upper bound of the range; default = inf
+		T max;
 
 		// explicit conversion constructor
 		template< typename U > explicit Range( const Range<U>& o ) : min( T( o.min ) ), max( T( o.max) ) {}
@@ -40,9 +50,7 @@ namespace scone
 		T GetCenter() const { return ( min + max ) / 2; }
 		T GetLength() const { return max - min; }
 
-		T min;
-		T max;
 	};
 
-	typedef Range< Real > RealRange;
+	typedef Range<Real> RealRange;
 }

@@ -106,3 +106,8 @@ optimizer {
 		default = 2
 	}
 }
+
+hyfydy {
+	enabled { type = boolean label = "Enable Hyfydy" default = 0 }
+	license { type = string label = "Hyfydy license key" default = "" }
+}

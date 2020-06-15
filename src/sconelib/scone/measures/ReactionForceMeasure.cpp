@@ -15,8 +15,9 @@
 namespace scone
 {
 	ReactionForceMeasure::ReactionForceMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
-	Measure( props, par, model, loc ),
-	RangePenalty<Real>( props )
+		Measure( props, par, model, loc ),
+		RangePenalty<Real>( props ),
+		INIT_MEMBER( props, use_force_per_leg, false )
 	{}
 
 	double ReactionForceMeasure::ComputeResult( const Model& model )
@@ -27,8 +28,15 @@ namespace scone
 	bool ReactionForceMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
 		Real leg_load = 0.0f;
-		for ( auto& leg : model.GetLegs() )
-			leg_load += xo::length( leg->GetContactForce() ) / model.GetBW();
+		if ( use_force_per_leg )
+		{
+			for ( auto& leg : model.GetLegs() )
+				leg_load = xo::max( leg_load, xo::length( leg->GetContactForce() ) / model.GetBW() );
+		}
+		else {
+			for ( auto& leg : model.GetLegs() )
+				leg_load += xo::length( leg->GetContactForce() ) / model.GetBW();
+		}
 
 		AddSample( timestamp, leg_load );
 

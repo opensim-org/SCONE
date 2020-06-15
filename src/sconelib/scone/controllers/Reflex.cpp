@@ -9,7 +9,8 @@
 #include "Reflex.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Location.h"
-#include "scone/core/math.h"
+#include "scone/core/PropNode.h"
+#include "scone/model/Model.h"
 #include "xo/numerical/math.h"
 
 namespace scone

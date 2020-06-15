@@ -42,6 +42,7 @@
 #include "xo/system/log_sink.h"
 #include "xo/time/timer.h"
 #include "GaitAnalysis.h"
+#include "ParTableModel.h"
 
 using scone::TimeInSeconds;
 
@@ -70,10 +71,12 @@ public slots:
 	virtual void fileSaveAsTriggered() override;
 	virtual void fileCloseTriggered() override;
 
-	void helpAbout() {}
+	void helpSearch();
+	void helpForum();
+	void helpAbout();
 	void evaluateActiveScenario();
-	void performanceTestProfile() { performanceTest( true ); }
-	void performanceTestNoProfile() { performanceTest( false ); }
+	void performanceTestNormal() { performanceTest( false ); }
+	void performanceTestWriteStats() { performanceTest( true ); }
 	void optimizeScenario();
 	void optimizeScenarioMultiple();
 	bool abortOptimizations();
@@ -89,9 +92,11 @@ public slots:
 	void showSettingsDialog() { settings.showDialog( this ); }
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void updateTabTitles();
-	void findDialog() { if ( auto* e = getActiveScenario() ) e->findDialog(); }
-	void findNext() { if ( auto* e = getActiveScenario() ) e->findNext(); }
-	void findPrevious() { if ( auto* e = getActiveScenario() ) e->findNext( true ); }
+	void findDialog() { if ( auto* e = getActiveCodeEditor() ) e->findDialog(); }
+	void findNext() { if ( auto* e = getActiveCodeEditor() ) e->findNext(); }
+	void findPrevious() { if ( auto* e = getActiveCodeEditor() ) e->findNext( true ); }
+	void toggleComments() { if ( auto* e = getActiveCodeEditor() ) e->toggleComments(); }
+	void resetWindowLayout();
 
 public:
 	bool close_all;
@@ -104,7 +109,7 @@ private:
 	void restoreCustomSettings( QSettings& settings ) override;
 	void saveCustomSettings( QSettings& settings ) override;
 
-	void performanceTest( bool do_profile );
+	void performanceTest( bool write_stats );
 	void evaluate();
 	void setTime( TimeInSeconds t, bool update_vis );
 	std::vector< QCodeEditor* > changedDocuments();
@@ -151,6 +156,11 @@ private:
 	// gait analysis
 	scone::GaitAnalysis* gaitAnalysis;
 	QDockWidget* gaitAnalysisDock;
+
+	// parameters
+	QTableView* parView;
+	ParTableModel* parModel;
+	QDockWidget* parViewDock;
 
 	//// dof editor
 	//QFormGroup* dofSliderGroup;

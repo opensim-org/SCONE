@@ -9,7 +9,7 @@
 #include "ResultsFileSystemModel.h"
 #include "xo/system/log.h"
 #include <algorithm>
-#include "QDirIterator"
+#include <QDirIterator>
 #include <iostream>
 #include "xo/container/prop_node_tools.h"
 #include "xo/system/error_code.h"
@@ -96,7 +96,7 @@ QVariant ResultsFileSystemModel::data( const QModelIndex &idx, int role ) const
 		{
 //		case StateCol: return QVariant( QString( stat.state_str().c_str() ) );
 		case GenCol: return QVariant( stat.gen );
-		case ScoreCol: return QVariant( QString().sprintf( "%7.3f", stat.best ) );
+		case ScoreCol: return QVariant( QString::asprintf( "%7.3f", stat.best ) );
 		default: return QVariant();
 		}
 	}

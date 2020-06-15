@@ -52,6 +52,7 @@
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
 #include "xo/filesystem/filesystem.h"
+#include "scone/controllers/NeuralNetworkController.h"
 
 namespace scone
 {
@@ -66,7 +67,8 @@ namespace scone
 			.register_type< NeuralController >()
 			.register_type< CompositeController >()
 			.register_type< SequentialController >()
-			.register_type< NoiseController >();
+			.register_type< NoiseController >()
+			.register_type< NN::NeuralNetworkController >( "NeuralNetworkController" );
 
 		return g_ControllerFactory;
 	}

@@ -1,8 +1,8 @@
 #pragma once
 
+#include "platform.h"
 #include "scone/optimization/Params.h"
 #include "scone/model/Model.h"
-#include "platform.h"
 
 #include "sol_config.h"
 

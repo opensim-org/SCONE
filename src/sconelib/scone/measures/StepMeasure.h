@@ -12,8 +12,7 @@
 
 namespace scone
 {
-	/// Measure for locomotion that penalizes the stride length and/or
-	/// step duration.
+	/// Measure for locomotion that penalizes stride length, stride duration, and/or stride velocity.
 	/** Example:
 	\verbatim
 	StepMeasure {
@@ -34,6 +33,10 @@ namespace scone
 		/// Penalty for stride duration [s] when out of range
 		/// (Optional); default range [-inf, inf].
 		RangePenalty<double> stride_duration;
+
+		/// Penalty for velocity [m/s] when out of range
+		/// (Optional); default range [-inf, inf].
+		RangePenalty<double> stride_velocity;
 
 		/// Load threshold for step detection; default = 0.01.
 		Real load_threshold;

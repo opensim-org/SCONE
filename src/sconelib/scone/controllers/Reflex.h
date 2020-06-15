@@ -8,10 +8,12 @@
 
 #pragma once
 
-#include "scone/model/Model.h"
-#include "scone/optimization/Params.h"
-#include "scone/core/PropNode.h"
+#include "scone/core/types.h"
 #include "scone/core/math.h"
+#include "scone/core/HasData.h"
+#include "scone/core/PropNode.h"
+#include "scone/model/Location.h"
+#include "scone/optimization/Params.h"
 
 namespace scone
 {

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "QOpenGLContext"
 #include "QDataAnalysisView.h"
 #include "scone/core/Storage.h"
 

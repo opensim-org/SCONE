@@ -11,7 +11,10 @@
 #include "scone/core/Log.h"
 #include "ModelOpenSim3.h"
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/SimbodyEngine/Joint.h>
+#include <OpenSim/Simulation/SimbodyEngine/Body.h>
+#include <OpenSim/Simulation/Model/Model.h>
+
 #include "simbody_tools.h"
 
 namespace scone

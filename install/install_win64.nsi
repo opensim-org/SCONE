@@ -2,9 +2,9 @@
 ;Start Menu Folder Selection Example Script
 ;Written by Joost Verburg
 
-!define SCONE_VERSION "1.4.0"
+!define SCONE_VERSION "1.5.0"
 !define MSVC_VERSION "vc2019-x64"
-!define BIN_FOLDER "..\bin\${MSVC_VERSION}\Release"
+!define BIN_FOLDER "\Build\scone\${MSVC_VERSION}\bin\Release"
 !define OSG_PLUGINS_FOLDER "osgPlugins-3.4.1"
 !define SCONE_DOCUMENTS_FOLDER "$DOCUMENTS\SCONE"
 !define VCREDIST_FILE "vc_redist.x64.exe"
@@ -78,8 +78,8 @@ Section "Program Files" SecMain
 	
 	; bin files
 	SetOutPath "$INSTDIR\bin"
-	File "${BIN_FOLDER}\*.exe"
-	File "${BIN_FOLDER}\*.dll"
+	File /x "*hfd*.*" /x "hyfydy*.*" "${BIN_FOLDER}\*.exe"
+	File /x "*hfd*.*" /x "hyfydy*.*" "${BIN_FOLDER}\*.dll"
 	File "${VCREDIST_FILE}"
 	SetOutPath "$INSTDIR\bin\${OSG_PLUGINS_FOLDER}"
 	File "${BIN_FOLDER}\${OSG_PLUGINS_FOLDER}\*.dll"

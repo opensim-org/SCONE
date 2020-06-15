@@ -106,3 +106,20 @@ namespace scone
 		return *it;
 	}
 }
+
+namespace xo
+{
+	inline bool from_str( const string& s, scone::Side& v )
+	{
+		if ( str_equals_any_of( s, { "left", "l" } ) )
+			v = scone::LeftSide;
+		else if ( str_equals_any_of( s, { "right", "r" } ) )
+			v = scone::RightSide;
+		else if ( str_equals_any_of( s, { "both", "none" } ) )
+			v = scone::NoSide;
+		else if ( str_equals_any_of( s, { "opposite", "other" } ) )
+			v = scone::OppositeSide;
+		else return false; // could not extract side
+		return true;
+	}
+}

@@ -8,5 +8,6 @@ namespace scone
 	void RegisterSconeOpenSim4()
 	{
 		GetModelFactory().register_type< ModelOpenSim4 >( "OpenSim4Model" );
+		GetModelFactory().register_type< ModelOpenSim4 >( "ModelOpenSim4" );
 	}
 }

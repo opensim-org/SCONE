@@ -81,11 +81,16 @@ namespace scone
 			// get state masks
 			String state_masks = ccIt->second.get< String >( "states" );
 			auto state_tokens = xo::split_str( state_masks, ";," );
+			auto target_side = ccIt->second.get<Side>( "legs", NoSide );
 			for ( const String& instance_states_str : state_tokens )
 			{
 				// automatically create controllers for all legs (sides)
 				for ( size_t legIdx = 0; legIdx < model.GetLegs().size(); ++legIdx )
 				{
+					const auto& leg = model.GetLeg( legIdx );
+					if ( target_side != NoSide && leg.GetSide() != target_side )
+						continue; // skip this leg
+
 					// create new conditional controller
 					m_ConditionalControllers.push_back( ConditionalControllerUP( new ConditionalController() ) );
 					ConditionalController& cc = *m_ConditionalControllers.back();
@@ -120,7 +125,7 @@ namespace scone
 
 	bool GaitStateController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		if ( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() )
 		{
@@ -143,7 +148,7 @@ namespace scone
 
 	void GaitStateController::UpdateLegStates( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// update statuses
 		for ( size_t idx = 0; idx < m_LegStates.size(); ++idx )

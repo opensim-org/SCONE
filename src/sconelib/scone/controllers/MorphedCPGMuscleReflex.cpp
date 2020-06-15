@@ -8,6 +8,7 @@
 
 #include "MorphedCPGMuscleReflex.h"
 #include "scone/model/Muscle.h"
+#include "scone/model/Model.h"
 
 namespace scone
 {

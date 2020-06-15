@@ -37,12 +37,15 @@ namespace scone
 {
 	Model::Model( const PropNode& props, Params& par ) :
 		HasSignature( props ),
+		m_Profiler( props.get<bool>( "enable_profiler", false ) ),
 		m_Measure( nullptr ),
 		m_Controller( nullptr ),
 		m_ShouldTerminate( false ),
 		m_StoreData( false ),
 		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } )
 	{
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
+
 		// old-style initialization (for backwards compatibility)
 		if ( auto sio = props.try_get_child( "state_init_optimization" ) )
 		{
@@ -61,8 +64,14 @@ namespace scone
 
 		INIT_PROP( props, max_step_size, 0.001 );
 		INIT_PROP( props, fixed_control_step_size, 0.001 );
+		INIT_PROP( props, fixed_measure_step_size, fixed_control_step_size );
 		INIT_PROP( props, use_fixed_control_step_size, fixed_control_step_size > 0 );
+		fixed_step_size = std::min( fixed_control_step_size, fixed_measure_step_size );
+		fixed_control_step_interval = static_cast<int>( std::round( fixed_control_step_size / fixed_step_size ) );
+		fixed_analysis_step_interval = static_cast<int>( std::round( fixed_measure_step_size / fixed_step_size ) );
+
 		INIT_PROP( props, initial_load, 0.2 );
+		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, sensor_delay_scaling_factor, 1.0 );
 		INIT_PROP( props, initial_equilibration_activation, 0.05 );
 
@@ -109,7 +118,8 @@ namespace scone
 
 	void Model::UpdateSensorDelayAdapters()
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
+
 		//SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
 		SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
 
@@ -125,18 +135,18 @@ namespace scone
 	{
 		// add controller (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Controller" ) )
-			SetController( CreateController( *cprops, par, *this, Location() ) );
+			SetController( scone::CreateController( *cprops, par, *this, Location() ) );
 
 		// add measure (new style, prefer define outside model)
 		if ( auto* cprops = pn.try_get_child( "Measure" ) )
-			SetMeasure( CreateMeasure( *cprops, par, *this, Location() ) );
+			SetMeasure( scone::CreateMeasure( *cprops, par, *this, Location() ) );
 
 		// add multiple controllers / measures (old style)
 		if ( auto* cprops = pn.try_get_child( "Controllers" ) )
 		{
 			SetController( std::make_unique< CompositeController >( *cprops, par, *this, Location() ) );
 			if ( auto* mprops = cprops->try_get_child( "Measure" ) )
-				SetMeasure( CreateMeasure( *mprops, par, *this, Location() ) );
+				SetMeasure( scone::CreateMeasure( *mprops, par, *this, Location() ) );
 		}
 	}
 
@@ -147,7 +157,7 @@ namespace scone
 
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		// store states
 		if ( flags( StoreDataTypes::State ) )
@@ -209,6 +219,10 @@ namespace scone
 			frame[ "com_x_u" ] = com_u.x;
 			frame[ "com_y_u" ] = com_u.y;
 			frame[ "com_z_u" ] = com_u.z;
+
+			const auto mom = GetLinAngMom();
+			frame.SetVec3( "lin_mom", mom.first );
+			frame.SetVec3( "ang_mom", mom.second );
 		}
 
 		// store GRF data (measured in BW)
@@ -244,22 +258,35 @@ namespace scone
 
 	void Model::StoreCurrentFrame()
 	{
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 		if ( m_Data.IsEmpty() || GetTime() > m_Data.Back().GetTime() )
 			m_Data.AddFrame( GetTime() );
 		StoreData( m_Data.Back(), m_StoreDataFlags );
 	}
 
+	void Model::CreateController( const FactoryProps& controller_fp, Params& par )
+	{
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
+		SetController( scone::CreateController( controller_fp, par, *this, Location() ) );
+	}
+
+	void Model::CreateMeasure( const FactoryProps& measure_fp, Params& par )
+	{
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
+		SetMeasure( scone::CreateMeasure( measure_fp, par, *this, Location() ) );
+	}
+
 	void Model::UpdateControlValues()
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		// reset actuator values
 		for ( Actuator* a : GetActuators() )
 			a->ClearInput();
 
-		// update all controllers
 		bool terminate = false;
-		terminate |= GetController()->UpdateControls( *this, GetTime() );
+		if ( auto* c = GetController() )
+			terminate |= c->UpdateControls( *this, GetTime() );
 
 		if ( terminate )
 			RequestTermination();
@@ -267,11 +294,13 @@ namespace scone
 
 	void Model::UpdateAnalyses()
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		bool terminate = false;
-		terminate |= GetController()->UpdateAnalysis( *this, GetTime() );
-		terminate |= GetMeasure()->UpdateAnalysis( *this, GetTime() );
+		if ( auto* c = GetController() )
+			terminate |= c->UpdateAnalysis( *this, GetTime() );
+		if ( auto* m = GetMeasure() )
+			terminate |= m->UpdateAnalysis( *this, GetTime() );
 
 		if ( terminate )
 			RequestTermination();

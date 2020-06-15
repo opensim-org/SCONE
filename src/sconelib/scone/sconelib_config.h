@@ -26,10 +26,11 @@
 
 #include "xo/serialization/serialize.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
+#include "core/Settings.h"
 
 namespace scone
 {
-	void Initialize()
+	inline void Initialize()
 	{
 		// register .scone file format
 		xo::register_file_extension< xo::prop_node_serializer_zml >( "scone" );
@@ -43,7 +44,8 @@ namespace scone
 #endif
 
 #ifdef SCONE_HYFYDY
-		RegisterSconeHfd();
+		if ( GetSconeSetting<bool>( "hyfydy.enabled" ) )
+			RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ).c_str() );
 #endif
 
 #ifdef SCONE_LUA

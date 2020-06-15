@@ -12,6 +12,8 @@
 #include "scone/core/version.h"
 #include "scone/core/Log.h"
 #include "xo/serialization/serialize.h"
+#include "xo/filesystem/filesystem.h"
+#include "studio_config.h"
 
 namespace scone
 {
@@ -31,6 +33,9 @@ namespace scone
 		// set defaults
 		if ( get<path>( "gait_analysis.template" ).empty() )
 			set<path>( "gait_analysis.template", GetFolder( SCONE_RESOURCE_FOLDER ).make_preferred() / "gaitanalysis/default.zml" );
+
+		if ( get<path>( "video.path_to_ffmpeg" ).empty() )
+			set<path>( "video.path_to_ffmpeg", xo::get_application_dir() / SCONE_FFMPEG_EXECUTABLE );
 	}
 
 	xo::settings& GetStudioSettings()

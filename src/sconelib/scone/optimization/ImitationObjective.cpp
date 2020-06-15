@@ -67,11 +67,10 @@ namespace scone
 
 	void ImitationObjective::AdvanceSimulationTo( Model& model, TimeInSeconds t ) const
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		if ( !model.GetUserData().has_key( "IM_fra" ) )
 		{
-			SCONE_PROFILE_SCOPE( "SetupStorage" );
 			model.GetUserData()[ "IM_fra" ] = 0;
 			model.GetUserData()[ "IM_res" ] = 0.0;
 
@@ -92,7 +91,6 @@ namespace scone
 		index_t frame_count = 0;
 
 		{
-			SCONE_PROFILE_SCOPE( "ComputeSimularity" );
 			for ( index_t idx = frame_start * frame_delta; idx < m_Storage.GetFrameCount() && m_Storage.GetFrame( idx ).GetTime() <= t; idx += frame_delta )
 			{
 				auto f = m_Storage.GetFrame( idx );

@@ -32,8 +32,8 @@ namespace xo
 					XO_CHECK( eval_result == base_result );
 					if ( eval_result != base_result )
 					{
-						xo::log::info( "baseline:\n", base_result );
-						xo::log::info( "evaluated:\n", eval_result );
+						xo::log::info( "baseline:\n", base_pn );
+						xo::log::info( "evaluated:\n", eval_pn );
 					}
 				}
 				else

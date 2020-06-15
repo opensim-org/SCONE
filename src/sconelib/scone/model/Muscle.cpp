@@ -93,8 +93,6 @@ namespace scone
 
 	bool Muscle::IsAntagonist( const Muscle& other ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& dof : GetModel().GetDofs() )
 		{
 			auto mom1 = GetMomentArm( *dof );
@@ -119,8 +117,6 @@ namespace scone
 
 	bool Muscle::HasSharedDofs( const Muscle& other ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		for ( auto& dof : GetOriginBody().GetModel().GetDofs() )
 		{
 			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
@@ -135,6 +131,17 @@ namespace scone
 			|| &GetOriginBody() == &other.GetInsertionBody()
 			|| &GetInsertionBody() == &other.GetOriginBody()
 			|| &GetInsertionBody() == &other.GetInsertionBody();
+	}
+
+	bool Muscle::HasSharedJoints( const Muscle& other ) const
+	{
+		const Body* org1 = &GetOriginBody();
+		const Body* org2 = &other.GetOriginBody();
+		for ( const Body* b1 = &GetInsertionBody(); b1 != org1; b1 = b1->GetParentBody() )
+			for ( const Body* b2 = &other.GetInsertionBody(); b2 != org2; b2 = b2->GetParentBody() )
+				if ( b1->GetJoint() == b2->GetJoint() )
+					return true;
+		return false;
 	}
 
 	void Muscle::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const

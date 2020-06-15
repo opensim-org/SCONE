@@ -5,7 +5,7 @@ CmaOptimizer {
 		max_duration = 10
 		
 		# Model used in simulation
-		OpenSimModel {
+		ModelOpenSim3 {
 			model_file = data/Human0914.osim
 			
 			# Optimize initial state parameters

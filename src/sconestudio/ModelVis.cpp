@@ -47,7 +47,7 @@ namespace scone
 			body_axes.push_back( vis::axes( bodies.back(), vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
 			if ( body->GetMass() > 0 )
 			{
-				body_com.push_back( vis::mesh( bodies.back(), xo::sphere( 0.02 ), xo::color::green(), xo::vec3f::zero(), 0.75f ) );
+				body_com.push_back( vis::mesh( bodies.back(), xo::sphere( 0.02f ), xo::color::green(), xo::vec3f::zero(), 0.75f ) );
 				body_com.back().set_material( com_mat );
 				body_com.back().pos( xo::vec3f( body->GetLocalComPos() ) );
 			}
@@ -111,7 +111,7 @@ namespace scone
 
 		for ( auto& j : model.GetJoints() )
 		{
-			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.02 ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
+			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.02f ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
 			joints.back().set_material( joint_mat );
 		}
 

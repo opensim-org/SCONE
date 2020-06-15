@@ -21,7 +21,8 @@ namespace scone
 		EffortMeasure::TotalForce, "TotalForce",
 		EffortMeasure::Wang2012, "Wang2012",
 		EffortMeasure::Uchida2016, "Uchida2016",
-		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress"
+		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress",
+		EffortMeasure::SquaredMuscleActivation, "SquaredMuscleActivation"
 		);
 
 	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
@@ -55,7 +56,7 @@ namespace scone
 
 	bool EffortMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// make sure this is a new step and the measure is active
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
@@ -96,6 +97,7 @@ namespace scone
 		case Constant: return model.GetMass();
 		case Uchida2016: return GetUchida2016( model );
 		case SquaredMuscleStress: return GetSquaredMuscleStress( model );
+		case SquaredMuscleActivation: return GetSquaredMuscleActivation( model );
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 	}
@@ -259,10 +261,18 @@ namespace scone
 
 	double EffortMeasure::GetSquaredMuscleStress( const Model& model ) const
 	{
-		double total_stress = 0.0;
+		double sum = 0.0;
 		for ( auto& m : model.GetMuscles() )
-			total_stress += xo::squared( m->GetForce() / m->GetPCSA() );
-		return total_stress;
+			sum += xo::squared( m->GetForce() / m->GetPCSA() );
+		return sum;
+	}
+
+	double EffortMeasure::GetSquaredMuscleActivation( const Model& model ) const
+	{
+		double sum = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			sum += xo::squared( m->GetActivation() );
+		return sum;
 	}
 
 	String EffortMeasure::GetClassSignature() const
@@ -278,7 +288,8 @@ namespace scone
 		case Wang2012: s += "W"; break;
 		case Constant: s += "C"; break;
 		case Uchida2016: s += "U"; break;
-		case SquaredMuscleStress: s += "S"; break;
+		case SquaredMuscleStress: s += "MS"; break;
+		case SquaredMuscleActivation: s += "MA"; break;
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 

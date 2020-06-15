@@ -26,14 +26,20 @@ namespace scone
 		/// Filename of storage (sto).
 		xo::path file;
 
-		/// Use only best match instead of average match -- useful when data contains a single pose; default = false.
-		bool use_best_match;
-
 		/// States to include for comparison; default = *.
 		xo::pattern_matcher include_states;
 
 		/// States to exclude for comparison; default = "".
 		xo::pattern_matcher exclude_states;
+
+		/// Use only best match instead of average match -- useful when data contains a single pose; default = false.
+		bool use_best_match;
+
+		/// Average error above which to terminate simulation early; default = 1e9;
+		Real average_error_limit;
+
+		/// Peak error above which to terminate simulation early; default = 1e9;
+		Real peak_error_limit;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double ComputeResult( const Model& model ) override;

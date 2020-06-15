@@ -16,6 +16,7 @@ option(SCONE_OPENSIM_3 "Support OpenSim 3.3" ON)
 option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 option(SCONE_LUA "Support for lua scripting" OFF)
 option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
+option(SCONE_ENABLE_PROFILER "Enable SCONE profiler" ON)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 find_package(Qt5Widgets)
@@ -26,9 +27,9 @@ find_package(Qt5Widgets)
 # Place build products (libraries, executables) in root
 # binary (build) directory. Otherwise, they get scattered around
 # the build directory and so the dll's aren't next to the executables.
-get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
-set(EXECUTABLE_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
-set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
+#get_filename_component(CONFIG_NAME "${CMAKE_BINARY_DIR}" NAME)
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 # Silence CMake warning on OSX.
 set(CMAKE_MACOSX_RPATH ON)

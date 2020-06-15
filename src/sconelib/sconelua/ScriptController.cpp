@@ -52,8 +52,6 @@ namespace scone
 
 	void ScriptController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		if ( store_ )
 		{
 			LuaFrame lf( frame );
@@ -63,7 +61,7 @@ namespace scone
 
 	bool ScriptController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		LuaModel lm( model );
 		return update_( &lm );

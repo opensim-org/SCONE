@@ -45,7 +45,7 @@ namespace scone
 	model_( model ),
 	m_VirtualMusclesMemoize( GetVirtualMusclesFunc )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		INIT_PROP( pn, min_virtual_muscle_correlation, 0 );
 		INIT_PROP( pn, use_neutral_pose_, false );
@@ -251,7 +251,7 @@ namespace scone
 
 	bool NeuralController::ComputeControls( Model& model, double timestamp )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		for ( auto& n : m_MotorNeurons )
 			n->UpdateActuator();
@@ -329,6 +329,15 @@ namespace scone
 			for ( auto& par : mp )
 				str << "\t" << par.name << "\t" << par.correlation;
 			str << std::endl;
+		}
+		str << std::endl;
+
+		// output actual gains
+		for ( auto& mn : m_MotorNeurons )
+		{
+			str << mn->GetName() + ".C0" + '\t' << mn->offset_ << std::endl;
+			for ( auto& in : mn->GetInputs() )
+				str << mn->GetName() + '.' + in.neuron->GetName() << '\t' << in.gain << std::endl;
 		}
 
 		return files;

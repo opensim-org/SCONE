@@ -11,7 +11,10 @@
 #include "JointOpenSim3.h"
 #include "scone/core/Log.h"
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Model.h>
+#include <OpenSim/Simulation/Model/ForceSet.h>
+#include <OpenSim/Simulation/Model/CoordinateLimitForce.h>
+#include <OpenSim/Actuators/CoordinateActuator.h>
 
 namespace scone
 {

@@ -51,7 +51,7 @@ namespace scone
 			auto avg_dur = f * std::accumulate( cycles.begin(), cycles.end(), 0.0,
 				[]( const auto& v, const auto& c ) { return v + c.duration();  } );
 			auto avg_speed = avg_length / avg_dur;
-			info_.asprintf( "Gait Analysis - %zu steps; %.2fm; %.2fs; %0.2fm/s", cycles.size(), avg_length, avg_dur, avg_speed );
+			info_ = QString::asprintf( "Gait Analysis - %zu steps; %.2fm; %.2fs; %0.2fm/s", cycles.size(), avg_length, avg_dur, avg_speed );
 		}
 		else log::warning( "Could not extract enough gait cycles from " + filename.str() );
 	}

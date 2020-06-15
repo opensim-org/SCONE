@@ -6,7 +6,9 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Model.h>
+#include <OpenSim/Simulation/Model/Muscle.h>
+#include <OpenSim/Simulation/SimbodyEngine/Body.h>
 
 #include "MuscleOpenSim3.h"
 #include "ModelOpenSim3.h"
@@ -187,7 +189,6 @@ namespace scone
 
 	std::vector< Vec3 > MuscleOpenSim3::GetMusclePath() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 		auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );

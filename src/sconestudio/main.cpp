@@ -45,9 +45,6 @@ int main( int argc, char *argv[] )
 		SCONE_THROW_IF( !file_sink.file_stream().good(), "Could not create file " + log_file.str() );
 		xo::log::debug( "Created log file: ", log_file );
 
-		// init scone file format
-		scone::Initialize();
-
 		// init plash screen
 		QPixmap splash_pm( to_qt( scone::GetFolder( scone::SCONE_UI_RESOURCE_FOLDER ) / "scone_splash.png" ) );
 		QSplashScreen splash( splash_pm );
@@ -58,8 +55,12 @@ int main( int argc, char *argv[] )
 		SconeStudio w;
 		QThread::sleep( 0 ); // sleep a while so people can enjoy the splash screen :-)
 		w.init();
-		w.show();
+
+		// init scone file format and libraries
 		scone::log::info( "SCONE version ", scone::GetSconeVersion() );
+		scone::Initialize();
+
+		w.show();
 		splash.close();
 		
 		return a.exec();

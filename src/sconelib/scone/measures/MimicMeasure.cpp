@@ -12,18 +12,21 @@
 #include "scone/model/Model.h"
 #include "xo/numerical/math.h"
 #include "scone/core/Log.h"
+#include "scone/core/profiler_config.h"
 
 namespace scone
 {
-	MimicMeasure::MimicMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
-	Measure( props, par, model, loc )
+	MimicMeasure::MimicMeasure( const PropNode& pn, Params& par, const Model& model, const Location& loc ) :
+		Measure( pn, par, model, loc ),
+		file( FindFile( pn.get<path>( "file" ) ) ),
+		INIT_MEMBER( pn, include_states, xo::pattern_matcher( "*" ) ),
+		INIT_MEMBER( pn, exclude_states, xo::pattern_matcher( "" ) ),
+		INIT_MEMBER( pn, use_best_match, false ),
+		INIT_MEMBER( pn, average_error_limit, 1e9 ),
+		INIT_MEMBER( pn, peak_error_limit, 1e9 )
 	{
-		INIT_PROP_REQUIRED( props, file );
-		INIT_PROP( props, include_states, xo::pattern_matcher( "*" ) );
-		INIT_PROP( props, exclude_states, xo::pattern_matcher( "" ) );
-		INIT_PROP( props, use_best_match, false );
-
-		ReadStorageSto( storage_, FindFile( file ) );
+		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
+		ReadStorageSto( storage_, file );
 
 		auto& s = model.GetState();
 		for ( index_t state_idx = 0; state_idx < s.GetSize(); ++state_idx )
@@ -49,28 +52,36 @@ namespace scone
 
 	bool MimicMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
-		// when using a full motion, terminate when there's no more data
+		// when using a full motion, skip when there's no more data
+		// we don't terminate because there may be other measures
 		if ( !use_best_match && timestamp > storage_.Back().GetTime() )
-			return true;
+			return false;
 
 		auto& s = model.GetState();
 		double error = 0.0;
 		index_t error_idx = 0;
 		for ( auto& m : state_storage_map_ )
 		{
-			auto e = fabs( s[ m.first ] - storage_.GetInterpolatedValue( timestamp, m.second ) );
+			auto e = xo::squared( s[ m.first ] - storage_.GetInterpolatedValue( timestamp, m.second ) );
 			channel_errors_[ error_idx++ ].second = e;
 			error += e;
 		}
 
 		result_.AddSample( timestamp, error / state_storage_map_.size() );
 
+		if ( result_.GetAverage() > average_error_limit || error > peak_error_limit )
+			return true; // early termination
+
 		return false;
 	}
 
 	double MimicMeasure::ComputeResult( const Model& model )
 	{
-		return use_best_match ? result_.GetLowest() : result_.GetAverage();
+		auto result = use_best_match ? result_.GetLowest() : result_.GetAverage();
+		auto penalty_factor = model.GetSimulationEndTime() / model.GetTime();
+		GetReport().set( "mimic_error", result );
+		GetReport().set( "penalty_factor", penalty_factor );
+		return penalty_factor * result;
 	}
 
 	void MimicMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

@@ -9,10 +9,12 @@
 #include "version.h"
 #include "xo/filesystem/path.h"
 #include "xo/filesystem/filesystem.h"
+#include "system_tools.h"
+#include "xo/string/string_cast.h"
 #include <fstream>
 
 constexpr int SCONE_VERSION_MAJOR = 1;
-constexpr int SCONE_VERSION_MINOR = 4;
+constexpr int SCONE_VERSION_MINOR = 5;
 constexpr int SCONE_VERSION_PATCH = 0;
 constexpr const char* SCONE_VERSION_POSTFIX = "";
 
@@ -20,21 +22,10 @@ namespace scone
 {
 	int GetSconeBuildNumber()
 	{
-		xo::path versionpath( xo::get_application_dir() );
+		xo::path versionpath( GetInstallFolder() / ".version" );
 		int build = 0;
-
-		// look for .version file, up to three levels from application folder
-		for ( int level = 0; level <= 3; ++level )
-		{
-			if ( xo::exists( versionpath / ".version" ) )
-			{
-				// .version file found, read its contents
-				std::ifstream ifstr( ( versionpath / ".version" ).str() );
-				ifstr >> build;
-				break;
-			}
-			else versionpath = versionpath / "..";
-		}
+		if ( xo::exists( versionpath ) )
+			xo::from_str( xo::load_string( versionpath ), build );
 		return build;
 	}
 

@@ -14,7 +14,6 @@
 #include "ModelOpenSim3.h"
 #include "BodyOpenSim3.h"
 #include "MuscleOpenSim3.h"
-#include "SimulationOpenSim3.h"
 #include "JointOpenSim3.h"
 #include "DofOpenSim3.h"
 #include "ConstantForce.h"
@@ -75,7 +74,7 @@ namespace scone
 		m_Mass( 0.0 ),
 		m_BW( 0.0 )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		path state_init_file;
 		String probe_class;
@@ -87,7 +86,6 @@ namespace scone
 		INIT_PROP( props, state_init_file, path() );
 		INIT_PROP( props, probe_class, String() );
 
-		INIT_PROP( props, initial_load_dof, "pelvis_ty" );
 		INIT_PROP( props, enable_external_forces, false );
 
 		INIT_PROP( props, leg_upper_body, "femur" );
@@ -104,7 +102,7 @@ namespace scone
 
 		// create new OpenSim Model using resource cache
 		{
-			SCONE_PROFILE_SCOPE( "CreateModel" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
 			model_file = FindFile( model_file );
 			m_pOsimModel = g_ModelCache( model_file.str() );
 			AddExternalResource( model_file );
@@ -113,7 +111,7 @@ namespace scone
 		// create torque and point actuators
 		if ( enable_external_forces )
 		{
-			SCONE_PROFILE_SCOPE( "SetupBodyForces" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "SetupBodyForces" );
 			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
 				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
@@ -126,7 +124,7 @@ namespace scone
 		}
 
 		{
-			//SCONE_PROFILE_SCOPE( "SetupOpenSimParameters" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "SetupOpenSimParameters" );
 
 			// change model properties
 			if ( auto* model_pars = props.try_get_child( "Properties" ) )
@@ -170,20 +168,20 @@ namespace scone
 		// Initialize the system
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
 		{
-			SCONE_PROFILE_SCOPE( "InitSystem" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "InitSystem" );
 			std::scoped_lock lock( g_SimBodyMutex );
 			m_pTkState = &m_pOsimModel->initSystem();
 		}
 
 		// create model component wrappers and sensors
 		{
-			//SCONE_PROFILE_SCOPE( "CreateWrappers" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "CreateWrappers" );
 			CreateModelWrappers( props, par );
 			AddExternalDisplayGeometries( model_file.parent_path() );
 		}
 
 		{
-			//SCONE_PROFILE_SCOPE( "InitVariables" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "InitVariables" );
 			// initialize cached variables to save computation time
 			m_Mass = m_pOsimModel->getMultibodySystem().getMatterSubsystem().calcSystemMass( m_pOsimModel->getWorkingState() );
 			m_BW = xo::length( GetGravity() ) * GetMass();
@@ -192,7 +190,7 @@ namespace scone
 
 		// Create the integrator for the simulation.
 		{
-			//SCONE_PROFILE_SCOPE( "InitIntegrators" );
+			//SCONE_PROFILE_SCOPE( GetProfiler(), "InitIntegrators" );
 			if ( integration_method == "RungeKuttaMerson" )
 				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
 			else if ( integration_method == "RungeKutta2" )
@@ -212,7 +210,7 @@ namespace scone
 
 		// read initial state
 		{
-			SCONE_PROFILE_SCOPE( "InitState" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "InitState" );
 			InitStateFromTk();
 			if ( !state_init_file.empty() )
 			{
@@ -248,7 +246,7 @@ namespace scone
 
 		// Realize acceleration because controllers may need it and in this way the results are consistent
 		{
-			SCONE_PROFILE_SCOPE( "RealizeSystem" );
+			SCONE_PROFILE_SCOPE( GetProfiler(), "RealizeSystem" );
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
 			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
 			m_pOsimManager->setWriteToStorage( false );
@@ -466,6 +464,22 @@ namespace scone
 		return from_osim( m_pOsimModel->calcMassCenterAcceleration( GetTkState() ) );
 	}
 
+	Vec3 ModelOpenSim3::GetLinMom() const
+	{
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[1] );
+	}
+
+	Vec3 ModelOpenSim3::GetAngMom() const
+	{
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[0] );
+	}
+
+	std::pair<Vec3, Vec3> ModelOpenSim3::GetLinAngMom() const
+	{
+		auto cm = m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() );
+		return std::pair<Vec3, Vec3>( from_osim( cm[ 1 ] ), from_osim( cm[ 0 ] ) );
+	}
+
 	Vec3 ModelOpenSim3::GetGravity() const
 	{
 		return from_osim( m_pOsimModel->getGravity() );
@@ -526,7 +540,7 @@ namespace scone
 
 	void ModelOpenSim3::StoreCurrentFrame()
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		// store scone data
 		Model::StoreCurrentFrame();
@@ -534,7 +548,7 @@ namespace scone
 
 	void ModelOpenSim3::AdvanceSimulationTo( double time )
 	{
-		SCONE_PROFILE_FUNCTION;
+		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
 		SCONE_ASSERT( m_pOsimManager );
 
@@ -568,7 +582,7 @@ namespace scone
 				double target_time = GetTime() + fixed_control_step_size;
 
 				{
-					SCONE_PROFILE_SCOPE( "SimTK::TimeStepper::stepTo" );
+					SCONE_PROFILE_SCOPE( GetProfiler(), "SimTK::TimeStepper::stepTo" );
 					auto status = m_pTkTimeStepper->stepTo( target_time );
 					if ( status == SimTK::Integrator::EndOfSimulation )
 						RequestTermination();
@@ -582,7 +596,7 @@ namespace scone
 				// Realize Acceleration, analysis components may need it
 				// this way the results are always consistent
 				{
-					SCONE_PROFILE_SCOPE( "SimTK::MultibodySystem::realize" );
+					SCONE_PROFILE_SCOPE( GetProfiler(), "SimTK::MultibodySystem::realize" );
 					m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 				}
 
@@ -725,8 +739,8 @@ namespace scone
 			log::warning( "Could not find initial state for ", initial_load_dof, " with external force of ", force_threshold );
 			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, initial_state );
 		}
-		//else
-		//	log::TraceF( "Fixed initial state, new_ty=%.6f top=%.6f bottom=%.6f force=%.6f (target=%.6f)", new_ty, top, bottom, force, force_threshold );
+		else
+			log::trace( "Moved ", initial_load_dof, " to ", new_ty, "; force=", force, "; goal=", force_threshold );
 	}
 
 	void ModelOpenSim3::InitStateFromTk()
@@ -830,8 +844,6 @@ namespace scone
 
 	void ModelOpenSim3::SetController( ControllerUP c )
 	{
-		SCONE_PROFILE_FUNCTION;
-
 		Model::SetController( std::move( c ) );
 
 		// Initialize muscle dynamics STEP 1
