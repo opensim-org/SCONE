@@ -14,7 +14,10 @@
   * ''.scone'' files now support // and /* */ style comments.
   * New menu option ''Window -> Reset Window Layout'' to restore the original window layout.
   * SequentialController now outputs which controller is active in the AnalysisWindow, as 'active_index'. Closes #200.
+  * FeedForwardController now has ''include'' and ''exclude'' settings for targeting specific actuators.
   * Measures now have a ''threshold_transition setting'' for gradually decreasing the measure if they approach the threshold (if any). 
+  * BodyMeasure now uses ''direction'' and has option for magnitude.
+  * GaitMeasure ''base_bodies'' now use model foot bodies by default, instead of toes_l / toes_r. This will result in a slightly different outcome for existing scenarios that have no ''base_bodies'' specified.
   * New command line option -b for benchmarking a scenario
   * MimicMeasure now has ''average_error_limit'' and ''peak_error_limit'' options for early termination
   * Option to store linear and angular momentum.
@@ -34,6 +37,7 @@
   * Models are now called ModelOpenSim3 / ModelOpenSim4 to be consistent with the online help. Tutorials have been updated.
   * Current optimization progress is now shown in optimization window tooltip.
   * SCONE now always logs to the terminal under Linux.
+  * Message "Invalid scenario settings" now shows invalid setting(s) in message window.
 
 ==== SCONE 1.4.0 ====
 //Released March 3, 2020//
