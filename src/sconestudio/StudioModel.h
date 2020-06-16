@@ -58,6 +58,8 @@ namespace scone
 		enum class Status { Initializing, Evaluating, Ready, Aborted, Error };
 		Status GetStatus() const { return status_; }
 
+		PropNode GetResult() const;
+
 	private:
 		void FinalizeEvaluation();
 		void InvokeError( const String& message );

@@ -19,6 +19,7 @@
 #include "QGroup.h"
 #include "QValueSlider.h"
 #include "QDockWidget"
+#include "QPropNodeItemModel.h"
 
 #include "ui_SconeStudio.h"
 
@@ -161,6 +162,11 @@ private:
 	QTableView* parView;
 	ParTableModel* parModel;
 	QDockWidget* parViewDock;
+
+	// results
+	QTreeView* reportView;
+	QPropNodeItemModel* reportModel;
+	QDockWidget* reportDock;
 
 	//// dof editor
 	//QFormGroup* dofSliderGroup;

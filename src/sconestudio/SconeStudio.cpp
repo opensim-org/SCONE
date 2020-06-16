@@ -170,6 +170,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	parView = new QTableView( this );
 	parModel = new ParTableModel();
 	parView->setModel( parModel );
+	parView->setEditTriggers( QAbstractItemView::NoEditTriggers );
 	for ( int i = 0; i < parView->horizontalHeader()->count(); ++i )
 		parView->horizontalHeader()->setSectionResizeMode( i, i == 0 ? QHeaderView::Stretch : QHeaderView::ResizeToContents );
 	parView->verticalHeader()->setSectionResizeMode( QHeaderView::Fixed );
@@ -177,6 +178,16 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	parViewDock = createDockWidget( "Optimization &Parameters", parView, Qt::BottomDockWidgetArea );
 	tabifyDockWidget( ui.messagesDock, parViewDock );
 	parViewDock->hide();
+
+	// evaluation report
+	reportView = new QTreeView( this );
+	reportModel = new QPropNodeItemModel();
+	reportView->setModel( reportModel );
+	reportView->setEditTriggers( QAbstractItemView::NoEditTriggers );
+	reportView->header()->setSectionResizeMode( 0, QHeaderView::ResizeToContents );
+	reportView->setIndentation( 12 );
+	reportDock = createDockWidget( "Evaluation &Report", reportView, Qt::BottomDockWidgetArea );
+	reportDock->hide();
 
 	//// dof editor
 	//dofSliderGroup = new QFormGroup( this );
@@ -362,6 +373,10 @@ void SconeStudio::evaluate()
 
 	dlg.setValue( 1000 );
 	scenario_->UpdateVis( scenario_->GetTime() );
+
+	reportModel->setData( scenario_->GetResult() );
+	reportView->expandAll();
+	
 }
 
 void SconeStudio::createVideo()

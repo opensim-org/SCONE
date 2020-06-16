@@ -51,6 +51,7 @@ namespace scone
 				const auto file_type = file.extension_no_dot();
 				if ( file_type == "par" )
 				{
+					model_objective_->info().import_mean_std( file, true );
 					model_ = model_objective_->CreateModelFromParFile( file );
 				}
 				else  // #todo: use ModelObjective::model_ instead? Needs proper parameter initialization
@@ -163,6 +164,15 @@ namespace scone
 		}
 	}
 
+	PropNode StudioModel::GetResult() const
+	{
+		PropNode report;
+		report.add_child( "Result", model_objective_->GetReport( *model_ ) );
+		if ( auto simpn = model_->GetSimulationReport(); !simpn.empty() )
+			report.add_child( "Simulation", model_->GetSimulationReport() );
+		return report;
+	}
+
 	void StudioModel::FinalizeEvaluation()
 	{
 		SCONE_ERROR_IF( !model_objective_, "No model objective" );
@@ -173,12 +183,9 @@ namespace scone
 
 		// show fitness results
 		auto fitness = model_objective_->GetResult( *model_ );
-		log::info( "fitness = ", fitness );
-		PropNode results;
-		results.add_child( "result", model_objective_->GetReport( *model_ ) );
-		if ( !results[ "result" ].empty() )
-			log::info( results );
-		log::info( model_->GetSimulationReport() );
+		//log::info( "fitness = ", fitness );
+		PropNode results = GetResult();
+		log::info( results );
 
 		// write results to file(s)
 		xo::timer t;
