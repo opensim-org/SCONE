@@ -570,7 +570,7 @@ void SconeStudio::helpAbout()
 {
 	QString title = to_qt( "SCONE version " + xo::to_str( GetSconeVersion() ) );
 	QString author = "Copyright (C) 2013 - 2020 Thomas Geijtenbeek and contributors. All rights reserved.";
-	QString license = "SCONE is licensed under the GNU General Public License. It depends on the following libraries):\n\tOpenSim 3.3 (Apache 2.0)\n\tSimbody (Apache 2.0)\n\tQt (GPL / LGPL)\n\tQCustomPlot (GPL v3)\n\tOpenSceneGraph (OSGPL)\n\tLua (MIT)\n\tSol 3 (MIT)\n\tTCLAP (MIT)\n\txo (Apache 2.0)\n\tspot (Apache 2.0)\n\tvis (Apache 2.0)\n\tqtfx (Apache 2.0";
+	QString license = "SCONE is licensed under the GNU General Public License V3.\n\nThe following external libraries are used by SCONE:\n - OpenSim 3.3 (Apache 2.0)\n - Simbody (Apache 2.0)\n - Qt (GPL / LGPL)\n - QCustomPlot (GPL v3)\n - OpenSceneGraph (OSGPL)\n - Lua (MIT)\n - Sol 3 (MIT)\n - TCLAP (MIT)\n - xo (Apache 2.0)\n - spot (Apache 2.0)\n - vis (Apache 2.0)\n - qtfx (Apache 2.0)";
 	information( "About SCONE", title + "\n\n" + author + "\n\n" + license );
 }
 
