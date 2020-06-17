@@ -41,8 +41,6 @@
 #include "scone/measures/MuscleMeasure.h"
 #include "scone/measures/StepMeasure.h"
 
-#include "scone/model/Sensors.h"
-
 #include "scone/optimization/CmaOptimizerSpot.h"
 #include "scone/optimization/CmaPoolOptimizer.h"
 #include "scone/optimization/ImitationObjective.h"
@@ -178,6 +176,19 @@ namespace scone
 	{
 		xo::current_find_file_path( scenario_dir );
 		return GetModelFactory().create( fp.type(), fp.props(), par );
+	}
+
+	StateComponentFactory& GetStateComponentFactory()
+	{
+		static StateComponentFactory g_StateComponentFactory = StateComponentFactory();
+		// TODO register state components
+
+		return g_StateComponentFactory;
+	}
+
+	StateComponentUP CreateStateComponent( const FactoryProps& fp, Params& par, Model& model )
+	{
+		return GetStateComponentFactory().create( fp.type(), fp.props(), par, model );
 	}
 
 	ObjectiveFactory& GetObjectiveFactory()
