@@ -47,6 +47,7 @@
 #include "vis-osg/osg_tools.h"
 #include "vis/plane.h"
 #include "help_tools.h"
+#include "xo/thread/thread_priority.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -336,7 +337,7 @@ void SconeStudio::evaluate()
 	dlg.show();
 	QApplication::processEvents();
 
-	xo::set_thread_priority( xo::thread_priority::highest );
+	xo::scoped_thread_priority prio_raiser( xo::thread_priority::highest );
 
 	const double step_size = 0.01;
 	const xo::time visual_update = 250_ms;
@@ -368,8 +369,6 @@ void SconeStudio::evaluate()
 		auto sim_time = scenario_->GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
-
-	xo::set_thread_priority( xo::thread_priority::normal );
 
 	dlg.setValue( 1000 );
 	scenario_->UpdateVis( scenario_->GetTime() );

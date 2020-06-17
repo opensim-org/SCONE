@@ -12,12 +12,15 @@
 #include "xo/serialization/char_stream.h"
 #include "xo/container/container_algorithms.h"
 #include "xo/time/time.h"
+#include "xo/thread/thread_priority.h"
 #include "Log.h"
 
 namespace scone
 {
 	void BenchmarkScenario( const PropNode& scenario_pn, const path& file, size_t evals )
 	{
+		xo::scoped_thread_priority prio_raiser( xo::thread_priority::realtime );
+
 		auto opt = CreateOptimizer( scenario_pn, file.parent_path() );
 		auto mo = dynamic_cast<ModelObjective*>( &opt->GetObjective() );
 		auto par = SearchPoint( mo->info() );
@@ -33,6 +36,7 @@ namespace scone
 		xo::time duration;
 		for ( index_t idx = 0; idx < evals; ++idx )
 		{
+			log::info( "Trial ", idx + 1, " of ", evals );
 			xo::timer t;
 			auto model = mo->CreateModelFromParams( par );
 			model->SetStoreData( false );
