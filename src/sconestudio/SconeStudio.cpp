@@ -443,13 +443,17 @@ void SconeStudio::muscleAnalysis()
 
 void SconeStudio::updateGaitAnalysis()
 {
-	if ( scenario_ && !scenario_->IsEvaluating() )
+	try
 	{
-		gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
-		gaitAnalysisDock->setWindowTitle( gaitAnalysis->info() );
-		gaitAnalysisDock->show();
-		gaitAnalysisDock->raise();
+		if ( scenario_ && !scenario_->IsEvaluating() )
+		{
+			gaitAnalysis->update( scenario_->GetData(), scenario_->GetFileName() );
+			gaitAnalysisDock->setWindowTitle( gaitAnalysis->info() );
+			gaitAnalysisDock->show();
+			gaitAnalysisDock->raise();
+		}
 	}
+	catch ( const std::exception& e ) { error( "Error", e.what() ); }
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
@@ -929,6 +933,14 @@ void SconeStudio::updateViewSettings()
 			f.set( va.first, va.second->isChecked() );
 		scenario_->ApplyViewSettings( f );
 		ui.osgViewer->repaint();
+	}
+}
+
+void SconeStudio::showSettingsDialog()
+{
+	if ( settings.showDialog( this ) == QDialog::Accepted )
+	{
+		gaitAnalysis->reset();
 	}
 }
 

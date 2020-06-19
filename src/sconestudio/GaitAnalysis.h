@@ -10,6 +10,7 @@ namespace scone
 	{
 	public:
 		GaitAnalysis( QWidget* parent = nullptr );
+		void reset();
 		void update( const Storage<>& sto, const path& filename );
 
 		Real threshold_;

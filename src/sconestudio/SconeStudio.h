@@ -90,7 +90,7 @@ public slots:
 	void updateGaitAnalysis();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
-	void showSettingsDialog() { settings.showDialog( this ); }
+	void showSettingsDialog();
 	void setPlaybackTime( TimeInSeconds t ) { setTime( t, true ); }
 	void updateTabTitles();
 	void findDialog() { if ( auto* e = getActiveCodeEditor() ) e->findDialog(); }

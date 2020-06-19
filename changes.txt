@@ -2,7 +2,6 @@
 ====== SCONE Version History ======
 
 ==== SCONE 1.5.0 ====
-//Released June 10, 2020//
 
 === New Features ===
   * New ''Parameter View'' window that shows all optimization parameters in the current scenario.
@@ -39,6 +38,8 @@
   * Current optimization progress is now shown in optimization window tooltip.
   * SCONE now always logs to the terminal under Linux.
   * Message "Invalid scenario settings" now shows invalid setting(s) in message window.
+  * Gait Analysis now provides more useful error messages when loading a template.
+  * No longer is a restart required after selecting a different gait analysis template.
 
 ==== SCONE 1.4.0 ====
 //Released March 3, 2020//

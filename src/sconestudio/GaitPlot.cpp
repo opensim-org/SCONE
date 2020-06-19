@@ -10,6 +10,7 @@
 #include "xo/numerical/interpolation.h"
 #include "xo/numerical/math.h"
 #include "xo/utility/frange.h"
+#include "scone/core/Log.h"
 
 namespace scone
 {
@@ -44,26 +45,30 @@ namespace scone
 		// norm data
 		auto norm_min = pn.try_get_child( "norm_min" );
 		auto norm_max = pn.try_get_child( "norm_max" );
-		if ( norm_min && norm_max && norm_min->size() == norm_max->size() )
+		if ( norm_min && norm_max )
 		{
-			auto* top = plot_->addGraph();
-			auto* bot = plot_->addGraph();
-			norm_data_.reserve( norm_min->size() );
-			for ( index_t i = 0; i < norm_min->size(); ++i )
+			if ( norm_min->size() == norm_max->size() )
 			{
-				auto yt = norm_max->get<double>( i ) + norm_offset_;
-				auto yb = norm_min->get<double>( i ) + norm_offset_;
-				y_min_ = xo::min( y_min_, yb );
-				y_max_ = xo::max( y_max_, yt );
-				double x = 100.0 * i / ( norm_min->size() - 1 );
-				top->addData( x, yt );
-				bot->addData( x, yb );
-				norm_data_[ x ] = { yb, yt };
+				auto* top = plot_->addGraph();
+				auto* bot = plot_->addGraph();
+				norm_data_.reserve( norm_min->size() );
+				for ( index_t i = 0; i < norm_min->size(); ++i )
+				{
+					auto yt = norm_max->get<double>( i ) + norm_offset_;
+					auto yb = norm_min->get<double>( i ) + norm_offset_;
+					y_min_ = xo::min( y_min_, yb );
+					y_max_ = xo::max( y_max_, yt );
+					double x = 100.0 * i / ( norm_min->size() - 1 );
+					top->addData( x, yt );
+					bot->addData( x, yb );
+					norm_data_[ x ] = { yb, yt };
+				}
+				top->setPen( Qt::NoPen );
+				bot->setPen( Qt::NoPen );
+				top->setBrush( QColor( 0, 0, 0, 30.0 ) );
+				top->setChannelFillGraph( bot );
 			}
-			top->setPen( Qt::NoPen );
-			bot->setPen( Qt::NoPen );
-			top->setBrush( QColor( 0, 0, 0, 30.0 ) );
-			top->setChannelFillGraph( bot );
+			else log::warning( "Invalid norm data for ", title_, ", norm_min has ", norm_min->size(), " data points, norm_max has ", norm_max->size() );
 		}
 
 		// margins
@@ -110,7 +115,8 @@ namespace scone
 		for ( const auto& cycle : cycles )
 		{
 			bool right = cycle.side_ == RightSide;
-			auto channel_idx = sto.GetChannelIndex( right ? right_channel_ : left_channel_ );
+			const auto& channel_name = right ? right_channel_ : left_channel_;
+			auto channel_idx = sto.GetChannelIndex( channel_name );
 			if ( channel_idx != no_index )
 			{
 				auto* graph = plot_cycles ? plot_->addGraph() : nullptr;
@@ -124,23 +130,29 @@ namespace scone
 					avg_data[ perc ] += s * value;
 				}
 			}
+			else log::error( "Could not find channel for Gait Analysis: ", channel_name );
 		}
 
 		// add average data plot
-		auto* avg_graph = plot_->addGraph();
-		avg_graph->setPen( QPen( Qt::black, 1.5 ) );
-		for ( auto& e : avg_data )
-			avg_graph->addData( e.first, e.second );
+		if ( !avg_data.empty() )
+		{
+			auto* avg_graph = plot_->addGraph();
+			avg_graph->setPen( QPen( Qt::black, 1.5 ) );
+			for ( auto& e : avg_data )
+				avg_graph->addData( e.first, e.second );
+		}
 
 		// compute average error in STD
-		double error = 0.0;
-		for ( const auto& [x, r] : norm_data_ )
-			error += xo::abs( r.get_violation( xo::lerp_map( avg_data, x ) ) ) / xo::max( 0.01, r.range() );
-		error /= norm_data_.size();
-		auto fit_perc = 100.0 * xo::clamped( 1.0 - error, 0.0, 1.0 );
-
-		if ( plot_title_&& GetStudioSetting<bool>( "gait_analysis.show_fit" ) )
-			plot_title_->setText( title_.c_str() + QString::asprintf( " (%.1f%%)", fit_perc ) );
+		if ( !norm_data_.empty() )
+		{
+			double error = 0.0;
+			for ( const auto& [x, r] : norm_data_ )
+				error += xo::abs( r.get_violation( xo::lerp_map( avg_data, x ) ) ) / xo::max( 0.01, r.range() );
+			error /= norm_data_.size();
+			auto fit_perc = 100.0 * xo::clamped( 1.0 - error, 0.0, 1.0 );
+			if ( plot_title_ && GetStudioSetting<bool>( "gait_analysis.show_fit" ) )
+				plot_title_->setText( title_.c_str() + QString::asprintf( " (%.1f%%)", fit_perc ) );
+		}
 		plot_->replot();
 	}
 }

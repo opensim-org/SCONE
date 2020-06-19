@@ -16,22 +16,37 @@ namespace scone
 {
 	GaitAnalysis::GaitAnalysis( QWidget* parent ) :
 		QWidget( parent ),
+		grid_( nullptr ),
 		threshold_( 0.01 ),
 		skip_first_( 2 ),
-		skip_last_( 1 ),
-		info_( "Gait Analysis" )
+		skip_last_( 1 )
 	{
+		reset();
+	}
+
+	void GaitAnalysis::reset()
+	{
+		if ( grid_ )
+			delete grid_;
+		plots_.clear();
+		info_ = "Gait Analysis";
+
 		grid_ = new QGridLayout( this );
 		grid_->setContentsMargins( 0, 0, 0, 0 );
 		grid_->setSpacing( 0 );
 
-		auto plot_pn = xo::load_file( GetStudioSetting<path>( "gait_analysis.template" ) );
-		for ( const auto& pn : plot_pn )
+		xo::error_code ec;
+		auto plot_pn = xo::load_file( GetStudioSetting<path>( "gait_analysis.template" ), &ec );
+		if ( ec.good() )
 		{
-			auto plot = new GaitPlot( pn.second );
-			grid_->addWidget( plot, plot->row_, plot->column_ );
-			plots_.push_back( plot );
+			for ( const auto& pn : plot_pn )
+			{
+				auto plot = new GaitPlot( pn.second );
+				grid_->addWidget( plot, plot->row_, plot->column_ );
+				plots_.push_back( plot );
+			}
 		}
+		else log::error( "Error loading gait analysis template: ", ec.message() );
 	}
 
 	void GaitAnalysis::update( const Storage<>& sto, const path& filename )
