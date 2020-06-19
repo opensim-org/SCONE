@@ -2,6 +2,7 @@
 ====== SCONE Version History ======
 
 ==== SCONE 1.5.0 ====
+//Released June 19, 2020//
 
 === New Features ===
   * New ''Parameter View'' window that shows all optimization parameters in the current scenario.
@@ -11,15 +12,16 @@
   * ''GaitStateController'' can now have single-sided controllers, using the ''legs'' parameter.
   * Help menu now has links for ''About...'' and ''User Forum''
   * New (very useful!) text editor option: Press ''Ctrl + /'' to toggle comments for the current selection.
-  * ''.scone'' files now support // and /* */ style comments.
+  * ''.scone'' files now support ''//'' and ''/*'' ''*/'' style comments.
   * New menu option ''Window -> Reset Window Layout'' to restore the original window layout.
-  * SequentialController now outputs which controller is active in the AnalysisWindow, as 'active_index'. Closes #200.
-  * FeedForwardController now has ''include'' and ''exclude'' settings for targeting specific actuators.
+  * ''EffortMeasure'' now supports ''SquaredMuscleActivation''.
+  * ''SequentialController'' now outputs which controller is active in the AnalysisWindow, as 'active_index'. Closes #200.
+  * ''FeedForwardController'' now has ''include'' and ''exclude'' settings for targeting specific actuators.
   * Measures now have a ''threshold_transition setting'' for gradually decreasing the measure if they approach the threshold (if any). 
-  * BodyMeasure now uses ''direction'' and has option for magnitude.
-  * GaitMeasure ''base_bodies'' now use model foot bodies by default, instead of toes_l / toes_r. This will result in a slightly different outcome for existing scenarios that have no ''base_bodies'' specified.
+  * ''BodyMeasure'' now uses ''direction'' and has option for magnitude.
+  * ''GaitMeasure'' ''base_bodies'' now use model foot bodies by default, instead of toes_l / toes_r. This will result in a slightly different outcome for existing scenarios that have no ''base_bodies'' specified.
   * New command line option -b for benchmarking a scenario
-  * MimicMeasure now has ''average_error_limit'' and ''peak_error_limit'' options for early termination
+  * ''MimicMeasure'' now has ''average_error_limit'' and ''peak_error_limit'' options for early termination
   * Option to store linear and angular momentum.
 
 === Updates and Fixes ===
