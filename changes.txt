@@ -12,7 +12,7 @@
   * ''GaitStateController'' can now have single-sided controllers, using the ''legs'' parameter.
   * Help menu now has links for ''About...'' and ''User Forum''
   * New (very useful!) text editor option: Press ''Ctrl + /'' to toggle comments for the current selection.
-  * ''.scone'' files now support ''//'' and ''/*'' ''*/'' style comments.
+  * ''.scone'' files now support ''%%//%%'' and ''/*'' ''*/'' style comments.
   * New menu option ''Window -> Reset Window Layout'' to restore the original window layout.
   * ''EffortMeasure'' now supports ''SquaredMuscleActivation''.
   * ''SequentialController'' now outputs which controller is active in the AnalysisWindow, as 'active_index'. Closes #200.
