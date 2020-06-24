@@ -33,6 +33,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 # Silence CMake warning on OSX.
 set(CMAKE_MACOSX_RPATH ON)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+# Set a relative rpath for Linux/OSX
+#
+#  This enables a portable install of SCONE, where the user can just
+#  unpack the executables + libraries *somewhere* (not known at
+#  compile-time) and run SCONE.
+if (UNIX OR APPLE)
+  # Relative path, because the binaries will be placed in
+  # <install_dir>/bin, and the libraries will be place in
+  # <install_dir>/lib.
+endif()
 
 # Process source code.
 # --------------------

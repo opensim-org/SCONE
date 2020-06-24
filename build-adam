@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# dependencies: freeglut3-dev libxi-dev libxmu-dev liblapack-dev libqt5widgets5 libqt5opengl5-dev qt5-default
+
+if ! command -v osgwindows; then
+    echo "cannot run 'osgwindows': is openscenegraph installed? It can be installed with:"
+    echo "    sudo apt-get install libopenscenegraph-3.4-dev"
+fi
+
+export OPENSIM_HOME="${PWD}/opensim-core"
+
+if [ ! -d "${OPENSIM_HOME}" ]; then
+    echo "${OPENSIM_HOME}: does not exist, fetching binary from sourceforge"
+
+    osc_files_dir="https://sourceforge.net/projects/dependencies/files/opensim-core"
+    osc_tarball="opensim-core-3.3-ubuntu-18.04.tar.xz"
+    
+    wget "${osc_files_dir}/${osc_tarball}"
+    tar -xvf "${osc_tarball}"
+fi
+
+export PATH="${OPENSIM_HOME}/bin:${PATH}"
+export LD_LIBRARY_PATH="${OPENSIM_HOME}/lib:${LD_LIBRARY_PATH:-}"
+
+set -x
+
+git submodule update --init --recursive
+mkdir -p build/
+
+project_dir=${PWD}
+
+pushd build/
+set +x
+cmake ../ \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_VERBOSE_MAKEFILE=TRUE \
+      -DCMAKE_INSTALL_PREFIX="${project_dir}/install" \
+      -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/" \
+      -DOPENSIM_INSTALL_DIR="${OPENSIM_HOME}" \
+      -DOPENSIM_INCLUDE_DIR="${OPENSIM_HOME}/sdk/include"
+
+make -j$(nproc)
+popd

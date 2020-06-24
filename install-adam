@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Packages built SCONE binaries/scripts etc. into something vaguely
+# resembling a standalone portable (i.e. "fat") installation
+
+install_dir="install/linux"
+
+set -xeuo pipefail
+
+mkdir -p "${install_dir}"
+
+# copy the binaries
+mkdir -p "${install_dir}/bin"
+cp -r build/bin/* "${install_dir}/bin"
+
+# copy the libraries
+mkdir -p "${install_dir}/lib"
+find "build/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
+find "opensim-core/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+
+# copy the runtime resources
+mkdir -p "${install_dir}/share/resources"
+cp -r resources/* "${install_dir}/share/resources"
+
+# create .version document in the install root (required to run it)
+git rev-list --count HEAD > "${install_dir}/.version"

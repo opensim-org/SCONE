@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cd build/bin
+QT_LOGGING_RULES='*=false' LD_LIBRARY_PATH="${PWD}/../../opensim-core/lib:${LD_LIBRARY_PATH}" ./sconestudio
