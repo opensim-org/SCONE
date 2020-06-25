@@ -2,8 +2,6 @@
 
 set -exuo pipefail
 
-sudo apt-get update
-
 system_dependencies=(
     cmake
     make
@@ -23,6 +21,9 @@ system_dependencies=(
     qt5-default
     libopenscenegraph-3.4-dev
 )
+OPENSIM_HOME="${PWD}/opensim-core"
+OSC_SOURCEFORGE_FILES="https://sourceforge.net/projects/dependencies/files/opensim-core"
+OSC_TARBALL_NAME="opensim-core-3.3-ubuntu-18.04.tar.xz"
 
 # only install g++/gcc if the user hasn't already installed them
 # (e.g. because it's a fresh computer) AND the user hasn't specified a
@@ -39,24 +40,21 @@ if [[ -z "${CC:-}" ]]; then
     fi
 fi
 
+
 echo "installing system-level dependencies"
-sudo apt-get install ${system_dependencies[@]}
+sudo apt-get update && sudo apt-get install ${system_dependencies[@]}
 
 echo "installing fpm (used to create packages)"
 sudo gem install --no-document fpm
 
 echo "installing opensim3"
-OPENSIM_HOME="${PWD}/opensim-core"
 if [ -d "${OPENSIM_HOME}" ]; then
     echo "OPENSIM_HOME (${OPENSIM_HOME}): already exists: skipping"
 else
     echo "${OPENSIM_HOME}: does not exist, fetching binary from sourceforge"
 
-    osc_files_dir="https://sourceforge.net/projects/dependencies/files/opensim-core"
-    osc_tarball="opensim-core-3.3-ubuntu-18.04.tar.xz"
-
-    wget "${osc_files_dir}/${osc_tarball}"
-    tar -xf "${osc_tarball}"
-    echo "${osc_tarball}: unpacked"
-    ls opensim-core
+    wget "${OSC_SOURCEFORGE_FILES}/${OSC_TARBALL_NAME}"
+    tar -xf "${OSC_TARBALL_NAME}"
+    echo "${OSC_TARBALL_NAME}: unpacked"
+    ls opensim-core/
 fi

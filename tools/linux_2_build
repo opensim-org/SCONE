@@ -1,26 +1,24 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -exuo pipefail
 
 OPENSIM_HOME="${OPENSIM_HOME:-${PWD}/opensim-core}"
-#export PATH="${OPENSIM_HOME}/bin:${PATH}"
 CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(nproc)}"
+PROJECT_DIR="${PWD}"
 
 set -x
 git submodule update --init --recursive
 mkdir -p build/
-project_dir="${PWD}"
 
-pushd build/
+cd build/
 set +x
-#LD_LIBRARY_PATH="${OPENSIM_HOME}/lib:${LD_LIBRARY_PATH:-}"
+
 cmake ../ \
       -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
       -DCMAKE_VERBOSE_MAKEFILE=TRUE \
-      -DCMAKE_INSTALL_PREFIX="${project_dir}/install" \
-      -DCMAKE_PREFIX_PATH="/usr/lib/x86_64-linux-gnu/" \
+      -DCMAKE_INSTALL_PREFIX="${PROJECT_DIR}/install" \
       -DOPENSIM_INSTALL_DIR="${OPENSIM_HOME}" \
       -DOPENSIM_INCLUDE_DIR="${OPENSIM_HOME}/sdk/include"
+
 make "-j${NUM_BUILD_JOBS}"
-popd
