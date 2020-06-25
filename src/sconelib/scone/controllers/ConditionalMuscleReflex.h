@@ -10,6 +10,7 @@
 
 #include "MuscleReflex.h"
 #include "scone/core/Angle.h"
+#include "scone/core/Range.h"
 
 namespace scone
 {

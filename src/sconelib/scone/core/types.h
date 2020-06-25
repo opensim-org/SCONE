@@ -33,6 +33,7 @@ namespace scone
 	// forward declarations
 	SCONE_DECLARE_CLASS_AND_PTR( Simulation );
 	SCONE_DECLARE_CLASS_AND_PTR( Model );
+	SCONE_DECLARE_CLASS_AND_PTR( StateComponent );
 	SCONE_DECLARE_CLASS_AND_PTR( Body );
 	SCONE_DECLARE_CLASS_AND_PTR( ContactForce );
 	SCONE_DECLARE_CLASS_AND_PTR( ContactGeometry );

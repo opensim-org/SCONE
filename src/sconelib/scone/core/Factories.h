@@ -18,6 +18,7 @@
 
 #include "scone/controllers/Reflex.h"
 #include "scone/model/Model.h"
+#include "scone/model/StateComponent.h"
 #include "scone/model/Location.h"
 
 namespace scone
@@ -47,6 +48,10 @@ namespace scone
 	using ModelFactory = xo::factory< Model, const PropNode&, Params& >;
 	SCONE_API ModelFactory& GetModelFactory();
 	SCONE_API ModelUP CreateModel( const FactoryProps& fp, Params& par, const path& scenario_dir );
+
+	using StateComponentFactory = xo::factory< StateComponent, const PropNode&, Params&, Model& >;
+	SCONE_API StateComponentFactory& GetStateComponentFactory();
+	SCONE_API StateComponentUP CreateStateComponent( const FactoryProps& fp, Params& par, Model& model );
 
 	using ObjectiveFactory = xo::factory< Objective, const PropNode&, const path& >;
 	SCONE_API ObjectiveFactory& GetObjectiveFactory();
