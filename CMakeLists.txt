@@ -31,21 +31,23 @@ find_package(Qt5Widgets)
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CONFIG_NAME}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-# Silence CMake warning on OSX.
-set(CMAKE_MACOSX_RPATH ON)
-set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
-
-# Set a relative rpath for Linux/OSX
+# Set `rpath` when building for Linux/OSX
 #
 #  This enables a portable install of SCONE, where the user can just
 #  unpack the executables + libraries *somewhere* (not known at
-#  compile-time) and run SCONE.
+#  compile-time) and execute any SCONE binary.
 if (UNIX OR APPLE)
-  # Relative path, because the binaries will be placed in
-  # <install_dir>/bin, and the libraries will be place in
-  # <install_dir>/lib.
+    set(CMAKE_MACOSX_RPATH ON)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+    # This is necessary because newer linkers "helpfully" interpret
+    # `rpath` as `RUNPATH`, which does not transistively apply the
+    # rpath to all dependencies (which means that any of SCONE's
+    # transitive library dependencies will fail to be located at
+    # runtime)
+    set(CMAKE_EXE_LINKER_FLAGS "-Wl,--disable-new-dtags")
 endif()
 
 # Process source code.

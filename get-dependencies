@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -exuo pipefail
+
+echo "installing system-level dependencies"
+apt-get install $(cat dependencies-debian)
+
+echo "installing opensim3"
+export OPENSIM_HOME="${PWD}/opensim-core"
+if [ -d "${OPENSIM_HOME}" ]; then
+    echo "OPENSIM_HOME (${OPENSIM_HOME}): already exists: skipping"
+else
+    echo "${OPENSIM_HOME}: does not exist, fetching binary from sourceforge"
+
+    osc_files_dir="https://sourceforge.net/projects/dependencies/files/opensim-core"
+    osc_tarball="opensim-core-3.3-ubuntu-18.04.tar.xz"
+    
+    wget "${osc_files_dir}/${osc_tarball}"
+    tar -xvf "${osc_tarball}"
+fi

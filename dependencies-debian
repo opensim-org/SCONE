@@ -1,0 +1,11 @@
+gcc
+g++
+cmake
+make
+freeglut3-dev
+libxi-dev
+libxmu-dev
+liblapack-dev
+libqt5widgets5
+libqt5opengl5-dev
+qt5-default

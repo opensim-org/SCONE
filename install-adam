@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# Packages built SCONE binaries/scripts etc. into something vaguely
-# resembling a standalone portable (i.e. "fat") installation
+# Packages built SCONE binaries/scripts etc. into a standalone
+# directory structure that is only dependent on common system
+# libraries (e.g. OpenGL, Qt5).
+#
+# This is a prerequisite for packaging into an installer (e.g. `.deb`,
+# which will also install any dependencies).
 
 install_dir="install/linux"
 
@@ -19,8 +23,8 @@ find "build/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
 find "opensim-core/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
 
 # copy the runtime resources
-mkdir -p "${install_dir}/share/resources"
-cp -r resources/* "${install_dir}/share/resources"
+mkdir -p "${install_dir}/resources"
+cp -r resources/* "${install_dir}/resources"
 
 # create .version document in the install root (required to run it)
 git rev-list --count HEAD > "${install_dir}/.version"
