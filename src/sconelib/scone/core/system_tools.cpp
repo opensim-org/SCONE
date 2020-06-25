@@ -21,7 +21,7 @@
 namespace {
 	using scone::path;
 
-	path GetInstallFolderUncached()
+	path FindInstallFolder()
 	{
 		path p = xo::get_application_dir();
 		for ( ; !p.empty(); p = p.parent_path() )
@@ -44,7 +44,7 @@ namespace scone
 {
 	path GetInstallFolder()
 	{
-		static const path g_RootFolder = GetInstallFolderUncached();
+		static const path g_RootFolder = FindInstallFolder();
 		return g_RootFolder;
 	}
 
