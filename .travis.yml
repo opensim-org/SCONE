@@ -1,7 +1,8 @@
-language: cpp
 dist: bionic
-script:
-  - ./tools/linux_1_get-dependencies
-  - ./tools/linux_2_build
-  - ./tools/linux_3_create-install-dirtree
-  - ./tools/linux_4_package
+script: >-
+  export PATH="${PWD}/tools:${PATH}"
+  set -e
+  linux_1_get-dependencies
+  linux_2_build
+  linux_3_create-install-dirtree
+  linux_4_package
