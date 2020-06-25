@@ -39,7 +39,15 @@ cat <<EOF > "${usr_dir}/local/bin/sconestudio"
 
 scone_install_dir="/opt/scone"
 
-LD_LIBRARY_PATH="\${scone_install_dir}/libs" "\${scone_install_dir}/bin/sconestudio"
+# ensure dynamic linker can find SCONE's libraries
+export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
+
+# add exes onto the PATH so that the application name appears
+# non-absolute when queried via argv[0] *but* the working dir
+# is still wherever the user ran this script.
+export PATH="\${scone_install_dir}/bin:\${PATH}"
+
+sconestudio
 EOF
 chmod +x "${usr_dir}/local/bin/sconestudio"
 
@@ -47,6 +55,15 @@ cat <<EOF > "${usr_dir}/local/bin/sconecmd"
 #!/usr/bin/env bash
 
 scone_install_dir="/opt/scone"
-LD_LIBRARY_PATH="\${scone_install_dir}/libs" "\${scone_install_dir}/bin/sconecmd"
+
+# ensure dynamic linker can find SCONE's libraries
+export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
+
+# add exes onto the PATH so that the application name appears
+# non-absolute when queried via argv[0] *but* the working dir
+# is still wherever the user ran this script.
+export PATH="\${scone_install_dir}/bin:\${PATH}"
+
+sconecmd
 EOF
 chmod +x "${usr_dir}/local/bin/sconecmd"

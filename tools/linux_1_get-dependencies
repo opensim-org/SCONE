@@ -17,7 +17,7 @@ else
 
     osc_files_dir="https://sourceforge.net/projects/dependencies/files/opensim-core"
     osc_tarball="opensim-core-3.3-ubuntu-18.04.tar.xz"
-    
+
     wget "${osc_files_dir}/${osc_tarball}"
     tar -xvf "${osc_tarball}"
 fi
