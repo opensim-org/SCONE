@@ -8,20 +8,6 @@ export LD_LIBRARY_PATH="${OPENSIM_HOME}/lib:${LD_LIBRARY_PATH:-}"
 CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(nproc)}"
 
-if ! command -v osgwindows; then
-    echo "osgwindows: no such command: this binary is from the (expected) 'openscenegraph' dependency" 1>&2
-    echo "have installed dependencies before running this build? try with:" 1>&2
-    echo "    ./tools/install-dependencies" 1>&2
-    exit 1
-fi
-
-if [ ! -d "${OPENSIM_HOME}" ]; then
-    echo "OPENSIM_HOME (${OPENSIM_HOME}): does not exist: must be set to a directory containing OpenSim3" 1>&2
-    echo "have you installed dependencies before running this build? try with:" 1>&2
-    echo "    ./tools/install-dependencies" 1>&2
-    exit 1
-fi
-
 set -x
 git submodule update --init --recursive
 mkdir -p build/
