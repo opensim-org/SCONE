@@ -2,14 +2,51 @@
 
 set -exuo pipefail
 
-echo "installing system-level dependencies"
-sudo apt-get update && sudo apt-get install $(cat "${BASH_SOURCE%/*}/linux_debian_build-dependencies")
+sudo apt-get update
 
-echo "installing fpm (package creation)"
+system_dependencies=(
+    cmake
+    make
+
+    # for 'fpm'
+    ruby
+    ruby-dev
+    rubygems
+
+    # for scone
+    freeglut3-dev
+    libxi-dev
+    libxmu-dev
+    liblapack-dev
+    libqt5widgets5
+    libqt5opengl5-dev
+    qt5-default
+    libopenscenegraph-3.4-dev
+)
+
+# only install g++/gcc if the user hasn't already installed them
+# (e.g. because it's a fresh computer) AND the user hasn't specified a
+# custom compiler override (e.g. by setting CC/CXX to 'clang').
+if [[ -z "${CXX:-}" ]]; then
+    if ! command -v g++; then
+        system_dependencies+=(g++)
+    fi
+fi
+
+if [[ -z "${CC:-}" ]]; then
+    if ! command -v gcc; then
+        system_dependencies+=(gcc)
+    fi
+fi
+
+echo "installing system-level dependencies"
+sudo apt-get install ${system_dependencies[@]}
+
+echo "installing fpm (used to create packages)"
 sudo gem install --no-document fpm
 
 echo "installing opensim3"
-export OPENSIM_HOME="${PWD}/opensim-core"
+OPENSIM_HOME="${PWD}/opensim-core"
 if [ -d "${OPENSIM_HOME}" ]; then
     echo "OPENSIM_HOME (${OPENSIM_HOME}): already exists: skipping"
 else
@@ -19,5 +56,7 @@ else
     osc_tarball="opensim-core-3.3-ubuntu-18.04.tar.xz"
 
     wget "${osc_files_dir}/${osc_tarball}"
-    tar -xvf "${osc_tarball}"
+    tar -xf "${osc_tarball}"
+    echo "${osc_tarball}: unpacked"
+    ls opensim-core
 fi

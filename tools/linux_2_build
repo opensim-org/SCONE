@@ -2,9 +2,8 @@
 
 set -euo pipefail
 
-export OPENSIM_HOME="${OPENSIM_HOME:-${PWD}/opensim-core}"
-export PATH="${OPENSIM_HOME}/bin:${PATH}"
-export LD_LIBRARY_PATH="${OPENSIM_HOME}/lib:${LD_LIBRARY_PATH:-}"
+OPENSIM_HOME="${OPENSIM_HOME:-${PWD}/opensim-core}"
+#export PATH="${OPENSIM_HOME}/bin:${PATH}"
 CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(nproc)}"
 
@@ -15,6 +14,7 @@ project_dir="${PWD}"
 
 pushd build/
 set +x
+#LD_LIBRARY_PATH="${OPENSIM_HOME}/lib:${LD_LIBRARY_PATH:-}"
 cmake ../ \
       -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
       -DCMAKE_VERBOSE_MAKEFILE=TRUE \
