@@ -41,7 +41,7 @@ namespace {
 
 namespace scone
 {
-	path GetInstallFolder()
+	const path& GetInstallFolder()
 	{
 		static const path g_RootFolder = FindInstallFolder();
 		return g_RootFolder;
