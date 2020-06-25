@@ -3,7 +3,7 @@
 set -exuo pipefail
 
 echo "installing system-level dependencies"
-sudo apt-get install $(cat "${BASH_SOURCE%/*}/linux_debian_build-dependencies")
+sudo apt-get update && sudo apt-get install $(cat "${BASH_SOURCE%/*}/linux_debian_build-dependencies")
 
 echo "installing fpm (package creation)"
 sudo gem install --no-document fpm
