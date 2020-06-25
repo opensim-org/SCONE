@@ -7,7 +7,7 @@ fpm \
     --force \
     --name "scone" \
     --version "$(cat linux/opt/scone/.version)" \
-    --maintainer "Tom" \
+    --maintainer "Thomas Geijtenbeek <T.Geijtenbeek@tudelft.nl>" \
     --url "https://github.com/opensim-org/SCONE" \
     --description "open-source software for predictive simulation of biological motion" \
     --license "gnu-3.0" \
@@ -17,7 +17,7 @@ fpm \
     \
     --depends libqt5opengl5 \
     --depends qt5-default \
-    --depends libopenscenegraph-3.4-131\
+    --depends libopenscenegraph-3.4-131 \
     --depends freeglut3 \
     --depends liblapack3 \
     --depends libqt5widgets5 \
