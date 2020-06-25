@@ -13,3 +13,4 @@ liblapack-dev
 libqt5widgets5
 libqt5opengl5-dev
 qt5-default
+libopenscenegraph-3.4-dev
