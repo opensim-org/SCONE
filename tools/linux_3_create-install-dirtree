@@ -67,3 +67,13 @@ export PATH="\${scone_install_dir}/bin:\${PATH}"
 sconecmd
 EOF
 chmod +x "${usr_dir}/local/bin/sconecmd"
+
+# <install_loc>/resource/scone_icon.png: desktop-suitable icon
+cp "src/sconestudio/scone_icon.png" "${install_dir}/resources"
+
+# /usr/share/applications/scone.desktop
+#
+#    desktop UI shortcuts so that sconestudio can be booted from the
+#    desktop easily.
+mkdir -p "${usr_dir}/share/applications"
+cp sconestudio.desktop "${usr_dir}/share/applications/"
