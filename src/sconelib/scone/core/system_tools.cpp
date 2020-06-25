@@ -26,8 +26,7 @@ namespace {
 		path p = xo::get_application_dir();
 		for ( ; !p.empty(); p = p.parent_path() )
 		{
-			path config = p / ".sconeroot";
-			if ( xo::exists( config ) )
+			if ( path config = p / ".sconeroot"; xo::exists( config ) )
 			{
 				return xo::load_string( config );
 			}
