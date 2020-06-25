@@ -3,7 +3,10 @@
 set -exuo pipefail
 
 echo "installing system-level dependencies"
-apt-get install $(cat dependencies-debian)
+apt-get install $(cat "${BASH_SOURCE%/*}/linux_debian_build-dependencies")
+
+echo "installing fpm (package creation)"
+gem install --no-document fpm
 
 echo "installing opensim3"
 export OPENSIM_HOME="${PWD}/opensim-core"

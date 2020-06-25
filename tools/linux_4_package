@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -xeu
+
+cd install/
+fpm \
+    --force \
+    --name "scone" \
+    --version "$(cat linux/opt/scone/.version)" \
+    --maintainer "Tom" \
+    --url "https://github.com/opensim-org/SCONE" \
+    --description "open-source software for predictive simulation of biological motion" \
+    --license "gnu-3.0" \
+    --architecture "x86_64" \
+    --input-type "dir" \
+    --output-type "deb" \
+    \
+    --depends libqt5opengl5 \
+    --depends qt5-default \
+    --depends libopenscenegraph-3.4-131\
+    --depends freeglut3 \
+    --depends liblapack3 \
+    --depends libqt5widgets5 \
+    \
+    linux/=/

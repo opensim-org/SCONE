@@ -2,6 +2,10 @@ gcc
 g++
 cmake
 make
+ruby
+ruby-dev
+rubygems
+build-essential
 freeglut3-dev
 libxi-dev
 libxmu-dev

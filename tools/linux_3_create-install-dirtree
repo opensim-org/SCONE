@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# Packages built SCONE binaries/scripts etc. into a standalone
+# directory structure that is only dependent on common system
+# libraries (e.g. OpenGL, Qt5).
+#
+# This is a prerequisite for packaging into an installer (e.g. `.deb`,
+# which will also install any dependencies).
+
+base_dir="install/linux"
+install_dir="${base_dir}/opt/scone"
+usr_dir="${base_dir}/usr"
+
+set -xeuo pipefail
+
+mkdir -p "${install_dir}"
+
+# <install_loc>/bin/: runtime executables
+mkdir -p "${install_dir}/bin"
+cp -r build/bin/* "${install_dir}/bin"
+
+# <install_loc>/lib/: runtime libraries
+mkdir -p "${install_dir}/lib"
+find "build/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
+find "opensim-core/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+
+# <install_loc>/resources: resources
+mkdir -p "${install_dir}/resources"
+cp -r resources/* "${install_dir}/resources"
+
+# <install_loc>/.version: SCONE version
+git rev-list --count HEAD > "${install_dir}/.version"
+
+# /usr/local: wrapper scripts etc. for booting SCONE from anywhere on
+# the system
+mkdir -p "${usr_dir}/local/bin"
+cat <<EOF > "${usr_dir}/local/bin/sconestudio"
+#!/usr/bin/env bash
+
+scone_install_dir="/opt/scone"
+
+LD_LIBRARY_PATH="\${scone_install_dir}/libs" "\${scone_install_dir}/bin/sconestudio"
+EOF
+chmod +x "${usr_dir}/local/bin/sconestudio"
+
+cat <<EOF > "${usr_dir}/local/bin/sconecmd"
+#!/usr/bin/env bash
+
+scone_install_dir="/opt/scone"
+LD_LIBRARY_PATH="\${scone_install_dir}/libs" "\${scone_install_dir}/bin/sconecmd"
+EOF
+chmod +x "${usr_dir}/local/bin/sconecmd"
