@@ -21,7 +21,7 @@ dependencies=(
     libqt5widgets5
 )
 
-cd install/
+cd build/
 fpm \
     --force \
     --name "scone" \

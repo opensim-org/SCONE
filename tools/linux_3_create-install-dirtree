@@ -7,7 +7,7 @@
 # This is a prerequisite for packaging into an installer (e.g. `.deb`,
 # which will also install any dependencies).
 
-base_dir="install/linux"
+base_dir="build/linux"
 install_dir="${base_dir}/opt/scone"
 usr_dir="${base_dir}/usr"
 
@@ -77,4 +77,13 @@ cp "src/sconestudio/scone_icon.png" "${install_dir}/resources"
 #    desktop UI shortcuts so that sconestudio can be booted from the
 #    desktop easily.
 mkdir -p "${usr_dir}/share/applications"
-cp sconestudio.desktop "${usr_dir}/share/applications/"
+cat <<EOF > "${usr_dir}/share/applications/sconestudio.desktop"
+[Desktop Entry]
+Name=SCONE Studio
+Comment=Scone studio desktop client
+TryExec=sconestudio
+Exec=sconestudio
+Icon=/opt/scone/resources/scone_icon.png
+Type=Application
+Keywords=OpenSim
+EOF

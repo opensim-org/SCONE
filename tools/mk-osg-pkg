@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Creates a OpenSceneGraph-3.4 dir containing the necessary include/
+# and binaries necessary to build + run SCONE
+#
+# This is only necessary when creating a new binary package. The build
+# just downloads this as a prebuilt thing for normal day-to-day builds.
+#
+# The reason this is necessary, rather than using the package manager,
+# is because OpenSceneGraph can change *a lot* between different OSes
+# (in pkg managers).
+
+set -xeuo pipefail
+
+# minimal deps to build in Ubuntu-Bionic:
+# apt-get install git rsync cmake make gcc g++ libgl-dev libpng-dev zlib1g-dev qt5-default libqt5widgets5 libqt5opengl5-dev
+
+git clone https://github.com/openscenegraph/OpenSceneGraph
+
+pushd OpenSceneGraph
+git checkout OpenSceneGraph-3.4.1
+mkdir -p build/
+
+pushd build/
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE=TRUE -DUSE_RPATH=OFF
+make -j$(nproc)
+rm -f lib/libpng16.so && cp /usr/lib/x86_64-linux-gnu/libpng16.so lib/
+# HACK: also package libpng, because the version can change in package
+# managers (e.g. the libpng12 --> libpng16 break for security reasons)
+chmod 755 lib/libpng16.so
+popd
+popd
+
+mkdir -p OpenSceneGraph-3.4/lib/
+# lib/ : flatten osg library files so that downstream dynamic loaders
+# can just add a single dir to LD_LIBRARY_PATH
+find OpenSceneGraph/build/lib -name '*.so*' -exec cp -a {} OpenSceneGraph-3.4/lib/ \;
+
+mkdir -p OpenSceneGraph-3.4/include/
+# include/ : do not flatten because codebases might rely on dir
+# structures
+rsync -avz OpenSceneGraph/include/* OpenSceneGraph-3.4/include/
+rsync -avz OpenSceneGraph/build/include/* OpenSceneGraph-3.4/include/
