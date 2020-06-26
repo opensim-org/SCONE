@@ -8,7 +8,7 @@ script:
 #
 #   TODO: This should be replaced with a binary download (as in
 #   `master`)
-- apt-get update && apt-get install git rsync cmake make gcc g++ libgl-dev libpng-dev zlib1g-dev qt5-default libqt5widgets5 libqt5opengl5-dev
+- sudo apt-get update && sudo apt-get install git rsync cmake make gcc g++ libgl-dev libpng-dev zlib1g-dev qt5-default libqt5widgets5 libqt5opengl5-dev
 - tools/mk-osg-pkg
 
 # ubuntu-bionic specific steps: the standard gcc/g++ packages do not
