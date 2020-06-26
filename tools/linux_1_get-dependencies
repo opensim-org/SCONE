@@ -56,13 +56,15 @@ ${sudo} apt-get update && ${sudo} apt-get install -y ${system_dependencies[@]}
 echo "installing fpm (used to create packages)"
 ${sudo} gem install --no-document fpm
 
-echo "installing openscenegraph 3.4"
-if [ -d "OpenSceneGraph-3.4" ]; then
-    echo "OpenSceneGraph-3.4/: already exists: skipping"
-else
-    wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
-    tar xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
-fi
+# TODO: upload prebuilt openscenegraph with libpng16 onto sourceforce
+# 
+#echo "installing openscenegraph 3.4"
+#if [ -d "OpenSceneGraph-3.4" ]; then
+#    echo "OpenSceneGraph-3.4/: already exists: skipping"
+#else
+#    wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
+#    tar xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
+#fi
 
 echo "installing opensim3"
 if [ -d "${OPENSIM_HOME}" ]; then

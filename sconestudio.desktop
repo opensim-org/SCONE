@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=SCONE Studio
-Comment=Scone studio desktop client
-TryExec=sconestudio
-Exec=sconestudio
-Icon=/opt/scone/resources/scone_icon.png
-Type=Application
-Keywords=OpenSim
