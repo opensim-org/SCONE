@@ -48,7 +48,7 @@ export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
 # is still wherever the user ran this script.
 export PATH="\${scone_install_dir}/bin:\${PATH}"
 
-sconestudio
+sconestudio "\$@"
 EOF
 chmod +x "${usr_dir}/local/bin/sconestudio"
 
@@ -65,7 +65,7 @@ export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
 # is still wherever the user ran this script.
 export PATH="\${scone_install_dir}/bin:\${PATH}"
 
-sconecmd
+sconecmd "\$@"
 EOF
 chmod +x "${usr_dir}/local/bin/sconecmd"
 
