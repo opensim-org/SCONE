@@ -23,6 +23,7 @@ cp -r build/bin/* "${install_dir}/bin"
 mkdir -p "${install_dir}/lib"
 find "build/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
 find "opensim-core/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+find "OpenSceneGraph-3.4/" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
 
 # <install_loc>/resources: resources
 mkdir -p "${install_dir}/resources"

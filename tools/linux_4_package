@@ -2,6 +2,25 @@
 
 set -xeu
 
+# keeping this list as short as possible is the only way to guarantee
+# that the resulting `.deb` package will install on multiple versions
+# of debian/ubuntu. This is why `scone` packages openscenegraph,
+# rather than depending on it via `apt`.
+dependencies=(
+    # transitive: from libosgDB.so
+    zlib1g
+
+    # transitive: from libosimAnalyses.so
+    liblapack3
+
+    # scone
+    freeglut3
+    qt5-default
+    libqt5printsupport5
+    libqt5opengl5
+    libqt5widgets5
+)
+
 cd install/
 fpm \
     --force \
@@ -15,11 +34,6 @@ fpm \
     --input-type "dir" \
     --output-type "deb" \
     \
-    --depends libqt5opengl5 \
-    --depends qt5-default \
-    --depends libopenscenegraph-3.4-131 \
-    --depends freeglut3 \
-    --depends liblapack3 \
-    --depends libqt5widgets5 \
+    ${dependencies[@]/#/--depends } \
     \
     linux/=/

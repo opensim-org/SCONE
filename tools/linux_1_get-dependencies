@@ -3,6 +3,9 @@
 set -exuo pipefail
 
 system_dependencies=(
+    # for 'git submodule'
+    git
+
     cmake
     make
 
@@ -11,7 +14,7 @@ system_dependencies=(
     ruby-dev
     rubygems
 
-    # for scone
+    # for 'scone{studio,cmd}'
     freeglut3-dev
     libxi-dev
     libxmu-dev
@@ -19,7 +22,6 @@ system_dependencies=(
     libqt5widgets5
     libqt5opengl5-dev
     qt5-default
-    libopenscenegraph-3.4-dev
 )
 OPENSIM_HOME="${PWD}/opensim-core"
 OSC_SOURCEFORGE_FILES="https://sourceforge.net/projects/dependencies/files/opensim-core"
@@ -40,12 +42,27 @@ if [[ -z "${CC:-}" ]]; then
     fi
 fi
 
+# if root is running this script then do not use `sudo` (some distros
+# do not supply it)
+if [[ "${UID}" == 0 ]]; then
+    sudo=''
+else
+    sudo='sudo'
+fi
 
 echo "installing system-level dependencies"
-sudo apt-get update && sudo apt-get install ${system_dependencies[@]}
+${sudo} apt-get update && ${sudo} apt-get install -y ${system_dependencies[@]}
 
 echo "installing fpm (used to create packages)"
-sudo gem install --no-document fpm
+${sudo} gem install --no-document fpm
+
+echo "installing openscenegraph 3.4"
+if [ -d "OpenSceneGraph-3.4" ]; then
+    echo "OpenSceneGraph-3.4/: already exists: skipping"
+else
+    wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
+    tar xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
+fi
 
 echo "installing opensim3"
 if [ -d "${OPENSIM_HOME}" ]; then
@@ -58,3 +75,6 @@ else
     echo "${OSC_TARBALL_NAME}: unpacked"
     ls opensim-core/
 fi
+
+echo "getting submodule dependencies"
+git submodule update --init --recursive
