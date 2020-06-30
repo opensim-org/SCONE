@@ -21,7 +21,9 @@ namespace scone
 		- ''Wang2012'': metabolic energy measure as defined in [Wang et al. 2012]
 		- ''Uchida2016'': metabolic energy measure as defined in [Uchida et al. 2012]
 		- ''SquaredMuscleStress'': summed squared muscle stress: (force / PCSA)^2
+		- ''CubedMuscleStress'': summed squared muscle stress: (force / PCSA)^3
 		- ''SquaredMuscleActivation'': summed squared muscle activation: (activation)^2
+		- ''CubedMuscleActivation'': summed cubed muscle activation: (activation)^3
 
 		This can also be used for cost-of-transport, using the ''use_cost_of_transport'' parameter.
 	*/
@@ -38,11 +40,13 @@ namespace scone
 			Wang2012, ///< Use metabolic energy measure as defined in [Wang et al. 2012].
 			Uchida2016, ///< Use metabolic energy measure as defined in [Uchida et al. 2016].
 			SquaredMuscleStress, ///< Use the summed squared muscle stress as a measure
-			SquaredMuscleActivation ///< Use the summed squared muscle muscle activation
+			CubedMuscleStress, ///< Use the summed squared muscle stress as a measure
+			SquaredMuscleActivation, ///< Use the summed squared muscle muscle activation
+			CubedMuscleActivation ///< Use the summed cubed muscle muscle activation
 		};
 
 		/// Energy model to be used, can be: ''TotalForce'', ''Wang2012'', ''Uchida2016'', or ''Constant''; default = ''UnknownMeasure''.
-		EnergyMeasureType measure_type; 
+		EnergyMeasureType measure_type;
 
 		/// Flag indicating to use (energy / distance) as a result; default = 0.
 		bool use_cost_of_transport;
@@ -51,7 +55,7 @@ namespace scone
 		Real specific_tension;
 
 		/// Value to use for muscle density; default = 1059.7.
-		Real muscle_density; 
+		Real muscle_density;
 
 		/// Default slow / twitch ratio if not defined per muscle (used by Uchida2016); default = 0.5.
 		Real default_muscle_slow_twitch_ratio;
@@ -90,6 +94,8 @@ namespace scone
 		double GetTotalForce( const Model& model ) const;
 		void SetSlowTwitchRatios( const PropNode& props, const Model& model );
 		double GetSquaredMuscleStress( const Model& model ) const;
+		double GetCubedMuscleStress( const Model& model ) const;
 		double GetSquaredMuscleActivation( const Model& model ) const;
+		double GetCubedMuscleActivation( const Model& model ) const;
 	};
 }
