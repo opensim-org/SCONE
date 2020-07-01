@@ -7,13 +7,8 @@ CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(nproc)}"
 PROJECT_DIR="${PWD}"
 
-set -x
-git submodule update --init --recursive
-mkdir -p build/
-
 cd build/
 set +x
-
 cmake ../ \
     -DOSG_DIR="${PROJECT_DIR}/OpenSceneGraph-3.4" \
     -DCMAKE_PREFIX_PATH="${PROJECT_DIR}/OpenSceneGraph-3.4/lib64" \
