@@ -7,7 +7,7 @@ CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(nproc)}"
 PROJECT_DIR="${PWD}"
 
-cd build/
+mkdir -p build/ && cd build/
 set +x
 cmake ../ \
     -DOSG_DIR="${PROJECT_DIR}/OpenSceneGraph-3.4" \
