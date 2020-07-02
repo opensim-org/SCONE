@@ -14,7 +14,7 @@ namespace scone
 			base_( GetNameNoSide( str ) ),
 			line_( no_index )
 		{
-			auto idx = str.find_last_of( "123456789" );
+			auto idx = str.find_last_of( "0123456789" );
 			if ( idx != String::npos && idx > 0 && base_[ idx - 1 ] != '_' )
 			{
 				xo::from_str( base_.substr( idx ), line_ );
