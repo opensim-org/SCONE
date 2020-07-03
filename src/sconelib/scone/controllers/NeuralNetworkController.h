@@ -9,7 +9,7 @@ namespace scone
 	namespace NN
 	{
 		inline double relu( const double v ) { return std::max( 0.0, v ); }
-		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
+		inline double leaky_relu( const double v, const double l ) { return v >= 0.0 ? v : l * v; }
 
 		struct Neuron {
 			Neuron() : input_(), offset_(), output_() {}
@@ -47,8 +47,6 @@ namespace scone
 			const Muscle* muscle_;
 		};
 
-		inline void update_output( Neuron& n ) { n.output_ = relu( n.input_ + n.offset_ ); }
-
 		class NeuralNetworkController : public Controller
 		{
 		public:
@@ -58,11 +56,14 @@ namespace scone
 			void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
 			PropNode GetInfo() const;
 
+			const double leakyness_;
+
 		protected:
 			bool ComputeControls( Model& model, double timestamp ) override;
 			String GetClassSignature() const override;
 
 		private:
+			inline void update_output( Neuron& n ) { n.output_ = leaky_relu( n.input_ + n.offset_, leakyness_ ); }
 
 			NeuronLayer& AddNeuronLayer( index_t layer );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
@@ -75,6 +76,7 @@ namespace scone
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
 
 			const xo::flat_map< String, TimeInSeconds > neural_delays_;
+
 			std::vector<SensorNeuronLink> sensor_links_;
 			std::vector< NeuronLayer > neurons_;
 			std::vector< std::vector< LinkLayer > > links_;

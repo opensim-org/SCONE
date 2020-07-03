@@ -19,7 +19,8 @@ namespace scone::NN
 {
 	NeuralNetworkController::NeuralNetworkController( const PropNode& pn, Params& par, Model& model, const Location& area ) :
 		Controller( pn, par, model, area ),
-		INIT_MEMBER_REQUIRED( pn, neural_delays_ )
+		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
+		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
