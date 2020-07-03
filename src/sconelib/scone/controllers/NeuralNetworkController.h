@@ -8,6 +8,9 @@ namespace scone
 {
 	namespace NN
 	{
+		inline double relu( const double v ) { return std::max( 0.0, v ); }
+		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
+
 		struct Neuron {
 			Neuron() : input_(), offset_(), output_() {}
 			Neuron( double offset ) : input_(), offset_( offset ), output_() {}
@@ -44,7 +47,7 @@ namespace scone
 			const Muscle* muscle_;
 		};
 
-		inline void update_output( Neuron& n ) { n.output_ = std::max( 0.0, n.input_ + n.offset_ ); }
+		inline void update_output( Neuron& n ) { n.output_ = relu( n.input_ + n.offset_ ); }
 
 		class NeuralNetworkController : public Controller
 		{
