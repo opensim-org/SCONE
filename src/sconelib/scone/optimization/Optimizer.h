@@ -49,10 +49,10 @@ namespace scone
 		/// Thread priority of the optimization; 0 = lowest, 7 = highest, default = 1.
 		int thread_priority;
 
-		/// Number of iterations after which to stop the optimization; default = 10000.
+		/// Number of iterations after which to stop the optimization; default = 100000.
 		size_t max_generations;
 
-		/// Minimum progress after which to stop the optimization; default = 1e-6.
+		/// Minimum progress after which to stop the optimization; default = 1e-5.
 		double min_progress;
 
 		/// Minimum number of samples after which progress is measured; default = 200.
