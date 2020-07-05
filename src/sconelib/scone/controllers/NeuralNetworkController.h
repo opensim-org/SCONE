@@ -79,6 +79,7 @@ namespace scone
 
 			std::vector<SensorNeuronLink> sensor_links_;
 			std::vector< NeuronLayer > neurons_;
+			std::vector< std::vector< String > > neuron_names_;
 			std::vector< std::vector< LinkLayer > > links_;
 			std::vector<MotorNeuronLink> motor_links_;
 		};

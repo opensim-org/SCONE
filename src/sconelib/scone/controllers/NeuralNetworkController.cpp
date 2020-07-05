@@ -38,6 +38,7 @@ namespace scone::NN
 	NeuronLayer& NeuralNetworkController::AddNeuronLayer( index_t layer )
 	{
 		neurons_.resize( std::max( neurons_.size(), layer + 1 ) );
+		neuron_names_.resize( neurons_.size() );
 		return neurons_[ layer ];
 	}
 
@@ -148,11 +149,11 @@ namespace scone::NN
 			return sensor_links_[ neuron_idx ].sensor_->GetName();
 		else if ( !motor_links_.empty() && layer_idx == neurons_.size() - 1 )
 			return motor_links_[ neuron_idx ].actuator_->GetName();
-		else
-		{
-			auto lr_threshold = neurons_[ layer_idx ].size() / 2;
-			return xo::stringf( "I%d_%d_%c", layer_idx, neuron_idx % lr_threshold, neuron_idx < lr_threshold ? 'l' : 'r' );
-		}
+		else return neuron_names_[ layer_idx ][ neuron_idx ];
+		//{
+		//	auto lr_threshold = neurons_[ layer_idx ].size() / 2;
+		//	return xo::stringf( "I%d_%d_%c", layer_idx, neuron_idx % lr_threshold, neuron_idx < lr_threshold ? 'l' : 'r' );
+		//}
 	}
 
 	void NeuralNetworkController::CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model )
@@ -208,9 +209,29 @@ namespace scone::NN
 		{
 			const auto layer_idx = pn.get<index_t>( "layer", neurons_.size() );
 			auto& layer = AddNeuronLayer( layer_idx );
-			const auto neurons = pn.get<index_t>( "neurons" ) * 2; // both left and right sides
+
+			// set names of interneurons
+			auto& neuron_names = neuron_names_[ layer_idx ];
+			if ( auto neurons = pn.try_get<index_t>( "neurons" ) )
+			{
+				neuron_names.reserve( *neurons * 2 );
+				for ( auto s : { LeftSide, RightSide } )
+					for ( index_t idx = 0; idx < *neurons; ++idx )
+						neuron_names.emplace_back( xo::stringf( "I%d_%d_%c", layer_idx, idx, s == LeftSide ? 'l' : 'r' ) );
+			}
+			else if ( const auto names = pn.try_get<String>( "names" ) )
+			{
+				auto base_names = xo::split_str( *names, " ;," );
+				neuron_names.reserve( base_names.size() * 2 );
+				for ( auto s : { LeftSide, RightSide } )
+					for ( const auto& name : base_names )
+						neuron_names.emplace_back( name + GetSideName( s ) );
+			}
+
+			// neuron count is based on names
+			const auto neurons = neuron_names.size();
 			const auto& offset = pn.get_child( "offset" );
-			layer.resize( neurons ); // first resize so GetNeuronName knows who's left and right
+			layer.resize( neurons );
 			for ( index_t idx = 0; idx < neurons; ++idx )
 				layer[ idx ].offset_ = par.get( GetNameNoSide( GetNeuronName( layer_idx, idx ) ) + ".C0", offset );
 			break;
