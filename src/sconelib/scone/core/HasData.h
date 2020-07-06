@@ -30,9 +30,9 @@ namespace scone
 		GroundReactionForce,
 		ContactForce,
 		ExternalForce,
-		CenterOfMass,
 		SensorData,
 		ControllerData,
+		MeasureData,
 		DebugData
 	};
 

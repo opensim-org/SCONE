@@ -89,8 +89,11 @@ namespace scone
 	void MimicMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ "mimic_error" ] = result_.GetLatest();
-		for ( auto& c : channel_errors_ )
-			frame[ c.first + "_mimic_error" ] = c.second;
+		if ( flags.get<StoreDataTypes::DebugData>() )
+		{
+			for ( auto& c : channel_errors_ )
+				frame[ c.first + "_mimic_error" ] = c.second;
+		}
 	}
 
 	String MimicMeasure::GetClassSignature() const
