@@ -20,7 +20,8 @@ namespace scone::NN
 	NeuralNetworkController::NeuralNetworkController( const PropNode& pn, Params& par, Model& model, const Location& area ) :
 		Controller( pn, par, model, area ),
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
-		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 )
+		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 ),
+		INIT_MEMBER( pn, ignore_muscle_lines_, false )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
@@ -131,12 +132,12 @@ namespace scone::NN
 		return xo::stringf( "NN%d", links );
 	}
 
-	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool use_muscle_lines )
+	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool ignore_muscle_lines )
 	{
 		auto sid = MuscleId( source );
 		auto tid = MuscleId( target );
-		auto sns = use_muscle_lines ? sid.base_line_name() : sid.base_;
-		auto tns = use_muscle_lines ? tid.base_line_name() : tid.base_;
+		auto sns = ignore_muscle_lines ? sid.base_ : sid.base_line_name();
+		auto tns = ignore_muscle_lines ? tid.base_ : tid.base_line_name();
 		String postfix = type.empty() ? "" : '.' + type;
 		if ( tns == sns )
 			return tns + postfix;
@@ -150,10 +151,6 @@ namespace scone::NN
 		else if ( !motor_links_.empty() && layer_idx == neurons_.size() - 1 )
 			return motor_links_[ neuron_idx ].actuator_->GetName();
 		else return neuron_names_[ layer_idx ][ neuron_idx ];
-		//{
-		//	auto lr_threshold = neurons_[ layer_idx ].size() / 2;
-		//	return xo::stringf( "I%d_%d_%c", layer_idx, neuron_idx % lr_threshold, neuron_idx < lr_threshold ? 'l' : 'r' );
-		//}
 	}
 
 	void NeuralNetworkController::CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model )
@@ -266,7 +263,7 @@ namespace scone::NN
 		auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
 		auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
 		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
-		bool use_muscle_lines = pn.get<bool>( "use_muscle_lines", true );
+		bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
 		auto input_include = pn.try_get<xo::pattern_matcher>( "input_include" );
 		auto output_include = pn.try_get<xo::pattern_matcher>( "output_include" );
 		for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
@@ -299,11 +296,10 @@ namespace scone::NN
 				}
 
 				// if we arrive here there's actually a connection
-				auto parname = GetParName( source_name, target_name, source_type, use_muscle_lines );
+				auto parname = GetParName( source_name, target_name, source_type, ignore_muscle_lines );
 				double weight = par.get( parname, pn.get_child( "weight" ) );
 				link_layer.links_.push_back( Link{ source_neuron_idx, target_neuron_idx, weight } );
 			}
 		}
 	}
-
 }

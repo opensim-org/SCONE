@@ -57,6 +57,7 @@ namespace scone
 			PropNode GetInfo() const;
 
 			const double leakyness_;
+			const bool ignore_muscle_lines_;
 
 		protected:
 			bool ComputeControls( Model& model, double timestamp ) override;
