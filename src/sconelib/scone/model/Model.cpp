@@ -86,6 +86,7 @@ namespace scone
 		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
+		flags.set( StoreDataTypes::MeasureData, GetSconeSetting<bool>( "data.measure" ) );
 		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
 		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
 		flags.set( StoreDataTypes::SimulationStatistics, GetSconeSetting<bool>( "data.simulation" ) );
