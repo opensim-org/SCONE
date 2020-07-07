@@ -100,8 +100,8 @@ public slots:
 	void resetWindowLayout();
 
 	void deleteSelectedFileOrFolder();
-	void sortFileOrFolderByDate();
-	void sortFileOrFolderByName();
+	void sortResultsByDate();
+	void sortResultsByName();
 	void onResultBrowserCustomContextMenu(const QPoint &);
 
 public:

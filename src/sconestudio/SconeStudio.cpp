@@ -1003,14 +1003,14 @@ void SconeStudio::deleteSelectedFileOrFolder()
 {
 	if (!currResultModelIdx.isValid()) return;
 
-	int ret = QMessageBox::warning(this, tr("Delete file or folder"), 
-		tr("Do you really want to delete the selected file or folder (can not be recovered)"), 
-		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel);
+	int ret = QMessageBox::warning( this, tr( "Delete file or folder" ),
+		tr( "Are you sure you wish to delete the selected file or folder? WARNING: this cannot be recovered" ),
+		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel );
 	if (ret == QMessageBox::Cancel) {
 		return;
 	}
 
-	auto item = ui.resultsBrowser->fileSystemModel()->fileInfo(currResultModelIdx);
+	auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( currResultModelIdx );
 	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
 
 	if (item.isDir()) {
@@ -1019,50 +1019,39 @@ void SconeStudio::deleteSelectedFileOrFolder()
 			//can not remove non empty folder
 			QDir dir(item.filePath());
 			succ = dir.removeRecursively();
-
 			if (!succ) {
-				QMessageBox::information(this, tr("Message"), tr("can not delete folder"), QMessageBox::Ok);
+				QMessageBox::warning( this, tr( "Message" ), tr( "Cannot delete folder!" ), QMessageBox::Ok );
 			}
 		}
 	}
 	else if (item.isFile()) {
-		bool succ = ui.resultsBrowser->fileSystemModel()->remove(currResultModelIdx);
+		bool succ = ui.resultsBrowser->fileSystemModel()->remove( currResultModelIdx );
 		if (!succ) {
-			QMessageBox::information(this, tr("Message"), tr("can not delete file"), QMessageBox::Ok);
+			QMessageBox::warning( this, tr( "Message" ), tr( "Cannot delete file!" ), QMessageBox::Ok );
 		}
 	}
 	else {
-
+		QMessageBox::warning( this, tr( "Message" ), tr( "Cannot delete selection!" ), QMessageBox::Ok );
 	}
 }
 
-void SconeStudio::sortFileOrFolderByDate()
+void SconeStudio::sortResultsByDate()
 {
-	ui.resultsBrowser->fileSystemModel()->sort(3);
+	ui.resultsBrowser->fileSystemModel()->sort( 3 );
 }
 
-void SconeStudio::sortFileOrFolderByName()
+void SconeStudio::sortResultsByName()
 {
-	ui.resultsBrowser->fileSystemModel()->sort(0);
+	ui.resultsBrowser->fileSystemModel()->sort( 0 );
 }
 
 void SconeStudio::onResultBrowserCustomContextMenu(const QPoint &pos)
 {
-	QModelIndex idx = ui.resultsBrowser->indexAt(pos);
-	currResultModelIdx = idx;
-
+	currResultModelIdx = ui.resultsBrowser->indexAt(pos);
 	QMenu menu;
-	QAction *deleteAct = new QAction("Delete", this);
-	connect(deleteAct, SIGNAL(triggered()), this, SLOT(deleteSelectedFileOrFolder()));
-	menu.addAction(deleteAct);
-
-	QAction *sortDataAct = new QAction("Sort by name", this);
-	connect(sortDataAct, SIGNAL(triggered()), this, SLOT(sortFileOrFolderByName()));
-	menu.addAction(sortDataAct);
-
-	QAction *sortNameAct = new QAction("Sort by date", this);
-	connect(sortNameAct, SIGNAL(triggered()), this, SLOT(sortFileOrFolderByDate()));
-	menu.addAction(sortNameAct);
-
+	menu.addAction( "Sort by &Name", this, &SconeStudio::sortResultsByName );
+	menu.addAction( "Sort by &Date", this, &SconeStudio::sortResultsByDate );
+	menu.addSeparator();
+	menu.addAction( "Remove", this, &SconeStudio::deleteSelectedFileOrFolder );
 	menu.exec(ui.resultsBrowser->mapToGlobal(pos));
 }
