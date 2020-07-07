@@ -5,8 +5,7 @@ source ./tools/linux_config  # sets relevant envvar defaults
 
 mkdir -p "${SCONE_BUILD_DIR}"
 mkdir -p "${SCONE_INSTALL_DIR}"
-cd "${BUILD_DIR}"
-set +x
+cd "${SCONE_BUILD_DIR}"
 cmake ../ \
     -DOSG_DIR="${OSG_INSTALL_PATH}" \
     -DCMAKE_PREFIX_PATH="${OSG_INSTALL_PATH}/lib64" \
@@ -16,5 +15,4 @@ cmake ../ \
     -DOPENSIM_INSTALL_DIR="${OPENSIM3_INSTALL_PATH}" \
     -DOPENSIM_INCLUDE_DIR="${OPENSIM3_INSTALL_PATH}/sdk/include"
 make -j$(nproc)
-make install
 cd -

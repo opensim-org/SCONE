@@ -25,7 +25,7 @@ export CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 export OSG_INSTALL_PATH="${OSG_INSTALL_PATH:-${PROJECT_DIR}/OpenSceneGraph/install}"
 
 # where simbody binaries are installed post-build
-export SIMBODY_INSTALL_PATH="${SIMBODY_INSTALL_PATH:-${PROJECT_DIR}/-${PWD}/simbody/install}"
+export SIMBODY_INSTALL_PATH="${SIMBODY_INSTALL_PATH:-${PROJECT_DIR}/simbody/install}"
 
 # where opensim3 binaries are installed post-build
-export OPENSIM3_INSTALL_PATH="${OPENSIM3_INSTALL_PATH:-${PWD}/opensim3-scone/install}"
+export OPENSIM3_INSTALL_PATH="${OPENSIM3_INSTALL_PATH:-${PROJECT_DIR}/opensim3-scone/install}"

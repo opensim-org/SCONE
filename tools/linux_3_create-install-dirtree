@@ -28,7 +28,7 @@ find "${OSG_INSTALL_PATH}/" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
 
 # <install_loc>/resources: resources
 mkdir -p "${install_dir}/resources"
-cp -r ${PROJECT_DIR}resources/* "${install_dir}/resources"
+cp -r ${PROJECT_DIR}/resources/* "${install_dir}/resources"
 
 # <install_loc>/.version: SCONE version
 git rev-list --count HEAD > "${install_dir}/.version"
