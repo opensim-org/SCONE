@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -xeu
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
 
 # keeping this list as short as possible is the only way to guarantee
 # that the resulting `.deb` package will install on multiple versions
@@ -21,7 +22,7 @@ dependencies=(
     libqt5widgets5
 )
 
-cd build/
+cd "${SCONE_BUILD_DIR}"
 fpm \
     --force \
     --name "scone" \
@@ -37,3 +38,7 @@ fpm \
     ${dependencies[@]/#/--depends } \
     \
     linux/=/
+cd -
+
+echo "packaging complete"
+ls "${SCONE_BUILD_DIR}"

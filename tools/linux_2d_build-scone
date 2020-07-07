@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+mkdir -p "${SCONE_BUILD_DIR}"
+mkdir -p "${SCONE_INSTALL_DIR}"
+cd "${BUILD_DIR}"
+set +x
+cmake ../ \
+    -DOSG_DIR="${OSG_INSTALL_PATH}" \
+    -DCMAKE_PREFIX_PATH="${OSG_INSTALL_PATH}/lib64" \
+    -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+    -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
+    -DCMAKE_INSTALL_PREFIX="${SCONE_INSTALL_DIR}" \
+    -DOPENSIM_INSTALL_DIR="${OPENSIM3_INSTALL_PATH}" \
+    -DOPENSIM_INCLUDE_DIR="${OPENSIM3_INSTALL_PATH}/sdk/include"
+make -j$(nproc)
+make install
+cd -

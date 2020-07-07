@@ -1,20 +1,31 @@
 #!/usr/bin/env bash
 
-set -exuo pipefail
+set -xeuo pipefail
 
-system_dependencies=(
-    # for 'git submodule'
+general_deps=(
     git
-
+    rsync
     cmake
     make
+    gcc
+    g++
 
     # for 'fpm'
     ruby
     ruby-dev
     rubygems
-
-    # for 'scone{studio,cmd}'
+)
+openscenegraph_build_deps=(
+    libpng-dev
+    zlib1g-dev
+    qt5-default
+    libqt5widgets5
+    libqt5opengl5-dev
+)
+simbody_build_deps=(
+    liblapack-dev
+)
+scone_deps=(
     freeglut3-dev
     libxi-dev
     libxmu-dev
@@ -23,9 +34,35 @@ system_dependencies=(
     libqt5opengl5-dev
     qt5-default
 )
+all_deps=(
+    "${general_deps[@]}"
+    "${openscenegraph_build_deps[@]}"
+    "${simbody_build_deps[@]}"
+    "${scone_deps[@]}"
+)
+
 OPENSIM_HOME="${PWD}/opensim-core"
 OSC_SOURCEFORGE_FILES="https://sourceforge.net/projects/dependencies/files/opensim-core"
 OSC_TARBALL_NAME="opensim-core-3.3-ubuntu-18.04.tar.xz"
+
+
+try_clone_checkout() {
+    url="${1}"
+    ref="${2}"
+    
+    dir=$(basename "${url}" | sed 's/.git$//')
+
+    echo "${0}: ${dir}: must be built from source for Linux builds"
+    if [ ! -d "${dir}" ]; then
+        git clone "${url}"
+        cd "${dir}"
+        git checkout "${ref}"
+        cd -
+    else
+        echo "${0}: ${dir}: already exists: skipping clone"
+    fi
+}
+
 
 # only install g++/gcc if the user hasn't already installed them
 # (e.g. because it's a fresh computer) AND the user hasn't specified a
@@ -51,32 +88,14 @@ else
 fi
 
 echo "installing system-level dependencies"
-${sudo} apt-get update && ${sudo} apt-get install -y ${system_dependencies[@]}
+${sudo} apt-get update && ${sudo} apt-get install -y ${all_deps[@]}
 
 echo "installing fpm (used to create packages)"
 ${sudo} gem install --no-document fpm
 
-# TODO: upload prebuilt openscenegraph with libpng16 onto sourceforce
-# 
-#echo "installing openscenegraph 3.4"
-#if [ -d "OpenSceneGraph-3.4" ]; then
-#    echo "OpenSceneGraph-3.4/: already exists: skipping"
-#else
-#    wget https://sourceforge.net/projects/dependencies/files/OpenSceneGraph/OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
-#    tar xvf OpenSceneGraph-3.4-ubuntu-18.04.tar.xz
-#fi
-
-echo "installing opensim3"
-if [ -d "${OPENSIM_HOME}" ]; then
-    echo "OPENSIM_HOME (${OPENSIM_HOME}): already exists: skipping"
-else
-    echo "${OPENSIM_HOME}: does not exist, fetching binary from sourceforge"
-
-    wget "${OSC_SOURCEFORGE_FILES}/${OSC_TARBALL_NAME}"
-    tar -xf "${OSC_TARBALL_NAME}"
-    echo "${OSC_TARBALL_NAME}: unpacked"
-    ls opensim-core/
-fi
+try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
 
 echo "getting submodule dependencies"
 git submodule update --init --recursive

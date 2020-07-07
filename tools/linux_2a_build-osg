@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+echo "${0}: building openscenegraph"
+
+mkdir -p "${OSG_INSTALL_PATH}"
+mkdir -p OpenSceneGraph/build
+cd OpenSceneGraph/build
+cmake .. \
+      -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+      -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
+      -DUSE_RPATH=OFF \
+      -DCMAKE_INSTALL_PREFIX="${OSG_INSTALL_PATH}"
+make -j$(nproc)
+make install
+cd -

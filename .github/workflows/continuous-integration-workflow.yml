@@ -1,0 +1,25 @@
+on: [push]
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Get Dependencies
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_1_get-dependencies
+
+    # note: the gxx-8 steps are specifically because Ubuntu bionic
+    # does not provide a C++17 compiler and can be skipped newer
+    # distros
+    - name: Build Sources
+      run: |
+        apt-get install gcc-8 g++-8
+        cd $GITHUB_WORKSPACE
+        CC=gcc-8 CXX=g++-8 ./tools/linux_2_build
+      
+    - name: Rearrange binaries into single dir
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_3_create-install-dirtree
+
+    - name: Package dir into deb package
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package

@@ -7,27 +7,28 @@
 # This is a prerequisite for packaging into an installer (e.g. `.deb`,
 # which will also install any dependencies).
 
-base_dir="build/linux"
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+base_dir="${SCONE_BUILD_DIR}/linux"
 install_dir="${base_dir}/opt/scone"
 usr_dir="${base_dir}/usr"
-
-set -xeuo pipefail
 
 mkdir -p "${install_dir}"
 
 # <install_loc>/bin/: runtime executables
 mkdir -p "${install_dir}/bin"
-cp -r build/bin/* "${install_dir}/bin"
+cp -r ${SCONE_BUILD_DIR}/bin/* "${install_dir}/bin"
 
 # <install_loc>/lib/: runtime libraries
 mkdir -p "${install_dir}/lib"
-find "build/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
-find "opensim-core/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
-find "OpenSceneGraph-3.4/" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+find "${SCONE_BUILD_DIR}/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
+find "${OPENSIM3_INSTALL_PATH}/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+find "${OSG_INSTALL_PATH}/" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
 
 # <install_loc>/resources: resources
 mkdir -p "${install_dir}/resources"
-cp -r resources/* "${install_dir}/resources"
+cp -r ${PROJECT_DIR}resources/* "${install_dir}/resources"
 
 # <install_loc>/.version: SCONE version
 git rev-list --count HEAD > "${install_dir}/.version"
@@ -70,7 +71,7 @@ EOF
 chmod +x "${usr_dir}/local/bin/sconecmd"
 
 # <install_loc>/resource/scone_icon.png: desktop-suitable icon
-cp "src/sconestudio/scone_icon.png" "${install_dir}/resources"
+cp "${PROJECT_DIR}/src/sconestudio/scone_icon.png" "${install_dir}/resources"
 
 # /usr/share/applications/scone.desktop
 #
