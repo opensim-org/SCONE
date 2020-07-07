@@ -215,6 +215,9 @@ bool SconeStudio::init()
 	ui.resultsBrowser->setRoot( to_qt( results_folder ), "*.par;*.sto" );
 	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
 
+	ui.resultsBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui.resultsBrowser, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onResultBrowserCustomContextMenu(const QPoint &)));
+
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
 		this, SLOT( selectBrowserItem( const QModelIndex&, const QModelIndex& ) ) );
@@ -295,6 +298,7 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 
 void SconeStudio::selectBrowserItem( const QModelIndex& idx, const QModelIndex& idxold )
 {
+	currResultModelIdx = idx;
 	auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
 	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
 }
@@ -993,4 +997,72 @@ void SconeStudio::finalizeCapture()
 	delete captureProcess;
 	captureProcess = nullptr;
 	captureFilename.clear();
+}
+
+void SconeStudio::deleteSelectedFileOrFolder()
+{
+	if (!currResultModelIdx.isValid()) return;
+
+	int ret = QMessageBox::warning(this, tr("Delete file or folder"), 
+		tr("Do you really want to delete the selected file or folder (can not be recovered)"), 
+		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel);
+	if (ret == QMessageBox::Cancel) {
+		return;
+	}
+
+	auto item = ui.resultsBrowser->fileSystemModel()->fileInfo(currResultModelIdx);
+	string dirname = item.isDir() ? item.filePath().toStdString() : item.dir().path().toStdString();
+
+	if (item.isDir()) {
+		bool succ = ui.resultsBrowser->fileSystemModel()->rmdir(currResultModelIdx);
+		if (!succ) {
+			//can not remove non empty folder
+			QDir dir(item.filePath());
+			succ = dir.removeRecursively();
+
+			if (!succ) {
+				QMessageBox::information(this, tr("Message"), tr("can not delete folder"), QMessageBox::Ok);
+			}
+		}
+	}
+	else if (item.isFile()) {
+		bool succ = ui.resultsBrowser->fileSystemModel()->remove(currResultModelIdx);
+		if (!succ) {
+			QMessageBox::information(this, tr("Message"), tr("can not delete file"), QMessageBox::Ok);
+		}
+	}
+	else {
+
+	}
+}
+
+void SconeStudio::sortFileOrFolderByDate()
+{
+	ui.resultsBrowser->fileSystemModel()->sort(3);
+}
+
+void SconeStudio::sortFileOrFolderByName()
+{
+	ui.resultsBrowser->fileSystemModel()->sort(0);
+}
+
+void SconeStudio::onResultBrowserCustomContextMenu(const QPoint &pos)
+{
+	QModelIndex idx = ui.resultsBrowser->indexAt(pos);
+	currResultModelIdx = idx;
+
+	QMenu menu;
+	QAction *deleteAct = new QAction("Delete", this);
+	connect(deleteAct, SIGNAL(triggered()), this, SLOT(deleteSelectedFileOrFolder()));
+	menu.addAction(deleteAct);
+
+	QAction *sortDataAct = new QAction("Sort by name", this);
+	connect(sortDataAct, SIGNAL(triggered()), this, SLOT(sortFileOrFolderByName()));
+	menu.addAction(sortDataAct);
+
+	QAction *sortNameAct = new QAction("Sort by date", this);
+	connect(sortNameAct, SIGNAL(triggered()), this, SLOT(sortFileOrFolderByDate()));
+	menu.addAction(sortNameAct);
+
+	menu.exec(ui.resultsBrowser->mapToGlobal(pos));
 }
