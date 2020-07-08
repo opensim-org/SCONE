@@ -1,25 +1,86 @@
 on: [push]
+
 jobs:
   build:
     name: Build
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
-    
+
     - name: Get Dependencies
       run: cd $GITHUB_WORKSPACE && ./tools/linux_1_get-dependencies
 
-    # note: the gxx-8 steps are specifically because Ubuntu bionic
-    # does not provide a C++17 compiler and can be skipped newer
-    # distros
-    - name: Build Sources
+    # note: this step is specifically because ubuntu-18.04 does not
+    # provide a C++17 compiler. It can be skipped newer distros
+    - name: Install gcc-8 and g++8
       run: |
         sudo apt-get install gcc-8 g++-8
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+
+
+    # openscenegraph: only build it if its source files have changed
+    - name: Cache openscenegraph
+      id: cache_osg
+      uses: actions/cache@v1
+      with:
+        path: ~/OpenSceneGraph-install
+        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph') }}
+
+    - name: Build openscenegraph (if not cached)
+      if: steps.cache_osg.outputs.cache-hit != 'true'
+      run: |
         cd $GITHUB_WORKSPACE
-        CC=gcc-8 CXX=g++-8 ./tools/linux_2_build
-      
+        OSG_INSTALL_PATH=~/OpenSceneGraph-install ./tools/linux_2a_build-osg
+
+
+    # simbody: only build it if its source files have changed
+    - name: Cache simbody
+      id: cache_simbody
+      uses: actions/cache@v1
+      with:
+        path: ~/simbody-install
+        key: ${{ runner.os }}-simbody-${{ hashFiles('simbody') }}
+
+    - name: Build simbody (if not cached)
+      if: steps.cache_simbody.outputs.cache-hit != 'true'
+      run: |
+        cd $GITHUB_WORKSPACE
+        SIMBODY_INSTALL_PATH=~/simbody-install ./tools/linux_2b_build-simbody
+
+
+    # opensim3: only build it if its source files have changed
+    - name: Cache opensim3
+      id: cache_opensim3
+      uses: actions/cache@v1
+      with:
+        path: ~/opensim3-install
+        key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone') }}
+
+    - name: Build opensim3 (if not cached)
+      if: steps.cache_opensim3.outputs.cache-hit != 'true'
+      run: |
+        cd $GITHUB_WORKSPACE
+        OPENSIM3_INSTALL_PATH=~/opensim3-install ./tools/linux_2c_build-opensim3
+
+
+    - name: Build SCONE
+      run: |
+        cd $GITHUB_WORKSPACE
+
+        export OSG_INSTALL_PATH=~/OpenSceneGraph-install
+        export OPENSIM3_INSTALL_PATH=~/opensim3-install
+
+        ./tools/linux_2d_build-scone
+
     - name: Rearrange binaries into single dir
-      run: cd $GITHUB_WORKSPACE && ./tools/linux_3_create-install-dirtree
+      run: |
+        cd $GITHUB_WORKSPACE
+
+        export OSG_INSTALL_PATH=~/OpenSceneGraph-install
+        export OPENSIM3_INSTALL_PATH=~/opensim3-install
+
+        ./tools/linux_3_create-install-dirtree
 
     - name: Package dir into deb package
       run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package
