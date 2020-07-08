@@ -25,7 +25,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/OpenSceneGraph-install
-        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph') }}
+        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
 
     - name: Build openscenegraph (if not cached)
       if: steps.cache_osg.outputs.cache-hit != 'true'
@@ -40,7 +40,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/simbody-install
-        key: ${{ runner.os }}-simbody-${{ hashFiles('simbody') }}
+        key: ${{ runner.os }}-simbody-${{ hashFiles('simbody/Simbody') }}
 
     - name: Build simbody (if not cached)
       if: steps.cache_simbody.outputs.cache-hit != 'true'
@@ -55,7 +55,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/opensim3-install
-        key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone') }}
+        key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone/OpenSim') }}
 
     - name: Build opensim3 (if not cached)
       if: steps.cache_opensim3.outputs.cache-hit != 'true'
