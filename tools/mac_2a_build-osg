@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+echo "${0}: building openscenegraph"
+
+mkdir -p "${OSG_INSTALL_PATH}"
+mkdir -p OpenSceneGraph/build
+cd OpenSceneGraph/build
+cmake .. \
+      -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+      -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
+      -DUSE_RPATH=OFF \
+      -DCMAKE_INSTALL_PREFIX="${OSG_INSTALL_PATH}" \
+      -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations"
+make -j${NUM_BUILD_JOBS}
+make install
+
+# HACK: also package libpng, because the version can change in package
+# managers (e.g. the libpng12 --> libpng16 break for security reasons)
+cp /usr/lib/x86_64-linux-gnu/libpng16.so "${OSG_INSTALL_PATH}/lib64/"
+chmod 755 "${OSG_INSTALL_PATH}/lib64/libpng16.so"
+cd -
