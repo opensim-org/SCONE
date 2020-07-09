@@ -13,6 +13,6 @@ cmake .. \
       -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
       -DSIMBODY_HOME="${SIMBODY_INSTALL_PATH}" \
       -DCMAKE_INSTALL_PREFIX="${OPENSIM3_INSTALL_PATH}"
-make -j$(nproc)
+make -j${NUM_BUILD_JOBS}
 make install
 cd -

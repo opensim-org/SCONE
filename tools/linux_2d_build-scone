@@ -14,5 +14,5 @@ cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${SCONE_INSTALL_DIR}" \
     -DOPENSIM_INSTALL_DIR="${OPENSIM3_INSTALL_PATH}" \
     -DOPENSIM_INCLUDE_DIR="${OPENSIM3_INSTALL_PATH}/sdk/include"
-make -j$(nproc)
+make -j${NUM_BUILD_JOBS}
 cd -

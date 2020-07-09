@@ -3,6 +3,15 @@
 # vars can be overridden by specifying them in the calling environment
 # (e.g. a top-level script can just set CMAKE_BUILD_TYPE)
 
+# returns number of processors the machine has
+num_processors() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sysctl -n hw.ncpu
+    else
+        nproc
+    fi
+}
+
 # scone project directory
 export PROJECT_DIR="${PWD}"
 
@@ -29,3 +38,6 @@ export SIMBODY_INSTALL_PATH="${SIMBODY_INSTALL_PATH:-${PROJECT_DIR}/simbody/inst
 
 # where opensim3 binaries are installed post-build
 export OPENSIM3_INSTALL_PATH="${OPENSIM3_INSTALL_PATH:-${PROJECT_DIR}/opensim3-scone/install}"
+
+# number of concurrent cc/c++ build jobs
+export NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(num_processors)}"
