@@ -63,7 +63,7 @@ namespace scone
 	protected:
 		struct LegState
 		{
-			LegState( Model& m, Leg& l );
+			LegState( Model& m, Leg& l, const PropNode& props, Params& par );
 
 			// leg structure
 			const Leg& leg;
@@ -83,8 +83,13 @@ namespace scone
 			bool allow_liftoff_transition;
 			bool allow_landing_transition;
 
-			// cached constant state
-			Real leg_length;
+			// cached constants
+			const Real leg_length;
+			const Real stance_load_threshold;
+			const Real swing_load_threshold;
+			const Real landing_threshold;
+			const Real late_stance_threshold;
+			const Real liftoff_threshold; // default value is such that parameter has no effect
 		};
 
 		virtual void UpdateLegStates( Model& model, double timestamp );
