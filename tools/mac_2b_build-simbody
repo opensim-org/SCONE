@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+echo "${0}: building simbody"
+
+mkdir -p "${SIMBODY_INSTALL_PATH}"
+mkdir -p simbody/build
+cd simbody/build
+cmake .. \
+      -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+      -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
+      -DCMAKE_INSTALL_PREFIX="${SIMBODY_INSTALL_PATH}"
+make -j${NUM_BUILD_JOBS}
+make install
+cd -
