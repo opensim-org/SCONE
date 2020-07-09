@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config
+
+mkdir -p "${OSGQT_INSTALL_DIR}"
+
+mkdir -p osgQt/build
+cd osgQt/build
+cmake ../ \
+    -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
+    -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
+    -DCMAKE_INSTALL_PREFIX="${OSGQT_INSTALL_DIR}" \
+    -DCMAKE_PREFIX_PATH="/usr/local/Cellar/qt/5.15.0"
+make -j${NUM_BUILD_JOBS} install
+cd -
+
