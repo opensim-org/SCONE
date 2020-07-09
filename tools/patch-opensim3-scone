@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7629f5a..2902ce8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -144,10 +144,10 @@ IF(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU" OR
+         # libc++ is an implementation of the C++ standard library for OSX.
+         IF(APPLE)
+             IF(XCODE)
+-                SET(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
++                SET(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++11")
+                 SET(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
+             ELSE()
+-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
++                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+                 IF(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+                     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+                 ENDIF()
+@@ -174,13 +174,6 @@ IF(${CMAKE_CXX_COMPILER_ID} MATCHES "GNU" OR
+     # If you know of optimization bugs that affect SimTK in particular
+     # gcc versions, this is the place to turn off those optimizations.
+     SET(GCC_OPT_DISABLE)
+-    # We know Gcc 4.4.3 on Ubuntu 10 is buggy and that Snow Leopard's
+-    # 4.2.1 is not. To be safe for now we'll assume anything over 4.3
+-    # should have these disabled.
+-    if (GCC_VERSION VERSION_GREATER 4.3 OR GCC_VERSION VERSION_EQUAL 4.3)
+-        SET(GCC_OPT_DISABLE 
+-	"-fno-tree-vrp -fno-strict-aliasing -fno-guess-branch-probability")
+-    endif()
+ 
+     # C++
+     SET(CMAKE_CXX_FLAGS_DEBUG          "-g ${GCC_INST_SET}" 

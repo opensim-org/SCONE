@@ -48,6 +48,10 @@ ${sudo} gem install --no-document fpm
 
 try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
 try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+# HACK: opensim3-scone needs this patch to compile on my laptop
+cd opensim3-scone
+git apply ../tools/patch-opensim3-scone || echo "could not apply patch: skipping"
+cd -
 try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
 
 echo "getting submodule dependencies"
