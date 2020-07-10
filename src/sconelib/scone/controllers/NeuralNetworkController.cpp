@@ -82,8 +82,8 @@ namespace scone::NN
 			for ( const auto& link_layer : links_[ idx ] )
 				for ( const auto& link : link_layer.links_ )
 					neurons_[ idx + 1 ][ link.trg_idx_ ].input_ += link.weight_ * neurons_[ link_layer.input_layer_ ][ link.src_idx_ ].output_;
-			for ( auto& neuron : neurons_[ idx + 1 ] )
-				update_output( neuron );
+
+			neurons_[ idx + 1 ].update_outputs();
 		}
 
 		// update actuators with output neurons
@@ -206,6 +206,7 @@ namespace scone::NN
 		{
 			const auto layer_idx = pn.get<index_t>( "layer", neurons_.size() );
 			auto& layer = AddNeuronLayer( layer_idx );
+			layer.update_func_ = make_update_function( pn.get<String>( "activation", "leaky_relu" ) );
 
 			// set names of interneurons
 			auto& neuron_names = neuron_names_[ layer_idx ];
@@ -235,7 +236,8 @@ namespace scone::NN
 		}
 		case "MotorNeurons"_hash:
 		{
-			AddNeuronLayer( pn.get<index_t>( "layer" ) );
+			auto& layer = AddNeuronLayer( pn.get<index_t>( "layer" ) );
+			layer.update_func_ = make_update_function( pn.get<String>( "activation", "leaky_relu" ) );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{

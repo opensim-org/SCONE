@@ -3,14 +3,13 @@
 #include "Controller.h"
 #include "xo/utility/handle.h"
 #include "xo/container/handle_vector.h"
+#include <functional>
+#include "xo/utility/hash.h"
 
 namespace scone
 {
 	namespace NN
 	{
-		inline double relu( const double v ) { return std::max( 0.0, v ); }
-		inline double leaky_relu( const double v, const double l ) { return v >= 0.0 ? v : l * v; }
-
 		struct Neuron {
 			Neuron() : input_(), offset_(), output_() {}
 			Neuron( double offset ) : input_(), offset_( offset ), output_() {}
@@ -18,7 +17,31 @@ namespace scone
 			double offset_;
 			double output_;
 		};
-		using NeuronLayer = std::vector<Neuron>;
+
+		using UpdateFunction = std::function<void( std::vector<Neuron>& )>;
+
+		struct NeuronLayer : public std::vector<Neuron> {
+			void update_outputs() { update_func_( *this ); }
+			UpdateFunction update_func_;
+		};
+
+		inline double relu( const double v ) { return std::max( 0.0, v ); }
+		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
+
+		// #perf #todo: check in compiler explorer if this inlines properly
+		template< typename F >
+		UpdateFunction update_function( F act ) {
+			return [=]( std::vector<Neuron>& nv ) { for ( auto& n : nv ) n.output_ = act( n.input_ + n.offset_ ); };
+		}
+
+		inline UpdateFunction make_update_function( const String& s ) {
+			switch ( xo::hash( s ) )
+			{
+			case "relu"_hash: return update_function( relu );
+			case "leaky_relu"_hash: return update_function( leaky_relu );
+			default: SCONE_ERROR( "Unknown activation function: " + s );
+			}
+		}
 
 		struct Link {
 			index_t src_idx_;
@@ -64,8 +87,6 @@ namespace scone
 			String GetClassSignature() const override;
 
 		private:
-			inline void update_output( Neuron& n ) { n.output_ = leaky_relu( n.input_ + n.offset_, leakyness_ ); }
-
 			NeuronLayer& AddNeuronLayer( index_t layer );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
@@ -79,7 +100,7 @@ namespace scone
 			const xo::flat_map< String, TimeInSeconds > neural_delays_;
 
 			std::vector<SensorNeuronLink> sensor_links_;
-			std::vector< NeuronLayer > neurons_;
+			std::vector<NeuronLayer> neurons_;
 			std::vector< std::vector< String > > neuron_names_;
 			std::vector< std::vector< LinkLayer > > links_;
 			std::vector<MotorNeuronLink> motor_links_;
