@@ -887,7 +887,8 @@ bool SconeStudio::abortOptimizations()
 
 void SconeStudio::updateBackgroundTimer()
 {
-	updateOptimizations();
+	if ( !ui.playControl->isPlaying() )
+		updateOptimizations();
 }
 
 void SconeStudio::updateOptimizations()
