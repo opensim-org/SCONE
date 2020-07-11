@@ -27,6 +27,8 @@ namespace scone
 
 		inline double relu( const double v ) { return std::max( 0.0, v ); }
 		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
+		inline double tanh( const double v ) { return std::tanh( v ); }
+		inline double tanh_norm( const double v ) { return 0.5 * std::tanh( 2.0 * v - 1.0 ) + 0.5; }
 
 		// #perf #todo: check in compiler explorer if this inlines properly
 		template< typename F >
@@ -39,6 +41,8 @@ namespace scone
 			{
 			case "relu"_hash: return update_function( relu );
 			case "leaky_relu"_hash: return update_function( leaky_relu );
+			case "tanh"_hash: return update_function( tanh );
+			case "tanh_norm"_hash: return update_function( tanh_norm );
 			default: SCONE_ERROR( "Unknown activation function: " + s );
 			}
 		}

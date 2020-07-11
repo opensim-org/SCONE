@@ -237,7 +237,7 @@ namespace scone::NN
 		case "MotorNeurons"_hash:
 		{
 			auto& layer = AddNeuronLayer( pn.get<index_t>( "layer" ) );
-			layer.update_func_ = make_update_function( pn.get<String>( "activation", "leaky_relu" ) );
+			layer.update_func_ = make_update_function( pn.get<String>( "activation", "relu" ) );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{
