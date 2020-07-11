@@ -121,7 +121,8 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 		medvec.push_back( pn.get< double >( "step_median" ) );
 		bestvec.push_back( pn.get< double >( "step_best" ) );
 		genvec.push_back( cur_gen );
-		cur_pred = cur_reg( float( cur_gen + window_size ) );
+		if ( !pn.try_get( cur_pred, "predicted_fitness" ) )
+			cur_pred = cur_reg( float( cur_gen + window_size ) );
 	}
 
 	pn.try_get( best, "best" );
