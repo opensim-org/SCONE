@@ -192,6 +192,18 @@ namespace scone::NN
 					pn.get<double>( "delay" ), 0 );
 			break;
 		}
+		case "BodyOriVelSensor"_hash:
+		{
+			const auto body_name = pn.get<String>( "body" );
+			const auto postfix = pn.get<String>( "postfix" );
+			const auto& body = *FindByName( model.GetBodies(), body_name );
+			auto kv = par.try_get( body_name + postfix + ".KV", pn, "velocity_gain", 0.1 );
+			for ( auto side : { LeftSide, RightSide } )
+				AddSensor(
+					&model.AcquireDelayedSensor<BodyOriVelSensor>( body, pn.get<Vec3>( "dir" ), kv, postfix, side ),
+					pn.get<double>( "delay" ), 0 );
+			break;
+		}
 		case "DofPosVelSensor"_hash:
 		{
 			auto dof_name = pn.get<String>( "dof" );

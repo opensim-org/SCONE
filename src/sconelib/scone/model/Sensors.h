@@ -165,6 +165,17 @@ namespace scone
 		const Vec3 dir_;
 		const String name_;
 	};
+
+	struct SCONE_API BodyOriVelSensor : public Sensor
+	{
+		BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side );
+		virtual String GetName() const override { return name_; }
+		virtual Real GetValue() const override;
+		const Body& body_;
+		const double kv_;
+		const Vec3 dir_;
+		const String name_;
+	};
 }
 
 #if defined(_MSC_VER)
