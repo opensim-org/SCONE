@@ -18,6 +18,7 @@
 #include "xo/string/string_tools.h"
 #include "xo/string/string_cast.h"
 #include "scone/core/types.h"
+#include "scone/core/Vec3.h"
 
 namespace scone
 {
@@ -82,6 +83,12 @@ namespace scone
 	inline String GetMirroredName( const String& str )
 	{
 		return GetNameNoSide( str ) + GetSideName( GetOppositeSide( GetSideFromName( str ) ) );
+	}
+
+	// get direction vector that is mirrored in the XY plane for LeftSide, used in e.g. BodyOrientationSensor
+	inline Vec3 GetSidedDir( Vec3 dir, Side side ) {
+		if ( side == LeftSide ) { dir.x = -dir.x; dir.y = -dir.y; }
+		return dir;
 	}
 
 	template< typename T >

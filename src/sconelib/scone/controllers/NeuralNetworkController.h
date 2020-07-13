@@ -63,7 +63,6 @@ namespace scone
 			SensorDelayAdapter* sensor_;
 			TimeInSeconds delay_;
 			double offset_;
-			double sign_;
 			index_t neuron_idx_;
 			const Muscle* muscle_;
 		};

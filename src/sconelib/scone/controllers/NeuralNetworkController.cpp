@@ -53,7 +53,7 @@ namespace scone::NN
 	Neuron& NeuralNetworkController::AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset )
 	{
 		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor->GetInputSensor() );
-		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, offset, 1, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
+		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, offset, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
 		return neurons_.front().emplace_back( offset );
 	}
 
@@ -174,18 +174,22 @@ namespace scone::NN
 			}
 			break;
 		}
-		case "BodyAngularVelocitySensor"_hash:
-		{
-			AddSensor( &model.AcquireDelayedSensor<BodyAngularVelocitySensor>(
-				*FindByName( model.GetBodies(), pn.get<String>( "body" ) ),
-				pn.get<Vec3>( "dir" ), pn.get<String>( "id" ) ), pn.get<double>( "delay" ), 0 );
-			break;
-		}
 		case "BodyOrientationSensor"_hash:
 		{
-			AddSensor( &model.AcquireDelayedSensor<BodyOrientationSensor>(
-				*FindByName( model.GetBodies(), pn.get<String>( "body" ) ),
-				pn.get<Vec3>( "dir" ), pn.get<String>( "id" ) ), pn.get<double>( "delay" ), 0 );
+			const auto& body = *FindByName( model.GetBodies(), pn.get<String>( "body" ) );
+			for ( auto side : { LeftSide, RightSide } )
+				AddSensor(
+					&model.AcquireDelayedSensor<BodyOrientationSensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
+					pn.get<double>( "delay" ), 0 );
+			break;
+		}
+		case "BodyAngularVelocitySensor"_hash:
+		{
+			const auto& body = *FindByName( model.GetBodies(), pn.get<String>( "body" ) );
+			for ( auto side : { LeftSide, RightSide } )
+				AddSensor(
+					&model.AcquireDelayedSensor<BodyAngularVelocitySensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
+					pn.get<double>( "delay" ), 0 );
 			break;
 		}
 		case "DofPosVelSensor"_hash:

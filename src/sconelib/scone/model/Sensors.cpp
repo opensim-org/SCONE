@@ -65,12 +65,16 @@ namespace scone
 		return xo::dot_product( direction_, body_.GetLinAccOfPointOnBody( offset_ ) );
 	}
 
-	String BodyOrientationSensor::GetName() const { return body_.GetName() + id_ + ".BO"; }
+	BodyOrientationSensor::BodyOrientationSensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BO" ) {}
+
 	Real BodyOrientationSensor::GetValue() const {
-		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) ) );
+		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized_fast( body_.GetOrientation() ) ) );
 	}
 
-	String BodyAngularVelocitySensor::GetName() const { return body_.GetName() + id_ + ".BAV"; }
+	inline BodyAngularVelocitySensor::BodyAngularVelocitySensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BAV" ) {}
+
 	Real BodyAngularVelocitySensor::GetValue() const {
 		return xo::dot_product( body_.GetOrientation() * dir_, body_.GetAngVel() );
 	}
