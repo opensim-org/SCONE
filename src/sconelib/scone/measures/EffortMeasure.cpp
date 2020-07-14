@@ -22,7 +22,9 @@ namespace scone
 		EffortMeasure::Wang2012, "Wang2012",
 		EffortMeasure::Uchida2016, "Uchida2016",
 		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress",
-		EffortMeasure::SquaredMuscleActivation, "SquaredMuscleActivation"
+		EffortMeasure::CubedMuscleStress, "CubedMuscleStress",
+		EffortMeasure::SquaredMuscleActivation, "SquaredMuscleActivation",
+		EffortMeasure::CubedMuscleActivation, "CubedMuscleActivation"
 		);
 
 	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
@@ -97,7 +99,9 @@ namespace scone
 		case Constant: return model.GetMass();
 		case Uchida2016: return GetUchida2016( model );
 		case SquaredMuscleStress: return GetSquaredMuscleStress( model );
+		case CubedMuscleStress: return GetCubedMuscleStress( model );
 		case SquaredMuscleActivation: return GetSquaredMuscleActivation( model );
+		case CubedMuscleActivation: return GetCubedMuscleActivation( model );
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 	}
@@ -267,11 +271,27 @@ namespace scone
 		return sum;
 	}
 
+	double EffortMeasure::GetCubedMuscleStress( const Model& model ) const
+	{
+		double sum = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			sum += xo::cubed( m->GetForce() / m->GetPCSA() );
+		return sum;
+	}
+
 	double EffortMeasure::GetSquaredMuscleActivation( const Model& model ) const
 	{
 		double sum = 0.0;
 		for ( auto& m : model.GetMuscles() )
 			sum += xo::squared( m->GetActivation() );
+		return sum;
+	}
+
+	double EffortMeasure::GetCubedMuscleActivation( const Model& model ) const
+	{
+		double sum = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			sum += xo::cubed( m->GetActivation() );
 		return sum;
 	}
 
@@ -289,7 +309,9 @@ namespace scone
 		case Constant: s += "C"; break;
 		case Uchida2016: s += "U"; break;
 		case SquaredMuscleStress: s += "MS"; break;
-		case SquaredMuscleActivation: s += "MA"; break;
+		case CubedMuscleStress: s += "MC"; break;
+		case SquaredMuscleActivation: s += "MAS"; break;
+		case CubedMuscleActivation: s += "MAC"; break;
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 
