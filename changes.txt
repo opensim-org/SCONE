@@ -1,6 +1,12 @@
 ~~NOCACHE~~
 ====== SCONE Version History ======
 
+==== SCONE 1.5.1 ====
+//Released July 14, 2020//
+
+=== Updates and Fixes ===
+  * GaitStateController transition parameters are now optimized individually when symmetric = 0. closes #214.
+
 ==== SCONE 1.5.0 ====
 //Released June 19, 2020//
 
