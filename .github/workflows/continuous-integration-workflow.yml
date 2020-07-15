@@ -1,9 +1,9 @@
 on: [push]
 
 env:
-  OSG_INSTALL_PATH: ${{ home }}/OpenSceneGraph-install
-  SIMBODY_INSTALL_PATH: ${{ home }}/simbody-install
-  OPENSIM3_INSTALL_PATH: ${{ home }}/opensim3-install
+  OSG_INSTALL_PATH: ~/OpenSceneGraph-install
+  SIMBODY_INSTALL_PATH: ~/simbody-install
+  OPENSIM3_INSTALL_PATH: ~/opensim3-install
 
 jobs:
   build:
