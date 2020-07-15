@@ -1,5 +1,10 @@
 on: [push]
 
+env:
+  OSG_INSTALL_PATH: /tmp/OpenSceneGraph-install
+  SIMBODY_INSTALL_PATH: /tmp/simbody-install
+  OPENSIM3_INSTALL_PATH: /tmp/opensim3-install
+
 jobs:
   build:
     name: Build
@@ -14,10 +19,26 @@ jobs:
     - name: Get Dependencies
       run: cd $GITHUB_WORKSPACE && ./tools/mac_1_get-dependencies
 
+    - name: Check cache for openscenegraph
+      id: cache_osg
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.OSG_INSTALL_PATH }}
+        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
+
     - name: Build openscenegraph
+      if: steps.cache_osg.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE && ./tools/mac_2a_build-osg
 
+    - name: Check cache for simbody
+      id: cache_simbody
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.SIMBODY_INSTALL_PATH }}
+        key: ${{ runner.os }}-simbody-${{ hashFiles('simbody/Simbody') }}
+
     - name: Build simbody
+      if: steps.cache_simbody.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE && ./tools/mac_2b_build-simbody
 
     - name: Build opensim3
