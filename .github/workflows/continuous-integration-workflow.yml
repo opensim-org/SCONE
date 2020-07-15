@@ -1,5 +1,11 @@
 on: [push]
 
+env:
+  OSG_INSTALL_PATH: ~/OpenSceneGraph-install
+  SIMBODY_INSTALL_PATH: ~/simbody-install
+  OPENSIM3_INSTALL_PATH: ~/opensim3-install
+  OSG_INSTALL_PATH: ~/OpenSceneGraph-install
+
 jobs:
   build:
     name: Build
@@ -11,7 +17,7 @@ jobs:
       run: cd $GITHUB_WORKSPACE && ./tools/linux_1_get-dependencies
 
     # note: this step is specifically because ubuntu-18.04 does not
-    # provide a C++17 compiler. It can be skipped newer distros
+    # provide a C++17 compiler. It can be skipped in newer distros
     - name: Install gcc-8 and g++8
       run: |
         sudo apt-get install gcc-8 g++-8
@@ -29,9 +35,7 @@ jobs:
 
     - name: Build openscenegraph (if not cached)
       if: steps.cache_osg.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE
-        OSG_INSTALL_PATH=~/OpenSceneGraph-install ./tools/linux_2a_build-osg
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2a_build-osg     
 
 
     # simbody: only build it if its source files have changed
@@ -44,9 +48,7 @@ jobs:
 
     - name: Build simbody (if not cached)
       if: steps.cache_simbody.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE
-        SIMBODY_INSTALL_PATH=~/simbody-install ./tools/linux_2b_build-simbody
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2b_build-simbody
 
 
     # opensim3: only build it if its source files have changed
@@ -59,35 +61,21 @@ jobs:
 
     - name: Build opensim3 (if not cached)
       if: steps.cache_opensim3.outputs.cache-hit != 'true'
-      run: |
-        cd $GITHUB_WORKSPACE
-        export SIMBODY_INSTALL_PATH=~/simbody-install
-        export OPENSIM3_INSTALL_PATH=~/opensim3-install
-        ./tools/linux_2c_build-opensim3
+      run: cd $GITHUB_WORKSPACE &&./tools/linux_2c_build-opensim3
+
 
     - name: Build SCONE
-      run: |
-        cd $GITHUB_WORKSPACE
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2d_build-scone
 
-        export OSG_INSTALL_PATH=~/OpenSceneGraph-install
-        export OPENSIM3_INSTALL_PATH=~/opensim3-install
-
-        ./tools/linux_2d_build-scone
 
     - name: Rearrange binaries into single dir
-      run: |
-        cd $GITHUB_WORKSPACE
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_3_create-install-dirtree
 
-        export OSG_INSTALL_PATH=~/OpenSceneGraph-install
-        export OPENSIM3_INSTALL_PATH=~/opensim3-install
-
-        ./tools/linux_3_create-install-dirtree
 
     - name: Package dir into deb package
       run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package
 
-    # uploads to github such that some(one/thing) can download the
-    # artifact easily
+
     - name: Upload deb package artifact
       uses: actions/upload-artifact@v2
       with:
