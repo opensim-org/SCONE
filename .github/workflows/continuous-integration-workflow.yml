@@ -4,7 +4,6 @@ env:
   OSG_INSTALL_PATH: ~/OpenSceneGraph-install
   SIMBODY_INSTALL_PATH: ~/simbody-install
   OPENSIM3_INSTALL_PATH: ~/opensim3-install
-  OSG_INSTALL_PATH: ~/OpenSceneGraph-install
 
 jobs:
   build:
@@ -30,12 +29,12 @@ jobs:
       id: cache_osg
       uses: actions/cache@v1
       with:
-        path: ~/OpenSceneGraph-install
+        path: ${{ env.OSG_INSTALL_PATH }}
         key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
 
     - name: Build openscenegraph (if not cached)
       if: steps.cache_osg.outputs.cache-hit != 'true'
-      run: cd $GITHUB_WORKSPACE && ./tools/linux_2a_build-osg     
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2a_build-osg
 
 
     # simbody: only build it if its source files have changed
@@ -43,7 +42,7 @@ jobs:
       id: cache_simbody
       uses: actions/cache@v1
       with:
-        path: ~/simbody-install
+        path: ${{ env.SIMBODY_INSTALL_PATH }}
         key: ${{ runner.os }}-simbody-${{ hashFiles('simbody/Simbody') }}
 
     - name: Build simbody (if not cached)
@@ -56,7 +55,7 @@ jobs:
       id: cache_opensim3
       uses: actions/cache@v1
       with:
-        path: ~/opensim3-install
+        path: ${{ env.OPENSIM3_INSTALL_PATH }}
         key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone/OpenSim') }}
 
     - name: Build opensim3 (if not cached)
