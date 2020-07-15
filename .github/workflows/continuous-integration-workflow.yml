@@ -86,7 +86,10 @@ jobs:
     - name: Package dir into deb package
       run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package
 
+    # uploads to github such that some(one/thing) can download the
+    # artifact easily
     - name: Upload deb package artifact
       uses: actions/upload-artifact@v2
       with:
+        name: deb-installer.zip
         path: build/*.deb
