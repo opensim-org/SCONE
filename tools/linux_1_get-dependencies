@@ -49,7 +49,7 @@ OSC_TARBALL_NAME="opensim-core-3.3-ubuntu-18.04.tar.xz"
 try_clone_checkout() {
     url="${1}"
     ref="${2}"
-    
+
     dir=$(basename "${url}" | sed 's/.git$//')
 
     echo "${0}: ${dir}: must be built from source for Linux builds"
