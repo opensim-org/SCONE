@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+DYLD_FALLBACK_LIBRARY_PATH=OpenSceneGraph/install/lib:opensim3-scone/install/lib ./build/bin/sconestudio

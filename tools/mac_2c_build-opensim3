@@ -17,4 +17,5 @@ cmake .. \
  #     -DCMAKE_CXX_FLAGS="-stdlib=libc++"
 make -j${NUM_BUILD_JOBS}
 make install
+# TODO: chmod +x opensim3-scone/install/lib/*.dylib
 cd -
