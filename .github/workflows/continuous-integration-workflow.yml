@@ -44,8 +44,5 @@ jobs:
     - name: Build opensim3
       run: cd $GITHUB_WORKSPACE && ./tools/mac_2c_build-opensim3
 
-    - name: Build OsgQt
-      run: cd $GITHUB_WORKSPACE && ./tools/mac_2d_build-osgqt
-
     - name: Build SCONE
-      run: cd $GITHUB_WORKSPACE && ./tools/mac_2e_build-scone
+      run: cd $GITHUB_WORKSPACE && ./tools/mac_2d_build-scone

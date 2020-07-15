@@ -55,7 +55,6 @@ cd opensim3-scone
 git apply ../tools/patch-opensim3-scone || echo "could not apply patch: skipping"
 cd -
 try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
-try_clone_checkout "https://github.com/openscenegraph/osgQt.git" "master"
 
 echo "getting submodule dependencies"
 git submodule update --init --recursive
