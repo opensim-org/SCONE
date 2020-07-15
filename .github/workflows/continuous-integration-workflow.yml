@@ -85,3 +85,8 @@ jobs:
 
     - name: Package dir into deb package
       run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package
+
+    - name: Upload deb package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: build/*.deb
