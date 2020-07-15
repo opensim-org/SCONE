@@ -41,7 +41,7 @@ namespace OpenSim
 		/// Takes ownership of the StateComponent pointer.
 		StateComponentOpenSim3( scone::StateComponent* stateComponent );
 		/// Extract the state of this component from global state.
-		std::vector< scone::Real > getStateVariables( const SimTK::State& s ) const;
+		std::vector<scone::Real> getStateVariables( const SimTK::State& s ) const;
 		/// Extract the state of this component from global state.
 		void setStateVariables( SimTK::State& s, std::vector< scone::Real > x0 ) const;
 		/// Calculate the state derivative.
@@ -53,6 +53,6 @@ namespace OpenSim
 
 	private:
 		SimTK::ReferencePtr<scone::StateComponent> m_stateComponent;
-		std::vector< scone::String > m_stateVariables;
+		std::vector<scone::String> m_stateVariables;
 	};
 }
