@@ -14,14 +14,12 @@ namespace scone
 {
 	MuscleMeasure::MuscleMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
-		muscle( *FindByLocation( model.GetMuscles(), props.get< String >( "muscle" ), loc ) ),
-		range_count( 0 )
+		muscle( *FindByLocation( model.GetMuscles(), props.get< String >( "muscle" ), loc ) )
 	{
 		INIT_PROP( props, activation, RangePenalty<Real>() );
 		INIT_PROP( props, length, RangePenalty<Real>() );
 		INIT_PROP( props, velocity, RangePenalty<Real>() );
 
-		range_count = int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
 		if ( name.empty() )
 			name = muscle.GetName();
 	}
@@ -29,6 +27,7 @@ namespace scone
 	double MuscleMeasure::ComputeResult( const Model& model )
 	{
 		double penalty = 0.0;
+		auto range_count = int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
 		if ( !activation.IsNull() )
 		{
 			penalty += activation.GetResult();

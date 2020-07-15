@@ -36,6 +36,7 @@ namespace scone
 
 		// prepare data
 		ReadStorageSto( m_Storage, file );
+		model_->AddExternalResource(file);
 
 		// make sure data and model are compatible
 		auto state = model_->GetState();
@@ -60,6 +61,8 @@ namespace scone
 			m_SensorChannels.push_back( m_Storage.GetChannelIndex( sensor_name ) );
 			SCONE_THROW_IF( m_SensorChannels.back() == NoIndex, "Could not find sensor for " + sensor_name );
 		}
+
+		AddExternalResources( *model_ );
 	}
 
 	ImitationObjective::~ImitationObjective()

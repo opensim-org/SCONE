@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "scone/core/Exception.h"
 #include "scone/core/platform.h"
 #include "types.h"
 
@@ -21,6 +22,7 @@ namespace scone
 		virtual ~Function() { };
 
 		virtual Real GetValue( Real x ) = 0;
+		virtual Real GetDerivativeValue( Real x ) { SCONE_THROW_NOT_IMPLEMENTED };
 		virtual String GetSignature() { return "UnknownFunction"; }
 	};
 }

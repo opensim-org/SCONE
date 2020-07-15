@@ -15,7 +15,7 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
 #include "scone/core/Settings.h"
-#include "spot/async_evaluator.h"
+#include "spot/async_evaluator.h"	
 #include "spot/pooled_evaluator.h"
 #include "spot/batch_evaluator.h"
 
@@ -23,7 +23,14 @@ namespace scone
 {
 	CmaOptimizerSpot::CmaOptimizerSpot( const PropNode& pn, const PropNode& scenario_pn, const path& scenario_dir ) :
 		CmaOptimizer( pn, scenario_pn, scenario_dir ),
-		cma_optimizer( *m_Objective, GetEvaluator(), spot::cma_options{ CmaOptimizer::lambda_, CmaOptimizer::random_seed, spot::cma_weights::log } )
+		cma_optimizer( *m_Objective, GetEvaluator(),
+			spot::cma_options{
+				CmaOptimizer::lambda_,
+				CmaOptimizer::random_seed,
+				spot::cma_weights::log,
+				pn.get<double>( "update_eigen_modulo", -1.0 )
+			}
+		)
 	{
 		size_t dim = GetObjective().dim();
 		SCONE_ASSERT( dim > 0 );
@@ -155,6 +162,7 @@ namespace scone
 		pn.set( "trend_offset", cma.fitness_trend().offset() );
 		pn.set( "trend_slope", cma.fitness_trend().slope() );
 		pn.set( "progress", cma.progress() );
+		pn.set( "predicted_fitness", cma.predicted_fitness( cma.fitness_tracking_window_size() ) );
 		pn.set( "time", t );
 		pn.set( "number_of_evaluations", number_of_evaluations_ );
 		pn.set( "evaluations_per_sec", number_of_evaluations_ / t );

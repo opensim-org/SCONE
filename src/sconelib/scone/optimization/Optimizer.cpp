@@ -57,8 +57,8 @@ namespace scone
 		INIT_PROP( props, min_improvement_for_file_output, 0.05 );
 		INIT_PROP( props, max_generations_without_file_output, 1000 );
 
-		INIT_PROP( props, max_generations, 10000 );
-		INIT_PROP( props, min_progress, 1e-6 );
+		INIT_PROP( props, max_generations, 100000 );
+		INIT_PROP( props, min_progress, 1e-5 );
 		INIT_PROP( props, min_progress_samples, 200 );
 
 		// initialize parameters from file

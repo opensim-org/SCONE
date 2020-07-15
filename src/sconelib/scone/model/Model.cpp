@@ -42,7 +42,7 @@ namespace scone
 		m_Controller( nullptr ),
 		m_ShouldTerminate( false ),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce, StoreDataTypes::CenterOfMass } )
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
@@ -82,11 +82,14 @@ namespace scone
 		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSetting<bool>( "data.muscle" ) );
 		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
+		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
 		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
+		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
+		flags.set( StoreDataTypes::MeasureData, GetSconeSetting<bool>( "data.measure" ) );
 		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
 		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
-		flags.set( StoreDataTypes::SimulationStatistics );
+		flags.set( StoreDataTypes::SimulationStatistics, GetSconeSetting<bool>( "data.simulation" ) );
 	}
 
 	Model::~Model()
@@ -193,12 +196,11 @@ namespace scone
 				frame[ d->GetName() + ".moment" ] = d->GetMoment();
 		}
 
-		// store controller data
-		if ( flags( StoreDataTypes::ControllerData ) )
-		{
-			if ( GetController() ) GetController()->StoreData( frame, flags );
-			if ( GetMeasure() ) GetMeasure()->StoreData( frame, flags );
-		}
+		// store controller / measure data
+		if ( flags( StoreDataTypes::ControllerData ) && GetController() )
+			GetController()->StoreData( frame, flags );
+		if ( flags( StoreDataTypes::MeasureData ) && GetMeasure() )
+			GetMeasure()->StoreData( frame, flags );
 
 		// store sensor data
 		if ( flags( StoreDataTypes::SensorData ) && !m_SensorDelayStorage.IsEmpty() )
@@ -209,7 +211,7 @@ namespace scone
 		}
 
 		// store COP data
-		if ( flags( StoreDataTypes::CenterOfMass ) )
+		if ( flags( StoreDataTypes::BodyComPosition ) )
 		{
 			auto com = GetComPos();
 			auto com_u = GetComVel();

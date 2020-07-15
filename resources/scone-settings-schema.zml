@@ -50,11 +50,29 @@ data {
 		default = 1
 		description = "Output sensor data"
 	}
+	actuator {
+		type = bool
+		label = "Output actuator data"
+		default = 0
+		description = "Output actuator data"
+	}
 	controller {
 		type = bool
 		label = "Output controller data"
 		default = 1
 		description = "Output controller data"
+	}
+	measure {
+		type = bool
+		label = "Output measure data"
+		default = 1
+		description = "Output measure data"
+	}
+	grf {
+		type = bool
+		label = "Output ground reaction force"
+		default = 1
+		description = "Output ground reaction force"
 	}
 	contact {
 		type = bool
@@ -67,6 +85,12 @@ data {
 		label = "Output debug data"
 		default = 0
 		description = "Output debug data"
+	}
+	simulation {
+		type = bool
+		label = "Output simulation statisticts"
+		default = 0
+		description = "Output simulation statisticts"
 	}
 }
 

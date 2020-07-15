@@ -17,6 +17,8 @@ set(MODEL_OPENSIM_3_FILES
 	platform.h
 	sconeopensim3.h
 	sconeopensim3.cpp
+	StateComponentOpenSim3.h
+	StateComponentOpenSim3.cpp
 )
 
 find_package( OpenSim 3.3 REQUIRED MODULE )

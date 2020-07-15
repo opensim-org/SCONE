@@ -28,6 +28,7 @@ namespace scone
 		size_t degree;
 
 		virtual Real GetValue( Real x ) override;
+		virtual Real GetDerivativeValue( Real x ) override;
 		virtual void SetCoefficient( size_t idx, Real value );
 		size_t GetCoefficientCount();
 

@@ -19,6 +19,7 @@
 #include "ConstantForce.h"
 #include "ContactForceOpenSim3.h"
 #include "simbody_tools.h"
+#include "StateComponentOpenSim3.h"
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
@@ -148,6 +149,19 @@ namespace scone
 				probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
 				probe->setOperation( "integrate" );
 				m_pProbe = probe;
+			}
+		}
+
+		{
+			// Find StateComponents inside of the model definition and add them
+			// into OpenSim's subsystem.
+			for (auto& cpn : props) {
+				if ( auto fp = MakeFactoryProps( GetStateComponentFactory(), cpn, "StateComponent" ) ) {
+					auto stateComponent = CreateStateComponent( fp, par, *this );
+					// modelComponent takes ownership of the stateComponent
+					auto modelComponent = new OpenSim::StateComponentOpenSim3(stateComponent.release());
+					m_pOsimModel->addComponent(modelComponent);
+				}
 			}
 		}
 

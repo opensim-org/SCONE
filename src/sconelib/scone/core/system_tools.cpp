@@ -18,28 +18,32 @@
 #include "Log.h"
 #include "Exception.h"
 
+namespace {
+	using scone::path;
+
+	path FindInstallFolder()
+	{
+		path p = xo::get_application_dir();
+		for ( ; !p.empty(); p = p.parent_path() )
+		{
+			if ( path config = p / ".sconeroot"; xo::exists( config ) )
+			{
+				return xo::load_string( config );
+			}
+			else if ( xo::exists( p / ".version" ) )
+				break;
+		}
+		SCONE_THROW_IF( p.empty(), "Could not detect installation root folder, please run .updateversion.bat or .updateversion.sh" );
+		scone::log::debug( "SCONE root folder: ", p );
+		return p;
+	}
+}
+
 namespace scone
 {
-	String g_Version;
-	path g_RootFolder;
-
-	path GetInstallFolder()
+	const path& GetInstallFolder()
 	{
-		if ( g_RootFolder.empty() )
-		{
-			for ( g_RootFolder = xo::get_application_dir(); !g_RootFolder.empty(); g_RootFolder = g_RootFolder.parent_path() )
-			{
-				if ( xo::exists( g_RootFolder / ".sconeroot" ) )
-				{
-					g_RootFolder = xo::load_string( g_RootFolder / ".sconeroot" );
-					break;
-				}
-				else if ( xo::exists( g_RootFolder / ".version" ) )
-					break;
-			}
-			SCONE_THROW_IF( g_RootFolder.empty(), "Could not detect installation root folder, please run .updateversion.bat or .updateversion.sh" );
-			log::debug( "SCONE root folder: ", g_RootFolder );
-		}
+		static const path g_RootFolder = FindInstallFolder();
 		return g_RootFolder;
 	}
 
