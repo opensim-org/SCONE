@@ -46,3 +46,6 @@ jobs:
 
     - name: Build SCONE
       run: cd $GITHUB_WORKSPACE && ./tools/mac_2d_build-scone
+
+    - name: Rearrange SCONE into portable install dir
+      run: cd $GITHUB_WORKSPACE && ./tools/mac_3_create-install-dirtree

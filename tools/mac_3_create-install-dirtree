@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Packages built SCONE binaries/scripts etc. into a standalone
+# directory structure that is only dependent on common system
+# libraries (e.g. OpenGL, Qt5).
+#
+# This is a prerequisite for packaging into an installer (e.g. `.deb`,
+# which will also install any dependencies).
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+base_dir="${SCONE_BUILD_DIR}/mac"
+install_dir="${base_dir}/opt/scone"
+usr_dir="${base_dir}/usr"
+
+mkdir -p "${install_dir}"
+
+# creates a bash wrapper script for booting SCONE binaries
+# portably from any dir
+create_wrapper() {
+	raw_appname=$1
+	dest=$2
+
+cat <<EOF > "${dest}"
+#!/usr/bin/env bash
+
+# ensure the dynamic linker can find bundled libs
+export DYLD_FALLBACK_LIBRARY_PATH=\${BASH_SOURCE%/*}/../lib/
+
+# add all SCONE exes onto the PATH so that the application name
+# appears non-absolute when queried via argv[0] *but* the working
+# dir is still wherever the caller ran this script
+export PATH="\${BASH_SOURCE%/*}:\${PATH}"
+
+${raw_appname} "\$@"
+EOF
+chmod +x "${dest}"
+}
+
+# <install_loc>/bin/: runtime executables + wrapper scripts
+mkdir -p "${install_dir}/bin"
+for exe in $(find "${SCONE_BUILD_DIR}/bin" -type f); do
+	name=$(basename ${exe})
+	# the binary is renamed to _raw because it can't just be called.
+	#
+	# callers need to setup their library path etc. so that the binaries
+	# load correctly. The wrapper has the original name (e.g. 'sconestudio')
+	cp "${exe}" "${install_dir}/bin/${name}_raw"
+	create_wrapper "${name}_raw" "${install_dir}/bin/${name}"
+done
+
+# <install_loc>/lib/: runtime libraries
+mkdir -p "${install_dir}/lib"
+find "${SCONE_BUILD_DIR}/" -name "*.dylib" -exec cp -a {} "${install_dir}/lib" \;
+find "${OPENSIM3_INSTALL_PATH}/lib" -name "*.dylib*" -exec cp -a {} "${install_dir}/lib" \;
+find "${OSG_INSTALL_PATH}/" -name "*.dylib*" -exec cp -a {} "${install_dir}/lib" \;
+
+# <install_loc>/resources: resources
+mkdir -p "${install_dir}/resources"
+cp -r ${PROJECT_DIR}/resources/* "${install_dir}/resources"
+
+# <install_loc>/.version: SCONE version: needs to exist in order for the binaries
+# to work (they seem to check it)
+git rev-list --count HEAD > "${install_dir}/.version"
+
