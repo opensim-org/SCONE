@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+echo "${0}: starting OpenSceneGraph build"
+./tools/linux_2a_build-osg
+
+echo "${0}: starting simbody build"
+./tools/linux_2b_build-simbody
+
+echo "${0}: starting OpenSim3 build"
+./tools/linux_2c_build-opensim3
+
+echo "${0}: dependency build complete: the following directories were created:"
+find "${OSG_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+find "${SIMBODY_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+find "${OPENSIM3_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+
+echo "${0}: all dependencies built: building SCONE"
+./tools/linux_2d_build-scone

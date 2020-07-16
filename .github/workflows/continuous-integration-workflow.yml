@@ -1,0 +1,82 @@
+on: [push]
+
+env:
+  OSG_INSTALL_PATH: /tmp/OpenSceneGraph-install
+  SIMBODY_INSTALL_PATH: /tmp/simbody-install
+  OPENSIM3_INSTALL_PATH: /tmp/opensim3-install
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Get Dependencies
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_1_get-dependencies
+
+    # note: this step is specifically because ubuntu-18.04 does not
+    # provide a C++17 compiler. It can be skipped in newer distros
+    - name: Install gcc-8 and g++8
+      run: |
+        sudo apt-get install gcc-8 g++-8
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 700 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 800 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+
+
+    # openscenegraph: only build it if its source files have changed
+    - name: Cache openscenegraph
+      id: cache_osg
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.OSG_INSTALL_PATH }}
+        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
+
+    - name: Build openscenegraph (if not cached)
+      if: steps.cache_osg.outputs.cache-hit != 'true'
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2a_build-osg
+
+
+    # simbody: only build it if its source files have changed
+    - name: Cache simbody
+      id: cache_simbody
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.SIMBODY_INSTALL_PATH }}
+        key: ${{ runner.os }}-simbody-${{ hashFiles('simbody/Simbody') }}
+
+    - name: Build simbody (if not cached)
+      if: steps.cache_simbody.outputs.cache-hit != 'true'
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2b_build-simbody
+
+
+    # opensim3: only build it if its source files have changed
+    - name: Cache opensim3
+      id: cache_opensim3
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.OPENSIM3_INSTALL_PATH }}
+        key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone/OpenSim') }}
+
+    - name: Build opensim3 (if not cached)
+      if: steps.cache_opensim3.outputs.cache-hit != 'true'
+      run: cd $GITHUB_WORKSPACE &&./tools/linux_2c_build-opensim3
+
+
+    - name: Build SCONE
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2d_build-scone
+
+
+    - name: Rearrange binaries into single dir
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_3_create-install-dirtree
+
+
+    - name: Package dir into deb package
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_4_package
+
+
+    - name: Upload deb package artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: deb-installer.zip
+        path: build/*.deb

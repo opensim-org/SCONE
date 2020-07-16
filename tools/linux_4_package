@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+# keeping this list as short as possible is the only way to guarantee
+# that the resulting `.deb` package will install on multiple versions
+# of debian/ubuntu. This is why `scone` packages openscenegraph,
+# rather than depending on it via `apt`.
+dependencies=(
+    # transitive: from libosgDB.so
+    zlib1g
+
+    # transitive: from libosimAnalyses.so
+    liblapack3
+
+    # scone
+    freeglut3
+    qt5-default
+    libqt5printsupport5
+    libqt5opengl5
+    libqt5widgets5
+    libpng16-16
+)
+
+cd "${SCONE_BUILD_DIR}"
+fpm \
+    --force \
+    --name "scone" \
+    --version "$(cat linux/opt/scone/.version)" \
+    --maintainer "Thomas Geijtenbeek <T.Geijtenbeek@tudelft.nl>" \
+    --url "https://github.com/opensim-org/SCONE" \
+    --description "open-source software for predictive simulation of biological motion" \
+    --license "gnu-3.0" \
+    --architecture "x86_64" \
+    --input-type "dir" \
+    --output-type "deb" \
+    \
+    ${dependencies[@]/#/--depends } \
+    \
+    linux/=/
+cd -
+
+echo "packaging complete"
+ls "${SCONE_BUILD_DIR}"
