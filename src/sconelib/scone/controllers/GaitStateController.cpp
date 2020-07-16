@@ -68,6 +68,9 @@ namespace scone
 			SCONE_ERROR( msg );
 		}
 
+		if ( !xo::is_even( model.GetLegCount() ) )
+			SCONE_ERROR( "GaitStateController requires model to have an even number of legs. Number of legs found: " + xo::to_str( model.GetLegCount() ) );
+
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )
 		{
