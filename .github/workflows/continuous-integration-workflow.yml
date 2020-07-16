@@ -4,6 +4,7 @@ env:
   OSG_INSTALL_PATH: /tmp/OpenSceneGraph-install
   SIMBODY_INSTALL_PATH: /tmp/simbody-install
   OPENSIM3_INSTALL_PATH: /tmp/opensim3-install
+  CMAKE_VERBOSE_MAKEFILE: "False"
 
 jobs:
   build:
@@ -60,7 +61,7 @@ jobs:
 
     - name: Build opensim3 (if not cached)
       if: steps.cache_opensim3.outputs.cache-hit != 'true'
-      run: cd $GITHUB_WORKSPACE &&./tools/linux_2c_build-opensim3
+      run: cd $GITHUB_WORKSPACE && ./tools/linux_2c_build-opensim3
 
 
     - name: Build SCONE
