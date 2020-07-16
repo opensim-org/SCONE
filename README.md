@@ -1,5 +1,5 @@
 # Welcome to SCONE!
-[![Build Status](https://travis-ci.org/opensim-org/SCONE.svg?branch=master)](https://travis-ci.org/opensim-org/SCONE)
+![.github/workflows/continuous-integration-workflow.yml](https://github.com/opensim-org/SCONE/workflows/.github/workflows/continuous-integration-workflow.yml/badge.svg)
 
 <img align="right" width="112" height="90" src="https://github.com/opensim-org/SCONE/blob/master/resources/ui/scone_logo_notext.png">
 SCONE is open source software for predictive simulation of biological
