@@ -1005,7 +1005,7 @@ void SconeStudio::deleteSelectedFileOrFolder()
 	if (!currResultModelIdx.isValid()) return;
 
 	int ret = QMessageBox::warning( this, tr( "Delete file or folder" ),
-		tr( "Are you sure you wish to delete the selected file or folder? WARNING: this cannot be recovered" ),
+		tr( "Are you sure you wish to delete the selected file or folder?\n\nWARNING: this cannot be recovered!" ),
 		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel );
 	if (ret == QMessageBox::Cancel) {
 		return;
