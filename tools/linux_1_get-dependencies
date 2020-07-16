@@ -74,7 +74,7 @@ echo "installing fpm: used to create end-user packages (e.g. .deb)"
 ${sudo} gem install --no-document fpm
 
 try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
-try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "master"
 try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
 
 echo "git submodules: initializing and updating"
