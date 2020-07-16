@@ -8,8 +8,7 @@ guidelines and documentation can be found on https://scone.software.
 
 ## Installing SCONE (Windows 64 bit)
 
-The fastest way to get started using SCONE is to download and run the [Windows
-64 bit installer](https://scone.software/doku.php?id=install).
+The fastest way to get started using SCONE is to download and run the [Windows 64 bit installer](https://scone.software/doku.php?id=install). Check [what's new](https://scone.software/doku.php?id=changes) in the latest build!
 
 ## Building SCONE
 
