@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/linux_config
+
+echo "${0}: starting OpenSceneGraph build"
+./tools/mac_2a_build-osg
+
+echo "${0}: starting simbody build"
+./tools/mac_2b_build-simbody
+
+echo "${0}: starting opensim3 build"
+./tools/mac_2c_build-opensim3
+
+echo "${0}: dependency build complete: the following directories were created:"
+find "${OSG_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+find "${SIMBODY_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+find "${OPENSIM3_INSTALL_PATH}" -maxdepth 2 -mindepth 1
+
+echo "${0}: all dependencies built: building SCONE"
+./tools/mac_2d_build-scone
+
+# to test the build
+# ./tools/mac_2f_run-sconestudio
