@@ -68,6 +68,7 @@ public slots:
 	void refreshAnalysis();
 
 	virtual void fileOpenTriggered() override;
+	virtual void fileReloadTriggered();
 	virtual void fileSaveTriggered() override;
 	virtual void fileSaveAsTriggered() override;
 	virtual void fileCloseTriggered() override;
