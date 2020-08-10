@@ -282,21 +282,25 @@ namespace scone::NN
 		auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
 		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
 		bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
-		auto input_include = pn.try_get<xo::pattern_matcher>( "input_include" );
-		auto output_include = pn.try_get<xo::pattern_matcher>( "output_include" );
+		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
+		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
+		auto input_type = pn.try_get<String>( "type" );
 		for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
 		{
 			const auto target_name = GetNeuronName( output_layer_idx, target_neuron_idx );
 			if ( output_include && !output_include->match( target_name ) )
-				continue; // skip this neuron
+				continue; // skip, not part of output pattern
 
 			for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
 			{
 				const auto source_name_full = GetNeuronName( input_layer_idx, source_neuron_idx );
 				if ( input_include && !input_include->match( source_name_full ) )
-					continue; // skip this neuron
+					continue; // skip, not part of input pattern
 
 				auto [source_name, source_type] = xo::split_str_at_last( source_name_full, "." );
+				if ( input_type && source_type != *input_type )
+					continue; // skip, wrong type
+
 				auto src_side = GetSideFromName( source_name );
 				auto trg_side = GetSideFromName( target_name );
 
