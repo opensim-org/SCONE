@@ -17,11 +17,12 @@ namespace scone
 		muscle( *FindByLocation( model.GetMuscles(), props.get< String >( "muscle" ), loc ) ),
 		range_count( 0 )
 	{
+		INIT_PROP( props, input, RangePenalty<Real>() );
 		INIT_PROP( props, activation, RangePenalty<Real>() );
 		INIT_PROP( props, length, RangePenalty<Real>() );
 		INIT_PROP( props, velocity, RangePenalty<Real>() );
 
-		range_count = int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
+		range_count = int( !input.IsNull() ) + int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
 		if ( name.empty() )
 			name = muscle.GetName();
 	}
@@ -29,6 +30,12 @@ namespace scone
 	double MuscleMeasure::ComputeResult( const Model& model )
 	{
 		double penalty = 0.0;
+		if ( !input.IsNull() )
+		{
+			penalty += input.GetResult();
+			if ( range_count > 1 )
+				GetReport().set( name + ".input_penalty", stringf( "%g", input.GetResult() ) );
+		}
 		if ( !activation.IsNull() )
 		{
 			penalty += activation.GetResult();
@@ -53,6 +60,7 @@ namespace scone
 
 	bool MuscleMeasure::UpdateMeasure( const Model& model, double timestamp )
 	{
+		input.AddSample( timestamp, muscle.GetInput() );
 		activation.AddSample( timestamp, muscle.GetActivation() );
 		velocity.AddSample( timestamp, muscle.GetNormalizedFiberVelocity() );
 		length.AddSample( timestamp, muscle.GetNormalizedFiberLength() );
@@ -66,6 +74,8 @@ namespace scone
 
 	void MuscleMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
+		if ( !input.IsNull() )
+			frame[ muscle.GetName() + ".input_penalty" ] = input.GetLatest();
 		if ( !activation.IsNull() )
 			frame[ muscle.GetName() + ".activation_penalty" ] = activation.GetLatest();
 		if ( !velocity.IsNull() )
