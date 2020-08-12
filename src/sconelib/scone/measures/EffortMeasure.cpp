@@ -299,19 +299,16 @@ namespace scone
 	{
 		String s;
 
-		if ( use_cost_of_transport )
-			s += "C";
-
 		switch ( measure_type )
 		{
 		case TotalForce: s += "F"; break;
 		case Wang2012: s += "W"; break;
 		case Constant: s += "C"; break;
 		case Uchida2016: s += "U"; break;
-		case SquaredMuscleStress: s += "MS"; break;
-		case CubedMuscleStress: s += "MC"; break;
-		case SquaredMuscleActivation: s += "MAS"; break;
-		case CubedMuscleActivation: s += "MAC"; break;
+		case SquaredMuscleStress: s += "S2"; break;
+		case CubedMuscleStress: s += "S3"; break;
+		case SquaredMuscleActivation: s += "A2"; break;
+		case CubedMuscleActivation: s += "A3"; break;
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 
