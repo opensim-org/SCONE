@@ -15,13 +15,13 @@
 
 namespace scone
 {
-	/// Measure for penalizing specific muscle parameters.
-	/** Penalties can be based on muscle activation, length and velocity. Example:
+	/// Measure for penalizing specific muscle quantities.
+	/** Penalties can be based on muscle input, activation, length and velocity. Example:
 	\verbatim
 	MuscleMeasure {
 		muscle = gastroc
 		activation { max = 0 squared_penalty = 1 } # penalize squared activation
-		length { max = 1 abs_penalty = 1 } # Penalize when ( length > optimizal fiber length )
+		length { max = 1 abs_penalty = 1 } # Penalize when ( length > optimized fiber length )
 	}
 	\endverbatim
 	*/
@@ -33,6 +33,9 @@ namespace scone
 
 		/// Muscle to which to apply the penalty to.
 		Muscle& muscle;
+
+		/// Penalty for when the muscle input [0..1] is out of range.
+		RangePenalty<Real> input;
 
 		/// Penalty for when the normalized muscle activation [0..1] is out of range.
 		RangePenalty<Real> activation;
