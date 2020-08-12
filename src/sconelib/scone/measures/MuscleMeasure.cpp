@@ -28,7 +28,7 @@ namespace scone
 	double MuscleMeasure::ComputeResult( const Model& model )
 	{
 		double penalty = 0.0;
-    auto range_count = int( !input.IsNull() ) + int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
+    		auto range_count = int( !input.IsNull() ) + int( !activation.IsNull() ) + int( !velocity.IsNull() ) + int( !length.IsNull() );
 		if ( !input.IsNull() )
 		{
 			penalty += input.GetResult();
