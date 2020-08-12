@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+
+# Packages built SCONE binaries/scripts etc. into a standalone
+# directory structure that is only dependent on common system
+# libraries (e.g. OpenGL, Qt5).
+#
+# This is a prerequisite for packaging into an installer (e.g. `.deb`,
+# which will also install any dependencies).
+
+set -xeuo pipefail
+source ./tools/linux_config  # sets relevant envvar defaults
+
+base_dir="${SCONE_BUILD_DIR}/linux"
+install_dir="${base_dir}/opt/scone"
+usr_dir="${base_dir}/usr"
+
+mkdir -p "${install_dir}"
+
+# <install_loc>/bin/: runtime executables
+mkdir -p "${install_dir}/bin"
+cp -r ${SCONE_BUILD_DIR}/bin/* "${install_dir}/bin"
+
+# <install_loc>/lib/: runtime libraries
+mkdir -p "${install_dir}/lib"
+find "${SCONE_BUILD_DIR}/" -name "*.so" -exec cp -a {} "${install_dir}/lib" \;
+find "${OPENSIM3_INSTALL_PATH}/lib" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+find "${OSG_INSTALL_PATH}/" -name "*.so*" -exec cp -a {} "${install_dir}/lib" \;
+
+# <install_loc>/resources: resources
+mkdir -p "${install_dir}/resources"
+cp -r ${PROJECT_DIR}/resources/* "${install_dir}/resources"
+
+# <install_loc>/.version: SCONE version
+git rev-list --count HEAD > "${install_dir}/.version"
+
+# /usr/local: wrapper scripts etc. for booting SCONE from anywhere on
+# the system
+mkdir -p "${usr_dir}/local/bin"
+cat <<EOF > "${usr_dir}/local/bin/sconestudio"
+#!/usr/bin/env bash
+
+scone_install_dir="/opt/scone"
+
+# ensure dynamic linker can find SCONE's libraries
+export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
+
+# add exes onto the PATH so that the application name appears
+# non-absolute when queried via argv[0] *but* the working dir
+# is still wherever the user ran this script.
+export PATH="\${scone_install_dir}/bin:\${PATH}"
+
+sconestudio "\$@"
+EOF
+chmod +x "${usr_dir}/local/bin/sconestudio"
+
+cat <<EOF > "${usr_dir}/local/bin/sconecmd"
+#!/usr/bin/env bash
+
+scone_install_dir="/opt/scone"
+
+# ensure dynamic linker can find SCONE's libraries
+export LD_LIBRARY_PATH="\${scone_install_dir}/lib:\${LD_LIBRARY_PATH}"
+
+# add exes onto the PATH so that the application name appears
+# non-absolute when queried via argv[0] *but* the working dir
+# is still wherever the user ran this script.
+export PATH="\${scone_install_dir}/bin:\${PATH}"
+
+sconecmd "\$@"
+EOF
+chmod +x "${usr_dir}/local/bin/sconecmd"
+
+# <install_loc>/resource/scone_icon.png: desktop-suitable icon
+cp "${PROJECT_DIR}/src/sconestudio/scone_icon.png" "${install_dir}/resources"
+
+# /usr/share/applications/scone.desktop
+#
+#    desktop UI shortcuts so that sconestudio can be booted from the
+#    desktop easily.
+mkdir -p "${usr_dir}/share/applications"
+cat <<EOF > "${usr_dir}/share/applications/sconestudio.desktop"
+[Desktop Entry]
+Name=SCONE Studio
+Comment=Scone studio desktop client
+TryExec=sconestudio
+Exec=sconestudio
+Icon=/opt/scone/resources/scone_icon.png
+Type=Application
+Keywords=OpenSim
+EOF

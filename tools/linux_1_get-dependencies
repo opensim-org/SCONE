@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+general_deps=(
+    git
+    rsync
+    cmake
+    make
+    gcc
+    g++
+
+    # for 'fpm'
+    ruby
+    ruby-dev
+    rubygems
+)
+openscenegraph_build_deps=(
+    libpng-dev
+    zlib1g-dev
+    qt5-default
+    libqt5widgets5
+    libqt5opengl5-dev
+)
+simbody_build_deps=(
+    liblapack-dev
+)
+scone_build_deps=(
+    freeglut3-dev
+    libxi-dev
+    libxmu-dev
+    liblapack-dev
+    libqt5widgets5
+    libqt5opengl5-dev
+    qt5-default
+)
+all_deps=(
+    "${general_deps[@]}"
+    "${openscenegraph_build_deps[@]}"
+    "${simbody_build_deps[@]}"
+    "${scone_build_deps[@]}"
+)
+
+
+try_clone_checkout() {
+    url="${1}"
+    ref="${2}"
+
+    dir=$(basename "${url}" | sed 's/.git$//')
+
+    echo "${0}: ${dir}: must be built from source for Linux builds"
+    if [ ! -d "${dir}" ]; then
+        git clone "${url}"
+        cd "${dir}"
+        git checkout "${ref}"
+        cd -
+    else
+        echo "${0}: ${dir}: already exists: skipping clone"
+    fi
+}
+
+# if root is running this script then do not use `sudo` (some distros
+# do not supply it)
+if [[ "${UID}" == 0 ]]; then
+    sudo=''
+else
+    sudo='sudo'
+fi
+
+echo "installing system-level dependencies"
+${sudo} apt-get update && ${sudo} apt-get install -y ${all_deps[@]}
+
+echo "installing fpm: used to create end-user packages (e.g. .deb)"
+${sudo} gem install --no-document fpm
+
+try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "master"
+try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
+
+echo "git submodules: initializing and updating"
+git submodule update --init --recursive

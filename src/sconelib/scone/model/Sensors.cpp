@@ -65,13 +65,23 @@ namespace scone
 		return xo::dot_product( direction_, body_.GetLinAccOfPointOnBody( offset_ ) );
 	}
 
-	String BodyOrientationSensor::GetName() const { return body_.GetName() + id_ + ".BO"; }
+	BodyOrientationSensor::BodyOrientationSensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BO" ) {}
 	Real BodyOrientationSensor::GetValue() const {
-		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) ) );
+		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized_fast( body_.GetOrientation() ) ) );
 	}
 
-	String BodyAngularVelocitySensor::GetName() const { return body_.GetName() + id_ + ".BAV"; }
+	BodyAngularVelocitySensor::BodyAngularVelocitySensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BAV" ) {}
 	Real BodyAngularVelocitySensor::GetValue() const {
 		return xo::dot_product( body_.GetOrientation() * dir_, body_.GetAngVel() );
+	}
+
+	BodyOriVelSensor::BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), kv_( kv ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BOV" ) {}
+	Real BodyOriVelSensor::GetValue() const {
+		auto ori_rv = xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) );
+		auto dir = body_.GetOrientation() * dir_;
+		return xo::dot_product( dir, ori_rv ) + kv_ * xo::dot_product( dir, body_.GetAngVel() );
 	}
 }

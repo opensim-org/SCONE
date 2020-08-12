@@ -29,7 +29,7 @@ namespace scone
 		GaitStateController::LandingState, "Landing"
 		);
 
-	GaitStateController::LegState::LegState( Model& m, Leg& l ) :
+	GaitStateController::LegState::LegState( Model& m, Leg& l, const PropNode& props, Params& par ) :
 		leg( l ),
 		load_sensor( m.AcquireDelayedSensor< LegLoadSensor >( l ) ),
 		state( UnknownState ),
@@ -38,22 +38,25 @@ namespace scone
 		coronal_pos( 0.0 ),
 		allow_stance_transition( false ),
 		allow_swing_transition( false ),
-		leg_length( l.GetLength() )
+		leg_length( props.get( "override_leg_length", l.GetLength() ) ),
+		INIT_PAR_MEMBER( props, par, stance_load_threshold, 0.1 ),
+		INIT_PAR_MEMBER( props, par, swing_load_threshold, stance_load_threshold ),
+		INIT_PAR_MEMBER( props, par, landing_threshold, 0.0 ),
+		INIT_PAR_MEMBER( props, par, late_stance_threshold, 0.0 ),
+		INIT_PAR_MEMBER( props, par, liftoff_threshold, -1.0 ) // default value is such that parameter has no effect
 	{}
 
 	GaitStateController::GaitStateController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
-		Controller( props, par, model, target_area )
+		Controller( props, par, model, target_area ),
+		landing_threshold( 0 ), // not used internally, only for documentation purpose
+		late_stance_threshold( 0 ), // not used internally, only for documentation purpose
+		liftoff_threshold( 0 ), // not used internally, only for documentation purpose
+		override_leg_length( 0 ), // not used internally, only for documentation purpose
+		INIT_MEMBER( props, leg_load_sensor_delay, 0.0 ),
+		stance_load_threshold( 0 ), // not used internally, only for documentation purpose
+		swing_load_threshold( 0 ), // not used internally, only for documentation purpose
+		INIT_MEMBER( props, symmetric, true )
 	{
-		// #todo: move contact_force_threshold to leg?
-		INIT_PAR( props, par, stance_load_threshold, 0.1 );
-		INIT_PAR( props, par, swing_load_threshold, stance_load_threshold );
-		INIT_PAR( props, par, landing_threshold, 0.0 );
-		INIT_PAR( props, par, late_stance_threshold, 0.0 );
-		INIT_PAR( props, par, liftoff_threshold, -1.0 ); // default value is such that parameter has no effect
-		INIT_PROP( props, leg_load_sensor_delay, 0.0 );
-		INIT_PROP( props, override_leg_length, 0.0 );
-		INIT_PROP( props, symmetric, true );
-
 		// show a helpful error message when no legs are defined
 		if ( model.GetLegs().empty() )
 		{
@@ -65,12 +68,14 @@ namespace scone
 			SCONE_ERROR( msg );
 		}
 
+		if ( !xo::is_even( model.GetLegCount() ) )
+			SCONE_ERROR( "GaitStateController requires model to have an even number of legs. Number of legs found: " + xo::to_str( model.GetLegCount() ) );
+
 		// create leg states
 		for ( LegUP& leg : model.GetLegs() )
 		{
-			m_LegStates.push_back( LegStateUP( new LegState( model, *leg ) ) );
-			if ( override_leg_length != 0.0 )
-				m_LegStates.back()->leg_length = override_leg_length;
+			ScopedParamSetPrefixer prefixer( par, symmetric ? "" : leg->GetName() + '.' );
+			m_LegStates.push_back( LegStateUP( new LegState( model, *leg, props, par ) ) );
 			//log::TraceF( "leg %d leg_length=%.5f", m_LegStates.back()->leg.GetIndex(), m_LegStates.back()->leg_length );
 		}
 
@@ -155,13 +160,13 @@ namespace scone
 		{
 			LegState& ls = *m_LegStates[ idx ];
 			ls.leg_load = ls.load_sensor.GetValue( leg_load_sensor_delay );
-			ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > stance_load_threshold;
-			ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= swing_load_threshold;
+			ls.allow_stance_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) > ls.stance_load_threshold;
+			ls.allow_swing_transition = ls.load_sensor.GetValue( leg_load_sensor_delay ) <= ls.swing_load_threshold;
 			ls.sagittal_pos = ls.leg.GetFootBody().GetComPos().x - ls.leg.GetBaseBody().GetComPos().x;
 			ls.coronal_pos = ls.leg.GetFootBody().GetComPos().z - ls.leg.GetBaseBody().GetComPos().z;
-			ls.allow_late_stance_transition = ls.sagittal_pos < ls.leg_length * late_stance_threshold;
-			ls.allow_liftoff_transition = ls.sagittal_pos < ls.leg_length * liftoff_threshold;
-			ls.allow_landing_transition = ls.sagittal_pos > ls.leg_length * landing_threshold;
+			ls.allow_late_stance_transition = ls.sagittal_pos < ls.leg_length * ls.late_stance_threshold;
+			ls.allow_liftoff_transition = ls.sagittal_pos < ls.leg_length * ls.liftoff_threshold;
+			ls.allow_landing_transition = ls.sagittal_pos > ls.leg_length * ls.landing_threshold;
 		}
 
 		// update states
@@ -258,7 +263,7 @@ namespace scone
 		}
 	}
 
-	scone::String GaitStateController::GetClassSignature() const
+	String GaitStateController::GetClassSignature() const
 	{
 #ifdef SCONE_VERBOSE_SIGNATURES
 		String s = "G";
@@ -290,7 +295,7 @@ namespace scone
 		}
 	}
 
-	scone::String GaitStateController::GetConditionName( const ConditionalController& cc ) const
+	String GaitStateController::GetConditionName( const ConditionalController& cc ) const
 	{
 		String s = m_LegStates[ cc.leg_index ]->leg.GetName();
 		for ( int i = 0; i < StateCount; ++i )

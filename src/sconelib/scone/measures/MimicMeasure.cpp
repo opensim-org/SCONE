@@ -22,8 +22,8 @@ namespace scone
 		INIT_MEMBER( pn, include_states, xo::pattern_matcher( "*" ) ),
 		INIT_MEMBER( pn, exclude_states, xo::pattern_matcher( "" ) ),
 		INIT_MEMBER( pn, use_best_match, false ),
-		INIT_MEMBER( pn, average_error_limit, 1e9 ),
-		INIT_MEMBER( pn, peak_error_limit, 1e9 )
+		INIT_MEMBER( pn, average_error_limit, 1 ),
+		INIT_MEMBER( pn, peak_error_limit, 1 )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 		ReadStorageSto( storage_, file );
@@ -67,8 +67,8 @@ namespace scone
 			error += e;
 		}
 
-		result_.AddSample( timestamp, error / state_storage_map_.size() );
-
+		error /= state_storage_map_.size();
+		result_.AddSample( timestamp, error );
 		if ( result_.GetAverage() > average_error_limit || error > peak_error_limit )
 			return true; // early termination
 
@@ -78,17 +78,22 @@ namespace scone
 	double MimicMeasure::ComputeResult( const Model& model )
 	{
 		auto result = use_best_match ? result_.GetLowest() : result_.GetAverage();
-		auto penalty_factor = model.GetSimulationEndTime() / model.GetTime();
+		auto penalty_duration = xo::max( 0.0, xo::min( model.GetSimulationEndTime(), stop_time ) - model.GetTime() );
+		auto penalty = peak_error_limit * penalty_duration;
 		GetReport().set( "mimic_error", result );
-		GetReport().set( "penalty_factor", penalty_factor );
-		return penalty_factor * result;
+		GetReport().set( "penalty_duration", penalty_duration );
+		GetReport().set( "penalty", penalty );
+		return result + penalty;
 	}
 
 	void MimicMeasure::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		frame[ "mimic_error" ] = result_.GetLatest();
-		for ( auto& c : channel_errors_ )
-			frame[ c.first + "_mimic_error" ] = c.second;
+		if ( flags.get<StoreDataTypes::DebugData>() )
+		{
+			for ( auto& c : channel_errors_ )
+				frame[ c.first + "_mimic_error" ] = c.second;
+		}
 	}
 
 	String MimicMeasure::GetClassSignature() const
