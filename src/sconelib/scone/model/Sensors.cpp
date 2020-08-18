@@ -25,6 +25,9 @@ namespace scone
 	String MuscleVelocitySensor::GetName() const { return muscle_.GetName() + ".V"; }
 	Real MuscleVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberVelocity(); }
 
+	String MuscleLengthVelocitySensor::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleLengthVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberLength() + kv_ * muscle_.GetNormalizedFiberVelocity() ; }
+
 	String MuscleSpindleSensor::GetName() const { return muscle_.GetName() + ".S"; }
 	Real MuscleSpindleSensor::GetValue() const { return muscle_.GetNormalizedSpindleRate(); }
 

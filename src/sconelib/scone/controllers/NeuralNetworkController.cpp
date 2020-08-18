@@ -160,16 +160,24 @@ namespace scone::NN
 		case "MuscleSensors"_hash:
 		{
 			AddNeuronLayer( 0 );
-			bool length = pn.get<bool>( "length", true );
-			bool force = pn.get<bool>( "force", true );
+			bool force = pn.get<bool>( "force", false );
+			bool length = pn.get<bool>( "length", false );
+			bool velocity = pn.get<bool>( "velocity", false );
+			bool length_velocity = pn.get<bool>( "length_velocity", false );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
-					auto delay = neural_delays_[ GetNameNoSide( mus->GetName() ) ];
-					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
+					auto mus_name_no_side = GetNameNoSide( mus->GetName() );
+					auto delay = neural_delays_[ mus_name_no_side ];
 					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
+					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
+					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
+					if ( length_velocity ) {
+						auto kv = par.try_get( mus_name_no_side + ".KV", pn, "velocity_gain", 0.1 );
+						AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, -1 );
+					}
 				}
 			}
 			break;
