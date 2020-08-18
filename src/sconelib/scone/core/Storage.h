@@ -144,7 +144,7 @@ namespace scone
 		size_t GetFrameCount() const { return m_Data.size(); }
 
 		index_t AddChannel( const String& label, ValueT default_value = ValueT( 0 ) ) {
-			SCONE_ASSERT( GetChannelIndex( label ) == NoIndex );
+			SCONE_ASSERT_MSG( GetChannelIndex( label ) == NoIndex, "Channel " + label + " already exists" );
 			m_Labels.push_back( label );
 			m_LabelIndexMap[ label ] = m_Labels.size() - 1;
 			for ( auto it = m_Data.begin(); it != m_Data.end(); ++it )
