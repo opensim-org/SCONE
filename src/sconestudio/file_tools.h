@@ -14,15 +14,13 @@ namespace scone
 		else return { -1, 0.0 };
 	}
 
-	QFileInfo findBestPar( QDir& dir )
+	QFileInfo findBestPar( const QDir& dir )
 	{
 		QFileInfo bestFile;
 		int bestGen = -1;
 		for ( QDirIterator it( dir ); it.hasNext(); it.next() )
 		{
 			auto fi = it.fileInfo();
-			auto str = fi.fileName().toStdString();
-
 			if ( fi.isFile() && fi.suffix() == "par" )
 			{
 				auto [gen, best] = extractGenBestFromParFile( fi );
