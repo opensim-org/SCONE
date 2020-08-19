@@ -48,6 +48,7 @@
 #include "vis/plane.h"
 #include "help_tools.h"
 #include "xo/thread/thread_priority.h"
+#include "file_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -293,7 +294,10 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	auto info = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
-	if ( !info.isDir() )
+	if ( info.isDir() )
+		info = scone::findBestPar( QDir( info.absoluteFilePath() ) );
+	auto str = info.path().toStdString();
+	if ( info.exists() )
 	{
 		ui.playControl->reset();
 		if ( createScenario( info.absoluteFilePath() ) )
