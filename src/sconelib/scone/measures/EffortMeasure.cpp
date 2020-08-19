@@ -78,9 +78,8 @@ namespace scone
 
 		if ( use_cost_of_transport )
 		{
-			GetReport().set( "cost_of_transport", cot );
+			GetReport().set( "effort", m_Energy.GetTotal() );
 			GetReport().set( "distance", distance );
-			GetReport().set( "speed", distance / model.GetTime() );
 			return cot;
 		}
 		else
@@ -317,6 +316,6 @@ namespace scone
 
 	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ "metabolics_penalty" ] = m_Energy.GetLatest();
+		frame[ "effort_penalty" ] = m_Energy.GetLatest();
 	}
 }

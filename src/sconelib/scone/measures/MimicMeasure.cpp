@@ -81,7 +81,6 @@ namespace scone
 		auto penalty_duration = xo::max( 0.0, xo::min( model.GetSimulationEndTime(), stop_time ) - model.GetTime() );
 		auto penalty = peak_error_limit * penalty_duration;
 		GetReport().set( "mimic_error", result );
-		GetReport().set( "penalty_duration", penalty_duration );
 		GetReport().set( "penalty", penalty );
 		return result + penalty;
 	}
