@@ -431,6 +431,11 @@ namespace scone
 					vec3_prop->updValue() = to_osim( scenario_value );
 				else SCONE_ERROR( "Unsupported qualifier " + prop_qualifier + " for " + os_object.getName() + "." + prop_key + "" );
 			}
+			else if (os_prop.getTypeName() == "bool")
+			{
+				os_prop.updValue<bool>() = prop_val.get<bool>();
+			}
+
 			else if ( os_prop.isObjectProperty() )
 			{
 				log::debug( "Setting Parameter ", os_prop.getName() );
