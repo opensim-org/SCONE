@@ -31,13 +31,15 @@ namespace scone
 		Measure( props, par, model, loc ),
 		m_Energy( Statistic<>::LinearInterpolation )
 	{
-		measure_type = m_MeasureNames.GetValue( props.get< String >( "measure_type" ) );
+		measure_type = m_MeasureNames.GetValue( props.get<String>( "measure_type" ) );
 		INIT_PROP( props, use_cost_of_transport, false );
 		INIT_PROP( props, specific_tension, 0.25e6 );
 		INIT_PROP( props, muscle_density, 1059.7 );
 		INIT_PROP( props, default_muscle_slow_twitch_ratio, 0.5 );
 		INIT_PROP( props, use_symmetric_fiber_ratios, true );
 		INIT_PROP( props, min_distance, 1.0 );
+		if ( name.empty() )
+			name = m_MeasureNames.GetString( measure_type );
 
 		// precompute some stuff
 		m_Wang2012BasalEnergy = 1.51 * model.GetMass();
@@ -45,7 +47,6 @@ namespace scone
 		m_AerobicFactor = 1.5; // 1.5 is for aerobic conditions, 1.0 for anaerobic. may need to add as option later
 		m_InitComPos = model.GetComPos();
 		SetSlowTwitchRatios( props, model );
-
 	}
 
 	EffortMeasure::MuscleProperties::MuscleProperties( const PropNode& props ) :
@@ -316,6 +317,6 @@ namespace scone
 
 	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ "effort_penalty" ] = m_Energy.GetLatest();
+		frame[ name + ".penalty" ] = m_Energy.GetLatest();
 	}
 }
