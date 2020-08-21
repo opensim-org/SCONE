@@ -29,6 +29,7 @@ namespace scone
 		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
 		inline double tanh( const double v ) { return std::tanh( v ); }
 		inline double tanh_norm( const double v ) { return 0.5 * std::tanh( 2.0 * v - 1.0 ) + 0.5; }
+		inline double tanh_norm_01( const double v ) { return 0.495 * std::tanh( 2.0 * v - 1.0 ) + 0.505; }
 
 		// #perf #todo: check in compiler explorer if this inlines properly
 		template< typename F >
@@ -43,6 +44,7 @@ namespace scone
 			case "leaky_relu"_hash: return update_function( leaky_relu );
 			case "tanh"_hash: return update_function( tanh );
 			case "tanh_norm"_hash: return update_function( tanh_norm );
+			case "tanh_norm_01"_hash: return update_function( tanh_norm_01 );
 			default: SCONE_ERROR( "Unknown activation function: " + s );
 			}
 		}
@@ -62,7 +64,6 @@ namespace scone
 		struct SensorNeuronLink {
 			SensorDelayAdapter* sensor_;
 			TimeInSeconds delay_;
-			double offset_;
 			index_t neuron_idx_;
 			const Muscle* muscle_;
 		};

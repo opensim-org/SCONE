@@ -60,12 +60,29 @@ namespace scone
 		double kv_;
 	};
 
+	// Sensor for normalized muscle length
+	struct SCONE_API MuscleLengthVelocitySqrtSensor : public MuscleSensor
+	{
+		MuscleLengthVelocitySqrtSensor( const Muscle& m, double kv ) : MuscleSensor( m ), kv_( kv ) {}
+		virtual String GetName() const override;
+		virtual Real GetValue() const override;
+		double kv_;
+	};
+
 	// Sensor that simulates Ia muscle spindle (based on [Prochazka 1999], p.135)
 	struct SCONE_API MuscleSpindleSensor : public MuscleSensor
 	{
 		MuscleSpindleSensor( const Muscle& m ) : MuscleSensor( m ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
+	};
+
+	struct SCONE_API MuscleSpindleSensor2 : public MuscleSensor
+	{
+		MuscleSpindleSensor2( const Muscle& m, double kv, double l0 ) : MuscleSensor( m ), kv_( kv ), l0_( l0 ) {}
+		virtual String GetName() const override;
+		virtual Real GetValue() const override;
+		double kv_, l0_;
 	};
 
 	struct SCONE_API MuscleExcitationSensor : public MuscleSensor

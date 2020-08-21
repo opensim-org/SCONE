@@ -53,7 +53,7 @@ namespace scone::NN
 	Neuron& NeuralNetworkController::AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset )
 	{
 		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor->GetInputSensor() );
-		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, offset, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
+		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
 		return neurons_.front().emplace_back( offset );
 	}
 
@@ -164,19 +164,22 @@ namespace scone::NN
 			bool length = pn.get<bool>( "length", false );
 			bool velocity = pn.get<bool>( "velocity", false );
 			bool length_velocity = pn.get<bool>( "length_velocity", false );
+			bool length_velocity_sqrt = pn.get<bool>( "length_velocity_sqrt", false );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
-					auto mus_name_no_side = GetNameNoSide( mus->GetName() );
-					auto delay = neural_delays_[ mus_name_no_side ];
+					auto mid = MuscleId( mus->GetName() );
+					auto delay = neural_delays_[ mid.base_line_name() ];
 					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
 					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
 					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
-					if ( length_velocity ) {
-						auto kv = par.try_get( mus_name_no_side + ".KV", pn, "velocity_gain", 0.1 );
-						AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, -1 );
+					if ( length_velocity || length_velocity_sqrt ) {
+						auto kv = par.try_get( mid.base_ + ".KV", pn, "velocity_gain", 0.1 );
+						if ( length_velocity )
+							AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, -1 );
+						else AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, -1 );
 					}
 				}
 			}

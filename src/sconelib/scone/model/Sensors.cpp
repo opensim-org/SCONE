@@ -28,8 +28,18 @@ namespace scone
 	String MuscleLengthVelocitySensor::GetName() const { return muscle_.GetName() + ".L"; }
 	Real MuscleLengthVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberLength() + kv_ * muscle_.GetNormalizedFiberVelocity() ; }
 
+	String MuscleLengthVelocitySqrtSensor::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleLengthVelocitySqrtSensor::GetValue() const { return muscle_.GetNormalizedFiberLength() + kv_ * xo::signed_sqrt( muscle_.GetNormalizedFiberVelocity() ); }
+
 	String MuscleSpindleSensor::GetName() const { return muscle_.GetName() + ".S"; }
 	Real MuscleSpindleSensor::GetValue() const { return muscle_.GetNormalizedSpindleRate(); }
+
+	String MuscleSpindleSensor2::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleSpindleSensor2::GetValue() const {
+		auto l = muscle_.GetNormalizedFiberLength() - l0_;
+		auto v = kv_ * xo::signed_sqrt( muscle_.GetNormalizedFiberVelocity() );
+		return std::max( 0.0, l + v );
+	}
 
 	String MuscleExcitationSensor::GetName() const { return muscle_.GetName() + ".excitation"; }
 	Real MuscleExcitationSensor::GetValue() const { return muscle_.GetExcitation(); }
