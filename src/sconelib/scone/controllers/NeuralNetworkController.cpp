@@ -20,6 +20,7 @@ namespace scone::NN
 	NeuralNetworkController::NeuralNetworkController( const PropNode& pn, Params& par, Model& model, const Location& area ) :
 		Controller( pn, par, model, area ),
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
+		INIT_MEMBER( pn, parameter_aliases_, {} ),
 		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 ),
 		INIT_MEMBER( pn, ignore_muscle_lines_, false )
 	{
@@ -132,16 +133,30 @@ namespace scone::NN
 		return xo::stringf( "NN%d", links );
 	}
 
+	const String& NeuralNetworkController::GetParAlias( const String& name )
+	{
+		auto it = xo::find_if( parameter_aliases_, [&]( const auto& e ) { return xo::str_begins_with( name, e.first ); } );
+		if ( it != parameter_aliases_.end() )
+			return it->second;
+		else return name;
+	}
+
+	String NeuralNetworkController::GetParName( const String& name, bool ignore_muscle_lines )
+	{
+		auto mid = MuscleId( name );
+		if ( ignore_muscle_lines )
+			return GetParAlias( mid.base_ );
+		else return mid.base_line_name();
+	}
+
 	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool ignore_muscle_lines )
 	{
-		auto sid = MuscleId( source );
-		auto tid = MuscleId( target );
-		auto sns = ignore_muscle_lines ? sid.base_ : sid.base_line_name();
-		auto tns = ignore_muscle_lines ? tid.base_ : tid.base_line_name();
+		auto sname = GetParName( source, ignore_muscle_lines );
+		auto tname = GetParName( target, ignore_muscle_lines );
 		String postfix = type.empty() ? "" : '.' + type;
-		if ( tns == sns )
-			return tns + postfix;
-		else return tns + '.' + sns + postfix;
+		if ( sname == tname )
+			return tname + postfix;
+		else return tname + '.' + sname + postfix;
 	}
 
 	String NeuralNetworkController::GetNeuronName( index_t layer_idx, index_t neuron_idx )
@@ -171,12 +186,13 @@ namespace scone::NN
 				if ( include.empty() || include( mus->GetName() ) )
 				{
 					auto mid = MuscleId( mus->GetName() );
+					const auto& musparname = GetParAlias( mid.base_ );
 					auto delay = neural_delays_[ mid.base_line_name() ];
 					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
 					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
 					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
 					if ( length_velocity || length_velocity_sqrt ) {
-						auto kv = par.try_get( mid.base_ + ".KV", pn, "velocity_gain", 0.1 );
+						auto kv = par.try_get( musparname + ".KV", pn, "velocity_gain", 0.1 );
 						if ( length_velocity )
 							AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, -1 );
 						else AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, -1 );
@@ -264,13 +280,15 @@ namespace scone::NN
 		case "MotorNeurons"_hash:
 		{
 			auto& layer = AddNeuronLayer( pn.get<index_t>( "layer" ) );
+			bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", false ); // defaults to false for back comp
 			layer.update_func_ = make_update_function( pn.get<String>( "activation", "relu" ) );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
-					auto parname = GetNameNoSide( mus->GetName() ) + ".C0";
+					auto parname = GetParName( mus->GetName(), ignore_muscle_lines ) + ".C0";
+// 					auto parname = GetNameNoSide( mus->GetName() ) + ".C0";
 					AddActuator( mus.get(), par.get( parname, pn.get_child( "offset" ) ) );
 				}
 			}

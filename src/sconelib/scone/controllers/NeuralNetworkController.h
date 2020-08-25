@@ -95,13 +95,16 @@ namespace scone
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
 			Neuron& AddActuator( Actuator* actuator, double offset );
-			String GetParName( const String& target, const String& source, const String& type, bool use_muscle_lines );
+			const String& GetParAlias( const String& name );
+			String GetParName( const String& name, bool ignore_muscle_lines );
+			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines );
 			String GetNeuronName( index_t layer_idx, index_t neuron_idx );
 
 			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
 
-			const xo::flat_map< String, TimeInSeconds > neural_delays_;
+			const xo::flat_map<String, TimeInSeconds> neural_delays_;
+			const xo::flat_map<String, String> parameter_aliases_;
 
 			std::vector<SensorNeuronLink> sensor_links_;
 			std::vector<NeuronLayer> neurons_;
