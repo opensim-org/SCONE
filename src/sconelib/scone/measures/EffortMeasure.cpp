@@ -29,7 +29,7 @@ namespace scone
 
 	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
-		m_Energy( Statistic<>::LinearInterpolation )
+		m_Effort( Statistic<>::LinearInterpolation )
 	{
 		measure_type = m_MeasureNames.GetValue( props.get<String>( "measure_type" ) );
 		INIT_PROP( props, use_cost_of_transport, false );
@@ -38,6 +38,7 @@ namespace scone
 		INIT_PROP( props, default_muscle_slow_twitch_ratio, 0.5 );
 		INIT_PROP( props, use_symmetric_fiber_ratios, true );
 		INIT_PROP( props, min_distance, 1.0 );
+		INIT_PROP( props, use_average_per_muscle, false );
 		if ( name.empty() )
 			name = m_MeasureNames.GetString( measure_type );
 
@@ -64,33 +65,37 @@ namespace scone
 		// make sure this is a new step and the measure is active
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
-		double current_effort = GetEnergy( model );
-		m_Energy.AddSample( timestamp, current_effort );
+		double current_effort = GetCurrentEffort( model );
+		m_Effort.AddSample( timestamp, current_effort );
 
 		return false;
 	}
 
 	double EffortMeasure::ComputeResult( const Model& model )
 	{
-		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
-		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
+		auto effort = m_Effort.GetTotal();
+		if ( use_average_per_muscle && !model.GetMuscles().empty() )
+			effort /= model.GetMuscles().size();
 
-		//GetReport().set( "total", m_Energy.GetTotal() );
+		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
+		double cot = effort / ( model.GetMass() * distance );
+
+		//GetReport().set( "total", m_Effort.GetTotal() );
 
 		if ( use_cost_of_transport )
 		{
-			GetReport().set( "effort", m_Energy.GetTotal() );
+			GetReport().set( "effort", effort );
 			GetReport().set( "distance", distance );
 			return cot;
 		}
 		else
 		{
-			GetReport().set( "average", m_Energy.GetAverage() );
-			return m_Energy.GetAverage();
+			GetReport().set( "average", m_Effort.GetAverage() );
+			return effort;
 		}
 	}
 
-	double EffortMeasure::GetEnergy( const Model& model ) const
+	double EffortMeasure::GetCurrentEffort( const Model& model ) const
 	{
 		switch ( measure_type )
 		{
@@ -317,6 +322,6 @@ namespace scone
 
 	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ name + ".penalty" ] = m_Energy.GetLatest();
+		frame[ name + ".penalty" ] = m_Effort.GetLatest();
 	}
 }

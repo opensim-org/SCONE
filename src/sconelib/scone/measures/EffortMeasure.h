@@ -66,6 +66,9 @@ namespace scone
 		/// Minimum distance used for cost of transport computation; default = 1.0.
 		Real min_distance;
 
+		/// Divide result by number of muscles, useful for muscle activation measures; default = false.
+		bool use_average_per_muscle;
+
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double ComputeResult( const Model& model ) override;
 
@@ -77,7 +80,7 @@ namespace scone
 		Real m_Wang2012BasalEnergy;
 		Real m_Uchida2016BasalEnergy;
 		Real m_AerobicFactor;
-		Statistic< double > m_Energy;
+		Statistic< double > m_Effort;
 		static StringMap< EnergyMeasureType > m_MeasureNames;
 		Vec3 m_InitComPos;
 		PropNode m_Report;
@@ -88,7 +91,7 @@ namespace scone
 			Real slow_twitch_ratio;
 		};
 
-		double GetEnergy( const Model& model ) const;
+		double GetCurrentEffort( const Model& model ) const;
 		double GetWang2012( const Model& model ) const;
 		double GetUchida2016( const Model& model ) const;
 		double GetTotalForce( const Model& model ) const;
