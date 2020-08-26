@@ -80,6 +80,17 @@ namespace scone
 		cma.OutputStatus( std::move( pn ) );
 	}
 
+	void CmaPoolOptimizerReporter::on_post_step( const optimizer& opt )
+	{
+		auto& pool = dynamic_cast<const CmaPoolOptimizer&>( opt );
+		for ( const auto& o : pool.optimizers() )
+		{
+			auto& cma = dynamic_cast<const CmaOptimizer&>( *o );
+			for ( auto&& pn : cma.GetStatusMessages() )
+				pool.OutputStatus( std::move( pn ) );
+		}
+	}
+
 	void CmaPoolOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )
 	{
 		auto& cma = dynamic_cast<const CmaPoolOptimizer&>( opt );
