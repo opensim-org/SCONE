@@ -82,7 +82,7 @@ namespace scone
 		PropNode GetStatusPropNode() const;
 		void OutputStatus( PropNode&& pn ) const;
 		template< typename T > void OutputStatus( const String& key, const T& value ) const;
-		std::deque<PropNode> GetStatusMessages();
+		std::deque<PropNode> GetStatusMessages() const;
 
 		const String& id() const { return id_; }
 

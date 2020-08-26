@@ -105,7 +105,7 @@ namespace scone
 		}
 	}
 
-	std::deque<PropNode> Optimizer::GetStatusMessages()
+	std::deque<PropNode> Optimizer::GetStatusMessages() const
 	{
 		std::deque<PropNode> results;
 		{
