@@ -100,7 +100,7 @@ namespace scone
 		}
 		else if ( output_mode_ == status_queue_output )
 		{
-			auto lock = std::scoped_lock( g_status_output_mutex );
+			auto lock = std::scoped_lock( status_queue_mutex_ );
 			status_queue_.push_back( std::move( pn ) );
 		}
 	}
@@ -109,7 +109,7 @@ namespace scone
 	{
 		std::deque<PropNode> results;
 		{
-			auto lock = std::scoped_lock( g_status_output_mutex );
+			auto lock = std::scoped_lock( status_queue_mutex_ );
 			if ( !status_queue_.empty() )
 			{
 				results = std::move( status_queue_ );

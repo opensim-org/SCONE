@@ -14,6 +14,7 @@
 #include "scone/core/types.h"
 #include "xo/system/log_sink.h"
 #include <deque>
+#include <mutex>
 
 namespace scone
 {
@@ -102,6 +103,7 @@ namespace scone
 
 		OutputMode output_mode_;
 		mutable std::deque<PropNode> status_queue_; // #todo: move this to reporter
+		mutable std::mutex status_queue_mutex_;
 
 		mutable path output_folder_;
 		mutable String id_;
