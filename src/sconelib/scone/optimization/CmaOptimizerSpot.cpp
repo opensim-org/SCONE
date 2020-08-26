@@ -105,7 +105,7 @@ namespace scone
 		}
 		else if ( eval == 3 )
 		{
-			static spot::pooled_evaluator pooled_eval;
+			static spot::pooled_evaluator pooled_eval( max_threads, thread_prio );
 			pooled_eval.set_max_threads( max_threads, thread_prio );
 			return pooled_eval;
 		}
