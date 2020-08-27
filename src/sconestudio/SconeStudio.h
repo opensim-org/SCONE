@@ -164,8 +164,6 @@ private:
 	scone::GaitAnalysis* gaitAnalysis;
 	QDockWidget* gaitAnalysisDock;
 
-	QModelIndex currResultModelIdx;
-
 	// parameters
 	QTableView* parView;
 	ParTableModel* parModel;
