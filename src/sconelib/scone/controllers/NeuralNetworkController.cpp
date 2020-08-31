@@ -318,6 +318,9 @@ namespace scone::NN
 		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
 		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
 		auto input_type = pn.try_get<String>( "type" );
+		auto same_side = pn.get<bool>( "same_side", true );
+		auto same_name = pn.get<bool>( "same_name", false );
+
 		for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
 		{
 			const auto target_name = GetNeuronName( output_layer_idx, target_neuron_idx );
@@ -337,9 +340,11 @@ namespace scone::NN
 				auto src_side = GetSideFromName( source_name );
 				auto trg_side = GetSideFromName( target_name );
 
-				if ( pn.get<bool>( "same_side", true ) )
-					if ( !src_side == NoSide && src_side != trg_side )
-						continue; // neuron not on same side
+				if ( same_side && !src_side == NoSide && src_side != trg_side )
+					continue; // neuron not on same side
+
+				if ( same_name && GetNameNoSide( source_name ) != GetNameNoSide( target_name) )
+					continue;
 
 				if ( sensor_motor_link )
 				{
