@@ -1045,7 +1045,6 @@ void SconeStudio::deleteSelectedFileOrFolder()
 		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel ) )
 		return;
 
-	// delete everything! #todo: move to thrash instead with Qt 5.15
 	for ( auto idx : selection )
 	{
 		bool success = false;
@@ -1053,11 +1052,23 @@ void SconeStudio::deleteSelectedFileOrFolder()
 		if ( item.isDir() )
 		{
 			auto dir = QDir( item.filePath() );
-			log::info( "Deleting folder ", dir.absolutePath().toStdString() );
+			log::info( "Removing folder ", dir.absolutePath().toStdString() );
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+			// move folder to thrash
+			success = QFile::moveToTrash( dir.absolutePath() );
+#else
+			// delete everything! #todo: move to thrash instead with Qt 5.15
 			success = dir.removeRecursively();
+#endif
 		}
 		else if ( item.isFile() )
+		{
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+			success = QFile::moveToTrash( item.filePath() );
+#else
 			success = ui.resultsBrowser->fileSystemModel()->remove( idx );
+#endif
+		}
 
 		if ( !success )
 			QMessageBox::warning( this, msgTitle, tr( "Could not delete " ) + item.filePath(), QMessageBox::Ok );
