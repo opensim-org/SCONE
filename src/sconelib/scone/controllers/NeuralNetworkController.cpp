@@ -73,18 +73,22 @@ namespace scone::NN
 			for ( auto& n : layer )
 				n.input_ = 0.0;
 
-		// update input neurons with sensor values
+		// update sensor neurons with sensor values
 		for ( const auto& sn : sensor_links_ )
 			neurons_.front()[ sn.neuron_idx_ ].output_ = sn.sensor_->GetValue( sn.delay_ ) + neurons_.front()[ sn.neuron_idx_ ].offset_;
 
 		// update links and inter neurons
 		for ( index_t idx = 0; idx < links_.size(); ++idx )
 		{
+			auto& output_layer = neurons_[ idx + 1 ];
 			for ( const auto& link_layer : links_[ idx ] )
+			{
+				auto& input_layer = neurons_[ link_layer.input_layer_ ];
 				for ( const auto& link : link_layer.links_ )
-					neurons_[ idx + 1 ][ link.trg_idx_ ].input_ += link.weight_ * neurons_[ link_layer.input_layer_ ][ link.src_idx_ ].output_;
+					output_layer[ link.trg_idx_ ].input_ += link.weight_ * input_layer[ link.src_idx_ ].output_;
+			}
 
-			neurons_[ idx + 1 ].update_outputs();
+			output_layer.update_outputs();
 		}
 
 		// update actuators with output neurons
