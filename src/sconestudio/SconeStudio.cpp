@@ -1028,21 +1028,30 @@ void SconeStudio::finalizeCapture()
 void SconeStudio::deleteSelectedFileOrFolder()
 {
 	auto selection = ui.resultsBrowser->selectionModel()->selectedRows();
-	auto msgTitle = tr( "Delete files or folders" );
+	auto msgTitle = tr( "Remove files or folders" );
 
 	if ( selection.empty() )
-	{
-		QMessageBox::information( this, msgTitle, tr( "No files or folders selected" ), QMessageBox::Ok );
-		return;
-	}
-
-	// display warning
-	auto msgBody = tr( "Are you sure you wish to delete the following item(s):\n\n" );
+		return information( msgTitle, tr( "No files or folders selected" ) );
+	QString fileNames;
 	for ( auto idx : selection )
-		msgBody += ui.resultsBrowser->fileSystemModel()->fileName( idx ) + '\n';
+		fileNames += ui.resultsBrowser->fileSystemModel()->fileName( idx ) + '\n';
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	// Qt >= 15.5? Move items to thrash, display warning with default Ok
+	auto msgBody = tr( "The following item(s) will be moved to the recycle bin:\n\n" ) + fileNames;
+	if ( QMessageBox::warning( this, msgTitle, msgBody, QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok ) == QMessageBox::Cancel )
+		return;
+	for ( auto idx : selection )
+	{
+		auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
+		if ( !QFile::moveToTrash( item.filePath() ) )
+			warning( msgTitle, tr( "Could not remove " ) + item.filePath() );
+	}
+#else
+	// Qt < 15.5? Remove items, display warning with default Cancel
+	auto msgBody = tr( "The following item(s) will be permanently deleted:\n\n" ) + fileNames;
 	msgBody += tr( "\nWARNING: this cannot be recovered!" );
-	if ( QMessageBox::Cancel ==QMessageBox::warning( this, msgTitle, msgBody,
-		QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel ) )
+	if ( QMessageBox::Cancel == QMessageBox::warning( this, msgTitle, msgBody, QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel ) )
 		return;
 
 	for ( auto idx : selection )
@@ -1050,29 +1059,13 @@ void SconeStudio::deleteSelectedFileOrFolder()
 		bool success = false;
 		auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
 		if ( item.isDir() )
-		{
-			auto dir = QDir( item.filePath() );
-			log::info( "Removing folder ", dir.absolutePath().toStdString() );
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-			// move folder to thrash
-			success = QFile::moveToTrash( dir.absolutePath() );
-#else
-			// delete everything! #todo: move to thrash instead with Qt 5.15
-			success = dir.removeRecursively();
-#endif
-		}
+			success = QDir( item.filePath() ).removeRecursively();
 		else if ( item.isFile() )
-		{
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
-			success = QFile::moveToTrash( item.filePath() );
-#else
 			success = ui.resultsBrowser->fileSystemModel()->remove( idx );
-#endif
-		}
-
 		if ( !success )
-			QMessageBox::warning( this, msgTitle, tr( "Could not delete " ) + item.filePath(), QMessageBox::Ok );
-	}
+			warning( msgTitle, tr( "Could not remove " ) + item.filePath() );
+		}
+#endif
 }
 
 void SconeStudio::sortResultsByDate()
@@ -1091,6 +1084,6 @@ void SconeStudio::onResultBrowserCustomContextMenu(const QPoint &pos)
 	menu.addAction( "Sort by &Name", this, &SconeStudio::sortResultsByName );
 	menu.addAction( "Sort by &Date", this, &SconeStudio::sortResultsByDate );
 	menu.addSeparator();
-	menu.addAction( "Remove", this, &SconeStudio::deleteSelectedFileOrFolder );
+	menu.addAction( "&Remove", this, &SconeStudio::deleteSelectedFileOrFolder );
 	menu.exec(ui.resultsBrowser->mapToGlobal(pos));
 }
