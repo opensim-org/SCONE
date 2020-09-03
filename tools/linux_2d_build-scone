@@ -14,7 +14,6 @@ cmake ../ \
     -DCMAKE_INSTALL_PREFIX="${SCONE_INSTALL_DIR}" \
     -DOPENSIM_INSTALL_DIR="${OPENSIM3_INSTALL_PATH}" \
     -DOPENSIM_INCLUDE_DIR="${OPENSIM3_INSTALL_PATH}/sdk/include" \
-    -DSCONE_LUA=ON \
-    -DSOL_SINGLE_INCLUDE_DIR="${PROJECT_DIR}/submodules/sol2/single/include"
+    -DSCONE_LUA=ON
 make -j$(nproc)
 cd -
