@@ -10,3 +10,6 @@
 [submodule "submodules/vis"]
 	path = submodules/vis
 	url = ../../tgeijten/vis.git
+[submodule "submodules/sol2"]
+	path = submodules/sol2
+	url = ../../ThePhD/sol2.git
