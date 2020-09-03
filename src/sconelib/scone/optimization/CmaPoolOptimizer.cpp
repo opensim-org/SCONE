@@ -17,9 +17,11 @@ namespace scone
 	optimizer_pool( *m_Objective, CmaOptimizerSpot::GetEvaluator(), pn )
 	{
 		// re-initialize these parameters because we want different defaults
-		INIT_PROP( pn, prediction_window_, 300 );
-		INIT_PROP( pn, prediction_start_, 100 );
-		INIT_PROP( pn, prediction_look_ahead_, 1000 );
+		INIT_PROP( pn, prediction_window_, 500 );
+		INIT_PROP( pn, prediction_start_, prediction_window_ );
+		INIT_PROP( pn, prediction_look_ahead_, prediction_window_ );
+		INIT_PROP( pn, max_generations_without_file_output, 100000 );
+
 		INIT_PROP( pn, optimizations_, 6 );
 		INIT_PROP( pn, active_optimizations_, 6 );
 		INIT_PROP( pn, concurrent_optimizations_, 2 );
