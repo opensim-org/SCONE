@@ -237,6 +237,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		tooltipProps.merge( pn, true );
 	}
 
+	auto new_view_last_gen = view_last_gen;
 	for ( index_t idx = 0; idx < optimizations.size(); ++idx )
 	{
 		auto& o = optimizations[ idx ];
@@ -251,18 +252,24 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			ui.plot->graph( idx * 2 + 1 )->setData( QVector< double >{ start_gen, o.cur_gen }, QVector< double >{ o.cur_reg( start_gen ), o.cur_reg( float( o.cur_gen ) ); } );
 #else
 			auto* g = ui.plot->graph( idx );
-			if ( view_first_gen > 0 )
-				view_first_gen += o.genvec.size() - g->data()->size();
 			for ( int i = g->data()->size(); i < o.genvec.size(); ++i )
 				g->addData( o.genvec[ i ], o.bestvec[ i ] );
+			if ( o.genvec.size() >= view_last_gen )
+				new_view_last_gen = o.genvec.size() - 1;
 #endif
-
-			// update range and replot
-			ui.plot->xAxis->setRange( view_first_gen, std::max( o.cur_gen, view_last_gen ) );
-			fixRangeY();
-			ui.plot->replot();
 		}
 	}
+
+	// update range and replot
+	if ( new_view_last_gen != view_last_gen || view_last_gen <= min_view_gens )
+	{
+		if ( view_first_gen > 0 )
+			view_first_gen += new_view_last_gen - view_last_gen;
+		view_last_gen = new_view_last_gen;
+		ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
+		fixRangeY();
+	}
+	ui.plot->replot();
 
 	// #todo: use to_str instead
 	std::stringstream str;
