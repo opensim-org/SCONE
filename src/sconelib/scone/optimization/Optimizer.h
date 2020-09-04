@@ -59,6 +59,9 @@ namespace scone
 		/// Minimum number of samples after which progress is measured; default = 200.
 		size_t min_progress_samples;
 
+		/// Window size used for measureing progress; default = 500.
+		size_t window_size;
+
 		/// The minimum relative improvement needed for file output; default = 0.05.
 		Real min_improvement_for_file_output;
 
