@@ -100,11 +100,9 @@ namespace scone::NN
 
 	void NeuralNetworkController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( const auto& sn : sensor_links_ )
-			frame[ "SN." + sn.sensor_->GetName() ] = neurons_.front()[ sn.neuron_idx_ ].output_;
-
-		for ( auto& mn : motor_links_ )
-			frame[ "MN." + mn.actuator_->GetName() ] = neurons_.back()[ mn.neuron_idx_ ].output_;
+		for ( auto lidx : xo::size_range( neurons_ ) )
+			for ( auto nidx : xo::size_range( neurons_[ lidx ] ) )
+				frame[ GetNeuronName( lidx, nidx ) ] = neurons_[ lidx ][ nidx ].output_;
 	}
 
 	PropNode NeuralNetworkController::GetInfo() const
@@ -163,7 +161,7 @@ namespace scone::NN
 		else return tname + '.' + sname + postfix;
 	}
 
-	String NeuralNetworkController::GetNeuronName( index_t layer_idx, index_t neuron_idx )
+	String NeuralNetworkController::GetNeuronName( index_t layer_idx, index_t neuron_idx ) const
 	{
 		if ( !sensor_links_.empty() && layer_idx == 0 )
 			return sensor_links_[ neuron_idx ].sensor_->GetName();
@@ -292,7 +290,6 @@ namespace scone::NN
 				if ( include.empty() || include( mus->GetName() ) )
 				{
 					auto parname = GetParName( mus->GetName(), ignore_muscle_lines ) + ".C0";
-// 					auto parname = GetNameNoSide( mus->GetName() ) + ".C0";
 					AddActuator( mus.get(), par.get( parname, pn.get_child( "offset" ) ) );
 				}
 			}

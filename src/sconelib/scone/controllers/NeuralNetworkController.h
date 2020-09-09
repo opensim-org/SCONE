@@ -98,7 +98,7 @@ namespace scone
 			const String& GetParAlias( const String& name );
 			String GetParName( const String& name, bool ignore_muscle_lines );
 			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines );
-			String GetNeuronName( index_t layer_idx, index_t neuron_idx );
+			String GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
 
 			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
