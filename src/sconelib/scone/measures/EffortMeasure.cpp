@@ -73,26 +73,27 @@ namespace scone
 
 	double EffortMeasure::ComputeResult( const Model& model )
 	{
-		auto effort = m_Effort.GetTotal();
-		if ( use_average_per_muscle && !model.GetMuscles().empty() )
-			effort /= model.GetMuscles().size();
-
-		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
-		double cot = effort / ( model.GetMass() * distance );
-
-		//GetReport().set( "total", m_Effort.GetTotal() );
-
+		xo::optional<double> result;
 		if ( use_cost_of_transport )
 		{
-			GetReport().set( "effort", effort );
+			auto tot_effort = m_Effort.GetTotal();
+			double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
+			GetReport().set( "effort", tot_effort );
 			GetReport().set( "distance", distance );
-			return cot;
+			result = tot_effort / ( model.GetMass() * distance );
 		}
 		else
 		{
-			GetReport().set( "average", m_Effort.GetAverage() );
-			return effort;
+			auto avg_effort = m_Effort.GetAverage();
+			GetReport().set( "effort", avg_effort );
+			result = avg_effort;
 		}
+
+		SCONE_ASSERT( result );
+		if ( use_average_per_muscle && !model.GetMuscles().empty() )
+			*result /= model.GetMuscles().size();
+
+		return *result;
 	}
 
 	double EffortMeasure::GetCurrentEffort( const Model& model ) const
