@@ -27,8 +27,8 @@ namespace xo
 				if ( xo::file_exists( report_file_ ) )
 				{
 					auto base_pn = xo::load_file( report_file_ );
-					auto eval_result = eval_pn.get_child( "result" );
-					auto base_result = base_pn.get_child( "result" );
+					auto& eval_result = eval_pn.get_child( "result" ).raw_value();
+					auto& base_result = base_pn.get_child( "result" ).raw_value();
 					XO_CHECK( eval_result == base_result );
 					if ( eval_result != base_result )
 					{
