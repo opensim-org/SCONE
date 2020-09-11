@@ -49,3 +49,6 @@ jobs:
 
     - name: Rearrange SCONE into portable install dir
       run: cd $GITHUB_WORKSPACE && ./tools/mac_3_create-install-dirtree
+
+    - name: Create .dmg file from the tree
+      run: cd $GITHUB_WORKSPACE && ./tools/mac_4_create-dmg
