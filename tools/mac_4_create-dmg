@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Bundles the sconestudio.app/ directory created by the dirtree step into a
+# single `.dmg` file that users can download + install easily
+#
+# Requires `create-dmg` to bundle the dir up
+
+set -xeuo pipefail
+source ./tools/linux_config
+
+# create-dmg fails if target already exists
+rm "${SCONE_BUILD_DIR}/sconestudio.dmg"
+
+./create-dmg/create-dmg \
+    --volicon "${SCONE_BUILD_DIR}/sconestudio.app/Contents/MacOS/resources/ui/scone_logo_256x256.icns" \
+    --volname "sconestudio installer" \
+    --icon "${SCONE_BUILD_DIR}/sconestudio.app" 0 0 \
+    --icon-size 100 \
+    --app-drop-link 200 0 \
+    "${SCONE_BUILD_DIR}/sconestudio.dmg" \
+    "${SCONE_BUILD_DIR}/sconestudio.app"
+
