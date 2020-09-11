@@ -90,7 +90,8 @@ cat <<EOF > "${app_dir}/Contents/MacOS/sconestudio"
 #!/usr/bin/env bash
 
 # ensure the dynamic linker can find bundled libs
-export DYLD_FALLBACK_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib/
+export DYLD_FALLBACK_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib
+export DYLD_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib:\${DYLD_LIBRARY_PATH}
 
 # add all SCONE exes onto the PATH so that the application name
 # appears non-absolute when queried via argv[0] *but* the working
@@ -115,6 +116,9 @@ mkdir -p "${lib_dir}"
 find "${SCONE_BUILD_DIR}/" -name "*.dylib" -exec cp -a {} "${lib_dir}" \;
 find "${OPENSIM3_INSTALL_PATH}/lib" -name "*.dylib*" -exec cp -a {} "${lib_dir}" \;
 find "${OSG_INSTALL_PATH}/" -name "*.dylib*" -exec cp -a {} "${lib_dir}" \;
+# for some reason, osg creates .so plugin files--even in mac--that the runtime
+# depends on
+find "${OSG_INSTALL_PATH}/" -name "*.so" -exec cp -a {} "${lib_dir}" \;
 
 # sconestudio.app/Contents/MacOS/resources
 mkdir -p "${app_dir}/Contents/MacOS/resources/"
