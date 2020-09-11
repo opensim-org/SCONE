@@ -2,8 +2,10 @@ file (GLOB SCONE_LUA_FILES "*.h" "*.cpp")
 
 # liblua is build as part of SCONE -- no need for find_package (which doesn't work for debug builds)
 # find_package(Lua 5.3.5 EXACT REQUIRED)
-
-find_path( SOL_SINGLE_INCLUDE_DIR NAMES sol/sol.hpp )
+find_path( SOL_SINGLE_INCLUDE_DIR
+	NAMES sol/sol.hpp
+	HINTS "${CMAKE_SOURCE_DIR}/submodules/sol2/single/include"
+	REQUIRED )
 
 add_library( sconelua SHARED ${SCONE_LUA_FILES} )
 target_link_libraries( sconelua sconelib liblua )
