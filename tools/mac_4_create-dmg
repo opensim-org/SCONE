@@ -9,7 +9,7 @@ set -xeuo pipefail
 source ./tools/linux_config
 
 # create-dmg fails if target already exists
-rm "${SCONE_BUILD_DIR}/sconestudio.dmg"
+rm -f "${SCONE_BUILD_DIR}/sconestudio.dmg"
 
 ./create-dmg/create-dmg \
     --volicon "${SCONE_BUILD_DIR}/sconestudio.app/Contents/MacOS/resources/ui/scone_logo_256x256.icns" \
