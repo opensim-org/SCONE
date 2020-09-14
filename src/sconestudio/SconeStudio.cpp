@@ -397,8 +397,7 @@ void SconeStudio::evaluate()
 	scenario_->UpdateVis( scenario_->GetTime() );
 
 	reportModel->setData( scenario_->GetResult() );
-	reportView->expandAll();
-	
+	reportView->expandToDepth( 0 );
 }
 
 void SconeStudio::createVideo()
