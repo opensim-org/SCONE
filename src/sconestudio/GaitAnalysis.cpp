@@ -11,15 +11,13 @@
 #include "xo/container/container_algorithms.h"
 #include "xo/filesystem/path.h"
 #include "xo/serialization/serialize.h"
+#include "scone/core/Settings.h"
 
 namespace scone
 {
 	GaitAnalysis::GaitAnalysis( QWidget* parent ) :
 		QWidget( parent ),
-		grid_( nullptr ),
-		threshold_( 0.01 ),
-		skip_first_( 2 ),
-		skip_last_( 1 )
+		grid_( nullptr )
 	{
 		reset();
 	}
@@ -51,11 +49,17 @@ namespace scone
 
 	void GaitAnalysis::update( const Storage<>& sto, const path& filename )
 	{
-		auto cycles = ExtractGaitCycles( sto, threshold_, 0.2 );
-		if ( cycles.size() > skip_first_ + skip_last_ )
+		auto force_threshold = GetStudioSetting<Real>( "gait_analysis.force_threshold" );
+		auto min_duration = GetStudioSetting<Real>( "gait_analysis.min_stance_duration" );
+		auto skip_first = GetStudioSetting<int>( "gait_analysis.skip_first" );
+		auto skip_last = GetStudioSetting<int>( "gait_analysis.skip_last" );
+		auto skip_total = skip_first + skip_last;
+		auto cycles = ExtractGaitCycles( sto, force_threshold, min_duration );
+
+		if ( cycles.size() > skip_total )
 		{
-			cycles.erase( cycles.begin(), cycles.begin() + skip_first_ );
-			cycles.erase( cycles.end() - skip_last_, cycles.end() );
+			cycles.erase( cycles.begin(), cycles.begin() + skip_first );
+			cycles.erase( cycles.end() - skip_last, cycles.end() );
 
 			for ( auto* p : plots_ )
 				p->update( sto, cycles );
