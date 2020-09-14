@@ -52,3 +52,9 @@ jobs:
 
     - name: Create .dmg file from the tree
       run: cd $GITHUB_WORKSPACE && ./tools/mac_4_create-dmg
+
+    - name: Upload DMG file as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: sconestudio.dmg
+        path: build/*.dmg
