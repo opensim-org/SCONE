@@ -1,6 +1,6 @@
 optimization {
 	label = "Optimization settings"
-	use_external_process { type = bool default = 1 label = "Perform optimizations using external process" }
+	use_external_process { type = bool default = 0 label = "Perform optimizations using external process" }
 }
 
 gait_analysis {
