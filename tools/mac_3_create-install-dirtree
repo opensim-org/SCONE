@@ -98,7 +98,7 @@ export DYLD_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib:\${DYLD_LIBRARY_PATH}
 # dir is still wherever the caller ran this script
 export PATH="\${BASH_SOURCE%/*}/bin:\${PATH}"
 
-sconestudio-exe "\$@"
+sconestudio "\$@"
 EOF
 chmod +x "${app_dir}/Contents/MacOS/sconestudio"
 
@@ -108,10 +108,6 @@ mkdir -p "${app_dir}/Contents/MacOS/bin/"
 for exe in $(find "${SCONE_BUILD_DIR}/bin" -type f); do
     cp -a "${exe}" "${app_dir}/Contents/MacOS/bin/"
 done
-
-# HACK: When mounting an untrusted DMG, OSX will hide/delete all binaries with
-# the same name as the CFBundleExecutable (above)
-mv "${app_dir}/Contents/MacOS/bin/sconestudio" "${app_dir}/Contents/MacOS/bin/sconestudio-exe"
 
 chmod +x ${app_dir}/Contents/MacOS/bin/*
 
