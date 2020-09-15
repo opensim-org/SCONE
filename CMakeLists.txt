@@ -17,10 +17,15 @@ option(SCONE_OPENSIM_4 "Support OpenSim 4.0 - EXPERIMENTAL" OFF)
 option(SCONE_LUA "Support for lua scripting" OFF)
 option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
 option(SCONE_ENABLE_PROFILER "Enable SCONE profiler" ON)
+option(SCONE_SCONESTUDIO_REQUIRED "Require that sconestudio is built" OFF)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
-find_package(Qt5Widgets)
 # http://doc.qt.io/qt-5/cmake-manual.html
+if(${SCONE_SCONESTUDIO_REQUIRED})
+    find_package(Qt5Widgets REQUIRED)
+else()
+    find_package(Qt5Widgets)
+endif()
 
 # Various settings
 # ----------------
