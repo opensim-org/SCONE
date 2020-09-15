@@ -51,5 +51,5 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "ERROR: more than one version of qt5 detected in /usr/local/Cellar/qt"
         find /usr/local/Cellar/qt
     fi
-    export QT5_DIR=${QT5_VERSIONS[0]}
+    export QT5_BREW_PATH=${QT5_VERSIONS[0]}
 fi
