@@ -44,3 +44,12 @@ OSGQT_INSTALL_DIR="${OSGQT_INSTALL_DIR:-${PROJECT_DIR}/osgQt/install}"
 
 # number of concurrent cc/c++ build jobs
 export NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(num_processors)}"
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    QT5_VERSIONS=(/usr/local/Cellar/qt/*)
+    if [ ${#QT5_VERSIONS[@]} -neq 1 ]; then
+        echo "ERROR: more than one version of qt5 detected in /usr/local/Cellar/qt"
+        find /usr/local/Cellar/qt
+    fi
+    export QT5_DIR=${QT5_VERSIONS[0]}
+fi

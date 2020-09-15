@@ -8,8 +8,7 @@ mkdir -p "${SCONE_INSTALL_DIR}"
 cd "${SCONE_BUILD_DIR}"
 cmake ../ \
     -DOSG_DIR="${OSG_INSTALL_PATH}" \
-    -DCMAKE_PREFIX_PATH="${OSG_INSTALL_PATH}/lib64;/usr/local/Cellar/qt/5.15.0" \
-    -DCMAKE_MODULE_PATH="/usr/local/Cellar/qt/5.15.0/lib/cmake/" \
+    -DCMAKE_PREFIX_PATH="${OSG_INSTALL_PATH}/lib64;${QT5_DIR}" \
     -DOSGQT_INCLUDE_DIR="${OSG_INSTALL_PATH}/lib64" \
     -DOSGQT_LIBRARY_RELEASE="${OSG_INSTALL_PATH}/lib/libosgQt.dylib" \
     -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
