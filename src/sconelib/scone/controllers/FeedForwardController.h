@@ -22,7 +22,7 @@ namespace OpenSim
 
 namespace scone
 {
-	/// Controller that produces a function-based feed-forward signal for each actuator.
+	/// Controller that produces a feed-forward control signal for any actuator, based on a Function.
 	class FeedForwardController : public Controller
 	{
 	public:
