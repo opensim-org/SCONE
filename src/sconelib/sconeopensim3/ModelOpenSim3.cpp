@@ -76,7 +76,6 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
-		path state_init_file;
 		String probe_class;
 
 		INIT_PROP( props, integration_accuracy, 0.001 );

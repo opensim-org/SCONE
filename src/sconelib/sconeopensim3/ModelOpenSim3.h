@@ -51,6 +51,9 @@ namespace scone
 		/// File containing the OpenSim model.
 		path model_file;
 
+		/// File containing the initial state (or pose) of the model.
+		path state_init_file;
+
 		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2 (default), RungeKutta2, RungeKutta3, RungeKuttaMerson.
 		String integration_method;
 
