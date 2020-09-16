@@ -107,7 +107,24 @@ namespace scone
 				scone_settings.set( "hyfydy.license", hfd_new_license );
 				scone_settings.set( "hyfydy.enabled", hfd_new_enabled );
 				if ( hfd_new_enabled )
-					RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ).c_str() );
+				{
+					const char* license_key = GetSconeSetting<String>( "hyfydy.license" ).c_str();
+					auto [agreement, version] = GetHfdLicenseAgreement( license_key );
+					if ( !agreement.empty() )
+					{
+						const auto result = QMessageBox::information( NULL, "Hyfydy License Agreement", to_qt( agreement ), "Accept", "Reject" );
+						if ( result == 0 )
+						{
+							scone_settings.set( "hyfydy.license_agreement_accepted_version", version );
+							RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ).c_str() );
+						}
+						else
+						{
+							scone_settings.set( "hyfydy.enabled", false );
+							scone_settings.set( "hyfydy.license_agreement_accepted_version", version );
+						}
+					}
+				}
 			}
 #endif
 			scone_settings.save();

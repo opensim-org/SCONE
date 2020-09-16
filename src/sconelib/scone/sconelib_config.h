@@ -45,7 +45,7 @@ namespace scone
 
 #ifdef SCONE_HYFYDY
 		if ( GetSconeSetting<bool>( "hyfydy.enabled" ) )
-			RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ).c_str() );
+			RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ) );
 #endif
 
 #ifdef SCONE_LUA

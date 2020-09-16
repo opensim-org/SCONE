@@ -40,6 +40,7 @@ namespace scone
 
 	xo::settings& GetSconeSettings()
 	{
+		// #todo: make scone_settings a local static
 		if ( !is_loaded )
 		{
 			// try to load settings

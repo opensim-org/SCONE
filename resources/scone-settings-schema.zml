@@ -1,137 +1,38 @@
 folders {
-	scenarios { 
-		type = folder
-		label = "Scenario folder"
-		default = ""
-		description = "Default location for SCONE scenarios"
-	}
-	results { 
-		type = folder
-		label = "Results folder"
-		default = ""
-		description = "Default location for optimization results"
-	}
-	geometry { 
-		type = folder
-		label = "Geometry folder"
-		default = ""
-		description = "Default location for model geometry"
-	}
+	scenarios { type = folder label = "Scenario folder" default = "" description = "Default location for SCONE scenarios" }
+	results { type = folder label = "Results folder" default = "" description = "Default location for optimization results" }
+	geometry { type = folder label = "Geometry folder" default = "" description = "Default location for model geometry" }
 }
 
 data {
-	frequency {
-		type = float
-		label = "Data output frequency"
-		default = 100
-		range = 10..1000000
-	}
-	body {
-		type = bool
-		label = "Output body position and orientation"
-		default = 1
-		description = "Output body position and orientation data (0 or 1)"
-	}
-	joint {
-		type = bool
-		label = "Output joint data"
-		default = 1
-		description = "Output joint reaction force"
-	}
-	muscle {
-		type = bool
-		label = "Output muscle data"
-		default = 1
-		description = "Output muscle data"
-	}
-	sensor {
-		type = bool
-		label = "Output sensor data"
-		default = 1
-		description = "Output sensor data"
-	}
-	actuator {
-		type = bool
-		label = "Output actuator data"
-		default = 0
-		description = "Output actuator data"
-	}
-	controller {
-		type = bool
-		label = "Output controller data"
-		default = 1
-		description = "Output controller data"
-	}
-	measure {
-		type = bool
-		label = "Output measure data"
-		default = 1
-		description = "Output measure data"
-	}
-	grf {
-		type = bool
-		label = "Output ground reaction force"
-		default = 1
-		description = "Output ground reaction force"
-	}
-	contact {
-		type = bool
-		label = "Output contact forces and moments"
-		default = 1
-		description = "Output contact forces and moments"
-	}
-	debug {
-		type = bool
-		label = "Output debug data"
-		default = 0
-		description = "Output debug data"
-	}
-	simulation {
-		type = bool
-		label = "Output simulation statisticts"
-		default = 0
-		description = "Output simulation statisticts"
-	}
+	frequency { type = float label = "Data output frequency" default = 100 range = 10..1000000 }
+	body { type = bool label = "Output body position and orientation" default = 1 description = "Output body position and orientation data (0 or 1)" }
+	joint { type = bool label = "Output joint data" default = 1 description = "Output joint reaction force" }
+	muscle { type = bool label = "Output muscle data" default = 1 description = "Output muscle data" }
+	sensor { type = bool label = "Output sensor data" default = 1 description = "Output sensor data" }
+	actuator { type = bool label = "Output actuator data" default = 0 description = "Output actuator data" }
+	controller { type = bool label = "Output controller data" default = 1 description = "Output controller data" }
+	measure { type = bool label = "Output measure data" default = 1 description = "Output measure data" }
+	grf { type = bool label = "Output ground reaction force" default = 1 description = "Output ground reaction force" }
+	contact { type = bool label = "Output contact forces and moments" default = 1 description = "Output contact forces and moments" }
+	debug { type = bool label = "Output debug data" default = 0 description = "Output debug data" }
+	simulation { type = bool label = "Output simulation statisticts" default = 0 description = "Output simulation statisticts" }
 }
 
 results {
-	controller {
-		type = bool
-		label = "Write Controller and Measure results"
-		default = 0
-		label = "Write custom Controller and Measure results to file"
-	}
-	extract_channels {
-		type = bool
-		label = "Extract specific channels to separate file"
-		default = 0
-	}
-	extract_channel_names {
-		type = string
-		label = "Channels to extract to separate file"
-		default = "*.activation;*.excitation"
-	}
+	controller { type = bool label = "Output Controller and Measure results" default = 0 }
+	extract_channels { type = bool label = "Extract specific channels to separate file" default = 0 }
+	extract_channel_names { type = string label = "Channels to extract to separate file" default = "*.activation;*.excitation" }
 }
 
 optimizer {
-	evaluator {
-		type = number
-		label = "Evaluate sync=0, batch=1, async=2, pool=3"
-		default = 2
-	}
-	max_threads {
-		type = number
-		label = "Max optimization threads (0=hardware)"
-		default = 0
-	}
-	thread_priority {
-		type = number
-		label = "thread priority: 0-6 (default=2)"
-		default = 2
-	}
+	evaluator { type = number label = "Evaluate sync=0, batch=1, async=2, pool=3" default = 2 }
+	max_threads { type = number label = "Max optimization threads (0=hardware)" default = 0 }
+	thread_priority { type = number label = "thread priority: 0-6 (default=2)" default = 2 }
 }
 
 hyfydy {
 	enabled { type = boolean label = "Enable Hyfydy" default = 0 }
 	license { type = string label = "Hyfydy license key" default = "" }
+	license_agreement_accepted_version { type = int label = "Accepted Hyfydy license agreement version" default = 0 }
 }
