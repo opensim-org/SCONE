@@ -22,8 +22,8 @@ namespace scone
 		INIT_MEMBER( pn, include_states, xo::pattern_matcher( "*" ) ),
 		INIT_MEMBER( pn, exclude_states, xo::pattern_matcher( "" ) ),
 		INIT_MEMBER( pn, use_best_match, false ),
-		INIT_MEMBER( pn, average_error_limit, 1 ),
-		INIT_MEMBER( pn, peak_error_limit, 1 )
+		INIT_MEMBER( pn, average_error_limit, 1e9 ),
+		INIT_MEMBER( pn, peak_error_limit, 1e9 )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 		ReadStorageSto( storage_, file );
