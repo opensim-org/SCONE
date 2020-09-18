@@ -6,10 +6,10 @@
 	url = https://github.com/tgeijten/spot.git
 [submodule "submodules/xo"]
 	path = submodules/xo
-	url = ../../tgeijten/xo.git
+	url = https://github.com/tgeijten/xo.git
 [submodule "submodules/vis"]
 	path = submodules/vis
-	url = ../../tgeijten/vis.git
+	url = https://github.com/tgeijten/vis.git
 [submodule "submodules/sol2"]
 	path = submodules/sol2
-	url = ../../ThePhD/sol2.git
+	url = https://github.com/ThePhD/sol2.git
