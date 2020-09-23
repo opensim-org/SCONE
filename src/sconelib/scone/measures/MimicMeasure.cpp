@@ -22,8 +22,8 @@ namespace scone
 		INIT_MEMBER( pn, include_states, xo::pattern_matcher( "*" ) ),
 		INIT_MEMBER( pn, exclude_states, xo::pattern_matcher( "" ) ),
 		INIT_MEMBER( pn, use_best_match, false ),
-		INIT_MEMBER( pn, average_error_limit, 1e9 ),
-		INIT_MEMBER( pn, peak_error_limit, 1e9 )
+		INIT_MEMBER( pn, average_error_limit, 0 ),
+		INIT_MEMBER( pn, peak_error_limit, 2 * average_error_limit )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 		ReadStorageSto( storage_, file );
@@ -69,7 +69,9 @@ namespace scone
 
 		error /= state_storage_map_.size();
 		result_.AddSample( timestamp, error );
-		if ( result_.GetAverage() > average_error_limit || error > peak_error_limit )
+
+		if ( ( average_error_limit != 0 && result_.GetAverage() > average_error_limit ) ||
+			( peak_error_limit != 0 && error > peak_error_limit ) )
 			return true; // early termination
 
 		return false;

@@ -35,10 +35,10 @@ namespace scone
 		/// Use only best match instead of average match -- useful when data contains a single pose; default = false.
 		bool use_best_match;
 
-		/// Average error above which to terminate simulation early; default = 1e9;
+		/// Average error above which to terminate simulation early (if set to non-zero); default = 0;
 		Real average_error_limit;
 
-		/// Peak error above which to terminate simulation early; default = 1e9;
+		/// Peak error above which to terminate simulation early (if set to non-zero); default = ''2 * average_error_limit'';
 		Real peak_error_limit;
 
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
