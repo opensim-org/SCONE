@@ -41,6 +41,9 @@ namespace scone
 		/// Peak error above which to terminate simulation early (if set to non-zero); default = ''2 * average_error_limit'';
 		Real peak_error_limit;
 
+		/// Time in the .sto file to start measuring; default = 0;
+		TimeInSeconds time_offset;
+
 		virtual bool UpdateMeasure( const Model& model, double timestamp ) override;
 		virtual double ComputeResult( const Model& model ) override;
 		virtual void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;

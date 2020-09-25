@@ -23,7 +23,8 @@ namespace scone
 		INIT_MEMBER( pn, exclude_states, xo::pattern_matcher( "" ) ),
 		INIT_MEMBER( pn, use_best_match, false ),
 		INIT_MEMBER( pn, average_error_limit, 0 ),
-		INIT_MEMBER( pn, peak_error_limit, 2 * average_error_limit )
+		INIT_MEMBER( pn, peak_error_limit, 2 * average_error_limit ),
+		INIT_MEMBER( pn, time_offset, 0 )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 		ReadStorageSto( storage_, file );
@@ -62,7 +63,7 @@ namespace scone
 		index_t error_idx = 0;
 		for ( auto& m : state_storage_map_ )
 		{
-			auto e = xo::squared( s[ m.first ] - storage_.GetInterpolatedValue( timestamp, m.second ) );
+			auto e = xo::squared( s[ m.first ] - storage_.GetInterpolatedValue( timestamp + time_offset, m.second ) );
 			channel_errors_[ error_idx++ ].second = e;
 			error += e;
 		}
