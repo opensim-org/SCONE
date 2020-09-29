@@ -48,7 +48,11 @@
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/string/string_tools.h"
 #include "scone/controllers/NeuralNetworkController.h"
+
+#define SCONE_WRAP_EXCEPTION( _func_, _msg_ ) \
+try { _func_; } catch( std::exception& e ) { SCONE_ERROR( _msg_ + std::string( ":\n   " ) + xo::replace_str( e.what(), "\n", "\n   " ) ); }
 
 namespace scone
 {
@@ -72,7 +76,9 @@ namespace scone
 	ControllerUP CreateController( const FactoryProps& fp, Params& par, Model& model, const Location& target_area )
 	{
 		ScopedParamSetPrefixer param_prefix( par, fp.props().get<String>( "name", "" ), true );
-		return GetControllerFactory().create( fp.type(), fp.props(), par, model, target_area );
+		SCONE_WRAP_EXCEPTION(
+			return GetControllerFactory().create( fp.type(), fp.props(), par, model, target_area ),
+			fp.type() );
 	}
 
 	ControllerUP CreateController( const PropNode& pn, Params& par, Model& model, const Location& target_area )
@@ -105,7 +111,9 @@ namespace scone
 
 	MeasureUP CreateMeasure( const FactoryProps& fp, Params& par, const Model& model, const Location& target_area )
 	{
-		return GetMeasureFactory().create( fp.type(), fp.props(), par, model, target_area );
+		SCONE_WRAP_EXCEPTION(
+			return GetMeasureFactory().create( fp.type(), fp.props(), par, model, target_area ),
+			fp.type() );
 	}
 
 	MeasureUP CreateMeasure( const PropNode& pn, Params& par, const Model& model, const Location& target_area )
@@ -175,7 +183,9 @@ namespace scone
 	ModelUP CreateModel( const FactoryProps& fp, Params& par, const path& scenario_dir )
 	{
 		xo::current_find_file_path( scenario_dir );
-		return GetModelFactory().create( fp.type(), fp.props(), par );
+		SCONE_WRAP_EXCEPTION(
+			return GetModelFactory().create( fp.type(), fp.props(), par ),
+			fp.type() );
 	}
 
 	StateComponentFactory& GetStateComponentFactory()
