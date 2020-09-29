@@ -82,6 +82,14 @@ EOF
 
 # SconeStudio.app/Contents/Resources
 mkdir -p "${app_dir}/Contents/Resources/"
+
+# SconeStudio.app/Contents/Resources/Tutorials
+rsync -avz --delete "${PROJECT_DIR}/scenarios/Tutorials" "${app_dir}/Contents/Resources/"
+
+# SconeStudio.app/Contents/Resources/geometry
+rsync -avz --delete "${PROJECT_DIR}/resources/geometry" "${app_dir}/Contents/Resources"
+
+# SconeStudio.app/Contents/Resources/scone.icns
 cp "${PROJECT_DIR}/resources/ui/scone_logo_256x256.icns" "${app_dir}/Contents/Resources/scone.icns"
 
 # SconeStudio.app.app/Contents/MacOS
@@ -100,8 +108,15 @@ export DYLD_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib:\${DYLD_LIBRARY_PATH}
 # dir is still wherever the caller ran this script
 export PATH="\${BASH_SOURCE%/*}/bin:\${PATH}"
 
-otool -L \$(which sconestudio)
-sconestudio "\$@"
+# the user's SCONE directory should be auto-created on first boot and always
+# contain the most up-to-date copy of Tutorials + geometry
+if [ -t 1 ]; then  # HACK: only do this when running in a terminal
+    mkdir -p \${HOME}/SCONE
+    rsync -a \${BASH_SOURCE%/*}/../Resources/Tutorials \${HOME}/SCONE/Tutorials
+    rsync -a \${BASH_SOURCE%/*}/../Resources/geometry \${HOME}/SCONE/geometry
+fi
+
+exec sconestudio "\$@"
 EOF
 chmod +x "${app_dir}/Contents/MacOS/sconestudio"
 
