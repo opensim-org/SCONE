@@ -12,7 +12,7 @@
 #
 # Describes the structure of .app directories as:
 #
-# sconestudio.app/
+# SconeStudio.app/
 #     Contents/
 #         Info.plist
 #         MacOS/
@@ -43,14 +43,14 @@ set -xeuo pipefail
 source ./tools/linux_config  # sets relevant envvar defaults
 
 base_dir="${SCONE_BUILD_DIR}/mac"
-app_dir="${SCONE_BUILD_DIR}/sconestudio.app"
+app_dir="${SCONE_BUILD_DIR}/SconeStudio.app"
 
-# sconestudio.app/
+# SconeStudio.app/
 mkdir -p "${app_dir}"
-# sconestudio.app/Contents/
+# SconeStudio.app/Contents/
 mkdir -p "${app_dir}/Contents/"
 
-# sconestudio.app/Contents/Info.plist
+# SconeStudio.app/Contents/Info.plist
 cat <<EOF > "${app_dir}/Contents/Info.plist"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -80,14 +80,14 @@ cat <<EOF > "${app_dir}/Contents/Info.plist"
 </plist>
 EOF
 
-# sconestudio.app/Contents/Resources
+# SconeStudio.app/Contents/Resources
 mkdir -p "${app_dir}/Contents/Resources/"
 cp "${PROJECT_DIR}/resources/ui/scone_logo_256x256.icns" "${app_dir}/Contents/Resources/scone.icns"
 
-# sconestudio.app/Contents/MacOS
+# SconeStudio.app.app/Contents/MacOS
 mkdir -p "${app_dir}/Contents/MacOS/"
 
-# sconestudio.app/Contents/MacOS/sconestudio
+# SconeStudio.app/Contents/MacOS/sconestudio
 cat <<EOF > "${app_dir}/Contents/MacOS/sconestudio"
 #!/usr/bin/env bash
 
@@ -108,7 +108,7 @@ chmod +x "${app_dir}/Contents/MacOS/sconestudio"
 
 # copy executables
 
-# sconestudio.app/Contents/MacOS/bin/
+# SconeStudio.app/Contents/MacOS/bin/
 mkdir -p "${app_dir}/Contents/MacOS/bin/"
 for exe in $(find "${SCONE_BUILD_DIR}/bin" -type f); do
     cp -a "${exe}" "${app_dir}/Contents/MacOS/bin/"
@@ -125,7 +125,7 @@ chmod +x ${app_dir}/Contents/MacOS/bin/*
 #   more mac-centric '.framework dir's have to be handled with some additional
 #   fucking magic
 
-# sconestudio.app/Contents/MacOS/lib
+# SconeStudio.app/Contents/MacOS/lib
 lib_dir="${app_dir}/Contents/MacOS/lib/"
 mkdir -p "${lib_dir}"
 
@@ -191,11 +191,11 @@ ${QT5_BREW_PATH}/bin/macdeployqt ${app_dir} -verbose=2 -no-strip -executable=${a
 
 # copy resources (icons etc.)
 
-# sconestudio.app/Contents/MacOS/resources
+# SconeStudio.app/Contents/MacOS/resources
 mkdir -p "${app_dir}/Contents/MacOS/resources/"
 cp -r ${PROJECT_DIR}/resources/* "${app_dir}/Contents/MacOS/resources/"
 
-# sconestudio.app/Contents/MacOS/.version
+# SconeStudio.app/Contents/MacOS/.version
 # (needed by SCONE to boot)
 git rev-list --count HEAD > "${app_dir}/Contents/MacOS/.version"
 
