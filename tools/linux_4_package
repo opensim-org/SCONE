@@ -20,6 +20,7 @@ dependencies=(
     libqt5printsupport5
     libqt5opengl5
     libqt5widgets5
+    libpng16-16
 )
 
 cd "${SCONE_BUILD_DIR}"

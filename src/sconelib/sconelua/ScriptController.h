@@ -4,6 +4,7 @@
 #include "scone/controllers/Controller.h"
 #include "scone/core/system_tools.h"
 
+#include <functional>
 #include <vector>
 
 namespace scone

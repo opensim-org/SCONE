@@ -17,9 +17,11 @@ namespace scone
 	optimizer_pool( *m_Objective, CmaOptimizerSpot::GetEvaluator(), pn )
 	{
 		// re-initialize these parameters because we want different defaults
-		INIT_PROP( pn, prediction_window_, 300 );
-		INIT_PROP( pn, prediction_start_, 100 );
-		INIT_PROP( pn, prediction_look_ahead_, 1000 );
+		INIT_PROP( pn, prediction_window_, window_size );
+		INIT_PROP( pn, prediction_start_, prediction_window_ );
+		INIT_PROP( pn, prediction_look_ahead_, prediction_window_ );
+		INIT_PROP( pn, max_generations_without_file_output, 100000 );
+
 		INIT_PROP( pn, optimizations_, 6 );
 		INIT_PROP( pn, active_optimizations_, 6 );
 		INIT_PROP( pn, concurrent_optimizations_, 2 );
@@ -78,6 +80,17 @@ namespace scone
 		pn.set( "minimize", cma.IsMinimizing() );
 		pn.set( "prediction_window", cma.prediction_window_ );
 		cma.OutputStatus( std::move( pn ) );
+	}
+
+	void CmaPoolOptimizerReporter::on_post_step( const optimizer& opt )
+	{
+		auto& pool = dynamic_cast<const CmaPoolOptimizer&>( opt );
+		for ( const auto& o : pool.optimizers() )
+		{
+			auto& cma = dynamic_cast<const CmaOptimizer&>( *o );
+			for ( auto&& pn : cma.GetStatusMessages() )
+				pool.OutputStatus( std::move( pn ) );
+		}
 	}
 
 	void CmaPoolOptimizerReporter::on_stop( const optimizer& opt, const spot::stop_condition& s )

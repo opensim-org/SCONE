@@ -20,6 +20,14 @@ namespace scone
 		m_Body.m_Joint = this;
 	}
 
+	Real Joint::GetLimitForce() const
+	{
+		Real force{ 0 };
+		for ( const auto& dof : GetDofs() )
+			force += dof->GetLimitForce();
+		return force;
+	}
+
 	Real Joint::GetLoad() const
 	{
 		return xo::length( GetReactionForce() ) / m_Body.GetModel().GetBW();

@@ -8,4 +8,4 @@ set ( SRC_LIB src/lauxlib.c src/lbaselib.c src/lbitlib.c src/lcorolib.c src/ldbl
 
 # build static lua library
 add_library ( liblua ${SRC_CORE} ${SRC_LIB} )
-set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua )
+set_target_properties ( liblua PROPERTIES OUTPUT_NAME lua POSITION_INDEPENDENT_CODE True )

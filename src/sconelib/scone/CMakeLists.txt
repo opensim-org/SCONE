@@ -26,9 +26,9 @@ set(CORE_MATH_FILES
 	core/PieceWiseConstantFunction.h
 	core/PieceWiseLinearFunction.cpp
 	core/PieceWiseLinearFunction.h
-	core/Polynomial.h	
+	core/Polynomial.h
 	core/Polynomial.cpp
-	core/SineWave.h	
+	core/SineWave.h
 	core/SineWave.cpp
 	)
 set(CORE_SYSTEM_FILES
@@ -202,6 +202,7 @@ set(SIM_MODELCOMPONENTS_FILES
 	model/State.cpp
 	model/State.h
 	model/ContactGeometry.h
+	model/StateComponent.h
 	)
 set(SIM_SENSORSANDACTUATORS_FILES
 	model/Actuator.cpp

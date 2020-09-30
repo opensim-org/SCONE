@@ -57,9 +57,11 @@ namespace scone
 		INIT_PROP( props, min_improvement_for_file_output, 0.05 );
 		INIT_PROP( props, max_generations_without_file_output, 1000 );
 
-		INIT_PROP( props, max_generations, 10000 );
-		INIT_PROP( props, min_progress, 1e-6 );
-		INIT_PROP( props, min_progress_samples, 200 );
+		INIT_PROP( props, max_generations, 100000 );
+
+		INIT_PROP( props, min_progress, 1e-5 );
+		INIT_PROP( props, window_size, 500 );
+		INIT_PROP( props, min_progress_samples, window_size );
 
 		// initialize parameters from file
 		if ( use_init_file && !init_file.empty() )
@@ -100,16 +102,16 @@ namespace scone
 		}
 		else if ( output_mode_ == status_queue_output )
 		{
-			auto lock = std::scoped_lock( g_status_output_mutex );
+			auto lock = std::scoped_lock( status_queue_mutex_ );
 			status_queue_.push_back( std::move( pn ) );
 		}
 	}
 
-	std::deque<PropNode> Optimizer::GetStatusMessages()
+	std::deque<PropNode> Optimizer::GetStatusMessages() const
 	{
 		std::deque<PropNode> results;
 		{
-			auto lock = std::scoped_lock( g_status_output_mutex );
+			auto lock = std::scoped_lock( status_queue_mutex_ );
 			if ( !status_queue_.empty() )
 			{
 				results = std::move( status_queue_ );

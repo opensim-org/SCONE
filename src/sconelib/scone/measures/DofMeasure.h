@@ -43,7 +43,7 @@ namespace scone
 		/// Penalty for when the DOF velocity [deg/s] is out of range.
 		RangePenalty<Degree> velocity;
 
-		/// Penalty for when the DOF limit force [N] is out of range.
+		/// Penalty for when the DOF limit force [N] is out of range (this value is signed!).
 		RangePenalty<Real> force;
 
 	protected:

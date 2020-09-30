@@ -51,12 +51,38 @@ namespace scone
 		virtual Real GetValue() const override;
 	};
 
+	// Sensor for normalized muscle length
+	struct SCONE_API MuscleLengthVelocitySensor : public MuscleSensor
+	{
+		MuscleLengthVelocitySensor( const Muscle& m, double kv ) : MuscleSensor( m ), kv_( kv ) {}
+		virtual String GetName() const override;
+		virtual Real GetValue() const override;
+		double kv_;
+	};
+
+	// Sensor for normalized muscle length
+	struct SCONE_API MuscleLengthVelocitySqrtSensor : public MuscleSensor
+	{
+		MuscleLengthVelocitySqrtSensor( const Muscle& m, double kv ) : MuscleSensor( m ), kv_( kv ) {}
+		virtual String GetName() const override;
+		virtual Real GetValue() const override;
+		double kv_;
+	};
+
 	// Sensor that simulates Ia muscle spindle (based on [Prochazka 1999], p.135)
 	struct SCONE_API MuscleSpindleSensor : public MuscleSensor
 	{
 		MuscleSpindleSensor( const Muscle& m ) : MuscleSensor( m ) {}
 		virtual String GetName() const override;
 		virtual Real GetValue() const override;
+	};
+
+	struct SCONE_API MuscleSpindleSensor2 : public MuscleSensor
+	{
+		MuscleSpindleSensor2( const Muscle& m, double kv, double l0 ) : MuscleSensor( m ), kv_( kv ), l0_( l0 ) {}
+		virtual String GetName() const override;
+		virtual Real GetValue() const override;
+		double kv_, l0_;
 	};
 
 	struct SCONE_API MuscleExcitationSensor : public MuscleSensor
@@ -148,22 +174,33 @@ namespace scone
 
 	struct SCONE_API BodyOrientationSensor : public Sensor
 	{
-		BodyOrientationSensor( const Body& body, Vec3 dir, const String& id ) : body_( body ), dir_( dir ), id_( id ) {}
-		virtual String GetName() const override;
+		BodyOrientationSensor( const Body& body, const Vec3& dir, const String& postfix, Side side );
+		virtual String GetName() const override { return name_; }
 		virtual Real GetValue() const override;
 		const Body& body_;
 		const Vec3 dir_;
-		const String id_;
+		const String name_;
 	};
 
 	struct SCONE_API BodyAngularVelocitySensor : public Sensor
 	{
-		BodyAngularVelocitySensor( const Body& body, Vec3 dir, const String& id ) : body_( body ), dir_( dir ), id_( id ) {}
-		virtual String GetName() const override;
+		BodyAngularVelocitySensor( const Body& body, const Vec3& dir, const String& postfix, Side side );
+		virtual String GetName() const override { return name_; }
 		virtual Real GetValue() const override;
 		const Body& body_;
 		const Vec3 dir_;
-		const String id_;
+		const String name_;
+	};
+
+	struct SCONE_API BodyOriVelSensor : public Sensor
+	{
+		BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side );
+		virtual String GetName() const override { return name_; }
+		virtual Real GetValue() const override;
+		const Body& body_;
+		const double kv_;
+		const Vec3 dir_;
+		const String name_;
 	};
 }
 

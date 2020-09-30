@@ -14,6 +14,7 @@
 #include "scone/core/types.h"
 #include "xo/system/log_sink.h"
 #include <deque>
+#include <mutex>
 
 namespace scone
 {
@@ -49,14 +50,17 @@ namespace scone
 		/// Thread priority of the optimization; 0 = lowest, 7 = highest, default = 1.
 		int thread_priority;
 
-		/// Number of iterations after which to stop the optimization; default = 10000.
+		/// Number of iterations after which to stop the optimization; default = 100000.
 		size_t max_generations;
 
-		/// Minimum progress after which to stop the optimization; default = 1e-6.
+		/// Minimum progress after which to stop the optimization; default = 1e-5.
 		double min_progress;
 
 		/// Minimum number of samples after which progress is measured; default = 200.
 		size_t min_progress_samples;
+
+		/// Window size used for measureing progress; default = 500.
+		size_t window_size;
 
 		/// The minimum relative improvement needed for file output; default = 0.05.
 		Real min_improvement_for_file_output;
@@ -82,7 +86,7 @@ namespace scone
 		PropNode GetStatusPropNode() const;
 		void OutputStatus( PropNode&& pn ) const;
 		template< typename T > void OutputStatus( const String& key, const T& value ) const;
-		std::deque<PropNode> GetStatusMessages();
+		std::deque<PropNode> GetStatusMessages() const;
 
 		const String& id() const { return id_; }
 
@@ -102,6 +106,7 @@ namespace scone
 
 		OutputMode output_mode_;
 		mutable std::deque<PropNode> status_queue_; // #todo: move this to reporter
+		mutable std::mutex status_queue_mutex_;
 
 		mutable path output_folder_;
 		mutable String id_;

@@ -121,7 +121,8 @@ void ProgressDockWidget::Optimization::Update( const PropNode& pn )
 		medvec.push_back( pn.get< double >( "step_median" ) );
 		bestvec.push_back( pn.get< double >( "step_best" ) );
 		genvec.push_back( cur_gen );
-		cur_pred = cur_reg( float( cur_gen + window_size ) );
+		if ( !pn.try_get( cur_pred, "predicted_fitness" ) )
+			cur_pred = cur_reg( float( cur_gen + window_size ) );
 	}
 
 	pn.try_get( best, "best" );
@@ -236,6 +237,7 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 		tooltipProps.merge( pn, true );
 	}
 
+	auto new_view_last_gen = view_last_gen;
 	for ( index_t idx = 0; idx < optimizations.size(); ++idx )
 	{
 		auto& o = optimizations[ idx ];
@@ -249,15 +251,25 @@ ProgressDockWidget::ProgressResult ProgressDockWidget::updateProgress()
 			auto start_gen = std::max( 0, o.cur_gen - o.window_size );
 			ui.plot->graph( idx * 2 + 1 )->setData( QVector< double >{ start_gen, o.cur_gen }, QVector< double >{ o.cur_reg( start_gen ), o.cur_reg( float( o.cur_gen ) ); } );
 #else
-			ui.plot->graph( idx )->setData( o.genvec, o.bestvec );
+			auto* g = ui.plot->graph( idx );
+			for ( int i = g->data()->size(); i < o.genvec.size(); ++i )
+				g->addData( o.genvec[ i ], o.bestvec[ i ] );
+			if ( o.genvec.size() >= view_last_gen )
+				new_view_last_gen = o.genvec.size() - 1;
 #endif
-
-			// update range and replot
-			ui.plot->xAxis->setRange( view_first_gen, std::max( o.cur_gen, view_last_gen ) );
-			fixRangeY();
-			ui.plot->replot();
 		}
 	}
+
+	// update range and replot
+	if ( new_view_last_gen != view_last_gen || view_last_gen <= min_view_gens )
+	{
+		if ( view_first_gen > 0 )
+			view_first_gen += new_view_last_gen - view_last_gen;
+		view_last_gen = new_view_last_gen;
+		ui.plot->xAxis->setRange( view_first_gen, view_last_gen );
+		fixRangeY();
+	}
+	ui.plot->replot();
 
 	// #todo: use to_str instead
 	std::stringstream str;

@@ -68,6 +68,7 @@ public slots:
 	void refreshAnalysis();
 
 	virtual void fileOpenTriggered() override;
+	virtual void fileReloadTriggered();
 	virtual void fileSaveTriggered() override;
 	virtual void fileSaveAsTriggered() override;
 	virtual void fileCloseTriggered() override;
@@ -98,6 +99,11 @@ public slots:
 	void findPrevious() { if ( auto* e = getActiveCodeEditor() ) e->findNext( true ); }
 	void toggleComments() { if ( auto* e = getActiveCodeEditor() ) e->toggleComments(); }
 	void resetWindowLayout();
+
+	void deleteSelectedFileOrFolder();
+	void sortResultsByDate();
+	void sortResultsByName();
+	void onResultBrowserCustomContextMenu(const QPoint &);
 
 public:
 	bool close_all;

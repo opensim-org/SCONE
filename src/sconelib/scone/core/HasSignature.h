@@ -19,13 +19,16 @@ namespace scone
 	{
 	public:
 		HasSignature( const PropNode& pn );
-		virtual ~HasSignature();
+		virtual ~HasSignature() = default;
 
 		/// Prefix signature with custom string. Special tags: DATE_TIME, DATE_TIME_EXACT, SCONE_VERSION.
 		String signature_prefix;
 
 		/// Append custom string to signature. Special tags: DATE_TIME, DATE_TIME_EXACT, SCONE_VERSION.
 		String signature_postfix;
+
+		/// Set custom signature and omit the auto-generated signature.
+		String signature;
 
 		String GetSignature() const;
 

@@ -25,7 +25,7 @@ openscenegraph_build_deps=(
 simbody_build_deps=(
     liblapack-dev
 )
-scone_deps=(
+scone_build_deps=(
     freeglut3-dev
     libxi-dev
     libxmu-dev
@@ -38,18 +38,14 @@ all_deps=(
     "${general_deps[@]}"
     "${openscenegraph_build_deps[@]}"
     "${simbody_build_deps[@]}"
-    "${scone_deps[@]}"
+    "${scone_build_deps[@]}"
 )
-
-OPENSIM_HOME="${PWD}/opensim-core"
-OSC_SOURCEFORGE_FILES="https://sourceforge.net/projects/dependencies/files/opensim-core"
-OSC_TARBALL_NAME="opensim-core-3.3-ubuntu-18.04.tar.xz"
 
 
 try_clone_checkout() {
     url="${1}"
     ref="${2}"
-    
+
     dir=$(basename "${url}" | sed 's/.git$//')
 
     echo "${0}: ${dir}: must be built from source for Linux builds"
@@ -63,22 +59,6 @@ try_clone_checkout() {
     fi
 }
 
-
-# only install g++/gcc if the user hasn't already installed them
-# (e.g. because it's a fresh computer) AND the user hasn't specified a
-# custom compiler override (e.g. by setting CC/CXX to 'clang').
-if [[ -z "${CXX:-}" ]]; then
-    if ! command -v g++; then
-        system_dependencies+=(g++)
-    fi
-fi
-
-if [[ -z "${CC:-}" ]]; then
-    if ! command -v gcc; then
-        system_dependencies+=(gcc)
-    fi
-fi
-
 # if root is running this script then do not use `sudo` (some distros
 # do not supply it)
 if [[ "${UID}" == 0 ]]; then
@@ -90,12 +70,12 @@ fi
 echo "installing system-level dependencies"
 ${sudo} apt-get update && ${sudo} apt-get install -y ${all_deps[@]}
 
-echo "installing fpm (used to create packages)"
+echo "installing fpm: used to create end-user packages (e.g. .deb)"
 ${sudo} gem install --no-document fpm
 
 try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
-try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "master"
 try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
 
-echo "getting submodule dependencies"
+echo "git submodules: initializing and updating"
 git submodule update --init --recursive

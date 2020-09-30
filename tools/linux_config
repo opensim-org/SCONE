@@ -13,13 +13,13 @@ num_processors() {
 }
 
 # scone project directory
-export PROJECT_DIR="${PWD}"
+export PROJECT_DIR=${PWD}
 
 # scone build dir
-export SCONE_BUILD_DIR="${PROJECT_DIR}/build"
+export SCONE_BUILD_DIR=${PROJECT_DIR}/build
 
 # scone install dir
-export SCONE_INSTALL_DIR="${PROJECT_DIR}/install"
+export SCONE_INSTALL_DIR=${PROJECT_DIR}/install
 
 # whether makefiles should emit commands (useful for debugging
 # compiler flags + errors)
@@ -31,10 +31,10 @@ export CMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE:-True}"
 export CMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE:-Release}"
 
 # where openscenegraph binaries are installed post-build
-export OSG_INSTALL_PATH="${OSG_INSTALL_PATH:-${PROJECT_DIR}/OpenSceneGraph/install}"
+export OSG_INSTALL_PATH=${OSG_INSTALL_PATH:-${PROJECT_DIR}/OpenSceneGraph/install}
 
 # where simbody binaries are installed post-build
-export SIMBODY_INSTALL_PATH="${SIMBODY_INSTALL_PATH:-${PROJECT_DIR}/simbody/install}"
+export SIMBODY_INSTALL_PATH=${SIMBODY_INSTALL_PATH:-${PROJECT_DIR}/simbody/install}
 
 # where opensim3 binaries are installed post-build
 export OPENSIM3_INSTALL_PATH="${OPENSIM3_INSTALL_PATH:-${PROJECT_DIR}/opensim3-scone/install}"
@@ -45,6 +45,7 @@ OSGQT_INSTALL_DIR="${OSGQT_INSTALL_DIR:-${PROJECT_DIR}/osgQt/install}"
 # number of concurrent cc/c++ build jobs
 export NUM_BUILD_JOBS="${NUM_BUILD_JOBS:-$(num_processors)}"
 
+# if on mac, detect where Qt is installed (by brew)
 if [[ "$OSTYPE" == "darwin"* ]]; then
     QT5_VERSIONS=(/usr/local/Cellar/qt/*)
     if [ ${#QT5_VERSIONS[@]} -neq 1 ]; then
@@ -53,3 +54,4 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     fi
     export QT5_BREW_PATH=${QT5_VERSIONS[0]}
 fi
+

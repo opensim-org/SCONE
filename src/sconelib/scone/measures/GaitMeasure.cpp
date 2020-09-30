@@ -111,10 +111,8 @@ namespace scone
 			step_time += duration - model.GetTime();
 
 		// set results
-		GetReport().set( "speed", speed );
+		GetReport().set( "step_velocity", step_length / step_time );
 		GetReport().set( "step_count", step_count );
-		GetReport().set( "step_length", counted_steps > 0 ? step_length / counted_steps : 0.0 );
-		GetReport().set( "step_duration", counted_steps > 0 ? step_duration / counted_steps : 0.0 );
 
 		return 1.0 - step_measure / step_time;
 	}

@@ -32,16 +32,16 @@ namespace scone
 		/// Gait states that can be detected by the controller
 		enum GaitState { UnknownState = -1, EarlyStanceState = 0, LateStanceState = 1, LiftoffState = 2, SwingState = 3, LandingState = 4, StateCount };
 
-		/// Relative sagittal distance [m] of the swing foot used for detecting LandingState.
+		/// Relative sagittal distance [leg length] of the swing foot used for detecting LandingState; default = 0.
 		Real landing_threshold;
 
-		/// Relative sagittal distance [m] of the stance foot used for detecting LateStanceState.
+		/// Relative sagittal distance [leg length] of the stance foot used for detecting LateStanceState; default = 0.
 		Real late_stance_threshold;
 
-		/// Relative sagittal distance [m] of the stance foot used for detecting LiftoffState.
+		/// Relative sagittal distance [leg length] of the stance foot used for detecting LiftoffState; default = -1.
 		Real liftoff_threshold;
 
-		/// Use custom leg length instead of deriving from model; default = false.
+		/// If defined, use custom leg length instead of deriving from model; default = [not set].
 		Real override_leg_length;
 
 		/// Neural delay [s] used for load sensors; default = 0.
@@ -63,7 +63,7 @@ namespace scone
 	protected:
 		struct LegState
 		{
-			LegState( Model& m, Leg& l );
+			LegState( Model& m, Leg& l, const PropNode& props, Params& par );
 
 			// leg structure
 			const Leg& leg;
@@ -83,8 +83,13 @@ namespace scone
 			bool allow_liftoff_transition;
 			bool allow_landing_transition;
 
-			// cached constant state
-			Real leg_length;
+			// cached constants
+			const Real leg_length;
+			const Real stance_load_threshold;
+			const Real swing_load_threshold;
+			const Real landing_threshold;
+			const Real late_stance_threshold;
+			const Real liftoff_threshold; // default value is such that parameter has no effect
 		};
 
 		virtual void UpdateLegStates( Model& model, double timestamp );

@@ -48,6 +48,7 @@
 #include "vis/plane.h"
 #include "help_tools.h"
 #include "xo/thread/thread_priority.h"
+#include "file_tools.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -71,9 +72,19 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	analysisView->setMinSeriesInterval( 0 );
 	analysisView->setLineWidth( scone::GetStudioSettings().get< float >( "analysis.line_width" ) );
 
-	// menu
-	createFileMenu( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ), "Scone Scenario (*.scone)" );
+	// File menu
+	auto fileMenu = menuBar()->addMenu( ( "&File" ) );
+	fileMenu->addAction( "&Open...", this, &SconeStudio::fileOpenTriggered, QKeySequence( "Ctrl+O" ) );
+	recentFilesMenu = addMenuAction( fileMenu, "Open &Recent", this, &QCompositeMainWindow::fileOpenTriggered, QKeySequence() );
+	fileMenu->addAction( "Re&load", this, &SconeStudio::fileReloadTriggered, QKeySequence( "Ctrl+R" ) );
+	fileMenu->addSeparator();
+	fileMenu->addAction( "&Save", this, &SconeStudio::fileSaveTriggered, QKeySequence( "Ctrl+S" ) );
+	fileMenu->addAction( "Save &As...", this, &SconeStudio::fileSaveAsTriggered, QKeySequence( "Ctrl+Shift+S" ) );
+	fileMenu->addAction( "&Close", this, &SconeStudio::fileCloseTriggered, QKeySequence( "Ctrl+W" ) );
+	fileMenu->addSeparator();
+	fileMenu->addAction( "E&xit", this, &SconeStudio::fileExitTriggered, QKeySequence( "Alt+X" ) );
 
+	// Edit menu
 	auto editMenu = menuBar()->addMenu( "&Edit" );
 	editMenu->addAction( "&Find...", this, &SconeStudio::findDialog, QKeySequence( "Ctrl+F" ) );
 	editMenu->addAction( "Find &Next", this, &SconeStudio::findNext, Qt::Key_F3 );
@@ -81,6 +92,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	editMenu->addSeparator();
 	editMenu->addAction( "&Toggle Comments", this, &SconeStudio::toggleComments, QKeySequence( "Ctrl+/" ) );
 
+	// View menu
 	auto viewMenu = menuBar()->addMenu( "&View" );
 	viewActions[ ModelVis::ShowForces ] = viewMenu->addAction( "Show External &Forces", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowMuscles ] = viewMenu->addAction( "Show &Muscles", this, &SconeStudio::updateViewSettings );
@@ -97,6 +109,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 		va.second->setChecked( va.first != ModelVis::ShowBodyAxes && va.first != ModelVis::ShowJoints && va.first != ModelVis::ShowBodyCom );
 	}
 
+	// Scenario menu
 	auto scenarioMenu = menuBar()->addMenu( "&Scenario" );
 	scenarioMenu->addAction( "&Evaluate Scenario", this, &SconeStudio::evaluateActiveScenario, QKeySequence( "Ctrl+E" ) );
 	scenarioMenu->addSeparator();
@@ -108,6 +121,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	scenarioMenu->addAction( "&Performance Test", this, &SconeStudio::performanceTestNormal, QKeySequence( "Ctrl+P" ) );
 	scenarioMenu->addAction( "Performance Test (Write Stats)", this, &SconeStudio::performanceTestWriteStats, QKeySequence( "Ctrl+Shift+P" ) );
 
+	// Tools menu
 	auto toolsMenu = menuBar()->addMenu( "&Tools" );
 	toolsMenu->addAction( "Generate &Video...", this, &SconeStudio::createVideo );
 	toolsMenu->addAction( "Save &Image...", this, &SconeStudio::captureImage, QKeySequence( "Ctrl+I" ) );
@@ -119,6 +133,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	toolsMenu->addSeparator();
 	toolsMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
 
+	// Action menu
 	auto* actionMenu = menuBar()->addMenu( "&Playback" );
 	actionMenu->addAction( "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
 	actionMenu->addAction( "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
@@ -134,8 +149,12 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	actionMenu->addAction( "Goto &Begin", ui.playControl, &QPlayControl::reset, QKeySequence( "Ctrl+Home" ) );
 	actionMenu->addAction( "Go to &End", ui.playControl, &QPlayControl::end, QKeySequence( "Ctrl+End" ) );
 
-	createWindowMenu();
+	// Window menu
+	auto windowMenu = createWindowMenu();
+	windowMenu->addSeparator();
+	windowMenu->addAction( "Reset Window Layout", this, &SconeStudio::resetWindowLayout );
 
+	// Help menu
 	auto helpMenu = menuBar()->addMenu( ( "&Help" ) );
 	helpMenu->addAction( "View &Help...", this, &SconeStudio::helpSearch, QKeySequence( "F1" ) );
 	helpMenu->addAction( "User &Forum...", this, &SconeStudio::helpSearch );
@@ -195,10 +214,6 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	//auto* ddw = createDockWidget( "&State", dofSliderGroup, Qt::BottomDockWidgetArea );
 	//tabifyDockWidget( analysis_dock, ddw );
 
-	// add window menu option
-	windowMenu->addSeparator();
-	windowMenu->addAction( "Reset Window Layout", this, &SconeStudio::resetWindowLayout );
-
 	// init scene
 	ui.osgViewer->setClearColor( vis::to_osg( scone::GetStudioSetting< xo::color >( "viewer.background" ) ) );
 }
@@ -214,6 +229,11 @@ bool SconeStudio::init()
 	ui.resultsBrowser->setNumColumns( 1 );
 	ui.resultsBrowser->setRoot( to_qt( results_folder ), "*.par;*.sto" );
 	ui.resultsBrowser->header()->setFrameStyle( QFrame::NoFrame | QFrame::Plain );
+	ui.resultsBrowser->setSelectionMode( QAbstractItemView::ExtendedSelection );
+	ui.resultsBrowser->setSelectionBehavior( QAbstractItemView::SelectRows );
+
+	ui.resultsBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(ui.resultsBrowser, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(onResultBrowserCustomContextMenu(const QPoint &)));
 
 	connect( ui.resultsBrowser->selectionModel(),
 		SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
@@ -276,7 +296,10 @@ void SconeStudio::saveCustomSettings( QSettings& settings )
 void SconeStudio::activateBrowserItem( QModelIndex idx )
 {
 	auto info = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
-	if ( !info.isDir() )
+	if ( info.isDir() )
+		info = scone::findBestPar( QDir( info.absoluteFilePath() ) );
+	auto str = info.path().toStdString();
+	if ( info.exists() )
 	{
 		ui.playControl->reset();
 		if ( createScenario( info.absoluteFilePath() ) )
@@ -374,8 +397,7 @@ void SconeStudio::evaluate()
 	scenario_->UpdateVis( scenario_->GetTime() );
 
 	reportModel->setData( scenario_->GetResult() );
-	reportView->expandAll();
-	
+	reportView->expandToDepth( 0 );
 }
 
 void SconeStudio::createVideo()
@@ -491,6 +513,12 @@ void SconeStudio::fileOpenTriggered()
 		openFile( filename );
 }
 
+void SconeStudio::fileReloadTriggered()
+{
+	if ( auto* s = getActiveCodeEditor() )
+		s->reload();
+}
+
 void SconeStudio::openFile( const QString& filename )
 {
 	try
@@ -500,7 +528,7 @@ void SconeStudio::openFile( const QString& filename )
 		edw->setFocus();
 		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 		ui.tabWidget->setCurrentIndex( idx );
-		connect( edw, &QCodeEditor::textChanged, this, &SconeStudio::updateTabTitles );
+		connect( edw, &QCodeEditor::modificationChanged, this, &SconeStudio::updateTabTitles );
 		codeEditors.push_back( edw );
 		updateRecentFilesMenu( filename );
 		createAndVerifyActiveScenario( false );
@@ -883,7 +911,8 @@ bool SconeStudio::abortOptimizations()
 
 void SconeStudio::updateBackgroundTimer()
 {
-	updateOptimizations();
+	if ( !ui.playControl->isPlaying() )
+		updateOptimizations();
 }
 
 void SconeStudio::updateOptimizations()
@@ -993,4 +1022,67 @@ void SconeStudio::finalizeCapture()
 	delete captureProcess;
 	captureProcess = nullptr;
 	captureFilename.clear();
+}
+
+void SconeStudio::deleteSelectedFileOrFolder()
+{
+	auto selection = ui.resultsBrowser->selectionModel()->selectedRows();
+	auto msgTitle = tr( "Remove files or folders" );
+
+	if ( selection.empty() )
+		return information( msgTitle, tr( "No files or folders selected" ) );
+	QString fileNames;
+	for ( auto idx : selection )
+		fileNames += ui.resultsBrowser->fileSystemModel()->fileName( idx ) + '\n';
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 15, 0))
+	// Qt >= 15.5? Move items to thrash, display warning with default Ok
+	auto msgBody = tr( "The following item(s) will be moved to the recycle bin:\n\n" ) + fileNames;
+	if ( QMessageBox::warning( this, msgTitle, msgBody, QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok ) == QMessageBox::Cancel )
+		return;
+	for ( auto idx : selection )
+	{
+		auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
+		if ( !QFile::moveToTrash( item.filePath() ) )
+			warning( msgTitle, tr( "Could not remove " ) + item.filePath() );
+	}
+#else
+	// Qt < 15.5? Remove items, display warning with default Cancel
+	auto msgBody = tr( "The following item(s) will be permanently deleted:\n\n" ) + fileNames;
+	msgBody += tr( "\nWARNING: this cannot be recovered!" );
+	if ( QMessageBox::Cancel == QMessageBox::warning( this, msgTitle, msgBody, QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel ) )
+		return;
+
+	for ( auto idx : selection )
+	{
+		bool success = false;
+		auto item = ui.resultsBrowser->fileSystemModel()->fileInfo( idx );
+		if ( item.isDir() )
+			success = QDir( item.filePath() ).removeRecursively();
+		else if ( item.isFile() )
+			success = ui.resultsBrowser->fileSystemModel()->remove( idx );
+		if ( !success )
+			warning( msgTitle, tr( "Could not remove " ) + item.filePath() );
+		}
+#endif
+}
+
+void SconeStudio::sortResultsByDate()
+{
+	ui.resultsBrowser->fileSystemModel()->sort( 3 );
+}
+
+void SconeStudio::sortResultsByName()
+{
+	ui.resultsBrowser->fileSystemModel()->sort( 0 );
+}
+
+void SconeStudio::onResultBrowserCustomContextMenu(const QPoint &pos)
+{
+	QMenu menu;
+	menu.addAction( "Sort by &Name", this, &SconeStudio::sortResultsByName );
+	menu.addAction( "Sort by &Date", this, &SconeStudio::sortResultsByDate );
+	menu.addSeparator();
+	menu.addAction( "&Remove", this, &SconeStudio::deleteSelectedFileOrFolder );
+	menu.exec(ui.resultsBrowser->mapToGlobal(pos));
 }

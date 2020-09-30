@@ -25,8 +25,21 @@ namespace scone
 	String MuscleVelocitySensor::GetName() const { return muscle_.GetName() + ".V"; }
 	Real MuscleVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberVelocity(); }
 
+	String MuscleLengthVelocitySensor::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleLengthVelocitySensor::GetValue() const { return muscle_.GetNormalizedFiberLength() + kv_ * muscle_.GetNormalizedFiberVelocity() ; }
+
+	String MuscleLengthVelocitySqrtSensor::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleLengthVelocitySqrtSensor::GetValue() const { return muscle_.GetNormalizedFiberLength() + kv_ * xo::signed_sqrt( muscle_.GetNormalizedFiberVelocity() ); }
+
 	String MuscleSpindleSensor::GetName() const { return muscle_.GetName() + ".S"; }
 	Real MuscleSpindleSensor::GetValue() const { return muscle_.GetNormalizedSpindleRate(); }
+
+	String MuscleSpindleSensor2::GetName() const { return muscle_.GetName() + ".L"; }
+	Real MuscleSpindleSensor2::GetValue() const {
+		auto l = muscle_.GetNormalizedFiberLength() - l0_;
+		auto v = kv_ * xo::signed_sqrt( muscle_.GetNormalizedFiberVelocity() );
+		return std::max( 0.0, l + v );
+	}
 
 	String MuscleExcitationSensor::GetName() const { return muscle_.GetName() + ".excitation"; }
 	Real MuscleExcitationSensor::GetValue() const { return muscle_.GetExcitation(); }
@@ -65,13 +78,23 @@ namespace scone
 		return xo::dot_product( direction_, body_.GetLinAccOfPointOnBody( offset_ ) );
 	}
 
-	String BodyOrientationSensor::GetName() const { return body_.GetName() + id_ + ".BO"; }
+	BodyOrientationSensor::BodyOrientationSensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BO" ) {}
 	Real BodyOrientationSensor::GetValue() const {
-		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) ) );
+		return xo::dot_product( body_.GetOrientation() * dir_, xo::rotation_vector_from_quat( xo::normalized_fast( body_.GetOrientation() ) ) );
 	}
 
-	String BodyAngularVelocitySensor::GetName() const { return body_.GetName() + id_ + ".BAV"; }
+	BodyAngularVelocitySensor::BodyAngularVelocitySensor( const Body& body, const Vec3& dir, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BAV" ) {}
 	Real BodyAngularVelocitySensor::GetValue() const {
 		return xo::dot_product( body_.GetOrientation() * dir_, body_.GetAngVel() );
+	}
+
+	BodyOriVelSensor::BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side ) :
+		body_( body ), dir_( GetSidedDir( dir, side ) ), kv_( kv ), name_( GetSidedName( body_.GetName() + postfix, side ) + ".BOV" ) {}
+	Real BodyOriVelSensor::GetValue() const {
+		auto ori_rv = xo::rotation_vector_from_quat( xo::normalized( body_.GetOrientation() ) );
+		auto dir = body_.GetOrientation() * dir_;
+		return xo::dot_product( dir, ori_rv ) + kv_ * xo::dot_product( dir, body_.GetAngVel() );
 	}
 }

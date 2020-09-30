@@ -22,20 +22,25 @@ namespace scone
 		EffortMeasure::Wang2012, "Wang2012",
 		EffortMeasure::Uchida2016, "Uchida2016",
 		EffortMeasure::SquaredMuscleStress, "SquaredMuscleStress",
-		EffortMeasure::SquaredMuscleActivation, "SquaredMuscleActivation"
+		EffortMeasure::CubedMuscleStress, "CubedMuscleStress",
+		EffortMeasure::SquaredMuscleActivation, "SquaredMuscleActivation",
+		EffortMeasure::CubedMuscleActivation, "CubedMuscleActivation"
 		);
 
 	EffortMeasure::EffortMeasure( const PropNode& props, Params& par, const Model& model, const Location& loc ) :
 		Measure( props, par, model, loc ),
-		m_Energy( Statistic<>::LinearInterpolation )
+		m_Effort( Statistic<>::LinearInterpolation )
 	{
-		measure_type = m_MeasureNames.GetValue( props.get< String >( "measure_type" ) );
+		measure_type = m_MeasureNames.GetValue( props.get<String>( "measure_type" ) );
 		INIT_PROP( props, use_cost_of_transport, false );
 		INIT_PROP( props, specific_tension, 0.25e6 );
 		INIT_PROP( props, muscle_density, 1059.7 );
 		INIT_PROP( props, default_muscle_slow_twitch_ratio, 0.5 );
 		INIT_PROP( props, use_symmetric_fiber_ratios, true );
 		INIT_PROP( props, min_distance, 1.0 );
+		INIT_PROP( props, use_average_per_muscle, false );
+		if ( name.empty() )
+			name = m_MeasureNames.GetString( measure_type );
 
 		// precompute some stuff
 		m_Wang2012BasalEnergy = 1.51 * model.GetMass();
@@ -43,7 +48,6 @@ namespace scone
 		m_AerobicFactor = 1.5; // 1.5 is for aerobic conditions, 1.0 for anaerobic. may need to add as option later
 		m_InitComPos = model.GetComPos();
 		SetSlowTwitchRatios( props, model );
-
 	}
 
 	EffortMeasure::MuscleProperties::MuscleProperties( const PropNode& props ) :
@@ -61,34 +65,38 @@ namespace scone
 		// make sure this is a new step and the measure is active
 		SCONE_ASSERT( model.GetIntegrationStep() != model.GetPreviousIntegrationStep() );
 
-		double current_effort = GetEnergy( model );
-		m_Energy.AddSample( timestamp, current_effort );
+		double current_effort = GetCurrentEffort( model );
+		m_Effort.AddSample( timestamp, current_effort );
 
 		return false;
 	}
 
 	double EffortMeasure::ComputeResult( const Model& model )
 	{
-		double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
-		double cot = m_Energy.GetTotal() / ( model.GetMass() * distance );
-
-		//GetReport().set( "total", m_Energy.GetTotal() );
-
+		xo::optional<double> result;
 		if ( use_cost_of_transport )
 		{
-			GetReport().set( "cost_of_transport", cot );
+			auto tot_effort = m_Effort.GetTotal();
+			double distance = std::max( min_distance, model.GetComPos().x - m_InitComPos.x );
+			GetReport().set( "effort", tot_effort );
 			GetReport().set( "distance", distance );
-			GetReport().set( "speed", distance / model.GetTime() );
-			return cot;
+			result = tot_effort / ( model.GetMass() * distance );
 		}
 		else
 		{
-			GetReport().set( "average", m_Energy.GetAverage() );
-			return m_Energy.GetAverage();
+			auto avg_effort = m_Effort.GetAverage();
+			GetReport().set( "effort", avg_effort );
+			result = avg_effort;
 		}
+
+		SCONE_ASSERT( result );
+		if ( use_average_per_muscle && !model.GetMuscles().empty() )
+			*result /= model.GetMuscles().size();
+
+		return *result;
 	}
 
-	double EffortMeasure::GetEnergy( const Model& model ) const
+	double EffortMeasure::GetCurrentEffort( const Model& model ) const
 	{
 		switch ( measure_type )
 		{
@@ -97,7 +105,9 @@ namespace scone
 		case Constant: return model.GetMass();
 		case Uchida2016: return GetUchida2016( model );
 		case SquaredMuscleStress: return GetSquaredMuscleStress( model );
+		case CubedMuscleStress: return GetCubedMuscleStress( model );
 		case SquaredMuscleActivation: return GetSquaredMuscleActivation( model );
+		case CubedMuscleActivation: return GetCubedMuscleActivation( model );
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 	}
@@ -267,6 +277,14 @@ namespace scone
 		return sum;
 	}
 
+	double EffortMeasure::GetCubedMuscleStress( const Model& model ) const
+	{
+		double sum = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			sum += xo::cubed( m->GetForce() / m->GetPCSA() );
+		return sum;
+	}
+
 	double EffortMeasure::GetSquaredMuscleActivation( const Model& model ) const
 	{
 		double sum = 0.0;
@@ -275,12 +293,17 @@ namespace scone
 		return sum;
 	}
 
+	double EffortMeasure::GetCubedMuscleActivation( const Model& model ) const
+	{
+		double sum = 0.0;
+		for ( auto& m : model.GetMuscles() )
+			sum += xo::cubed( m->GetActivation() );
+		return sum;
+	}
+
 	String EffortMeasure::GetClassSignature() const
 	{
 		String s;
-
-		if ( use_cost_of_transport )
-			s += "C";
 
 		switch ( measure_type )
 		{
@@ -288,8 +311,10 @@ namespace scone
 		case Wang2012: s += "W"; break;
 		case Constant: s += "C"; break;
 		case Uchida2016: s += "U"; break;
-		case SquaredMuscleStress: s += "MS"; break;
-		case SquaredMuscleActivation: s += "MA"; break;
+		case SquaredMuscleStress: s += "S2"; break;
+		case CubedMuscleStress: s += "S3"; break;
+		case SquaredMuscleActivation: s += "A2"; break;
+		case CubedMuscleActivation: s += "A3"; break;
 		default: SCONE_THROW( "Invalid energy measure" );
 		}
 
@@ -298,6 +323,6 @@ namespace scone
 
 	void EffortMeasure::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		frame[ "metabolics_penalty" ] = m_Energy.GetLatest();
+		frame[ name + ".penalty" ] = m_Effort.GetLatest();
 	}
 }
