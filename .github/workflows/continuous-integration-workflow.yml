@@ -20,12 +20,12 @@ jobs:
     - name: Get Dependencies
       run: cd $GITHUB_WORKSPACE && ./tools/mac_1_get-dependencies
 
-      #    - name: Check cache for openscenegraph
-      # id: cache_osg
-      #uses: actions/cache@v1
-      #with:
-      # path: ${{ env.OSG_INSTALL_PATH }}
-      # key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
+    - name: Check cache for openscenegraph
+      id: cache_osg
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.OSG_INSTALL_PATH }}
+        key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
 
     - name: Build openscenegraph
       if: steps.cache_osg.outputs.cache-hit != 'true'
