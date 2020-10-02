@@ -22,7 +22,8 @@ namespace scone::NN
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
 		INIT_MEMBER( pn, parameter_aliases_, {} ),
 		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 ),
-		INIT_MEMBER( pn, ignore_muscle_lines_, false )
+		INIT_MEMBER( pn, ignore_muscle_lines_, false ),
+		INIT_MEMBER( pn, symmetric_, true )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
@@ -143,18 +144,22 @@ namespace scone::NN
 		else return name;
 	}
 
-	String NeuralNetworkController::GetParName( const String& name, bool ignore_muscle_lines )
+	String NeuralNetworkController::GetParName( const String& name, bool ignore_muscle_lines, bool symmetric )
 	{
+		String par_name;
 		auto mid = MuscleId( name );
 		if ( ignore_muscle_lines )
-			return GetParAlias( mid.base_ );
-		else return mid.base_line_name();
+			par_name = GetParAlias( mid.base_ );
+		else par_name = mid.base_line_name();
+		if ( !symmetric )
+			par_name += mid.side_name();
+		return par_name;
 	}
 
-	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool ignore_muscle_lines )
+	String NeuralNetworkController::GetParName( const String& source, const String& target, const String& type, bool ignore_muscle_lines, bool symmetric )
 	{
-		auto sname = GetParName( source, ignore_muscle_lines );
-		auto tname = GetParName( target, ignore_muscle_lines );
+		auto sname = GetParName( source, ignore_muscle_lines, symmetric );
+		auto tname = GetParName( target, ignore_muscle_lines, symmetric );
 		String postfix = type.empty() ? "" : '.' + type;
 		if ( sname == tname )
 			return tname + postfix;
@@ -183,13 +188,15 @@ namespace scone::NN
 			bool length_velocity = pn.get<bool>( "length_velocity", false );
 			bool length_velocity_sqrt = pn.get<bool>( "length_velocity_sqrt", false );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
+			const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", true ); // defaults to true for back comp
+			const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 			for ( const auto& mus : model.GetMuscles() )
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
-					auto mid = MuscleId( mus->GetName() );
-					const auto& musparname = GetParAlias( mid.base_ );
-					auto delay = neural_delays_[ mid.base_line_name() ];
+					auto musid = MuscleId( mus->GetName() );
+					auto musparname = GetParName( mus->GetName(), ignore_muscle_lines, symmetric );
+					auto delay = neural_delays_[ musid.base_line_name() ];
 					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
 					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
 					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
@@ -252,6 +259,7 @@ namespace scone::NN
 			const auto layer_idx = pn.get<index_t>( "layer", neurons_.size() );
 			auto& layer = AddNeuronLayer( layer_idx );
 			layer.update_func_ = make_update_function( pn.get<String>( "activation", "leaky_relu" ) );
+			const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 
 			// set names of interneurons
 			auto& neuron_names = neuron_names_[ layer_idx ];
@@ -276,20 +284,26 @@ namespace scone::NN
 			const auto& offset = pn.get_child( "offset" );
 			layer.resize( neurons );
 			for ( index_t idx = 0; idx < neurons; ++idx )
-				layer[ idx ].offset_ = par.get( GetNameNoSide( GetNeuronName( layer_idx, idx ) ) + ".C0", offset );
+			{
+				// #perf: avoid the copy by having GetNeuronName return refs
+				String neuronname = GetNeuronName( layer_idx, idx );
+				String parname = ( symmetric ? GetNameNoSide( neuronname ) : neuronname ) + ".C0";
+				layer[ idx ].offset_ = par.get( parname, offset );
+			}
 			break;
 		}
 		case "MotorNeurons"_hash:
 		{
 			auto& layer = AddNeuronLayer( pn.get<index_t>( "layer" ) );
-			bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", false ); // defaults to false for back comp
+			const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", false ); // defaults to false for back comp
+			const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 			layer.update_func_ = make_update_function( pn.get<String>( "activation", "relu" ) );
 			auto include = pn.get<xo::pattern_matcher>( "include", "" );
 			for ( const auto& mus : model.GetMuscles() )
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
-					auto parname = GetParName( mus->GetName(), ignore_muscle_lines ) + ".C0";
+					auto parname = GetParName( mus->GetName(), ignore_muscle_lines, symmetric ) + ".C0";
 					AddActuator( mus.get(), par.get( parname, pn.get_child( "offset" ) ) );
 				}
 			}
@@ -311,7 +325,8 @@ namespace scone::NN
 		auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
 		auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
 		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
-		bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
+		const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
+		const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
 		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
 		auto input_type = pn.try_get<String>( "type" );
@@ -353,7 +368,7 @@ namespace scone::NN
 				}
 
 				// if we arrive here there's actually a connection
-				auto parname = GetParName( source_name, target_name, source_type, ignore_muscle_lines );
+				auto parname = GetParName( source_name, target_name, source_type, ignore_muscle_lines, symmetric );
 				double weight = par.get( parname, pn.get_child( "weight" ) );
 				link_layer.links_.push_back( Link{ source_neuron_idx, target_neuron_idx, weight } );
 			}

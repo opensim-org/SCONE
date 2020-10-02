@@ -85,6 +85,7 @@ namespace scone
 
 			const double leakyness_;
 			const bool ignore_muscle_lines_;
+			const bool symmetric_;
 
 		protected:
 			bool ComputeControls( Model& model, double timestamp ) override;
@@ -96,8 +97,8 @@ namespace scone
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
 			Neuron& AddActuator( Actuator* actuator, double offset );
 			const String& GetParAlias( const String& name );
-			String GetParName( const String& name, bool ignore_muscle_lines );
-			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines );
+			String GetParName( const String& name, bool ignore_muscle_lines, bool symmetric );
+			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines, bool symmetric );
 			String GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
 
 			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
