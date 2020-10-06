@@ -197,14 +197,15 @@ namespace scone::NN
 					auto musid = MuscleId( mus->GetName() );
 					auto musparname = GetParName( mus->GetName(), ignore_muscle_lines, symmetric );
 					auto delay = neural_delays_[ musid.base_line_name() ];
+					auto lofs = -pn.get<double>( "L0", 1.0 ); // defaults to -1
 					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
-					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, -1 );
+					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, lofs );
 					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
 					if ( length_velocity || length_velocity_sqrt ) {
 						auto kv = par.try_get( musparname + ".KV", pn, "velocity_gain", 0.1 );
 						if ( length_velocity )
-							AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, -1 );
-						else AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, -1 );
+							AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, lofs );
+						else AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, lofs );
 					}
 				}
 			}

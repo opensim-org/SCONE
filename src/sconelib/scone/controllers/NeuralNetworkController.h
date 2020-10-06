@@ -25,6 +25,7 @@ namespace scone
 			UpdateFunction update_func_;
 		};
 
+		inline double linear( const double v ) { return v; }
 		inline double relu( const double v ) { return std::max( 0.0, v ); }
 		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
 		inline double tanh( const double v ) { return std::tanh( v ); }
@@ -40,6 +41,7 @@ namespace scone
 		inline UpdateFunction make_update_function( const String& s ) {
 			switch ( xo::hash( s ) )
 			{
+			case "linear"_hash: return update_function( linear );
 			case "relu"_hash: return update_function( relu );
 			case "leaky_relu"_hash: return update_function( leaky_relu );
 			case "tanh"_hash: return update_function( tanh );
