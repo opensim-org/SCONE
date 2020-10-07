@@ -6,7 +6,7 @@
 # Requires `create-dmg` to bundle the dir up
 
 set -xeuo pipefail
-source ./tools/linux_config
+source ./tools/build_config
 
 # create-dmg fails if target already exists
 rm -f "${SCONE_BUILD_DIR}/SconeStudio.dmg"

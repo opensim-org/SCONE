@@ -5,10 +5,10 @@ set -xeuo pipefail
 try_clone_checkout() {
     url="${1}"
     ref="${2}"
-    
+
     dir=$(basename "${url}" | sed 's/.git$//')
 
-    echo "${0}: ${dir}: must be built from source for Linux builds"
+    echo "${0}: ${dir}: must be built from source builds"
     if [ ! -d "${dir}" ]; then
         git clone "${url}"
         cd "${dir}"
@@ -19,22 +19,6 @@ try_clone_checkout() {
     fi
 }
 
-
-# only install g++/gcc if the user hasn't already installed them
-# (e.g. because it's a fresh computer) AND the user hasn't specified a
-# custom compiler override (e.g. by setting CC/CXX to 'clang').
-if [[ -z "${CXX:-}" ]]; then
-    if ! command -v g++; then
-        system_dependencies+=(g++)
-    fi
-fi
-
-if [[ -z "${CC:-}" ]]; then
-    if ! command -v gcc; then
-        system_dependencies+=(gcc)
-    fi
-fi
-
 # if root is running this script then do not use `sudo` (some distros
 # do not supply it)
 if [[ "${UID}" == 0 ]]; then
@@ -43,24 +27,28 @@ else
     sudo='sudo'
 fi
 
+
+echo "installing brew dependencies"
 brew install qt5
 
-echo "installing fpm (used to create packages)"
-${sudo} gem install --no-document fpm
-
+echo "cloning non-submodule source dependencies"
 try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
 try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
+try_clone_checkout "https://github.com/create-dmg/create-dmg.git" "v1.0.8"
+
+echo "getting submodule dependencies"
+git submodule update --init --recursive
+
+
+echo "performing other hacks necessary to make SCONE compile on mac"
+
 # HACK: opensim3-scone needs this patch to compile on my laptop
 cd opensim3-scone
 git apply ../tools/patch-opensim3-scone || echo "could not apply patch: skipping"
 cd -
-try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
-
-echo "getting submodule dependencies"
-git submodule update --init --recursive
 
 # HACK: remove the jpeg plugin from openscenegraph, because
 # it doesn't compile on mac (API changed)
 sed -i -e 's/^[ ]*ADD_SUBDIRECTORY(jpeg)/# ADD_SUBDIRECTORY(jpeg)/' OpenSceneGraph/src/osgPlugins/CMakeLists.txt
 
-try_clone_checkout "https://github.com/create-dmg/create-dmg.git" "v1.0.8"

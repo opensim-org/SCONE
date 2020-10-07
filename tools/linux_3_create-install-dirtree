@@ -8,7 +8,7 @@
 # which will also install any dependencies).
 
 set -xeuo pipefail
-source ./tools/linux_config  # sets relevant envvar defaults
+source ./tools/build_config  # sets relevant envvar defaults
 
 base_dir="${SCONE_BUILD_DIR}/linux"
 install_dir="${base_dir}/opt/scone"

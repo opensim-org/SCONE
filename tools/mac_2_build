@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/linux_config
+source ./tools/build_config
 
 echo "${0}: starting OpenSceneGraph build"
 ./tools/mac_2a_build-osg

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/linux_config  # sets relevant envvar defaults
+source ./tools/build_config  # sets relevant envvar defaults
 
 mkdir -p "${SCONE_BUILD_DIR}"
 mkdir -p "${SCONE_INSTALL_DIR}"

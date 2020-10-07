@@ -40,7 +40,7 @@
 #      their `/Applications` dir.
 
 set -xeuo pipefail
-source ./tools/linux_config  # sets relevant envvar defaults
+source ./tools/build_config  # sets relevant envvar defaults
 
 base_dir="${SCONE_BUILD_DIR}/mac"
 app_dir="${SCONE_BUILD_DIR}/SconeStudio.app"

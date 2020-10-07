@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/linux_config  # sets relevant envvar defaults
+source ./tools/build_config  # sets relevant envvar defaults
 
 echo "${0}: starting OpenSceneGraph build"
 ./tools/linux_2a_build-osg
