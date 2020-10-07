@@ -81,15 +81,15 @@ namespace scone::NN
 		// update links and inter neurons
 		for ( index_t idx = 0; idx < links_.size(); ++idx )
 		{
-			auto& output_layer = neurons_[ idx + 1 ];
+			auto& target_layer = neurons_[ idx + 1 ];
 			for ( const auto& link_layer : links_[ idx ] )
 			{
-				auto& input_layer = neurons_[ link_layer.input_layer_ ];
+				auto& source_layer = neurons_[ link_layer.input_layer_ ];
 				for ( const auto& link : link_layer.links_ )
-					output_layer[ link.trg_idx_ ].input_ += link.weight_ * input_layer[ link.src_idx_ ].output_;
+					target_layer[ link.trg_idx_ ].input_ += link.weight_ * source_layer[ link.src_idx_ ].output_;
 			}
 
-			output_layer.update_outputs();
+			target_layer.update_outputs();
 		}
 
 		// update actuators with output neurons
@@ -169,9 +169,9 @@ namespace scone::NN
 	String NeuralNetworkController::GetNeuronName( index_t layer_idx, index_t neuron_idx ) const
 	{
 		if ( !sensor_links_.empty() && layer_idx == 0 )
-			return sensor_links_[ neuron_idx ].sensor_->GetName();
+			return sensor_links_.at( neuron_idx ).sensor_->GetName();
 		else if ( !motor_links_.empty() && layer_idx == neurons_.size() - 1 )
-			return motor_links_[ neuron_idx ].actuator_->GetName();
+			return motor_links_.at( neuron_idx ).actuator_->GetName();
 		else return neuron_names_[ layer_idx ][ neuron_idx ];
 	}
 
@@ -253,6 +253,12 @@ namespace scone::NN
 				AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof, RightSide ), neural_delays_[ dof_name ], 0 );
 			}
 			else AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof ), neural_delays_[ dof_name ], 0 );
+			break;
+		}
+		case "LegLoadSensors"_hash:
+		{
+			for ( const auto& leg : model.GetLegs() )
+				AddSensor( &model.AcquireDelayedSensor<LegLoadSensor>( *leg ), pn.get<double>( "delay" ), 0 );
 			break;
 		}
 		case "InterNeurons"_hash:
