@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/build_config  # sets relevant envvar defaults
+source ./tools/build_config
 
 echo "${0}: building openscenegraph"
 
@@ -13,10 +13,9 @@ cmake .. \
       -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
       -DUSE_RPATH=OFF \
       -DCMAKE_INSTALL_PREFIX="${OSG_INSTALL_PATH}" \
-      -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" \
       -DOSG_USE_QT=ON \
       -DDESIRED_QT_VERSION=5 \
+      -DCMAKE_CXX_FLAGS="-Wno-deprecated-declarations" \
       -DCMAKE_PREFIX_PATH="${QT5_BREW_PATH}/lib/cmake/Qt5Widgets/"
-make -j${NUM_BUILD_JOBS}
-make install
+cmake --build . --parallel "${NUM_BUILD_JOBS}" --target install
 cd -

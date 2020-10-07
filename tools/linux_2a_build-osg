@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/build_config  # sets relevant envvar defaults
+source ./tools/build_config
 
 echo "${0}: building openscenegraph"
 
@@ -12,9 +12,10 @@ cmake .. \
       -DCMAKE_BUILD_TYPE="${CMAKE_BUILD_TYPE}" \
       -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
       -DUSE_RPATH=OFF \
-      -DCMAKE_INSTALL_PREFIX="${OSG_INSTALL_PATH}"
-make -j$(nproc)
-make install
+      -DCMAKE_INSTALL_PREFIX="${OSG_INSTALL_PATH}" \
+      -DOSG_USE_QT=ON \
+      -DDESIRED_QT_VERSION=5
+cmake --build . --parallel "${NUM_BUILD_JOBS}" --target install
 
 # HACK: also package libpng, because the version can change in package
 # managers (e.g. the libpng12 --> libpng16 break for security reasons)
