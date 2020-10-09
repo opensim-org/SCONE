@@ -3,6 +3,17 @@
 set -xeuo pipefail
 source ./tools/build_config
 
+# setup platform-specific build flags
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    PLATFORM_SPECIFIC_FLAGS=(
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10
+        -DCMAKE_CXX_FLAGS="-stdlib=libc++"
+    )
+else
+    PLATFORM_SPECIFIC_FLAGS=(
+    )
+fi
+
 echo "${0}: building opensim3"
 
 mkdir -p "${OPENSIM3_INSTALL_PATH}"
