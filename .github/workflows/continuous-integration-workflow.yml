@@ -46,7 +46,7 @@ jobs:
       run: cd $GITHUB_WORKSPACE && ./tools/unix_2c_build-opensim3
 
     - name: Build SCONE
-      run: cd $GITHUB_WORKSPACE && ./tools/mac_2d_build-scone
+      run: cd $GITHUB_WORKSPACE && ./tools/unix_2d_build-scone
 
     - name: Rearrange SCONE into portable install dir
       run: cd $GITHUB_WORKSPACE && ./tools/mac_3_create-install-dirtree
@@ -118,7 +118,7 @@ jobs:
 
 
     - name: Build SCONE
-      run: cd $GITHUB_WORKSPACE && ./tools/linux_2d_build-scone
+      run: cd $GITHUB_WORKSPACE && ./tools/unix_2d_build-scone
 
 
     - name: Rearrange binaries into single dir

@@ -18,5 +18,5 @@ find "${SIMBODY_INSTALL_PATH}" -maxdepth 2 -mindepth 1
 find "${OPENSIM3_INSTALL_PATH}" -maxdepth 2 -mindepth 1
 
 echo "${0}: all dependencies built: building SCONE"
-./tools/mac_2d_build-scone
+./tools/unix_2d_build-scone
 
