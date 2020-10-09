@@ -272,7 +272,7 @@ namespace scone::NN
 			auto& neuron_names = neuron_names_[ layer_idx ];
 			if ( auto neurons = pn.try_get<index_t>( "neurons" ) )
 			{
-				neuron_names.reserve( *neurons * 2 );
+				neuron_names.reserve( neuron_names.size() + *neurons * 2 );
 				for ( auto s : { LeftSide, RightSide } )
 					for ( index_t idx = 0; idx < *neurons; ++idx )
 						neuron_names.emplace_back( xo::stringf( "I%d_%d_%c", layer_idx, idx, s == LeftSide ? 'l' : 'r' ) );
@@ -280,20 +280,21 @@ namespace scone::NN
 			else if ( const auto names = pn.try_get<String>( "names" ) )
 			{
 				auto base_names = xo::split_str( *names, " ;," );
-				neuron_names.reserve( base_names.size() * 2 );
+				neuron_names.reserve( neuron_names.size() + base_names.size() * 2 );
 				for ( auto s : { LeftSide, RightSide } )
 					for ( const auto& name : base_names )
 						neuron_names.emplace_back( name + GetSideName( s ) );
 			}
 
-			// neuron count is based on names
+			// neuron names are set at this point, and used for counting
 			const auto neurons = neuron_names.size();
 			const auto& offset = pn.get_child( "offset" );
+			auto start_idx = layer.size();
 			layer.resize( neurons );
-			for ( index_t idx = 0; idx < neurons; ++idx )
+			for ( index_t idx = start_idx; idx < neurons; ++idx )
 			{
-				// #perf: avoid the copy by having GetNeuronName return refs
-				String neuronname = GetNeuronName( layer_idx, idx );
+				// we can use a const ref here because interneuron names are always stored internally
+				const String& neuronname = neuron_names[ idx ];
 				String parname = ( symmetric ? GetNameNoSide( neuronname ) : neuronname ) + ".C0";
 				layer[ idx ].offset_ = par.get( parname, offset );
 			}
