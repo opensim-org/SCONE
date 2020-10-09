@@ -8,7 +8,7 @@ echo "${0}: getting build dependencies"
 ./tools/mac_1_get-dependencies
 
 echo "${0}: building binaries"
-./tools/mac_2_build
+./tools/unix_2_build
 
 echo "${0}: packaging binaries + assets into a directory"
 ./tools/mac_3_create-install-dirtree
