@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
-source ./tools/build_config  # sets relevant envvar defaults
+source ./tools/build_config
 
 echo "${0}: building opensim3"
 
@@ -13,9 +13,6 @@ cmake .. \
       -DCMAKE_VERBOSE_MAKEFILE="${CMAKE_VERBOSE_MAKEFILE}" \
       -DSIMBODY_HOME="${SIMBODY_INSTALL_PATH}" \
       -DCMAKE_INSTALL_PREFIX="${OPENSIM3_INSTALL_PATH}" \
-      -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10
- #     -DCMAKE_CXX_FLAGS="-stdlib=libc++"
-make -j${NUM_BUILD_JOBS}
-make install
-# TODO: chmod +x opensim3-scone/install/lib/*.dylib
+      ${PLATFORM_SPECIFIC_FLAGS[@]}
+cmake --build . --parallel ${NUM_BUILD_JOBS} --target install
 cd -

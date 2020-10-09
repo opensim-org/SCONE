@@ -161,48 +161,13 @@ find "${OSG_INSTALL_PATH}/" -name "*.so" -exec cp -a {} "${lib_dir}" \;
 # The reason `macdeployqt` is used, rather than (e.g.) manually copying it is
 # because `macdeployqt` also strips out any absolute paths to Qt and replaces
 # them with relative paths, so that mac's dylib can find them.
-
-
-# copy Qt5 frameworks SCONE uses into Contents/Frameworks. Fix the sconestudio
-# binary to be able to find those frameworks, rather than using the system-wide
-# absolute path it's built with (why? fuck knows, maybe because Qt5 gets a
-# payday from static linking). This process is adapted from:
 #
 # https://doc.qt.io/qt-5/macos-deployment.html
-#frameworks_dir="${app_dir}/Frameworks/"
-#mkdir -p "${frameworks_dir}"
-
-#bins_to_fix=(
-#    "${app_dir}/Contents/MacOS/bin/sconestudio"
-#    "${app_dir}/Contents/MacOS/lib/libosgQt.3.4.1.dylib"
-#)
-
-${QT5_BREW_PATH}/bin/macdeployqt ${app_dir} -verbose=2 -no-strip -executable=${app_dir}/Contents/MacOS/bin/sconestudio
-
-#for bin in ${bins_to_fix[@]}; do
-#    for qt_framework in QtOpenGL QtPrintSupport QtWidgets QtGui QtCore; do
-#        libs=$(otool -L "${bin}")
-#        if ! [[ "${libs}" =~ "${qt_framework}" ]] ; then continue; fi
-#
-#        path_in_bin=$(echo "${libs}" | grep "${qt_framework}" | awk '{print $1}')
-#        framework_dir=$(echo "${path_in_bin}" | grep -o ".*.framework")
-#        framework_onwards=$(echo "${path_in_bin}" | sed 's/.*\/\([^\/]*.framework.*\)/\1/g')
-#        echo "${framework_onwards}"
-
- #       # copy the framework into the package
-#        rsync -av "${framework_dir}" "${frameworks_dir}"
-
-        # add new ID into the library (don't ask why)
- #       id_name="@executable_path/../../../Frameworks/${framework_onwards}"
- #       lib_path="${frameworks_dir}${framework_onwards}"
-
- #       chmod 777 "${lib_path}"
- #       install_name_tool -id "${id_name}" "${lib_path}"
- #       chmod 655 "${lib_path}"
-        # and change the old (absolute) dylib path to the packaged framework
- #       install_name_tool -change "${path_in_bin}" "${id_name}" "${bin}"
- #   done
-# done
+${QT5_BREW_PATH}/bin/macdeployqt \
+    ${app_dir} \
+    -verbose=2 \
+    -no-strip \
+    -executable=${app_dir}/Contents/MacOS/bin/sconestudio
 
 # copy resources (icons etc.)
 
