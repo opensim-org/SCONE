@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -xeuo pipefail
+source ./tools/build_config
 
 general_deps=(
     git
@@ -40,24 +41,6 @@ all_deps=(
     "${simbody_build_deps[@]}"
     "${scone_build_deps[@]}"
 )
-
-
-try_clone_checkout() {
-    url="${1}"
-    ref="${2}"
-
-    dir=$(basename "${url}" | sed 's/.git$//')
-
-    echo "${0}: ${dir}: must be built from source for Linux builds"
-    if [ ! -d "${dir}" ]; then
-        git clone "${url}"
-        cd "${dir}"
-        git checkout "${ref}"
-        cd -
-    else
-        echo "${0}: ${dir}: already exists: skipping clone"
-    fi
-}
 
 # if root is running this script then do not use `sudo` (some distros
 # do not supply it)

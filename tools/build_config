@@ -12,6 +12,24 @@ num_processors() {
     fi
 }
 
+# helper: try to clone a repository, if it doesn't already exist locally
+try_clone_checkout() {
+    url="${1}"
+    ref="${2}"
+
+    dir=$(basename "${url}" | sed 's/.git$//')
+
+    echo "${0}: ${dir}: must be built from source for Linux builds"
+    if [ ! -d "${dir}" ]; then
+        git clone "${url}"
+        cd "${dir}"
+        git checkout "${ref}"
+        cd -
+    else
+        echo "${0}: ${dir}: already exists: skipping clone"
+    fi
+}
+
 # scone project directory
 export PROJECT_DIR=${PWD}
 
