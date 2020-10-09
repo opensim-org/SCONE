@@ -33,7 +33,7 @@ brew install qt5
 
 echo "cloning non-submodule source dependencies"
 try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
-try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "de8ebaed846e"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "master"
 try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
 try_clone_checkout "https://github.com/create-dmg/create-dmg.git" "v1.0.8"
 
