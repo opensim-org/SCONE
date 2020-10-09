@@ -4,7 +4,7 @@ set -xeuo pipefail
 source ./tools/build_config
 
 echo "${0}: starting OpenSceneGraph build"
-./tools/linux_2a_build-osg
+./tools/unix_2a_build-osg
 
 echo "${0}: starting simbody build"
 ./tools/unix_2b_build-simbody
