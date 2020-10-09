@@ -27,7 +27,6 @@ else
     sudo='sudo'
 fi
 
-
 echo "installing brew dependencies"
 brew install qt5
 
@@ -42,11 +41,6 @@ git submodule update --init --recursive
 
 
 echo "performing other hacks necessary to make SCONE compile on mac"
-
-# HACK: opensim3-scone needs this patch to compile on my laptop
-cd opensim3-scone
-git apply ../tools/patch-opensim3-scone || echo "could not apply patch: skipping"
-cd -
 
 # HACK: remove the jpeg plugin from openscenegraph, because
 # it doesn't compile on mac (API changed)
