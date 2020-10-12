@@ -35,6 +35,6 @@ namespace scone
 
 	String NoiseController::GetClassSignature() const
 	{
-		return stringf( "N%02d", static_cast<int>( 100 * proportional_noise ) );
+		return stringf( "N%02d", xo::round_cast<int>( 100 * proportional_noise ) );
 	}
 }
