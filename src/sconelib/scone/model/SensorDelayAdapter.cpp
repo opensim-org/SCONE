@@ -28,17 +28,17 @@ namespace scone
 	SensorDelayAdapter::~SensorDelayAdapter()
 	{}
 
-	scone::Real SensorDelayAdapter::GetValue() const
+	Real SensorDelayAdapter::GetValue() const
 	{
 		return GetValue( m_Delay );
 	}
 
-	scone::Real SensorDelayAdapter::GetValue( Real delay ) const
+	Real SensorDelayAdapter::GetValue( Real delay ) const
 	{
 		return m_Model.GetSensorDelayStorage().GetInterpolatedValue( m_Model.GetTime() - delay * m_Model.sensor_delay_scaling_factor, m_StorageIdx );
 	}
 
-	scone::Real SensorDelayAdapter::GetAverageValue( int delay_samples, int window_size ) const
+	Real SensorDelayAdapter::GetAverageValue( int delay_samples, int window_size ) const
 	{
 		auto& sto = m_Model.GetSensorDelayStorage();
 		auto history_begin = xo::max( 0, (int)sto.GetFrameCount() - delay_samples - window_size / 2 );
@@ -57,7 +57,7 @@ namespace scone
 		storage.Back()[ m_StorageIdx ] = m_InputSensor.GetValue();
 	}
 
-	scone::String SensorDelayAdapter::GetName() const
+	String SensorDelayAdapter::GetName() const
 	{
 		return m_InputSensor.GetName();
 	}
