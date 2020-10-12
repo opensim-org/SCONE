@@ -12,6 +12,7 @@
 #include "scone/core/types.h"
 #include "scone/core/Vec3.h"
 #include "scone/model/Side.h"
+#include "xo/numerical/bounds.h"
 
 #if defined(_MSC_VER)
 #	pragma warning( push )
@@ -194,14 +195,29 @@ namespace scone
 
 	struct SCONE_API BodyOriVelSensor : public Sensor
 	{
-		BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side );
+		BodyOriVelSensor( const Body& body, const Vec3& dir, double kv, const String& postfix, Side side, double target = 0.0 );
 		virtual String GetName() const override { return name_; }
 		virtual Real GetValue() const override;
 		const Body& body_;
 		const double kv_;
 		const Vec3 dir_;
 		const String name_;
+		const double target_;
 	};
+
+	struct SCONE_API ModulatedSensor : public Sensor
+	{
+		ModulatedSensor( const Sensor& sensor, const Sensor& modulator, double gain, double ofs, const String& name, xo::boundsd mod_range = { 0.0, 1.0 } );
+		virtual String GetName() const override { return name_; }
+		virtual Real GetValue() const override;
+		const Sensor& sensor_;
+		const Sensor& modulator_;
+		double gain_;
+		double ofs_;
+		String name_;
+		xo::boundsd mod_range_;
+	};
+
 }
 
 #if defined(_MSC_VER)
