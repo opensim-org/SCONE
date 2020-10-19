@@ -525,7 +525,6 @@ void SconeStudio::openFile( const QString& filename )
 	{
 		QCodeEditor* edw = new QCodeEditor( this );
 		edw->open( filename );
-		edw->setFocus();
 		int idx = ui.tabWidget->addTab( edw, edw->getTitle() );
 		ui.tabWidget->setCurrentIndex( idx );
 		connect( edw, &QCodeEditor::modificationChanged, this, &SconeStudio::updateTabTitles );
@@ -782,6 +781,7 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 
 		if ( createScenario( s->fileName ) )
 		{
+			s->setFocus();
 			if ( LogUnusedProperties( scenario_->GetScenarioProps() ) )
 			{
 				QString message = "Invalid scenario settings in " + scenario_->GetScenarioFileName() + ":\n\n";
