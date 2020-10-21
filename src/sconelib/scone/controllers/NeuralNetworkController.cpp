@@ -357,7 +357,10 @@ namespace scone::NN
 		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
 		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
 		auto input_type = pn.try_get<String>( "type" );
-		const auto same_side = pn.get<bool>( "same_side", true );
+
+		const auto contralateral = pn.get<bool>( "contralateral", false );
+		const auto ipsilateral = pn.get<bool>( "ipsilateral", !contralateral );
+
 		const auto same_name = pn.get<bool>( "same_name", false );
 		const auto normalize = pn.get<bool>( "normalize", false );
 		auto begin_link = link_layer.links_.size();
@@ -382,8 +385,10 @@ namespace scone::NN
 				auto src_side = GetSideFromName( source_name );
 				auto trg_side = GetSideFromName( target_name );
 
-				if ( same_side && !src_side == NoSide && src_side != trg_side )
+				if ( ipsilateral && !src_side == NoSide && src_side != trg_side )
 					continue; // neuron not on same side
+				if ( contralateral && src_side == trg_side )
+					continue; // neuron not on opposite side
 
 				if ( same_name && GetNameNoSide( source_name ) != GetNameNoSide( target_name) )
 					continue;
