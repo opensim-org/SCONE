@@ -16,8 +16,6 @@
 #include "scone/model/MuscleId.h"
 #include "scone/core/profiler_config.h"
 
-#include <algorithm>
-
 namespace scone::NN
 {
 	struct linear { static double update( const double v ) { return v; } };
