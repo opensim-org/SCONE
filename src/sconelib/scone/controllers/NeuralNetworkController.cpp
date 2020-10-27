@@ -1,6 +1,10 @@
 #include "NeuralNetworkController.h"
 
 #include "xo/string/string_tools.h"
+#include "xo/utility/irange.h"
+#include "xo/utility/hash.h"
+#include "xo/utility/factory.h"
+
 #include "scone/core/Log.h"
 #include "scone/model/Model.h"
 #include "scone/model/Muscle.h"
@@ -8,15 +12,35 @@
 #include "scone/model/SensorDelayAdapter.h"
 #include "scone/model/Actuator.h"
 #include "scone/model/Sensors.h"
-#include "xo/utility/irange.h"
 #include "scone/core/HasName.h"
 #include "scone/model/MuscleId.h"
-#include "xo/utility/hash.h"
 #include "scone/core/profiler_config.h"
+
 #include <algorithm>
 
 namespace scone::NN
 {
+	struct linear { static double update( const double v ) { return v; } };
+	struct relu { static double update( const double v ) { return std::max( 0.0, v ); } };
+	struct leaky_relu { static double update( const double v ) { return v >= 0.0 ? v : 0.01 * v; } };
+	struct tanh { static double update( const double v ) { return std::tanh( v ); } };
+	struct tanh_norm { static double update( const double v ) { return 0.5 * std::tanh( 2.0 * v - 1.0 ) + 0.5; } };
+	struct tanh_norm_01 { static double update( const double v ) { return 0.495 * std::tanh( 2.0 * v - 1.0 ) + 0.505; } };
+
+	using OutputUpdaterFactory = xo::factory<OutputUpdater, const PropNode&>;
+	u_ptr<OutputUpdater> make_update_function( const String& s )
+	{
+		static OutputUpdaterFactory fac = OutputUpdaterFactory()
+			.register_type<BasicOutputUpdater<linear>>( "linear" )
+			.register_type<BasicOutputUpdater<relu>>( "relu" )
+			.register_type<BasicOutputUpdater<leaky_relu>>( "leaky_relu" )
+			.register_type<BasicOutputUpdater<tanh>>( "tanh" )
+			.register_type<BasicOutputUpdater<tanh_norm>>( "tanh_norm" )
+			.register_type<BasicOutputUpdater<tanh_norm_01>>( "tanh_norm_01" );
+
+		return fac.create( s, PropNode() );
+	}
+
 	NeuralNetworkController::NeuralNetworkController( const PropNode& pn, Params& par, Model& model, const Location& area ) :
 		Controller( pn, par, model, area ),
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
@@ -40,9 +64,8 @@ namespace scone::NN
 
 	NeuronLayer& NeuralNetworkController::AddNeuronLayer( index_t layer )
 	{
-		neurons_.resize( std::max( neurons_.size(), layer + 1 ) );
-		neuron_names_.resize( neurons_.size() );
-		return neurons_[ layer ];
+		layers_.resize( std::max( layers_.size(), layer + 1 ) );
+		return layers_[ layer ];
 	}
 
 	LinkLayer& NeuralNetworkController::AddLinkLayer( index_t input_layer, index_t output_layer )
@@ -54,15 +77,19 @@ namespace scone::NN
 
 	Neuron& NeuralNetworkController::AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset )
 	{
+		SCONE_ERROR_IF( layers_.empty(), "No SensorNeuron layer defined" );
 		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor->GetInputSensor() );
-		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, neurons_.front().size(), ms ? &ms->muscle_ : nullptr } );
-		return neurons_.front().emplace_back( offset );
+		auto& layer = layers_.front();
+		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, layer.neurons_.size(), ms ? &ms->muscle_ : nullptr } );
+		return layer.neurons_.emplace_back( offset );
 	}
 
 	Neuron& NeuralNetworkController::AddActuator( Actuator* actuator, double offset )
 	{
-		motor_links_.push_back( MotorNeuronLink{ actuator, neurons_.back().size(), dynamic_cast<Muscle*>( actuator ) } );
-		return neurons_.back().emplace_back( offset );
+		SCONE_ERROR_IF( motor_layer_ == no_index, "No MotorNeuron layer defined" );
+		auto& layer = layers_[ motor_layer_ ];
+		motor_links_.push_back( MotorNeuronLink{ actuator, layer.neurons_.size(), dynamic_cast<Muscle*>( actuator ) } );
+		return layer.neurons_.emplace_back( offset );
 	}
 
 	bool NeuralNetworkController::ComputeControls( Model& model, double timestamp )
@@ -70,47 +97,49 @@ namespace scone::NN
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		// clear neuron inputs
-		for ( auto& layer : neurons_ )
-			for ( auto& n : layer )
+		for ( auto& layer : layers_ )
+			for ( auto& n : layer.neurons_ )
 				n.input_ = 0.0;
 
 		// update sensor neurons with sensor values
-		for ( const auto& sn : sensor_links_ )
-			neurons_.front()[ sn.neuron_idx_ ].output_ = sn.sensor_->GetValue( sn.delay_ ) + neurons_.front()[ sn.neuron_idx_ ].offset_;
+		auto& sensor_neurons = layers_.front().neurons_;
+		for ( const auto& sl : sensor_links_ )
+			sensor_neurons[ sl.neuron_idx_ ].output_ = sl.sensor_->GetValue( sl.delay_ ) + sensor_neurons[ sl.neuron_idx_ ].offset_;
 
 		// update links and inter neurons
 		for ( index_t idx = 0; idx < links_.size(); ++idx )
 		{
-			auto& target_layer = neurons_[ idx + 1 ];
+			auto& target_layer = layers_[ idx + 1 ];
 			for ( const auto& link_layer : links_[ idx ] )
 			{
-				auto& source_layer = neurons_[ link_layer.input_layer_ ];
+				auto& source_layer = layers_[ link_layer.input_layer_ ];
 				for ( const auto& link : link_layer.links_ )
-					target_layer[ link.trg_idx_ ].input_ += link.weight_ * source_layer[ link.src_idx_ ].output_;
+					target_layer.neurons_[ link.trg_idx_ ].input_ += link.weight_ * source_layer.neurons_[ link.src_idx_ ].output_;
 			}
 
 			target_layer.update_outputs();
 		}
 
 		// update actuators with output neurons
-		for ( auto& mn : motor_links_ )
-			mn.actuator_->AddInput( neurons_.back()[ mn.neuron_idx_ ].output_ );
+		auto& motor_neurons = layers_[ motor_layer_ ].neurons_;
+		for ( auto& ml : motor_links_ )
+			ml.actuator_->AddInput( motor_neurons[ ml.neuron_idx_ ].output_ );
 
 		return false;
 	}
 
 	void NeuralNetworkController::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
-		for ( auto lidx : xo::size_range( neurons_ ) )
-			for ( auto nidx : xo::size_range( neurons_[ lidx ] ) )
-				frame[ GetNeuronName( lidx, nidx ) ] = neurons_[ lidx ][ nidx ].output_;
+		for ( auto lidx : xo::size_range( layers_ ) )
+			for ( auto nidx : xo::size_range( layers_[ lidx ].neurons_ ) )
+				frame[ GetNeuronName( lidx, nidx ) ] = layers_[ lidx ].neurons_[ nidx ].output_;
 	}
 
 	PropNode NeuralNetworkController::GetInfo() const
 	{
 		PropNode pn;
 		for ( const auto& sn : sensor_links_ )
-			pn[ sn.sensor_->GetName() ] = neurons_.front()[ sn.neuron_idx_ ].offset_;
+			pn[ sn.sensor_->GetName() ] = layers_.front().neurons_[ sn.neuron_idx_ ].offset_;
 
 		for ( const auto& il : links_.front().front().links_ )
 		{
@@ -122,7 +151,7 @@ namespace scone::NN
 		}
 
 		for ( const auto& mn : motor_links_ )
-			pn[ mn.actuator_->GetName() ] = neurons_.back()[ mn.neuron_idx_ ].offset_;
+			pn[ mn.actuator_->GetName() ] = layers_[ motor_layer_ ].neurons_[ mn.neuron_idx_ ].offset_;
 
 		return pn;
 	}
@@ -170,9 +199,9 @@ namespace scone::NN
 	{
 		if ( !sensor_links_.empty() && layer_idx == 0 )
 			return sensor_links_.at( neuron_idx ).sensor_->GetName();
-		else if ( !motor_links_.empty() && layer_idx == neurons_.size() - 1 )
+		else if ( !motor_links_.empty() && layer_idx == layers_.size() - 1 )
 			return motor_links_.at( neuron_idx ).actuator_->GetName();
-		else return neuron_names_[ layer_idx ][ neuron_idx ];
+		else return layers_[ layer_idx ].names_[ neuron_idx ];
 	}
 
 	void NeuralNetworkController::CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model )
@@ -282,13 +311,13 @@ namespace scone::NN
 		}
 		case "InterNeurons"_hash:
 		{
-			const auto layer_idx = pn.get<index_t>( "layer", neurons_.size() );
+			const auto layer_idx = pn.get<index_t>( "layer", layers_.size() );
 			auto& layer = AddNeuronLayer( layer_idx );
 			layer.update_func_ = make_update_function( pn.get<String>( "activation", "leaky_relu" ) );
 			const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 
 			// set names of interneurons
-			auto& neuron_names = neuron_names_[ layer_idx ];
+			auto& neuron_names = layer.names_;
 			if ( auto neurons = pn.try_get<index_t>( "neurons" ) )
 			{
 				neuron_names.reserve( neuron_names.size() + *neurons * 2 );
@@ -308,20 +337,22 @@ namespace scone::NN
 			// neuron names are set at this point, and used for counting
 			const auto neurons = neuron_names.size();
 			const auto& offset = pn.get_child( "offset" );
-			auto start_idx = layer.size();
-			layer.resize( neurons );
+			auto start_idx = layer.neurons_.size();
+			layer.neurons_.resize( neurons );
 			for ( index_t idx = start_idx; idx < neurons; ++idx )
 			{
 				// we can use a const ref here because interneuron names are always stored internally
 				const String& neuronname = neuron_names[ idx ];
 				String parname = ( symmetric ? GetNameNoSide( neuronname ) : neuronname ) + ".C0";
-				layer[ idx ].offset_ = par.get( parname, offset );
+				layer.neurons_[ idx ].offset_ = par.get( parname, offset );
 			}
 			break;
 		}
 		case "MotorNeurons"_hash:
 		{
-			auto& layer = AddNeuronLayer( pn.get<index_t>( "layer" ) );
+			SCONE_ERROR_IF( motor_layer_ != no_index, "MotorNeurons already defined" );
+			motor_layer_ = pn.get<index_t>( "layer" );
+			auto& layer = AddNeuronLayer( motor_layer_ );
 			const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", false ); // defaults to false for back comp
 			const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 			layer.update_func_ = make_update_function( pn.get<String>( "activation", "relu" ) );
@@ -349,9 +380,9 @@ namespace scone::NN
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
 		auto input_layer_idx = pn.get<index_t>( "input_layer", 0 );
-		auto output_layer_idx = pn.get<index_t>( "output_layer", neurons_.size() - 1 );
+		auto output_layer_idx = pn.get<index_t>( "output_layer", layers_.size() - 1 );
 		auto& link_layer = AddLinkLayer( input_layer_idx, output_layer_idx );
-		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == neurons_.size() - 1;
+		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == layers_.size() - 1;
 		const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
 		const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
 		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
@@ -366,13 +397,13 @@ namespace scone::NN
 		auto begin_link = link_layer.links_.size();
 
 		xo::flat_map<index_t, size_t> target_link_count;
-		for ( auto target_neuron_idx : xo::irange( neurons_[ output_layer_idx ].size() ) )
+		for ( auto target_neuron_idx : xo::irange( layers_[ output_layer_idx ].neurons_.size() ) )
 		{
 			const auto target_name = GetNeuronName( output_layer_idx, target_neuron_idx );
 			if ( output_include && !output_include->match( target_name ) )
 				continue; // skip, not part of output pattern
 
-			for ( auto source_neuron_idx : xo::irange( neurons_[ input_layer_idx ].size() ) )
+			for ( auto source_neuron_idx : xo::irange( layers_[ input_layer_idx ].neurons_.size() ) )
 			{
 				const auto source_name_full = GetNeuronName( input_layer_idx, source_neuron_idx );
 				if ( input_include && !input_include->match( source_name_full ) )
