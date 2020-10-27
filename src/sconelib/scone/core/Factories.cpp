@@ -47,9 +47,9 @@
 #include "scone/optimization/SimilarityObjective.h"
 #include "scone/optimization/SimulationObjective.h"
 #include "scone/optimization/TestObjective.h"
+#include "scone/controllers/NeuralNetworkController.h"
 #include "xo/filesystem/filesystem.h"
 #include "xo/string/string_tools.h"
-#include "scone/controllers/NeuralNetworkController.h"
 
 #define SCONE_WRAP_EXCEPTION( _func_, _msg_ ) \
 try { _func_; } catch( std::exception& e ) { SCONE_ERROR( _msg_ + std::string( ":\n   " ) + xo::replace_str( e.what(), "\n", "\n   " ) ); }
