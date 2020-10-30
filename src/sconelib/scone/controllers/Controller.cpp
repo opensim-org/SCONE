@@ -18,6 +18,13 @@ namespace scone
 		INIT_PROP( props, disabled_, false );
 		INIT_PAR( props, par, start_time, 0.0 );
 		INIT_PAR( props, par, stop_time, 0.0 );
+
+		// add custom parameters
+		if ( auto par_pn = props.try_get_child( "Parameters" ) )
+		{
+			for ( auto& [key, value] : *par_pn )
+				par.get( key, value );
+		}
 	}
 
 	Controller::~Controller()
