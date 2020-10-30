@@ -3,7 +3,6 @@
 #include "Controller.h"
 #include "xo/utility/handle.h"
 #include "xo/container/handle_vector.h"
-#include <functional>
 #include "xo/utility/hash.h"
 
 namespace scone
@@ -11,51 +10,61 @@ namespace scone
 	namespace NN
 	{
 		struct Neuron {
-			Neuron() : input_(), offset_(), output_() {}
-			Neuron( double offset ) : input_(), offset_( offset ), output_() {}
+			Neuron() : input_(), offset_(), sum_(), output_() {}
+			Neuron( double offset ) : input_(), offset_( offset ), sum_(), output_() {}
 			double input_;
 			double offset_;
+			double sum_;
 			double output_;
 		};
 
-		using UpdateFunction = std::function<void( std::vector<Neuron>& )>;
-
-		struct NeuronLayer : public std::vector<Neuron> {
-			void update_outputs() { update_func_( *this ); }
-			UpdateFunction update_func_;
+		struct OutputUpdater {
+			OutputUpdater( const PropNode& pn ) {}
+			virtual ~OutputUpdater() = default;
+			virtual void Update( std::vector<Neuron>&, const double dt ) = 0;
 		};
 
-		inline double linear( const double v ) { return v; }
-		inline double relu( const double v ) { return std::max( 0.0, v ); }
-		inline double leaky_relu( const double v ) { return v >= 0.0 ? v : 0.01 * v; }
-		inline double tanh( const double v ) { return std::tanh( v ); }
-		inline double tanh_norm( const double v ) { return 0.5 * std::tanh( 2.0 * v - 1.0 ) + 0.5; }
-		inline double tanh_norm_01( const double v ) { return 0.495 * std::tanh( 2.0 * v - 1.0 ) + 0.505; }
-
-		// #perf #todo: check in compiler explorer if this inlines properly
 		template< typename F >
-		UpdateFunction update_function( F act ) {
-			return [=]( std::vector<Neuron>& nv ) { for ( auto& n : nv ) n.output_ = act( n.input_ + n.offset_ ); };
-		}
-
-		inline UpdateFunction make_update_function( const String& s ) {
-			switch ( xo::hash( s ) )
-			{
-			case "linear"_hash: return update_function( linear );
-			case "relu"_hash: return update_function( relu );
-			case "leaky_relu"_hash: return update_function( leaky_relu );
-			case "tanh"_hash: return update_function( tanh );
-			case "tanh_norm"_hash: return update_function( tanh_norm );
-			case "tanh_norm_01"_hash: return update_function( tanh_norm_01 );
-			default: SCONE_ERROR( "Unknown activation function: " + s );
+		struct BasicOutputUpdater : public OutputUpdater {
+			BasicOutputUpdater( const PropNode& pn ) : OutputUpdater( pn ) {}
+			virtual void Update( std::vector<Neuron>& nv, const double dt ) override {
+				for ( auto& n : nv )
+					n.output_ = F::update( n.input_ + n.offset_ );
 			}
-		}
+		};
+
+		template< typename F >
+		struct DynamicOutputUpdater : public OutputUpdater {
+			DynamicOutputUpdater( const PropNode& pn ) :
+				OutputUpdater( pn ),
+				deact_rate_( pn.get<float>( "deact_rate" ) ),
+				act_rate_( pn.get<float>( "act_rate" ) )
+			{}
+
+			DynamicOutputUpdater( double act_rate, double deact_rate, double dt ) {}
+			virtual void Update( std::vector<Neuron>& nv, const double dt ) override {
+				for ( auto& n : nv ) {
+					auto ds = n.input_ + n.offset_ - n.sum_;
+					n.sum_ += dt * ds * ( ds > 0 ? act_rate_ : deact_rate_ );
+					n.output_ = F::update( n.sum_ );
+				}
+			}
+			double act_rate_, deact_rate_;
+		};
+
+		struct NeuronLayer {
+			std::vector<Neuron> neurons_;
+			std::vector<String> names_;
+			u_ptr<OutputUpdater> update_func_;
+			index_t layer_idx_ = no_index;
+		};
 
 		struct Link {
 			index_t src_idx_;
 			index_t trg_idx_;
 			double weight_ = 0;
 		};
+
 		struct LinkLayer
 		{
 			LinkLayer( index_t input_layer ) : input_layer_( input_layer ) {}
@@ -94,14 +103,14 @@ namespace scone
 			String GetClassSignature() const override;
 
 		private:
-			NeuronLayer& AddNeuronLayer( index_t layer );
+			NeuronLayer& AddNeuronLayer( const PropNode& pn, const String& default_activation );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
 			Neuron& AddActuator( Actuator* actuator, double offset );
 			const String& GetParAlias( const String& name );
 			String GetParName( const String& name, bool ignore_muscle_lines, bool symmetric );
 			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines, bool symmetric );
-			String GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
+			const String& GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
 
 			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
@@ -110,10 +119,10 @@ namespace scone
 			const xo::flat_map<String, String> parameter_aliases_;
 
 			std::vector<SensorNeuronLink> sensor_links_;
-			std::vector<NeuronLayer> neurons_;
-			std::vector< std::vector< String > > neuron_names_;
+			std::vector<NeuronLayer> layers_;
 			std::vector< std::vector< LinkLayer > > links_;
 			std::vector<MotorNeuronLink> motor_links_;
+			index_t motor_layer_ = no_index;
 		};
 	}
 }
