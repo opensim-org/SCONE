@@ -21,13 +21,13 @@ namespace scone
 		struct OutputUpdater {
 			OutputUpdater( const PropNode& pn ) {}
 			virtual ~OutputUpdater() = default;
-			virtual void Update( std::vector<Neuron>& ) = 0;
+			virtual void Update( std::vector<Neuron>&, const double dt ) = 0;
 		};
 
 		template< typename F >
 		struct BasicOutputUpdater : public OutputUpdater {
 			BasicOutputUpdater( const PropNode& pn ) : OutputUpdater( pn ) {}
-			virtual void Update( std::vector<Neuron>& nv ) override {
+			virtual void Update( std::vector<Neuron>& nv, const double dt ) override {
 				for ( auto& n : nv )
 					n.output_ = F::update( n.input_ + n.offset_ );
 			}
@@ -35,24 +35,28 @@ namespace scone
 
 		template< typename F >
 		struct DynamicOutputUpdater : public OutputUpdater {
-			DynamicOutputUpdater( const PropNode& pn ) : OutputUpdater( pn ) {}
+			DynamicOutputUpdater( const PropNode& pn ) :
+				OutputUpdater( pn ),
+				deact_rate_( pn.get<float>( "deact_rate" ) ),
+				act_rate_( pn.get<float>( "act_rate" ) )
+			{}
+
 			DynamicOutputUpdater( double act_rate, double deact_rate, double dt ) {}
-			virtual void Update( std::vector<Neuron>& nv ) override {
+			virtual void Update( std::vector<Neuron>& nv, const double dt ) override {
 				for ( auto& n : nv ) {
-					auto sum_new = n.input_ + n.offset_;
-					auto sum_dot = ( sum_new - n.sum_ ) * ( c1_ * sum_new + c2_ );
-					n.sum_ += dt_ * sum_dot;
+					auto ds = n.input_ + n.offset_ - n.sum_;
+					n.sum_ += dt * ds * ( ds > 0 ? act_rate_ : deact_rate_ );
 					n.output_ = F::update( n.sum_ );
 				}
 			}
-			double c1_, c2_, dt_;
+			double act_rate_, deact_rate_;
 		};
 
 		struct NeuronLayer {
 			std::vector<Neuron> neurons_;
 			std::vector<String> names_;
 			u_ptr<OutputUpdater> update_func_;
-			void update_outputs() { update_func_->Update( neurons_ ); }
+			index_t layer_idx_ = no_index;
 		};
 
 		struct Link {
@@ -99,14 +103,14 @@ namespace scone
 			String GetClassSignature() const override;
 
 		private:
-			NeuronLayer& AddNeuronLayer( index_t layer );
+			NeuronLayer& AddNeuronLayer( const PropNode& pn, const String& default_activation );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
 			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
 			Neuron& AddActuator( Actuator* actuator, double offset );
 			const String& GetParAlias( const String& name );
 			String GetParName( const String& name, bool ignore_muscle_lines, bool symmetric );
 			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines, bool symmetric );
-			String GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
+			const String& GetNeuronName( index_t layer_idx, index_t neuron_idx ) const;
 
 			void CreateLinkComponent( const PropNode& pn, Params& par, Model& model );
 			void CreateComponent( const String& key, const PropNode& pn, Params& par, Model& model );
