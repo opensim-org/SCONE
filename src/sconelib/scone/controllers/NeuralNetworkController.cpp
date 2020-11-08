@@ -203,7 +203,7 @@ namespace scone::NN
 		auto tname = GetParName( target, ignore_muscle_lines, symmetric );
 		String postfix;
 		if ( GetSideFromName( source ) != GetSideFromName( target ) )
-			postfix = "_o";
+			postfix = "_c"; // contralateral connection
 		if ( !type.empty() )
 			postfix += '.' + type;
 		if ( sname == tname )
@@ -426,17 +426,16 @@ namespace scone::NN
 		bool sensor_motor_link = input_layer_idx == 0 && output_layer_idx == layers_.size() - 1;
 		const bool ignore_muscle_lines = pn.get<bool>( "ignore_muscle_lines", ignore_muscle_lines_ );
 		const bool symmetric = pn.get<bool>( "symmetric", symmetric_ );
-		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
-		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
 		auto input_type = pn.try_get<String>( "type" );
-
 		const auto contralateral = pn.get<bool>( "contralateral", false );
 		const auto ipsilateral = pn.get<bool>( "ipsilateral", !contralateral );
-
 		const auto same_name = pn.get<bool>( "same_name", false );
 		const auto normalize = pn.get<bool>( "normalize", false );
-		auto begin_link = link_layer.links_.size();
 
+		auto input_include = pn.try_get_any<xo::pattern_matcher>( { "input_include", "input" } );
+		auto output_include = pn.try_get_any<xo::pattern_matcher>( { "output_include", "output" } );
+
+		auto begin_link = link_layer.links_.size();
 		xo::flat_map<index_t, size_t> target_link_count;
 		for ( auto target_neuron_idx : xo::irange( layers_[ output_layer_idx ].neurons_.size() ) )
 		{
@@ -482,12 +481,13 @@ namespace scone::NN
 					++target_link_count[ target_neuron_idx ];
 			}
 		}
-		auto end_link = link_layer.links_.size();
 		if ( normalize )
-			for ( auto idx = begin_link; idx < end_link; ++idx )
+		{
+			for ( auto idx = begin_link; idx < link_layer.links_.size(); ++idx )
 			{
 				auto& link = link_layer.links_[ idx ];
 				link.weight_ /= target_link_count[ link.trg_idx_ ];
 			}
+		}
 	}
 }
