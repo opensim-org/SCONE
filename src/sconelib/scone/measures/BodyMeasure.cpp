@@ -24,6 +24,7 @@ namespace scone
 		INIT_PROP( props, magnitude, direction.is_null() );
 		INIT_PROP( props, position, RangePenalty<Real>() );
 		INIT_PROP( props, velocity, RangePenalty<Real>() );
+		INIT_PROP( props, angular_velocity, RangePenalty<Real>() );
 		INIT_PROP( props, acceleration, RangePenalty<Real>() );
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !acceleration.IsNull() );
@@ -43,6 +44,12 @@ namespace scone
 			penalty += velocity.GetResult();
 			if ( range_count > 1 )
 				GetReport().set( name + ".vel_penalty", stringf( "%g", velocity.GetResult() ) );
+		}
+		if ( !angular_velocity.IsNull() )
+		{
+			penalty += angular_velocity.GetResult();
+			if ( range_count > 1 )
+				GetReport().set( name + ".ang_vel_penalty", stringf( "%g", angular_velocity.GetResult() ) );
 		}
 		if ( !acceleration.IsNull() )
 		{
@@ -70,6 +77,12 @@ namespace scone
 			velocity.AddSample( timestamp, magnitude ? length( vel ) : dot_product( direction, vel ) );
 		}
 
+		if ( !angular_velocity.IsNull() )
+		{
+			auto vel = body.GetAngVel();
+			angular_velocity.AddSample( timestamp, magnitude ? length( vel ) : dot_product( direction, vel ) );
+		}
+
 		if ( !acceleration.IsNull() )
 		{
 			auto acc = body.GetLinAccOfPointOnBody( offset );
@@ -91,6 +104,8 @@ namespace scone
 			frame[ body.GetName() + ".pos_penalty" ] = position.GetLatest();
 		if ( !velocity.IsNull() )
 			frame[ body.GetName() + ".vel_penalty" ] = velocity.GetLatest();
+		if ( !angular_velocity.IsNull() )
+			frame[ body.GetName() + ".ang_vel_penalty" ] = angular_velocity.GetLatest();
 		if ( !acceleration.IsNull() )
 			frame[ body.GetName() + ".acc_penalty" ] = acceleration.GetLatest();
 	}
