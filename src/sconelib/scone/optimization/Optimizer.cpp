@@ -52,6 +52,8 @@ namespace scone
 		INIT_PROP( props, init_file_std_factor, 1.0 );
 		INIT_PROP( props, init_file_std_offset, 0.0 );
 		INIT_PROP( props, use_init_file_std, true );
+		INIT_PROP( props, init_file_include, {} );
+		INIT_PROP( props, init_file_exclude, {} );
 
 		INIT_PROP( props, output_objective_result_files, false );
 		INIT_PROP( props, min_improvement_for_file_output, 0.05 );
@@ -67,7 +69,9 @@ namespace scone
 		if ( use_init_file && !init_file.empty() )
 		{
 			init_file = FindFile( init_file );
-			auto result = GetObjective().info().import_mean_std( init_file, use_init_file_std, init_file_std_factor, init_file_std_offset );
+			auto result = GetObjective().info().import_mean_std( init_file,
+				use_init_file_std, init_file_std_factor, init_file_std_offset,
+				init_file_include, init_file_exclude );
 			log::debug( "Imported ", result.first, " of ", GetObjective().info().dim(), ", skipped ", result.second, " parameters from ", init_file );
 		}
 	}

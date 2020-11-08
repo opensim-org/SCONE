@@ -44,6 +44,12 @@ namespace scone
 		/// Offset added to the standard deviations from init_file; default = 0.
 		double init_file_std_offset;
 
+		/// Pattern matching the init_file parameters to include (semicolon seperated); default = "" (all).
+		String init_file_include;
+
+		/// Pattern matching the init_file parameters to exclude (semicolon seperated); default = "" (none).
+		String init_file_exclude;
+
 		/// Maximum number of threads to use for this optimization; default = 32.
 		size_t max_threads;
 
