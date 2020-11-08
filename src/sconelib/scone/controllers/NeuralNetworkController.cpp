@@ -347,6 +347,7 @@ namespace scone::NN
 			// neuron names are set at this point, and used for counting
 			const auto neurons = neuron_names.size();
 			const auto& offset = pn.get_child( "offset" );
+			auto init_value = pn.get<double>( "init_value", 0.0 );
 			auto start_idx = layer.neurons_.size();
 			layer.neurons_.resize( neurons );
 			for ( index_t idx = start_idx; idx < neurons; ++idx )
@@ -355,6 +356,7 @@ namespace scone::NN
 				const String& neuronname = neuron_names[ idx ];
 				String parname = ( symmetric ? GetNameNoSide( neuronname ) : neuronname ) + ".C0";
 				layer.neurons_[ idx ].offset_ = par.get( parname, offset );
+				layer.neurons_[ idx ].output_ = layer.neurons_[ idx ].sum_ = init_value;
 			}
 			break;
 		}
