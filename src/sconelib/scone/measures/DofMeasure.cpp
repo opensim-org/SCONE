@@ -23,9 +23,10 @@ namespace scone
 
 		INIT_PROP( props, position, RangePenalty<Degree>() );
 		INIT_PROP( props, velocity, RangePenalty<Degree>() );
+        INIT_PROP( props, acceleration, RangePenalty<Degree>() );
 		INIT_PROP( props, force, RangePenalty<Real>() );
 
-		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !force.IsNull() );
+		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !acceleration.IsNull() ) + int( !force.IsNull() );
 		if ( name.empty() )
 			name = dof.GetName();
 	}
@@ -45,6 +46,12 @@ namespace scone
 			if ( range_count > 1 )
 				GetReport().set( name + ".velocity_penalty", stringf( "%g", velocity.GetResult() ) );
 		}
+		if ( !acceleration.IsNull() )
+		{
+			penalty += acceleration.GetResult().value;
+			if ( range_count > 1 )
+				GetReport().set( name + ".acceleration_penalty", stringf( "%g", acceleration.GetResult() ) );
+		}
 		if ( !force.IsNull() )
 		{
 			penalty += force.GetResult();
@@ -59,6 +66,7 @@ namespace scone
 	{
 		position.AddSample( timestamp, Degree( Radian( dof.GetPos() + ( parent ? parent->GetPos() : 0 ) ) ) );
 		velocity.AddSample( timestamp, Degree( Radian( dof.GetVel() + ( parent ? parent->GetVel() : 0 ) ) ) );
+        acceleration.AddSample( timestamp, Degree( Radian( dof.GetAcc() + ( parent ? parent->GetAcc() : 0 ) ) ) );
 		force.AddSample( timestamp, dof.GetLimitForce() );
 		return false;
 	}
@@ -74,6 +82,8 @@ namespace scone
 			frame[ dof.GetName() + ".position_penalty" ] = position.GetLatest().value;
 		if ( !velocity.IsNull() )
 			frame[ dof.GetName() + ".velocity_penalty" ] = velocity.GetLatest().value;
+		if ( !acceleration.IsNull() )
+			frame[ dof.GetName() + ".acceleration_penalty" ] = acceleration.GetLatest().value;
 		if ( !force.IsNull() )
 			frame[ dof.GetName() + ".force_penalty" ] = force.GetLatest();
 	}

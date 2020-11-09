@@ -16,7 +16,7 @@
 namespace scone
 {
 	/// Measure that adds a penalty when a degree of freedom (DOF) is outside a specific range.
-	/** Penalties can be based on DOF position, DOF velocity, and restitution force. Example:
+	/** Penalties can be based on DOF position, DOF velocity, DOF acceleration, and restitution force. Example:
 	\verbatim
 	DofMeasure {
 		dof = pelvis_tilt
@@ -42,6 +42,9 @@ namespace scone
 
 		/// Penalty for when the DOF velocity [deg/s] is out of range.
 		RangePenalty<Degree> velocity;
+
+		/// Penalty for when the DOF acceleration [deg/s^2] is out of range.
+		RangePenalty<Degree> acceleration;
 
 		/// Penalty for when the DOF limit force [N] is out of range (this value is signed!).
 		RangePenalty<Real> force;
