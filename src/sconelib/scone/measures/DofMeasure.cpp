@@ -23,7 +23,7 @@ namespace scone
 
 		INIT_PROP( props, position, RangePenalty<Degree>() );
 		INIT_PROP( props, velocity, RangePenalty<Degree>() );
-        INIT_PROP( props, acceleration, RangePenalty<Degree>() );
+		INIT_PROP( props, acceleration, RangePenalty<Degree>() );
 		INIT_PROP( props, force, RangePenalty<Real>() );
 
 		range_count = int( !position.IsNull() ) + int( !velocity.IsNull() ) + int( !acceleration.IsNull() ) + int( !force.IsNull() );
@@ -66,7 +66,7 @@ namespace scone
 	{
 		position.AddSample( timestamp, Degree( Radian( dof.GetPos() + ( parent ? parent->GetPos() : 0 ) ) ) );
 		velocity.AddSample( timestamp, Degree( Radian( dof.GetVel() + ( parent ? parent->GetVel() : 0 ) ) ) );
-        acceleration.AddSample( timestamp, Degree( Radian( dof.GetAcc() + ( parent ? parent->GetAcc() : 0 ) ) ) );
+		acceleration.AddSample( timestamp, Degree( Radian( dof.GetAcc() + ( parent ? parent->GetAcc() : 0 ) ) ) );
 		force.AddSample( timestamp, dof.GetLimitForce() );
 		return false;
 	}
