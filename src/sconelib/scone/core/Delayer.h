@@ -10,6 +10,7 @@
 
 #include <deque>
 #include "platform.h"
+#include "types.h"
 
 namespace scone
 {
