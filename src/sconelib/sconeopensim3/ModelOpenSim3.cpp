@@ -191,15 +191,15 @@ namespace scone
 		{
 			//SCONE_PROFILE_SCOPE( GetProfiler(), "InitIntegrators" );
 			if ( integration_method == "RungeKuttaMerson" )
-				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKuttaMersonIntegrator( m_pOsimModel->getMultibodySystem() ) );
+				m_pTkIntegrator = std::make_unique<SimTK::RungeKuttaMersonIntegrator>( m_pOsimModel->getMultibodySystem() );
 			else if ( integration_method == "RungeKutta2" )
-				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta2Integrator( m_pOsimModel->getMultibodySystem() ) );
+				m_pTkIntegrator = std::make_unique<SimTK::RungeKutta2Integrator>( m_pOsimModel->getMultibodySystem() );
 			else if ( integration_method == "RungeKutta3" )
-				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::RungeKutta3Integrator( m_pOsimModel->getMultibodySystem() ) );
+				m_pTkIntegrator = std::make_unique<SimTK::RungeKutta3Integrator>( m_pOsimModel->getMultibodySystem() );
 			else if ( integration_method == "SemiExplicitEuler" )
-				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEulerIntegrator( m_pOsimModel->getMultibodySystem(), max_step_size ) );
+				m_pTkIntegrator = std::make_unique<SimTK::SemiExplicitEulerIntegrator>( m_pOsimModel->getMultibodySystem(), max_step_size );
 			else if ( integration_method == "SemiExplicitEuler2" )
-				m_pTkIntegrator = std::unique_ptr< SimTK::Integrator >( new SimTK::SemiExplicitEuler2Integrator( m_pOsimModel->getMultibodySystem() ) );
+				m_pTkIntegrator = std::make_unique<SimTK::SemiExplicitEuler2Integrator>( m_pOsimModel->getMultibodySystem() );
 			else SCONE_THROW( "Invalid integration method: " + xo::quoted( integration_method ) );
 
 			m_pTkIntegrator->setAccuracy( integration_accuracy );
@@ -247,7 +247,7 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "RealizeSystem" );
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_pOsimManager = std::unique_ptr< OpenSim::Manager >( new OpenSim::Manager( *m_pOsimModel, *m_pTkIntegrator ) );
+			m_pOsimManager = std::make_unique<OpenSim::Manager>( *m_pOsimModel, *m_pTkIntegrator );
 			m_pOsimManager->setWriteToStorage( false );
 			m_pOsimManager->setPerformAnalyses( false );
 			m_pOsimManager->setInitialTime( 0.0 );
@@ -270,7 +270,7 @@ namespace scone
 		// Create wrappers for bodies
 		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
-			m_Bodies.emplace_back( new BodyOpenSim3( *this, m_pOsimModel->getBodySet().get( idx ) ) );
+			m_Bodies.emplace_back( std::make_unique<BodyOpenSim3>( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 
 		// Create wrappers for joints
 		m_Joints.reserve( m_pOsimModel->getJointSet().getSize() );
@@ -282,13 +282,13 @@ namespace scone
 			auto parent_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
 				{ return &dynamic_cast<BodyOpenSim3&>( *body ).GetOsBody() == &joint_osim.getParentBody(); } );
 			SCONE_ASSERT( body_it != m_Bodies.end() && parent_it != m_Bodies.end() );
-			m_Joints.emplace_back( new JointOpenSim3( **body_it, **parent_it, *this, joint_osim ) );
+			m_Joints.emplace_back( std::make_unique<JointOpenSim3>( **body_it, **parent_it, *this, joint_osim ) );
 		}
 
 		// create wrappers for dofs
 		m_Dofs.reserve( m_pOsimModel->getCoordinateSet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getCoordinateSet().getSize(); ++idx )
-			m_Dofs.emplace_back( new DofOpenSim3( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
+			m_Dofs.emplace_back( std::make_unique<DofOpenSim3>( *this, m_pOsimModel->getCoordinateSet().get( idx ) ) );
 
 		// create contact geometries
 		m_ContactGeometries.reserve( m_pOsimModel->getContactGeometrySet().getSize() );
@@ -302,10 +302,10 @@ namespace scone
 			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
 
 			if ( auto cs = dynamic_cast< OpenSim::ContactSphere* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( new ContactGeometry(
+				m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
 					name, bod, xo::sphere( float( cs->getRadius() ) ), loc, ori ) );
 			else if ( auto cp = dynamic_cast< OpenSim::ContactHalfSpace* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( new ContactGeometry(
+				m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
 					name, bod, xo::plane( xo::vec3f::neg_unit_x() ), loc, ori ) );
 			else if ( auto cm = dynamic_cast<OpenSim::ContactMesh*>( cg_osim ) )
 			{
@@ -323,7 +323,7 @@ namespace scone
 			OpenSim::Actuator& osAct = m_pOsimModel->getActuators().get( idx );
 			if ( OpenSim::Muscle* osMus = dynamic_cast<OpenSim::Muscle*>( &osAct ) )
 			{
-				m_Muscles.emplace_back( new MuscleOpenSim3( *this, *osMus ) );
+				m_Muscles.emplace_back( std::make_unique<MuscleOpenSim3>( *this, *osMus ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
 			else if ( auto* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
@@ -344,7 +344,7 @@ namespace scone
 		for ( int i = 0; i < forces.getSize(); ++i )
 		{
 			if ( auto* hcf = dynamic_cast<const OpenSim::HuntCrossleyForce*>( &forces.get( i ) ) )
-				m_ContactForces.emplace_back( new ContactForceOpenSim3( *this, *hcf ) );
+				m_ContactForces.emplace_back( std::make_unique<ContactForceOpenSim3>( *this, *hcf ) );
 		}
 
 		// create legs and connect stance_contact forces
@@ -365,7 +365,7 @@ namespace scone
 			auto cf_it = TryFindByName( GetContactForces(), GetSidedName( leg_contact_force, side ) );
 
 			if ( upper_body && lower_body && cf_it != GetContactForces().end() )
-				m_Legs.emplace_back( new Leg( *upper_body, *lower_body, m_Legs.size(), side, 0, &**cf_it ) );
+				m_Legs.emplace_back( std::make_unique<Leg>( *upper_body, *lower_body, m_Legs.size(), side, 0, &**cf_it ) );
 			//else log::warning( "Could not define leg using ", leg_upper_body, ", ", leg_lower_body, " and ", leg_contact_force );
 		}
 	}
@@ -562,7 +562,7 @@ namespace scone
 			if ( !m_pTkTimeStepper )
 			{
 				// Integrate using time stepper
-				m_pTkTimeStepper = std::unique_ptr< SimTK::TimeStepper >( new SimTK::TimeStepper( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator ) );
+				m_pTkTimeStepper = std::make_unique< SimTK::TimeStepper >( m_pOsimModel->getMultibodySystem(), *m_pTkIntegrator );
 				m_pTkTimeStepper->initialize( GetTkState() );
 				if ( GetStoreData() )
 				{

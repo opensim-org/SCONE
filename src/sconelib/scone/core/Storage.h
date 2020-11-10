@@ -92,7 +92,7 @@ namespace scone
 			m_Data.clear();
 			m_Data.reserve( other.m_Data.size() );
 			for ( auto it = other.m_Data.begin(); it != other.m_Data.end(); ++it )
-				m_Data.push_back( FrameUP( new Frame( **it ) ) );
+				m_Data.push_back( std::make_unique<Frame>( **it ) );
 			m_InterpolationCache.clear();
 			return *this;
 		};
@@ -115,13 +115,13 @@ namespace scone
 				size = ( GetFrameCount() + stride - 1 ) / stride;
 			r.m_Data.reserve( size );
 			for ( size_t i = start; r.m_Data.size() < size && i < m_Data.size(); i += stride )
-				r.m_Data.push_back( FrameUP( new Frame( *m_Data[ i ] ) ) );
+				r.m_Data.push_back( std::make_unique<Frame>( *m_Data[ i ] ) );
 			return r;
 		}
 
 		Frame& AddFrame( TimeT time, ValueT default_value = ValueT( 0 ) ) {
 			SCONE_THROW_IF( !m_Data.empty() && time <= m_Data.back()->GetTime(), "Frame must have higher timestamp" );
-			m_Data.push_back( FrameUP( new Frame( *this, time, default_value ) ) );
+			m_Data.push_back( std::make_unique<Frame>( *this, time, default_value ) );
 			m_InterpolationCache.clear(); // cached iterators have become invalid
 			return *m_Data.back();
 		}

@@ -103,7 +103,7 @@ namespace scone
 
 		if ( it == m_SensorDelayAdapters.end() )
 		{
-			m_SensorDelayAdapters.push_back( SensorDelayAdapterUP( new SensorDelayAdapter( *this, source, 0.0 ) ) );
+			m_SensorDelayAdapters.push_back( std::make_unique<SensorDelayAdapter>( *this, source, 0.0 ) );
 			return *m_SensorDelayAdapters.back();
 		}
 		else return **it;

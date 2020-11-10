@@ -33,7 +33,7 @@ namespace scone
 				m_Resources[ name ] = std::unique_ptr< T >( r );
 				it = m_Resources.find( name );
 			}
-			return std::unique_ptr< T >( new T( *it->second ) );
+			return std::make_unique<T>( *it->second );
 		}
 			
 	private:
