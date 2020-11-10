@@ -52,6 +52,11 @@ namespace scone
 		return m_osCoord.getSpeedValue( m_Model.GetTkState() );
 	}
 
+	Real DofOpenSim3::GetAcc() const
+	{
+		return m_osCoord.getAccelerationValue( m_Model.GetTkState() );
+	}
+
 	const String& DofOpenSim3::GetName() const
 	{
 		return m_osCoord.getName();

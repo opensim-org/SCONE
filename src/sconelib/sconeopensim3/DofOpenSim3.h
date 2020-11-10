@@ -28,6 +28,7 @@ namespace scone
 
 		virtual Real GetPos() const override;
 		virtual Real GetVel() const override;
+		virtual Real GetAcc() const override;
 
 		virtual Real GetLimitForce() const override;
 		virtual Real GetMoment() const override;
