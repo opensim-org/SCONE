@@ -68,6 +68,8 @@ int main(int argc, char* argv[])
 			{
 				path scenario_file = FindScenario( optArg.getValue() );
 				auto scenario_pn = load_scenario( scenario_file, propArg );
+				if ( outArg.isSet() && scenario_pn.count_children() >= 1 )
+					scenario_pn.front().second.set( "output_root", outArg.getValue() );
 				OptimizerUP o = CreateOptimizer( scenario_pn, scenario_file.parent_path() );
 				LogUnusedProperties( scenario_pn );
 				if ( statusOutput.getValue() )
