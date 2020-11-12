@@ -26,6 +26,8 @@ namespace scone
 		INIT_PROP( pn, active_optimizations_, 6 );
 		INIT_PROP( pn, concurrent_optimizations_, 2 );
 		INIT_PROP( pn, random_seed_, 1 );
+
+		auto flag_parameters = CmaOptimizerSpot( pn, scenario_pn, scenario_dir );
 	}
 
 	void CmaPoolOptimizer::Run()
