@@ -15,6 +15,7 @@
 #include "scone/core/HasName.h"
 #include "scone/model/MuscleId.h"
 #include "scone/core/profiler_config.h"
+#include <algorithm>
 
 namespace scone::NN
 {
@@ -46,7 +47,8 @@ namespace scone::NN
 		INIT_MEMBER( pn, parameter_aliases_, {} ),
 		INIT_PAR_MEMBER( pn, par, leakyness_, 0.01 ),
 		INIT_MEMBER( pn, ignore_muscle_lines_, false ),
-		INIT_MEMBER( pn, symmetric_, true )
+		INIT_MEMBER( pn, symmetric_, true ),
+		INIT_MEMBER( pn, accurate_neural_delays_, false )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
 
@@ -84,22 +86,44 @@ namespace scone::NN
 		return links_[ output_layer - 1 ].emplace_back( input_layer );
 	}
 
-	Neuron& NeuralNetworkController::AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset )
+	Neuron& NeuralNetworkController::AddSensor( Model& model, Sensor& sensor, TimeInSeconds delay, double offset )
 	{
 		SCONE_ERROR_IF( layers_.empty(), "No SensorNeuron layer defined" );
-		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor->GetInputSensor() );
+
 		auto& layer = layers_.front();
-		sensor_links_.push_back( SensorNeuronLink{ sensor, delay, layer.neurons_.size(), ms ? &ms->muscle_ : nullptr } );
-		layer.names_.emplace_back( sensor->GetName() );
-		return layer.neurons_.emplace_back( offset );
+		auto& neuron = layer.neurons_.emplace_back( offset );
+		layer.names_.emplace_back( sensor.GetName() );
+
+		auto& snl = sensor_links_.emplace_back();
+		snl.sensor_ = &sensor;
+		snl.delay_ = delay;
+		snl.neuron_idx_ = layer.neurons_.size() - 1;
+		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor );
+		snl.muscle_ = ms ? &ms->muscle_ : nullptr;
+
+		if ( accurate_neural_delays_ )
+		{
+			auto delay_samples = std::max( size_t{ 1 }, xo::round_cast<size_t>( delay / model.fixed_control_step_size ) );
+			snl.buffer_channel_.buffer_it_ = sensor_buffers_.try_emplace( delay_samples, delay_samples, 0 ).first;
+			snl.buffer_channel_.channel_idx_ = snl.buffer_channel_.buffer_it_->second.add_channel();
+		}
+		else snl.delayed_sensor_ = &model.AcquireSensorDelayAdapter( sensor );
+
+		return neuron;
 	}
 
-	Neuron& NeuralNetworkController::AddActuator( Actuator* actuator, double offset )
+	Neuron& NeuralNetworkController::AddActuator( const Model& model, Actuator& actuator, TimeInSeconds delay, double offset )
 	{
 		SCONE_ERROR_IF( motor_layer_ == no_index, "No MotorNeuron layer defined" );
 		auto& layer = layers_[ motor_layer_ ];
-		motor_links_.push_back( MotorNeuronLink{ actuator, layer.neurons_.size(), dynamic_cast<Muscle*>( actuator ) } );
-		layer.names_.emplace_back( actuator->GetName() );
+		layer.names_.emplace_back( actuator.GetName() );
+		auto& mnl = motor_links_.emplace_back( MotorNeuronLink{ &actuator, layer.neurons_.size(), dynamic_cast<Muscle*>( &actuator ) } );
+		if ( accurate_neural_delays_ )
+		{
+			auto delay_samples = std::max( size_t{ 1 }, xo::round_cast<size_t>( delay / model.fixed_control_step_size ) );
+			mnl.buffer_channel_.buffer_it_ = actuator_buffers_.try_emplace( delay_samples, delay_samples, 0 ).first;
+			mnl.buffer_channel_.channel_idx_ = mnl.buffer_channel_.buffer_it_->second.add_channel();
+		}
 		return layer.neurons_.emplace_back( offset );
 	}
 
@@ -114,8 +138,36 @@ namespace scone::NN
 
 		// update sensor neurons with sensor values
 		auto& sensor_neurons = layers_.front().neurons_;
-		for ( const auto& sl : sensor_links_ )
-			sensor_neurons[ sl.neuron_idx_ ].output_ = sl.sensor_->GetValue( sl.delay_ ) + sensor_neurons[ sl.neuron_idx_ ].offset_;
+		if ( accurate_neural_delays_ )
+		{
+			if ( timestamp == 0.0 ) {
+				// first run, set and use current value (can be called multiple times)
+				for ( const auto& sl : sensor_links_ )
+				{
+					auto sensor_value = sl.sensor_->GetValue();
+					sl.buffer_channel_.set( sensor_value );
+					sensor_neurons[ sl.neuron_idx_ ].output_ = sensor_value + sensor_neurons[ sl.neuron_idx_ ].offset_;
+				}
+			}
+			else {
+				// get delayed value, advance, set current
+				for ( const auto& sl : sensor_links_ )
+				{
+					sensor_neurons[ sl.neuron_idx_ ].output_ = sl.buffer_channel_.get() + sensor_neurons[ sl.neuron_idx_ ].offset_;
+					if ( sl.sensor_->GetName() == "iliopsoas_l.L" )
+						log::debug( "DELAYED at ", timestamp, "=", sensor_neurons[ sl.neuron_idx_ ].output_ );
+				}
+				for ( auto& sbuf : sensor_buffers_ )
+					sbuf.second.advance();
+				for ( const auto& sl : sensor_links_ )
+					sl.buffer_channel_.set( sl.sensor_->GetValue() );
+			}
+		}
+		else
+		{
+			for ( const auto& sl : sensor_links_ )
+				sensor_neurons[ sl.neuron_idx_ ].output_ = sl.delayed_sensor_->GetValue( sl.delay_ ) + sensor_neurons[ sl.neuron_idx_ ].offset_;
+		}
 
 		// update links and inter neurons
 		for ( index_t idx = 0; idx < links_.size(); ++idx )
@@ -134,8 +186,33 @@ namespace scone::NN
 
 		// update actuators with output neurons
 		auto& motor_neurons = layers_[ motor_layer_ ].neurons_;
-		for ( auto& ml : motor_links_ )
-			ml.actuator_->AddInput( motor_neurons[ ml.neuron_idx_ ].output_ );
+		if ( accurate_neural_delays_ )
+		{
+			if ( timestamp == 0.0 ) {
+				// first run, set and use current value (can be called multiple times)
+				for ( const auto& ml : motor_links_ ) {
+					auto motor_value = motor_neurons[ ml.neuron_idx_ ].output_;
+					ml.buffer_channel_.set( motor_value );
+					ml.actuator_->AddInput( motor_value );
+				}
+			}
+			else {
+				// get delayed value, advance, set current
+				for ( auto& ml : motor_links_ )
+					ml.actuator_->AddInput( ml.buffer_channel_.get() );
+				for ( auto& abuf : actuator_buffers_ )
+					abuf.second.advance();
+				for ( auto& ml : motor_links_ )
+					ml.buffer_channel_.set( motor_neurons[ ml.neuron_idx_ ].output_ );
+			}
+// 			for ( auto& ml : motor_links_ )
+// 				ml.actuator_->AddInput( motor_neurons[ ml.neuron_idx_ ].output_ );
+		}
+		else
+		{
+			for ( auto& ml : motor_links_ )
+				ml.actuator_->AddInput( motor_neurons[ ml.neuron_idx_ ].output_ );
+		}
 
 		return false;
 	}
@@ -144,14 +221,14 @@ namespace scone::NN
 	{
 		for ( auto lidx : xo::size_range( layers_ ) )
 			for ( auto nidx : xo::size_range( layers_[ lidx ].neurons_ ) )
-				frame[ GetNeuronName( lidx, nidx ) ] = layers_[ lidx ].neurons_[ nidx ].output_;
+				frame[ "NN." + GetNeuronName( lidx, nidx ) ] = layers_[ lidx ].neurons_[ nidx ].output_;
 	}
 
 	PropNode NeuralNetworkController::GetInfo() const
 	{
 		PropNode pn;
 		for ( const auto& sn : sensor_links_ )
-			pn[ sn.sensor_->GetName() ] = layers_.front().neurons_[ sn.neuron_idx_ ].offset_;
+			pn[ sn.delayed_sensor_->GetName() ] = layers_.front().neurons_[ sn.neuron_idx_ ].offset_;
 
 		for ( const auto& il : links_.front().front().links_ )
 		{
@@ -239,14 +316,14 @@ namespace scone::NN
 					auto musparname = GetParName( mus->GetName(), ignore_muscle_lines, symmetric );
 					auto delay = neural_delays_[ musid.base_line_name() ];
 					auto lofs = -pn.get<double>( "L0", 1.0 ); // defaults to -1
-					if ( force ) AddSensor( &model.AcquireDelayedSensor<MuscleForceSensor>( *mus ), delay, 0 );
-					if ( length ) AddSensor( &model.AcquireDelayedSensor<MuscleLengthSensor>( *mus ), delay, lofs );
-					if ( velocity ) AddSensor( &model.AcquireDelayedSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
+					if ( force ) AddSensor( model, model.AcquireSensor<MuscleForceSensor>( *mus ), delay, 0 );
+					if ( length ) AddSensor( model, model.AcquireSensor<MuscleLengthSensor>( *mus ), delay, lofs );
+					if ( velocity ) AddSensor( model, model.AcquireSensor<MuscleVelocitySensor>( *mus ), delay, 0 );
 					if ( length_velocity || length_velocity_sqrt ) {
 						auto kv = par.try_get( musparname + ".KV", pn, "velocity_gain", 0.1 );
 						if ( length_velocity )
-							AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, lofs );
-						else AddSensor( &model.AcquireDelayedSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, lofs );
+							AddSensor( model, model.AcquireSensor<MuscleLengthVelocitySensor>( *mus, kv ), delay, lofs );
+						else AddSensor( model, model.AcquireSensor<MuscleLengthVelocitySqrtSensor>( *mus, kv ), delay, lofs );
 					}
 				}
 			}
@@ -256,8 +333,8 @@ namespace scone::NN
 		{
 			const auto& body = *FindByName( model.GetBodies(), pn.get<String>( "body" ) );
 			for ( auto side : { RightSide, LeftSide } )
-				AddSensor(
-					&model.AcquireDelayedSensor<BodyOrientationSensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
+				AddSensor( model,
+					model.AcquireSensor<BodyOrientationSensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
 					pn.get<double>( "delay" ), 0 );
 			break;
 		}
@@ -265,8 +342,8 @@ namespace scone::NN
 		{
 			const auto& body = *FindByName( model.GetBodies(), pn.get<String>( "body" ) );
 			for ( auto side : { RightSide, LeftSide } )
-				AddSensor(
-					&model.AcquireDelayedSensor<BodyAngularVelocitySensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
+				AddSensor( model,
+					model.AcquireSensor<BodyAngularVelocitySensor>( body, pn.get<Vec3>( "dir" ), pn.get<String>( "postfix" ), side ),
 					pn.get<double>( "delay" ), 0 );
 			break;
 		}
@@ -278,8 +355,8 @@ namespace scone::NN
 			auto kv = par.try_get( body_name + postfix + ".KV", pn, "velocity_gain", 0.1 );
 			const auto target = par.try_get( body_name + postfix + ".P0", pn, "target", 0 );;
 			for ( auto side : { RightSide, LeftSide } )
-				AddSensor(
-					&model.AcquireDelayedSensor<BodyOriVelSensor>( body, pn.get<Vec3>( "dir" ), kv, postfix, side, target ),
+				AddSensor( model,
+					model.AcquireSensor<BodyOriVelSensor>( body, pn.get<Vec3>( "dir" ), kv, postfix, side, target ),
 					pn.get<double>( "delay" ), 0 );
 			break;
 		}
@@ -296,8 +373,8 @@ namespace scone::NN
 			{
 				auto& bov = model.AcquireSensor<BodyOriVelSensor>( body, pn.get<Vec3>( "dir" ), kv, postfix, side, target );
 				auto& load = model.AcquireSensor<LegLoadSensor>( model.GetLeg( Location( side ) ) );
-				AddSensor( &model.AcquireDelayedSensor<ModulatedSensor>( bov, load, load_gain, 0, bov.GetName() + "ST" ), delay, 0 );
-				AddSensor( &model.AcquireDelayedSensor<ModulatedSensor>( bov, load, -load_gain, 1, bov.GetName() + "SW" ), delay, 0 );
+				AddSensor( model, model.AcquireSensor<ModulatedSensor>( bov, load, load_gain, 0, bov.GetName() + "ST" ), delay, 0 );
+				AddSensor( model, model.AcquireSensor<ModulatedSensor>( bov, load, -load_gain, 1, bov.GetName() + "SW" ), delay, 0 );
 			}
 			break;
 		}
@@ -309,16 +386,16 @@ namespace scone::NN
 			Dof* parent_dof = pn.has_key( "parent_dof" ) ? &*FindByName( model.GetDofs(), pn.get<String>( "parent_dof" ) ) : nullptr;
 			if ( pn.get<bool>( "dual_sided", false ) )
 			{
-				AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof, RightSide ), neural_delays_[ dof_name ], 0 );
-				AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof, LeftSide ), neural_delays_[ dof_name ], 0 );
+				AddSensor( model, model.AcquireSensor<DofPosVelSensor>( dof, kv, parent_dof, RightSide ), neural_delays_[ dof_name ], 0 );
+				AddSensor( model, model.AcquireSensor<DofPosVelSensor>( dof, kv, parent_dof, LeftSide ), neural_delays_[ dof_name ], 0 );
 			}
-			else AddSensor( &model.AcquireDelayedSensor<DofPosVelSensor>( dof, kv, parent_dof ), neural_delays_[ dof_name ], 0 );
+			else AddSensor( model, model.AcquireSensor<DofPosVelSensor>( dof, kv, parent_dof ), neural_delays_[ dof_name ], 0 );
 			break;
 		}
 		case "LegLoadSensors"_hash:
 		{
 			for ( const auto& leg : model.GetLegs() )
-				AddSensor( &model.AcquireDelayedSensor<LegLoadSensor>( *leg ), pn.get<double>( "delay" ), 0 );
+				AddSensor( model, model.AcquireSensor<LegLoadSensor>( *leg ), pn.get<double>( "delay" ), 0 );
 			break;
 		}
 		case "InterNeurons"_hash:
@@ -372,8 +449,10 @@ namespace scone::NN
 			{
 				if ( include.empty() || include( mus->GetName() ) )
 				{
+					auto musid = MuscleId( mus->GetName() );
+					auto delay = neural_delays_[ musid.base_line_name() ];
 					auto parname = GetParName( mus->GetName(), ignore_muscle_lines, symmetric ) + ".C0";
-					AddActuator( mus.get(), par.get( parname, pn.get_child( "offset" ) ) );
+					AddActuator( model, *mus, delay, par.get( parname, pn.get_child( "offset" ) ) );
 				}
 			}
 			break;
@@ -463,7 +542,7 @@ namespace scone::NN
 				if ( contralateral && src_side == trg_side )
 					continue; // neuron not on opposite side
 
-				if ( same_name && GetNameNoSide( source_name ) != GetNameNoSide( target_name) )
+				if ( same_name && GetNameNoSide( source_name ) != GetNameNoSide( target_name ) )
 					continue;
 
 				if ( sensor_motor_link )
