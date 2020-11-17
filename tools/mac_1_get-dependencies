@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+source ./tools/build_config
+
+# if root is running this script then do not use `sudo` (some distros
+# do not supply it)
+if [[ "${UID}" == 0 ]]; then
+    sudo=''
+else
+    sudo='sudo'
+fi
+
+echo "installing brew dependencies"
+brew install qt5
+
+echo "cloning non-submodule source dependencies"
+try_clone_checkout "https://github.com/openscenegraph/OpenSceneGraph.git" "OpenSceneGraph-3.4.1"
+try_clone_checkout "https://github.com/tgeijten/opensim3-scone.git" "master"
+try_clone_checkout "https://github.com/simbody/simbody.git" "Simbody-3.5.4"
+try_clone_checkout "https://github.com/create-dmg/create-dmg.git" "v1.0.8"
+
+echo "getting submodule dependencies"
+git submodule update --init --recursive
+
+
+echo "performing other hacks necessary to make SCONE compile on mac"
+
+# HACK: remove the jpeg plugin from openscenegraph, because
+# it doesn't compile on mac (API changed)
+sed -i -e 's/^[ ]*ADD_SUBDIRECTORY(jpeg)/# ADD_SUBDIRECTORY(jpeg)/' OpenSceneGraph/src/osgPlugins/CMakeLists.txt
+

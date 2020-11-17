@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+
+# Packages SCONE build artifacts into a standalone directory that
+# is *roughly* suitable for OSX
+#
+# OSX 3rd-party applications are assembled into <application>.app dirs. These
+# are effectively just structured directories that OSX knows how to parse
+#
+# The stackoverflow post I used to write this:
+#
+#     https://stackoverflow.com/questions/1596945/building-osx-app-bundle
+#
+# Describes the structure of .app directories as:
+#
+# SconeStudio.app/
+#     Contents/
+#         Info.plist
+#         MacOS/
+#             sconestudio
+#             all_the_other_shit/
+#         Resources/
+#              sconestudio.icns
+#         Frameworks/
+#              QtCore.framework/
+#
+# Where `Info.plist` is an XML metadata file that describes the "package". See
+# the SO post, or any app you have in /Applications, to find out more about
+# that.
+#
+# This script reassembles the build artifacts from the SCONE build into a `.app`
+# dir that OSX supports.
+#
+# APP vs DMG in osx:
+#
+#      The resulting directory can just be copied into /Applications *et voila*
+#      SCONE is installed. However, it's hard to download directories over the
+#      internet, so most applciation developers dump the app dir into a DMG
+#      file (effectively, a mountable archive) which users then mount. Once the
+#      archive is mounted, the user copies the `.app` directory in the DMG to 
+#      their `/Applications` dir.
+
+set -xeuo pipefail
+source ./tools/build_config  # sets relevant envvar defaults
+
+base_dir="${SCONE_BUILD_DIR}/mac"
+app_dir="${SCONE_BUILD_DIR}/SconeStudio.app"
+
+# SconeStudio.app/
+mkdir -p "${app_dir}"
+# SconeStudio.app/Contents/
+mkdir -p "${app_dir}/Contents/"
+
+# SconeStudio.app/Contents/Info.plist
+cat <<EOF > "${app_dir}/Contents/Info.plist"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleGetInfoString</key>
+  <string>sconestudio</string>
+  <key>CFBundleExecutable</key>
+  <string>sconestudio</string>
+  <key>CFBundleIdentifier</key>
+  <string>software.scone</string>
+  <key>CFBundleName</key>
+  <string>sconestudio</string>
+  <key>CFBundleIconFile</key>
+  <string>scone.icns</string>
+  <key>CFBundleShortVersionString</key>
+  <string>0.01</string>
+  <key>CFBundleInfoDictionaryVersion</key>
+  <string>6.0</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>IFMajorVersion</key>
+  <integer>0</integer>
+  <key>IFMinorVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>
+EOF
+
+# SconeStudio.app/Contents/Resources
+mkdir -p "${app_dir}/Contents/Resources/"
+
+# SconeStudio.app/Contents/Resources/Tutorials
+rsync -avz --delete "${PROJECT_DIR}/scenarios/Tutorials" "${app_dir}/Contents/Resources/"
+
+# SconeStudio.app/Contents/Resources/geometry
+rsync -avz --delete "${PROJECT_DIR}/resources/geometry" "${app_dir}/Contents/Resources"
+
+# SconeStudio.app/Contents/Resources/scone.icns
+cp "${PROJECT_DIR}/resources/ui/scone_logo_256x256.icns" "${app_dir}/Contents/Resources/scone.icns"
+
+# SconeStudio.app.app/Contents/MacOS
+mkdir -p "${app_dir}/Contents/MacOS/"
+
+# SconeStudio.app/Contents/MacOS/sconestudio
+cat <<EOF > "${app_dir}/Contents/MacOS/sconestudio"
+#!/usr/bin/env bash
+
+# ensure the dynamic linker can find bundled libs
+export DYLD_FALLBACK_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib
+export DYLD_LIBRARY_PATH=\${BASH_SOURCE%/*}/lib:\${DYLD_LIBRARY_PATH}
+
+# add all SCONE exes onto the PATH so that the application name
+# appears non-absolute when queried via argv[0] *but* the working
+# dir is still wherever the caller ran this script
+export PATH="\${BASH_SOURCE%/*}/bin:\${PATH}"
+
+# the user's SCONE directory should be auto-created on first boot and always
+# contain the most up-to-date copy of Tutorials + geometry
+if [ -t 1 ]; then  # HACK: only do this when running in a terminal
+    mkdir -p \${HOME}/SCONE
+    rsync -a \${BASH_SOURCE%/*}/../Resources/Tutorials \${HOME}/SCONE/Tutorials
+    rsync -a \${BASH_SOURCE%/*}/../Resources/geometry \${HOME}/SCONE/geometry
+fi
+
+exec sconestudio "\$@"
+EOF
+chmod +x "${app_dir}/Contents/MacOS/sconestudio"
+
+
+# copy executables
+
+# SconeStudio.app/Contents/MacOS/bin/
+mkdir -p "${app_dir}/Contents/MacOS/bin/"
+for exe in $(find "${SCONE_BUILD_DIR}/bin" -type f); do
+    cp -a "${exe}" "${app_dir}/Contents/MacOS/bin/"
+done
+chmod +x ${app_dir}/Contents/MacOS/bin/*
+
+
+# copy libraries
+#
+# - This is currently a mess, because the various libraries that we're
+#   integrating follow different conventions
+#
+# - Effectively, the standard "dir of dylibs" are copied into lib/ and the
+#   more mac-centric '.framework dir's have to be handled with some additional
+#   fucking magic
+
+# SconeStudio.app/Contents/MacOS/lib
+lib_dir="${app_dir}/Contents/MacOS/lib/"
+mkdir -p "${lib_dir}"
+
+# copy SCONE .dylib libraries into lib/
+find "${SCONE_BUILD_DIR}/" -name "*.dylib" -exec cp -a {} "${lib_dir}" \;
+
+# copy OpenSim3 .dylib libraries into lib/
+find "${OPENSIM3_INSTALL_PATH}/lib" -name "*.dylib*" -exec cp -a {} "${lib_dir}" \;
+
+# copy OSG .dylib libraries into lib/
+find "${OSG_INSTALL_PATH}/" -name "*.dylib*" -exec cp -a {} "${lib_dir}" \;
+
+# *also* copy OSG .so libraries into lib/, because OSG's plugin system seems to
+# generate .so files and I haven't got time to piss around with the OSG build
+find "${OSG_INSTALL_PATH}/" -name "*.so" -exec cp -a {} "${lib_dir}" \;
+
+# use `macdeployqt` to copy all the necessary Qt5 binaries into the app package.
+# The reason `macdeployqt` is used, rather than (e.g.) manually copying it is
+# because `macdeployqt` also strips out any absolute paths to Qt and replaces
+# them with relative paths, so that mac's dylib can find them.
+#
+# https://doc.qt.io/qt-5/macos-deployment.html
+${QT5_BREW_PATH}/bin/macdeployqt \
+    ${app_dir} \
+    -verbose=2 \
+    -no-strip \
+    -executable=${app_dir}/Contents/MacOS/bin/sconestudio
+
+# copy resources (icons etc.)
+
+# SconeStudio.app/Contents/MacOS/resources
+mkdir -p "${app_dir}/Contents/MacOS/resources/"
+cp -r ${PROJECT_DIR}/resources/* "${app_dir}/Contents/MacOS/resources/"
+
+# SconeStudio.app/Contents/MacOS/.version
+# (needed by SCONE to boot)
+git rev-list --count HEAD > "${app_dir}/Contents/MacOS/.version"
+

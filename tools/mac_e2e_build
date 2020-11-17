@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Top-level script for building SCONE from scratch on a fresh machine
+# this assumes the caller *also* wants to install dependencies, package SCONE,
+# etc., ("the works")
+
+echo "${0}: getting build dependencies"
+./tools/mac_1_get-dependencies
+
+echo "${0}: building binaries"
+./tools/unix_2_build
+
+echo "${0}: packaging binaries + assets into a directory"
+./tools/mac_3_create-install-dirtree
+
+echo "${0}: packaging directory into a DMG"
+./tools/mac_4_create-dmg
+
