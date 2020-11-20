@@ -75,8 +75,9 @@ namespace scone
 		};
 
 		using DelayBufferMap = std::map< size_t, xo::circular_buffer<Real> >;
+		using DelayBufferMapIter = DelayBufferMap::iterator;
 		struct DelayBufferChannel {
-			DelayBufferMap::iterator buffer_it_;
+			DelayBufferMapIter buffer_it_;
 			index_t channel_idx_;
 			void set( Real value ) const { buffer_it_->second.set( channel_idx_, value ); }
 			Real get() const { return buffer_it_->second.get( channel_idx_ ); }

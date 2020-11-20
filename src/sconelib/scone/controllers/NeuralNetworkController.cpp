@@ -41,6 +41,13 @@ namespace scone::NN
 		return fac.create( pn.get<String>( "activation", default_activation ), pn );
 	}
 
+	DelayBufferChannel make_delay_buffer_channel( DelayBufferMap& buffers, TimeInSeconds delay, TimeInSeconds step_size )
+	{
+		auto delay_samples = std::max( size_t{ 1 }, xo::round_cast<size_t>( 0.5 * delay / step_size ) );
+		auto buffer_it = buffers.try_emplace( delay_samples, delay_samples, 0 ).first;
+		return { buffer_it, buffer_it->second.add_channel() };
+	}
+
 	NeuralNetworkController::NeuralNetworkController( const PropNode& pn, Params& par, Model& model, const Location& area ) :
 		Controller( pn, par, model, area ),
 		INIT_MEMBER_REQUIRED( pn, neural_delays_ ),
@@ -100,13 +107,8 @@ namespace scone::NN
 		snl.neuron_idx_ = layer.neurons_.size() - 1;
 		MuscleSensor* ms = dynamic_cast<MuscleSensor*>( &sensor );
 		snl.muscle_ = ms ? &ms->muscle_ : nullptr;
-
 		if ( accurate_neural_delays_ )
-		{
-			auto delay_samples = std::max( size_t{ 1 }, xo::round_cast<size_t>( delay / model.fixed_control_step_size ) );
-			snl.buffer_channel_.buffer_it_ = sensor_buffers_.try_emplace( delay_samples, delay_samples, 0 ).first;
-			snl.buffer_channel_.channel_idx_ = snl.buffer_channel_.buffer_it_->second.add_channel();
-		}
+			snl.buffer_channel_ = make_delay_buffer_channel( sensor_buffers_, delay, model.fixed_control_step_size );
 		else snl.delayed_sensor_ = &model.AcquireSensorDelayAdapter( sensor );
 
 		return neuron;
@@ -115,16 +117,19 @@ namespace scone::NN
 	Neuron& NeuralNetworkController::AddActuator( const Model& model, Actuator& actuator, TimeInSeconds delay, double offset )
 	{
 		SCONE_ERROR_IF( motor_layer_ == no_index, "No MotorNeuron layer defined" );
+
 		auto& layer = layers_[ motor_layer_ ];
+		auto& neuron = layer.neurons_.emplace_back( offset );
 		layer.names_.emplace_back( actuator.GetName() );
-		auto& mnl = motor_links_.emplace_back( MotorNeuronLink{ &actuator, layer.neurons_.size(), dynamic_cast<Muscle*>( &actuator ) } );
+
+		auto& mnl = motor_links_.emplace_back();
+		mnl.actuator_ = &actuator;
+		mnl.neuron_idx_ = layer.neurons_.size() - 1;
+		mnl.muscle_ = dynamic_cast<Muscle*>( &actuator );
 		if ( accurate_neural_delays_ )
-		{
-			auto delay_samples = std::max( size_t{ 1 }, xo::round_cast<size_t>( delay / model.fixed_control_step_size ) );
-			mnl.buffer_channel_.buffer_it_ = actuator_buffers_.try_emplace( delay_samples, delay_samples, 0 ).first;
-			mnl.buffer_channel_.channel_idx_ = mnl.buffer_channel_.buffer_it_->second.add_channel();
-		}
-		return layer.neurons_.emplace_back( offset );
+			mnl.buffer_channel_ = make_delay_buffer_channel( actuator_buffers_, delay, model.fixed_control_step_size );
+
+		return neuron;
 	}
 
 	bool NeuralNetworkController::ComputeControls( Model& model, double timestamp )
@@ -141,9 +146,8 @@ namespace scone::NN
 		if ( accurate_neural_delays_ )
 		{
 			if ( timestamp == 0.0 ) {
-				// first run, set and use current value (can be called multiple times)
-				for ( const auto& sl : sensor_links_ )
-				{
+				// first run, initialize buffer and use current value (can be called multiple times)
+				for ( const auto& sl : sensor_links_ ) {
 					auto sensor_value = sl.sensor_->GetValue();
 					sl.buffer_channel_.set( sensor_value );
 					sensor_neurons[ sl.neuron_idx_ ].output_ = sensor_value + sensor_neurons[ sl.neuron_idx_ ].offset_;
@@ -152,11 +156,7 @@ namespace scone::NN
 			else {
 				// get delayed value, advance, set current
 				for ( const auto& sl : sensor_links_ )
-				{
 					sensor_neurons[ sl.neuron_idx_ ].output_ = sl.buffer_channel_.get() + sensor_neurons[ sl.neuron_idx_ ].offset_;
-					if ( sl.sensor_->GetName() == "iliopsoas_l.L" )
-						log::debug( "DELAYED at ", timestamp, "=", sensor_neurons[ sl.neuron_idx_ ].output_ );
-				}
 				for ( auto& sbuf : sensor_buffers_ )
 					sbuf.second.advance();
 				for ( const auto& sl : sensor_links_ )
@@ -189,7 +189,7 @@ namespace scone::NN
 		if ( accurate_neural_delays_ )
 		{
 			if ( timestamp == 0.0 ) {
-				// first run, set and use current value (can be called multiple times)
+				// first run, initialize buffer and use current value (can be called multiple times)
 				for ( const auto& ml : motor_links_ ) {
 					auto motor_value = motor_neurons[ ml.neuron_idx_ ].output_;
 					ml.buffer_channel_.set( motor_value );
@@ -205,8 +205,6 @@ namespace scone::NN
 				for ( auto& ml : motor_links_ )
 					ml.buffer_channel_.set( motor_neurons[ ml.neuron_idx_ ].output_ );
 			}
-// 			for ( auto& ml : motor_links_ )
-// 				ml.actuator_->AddInput( motor_neurons[ ml.neuron_idx_ ].output_ );
 		}
 		else
 		{
