@@ -4,6 +4,8 @@
 #include "xo/utility/handle.h"
 #include "xo/container/handle_vector.h"
 #include "xo/utility/hash.h"
+#include "xo/container/circular_buffer.h"
+#include <map>
 
 namespace scone
 {
@@ -72,17 +74,30 @@ namespace scone
 			std::vector<Link> links_;
 		};
 
+		using DelayBufferMap = std::map< size_t, xo::circular_buffer<Real> >;
+		using DelayBufferMapIter = DelayBufferMap::iterator;
+		struct DelayBufferChannel {
+			DelayBufferMapIter buffer_it_;
+			index_t channel_idx_;
+			void set( Real value ) const { buffer_it_->second.set( channel_idx_, value ); }
+			Real get() const { return buffer_it_->second.get( channel_idx_ ); }
+		};
+
+
 		struct SensorNeuronLink {
-			SensorDelayAdapter* sensor_;
+			SensorDelayAdapter* delayed_sensor_;
+			Sensor* sensor_;
 			TimeInSeconds delay_;
 			index_t neuron_idx_;
 			const Muscle* muscle_;
+			DelayBufferChannel buffer_channel_;
 		};
 
 		struct MotorNeuronLink {
 			Actuator* actuator_;
 			index_t neuron_idx_;
 			const Muscle* muscle_;
+			DelayBufferChannel buffer_channel_;
 		};
 
 		class NeuralNetworkController : public Controller
@@ -97,6 +112,7 @@ namespace scone
 			const double leakyness_;
 			const bool ignore_muscle_lines_;
 			const bool symmetric_;
+			const bool accurate_neural_delays_;
 
 		protected:
 			bool ComputeControls( Model& model, double timestamp ) override;
@@ -105,8 +121,8 @@ namespace scone
 		private:
 			NeuronLayer& AddNeuronLayer( const PropNode& pn, const String& default_activation );
 			LinkLayer& AddLinkLayer( index_t input_layer, index_t output_layer );
-			Neuron& AddSensor( SensorDelayAdapter* sensor, TimeInSeconds delay, double offset );
-			Neuron& AddActuator( Actuator* actuator, double offset );
+			Neuron& AddSensor( Model& model, Sensor& sensor, TimeInSeconds delay, double offset );
+			Neuron& AddActuator( const Model& model, Actuator& actuator, TimeInSeconds delay, double offset );
 			const String& GetParAlias( const String& name );
 			String GetParName( const String& name, bool ignore_muscle_lines, bool symmetric );
 			String GetParName( const String& target, const String& source, const String& type, bool ignore_muscle_lines, bool symmetric );
@@ -123,6 +139,9 @@ namespace scone
 			std::vector< std::vector< LinkLayer > > links_;
 			std::vector<MotorNeuronLink> motor_links_;
 			index_t motor_layer_ = no_index;
+
+			DelayBufferMap sensor_buffers_;
+			DelayBufferMap actuator_buffers_;
 		};
 	}
 }
