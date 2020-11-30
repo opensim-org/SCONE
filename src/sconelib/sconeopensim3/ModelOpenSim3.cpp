@@ -99,6 +99,9 @@ namespace scone
 				enable_external_forces |= cprops.second.get<string>( "type" ) == "PerturbationController";
 		}
 
+		// update features
+		m_Features.allow_external_forces = enable_external_forces;
+
 		// create new OpenSim Model using resource cache
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
