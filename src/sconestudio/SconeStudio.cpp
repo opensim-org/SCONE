@@ -103,6 +103,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	viewActions[ ModelVis::ShowJoints ] = viewMenu->addAction( "Show &Joints", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowContactGeom ] = viewMenu->addAction( "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowGroundPlane ] = viewMenu->addAction( "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
+	viewActions[ ModelVis::ShowModelComHeading ] = viewMenu->addAction( "Show Model COM and &Heading", this, &SconeStudio::updateViewSettings );
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );

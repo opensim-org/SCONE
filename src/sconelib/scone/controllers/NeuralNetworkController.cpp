@@ -376,6 +376,16 @@ namespace scone::NN
 			}
 			break;
 		}
+		case "ComBosSensor"_hash:
+		{
+			const auto name = pn.get<String>( "name" );
+			auto kv = par.try_get( name + ".KV", pn, "velocity_gain", 0.1 );
+			for ( auto side : { RightSide, LeftSide } )
+				AddSensor( model,
+					model.AcquireSensor<ComBosSensor>( model, pn.get<Vec3>( "dir" ), kv, name, side ),
+					pn.get<double>( "delay" ), 0 );
+			break;
+		}
 		case "DofPosVelSensor"_hash:
 		{
 			auto dof_name = pn.get<String>( "dof" );

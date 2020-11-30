@@ -18,6 +18,7 @@
 #include "ForceValue.h"
 #include "Leg.h"
 #include "Sensor.h"
+#include "ModelFeatures.h"
 
 #include "scone/controllers/Controller.h"
 #include "scone/core/HasExternalResources.h"
@@ -25,11 +26,11 @@
 #include "scone/core/HasSignature.h"
 #include "scone/core/Storage.h"
 #include "scone/measures/Measure.h"
+#include "scone/core/Factories.h"
 
 #include <vector>
 #include <type_traits>
 #include <utility>
-#include "scone/core/Factories.h"
 
 namespace scone
 {
@@ -47,6 +48,7 @@ namespace scone
 		// body access
 		std::vector< BodyUP >& GetBodies() { return m_Bodies; }
 		const std::vector< BodyUP >& GetBodies() const { return m_Bodies; }
+		const Body* GetRootBody() const { return m_RootBody; }
 
 		// joint access
 		const std::vector< JointUP >& GetJoints() const { return m_Joints; }
@@ -132,6 +134,7 @@ namespace scone
 		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
+		virtual Quat GetHeading() const;
 
 		// get static model info
 		virtual Real GetMass() const = 0;
@@ -142,6 +145,9 @@ namespace scone
 		// custom model properties
 		PropNode& GetUserData() { return m_UserData; }
 		virtual PropNode GetInfo() const;
+
+		// features supported by this model
+		virtual const ModelFeatures& GetFeatures() const { return m_Features; }
 
 		// acquire a sensor of type SensorT with a source of type SourceT
 		template< typename SensorT, typename... Args > SensorT& AcquireSensor( Args&&... args ) {
@@ -243,10 +249,12 @@ namespace scone
 		Storage< Real > m_SensorDelayStorage;
 		std::vector< std::unique_ptr< SensorDelayAdapter > > m_SensorDelayAdapters;
 		std::vector< std::unique_ptr< Sensor > > m_Sensors;
+		Body* m_RootBody;
 
 		const PropNode* m_pModelProps;
 		const PropNode* m_pCustomProps;
 		PropNode m_UserData;
+		ModelFeatures m_Features;
 
 		// storage for HasData classes
 		Storage< Real, TimeInSeconds > m_Data;

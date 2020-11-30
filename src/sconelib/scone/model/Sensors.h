@@ -205,6 +205,18 @@ namespace scone
 		const double target_;
 	};
 
+	// sensor of the center of mass wrt base of support
+	struct SCONE_API ComBosSensor : public Sensor
+	{
+		ComBosSensor( const Model& mod, const Vec3& dir, double kv, const String& name, Side side );
+		virtual String GetName() const override { return name_; }
+		virtual Real GetValue() const override;
+		const Model& model_;
+		const double kv_;
+		const Vec3 dir_;
+		const String name_;
+	};
+
 	struct SCONE_API ModulatedSensor : public Sensor
 	{
 		ModulatedSensor( const Sensor& sensor, const Sensor& modulator, double gain, double ofs, const String& name, xo::boundsd mod_range = { 0.0, 1.0 } );

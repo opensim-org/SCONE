@@ -15,6 +15,7 @@ data {
 	measure { type = bool label = "Output measure data" default = 1 description = "Output measure data" }
 	grf { type = bool label = "Output ground reaction force" default = 1 description = "Output ground reaction force" }
 	contact { type = bool label = "Output contact forces and moments" default = 1 description = "Output contact forces and moments" }
+	# dof { type = bool label = "Output dof moments and powers" default = 0 description = "Output dof moments and powers" }
 	debug { type = bool label = "Output debug data" default = 0 description = "Output debug data" }
 	simulation { type = bool label = "Output simulation statisticts" default = 0 description = "Output simulation statisticts" }
 }

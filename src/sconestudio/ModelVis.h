@@ -29,7 +29,9 @@ namespace scone
 			ShowContactGeom,
 			ShowGroundPlane,
 			EnableShadows,
-			ShowBodyCom	};
+			ShowBodyCom,
+			ShowModelComHeading
+		};
 		using ViewSettings = xo::flag_set< VisOpt >;
 
 		void ApplyViewSettings( const ViewSettings& f );
@@ -51,6 +53,7 @@ namespace scone
 		ViewSettings view_flags;
 		vis::plane ground_;
 		vis::node root_node_;
+		vis::arrow heading_;
 		float specular_;
 		float shininess_;
 		float ambient_;

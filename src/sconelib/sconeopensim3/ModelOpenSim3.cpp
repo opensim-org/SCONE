@@ -271,6 +271,7 @@ namespace scone
 		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			m_Bodies.emplace_back( std::make_unique<BodyOpenSim3>( *this, m_pOsimModel->getBodySet().get( idx ) ) );
+		m_RootBody = m_Bodies.empty() ? nullptr : &*m_Bodies.front();
 
 		// Create wrappers for joints
 		m_Joints.reserve( m_pOsimModel->getJointSet().getSize() );

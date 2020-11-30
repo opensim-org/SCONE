@@ -86,8 +86,14 @@ namespace scone
 	}
 
 	// get direction vector that is mirrored in the XY plane for LeftSide, used in e.g. BodyOrientationSensor
-	inline Vec3 GetSidedDir( Vec3 dir, Side side ) {
-		if ( side == LeftSide ) { dir.x = -dir.x; dir.y = -dir.y; }
+	inline Vec3 GetSidedAxis( Vec3 axis, Side side ) {
+		if ( side == LeftSide ) { axis.x = -axis.x; axis.y = -axis.y; }
+		return axis;
+	}
+
+	// get direction vector that is mirrored in the XY plane for LeftSide, used in e.g. ComBosSensor
+	inline Vec3 GetSidedDirection( Vec3 dir, Side side ) {
+		if ( side == LeftSide ) dir.z = -dir.z;
 		return dir;
 	}
 

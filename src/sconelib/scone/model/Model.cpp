@@ -41,6 +41,9 @@ namespace scone
 		m_Measure( nullptr ),
 		m_Controller( nullptr ),
 		m_ShouldTerminate( false ),
+		m_RootBody( nullptr ),
+		m_pModelProps( nullptr ),
+		m_pCustomProps( nullptr ),
 		m_StoreData( false ),
 		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
 	{
@@ -83,6 +86,7 @@ namespace scone
 		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
 		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
+		//flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
 		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
@@ -390,6 +394,12 @@ namespace scone
 		for ( const LegUP& leg : GetLegs() )
 			force += xo::length( leg->GetContactForce() );
 		return force;
+	}
+
+	Quat Model::GetHeading() const
+	{
+		SCONE_ASSERT( m_RootBody );
+		return m_RootBody->GetOrientation();
 	}
 
 	Real Model::GetBW() const
