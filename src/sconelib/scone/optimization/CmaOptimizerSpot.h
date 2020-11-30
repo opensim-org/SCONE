@@ -32,6 +32,9 @@ namespace scone
 		virtual void Run() override;
 		virtual double GetBestFitness() const override { return best_fitness(); }
 		static spot::evaluator& GetEvaluator();
+
+		/// Maximum number of errors allowed during evaluation, use a negative value equates to ''lambda - max_errors''; default = 0
+		int max_errors; // for documentation only, copies value to spot::max_errors_ during construction
 	};
 
 	class SCONE_API CmaOptimizerReporter : public spot::reporter

@@ -30,11 +30,12 @@ namespace scone
 				spot::cma_weights::log,
 				pn.get<double>( "update_eigen_modulo", -1.0 )
 			}
-		)
+		),
+		INIT_MEMBER( pn, max_errors, max_errors_ )
 	{
-		size_t dim = GetObjective().dim();
-		SCONE_ASSERT( dim > 0 );
+		SCONE_ASSERT( GetObjective().dim()  > 0 );
 
+		max_errors_ = max_errors; // copy to spot::optimizer::max_errors_
 		lambda_ = lambda();
 		mu_ = mu();
 		sigma_ = sigma();
