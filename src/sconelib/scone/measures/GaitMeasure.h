@@ -15,10 +15,17 @@
 namespace scone
 {
 	/// Measure for locomotion at a predefined speed, defined by the parameters ''min_velocity'' and (optionally) ''max_velocity''.
-	/** The measure returns a value between ''0'' (velocity conditions are met) and ''1'' (model falls over immediately).
+	/**
+	This measure returns a value between ''0'' (velocity conditions are met) and ''1'' (model falls over immediately).
+
+	Specifically, the value represents the average by which the velocity of each step falls between **min_velocity** and **max_velocity**.
+	The value is normalized by **min_velocity**, i.e. a step velocity of 0.5 times **min_velocity** has a score of 0.5.
+
 	In order to save simulation time and increasing optimization performance, the ''termination_height'' parameter is used to detect if the model has fallen,
 	after which the simulation is terminated early (assuming it will not recover). It does so by comparing the center of mass (COM) height
-	to the initial state, and terminates when ''(COM-height / initial-COM-height) < termination_height''. See Tutorials 4 and 5 for examples.
+	to the initial state, and terminates when ''(COM-height / initial-COM-height) < termination_height''.
+	
+	See Tutorials 4 and 5 for examples.
 	*/
 	class GaitMeasure : public Measure
 	{
