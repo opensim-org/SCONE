@@ -118,16 +118,22 @@ namespace scone
 		if ( model_ && vis_ )
 		{
 			SCONE_PROFILE_FUNCTION( model_->GetProfiler() );
-
-			if ( !storage_.IsEmpty() && !state_data_index.empty() )
+			try
 			{
-				// update model state from data
-				for ( index_t i = 0; i < model_state.GetSize(); ++i )
-					model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
-				model_->SetState( model_state, time );
-			}
+				if ( !storage_.IsEmpty() && !state_data_index.empty() )
+				{
+					// update model state from data
+					for ( index_t i = 0; i < model_state.GetSize(); ++i )
+						model_state[ i ] = storage_.GetInterpolatedValue( time, state_data_index[ i ] );
+					model_->SetState( model_state, time );
+				}
 
-			vis_->Update( *model_ );
+				vis_->Update( *model_ );
+			}
+			catch ( std::exception& e )
+			{
+				InvokeError( e.what() );
+			}
 		}
 	}
 
@@ -156,7 +162,6 @@ namespace scone
 			status_ = Status::Aborted;
 			storage_ = model_->GetData();
 			InitStateDataIndices();
-
 		}
 		catch ( const std::exception& e )
 		{
@@ -175,25 +180,34 @@ namespace scone
 
 	void StudioModel::FinalizeEvaluation()
 	{
-		SCONE_ERROR_IF( !model_objective_, "No model objective" );
+		if ( model_objective_ )
+		{
+			try
+			{
+				// fetch data
+				storage_ = model_->GetData();
+				InitStateDataIndices();
 
-		// fetch data
-		storage_ = model_->GetData();
-		InitStateDataIndices();
+				// show fitness results
+				auto fitness = model_objective_->GetResult( *model_ );
+				//log::info( "fitness = ", fitness );
+				PropNode results = GetResult();
+				log::info( results );
 
-		// show fitness results
-		auto fitness = model_objective_->GetResult( *model_ );
-		//log::info( "fitness = ", fitness );
-		PropNode results = GetResult();
-		log::info( results );
+				// write results to file(s)
+				xo::timer t;
+				auto result_files = model_->WriteResults( filename_ );
+				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
 
-		// write results to file(s)
-		xo::timer t;
-		auto result_files = model_->WriteResults( filename_ );
-		log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
-
-		// we're done!
-		status_ = Status::Ready;
+				// we're done!
+				status_ = Status::Ready;
+			}
+			catch ( std::exception& e )
+			{
+				InvokeError( e.what() );
+			}
+		}
+		else log::warning( "Unexpected call to StudioModel::FinalizeEvaluation()" );
 	}
 
 	void StudioModel::InvokeError( const String& message )
@@ -204,7 +218,7 @@ namespace scone
 			log::error( "Error in ", filename_.filename(), ": ", message );
 			QMessageBox::critical( nullptr, "Error in " + to_qt( filename_.filename() ), message.c_str() );
 		}
-		else log::warning( "Duplicate error: ", message );
+		else log::error( message );
 	}
 
 	TimeInSeconds StudioModel::GetMaxTime() const

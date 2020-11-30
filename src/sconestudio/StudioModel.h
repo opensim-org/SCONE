@@ -34,7 +34,7 @@ namespace scone
 		void AbortEvaluation();
 
 		const Storage<>& GetData() { return storage_; }
-		bool HasModel() const { return bool( model_ ); }
+		bool HasModel() const { return bool( model_ ) && IsValid(); }
 		bool HasData() const { return !storage_.IsEmpty() && !state_data_index.empty(); }
 
 		Model& GetModel() { return *model_; }
