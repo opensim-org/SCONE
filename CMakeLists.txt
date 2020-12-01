@@ -18,6 +18,7 @@ option(SCONE_LUA "Support for lua scripting" OFF)
 option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
 option(SCONE_ENABLE_PROFILER "Enable SCONE profiler" ON)
 option(SCONE_SCONESTUDIO_REQUIRED "Require that sconestudio is built" OFF)
+option(SCONE_EXPERIMENTAL_FEATURES "Enable experimental features" OFF)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 # http://doc.qt.io/qt-5/cmake-manual.html

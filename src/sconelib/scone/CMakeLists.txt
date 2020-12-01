@@ -273,6 +273,10 @@ target_link_libraries(sconelib xo spot)
 
 set_target_properties(sconelib PROPERTIES PROJECT_LABEL sconelib )
 
+if (SCONE_EXPERIMENTAL_FEATURES)
+	target_compile_definitions(sconelib PUBLIC SCONE_EXPERIMENTAL_FEATURES)
+endif()
+
 if (MSVC)
 	target_precompile_headers(sconelib PRIVATE <string> <vector> <algorithm> <memory> <limits> <fstream>)
 	file (GLOB_RECURSE PRECOMPILED_HEADER_FILES ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.*)

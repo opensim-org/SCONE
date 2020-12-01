@@ -59,6 +59,9 @@ namespace scone
 	ControllerFactory& GetControllerFactory()
 	{
 		static ControllerFactory g_ControllerFactory = ControllerFactory()
+#ifdef SCONE_EXPERIMENTAL_FEATURES
+			.register_type< NN::NeuralNetworkController >( "NeuralNetworkController" )
+#endif
 			.register_type< FeedForwardController >()
 			.register_type< GaitStateController >()
 			.register_type< ReflexController >()
@@ -67,8 +70,7 @@ namespace scone
 			.register_type< NeuralController >()
 			.register_type< CompositeController >()
 			.register_type< SequentialController >()
-			.register_type< NoiseController >()
-			.register_type< NN::NeuralNetworkController >( "NeuralNetworkController" );
+			.register_type< NoiseController >();
 
 		return g_ControllerFactory;
 	}
