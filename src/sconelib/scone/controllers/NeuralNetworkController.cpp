@@ -371,8 +371,7 @@ namespace scone::NN
 			{
 				auto& bov = model.AcquireSensor<BodyOriVelSensor>( body, pn.get<Vec3>( "dir" ), kv, postfix, side, target );
 				auto& load = model.AcquireSensor<LegLoadSensor>( model.GetLeg( Location( side ) ) );
-				AddSensor( model, model.AcquireSensor<ModulatedSensor>( bov, load, load_gain, 0, bov.GetName() + "ST" ), delay, 0 );
-				AddSensor( model, model.AcquireSensor<ModulatedSensor>( bov, load, -load_gain, 1, bov.GetName() + "SW" ), delay, 0 );
+				AddSensor( model, model.AcquireSensor<ModulatedSensor>( bov, load, load_gain, 0, bov.GetName() ), delay, 0 );
 			}
 			break;
 		}
@@ -380,10 +379,14 @@ namespace scone::NN
 		{
 			const auto name = pn.get<String>( "name" );
 			auto kv = par.try_get( name + ".KV", pn, "velocity_gain", 0.1 );
+			const auto delay = pn.get<double>( "delay" );
+			const auto load_gain = pn.get<double>( "load_gain", 4.0 );
 			for ( auto side : { RightSide, LeftSide } )
-				AddSensor( model,
-					model.AcquireSensor<ComBosSensor>( model, pn.get<Vec3>( "dir" ), kv, name, side ),
-					pn.get<double>( "delay" ), 0 );
+			{
+				auto& cb = model.AcquireSensor<ComBosSensor>( model, pn.get<Vec3>( "dir" ), kv, name, side );
+				auto& load = model.AcquireSensor<LegLoadSensor>( model.GetLeg( Location( side ) ) );
+				AddSensor( model, model.AcquireSensor<ModulatedSensor>( cb, load, -load_gain, 1, cb.GetName() ), delay, 0 );
+			}
 			break;
 		}
 		case "DofPosVelSensor"_hash:

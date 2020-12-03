@@ -24,6 +24,7 @@
 #include "xo/geometry/quat.h"
 #include "xo/shape/sphere.h"
 #include "xo/serialization/serialize.h"
+#include "xo/shape/shape_tools.h"
 
 #include "StudioSettings.h"
 

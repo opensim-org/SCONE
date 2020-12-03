@@ -229,7 +229,6 @@ namespace scone
 		String name_;
 		xo::boundsd mod_range_;
 	};
-
 }
 
 #if defined(_MSC_VER)

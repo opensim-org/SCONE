@@ -24,11 +24,13 @@
 #include "xo/container/container_tools.h"
 #include "xo/string/string_tools.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/container/storage.h"
+#include "xo/container/flat_map.h"
+#include "xo/shape/shape_tools.h"
+#include "xo/container/container_algorithms.h"
 
 #include <algorithm>
 #include <tuple>
-#include "xo/container/storage.h"
-#include "xo/container/flat_map.h"
 #include <fstream>
 
 using std::endl;
@@ -378,28 +380,13 @@ namespace scone
 	Real Model::GetComHeight( const Vec3& up ) const
 	{
 		auto com = GetComPos();
-		if ( auto* ground = GetGroundPlane() )
-		{
-			auto r = xo::linef( xo::vec3f( com ), xo::vec3f( -up ) );
-			auto t = xo::transformf( xo::vec3f( ground->GetPos() ), xo::quatf( ground->GetOri() ) );
-			auto p = xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
-			return com.y - p.y;
-		}
-		else return com.y;
+		return com.y - GetProjectedOntoGround( com ).y;
 	}
 
 	Real Model::GetTotalContactForce() const
 	{
-		Real force = 0.0;
-		for ( const LegUP& leg : GetLegs() )
-			force += xo::length( leg->GetContactForce() );
-		return force;
-	}
-
-	Quat Model::GetHeading() const
-	{
-		SCONE_ASSERT( m_RootBody );
-		return m_RootBody->GetOrientation();
+		return xo::accumulate( GetLegs(), 0.0,
+			[]( double v, const LegUP& l ) { return v + xo::length( l->GetContactForce() ); }  );
 	}
 
 	Real Model::GetBW() const
@@ -413,6 +400,17 @@ namespace scone
 		if ( cg.size() > 0 && std::holds_alternative< xo::plane >( cg.front()->GetShape() ) )
 			return cg.front().get();
 		else return nullptr;
+	}
+
+	Vec3 Model::GetProjectedOntoGround( const Vec3& point, const Vec3& up ) const
+	{
+		if ( auto* ground = GetGroundPlane() )
+		{
+			auto r = xo::lined( point, -up );
+			auto t = xo::transformd( ground->GetPos(), ground->GetOri() );
+			return xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
+		}
+		else return point;
 	}
 
 	PropNode Model::GetInfo() const

@@ -115,7 +115,7 @@ namespace scone
 			joints.back().set_material( joint_mat );
 		}
 
-		heading_ = vis::arrow( root_node_, 0.01f, 0.02f, xo::color::yellow() );
+		heading_ = vis::arrow( root_node_, 0.01f, 0.02f, xo::color::green() );
 		heading_.set_material( com_mat );
 
 		ApplyViewSettings( view_flags );
@@ -171,7 +171,11 @@ namespace scone
 
 		// update com / heading
 		if ( view_flags.get<ShowModelComHeading>() )
-			heading_.pos_ofs( xo::vec3f( model.GetComPos() ), xo::quatf( model.GetHeading() ) * ( 0.5f * xo::vec3f::unit_x() ) );
+		{
+			auto pos = xo::vec3f( model.GetComPos() );
+			auto dir = xo::quatf( model.GetRootBody()->GetOrientation() ) * xo::vec3f( 0.5f, 0, 0 );
+			heading_.pos_ofs( pos, dir );
+		}
 	}
 
 	void ModelVis::UpdateForceVis( index_t force_idx, Vec3 cop, Vec3 force )

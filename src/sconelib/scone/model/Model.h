@@ -134,13 +134,13 @@ namespace scone
 		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
-		virtual Quat GetHeading() const;
 
 		// get static model info
 		virtual Real GetMass() const = 0;
 		virtual Vec3 GetGravity() const = 0;
 		virtual Real GetBW() const;
 		virtual const ContactGeometry* GetGroundPlane() const;
+		virtual Vec3 GetProjectedOntoGround( const Vec3& point, const Vec3& up = Vec3::unit_y() ) const;
 
 		// custom model properties
 		PropNode& GetUserData() { return m_UserData; }

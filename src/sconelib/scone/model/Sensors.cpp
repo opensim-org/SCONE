@@ -13,6 +13,7 @@
 #include "Dof.h"
 #include "xo/geometry/vec3.h"
 #include "xo/geometry/quat.h"
+#include "xo/container/container_algorithms.h"
 #include <numeric>
 
 namespace scone
@@ -102,19 +103,20 @@ namespace scone
 	ComBosSensor::ComBosSensor( const Model& mod, const Vec3& dir, double kv, const String& name, Side side ) :
 		model_( mod ), dir_( GetSidedDirection( dir, side ) ), kv_( kv ), name_( GetSidedName( name, side ) + ".CB" ) {
 		SCONE_ERROR_IF( model_.GetLegCount() <= 0, "Could not find legs in model" );
+		SCONE_ERROR_IF( model_.GetRootBody() == nullptr, "Model has no root body" );
 	}
 	Real ComBosSensor::GetValue() const {
-		const auto com = model_.GetComPos() + kv_ * model_.GetComVel();
-		const auto& legs = model_.GetLegs();
-		Vec3 leg_pos;
-		for ( const auto& leg : model_.GetLegs() )
-			leg_pos += leg->GetFootBody().GetComPos();
-		leg_pos /= Real( model_.GetLegCount() );
-		return xo::dot_product( model_.GetHeading() * dir_, com - leg_pos );
+		const auto com = model_.GetProjectedOntoGround( model_.GetComPos() + kv_ * model_.GetComVel() );
+		const auto bosp = xo::average( model_.GetLegs(), Vec3(),
+			[]( const Vec3& v, const LegUP& l ) { return v + l->GetFootBody().GetComPos(); } );
+		const auto bosv = xo::average( model_.GetLegs(), Vec3(),
+			[]( const Vec3& v, const LegUP& l ) { return v + l->GetFootBody().GetComVel(); } );
+		const auto bos = model_.GetProjectedOntoGround( bosp + kv_ * bosv );
+		return xo::dot_product( model_.GetRootBody()->GetOrientation() * dir_, com - bos );
 	}
 
 	ModulatedSensor::ModulatedSensor( const Sensor& sensor, const Sensor& modulator, double gain, double ofs, const String& name, xo::boundsd mod_range ) :
-		sensor_( sensor ), modulator_( modulator ), gain_( gain ), ofs_( ofs ), name_( name ),mod_range_( mod_range ) {}
+		sensor_( sensor ), modulator_( modulator ), gain_( gain ), ofs_( ofs ), name_( name ), mod_range_( mod_range ) {}
 	Real ModulatedSensor::GetValue() const {
 		auto mv = mod_range_.clamped( gain_ * modulator_.GetValue() + ofs_ );
 		return sensor_.GetValue() * mv;
