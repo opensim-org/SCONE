@@ -30,6 +30,8 @@ set(CORE_MATH_FILES
 	core/Polynomial.cpp
 	core/SineWave.h
 	core/SineWave.cpp
+	core/Bezier.h
+	core/Bezier.cpp
 	)
 set(CORE_SYSTEM_FILES
 	core/FactoryProps.h

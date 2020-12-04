@@ -5,7 +5,7 @@ set(CORE_BASE_FILES
     HasName.h
     HasSignature.cpp
     HasSignature.h
-	Result.h
+    Result.h
     )
 set(CORE_MATH_FILES
     Vec3.h
@@ -32,7 +32,7 @@ set(CORE_TOOLS_FILES
     Profiler.h
     ResourceCache.h
     Storage.h
-	StorageIo.h
+    StorageIo.h
     StringMap.h
     system.cpp
     system.h

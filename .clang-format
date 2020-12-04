@@ -11,7 +11,7 @@ SpaceBeforeAssignmentOperators: 'true'
 SpaceBeforeCpp11BracedList: 'true'
 SpaceBeforeCtorInitializerColon: 'true'
 SpaceBeforeInheritanceColon: 'true'
-SpaceBeforeParens: Always
+SpaceBeforeParens: ControlStatements
 SpaceBeforeRangeBasedForLoopColon: 'true'
 SpaceInEmptyParentheses: 'true'
 SpacesInAngles: 'true'
@@ -19,7 +19,9 @@ SpacesInCStyleCastParentheses: 'true'
 SpacesInContainerLiterals: 'true'
 SpacesInParentheses: 'true'
 SpacesInSquareBrackets: 'true'
+FixNamespaceComments: true
 TabWidth: '4'
 UseTab: Always
-
+NamespaceIndentation: All
+AccessModifierOffset: -4
 ...
