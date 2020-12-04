@@ -77,7 +77,7 @@ namespace scone
 
 		Real B = 0;
 		size_t n = m_ControlPoints.size( ) - 1; // n: degree
-		for ( int i = 0; i < n - 1; i++ )
+		for ( int i = 0; i <= n - 1; i++ )
 			B += bernstein( n - 1, i, x ) *
 				 ( m_ControlPoints[ i + 1 ] - m_ControlPoints[ i ] );
 
