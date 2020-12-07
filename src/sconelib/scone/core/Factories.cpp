@@ -26,6 +26,7 @@
 #include "scone/core/PieceWiseLinearFunction.h"
 #include "scone/core/Polynomial.h"
 #include "scone/core/SineWave.h"
+#include "scone/core/Bezier.h"
 
 #include "scone/measures/BalanceMeasure.h"
 #include "scone/measures/BodyMeasure.h"
@@ -147,7 +148,8 @@ namespace scone
 			.register_type< PieceWiseLinearFunction >()
 			.register_type< PieceWiseLinearFunction >( "PieceWiseLinear" )
 			.register_type< Polynomial >()
-			.register_type< SineWave >();
+			.register_type< SineWave >()
+			.register_type< Bezier >();
 
 		return g_FunctionFactory;
 	}
