@@ -31,9 +31,10 @@ namespace scone
 	}
 
 	Bezier::Bezier( const std::vector< Real >& controlPoints )
-		: control_points( controlPoints.size( ) ),
+		: control_points( static_cast<int>( controlPoints.size() ) ),
 		  m_ControlPoints( controlPoints )
 	{
+		SCONE_CHECK_RANGE( control_points, 2, 99 );
 	}
 
 	Bezier::Bezier( const PropNode& props, Params& par )
@@ -55,7 +56,7 @@ namespace scone
 													stringf( "Y%d", i ), 0.0 );
 	}
 
-	Bezier::~Bezier( ) {}
+	Bezier::~Bezier() {}
 
 	Real Bezier::GetValue( Real x )
 	{
@@ -63,7 +64,7 @@ namespace scone
 						  "Bezier curve expects 0 <= x <= 1" );
 
 		Real B = 0;
-		size_t n = m_ControlPoints.size( ) - 1; // n: degree
+		int n = int( m_ControlPoints.size() ) - 1; // n: degree
 		for ( int i = 0; i <= n; i++ )
 			B += bernstein( n, i, x ) * m_ControlPoints[ i ];
 
@@ -76,7 +77,7 @@ namespace scone
 						  "Bezier curve expects 0 <= x <= 1" );
 
 		Real B = 0;
-		size_t n = m_ControlPoints.size( ) - 1; // n: degree
+		int n = int( m_ControlPoints.size() ) - 1; // n: degree
 		for ( int i = 0; i <= n - 1; i++ )
 			B += bernstein( n - 1, i, x ) *
 				 ( m_ControlPoints[ i + 1 ] - m_ControlPoints[ i ] );
@@ -84,9 +85,9 @@ namespace scone
 		return n * B;
 	}
 
-	String Bezier::GetSignature( )
+	String Bezier::GetSignature()
 	{
-		return stringf( "B%d", m_ControlPoints.size( ) );
+		return stringf( "B%d", m_ControlPoints.size() );
 	}
 
 } // namespace scone
