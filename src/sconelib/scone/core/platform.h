@@ -28,6 +28,12 @@ constexpr bool SCONE_DEBUG = false;
 constexpr bool SCONE_DEBUG = true;
 #endif
 
+#ifdef SCONE_EXPERIMENTAL_FEATURES
+#	define SCONE_EXPERIMENTAL_FEATURES_ENABLED 1
+#else
+#	define SCONE_EXPERIMENTAL_FEATURES_ENABLED 0
+#endif
+
 #if defined(_MSC_VER)
 #	pragma warning( disable: 4251 ) // disable W4251, unfortunately there's no nice way to do this
 #endif

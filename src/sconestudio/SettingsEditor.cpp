@@ -46,13 +46,15 @@ namespace scone
 		xo::flat_map< string, QListWidgetItem* > data_checkboxes;
 		for ( auto& item : scone_settings.schema().get_child( "data" ) )
 		{
-			if ( item.second.get<string>( "type" ) == "bool" )
-			{
-				auto* checkbox = new QListWidgetItem( item.second.get<string>( "label" ).c_str() );
-				checkbox->setCheckState( scone_settings.get< bool >( "data." + item.first ) ? Qt::Checked : Qt::Unchecked );
-				ui.dataList->addItem( checkbox );
-				data_checkboxes[ item.first ] = checkbox;
-			}
+			if ( item.second.get<string>( "type" ) != "bool" )
+				continue;
+			if ( !GetExperimentalFeaturesEnabled() && item.second.get<bool>( "experimental", 0 ) )
+				continue;
+
+			auto* checkbox = new QListWidgetItem( item.second.get<string>( "label" ).c_str() );
+			checkbox->setCheckState( scone_settings.get< bool >( "data." + item.first ) ? Qt::Checked : Qt::Unchecked );
+			ui.dataList->addItem( checkbox );
+			data_checkboxes[ item.first ] = checkbox;
 		}
 
 		// advanced settings

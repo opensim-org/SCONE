@@ -88,7 +88,9 @@ namespace scone
 		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
 		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
-		//flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
+#ifdef SCONE_EXPERIMENTAL_FEATURES
+		flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
+#endif
 		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
@@ -199,7 +201,10 @@ namespace scone
 		if ( flags( StoreDataTypes::DofMoment ) )
 		{
 			for ( auto& d : GetDofs() )
+			{
 				frame[ d->GetName() + ".moment" ] = d->GetMoment();
+				frame[ d->GetName() + ".acceleration" ] = d->GetAcc();
+			}
 		}
 
 		// store controller / measure data
