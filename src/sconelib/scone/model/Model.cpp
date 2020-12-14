@@ -90,6 +90,7 @@ namespace scone
 		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
 #ifdef SCONE_EXPERIMENTAL_FEATURES
 		flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
+		flags.set( StoreDataTypes::MuscleMoment, GetSconeSetting<bool>( "data.dof" ) );
 #endif
 		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
@@ -202,7 +203,8 @@ namespace scone
 		{
 			for ( auto& d : GetDofs() )
 			{
-				frame[ d->GetName() + ".moment" ] = d->GetMoment();
+				frame[ d->GetName() + ".moment" ] = d->GetMuscleMoment();
+				frame[ d->GetName() + ".moment_norm" ] = d->GetMuscleMoment() / GetMass();
 				frame[ d->GetName() + ".acceleration" ] = d->GetAcc();
 			}
 		}

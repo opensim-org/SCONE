@@ -22,6 +22,7 @@ namespace scone
 		MuscleActivation,
 		MuscleFiberProperties,
 		MuscleTendonProperties,
+		MuscleMoment,
 		JointReactionForce,
 		DofMoment,
 		BodyOriginPosition,

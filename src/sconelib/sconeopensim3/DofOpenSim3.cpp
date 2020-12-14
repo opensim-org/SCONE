@@ -69,11 +69,6 @@ namespace scone
 		else return 0.0;
 	}
 
-	Real DofOpenSim3::GetMoment() const
-	{
-		SCONE_THROW_NOT_IMPLEMENTED;
-	}
-
 	void DofOpenSim3::SetPos( Real pos, bool enforce_constraints )
 	{
 		if ( !m_osCoord.getLocked( m_Model.GetTkState() ) )
@@ -114,5 +109,10 @@ namespace scone
 	Real DofOpenSim3::GetMaxTorque() const
 	{
 		return m_OsCoordAct ? m_OsCoordAct->getMaxControl() * m_OsCoordAct->getOptimalForce() : 0.0;
+	}
+
+	const Model& DofOpenSim3::GetModel() const
+	{
+		return m_Model;
 	}
 }

@@ -36,6 +36,7 @@ namespace scone
 
 		virtual Real GetMomentArm( const Dof& dof ) const = 0;
 		virtual Real GetNormalizedMomentArm( const Dof& dof ) const;
+		virtual Real GetMoment( const Dof& dof ) const;
 
 		virtual Real GetMaxIsometricForce() const = 0;
 		virtual Real GetOptimalFiberLength() const = 0;
@@ -89,7 +90,8 @@ namespace scone
 		virtual void StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const override;
 		virtual PropNode GetInfo() const;
 
-	private:
+	protected:
+		void InitJointsDofs();
 		mutable std::vector< const Joint* > m_Joints;
 		mutable std::vector< const Dof* > m_Dofs;
 	};
