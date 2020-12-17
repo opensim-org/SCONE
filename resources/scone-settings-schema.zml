@@ -12,8 +12,8 @@ data {
 	muscle { type = bool label = "Output muscle properties" default = 1 }
 	muscle_dof { type = bool label = "Output muscle moments and powers" default = 0 }
 	grf { type = bool label = "Output ground reaction force" default = 1 }
-	contact { type = bool label = "Output contact forces and moments" default = 1 }
-	power { type = bool label = "Output system powers" default = 1 }
+	contact { type = bool label = "Output contact forces and moments" default = 0 }
+	power { type = bool label = "Output system powers" default = 0 }
 	sensor { type = bool label = "Output sensor data" default = 1 }
 	controller { type = bool label = "Output controller data" default = 1 }
 	measure { type = bool label = "Output measure data" default = 1 }
