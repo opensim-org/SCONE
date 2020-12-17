@@ -690,7 +690,7 @@ namespace scone
 		// for all storage channels, check if there's a matching state
 		for ( int i = 0; i < storeLabels.getSize(); i++ )
 		{
-			index_t idx = m_State.GetIndex( storeLabels[ i ] );
+			index_t idx = m_State.FindIndex( storeLabels[ i ] );
 			if ( idx != NoIndex )
 				m_State[ idx ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
 		}
@@ -701,7 +701,7 @@ namespace scone
 		const Real step_size = 0.1;
 		const Real max_range = 10.0; // don't look further than 10 meters up or down
 
-		if ( GetState().GetIndex( initial_load_dof ) == NoIndex )
+		if ( GetState().FindIndex( initial_load_dof ) == NoIndex )
 		{
 			log::warning( "Ignoring initial load setting, could not find ", initial_load_dof );
 			return;
@@ -795,7 +795,7 @@ namespace scone
 			UpdateControlValues();
 	}
 
-	void ModelOpenSim3::SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp )
+	void ModelOpenSim3::SetStateValues( const std::vector<Real>& state, TimeInSeconds timestamp )
 	{
 		m_State.SetValues( state );
 		CopyStateToTk();
