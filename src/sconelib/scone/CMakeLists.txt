@@ -72,6 +72,7 @@ set(CORE_TOOL_FILES
 	core/string_tools.h
 	core/GaitCycle.cpp
 	core/GaitCycle.h
+	core/CachedVar.h
 	)
 set(CS_CONTROLLERS_FILES
 	controllers/Controller.cpp
