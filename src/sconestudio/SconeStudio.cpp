@@ -130,6 +130,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	toolsMenu->addAction( "&Model Analysis", this, &SconeStudio::modelAnalysis );
 	toolsMenu->addAction( "M&uscle Analysis", this, &SconeStudio::muscleAnalysis );
 	toolsMenu->addAction( "&Gait Analysis", this, &SconeStudio::updateGaitAnalysis, QKeySequence( "Ctrl+G" ) );
+	toolsMenu->addAction( "Fil&ter Analysis", this, &SconeStudio::activateAnalysisFilter, QKeySequence( "Ctrl+L" ) );
 	toolsMenu->addAction( "&Keep Current Analysis Graphs", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+Shift+K" ) );
 	toolsMenu->addSeparator();
 	toolsMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
@@ -139,7 +140,7 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	actionMenu->addAction( "&Play or Evaluate", ui.playControl, &QPlayControl::togglePlay, Qt::Key_F5 );
 	actionMenu->addAction( "&Stop / Reset", ui.playControl, &QPlayControl::stopReset, Qt::Key_F8 );
 	actionMenu->addAction( "Toggle Play", ui.playControl, &QPlayControl::togglePlay, QKeySequence( "Ctrl+Space" ) );
-	actionMenu->addAction( "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+L" ) );
+	actionMenu->addAction( "Toggle Loop", ui.playControl, &QPlayControl::toggleLoop, QKeySequence( "Ctrl+Shift+L" ) );
 	actionMenu->addAction( "Play F&aster", ui.playControl, &QPlayControl::faster, QKeySequence( "Ctrl+Up" ) );
 	actionMenu->addAction( "Play S&lower", ui.playControl, &QPlayControl::slower, QKeySequence( "Ctrl+Down" ) );
 	actionMenu->addSeparator();
@@ -178,8 +179,8 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	addDockWidget( Qt::BottomDockWidgetArea, ui.messagesDock );
 	registerDockWidget( ui.messagesDock, "&Messages" );
 
-	auto* analysis_dock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
-	tabifyDockWidget( ui.messagesDock, analysis_dock );
+	analysisDock = createDockWidget( "&Analysis", analysisView, Qt::BottomDockWidgetArea );
+	tabifyDockWidget( ui.messagesDock, analysisDock );
 
 	// gait analysis
 	gaitAnalysis = new GaitAnalysis( this );
@@ -477,6 +478,12 @@ void SconeStudio::updateGaitAnalysis()
 		}
 	}
 	catch ( const std::exception& e ) { error( "Error", e.what() ); }
+}
+
+void SconeStudio::activateAnalysisFilter()
+{
+	analysisDock->raise();
+	analysisView->focusFilterEdit();
 }
 
 void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
