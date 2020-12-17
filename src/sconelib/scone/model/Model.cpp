@@ -47,7 +47,7 @@ namespace scone
 		m_pModelProps( nullptr ),
 		m_pCustomProps( nullptr ),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
@@ -83,27 +83,22 @@ namespace scone
 		// set store data info from settings
 		m_StoreDataInterval = 1.0 / GetSconeSetting<double>( "data.frequency" );
 		auto& flags = GetStoreDataFlags();
-		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSetting<bool>( "data.muscle" ) );
-		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSetting<bool>( "data.muscle" ) );
-		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
+		flags.set( StoreDataTypes::BodyPosition, GetSconeSetting<bool>( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
-		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
-#ifdef SCONE_EXPERIMENTAL_FEATURES
-		flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
-		flags.set( StoreDataTypes::MuscleMoment, GetSconeSetting<bool>( "data.dof" ) );
-#endif
-		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
+		flags.set( StoreDataTypes::MuscleProperties, GetSconeSetting<bool>( "data.muscle" ) );
+		flags.set( StoreDataTypes::MuscleDofMomentPower, GetSconeSetting<bool>( "data.muscle_dof" ) );
+		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
+		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
+		flags.set( StoreDataTypes::SystemPower, GetSconeSetting<bool>( "data.power" ) );
+		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
 		flags.set( StoreDataTypes::MeasureData, GetSconeSetting<bool>( "data.measure" ) );
-		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
-		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
 		flags.set( StoreDataTypes::SimulationStatistics, GetSconeSetting<bool>( "data.simulation" ) );
+		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
 	}
 
-	Model::~Model()
-	{
-	}
+	Model::~Model() {}
 
 	SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 	{
@@ -198,15 +193,40 @@ namespace scone
 		for ( auto& j : GetJoints() )
 			j->StoreData( frame, flags );
 
-		// store dof data
-		if ( flags( StoreDataTypes::DofMoment ) )
+		// store dof moments and powers
+		if ( flags( StoreDataTypes::MuscleDofMomentPower ) )
 		{
 			for ( auto& d : GetDofs() )
 			{
-				frame[ d->GetName() + ".moment" ] = d->GetMuscleMoment();
-				frame[ d->GetName() + ".moment_norm" ] = d->GetMuscleMoment() / GetMass();
+				auto mom = d->GetMuscleMoment();
+				frame[ d->GetName() + ".moment" ] = mom;
+				frame[ d->GetName() + ".moment_norm" ] = mom / GetMass();
+				frame[ d->GetName() + ".power" ] = mom * d->GetVel();
 				frame[ d->GetName() + ".acceleration" ] = d->GetAcc();
 			}
+		}
+
+		// powers
+		if ( flags( StoreDataTypes::SystemPower ) )
+		{
+			auto bp = xo::accumulate( GetBodies(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetPower(); } );
+			auto mp = xo::accumulate( GetMuscles(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetForce() * -obj->GetVelocity(); } );
+			auto jp = xo::accumulate( GetJoints(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetLimitPower(); } );
+			auto cp = GetTotalContactPower();
+// 			auto gp = xo::accumulate( GetBodies(), 0.0,
+// 				[&]( auto val, auto& obj ) { return val + obj->GetComVel().y * obj->GetMass() * GetGravity().y; } );
+			auto gp = xo::dot_product( GetComVel(), GetMass() * GetGravity() );
+			auto external_power = jp + cp + mp + gp;
+			frame[ "total_body.power" ] = bp;
+			frame[ "total_muscle.power" ] = mp;
+			frame[ "total_joint_limit.power" ] = jp;
+			frame[ "total_contact.power" ] = cp;
+			frame[ "total_gravity.power" ] = gp;
+			frame[ "total_external.power" ] = external_power;
+			frame[ "total.power" ] = bp - external_power;
 		}
 
 		// store controller / measure data
@@ -224,7 +244,7 @@ namespace scone
 		}
 
 		// store COP data
-		if ( flags( StoreDataTypes::BodyComPosition ) )
+		if ( flags( StoreDataTypes::BodyPosition ) )
 		{
 			auto com = GetComPos();
 			auto com_u = GetComVel();

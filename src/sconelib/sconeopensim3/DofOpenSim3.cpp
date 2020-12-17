@@ -62,7 +62,7 @@ namespace scone
 		return m_osCoord.getName();
 	}
 
-	Real DofOpenSim3::GetLimitForce() const
+	Real DofOpenSim3::GetLimitMoment() const
 	{
 		if ( m_pOsLimitForce )
 			return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );

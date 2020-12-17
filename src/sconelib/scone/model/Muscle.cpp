@@ -144,24 +144,21 @@ namespace scone
 	{
 		Actuator::StoreData( frame, flags );
 
-		if ( flags( StoreDataTypes::MuscleExcitation ) )
-			frame[ GetName() + ".excitation" ] = GetExcitation();
-
-		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
-			frame[ GetName() + ".activation" ] = GetActivation();
-
-		if ( flags( StoreDataTypes::MuscleTendonProperties ) )
+		if ( flags( StoreDataTypes::MuscleProperties) )
 		{
+			frame[ GetName() + ".excitation" ] = GetExcitation();
+			if ( !flags( StoreDataTypes::State ) ) // activation is also part of state
+				frame[ GetName() + ".activation" ] = GetActivation();
+
+			// tendon / mtu properties
 			frame[ GetName() + ".tendon_length" ] = GetTendonLength();
 			frame[ GetName() + ".tendon_length_norm" ] = GetNormalizedTendonLength() - 1;
 			frame[ GetName() + ".mtu_length" ] = GetLength();
 			frame[ GetName() + ".mtu_velocity" ] = GetVelocity();
 			frame[ GetName() + ".mtu_force" ] = GetForce();
 			frame[ GetName() + ".mtu_force_norm" ] = GetNormalizedForce();
-		}
 
-		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
-		{
+			// fiber properties
 			frame[ GetName() + ".cos_pennation_angle" ] = GetCosPennationAngle();
 			frame[ GetName() + ".force_length_multiplier" ] = GetActiveForceLengthMultipler();
 			frame[ GetName() + ".passive_fiber_force_norm" ] = GetPassiveFiberForce() / GetMaxIsometricForce();
@@ -169,7 +166,7 @@ namespace scone
 			frame[ GetName() + ".fiber_velocity_norm" ] = GetNormalizedFiberVelocity();
 		}
 
-		if ( flags( StoreDataTypes::MuscleMoment ) )
+		if ( flags( StoreDataTypes::MuscleDofMomentPower ) )
 		{
 			for ( auto& d : GetDofs() )
 			{
@@ -177,7 +174,9 @@ namespace scone
 				auto ma = GetMomentArm( *d );
 				auto mom = GetForce() * ma;
 				frame[ name + ".moment_arm" ] = ma;
-				frame[ name + ".moment" ] = GetForce() * ma;
+				frame[ name + ".moment" ] = mom;
+				frame[ name + ".moment_norm" ] = mom / GetModel().GetMass();
+				frame[ name + ".power" ] = mom * GetVelocity();
 			}
 		}
 	}

@@ -134,6 +134,7 @@ namespace scone
 		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
+		virtual Real GetTotalContactPower() const { return 0.0; }
 
 		// get static model info
 		virtual Real GetMass() const = 0;

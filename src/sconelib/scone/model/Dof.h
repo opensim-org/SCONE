@@ -27,7 +27,7 @@ namespace scone
 		virtual Real GetVel() const = 0;
 		virtual Real GetAcc() const = 0;
 
-		virtual Real GetLimitForce() const = 0;
+		virtual Real GetLimitMoment() const = 0;
 		virtual Real GetMuscleMoment() const;
 
 		virtual void SetPos( Real pos, bool enforce_constraints = true ) = 0;

@@ -27,7 +27,8 @@ namespace scone
 
 		virtual Vec3 GetPos() const = 0;
 		virtual Vec3 GetReactionForce() const = 0;
-		virtual Real GetLimitForce() const;
+		virtual Real GetLimitMoment() const;
+		virtual Real GetLimitPower() const = 0;
 		virtual Real GetLoad() const;
 
 		const Body& GetBody() const { return m_Body; }

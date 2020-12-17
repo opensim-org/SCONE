@@ -60,6 +60,8 @@ namespace scone
 		virtual Vec3 GetExternalForcePoint() const = 0;
 		virtual Vec3 GetExternalMoment() const = 0;
 
+		virtual Real GetPower() const { return 0.0; }
+
 		virtual void ClearExternalForceAndMoment();
 
 		virtual const Model& GetModel() const = 0;
