@@ -17,13 +17,14 @@
 namespace scone
 {
 	DofReflex::DofReflex( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Reflex( props, par, model, loc ),
-	source( props.get< String >( "source" ) ),
-	m_SourceDof( *FindByNameTrySided( model.GetDofs(), source, loc.side_ ) ),
-	m_SourceParentDof( props.has_key( "source_parent" ) ? &*FindByNameTrySided( model.GetDofs(), props.get< String >( "source_parent" ), loc.side_ ) : nullptr ),
-	m_pTargetPosSource( nullptr ),
-	m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( m_SourceDof, m_SourceParentDof ) ),
-	m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) )
+		Reflex( props, par, model, loc ),
+		INIT_MEMBER_REQUIRED( props, source ),
+		INIT_MEMBER( props, source_parent, "" ),
+		m_SourceDof( *FindByNameTrySided( model.GetDofs(), source, loc.side_ ) ),
+		m_SourceParentDof( !source_parent.empty() ? &*FindByNameTrySided( model.GetDofs(), source_parent, loc.side_ ) : nullptr ),
+		m_pTargetPosSource( nullptr ),
+		m_DelayedPos( model.AcquireDelayedSensor< DofPositionSensor >( m_SourceDof, m_SourceParentDof ) ),
+		m_DelayedVel( model.AcquireDelayedSensor< DofVelocitySensor >( m_SourceDof, m_SourceParentDof ) )
 	{
 		String par_name = GetParName( props, loc );
 		ScopedParamSetPrefixer prefixer( par, par_name + "." );
@@ -64,7 +65,7 @@ namespace scone
 		auto delta_pos = P0 - pos;
 		auto delta_vel = V0 - vel;
 
-		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || (condition == 1 && delta_pos > 0 && delta_vel > 0 ) )
+		if ( condition == 0 || ( condition == -1 && delta_pos < 0 && delta_vel < 0 ) || ( condition == 1 && delta_pos > 0 && delta_vel > 0 ) )
 		{
 			u_p = KP * delta_pos;
 			if ( !allow_neg_P && u_p < 0.0 )
