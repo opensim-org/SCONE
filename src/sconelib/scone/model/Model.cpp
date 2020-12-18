@@ -216,8 +216,6 @@ namespace scone
 			auto jp = xo::accumulate( GetJoints(), 0.0,
 				[&]( auto val, auto& obj ) { return val + obj->GetLimitPower(); } );
 			auto cp = GetTotalContactPower();
-// 			auto gp = xo::accumulate( GetBodies(), 0.0,
-// 				[&]( auto val, auto& obj ) { return val + obj->GetComVel().y * obj->GetMass() * GetGravity().y; } );
 			auto gp = xo::dot_product( GetComVel(), GetMass() * GetGravity() );
 			auto external_power = jp + cp + mp + gp;
 			frame[ "total_body.power" ] = bp;

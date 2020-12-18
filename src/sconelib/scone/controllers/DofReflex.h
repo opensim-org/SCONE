@@ -36,7 +36,6 @@ namespace scone
 		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_P;
 
-
 		/// Target velocity [rad or m] for sensor DOF; default = 0.
 		Real V0; 
 		/// Velocity feedback gain; default = 0.
