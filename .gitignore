@@ -1,6 +1,5 @@
 /_output/
 /bin/
-ignore/
 /doc/ref/
 /doc/html/
 /doc/xml/
@@ -16,6 +15,7 @@ ignore/
 /*.bat
 *.log
 .cquery_cached_index/
+/.vs/
 /.dir-locals.el
 *~
 build/
