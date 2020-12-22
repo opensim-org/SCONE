@@ -208,7 +208,7 @@ namespace scone
 		/// Activation used to equilibrate muscles before control inputs are known; default = 0.05
 		Real initial_equilibration_activation;
 
-		void SetStoreData( bool store ) { m_StoreData = store; }
+		virtual void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
