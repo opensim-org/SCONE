@@ -8,12 +8,18 @@
 
 #include "SconeStorageDataModel.h"
 #include "xo/numerical/math.h"
+#include "scone/core/Log.h"
 
-SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
+SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) :
+	storage( s ),
+	index_cache(),
+	equidistant_delta_time( false )
 {}
 
 void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 {
+	index_cache = { 0.0, 0 };
+	// #todo: set equidistant_delta_time
 	storage = s;
 }
 
@@ -64,12 +70,46 @@ double SconeStorageDataModel::timeStart() const
 
 xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 {
-	if ( storage && !storage->IsEmpty() )
+	if ( !storage && storage->IsEmpty() )
+		return xo::no_index;
+
+	if ( equidistant_delta_time )
 	{
 		double reltime = time / storage->Back().GetTime();
 		return xo::index_t( xo::clamped( int( reltime * ( storage->GetFrameCount() - 1 ) + 0.5 ), 0, int( storage->GetFrameCount() - 1 ) ) );
 	}
-	else return xo::no_index;
+
+	if ( index_cache.first == time )
+		return index_cache.second;
+
+	// find index using binary search
+	int lower = 0, upper = storage->GetFrameCount() - 1;
+	int count = 0;
+	while ( lower != upper )
+	{
+		double lower_time = storage->GetFrame( lower ).GetTime();
+		double upper_time = storage->GetFrame( upper ).GetTime();
+		double reltime = ( time - lower_time ) / ( upper_time - lower_time );
+		auto idx = xo::clamped( xo::round_cast<int>( lower + reltime * ( upper - lower ) ), lower, upper );
+		auto idx_time = storage->GetFrame( idx ).GetTime();
+		if ( idx_time < time )
+		{
+			if ( idx == lower )
+				upper = lower; // found
+			else lower = idx;
+		}
+		else if ( idx_time > time )
+		{
+			if ( idx == upper )
+				lower = upper; // found
+			else upper = idx;
+		}
+		else lower = upper = idx;
+		++count;
+	}
+	scone::log::debug( "located time ", time, " in ", count, " steps" );
+	index_cache = { time, xo::index_t( lower ) };
+	return lower;
 }
 
 double SconeStorageDataModel::timeValue( xo::index_t idx ) const

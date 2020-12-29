@@ -33,4 +33,6 @@ public:
 
 private:
 	const scone::Storage<>* storage;
+	bool equidistant_delta_time;
+	mutable std::pair<double, xo::index_t> index_cache;
 };
