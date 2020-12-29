@@ -53,7 +53,7 @@ namespace scone
 
 		timer tmr;
 		auto result = mo->EvaluateModel( *model, xo::stop_token() );
-		auto duration = tmr().seconds();
+		auto duration = tmr().secondsd();
 
 		// write results
 		if ( store_data )

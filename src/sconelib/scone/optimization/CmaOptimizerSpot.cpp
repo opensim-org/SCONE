@@ -153,7 +153,7 @@ namespace scone
 		auto& cma = dynamic_cast<const CmaOptimizerSpot&>( opt );
 
 		number_of_evaluations_ += pop.size();
-		auto t = timer_().seconds();
+		auto t = timer_().secondsd();
 
 		// report results
 		auto pn = cma.GetStatusPropNode();

@@ -390,7 +390,7 @@ void SconeStudio::evaluate()
 	// report duration
 	if ( scenario_->IsReady() )
 	{
-		auto real_dur = real_time().seconds();
+		auto real_dur = real_time().secondsd();
 		auto sim_time = scenario_->GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
 	}
@@ -875,7 +875,7 @@ void SconeStudio::performanceTest( bool write_stats )
 			auto model = scenario_->GetModelObjective().CreateModelFromParams( par );
 			model->SetStoreData( false );
 			model->AdvanceSimulationTo( model->GetSimulationEndTime() );
-			auto real_dur = real_time().seconds();
+			auto real_dur = real_time().secondsd();
 			auto sim_time = model->GetTime();
 			if ( model->GetProfiler().enabled() )
 				model->GetProfiler().log_results();

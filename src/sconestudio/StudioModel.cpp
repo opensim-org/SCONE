@@ -198,7 +198,7 @@ namespace scone
 				// write results to file(s)
 				xo::timer t;
 				auto result_files = model_->WriteResults( filename_ );
-				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
+				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().secondsd(), "s" );
 
 				// we're done!
 				status_ = Status::Ready;
