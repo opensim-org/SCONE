@@ -16,13 +16,13 @@
 
 namespace scone
 {
-	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::ostream& str, const String& time_label = "time" );
-	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::FILE* f, const String& time_label = "time" );
-	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& time_label = "time" );
+	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::ostream& str, const String& time_label, TimeInSeconds min_interval = 0.0 );
+	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, std::FILE* f, const String& time_label, TimeInSeconds min_interval = 0.0 );
+	void SCONE_API WriteStorageTxt( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& time_label, TimeInSeconds min_interval = 0.0 );
 
-	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name );
-	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::FILE*, const String& name );
-	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ostream& str, const String& name );
+	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, const xo::path& file, const String& name, TimeInSeconds min_interval = 0.0 );
+	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::FILE*, const String& name, TimeInSeconds min_interval = 0.0 );
+	void SCONE_API WriteStorageSto( const Storage< Real, TimeInSeconds >& storage, std::ostream& str, const String& name, TimeInSeconds min_interval = 0.0 );
 
 	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, const xo::path& file );
 	void SCONE_API ReadStorageTxt( Storage< Real, TimeInSeconds >& storage, xo::char_stream& str );

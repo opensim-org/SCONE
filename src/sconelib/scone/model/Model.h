@@ -261,6 +261,7 @@ namespace scone
 		Storage< Real, TimeInSeconds > m_Data;
 		bool m_StoreData;
 		TimeInSeconds m_StoreDataInterval;
+		bool m_KeepAllFrames;
 		StoreDataFlags m_StoreDataFlags;
 	};
 }

@@ -387,12 +387,14 @@ void SconeStudio::evaluate()
 		else setTime( t, false );
 	}
 
-	// report duration
-	if ( scenario_->IsReady() )
+	if ( scenario_->HasData() )
 	{
+		// report duration and update storage
 		auto real_dur = real_time().secondsd();
 		auto sim_time = scenario_->GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
+		analysisStorageModel.setStorage( &scenario_->GetData() );
+		analysisView->reset();
 	}
 
 	dlg.setValue( 1000 );
@@ -674,9 +676,7 @@ bool SconeStudio::createScenario( const QString& any_file )
 		scenario_ = std::make_unique< StudioModel >( scene_, path_from_qt( any_file ) );
 		updateViewSettings();
 
-		// update analysis and parview
-		analysisStorageModel.setStorage( &scenario_->GetData() );
-		analysisView->reset();
+		// update parview
 		parModel->setObjectiveInfo( &scenario_->GetOjective().info() );
 		parViewDock->setWindowTitle( QString( "Optimization Parameters (%1)" ).arg( scenario_->GetOjective().info().size() ) );
 	}

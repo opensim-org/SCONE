@@ -81,6 +81,7 @@ namespace scone
 		INIT_PROP( props, initial_equilibration_activation, 0.05 );
 
 		// set store data info from settings
+		m_KeepAllFrames = GetSconeSetting<bool>( "data.keep_all_frames" );
 		m_StoreDataInterval = 1.0 / GetSconeSetting<double>( "data.frequency" );
 		auto& flags = GetStoreDataFlags();
 		flags.set( StoreDataTypes::BodyPosition, GetSconeSetting<bool>( "data.body" ) );
@@ -159,7 +160,10 @@ namespace scone
 
 	bool Model::GetStoreData() const
 	{
-		return m_StoreData && ( m_Data.IsEmpty() || xo::greater_than_or_equal( GetTime() - m_Data.Back().GetTime(), m_StoreDataInterval, 1e-6 ) );
+		return m_StoreData &&
+			( m_Data.IsEmpty()
+				|| m_KeepAllFrames && GetTime() != m_Data.Back().GetTime()
+				|| xo::greater_than_or_equal( GetTime() - m_Data.Back().GetTime(), m_StoreDataInterval, 1e-6 ) );
 	}
 
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
@@ -376,7 +380,7 @@ namespace scone
 	std::vector<scone::path> Model::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str(), m_StoreDataInterval );
 		files.push_back( file + ".sto" );
 
 		if ( GetSconeSetting<bool>( "results.controller" ) )
