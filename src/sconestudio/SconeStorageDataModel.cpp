@@ -19,8 +19,29 @@ SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) :
 void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 {
 	index_cache = { 0.0, 0 };
-	// #todo: set equidistant_delta_time
 	storage = s;
+
+	// set equidistant_delta_time by checking all deltas
+	equidistant_delta_time = true;
+	if ( storage && storage->GetFrameCount() >= 3 )
+	{
+		auto tprev = s->GetFrame( 1 ).GetTime();
+		auto delta = tprev - s->GetFrame( 0 ).GetTime();
+
+		for ( xo::index_t i = 2; i < s->GetFrameCount(); ++i )
+		{
+			auto t = s->GetFrame( i ).GetTime();
+			auto dt = t - tprev;
+
+			if ( !xo::equal( delta, dt, 0.001 * delta ) )
+			{
+				equidistant_delta_time = false;
+				xo::log::trace( "Storage delta time is not equidistant, ", xo::stringf( "%.16f != %.16f", delta, dt ) );
+				break;
+			}
+			tprev = t;
+		}
+	}
 }
 
 size_t SconeStorageDataModel::seriesCount() const
@@ -70,7 +91,7 @@ double SconeStorageDataModel::timeStart() const
 
 xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 {
-	if ( !storage && storage->IsEmpty() )
+	if ( !storage || storage->IsEmpty() )
 		return xo::no_index;
 
 	if ( equidistant_delta_time )
@@ -107,7 +128,7 @@ xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 		else lower = upper = idx;
 		++count;
 	}
-	scone::log::debug( "located time ", time, " in ", count, " steps" );
+	scone::log::trace( "located time ", time, " in ", count, " steps" );
 	index_cache = { time, xo::index_t( lower ) };
 	return lower;
 }

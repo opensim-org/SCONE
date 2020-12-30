@@ -19,6 +19,7 @@ data {
 	measure { type = bool label = "Output measure data" default = 1 }
 	simulation { type = bool label = "Output simulation statisticts" default = 0 }
 	debug { type = bool label = "Output debug data" default = 0 }
+	keep_all_frames { type = bool label = "Keep all data frames for analysis" default = 0 }
 }
 
 results {
