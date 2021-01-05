@@ -240,6 +240,12 @@ namespace scone
 		}
 	}
 
+	const ModelVis::ViewSettings& StudioModel::GetViewSettings() const
+	{
+		SCONE_ASSERT( vis_ );
+		return vis_->GetViewSettings();
+	}
+
 	Vec3 StudioModel::GetFollowPoint() const
 	{
 		auto com = model_->GetComPos();

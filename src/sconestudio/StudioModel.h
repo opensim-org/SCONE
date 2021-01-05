@@ -49,6 +49,7 @@ namespace scone
 		TimeInSeconds GetMaxTime() const;
 
 		void ApplyViewSettings( const ModelVis::ViewSettings& f );
+		const ModelVis::ViewSettings& GetViewSettings() const;
 		Vec3 GetFollowPoint() const;
 
 		const path& GetFileName() const { return filename_; }

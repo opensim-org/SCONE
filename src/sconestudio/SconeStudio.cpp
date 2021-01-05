@@ -104,6 +104,8 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	viewActions[ ModelVis::ShowContactGeom ] = viewMenu->addAction( "Show &Contact Geometry", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowGroundPlane ] = viewMenu->addAction( "Show &Ground Plane", this, &SconeStudio::updateViewSettings );
 	viewActions[ ModelVis::ShowModelComHeading ] = viewMenu->addAction( "Show Model COM and &Heading", this, &SconeStudio::updateViewSettings );
+	viewMenu->addSeparator();
+	viewActions[ ModelVis::StaticCamera ] = viewMenu->addAction( "&Static Camera", this, &SconeStudio::updateViewSettings );
 	for ( auto& va : viewActions )
 	{
 		va.second->setCheckable( true );
@@ -502,10 +504,13 @@ void SconeStudio::setTime( TimeInSeconds t, bool update_vis )
 		if ( update_vis && scenario_->HasModel() )
 		{
 			scenario_->UpdateVis( t );
-			auto d = com_delta( scenario_->GetFollowPoint() );
-			ui.osgViewer->moveCamera( osg::Vec3( d.x, d.y, d.z ) );
-			ui.osgViewer->setFrameTime( current_time );
+			if ( !scenario_->GetViewSettings().get<ModelVis::StaticCamera>() )
+			{
+				auto d = com_delta( scenario_->GetFollowPoint() );
+				ui.osgViewer->moveCamera( osg::Vec3( d.x, d.y, d.z ) );
+			}
 
+			ui.osgViewer->setFrameTime( current_time );
 			if ( analysisView->isVisible() ) // #todo: not update so much when not playing (it's slow)
 				analysisView->refresh( current_time, !ui.playControl->isPlaying() );
 		}
