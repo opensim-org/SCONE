@@ -128,15 +128,13 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
-		const bool first_call = m_SensorDelayStorage.IsEmpty() && GetTime() == 0;
-		const bool redo_first_frame = m_SensorDelayStorage.GetFrameCount() == 1 && GetTime() == 0;
-		const bool subsequent_frame = !first_call && GetPreviousTime() == m_SensorDelayStorage.Back().GetTime();
+		const bool first_frame = m_SensorDelayStorage.IsEmpty() && GetTime() == 0;
+		const bool subsequent_frame = !m_SensorDelayStorage.IsEmpty() && GetTime() > GetPreviousTime() && GetPreviousTime() == m_SensorDelayStorage.Back().GetTime();
 
-		SCONE_ASSERT( first_call || redo_first_frame || subsequent_frame );
+		SCONE_ASSERT( first_frame || subsequent_frame );
 
 		// add a new frame and update
-		if ( !redo_first_frame )
-			m_SensorDelayStorage.AddFrame( GetTime() );
+		m_SensorDelayStorage.AddFrame( GetTime() );
 		for ( std::unique_ptr< SensorDelayAdapter >& sda : m_SensorDelayAdapters )
 			sda->UpdateStorage();
 
