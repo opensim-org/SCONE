@@ -128,6 +128,9 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
+		if ( m_SensorDelayAdapters.empty() )
+			return;
+
 		const bool first_frame = m_SensorDelayStorage.IsEmpty() && GetTime() == 0;
 		const bool subsequent_frame = !m_SensorDelayStorage.IsEmpty() && GetTime() > GetPreviousTime() && GetPreviousTime() == m_SensorDelayStorage.Back().GetTime();
 
