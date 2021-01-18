@@ -670,6 +670,7 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 
 bool SconeStudio::createScenario( const QString& any_file )
 {
+	ui.playControl->reset();
 	scenario_.reset();
 	analysisStorageModel.setStorage( nullptr );
 	parModel->setObjectiveInfo( nullptr );
