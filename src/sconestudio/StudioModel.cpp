@@ -37,6 +37,7 @@ namespace scone
 		status_( Status::Initializing )
 	{
 		// create the objective from par file or config file
+		xo::timer load_time;
 		filename_ = file;
 		scenario_filename_ = FindScenario( file );
 		scenario_pn_ = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
@@ -93,7 +94,7 @@ namespace scone
 			log::warning( "Not a model objective, disabling visualization" );
 		}
 
-		log::info( "Loaded ", file.filename(), "; dim=", objective_->dim() );
+		log::info( "Loaded ", file.filename(), "; dim=", objective_->dim(), "; time=", load_time() );
 	}
 
 	StudioModel::~StudioModel()
