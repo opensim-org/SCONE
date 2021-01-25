@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	xo_smart_enum_class( penalty_mode, sum, average, lowest, highest );
+	xo_smart_enum_class( penalty_mode, average, lowest, highest, sum );
 
 	/// Helper type to compute penalty if a value is outside a specific Range. The penalty corresponds to
 	/// ''abs_penalty * | _E_ | + squared_penalty * _E_^2'',
