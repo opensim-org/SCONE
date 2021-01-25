@@ -27,7 +27,13 @@ namespace scone
 		INIT_MEMBER( pn, time_offset, 0 )
 	{
 		SCONE_PROFILE_FUNCTION( model.GetProfiler() );
+
 		ReadStorageSto( storage_, file );
+		SCONE_THROW_IF( storage_.IsEmpty(), file.str() + " contains no data" );
+
+		// automatically set stop_time to match data, if not set
+		if ( stop_time == 0 || stop_time > storage_.Back().GetTime() )
+			stop_time = storage_.Back().GetTime();
 
 		auto& s = model.GetState();
 		for ( index_t state_idx = 0; state_idx < s.GetSize(); ++state_idx )
