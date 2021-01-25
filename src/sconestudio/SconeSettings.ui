@@ -69,11 +69,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QFileEdit" name="scenariosFolder" native="true">
-            <property name="autoFillBackground">
-             <bool>false</bool>
-            </property>
-           </widget>
+           <widget class="QFileEdit" name="scenariosFolder" native="true"/>
           </item>
           <item row="2" column="1">
            <widget class="QFileEdit" name="resultsFolder" native="true"/>
@@ -223,7 +219,7 @@
   <customwidget>
    <class>QFileEdit</class>
    <extends>QWidget</extends>
-   <header location="global">qfileedit.h</header>
+   <header location="global">QFileEdit.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
