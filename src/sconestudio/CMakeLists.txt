@@ -63,6 +63,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QPlayControl.cpp
 		${QTFX_PATH}/QFileBrowser.h
 		${QTFX_PATH}/QFileBrowser.cpp
+		${QTFX_PATH}/QFileEdit.h
+		${QTFX_PATH}/QFileEdit.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
 		${QTFX_PATH}/QValueSlider.h
