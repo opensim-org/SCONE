@@ -32,7 +32,9 @@ namespace scone
 
 			QString program = to_qt( GetApplicationFolder() / "hfdmodeltool" );
 			QStringList args;
-			args << "-c" << to_qt( inputFile );
+			args << to_qt( inputFile );
+			if ( ui.fixCheckbox->isChecked() )
+				args << "-f";
 
 			auto proc = new QProcess( parent );
 			proc->start( program, args );
