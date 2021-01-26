@@ -19,6 +19,8 @@ if(${Qt5Widgets_FOUND})
 		help_tools.h
 		help_tools.cpp
 		file_tools.h
+		model_tools.h
+		model_tools.cpp
 		SconeStudio.cpp
 		SconeStudio.h
 		ProgressDockWidget.h
@@ -82,20 +84,25 @@ if(${Qt5Widgets_FOUND})
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
 	
-	set(RESOURCEFILES
-		studio.rc
-		SconeStudio.qrc 
+	set (QT_UI_FILES
 		SconeStudio.ui
 		ProgressDockWidget.ui
 		SconeSettings.ui
+		ModelTool.ui
+	)
+
+	set(RESOURCEFILES
+		studio.rc
+		SconeStudio.qrc 
 		../../resources/studio-settings-schema.zml
 		../../resources/gaitanalysis/default.zml
+		${QT_UI_FILES}
 		)
 
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
 	INCLUDE_DIRECTORIES( ${QTFX_PATH} )
 
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui SconeSettings.ui)
+	qt5_wrap_ui(UI_HEADERS ${QT_UI_FILES})
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
 	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )

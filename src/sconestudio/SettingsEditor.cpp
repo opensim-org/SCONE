@@ -37,10 +37,10 @@ namespace scone
 		auto& scone_settings = GetSconeSettings();
 
 		// folders
-		ui.scenariosFolder->setText( to_qt( GetFolder( SCONE_SCENARIO_FOLDER ).make_preferred() ), QFileEdit::Directory );
-		ui.resultsFolder->setText( to_qt( GetFolder( SCONE_RESULTS_FOLDER ).make_preferred() ), QFileEdit::Directory );
-		ui.geometryFolder->setText( to_qt( GetFolder( SCONE_GEOMETRY_FOLDER ).make_preferred() ), QFileEdit::Directory );
-		ui.gaitAnalysisFolder->setText( to_qt( GetStudioSetting<xo::path>( "gait_analysis.template" ).make_preferred() ), QFileEdit::OpenFile, "*.zml" );
+		ui.scenariosFolder->init( QFileEdit::Directory, "", to_qt( GetFolder( SCONE_SCENARIO_FOLDER ).make_preferred() ) );
+		ui.resultsFolder->init( QFileEdit::Directory, "", to_qt( GetFolder( SCONE_RESULTS_FOLDER ).make_preferred() ) );
+		ui.geometryFolder->init( QFileEdit::Directory, "", to_qt( GetFolder( SCONE_GEOMETRY_FOLDER ).make_preferred() ) );
+		ui.gaitAnalysisFolder->init( QFileEdit::OpenFile, "Gait Analysis Templates (*.zml)", to_qt( GetStudioSetting<xo::path>( "gait_analysis.template" ).make_preferred() ) );
 
 		// data checkboxes
 		xo::flat_map< string, QListWidgetItem* > data_checkboxes;
