@@ -49,6 +49,7 @@
 #include "help_tools.h"
 #include "xo/thread/thread_priority.h"
 #include "file_tools.h"
+#include "model_conversion.h"
 
 using namespace scone;
 using namespace xo::literals;
@@ -135,6 +136,11 @@ SconeStudio::SconeStudio( QWidget* parent, Qt::WindowFlags flags ) :
 	toolsMenu->addAction( "Fil&ter Analysis", this, &SconeStudio::activateAnalysisFilter, QKeySequence( "Ctrl+L" ) );
 	toolsMenu->addAction( "&Keep Current Analysis Graphs", analysisView, &QDataAnalysisView::holdSeries, QKeySequence( "Ctrl+Shift+K" ) );
 	toolsMenu->addSeparator();
+#ifdef SCONE_HYFYDY
+	toolsMenu->addAction( "&Convert Model...", [=]() { ShowModelConversionDialog( this ); } );
+	toolsMenu->addSeparator();
+#endif // SCONE_HYFYDY
+
 	toolsMenu->addAction( "&Preferences...", this, &SconeStudio::showSettingsDialog, QKeySequence( "Ctrl+," ) );
 
 	// Action menu

@@ -1,9 +1,8 @@
 add_executable(sconecmd sconecmd.cpp)
 
-# Require C++17 standard
 set_target_properties(sconecmd PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
 
-target_include_directories(sconecmd PRIVATE ${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include)
+target_include_directories(sconecmd PRIVATE ${TCLAP_DIR} )
 
 target_link_libraries(sconecmd sconelib)
 
