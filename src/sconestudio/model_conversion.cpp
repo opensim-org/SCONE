@@ -1,11 +1,14 @@
-#include "model_tools.h"
+#include "model_conversion.h"
 
 #include "ui_ModelTool.h"
 #include "scone/core/Log.h"
 #include "scone/core/system_tools.h"
 #include "qt_convert.h"
 #include "xo/filesystem/path.h"
-#include "QProcess"
+
+#include <QProcess>
+#include <QMessageBox>
+#include <QPushButton>
 
 namespace scone
 {

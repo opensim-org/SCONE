@@ -49,7 +49,7 @@
 #include "help_tools.h"
 #include "xo/thread/thread_priority.h"
 #include "file_tools.h"
-#include "model_tools.h"
+#include "model_conversion.h"
 
 using namespace scone;
 using namespace xo::literals;
