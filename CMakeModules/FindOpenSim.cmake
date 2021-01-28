@@ -201,9 +201,14 @@ set(OPENSIMSIMBODY_LIBRARIES_DOC "Suitable for target_link_libraries().
 set(OPENSIM_LIBRARY)
 
 set(OPENSIM_LIBRARY_LIST
-    osimCommon osimSimulation osimAnalyses osimActuators osimTools)
-set(SIMBODY_LIBRARY_LIST SimTKcommon SimTKmath SimTKsimbody
-        OpenSim_SimTKcommon OpenSim_SimTKmath OpenSim_SimTKsimbody)
+    osimCommon osimSimulation osimAnalyses osimActuators osimTools
+    osim3Common osim3Simulation osim3Analyses osim3Actuators osim3Tools
+    )
+set(SIMBODY_LIBRARY_LIST
+    SimTKcommon SimTKmath SimTKsimbody
+    OpenSim_SimTKcommon OpenSim_SimTKmath OpenSim_SimTKsimbody
+    SB353_SimTKcommon SB353_SimTKmath SB353_SimTKsimbody
+    )
 
 foreach(LIB_NAME IN LISTS OPENSIM_LIBRARY_LIST)
     find_library(FOUND_LIB NAMES ${LIB_NAME}

@@ -215,15 +215,15 @@ if(${Qt5Widgets_FOUND})
 			if(${CMAKE_SIZEOF_VOID_P} EQUAL 8) # check if x64
 				set(PTHREAD pthreadVC2_x64)
 				set(LIBGCC libgcc_s_sjlj-1)
-				set(NameSpace "")
-			else() # else x86
+				set(SIMBODY_NAMESPACE ${SIMBODY_LIBRARY_PREFIX})
+			else() # else x86k
 				set(PTHREAD pthreadVC2)
 				set(LIBGCC libgcc_s_dw2-1)
-				set(NameSpace "OpenSim_")
+				set(SIMBODY_NAMESPACE "OpenSim_")
 			endif()
 
-			SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon 
-				${NameSpace}SimTKsimbody ${NameSpace}SimTKmath ${NameSpace}SimTKcommon)
+			SET(OPENSIM_DLLS ${OPENSIM_LIBRARY_PREFIX}Tools ${OPENSIM_LIBRARY_PREFIX}Analyses ${OPENSIM_LIBRARY_PREFIX}Actuators ${OPENSIM_LIBRARY_PREFIX}Simulation ${OPENSIM_LIBRARY_PREFIX}Lepton ${OPENSIM_LIBRARY_PREFIX}Common 
+				${SIMBODY_NAMESPACE}SimTKsimbody ${SIMBODY_NAMESPACE}SimTKmath ${SIMBODY_NAMESPACE}SimTKcommon)
 			foreach(opensimdll ${OPENSIM_DLLS})
 				add_custom_command(TARGET sconestudio POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}$<$<CONFIG:debug>:_d>.dll ${DLL_TARGET_DIR}
