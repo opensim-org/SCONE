@@ -143,6 +143,8 @@ else()
     endif()
 endif()
 
+SET( OPENSIM_LIBRARY_PREFIX "osim" CACHE STRING "All OpenSim libraries will start with this prefix" )
+SET( SIMBODY_LIBRARY_PREFIX "" CACHE STRING "All Simbody libraries will start with this prefix" )
 
 # OPENSIM_INCLUDE_DIR and OPENSIMSIMBODY_INCLUDE_DIRS
 # ---------------------------------------------------
@@ -201,13 +203,11 @@ set(OPENSIMSIMBODY_LIBRARIES_DOC "Suitable for target_link_libraries().
 set(OPENSIM_LIBRARY)
 
 set(OPENSIM_LIBRARY_LIST
-    osimCommon osimSimulation osimAnalyses osimActuators osimTools
-    osim3Common osim3Simulation osim3Analyses osim3Actuators osim3Tools
+    ${OPENSIM_LIBRARY_PREFIX}Common ${OPENSIM_LIBRARY_PREFIX}Simulation ${OPENSIM_LIBRARY_PREFIX}Analyses ${OPENSIM_LIBRARY_PREFIX}Actuators ${OPENSIM_LIBRARY_PREFIX}Tools
     )
 set(SIMBODY_LIBRARY_LIST
-    SimTKcommon SimTKmath SimTKsimbody
+    ${SIMBODY_LIBRARY_PREFIX}SimTKcommon ${SIMBODY_LIBRARY_PREFIX}SimTKmath ${SIMBODY_LIBRARY_PREFIX}SimTKsimbody
     OpenSim_SimTKcommon OpenSim_SimTKmath OpenSim_SimTKsimbody
-    SB353_SimTKcommon SB353_SimTKmath SB353_SimTKsimbody
     )
 
 foreach(LIB_NAME IN LISTS OPENSIM_LIBRARY_LIST)
