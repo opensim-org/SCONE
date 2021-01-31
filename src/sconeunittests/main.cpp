@@ -12,14 +12,22 @@
 #include "xo/system/test_case.h"
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "tutorial_test.h"
+#include "xo/utility/arg_parser.h"
 
 int main( int argc, const char* argv[] )
 {
 	xo::log::console_sink sink( xo::log::level::info );
 	scone::Initialize();
 
-	scone::add_scenario_tests( "scenarios/Tutorials" );
-	scone::add_scenario_tests( "scenarios/UnitTests" );
+	auto args = xo::arg_parser( argc, argv );
+	if ( !args.has_flag( "skip-tutorials" ) )
+		scone::add_scenario_tests( "scenarios/Tutorials" );
+	if ( !args.has_flag( "skip-opensim3" ) )
+		scone::add_scenario_tests( "scenarios/UnitTests/OpenSim3" );
+#ifdef SCONE_HYFYDY
+	if ( !args.has_flag( "skip-hyfydy" ) )
+		scone::add_scenario_tests( "scenarios/UnitTests/Hyfydy" );
+#endif
 
 	return xo::test::run_tests_async();
 }
