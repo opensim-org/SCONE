@@ -211,6 +211,7 @@ namespace scone
 				frame[ d->GetName() + ".moment" ] = mom;
 				frame[ d->GetName() + ".moment_norm" ] = mom / GetMass();
 				frame[ d->GetName() + ".power" ] = mom * d->GetVel();
+				frame[ d->GetName() + ".power_norm" ] = mom * d->GetVel() / GetMass();
 				frame[ d->GetName() + ".acceleration" ] = d->GetAcc();
 			}
 		}
