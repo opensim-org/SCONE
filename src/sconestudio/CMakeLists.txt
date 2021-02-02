@@ -89,6 +89,7 @@ if(${Qt5Widgets_FOUND})
 		ProgressDockWidget.ui
 		SconeSettings.ui
 		ModelTool.ui
+		LicenseDialog.ui
 	)
 
 	set(RESOURCEFILES
