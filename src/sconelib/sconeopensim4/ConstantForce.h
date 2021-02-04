@@ -55,18 +55,18 @@ namespace OpenSim
 		//--------------------------------------------------------------------------
 		void computeForce( const SimTK::State& state,
 			SimTK::Vector_<SimTK::SpatialVec>& bodyForces,
-			SimTK::Vector& mobilityForces ) const OVERRIDE_11;
+			SimTK::Vector& mobilityForces ) const override;
 
 		//--------------------------------------------------------------------------
 		// Implement ModelComponent interface
 		//--------------------------------------------------------------------------
 		// Setup method to initialize Body reference
-		void connectToModel( Model& model ) OVERRIDE_11;
+		void extendConnectToModel( Model& model ) override;
 
 		//--------------------------------------------------------------------------
 		// Implement Object interface.
 		//--------------------------------------------------------------------------
-		void updateFromXMLNode( SimTK::Xml::Element& node, int versionNumber = -1 ) OVERRIDE_11;
+		void updateFromXMLNode( SimTK::Xml::Element& node, int versionNumber = -1 ) override;
 
 		// Corresponding Body to which the point actuator is applied.
 		SimTK::ReferencePtr<Body> body_;
