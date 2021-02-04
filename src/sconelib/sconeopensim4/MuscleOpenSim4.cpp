@@ -54,8 +54,9 @@ namespace scone
 	{
 		// OpenSim: why can't I just use getWorkingState()?
 		// OpenSim: why must I update to Dynamics for getForce()?
-		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-		return m_osMus.getForce( m_Model.GetTkState() );
+		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+		// #osim4: is this seriously how I get the muscle force?
+		return m_osMus.getActuation( m_Model.GetTkState() );
 	}
 
 	Real MuscleOpenSim4::GetNormalizedForce() const
@@ -201,8 +202,9 @@ namespace scone
 		std::vector< Vec3 > points( pps.getSize() );
 		for ( int i = 0; i < points.size(); ++i )
 		{
-			const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[ i ]->getBody().getIndex() );
-			auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[ i ]->getLocation();
+			const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[ i ]->getBody().getMobilizedBodyIndex() );
+			auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[ i ]->getLocation( m_Model.GetTkState() );
+
 			points[ i ] = from_osim( world_pos );
 		}
 		return points;
