@@ -6,6 +6,8 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
+#ifdef ENABLE_STATE_COMPONENTS
+
 #include "StateComponentOpenSim4.h"
 #include "SimTKcommon/internal/EventHandler.h"
 #include "scone/model/StateComponent.h"
@@ -107,3 +109,4 @@ namespace OpenSim
 		}
 	}
 }
+#endif // ENABLE_STATE_COMPONENTS

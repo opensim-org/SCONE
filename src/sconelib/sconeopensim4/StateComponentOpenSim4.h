@@ -8,6 +8,8 @@
 
 #pragma once
 
+#ifdef ENABLE_STATE_COMPONENTS
+
 #include <OpenSim/Simulation/Model/ModelComponent.h>
 #include "SimTKcommon/internal/ReferencePtr.h"
 #include "scone/model/StateComponent.h"
@@ -56,3 +58,4 @@ namespace OpenSim
 		std::vector<scone::String> m_stateVariables;
 	};
 }
+#endif // ENABLE_STATE_COMPONENTS
