@@ -41,7 +41,7 @@ namespace scone
 		auto& model = m_osJoint.getModel();
 		auto& matter = model.getMatterSubsystem();
 		auto& state = m_Model.GetTkState();
-		auto child_body_idx = m_osJoint.getBody().getIndex();
+		auto child_body_idx = m_osJoint.getChildFrame().getMobilizedBodyIndex();
 
 		SimTK::Vector_< SimTK::SpatialVec > forcesAtMInG;
 		matter.calcMobilizerReactionForces( state, forcesAtMInG ); // state should be at acceleration
@@ -75,8 +75,13 @@ namespace scone
 
 	Vec3 JointOpenSim4::GetPos() const
 	{
+		// #todo: see if this is correct
+		auto ofs = SimTK::Vec3( 0, 0, 0 );
 		SimTK::Vec3 point;
-		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
+		const auto& body_frame = m_osJoint.getChildFrame();
+		const auto& joint_frame = m_osJoint.getChildFrame();
+		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), joint_frame, ofs, point );
+		//getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
 		return from_osim( point );
 	}
 }
