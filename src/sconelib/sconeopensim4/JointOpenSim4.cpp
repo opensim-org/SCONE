@@ -75,13 +75,19 @@ namespace scone
 
 	Vec3 JointOpenSim4::GetPos() const
 	{
-		// #todo: see if this is correct
+#if 1
+		// #osim4: this doesn't work for the fancy knee joints
+		auto point = m_osJoint.getParentFrame().getPositionInGround( m_Model.GetTkState() );
+		return from_osim( point );
+#else
+		// #osim4: this code gives an error
 		auto ofs = SimTK::Vec3( 0, 0, 0 );
 		SimTK::Vec3 point;
 		const auto& body_frame = m_osJoint.getChildFrame();
 		const auto& joint_frame = m_osJoint.getChildFrame();
 		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), joint_frame, ofs, point );
-		//getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
+		getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
 		return from_osim( point );
+#endif
 	}
 }

@@ -20,14 +20,22 @@ namespace scone
 		auto& osGeometry = osForceNonConst.getContactParametersSet().get( 0 ).getGeometry();
 		for ( int idx = 0; idx < osGeometry.size(); ++idx )
 		{
-			auto& cg = *FindByName( model.GetContactGeometries(), osGeometry.getValue( idx ) );
-			if ( auto p = std::get_if< xo::plane >( &cg.GetShape() ) )
+			auto& name = osGeometry.getValue( idx );
+			auto& cgvec = model.GetContactGeometries();
+			// #todo #osim4: need a contact geometry for "ground" to make this work
+			//auto& cg = *FindByName( model.GetContactGeometries(), name );
+			if ( auto cgit = TryFindByName( cgvec, name ); cgit != cgvec.end() )
 			{
-				// initialize plane normal / pos, needed for cop computation
-				m_PlaneNormal = cg.GetOri() * Vec3( p->normal_ );
-				m_PlaneLocation = cg.GetPos();
+				auto& cg = **cgit;
+				if ( auto p = std::get_if< xo::plane >( &cg.GetShape() ) )
+				{
+					// initialize plane normal / pos, needed for cop computation
+					m_PlaneNormal = cg.GetOri() * Vec3( p->normal_ );
+					m_PlaneLocation = cg.GetPos();
+				}
+				m_Geometries.push_back( &cg );
 			}
-			m_Geometries.push_back( &cg );
+			else log::warning( "Could not find ContactGeometry: ", name ); // error is because #osim4 has no ground body / contact geom
 		}
 
 		auto labels = m_osForce.getRecordLabels();

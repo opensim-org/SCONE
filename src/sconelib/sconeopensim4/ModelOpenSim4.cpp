@@ -273,11 +273,19 @@ namespace scone
 
 	ModelOpenSim4::~ModelOpenSim4() {}
 
+	const OpenSim::Body* find_osim_body( const OpenSim::BodySet& bodies, int mbidx ) {
+		for ( int idx = 0; idx < bodies.getSize(); ++idx )
+			if ( const auto& b = bodies.get( idx ); b.getMobilizedBodyIndex() == mbidx )
+				return &b;
+		return nullptr;
+	}
+
 	void ModelOpenSim4::CreateModelWrappers( const PropNode& pn, Params& par )
 	{
 		SCONE_ASSERT( m_pOsimModel && m_Bodies.empty() && m_Joints.empty() && m_Dofs.empty() && m_Actuators.empty() && m_Muscles.empty() );
 
 		// Create wrappers for bodies
+		// #todo #osim4 OpenSim 4 has no ground body, create fake scone::Body?
 		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			m_Bodies.emplace_back( std::make_unique<BodyOpenSim4>( *this, m_pOsimModel->getBodySet().get( idx ) ) );
@@ -290,14 +298,15 @@ namespace scone
 			auto& joint_osim = m_pOsimModel->getJointSet().get( idx );
 			auto child_body_idx = joint_osim.getChildFrame().getMobilizedBodyIndex();
 			auto parent_body_idx = joint_osim.getParentFrame().getMobilizedBodyIndex();
-			auto& child_body = m_pOsimModel->getBodySet().get( child_body_idx );
-			auto& parent_body = m_pOsimModel->getBodySet().get( parent_body_idx );
+			auto child_body = find_osim_body( m_pOsimModel->getBodySet(), child_body_idx );
+			auto parent_body = find_osim_body( m_pOsimModel->getBodySet(), parent_body_idx );
 			auto body_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
-				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &child_body; } );
+				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == child_body; } );
 			auto parent_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
-				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &parent_body; } );
-			SCONE_ASSERT( body_it != m_Bodies.end() && parent_it != m_Bodies.end() );
-			m_Joints.emplace_back( std::make_unique<JointOpenSim4>( **body_it, **parent_it, *this, joint_osim ) );
+				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == parent_body; } );
+			if ( body_it != m_Bodies.end() && parent_it != m_Bodies.end() )
+				m_Joints.emplace_back( std::make_unique<JointOpenSim4>( **body_it, **parent_it, *this, joint_osim ) );
+			else log::warning( "Could not find bodies for joint: ", joint_osim.getName() );
 		}
 
 		// create wrappers for dofs
@@ -311,23 +320,27 @@ namespace scone
 		{
 			OpenSim::ContactGeometry* cg_osim = &m_pOsimModel->getContactGeometrySet().get( idx );
 			auto& name = cg_osim->getName();
-			auto& bod = *FindByName( m_Bodies, cg_osim->getBody().getName() );
-			auto loc = from_osim( cg_osim->getLocation() );
-			auto ea = xo::vec3radd( from_osim( cg_osim->getOrientation() ) );
-			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
-
-			if ( auto cs = dynamic_cast< OpenSim::ContactSphere* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
-					name, bod, xo::sphere( float( cs->getRadius() ) ), loc, ori ) );
-			else if ( auto cp = dynamic_cast< OpenSim::ContactHalfSpace* >( cg_osim ) )
-				m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
-					name, bod, xo::plane( xo::vec3f::neg_unit_x() ), loc, ori ) );
-			else if ( auto cm = dynamic_cast<OpenSim::ContactMesh*>( cg_osim ) )
+			auto& body_name = cg_osim->getBody().getName();
+			if ( auto bodyit = TryFindByName( m_Bodies, body_name ); bodyit != m_Bodies.end() )
 			{
-				// #todo: add support for displaying mesh contacts
-				auto file = FindFile( model_file.parent_path() / cm->getFilename() );
-				AddExternalResource( file );
+				auto& body = **bodyit;
+				auto loc = from_osim( cg_osim->getLocation() );
+				auto ea = xo::vec3radd( from_osim( cg_osim->getOrientation() ) );
+				auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
+				if ( auto cs = dynamic_cast<OpenSim::ContactSphere*>( cg_osim ) )
+					m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
+						name, body, xo::sphere( float( cs->getRadius() ) ), loc, ori ) );
+				else if ( auto cp = dynamic_cast<OpenSim::ContactHalfSpace*>( cg_osim ) )
+					m_ContactGeometries.emplace_back( std::make_unique<ContactGeometry>(
+						name, body, xo::plane( xo::vec3f::neg_unit_x() ), loc, ori ) );
+				else if ( auto cm = dynamic_cast<OpenSim::ContactMesh*>( cg_osim ) )
+				{
+					// #todo: add support for displaying mesh contacts
+					auto file = FindFile( model_file.parent_path() / cm->getFilename() );
+					AddExternalResource( file );
+				}
 			}
+			else log::info( "Could not create ContactGeometry ", name, ": could not find body ", body_name );
 		}
 
 		// Create wrappers for actuators

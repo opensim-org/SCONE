@@ -18,8 +18,14 @@
 
 namespace scone
 {
+	Joint* try_find_joint( ModelOpenSim4& model, OpenSim::Coordinate& coord ) {
+		if ( auto it = TryFindByName( model.GetJoints(), coord.getJoint().getName() ); it != model.GetJoints().end() )
+			return it->get();
+		else return nullptr;
+	}
+
 	DofOpenSim4::DofOpenSim4( ModelOpenSim4& model, OpenSim::Coordinate& coord ) :
-		Dof( FindByName( model.GetJoints(), coord.getJoint().getName() ).get() ),
+		Dof( try_find_joint( model, coord ) ),
 		m_Model( model ),
 		m_osCoord( coord ),
 		m_pOsLimitForce( nullptr ),
