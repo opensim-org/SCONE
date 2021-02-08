@@ -55,14 +55,15 @@ namespace scone
 	// OpenSim4 controller that calls scone controllers
 	class ControllerDispatcher : public OpenSim::Controller
 	{
+		OpenSim_DECLARE_CONCRETE_OBJECT( ControllerDispatcher, OpenSim::Controller );
 	public:
-		ControllerDispatcher( ModelOpenSim4& model ) : m_Model( model ) { };
+		ControllerDispatcher( ModelOpenSim4& model ) : m_Model( &model ) { };
 		virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override;
-		virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
-		virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
+		//virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
+		//virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
 
 	private:
-		ModelOpenSim4& m_Model;
+		ModelOpenSim4* m_Model;
 	};
 
 	// Constructor
@@ -508,37 +509,37 @@ namespace scone
 		// see 'catch' statement below for explanation try {} catch {} is needed
 		try
 		{
-			if ( !m_Model.use_fixed_control_step_size )
+			if ( !m_Model->use_fixed_control_step_size )
 			{
 				// update current state (#todo: remove const cast)
-				m_Model.SetTkState( const_cast<SimTK::State&>( s ) );
+				m_Model->SetTkState( const_cast<SimTK::State&>( s ) );
 
 				// update SensorDelayAdapters at the beginning of each new step
 				// #todo: move this to an analyzer object or some other point
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep && m_Model.GetIntegrationStep() > 0 )
+				if ( m_Model->GetIntegrationStep() > m_Model->m_PrevIntStep && m_Model->GetIntegrationStep() > 0 )
 				{
-					m_Model.UpdateSensorDelayAdapters();
-					m_Model.UpdateAnalyses();
+					m_Model->UpdateSensorDelayAdapters();
+					m_Model->UpdateAnalyses();
 				}
 
 				// update actuator values
-				m_Model.UpdateControlValues();
+				m_Model->UpdateControlValues();
 
 				// update previous integration step and time
 				// OpenSim: do I need to keep this or is there are smarter way?
-				if ( m_Model.GetIntegrationStep() > m_Model.m_PrevIntStep )
+				if ( m_Model->GetIntegrationStep() > m_Model->m_PrevIntStep )
 				{
-					m_Model.m_PrevIntStep = m_Model.GetIntegrationStep();
-					m_Model.m_PrevTime = m_Model.GetTime();
+					m_Model->m_PrevIntStep = m_Model->GetIntegrationStep();
+					m_Model->m_PrevTime = m_Model->GetTime();
 				}
 			}
 
 			// inject actuator values into controls
 			{
-				//SCONE_ASSERT_MSG( controls.size() == m_Model.GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
+				//SCONE_ASSERT_MSG( controls.size() == m_Model->GetMuscles().size(), "Only muscle actuators are supported in SCONE at this moment" );
 
 				int idx = 0;
-				for ( auto* act : m_Model.GetActuators() )
+				for ( auto* act : m_Model->GetActuators() )
 				{
 					// OpenSim: addInControls is rather inefficient, that's why we don't use it
 					controls[ idx++ ] += act->GetInput();
