@@ -19,7 +19,10 @@
 #include "ConstantForce.h"
 #include "ContactForceOpenSim4.h"
 #include "simbody_tools.h"
+
+#ifdef ENABLE_STATE_COMPONENTS
 #include "StateComponentOpenSim4.h"
+#endif // ENABLE_STATE_COMPONENTS
 
 #include <OpenSim/OpenSim.h>
 #include <OpenSim/Simulation/Model/Umberger2010MuscleMetabolicsProbe.h>
@@ -71,6 +74,7 @@ namespace scone
 		m_pControllerDispatcher( nullptr ),
 		m_PrevIntStep( -1 ),
 		m_PrevTime( 0.0 ),
+		m_EndTime( xo::constants<TimeInSeconds>::max() ),
 		m_Mass( 0.0 ),
 		m_BW( 0.0 )
 	{
@@ -154,6 +158,7 @@ namespace scone
 			}
 		}
 
+#ifdef ENABLE_STATE_COMPONENTS
 		{
 			// Find StateComponents inside of the model definition and add them
 			// into OpenSim's subsystem.
@@ -166,6 +171,7 @@ namespace scone
 				}
 			}
 		}
+#endif // ENABLE_STATE_COMPONENTS
 
 		// Initialize the system
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
@@ -250,11 +256,11 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "RealizeSystem" );
 			// Create a manager to run the simulation. Can change manager options to save run time and memory or print more information
-			m_pOsimManager = std::make_unique<OpenSim::Manager>( *m_pOsimModel, *m_pTkIntegrator );
+			m_pOsimManager = std::make_unique<OpenSim::Manager>( *m_pOsimModel );
 			m_pOsimManager->setWriteToStorage( false );
 			m_pOsimManager->setPerformAnalyses( false );
-			m_pOsimManager->setInitialTime( 0.0 );
-			m_pOsimManager->setFinalTime( 0.0 );
+			//m_pOsimManager->setInitialTime( 0.0 );
+			//m_pOsimManager->setFinalTime( 0.0 );
 
 			m_pOsimModel->getMultibodySystem().realize( GetTkState(), SimTK::Stage::Acceleration );
 		}
@@ -281,10 +287,14 @@ namespace scone
 		for ( int idx = 0; idx < m_pOsimModel->getJointSet().getSize(); ++idx )
 		{
 			auto& joint_osim = m_pOsimModel->getJointSet().get( idx );
+			auto child_body_idx = joint_osim.getChildFrame().getMobilizedBodyIndex();
+			auto parent_body_idx = joint_osim.getParentFrame().getMobilizedBodyIndex();
+			auto& child_body = m_pOsimModel->getBodySet().get( child_body_idx );
+			auto& parent_body = m_pOsimModel->getBodySet().get( parent_body_idx );
 			auto body_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
-				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &joint_osim.getBody(); } );
+				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &child_body; } );
 			auto parent_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
-				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &joint_osim.getParentBody(); } );
+				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == &parent_body; } );
 			SCONE_ASSERT( body_it != m_Bodies.end() && parent_it != m_Bodies.end() );
 			m_Joints.emplace_back( std::make_unique<JointOpenSim4>( **body_it, **parent_it, *this, joint_osim ) );
 		}
@@ -299,8 +309,8 @@ namespace scone
 		for ( int idx = 0; idx < m_pOsimModel->getContactGeometrySet().getSize(); ++idx )
 		{
 			OpenSim::ContactGeometry* cg_osim = &m_pOsimModel->getContactGeometrySet().get( idx );
-			const auto& name = cg_osim->getName();
-			auto& bod = *FindByName( m_Bodies, cg_osim->getBodyName() );
+			auto& name = cg_osim->getName();
+			auto& bod = *FindByName( m_Bodies, cg_osim->getBody().getName() );
 			auto loc = from_osim( cg_osim->getLocation() );
 			auto ea = xo::vec3radd( from_osim( cg_osim->getOrientation() ) );
 			auto ori = xo::quat_from_euler( ea, xo::euler_order::xyz );
@@ -625,9 +635,10 @@ namespace scone
 		}
 		else
 		{
+			SCONE_THROW( "ModelOpenSim4 requires fixed_control_step_size" );
 			// Integrate from initial time to final time (the old way)
-			m_pOsimManager->setFinalTime( time );
-			m_pOsimManager->integrate( GetTkState() );
+			//m_pOsimManager->setFinalTime( time );
+			//m_pOsimManager->integrate( GetTkState() );
 		}
 	}
 
@@ -666,12 +677,13 @@ namespace scone
 
 	double ModelOpenSim4::GetSimulationEndTime() const
 	{
-		return m_pOsimManager->getFinalTime();
+		return m_EndTime;
 	}
 
 	void ModelOpenSim4::SetSimulationEndTime( double t )
 	{
-		m_pOsimManager->setFinalTime( t );
+		//m_pOsimManager->setFinalTime( t );
+		m_EndTime = t;
 		m_pTkIntegrator->setFinalTime( t );
 	}
 
@@ -708,12 +720,12 @@ namespace scone
 		}
 
 		// find top
-		double initial_state = GetOsimModel().getStateVariable( GetTkState(), initial_load_dof );
+		double initial_state = GetOsimModel().getStateVariableValue( GetTkState(), initial_load_dof );
 		double top = initial_state;
 		while ( abs( GetTotalContactForce() ) > force_threshold && ( top - initial_state < max_range ) )
 		{
 			top += step_size;
-			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, top );
+			GetOsimModel().setStateVariableValue( GetTkState(), initial_load_dof, top );
 		}
 
 		// find bottom
@@ -721,7 +733,7 @@ namespace scone
 		do
 		{
 			bottom -= step_size;
-			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, bottom );
+			GetOsimModel().setStateVariableValue( GetTkState(), initial_load_dof, bottom );
 		}
 		while ( abs( GetTotalContactForce() ) <= force_threshold && ( bottom - initial_state > -max_range ) );
 
@@ -731,7 +743,7 @@ namespace scone
 		for ( int i = 0; i < 100; ++i )
 		{
 			new_ty = ( top + bottom ) / 2;
-			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, new_ty );
+			GetOsimModel().setStateVariableValue( GetTkState(), initial_load_dof, new_ty );
 			force = abs( GetTotalContactForce() );
 
 			// check if it's good enough
@@ -745,7 +757,7 @@ namespace scone
 		if ( abs( force - force_threshold ) / force_threshold > fix_accuracy )
 		{
 			log::warning( "Could not find initial state for ", initial_load_dof, " with external force of ", force_threshold );
-			GetOsimModel().setStateVariable( GetTkState(), initial_load_dof, initial_state );
+			GetOsimModel().setStateVariableValue( GetTkState(), initial_load_dof, initial_state );
 		}
 		else
 			log::trace( "Moved ", initial_load_dof, " to ", new_ty, "; force=", force, "; goal=", force_threshold );
@@ -755,7 +767,7 @@ namespace scone
 	{
 		SCONE_ASSERT( GetState().GetSize() == 0 );
 		auto osnames = GetOsimModel().getStateVariableNames();
-		auto osvalues = GetOsimModel().getStateValues( GetTkState() );
+		auto osvalues = GetOsimModel().getStateVariableValues( GetTkState() );
 		for ( int i = 0; i < osnames.size(); ++i )
 			m_State.AddVariable( osnames[ i ], osvalues[ i ] );
 	}
@@ -763,7 +775,7 @@ namespace scone
 	void ModelOpenSim4::CopyStateFromTk()
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
-		auto osvalues = GetOsimModel().getStateValues( GetTkState() );
+		auto osvalues = GetOsimModel().getStateVariableValues( GetTkState() );
 		for ( int i = 0; i < osvalues.size(); ++i )
 			m_State.SetValue( i, osvalues[ i ] );
 	}
@@ -771,7 +783,8 @@ namespace scone
 	void ModelOpenSim4::CopyStateToTk()
 	{
 		SCONE_ASSERT( m_State.GetSize() >= GetOsimModel().getNumStateVariables() );
-		GetOsimModel().setStateValues( GetTkState(), &m_State.GetValues()[ 0 ] );
+		GetOsimModel().setStateVariableValues( GetTkState(),
+			SimTK::Vector( static_cast<int>( m_State.GetSize() ), &m_State.GetValues()[ 0 ] ) );
 
 		// set locked coordinates
 		auto& cs = GetOsimModel().updCoordinateSet();
@@ -822,7 +835,7 @@ namespace scone
 		for ( auto coIdx = 0u; coIdx < m_Dofs.size(); ++coIdx )
 		{
 			DofOpenSim4& dof = static_cast<DofOpenSim4&>( *m_Dofs[ coIdx ] );
-			auto mbIdx = dof.GetOsCoordinate().getJoint().getBody().getIndex();
+			auto mbIdx = dof.GetOsCoordinate().getJoint().getParentFrame().getMobilizedBodyIndex();
 
 			for ( auto j = 0; j < 3; ++j )
 				dof.m_RotationAxis[ j ] = jsmat( mbIdx * 6 + j, coIdx );
@@ -831,10 +844,9 @@ namespace scone
 
 	void ModelOpenSim4::UpdateOsimStorage()
 	{
-		OpenSim::Array<double> stateValues;
-		m_pOsimModel->getStateValues( GetTkState(), stateValues );
+		auto stateValues = m_pOsimModel->getStateVariableValues( GetTkState() );
 		OpenSim::StateVector vec;
-		vec.setStates( GetTkState().getTime(), stateValues.getSize(), &stateValues[ 0 ] );
+		vec.setStates( GetTkState().getTime(), stateValues );
 		m_pOsimManager->getStateStorage().append( vec );
 	}
 

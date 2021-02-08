@@ -154,6 +154,7 @@ namespace scone
 		State m_State; // model state
 		int m_PrevIntStep;
 		double m_PrevTime;
+		TimeInSeconds m_EndTime;
 
 		// cached variables
 		Real m_Mass;
