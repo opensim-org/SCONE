@@ -11,14 +11,15 @@
 #include "scone/core/string_tools.h"
 #include "xo/numerical/math.h"
 #include "scone/core/Log.h"
+#include <chrono>
+
+using std::chrono::high_resolution_clock;
 
 namespace scone
 {
 	PerturbationController::PerturbationController( const PropNode& props, Params& par, Model& model, const Location& target_area ) :
 		Controller( props, par, model, target_area ),
 		body( *FindByName( model.GetBodies(), props.get< String >( "body" ) ) ),
-		random_seed( props.get( "random_seed", 5489 ) ),
-		rng_( random_seed ),
 		active_( false ),
 		current_force(),
 		current_moment()
@@ -28,6 +29,9 @@ namespace scone
 		INIT_PROP( props, position_offset, Vec3::zero() );
 		INIT_PROP( props, interval, xo::bounds<TimeInSeconds>( 0, 0 ) );
 		INIT_PROP( props, duration, xo::bounds<TimeInSeconds>( 0.1, 0.1 ) );
+		INIT_PROP( props, random_seed,
+				   high_resolution_clock::now().time_since_epoch().count() );
+		rng_ = xo::random_number_generator( random_seed );
 
 		SCONE_THROW_IF( !interval.is_null() && duration.upper > interval.lower, "Duration cannot be longer than interval" );
 		SCONE_ERROR_IF( !model.GetFeatures().allow_external_forces, "External forces are not enabled for this model, please add:\n\nuse_external_forces = 1" );

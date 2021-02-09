@@ -27,7 +27,7 @@ namespace scone
 		/// Proportional standard deviation of the normal distribution; default = 0.
 		double proportional_noise;
 
-		/// Random seed for noise sampling; default = 123.
+		/// Random seed for noise sampling; default = time dependent.
 		unsigned int random_seed;
 
 	protected:

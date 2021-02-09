@@ -10,16 +10,20 @@
 #include "scone/model/Model.h"
 #include "scone/model/Actuator.h"
 #include "scone/core/string_tools.h"
+#include <chrono>
+
+using std::chrono::high_resolution_clock;
 
 namespace scone
 {
 	NoiseController::NoiseController( const PropNode& props, Params& par, Model& model, const Location& loc ) :
-	Controller( props, par, model, loc ),
-	random_seed( props.get< unsigned int >( "random_seed", 123 ) ),
-	rng_( random_seed )
+	Controller( props, par, model, loc )
 	{
 		INIT_PROP( props, base_noise, 0 );
 		INIT_PROP( props, proportional_noise, 0 );
+		INIT_PROP( props, random_seed,
+				   high_resolution_clock::now().time_since_epoch().count() );
+		rng_ = xo::random_number_generator( random_seed );
 	}
 
 	bool NoiseController::ComputeControls( Model& model, double timestamp )

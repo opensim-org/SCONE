@@ -8,11 +8,14 @@
 
 #include "ModelObjective.h"
 
+#include "scone/core/Exception.h"
 #include "scone/core/Factories.h"
 #include "scone/core/Log.h"
+#include "spot/spot_types.h"
 #include "xo/filesystem/filesystem.h"
 #include "opt_tools.h"
 #include "scone/core/profiler_config.h"
+#include <algorithm>
 
 namespace scone
 {
@@ -20,6 +23,12 @@ namespace scone
 		Objective( props, find_file_folder ),
 		evaluation_step_size_( XO_IS_DEBUG_BUILD ? 0.01 : 0.25 )
 	{
+		INIT_PROP ( props, num_evaluations_to_report, 1 );
+
+		// should be positive number
+		SCONE_THROW_IF( num_evaluations_to_report < 1,
+						"num_evaluations_to_report > 0" );
+
 		// create internal model using the ORIGINAL prop_node to flag unused model props and create par_info_
 		model_props = FindFactoryProps( GetModelFactory(), props, "Model" );
 		model_ = CreateModel( model_props, info_, GetExternalResourceDir() );
@@ -43,13 +52,32 @@ namespace scone
 
 	result<fitness_t> ModelObjective::evaluate( const SearchPoint& point, const xo::stop_token& st ) const
 	{
-		if ( !st.stop_requested() )
+		std::vector< result< fitness_t > > results;
+		for ( int evaluations = 0; evaluations < num_evaluations_to_report;
+			  evaluations++ )
 		{
-			SearchPoint params( point );
-			auto model = CreateModelFromParams( params );
-			return EvaluateModel( *model, st );
+			if ( ! st.stop_requested() )
+			{
+				SearchPoint params( point );
+				auto model = CreateModelFromParams( params );
+				results.push_back( EvaluateModel( *model, st ) );
+			}
+			else
+				return xo::error_message( "Optimization canceled" );
 		}
-		else return xo::error_message( "Optimization canceled" );
+		
+		// Once the simulations are evaluated, return the max if we minimize or
+		// the min if we maximize (always the worst case).
+		if ( info().minimize() )
+			return *std::max_element( results.begin(), results.end(),
+									  [] ( const auto& r1, const auto& r2 ) {
+										  return r1.value() < r2.value();
+									  } );
+		else
+			return *std::min_element( results.begin(), results.end(),
+									  [] ( const auto& r1, const auto& r2 ) {
+										  return r1.value() < r2.value();
+									  } );
 	}
 
 	result<fitness_t> ModelObjective::EvaluateModel( Model& m, const xo::stop_token& st ) const

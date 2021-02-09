@@ -18,6 +18,11 @@ namespace scone
 	class SCONE_API ModelObjective : public Objective
 	{
 	public:
+		// Number of evaluations for reporting a result (default = 1). The worst
+		// results among all evaluations is reported back. This helps creating
+		// robust solutions.
+		int num_evaluations_to_report;
+		
 		ModelObjective( const PropNode& props, const path& find_file_folder );
 		virtual ~ModelObjective() = default;
 

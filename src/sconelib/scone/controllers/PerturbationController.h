@@ -38,7 +38,7 @@ namespace scone
 		/// Perturbation moment to apply; default = [ 0 0 0 ].
 		Vec3 moment;
 
-		/// Random seed used for the perturbation sequence; default = 5489.
+		/// Random seed used for the perturbation sequence; default = time dependent.
 		unsigned int random_seed;
 
 		/// Fixed time [s] between two perturbations; default 2.
