@@ -96,6 +96,9 @@ namespace scone
 		INIT_PROP( props, leg_lower_body, "" );
 		INIT_PROP( props, leg_contact_force, "foot" );
 
+		// re-init initial_load_dof with different default value
+		INIT_PROP( props, initial_load_dof, "/jointset/ground_pelvis/pelvis_ty/value" );
+
 		// always set create_body_forces when there's a PerturbationController
 		// #todo: think of a nicer, more generic way of dealing with this issue
 		if ( auto* controller = props.try_get_child( "Controller" ) )
