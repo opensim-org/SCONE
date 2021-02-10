@@ -445,7 +445,7 @@ namespace scone
 			auto t = xo::transformd( ground->GetPos(), ground->GetOri() );
 			return xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
 		}
-		else return point;
+		else return point - xo::multiply( point, up ); // default projects to plane defined by origin and up
 	}
 
 	PropNode Model::GetInfo() const

@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "platform.h"
 #include "scone/model/Dof.h"
+#include "platform.h"
 
 namespace OpenSim
 {
@@ -28,9 +28,9 @@ namespace scone
 
 		virtual Real GetPos() const override;
 		virtual Real GetVel() const override;
-		virtual Real GetAcc() const override;
 
-		virtual Real GetLimitMoment() const override;
+		virtual Real GetLimitForce() const override;
+		virtual Real GetMoment() const override;
 
 		virtual const String& GetName() const override;
 		const OpenSim::Coordinate& GetOsCoordinate() const { return m_osCoord; }
@@ -43,20 +43,13 @@ namespace scone
 		virtual Vec3 GetRotationAxis() const override;
 		virtual Range< Real > GetRange() const override;
 
-		virtual bool IsActuated() const override { return m_OsCoordAct != nullptr; }
-		Real GetMinInput() const override;
-		Real GetMaxInput() const override;
-		Real GetMinTorque() const override;
-		Real GetMaxTorque() const override;
-
-		const Model& GetModel() const override;
-
 	private:
-		friend class ModelOpenSim4;
 		ModelOpenSim4& m_Model;
 		OpenSim::Coordinate& m_osCoord;
 		const OpenSim::CoordinateLimitForce* m_pOsLimitForce;
 		const OpenSim::CoordinateActuator* m_OsCoordAct;
 		Vec3 m_RotationAxis;
+
+		friend class ModelOpenSim4;
 	};
 }

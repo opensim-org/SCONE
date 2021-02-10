@@ -10,10 +10,11 @@
 
 #include "platform.h"
 #include "scone/model/Body.h"
+#include "ModelOpenSim4.h"
 
 namespace OpenSim
 {
-	class Body;
+	class PhysicalFrame;
 }
 
 namespace scone
@@ -21,11 +22,8 @@ namespace scone
 	class SCONE_OPENSIM_4_API BodyOpenSim4 : public Body
 	{
 	public:
-		BodyOpenSim4( class ModelOpenSim4& model, OpenSim::Body& body );
-		virtual ~BodyOpenSim4();
-
-		virtual Real GetMass() const override;
-		virtual Vec3 GetInertiaTensorDiagonal() const override;
+		BodyOpenSim4( class ModelOpenSim4& model, const OpenSim::PhysicalFrame& body );
+		virtual ~BodyOpenSim4() { };
 
 		virtual Vec3 GetOriginPos() const override;
 		virtual Vec3 GetComPos() const override;
@@ -45,14 +43,24 @@ namespace scone
 
 		virtual const String& GetName() const override;
 
+		virtual bool HasContact() const override { return m_ForceIndex != -1; }
 		virtual Vec3 GetContactForce() const override;
 		virtual Vec3 GetContactMoment() const override;
-		virtual Vec3 GetContactPoint() const override;
+
+		const OpenSim::PhysicalFrame& m_osBody;
+		class ModelOpenSim4& m_Model;
+
+		// connect a specific stance_contact force to this body
+		void ConnectContactForce( const String& force_name );
 
 		virtual Model& GetModel() override;
 		virtual const Model& GetModel() const override;
 
-		virtual std::vector< DisplayGeometry > GetDisplayGeometries() const override;
+		virtual std::vector<DisplayGeometry> GetDisplayGeometries() const override;
+		virtual std::vector< path > GetDisplayGeomFileNames() const;
+
+		virtual const std::vector< Real >& GetContactForceValues() const override;
+		virtual const std::vector< String >& GetContactForceLabels() const override { return m_ContactForceLabels; }
 
 		virtual void SetExternalForce( const Vec3& f ) override;
 		virtual void SetExternalMoment( const Vec3& torque ) override;
@@ -64,14 +72,11 @@ namespace scone
 		virtual Vec3 GetExternalMoment() const override;
 		virtual Vec3 GetExternalForcePoint() const override;
 
-		const OpenSim::Body& GetOsBody() const { return m_osBody; }
-
-		void AttachContactForce( ContactForce* cf ) { m_ContactForces.push_back( cf ); }
-
 	private:
-		OpenSim::Body& m_osBody;
-		class ModelOpenSim4& m_Model;
 		Vec3 m_LocalComPos;
-		std::vector< ContactForce* > m_ContactForces;
+		int m_ForceIndex;
+		mutable int m_LastNumDynamicsRealizations;
+		mutable std::vector< Real > m_ContactForceValues;
+		std::vector< String > m_ContactForceLabels;
 	};
 }

@@ -10,33 +10,45 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
 #include "ModelOpenSim4.h"
-#include "scone/model/Dof.h"
 
-#include <OpenSim/Simulation/SimbodyEngine/Joint.h>
-#include <OpenSim/Simulation/SimbodyEngine/Body.h>
-#include <OpenSim/Simulation/Model/Model.h>
-
+#include <OpenSim/OpenSim.h>
 #include "simbody_tools.h"
 
 namespace scone
 {
-	JointOpenSim4::JointOpenSim4( Body& body, Body& parent, class ModelOpenSim4& model, OpenSim::Joint& osJoint ) :
+	JointOpenSim4::JointOpenSim4( Body& body, Joint* parent, class ModelOpenSim4& model, OpenSim::Joint& osJoint ) :
 		Joint( body, parent ),
-		m_Model( model ),
-		m_osJoint( osJoint )
+		m_osJoint( osJoint ),
+		m_Model( model )
 	{
 		//log::Trace( "Creating joint " + osJoint.getName() + " body=" + body.GetName() + " parent=" + ( parent ? parent->GetName() : "null" ) );
 	}
 
 	JointOpenSim4::~JointOpenSim4()
-	{}
+	{
+	}
 
 	const String& JointOpenSim4::GetName() const
 	{
 		return m_osJoint.getName();
 	}
 
-	Vec3 JointOpenSim4::GetReactionForce() const
+	size_t JointOpenSim4::GetDofCount() const
+	{
+		return m_osJoint.numCoordinates();
+	}
+
+	scone::Real JointOpenSim4::GetDofValue( size_t index /*= 0 */ ) const
+	{
+		return m_osJoint.get_coordinates( static_cast<int>( index ) ).getValue( m_Model.GetTkState() );
+	}
+
+	const String& JointOpenSim4::GetDofName( size_t index /*= 0 */ ) const
+	{
+		return m_osJoint.get_coordinates( static_cast<int>( index ) ).getName();
+	}
+
+	scone::Vec3 JointOpenSim4::GetReactionForce() const
 	{
 		auto& model = m_osJoint.getModel();
 		auto& matter = model.getMatterSubsystem();
@@ -65,29 +77,13 @@ namespace scone
 #endif
 	}
 
-	Real JointOpenSim4::GetLimitPower() const
-	{
-		Real pow = 0.0;
-		for ( const auto& d : GetDofs() )
-			pow += d->GetVel() * d->GetLimitMoment();
-		return pow;
-	}
-
 	Vec3 JointOpenSim4::GetPos() const
 	{
-#if 1
-		// #osim4: this doesn't work for the fancy knee joints
-		auto point = m_osJoint.getParentFrame().getPositionInGround( m_Model.GetTkState() );
-		return from_osim( point );
-#else
-		// #osim4: this code gives an error
-		auto ofs = SimTK::Vec3( 0, 0, 0 );
-		SimTK::Vec3 point;
-		const auto& body_frame = m_osJoint.getChildFrame();
-		const auto& joint_frame = m_osJoint.getChildFrame();
-		m_osJoint.getModel().getSimbodyEngine().getPosition( m_Model.GetTkState(), joint_frame, ofs, point );
-		getPosition( m_Model.GetTkState(), m_osJoint.getBody(), m_osJoint.getLocationInChild(), point );
-		return from_osim( point );
-#endif
+		SCONE_THROW_NOT_IMPLEMENTED;
+
+		SimTK::Vec3 p;
+		m_osJoint.getParentFrame().getPositionInGround( m_Model.GetTkState() );
+		std::cout << GetName() << ": " << p << std::endl;
+		return from_osim( p );
 	}
 }

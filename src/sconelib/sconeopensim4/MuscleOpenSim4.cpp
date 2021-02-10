@@ -6,13 +6,15 @@
 ** This file is part of SCONE. For more information, see http://scone.software.
 */
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Model.h>
+#include <OpenSim/Simulation/Model/Muscle.h>
+#include <OpenSim/Simulation/SimbodyEngine/Body.h>
 
 #include "MuscleOpenSim4.h"
 #include "ModelOpenSim4.h"
 
 #include "scone/core/Exception.h"
-#include "scone/core/Profiler.h"
+#include "scone/core/profiler_config.h"
 
 #include "DofOpenSim4.h"
 #include "simbody_tools.h"
@@ -22,8 +24,13 @@ namespace scone
 {
 	const double MOMENT_ARM_EPSILON = 0.000001;
 
-	MuscleOpenSim4::MuscleOpenSim4( ModelOpenSim4& model, OpenSim::Muscle& mus ) : m_Model( model ), m_osMus( mus )
-	{}
+	MuscleOpenSim4::MuscleOpenSim4( ModelOpenSim4& model, OpenSim::Muscle& mus ) :
+		m_Model( model ),
+		m_osMus( mus ),
+		m_MomentArmCacheTimeStamp( -1 )
+	{
+		InitJointsDofs();
+	}
 
 	MuscleOpenSim4::~MuscleOpenSim4()
 	{}
@@ -33,155 +40,162 @@ namespace scone
 		return m_osMus.getName();
 	}
 
-	scone::Real MuscleOpenSim4::GetOptimalFiberLength() const
+	Real MuscleOpenSim4::GetOptimalFiberLength() const
 	{
 		return m_osMus.getOptimalFiberLength();
 	}
 
-	scone::Real MuscleOpenSim4::GetTendonSlackLength() const
+	Real MuscleOpenSim4::GetTendonSlackLength() const
 	{
 		return m_osMus.getTendonSlackLength();
 	}
 
-	scone::Real MuscleOpenSim4::GetMass( Real specific_tension, Real muscle_density ) const
+	Real MuscleOpenSim4::GetForce() const
 	{
-		return ( GetMaxIsometricForce() / specific_tension ) * muscle_density * GetOptimalFiberLength(); // from OpenSim Umberger metabolic energy model docs
-	}
-
-	scone::Real MuscleOpenSim4::GetForce() const
-	{
-		SCONE_PROFILE_FUNCTION;
 		// OpenSim: why can't I just use getWorkingState()?
 		// OpenSim: why must I update to Dynamics for getForce()?
-		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Dynamics );
-		// TODO is this correct?
+		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
+		// #osim4: is this seriously how I get the muscle force?
 		return m_osMus.getActuation( m_Model.GetTkState() );
-
 	}
 
-	scone::Real MuscleOpenSim4::GetNormalizedForce() const
+	Real MuscleOpenSim4::GetNormalizedForce() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		return GetForce() / GetMaxIsometricForce();
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetLength() const
+	Real MuscleOpenSim4::GetLength() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 		return m_osMus.getLength( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetVelocity() const
+	Real MuscleOpenSim4::GetVelocity() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		return m_osMus.getLengtheningSpeed( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetFiberForce() const
+	Real MuscleOpenSim4::GetFiberForce() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getFiberForce( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetNormalizedFiberForce() const
+	Real MuscleOpenSim4::GetActiveFiberForce() const
 	{
-		SCONE_PROFILE_FUNCTION;
-		return m_osMus.getFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
-	}
-
-	scone::Real MuscleOpenSim4::GetActiveFiberForce() const
-	{
-		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getActiveFiberForce( m_Model.GetTkState() );
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetFiberLength() const
+	Real MuscleOpenSim4::GetPassiveFiberForce() const
 	{
-		SCONE_PROFILE_FUNCTION;
+		return m_osMus.getPassiveFiberForce( m_Model.GetTkState() );
+	}
+
+	Real MuscleOpenSim4::GetFiberLength() const
+	{
 		return m_osMus.getFiberLength( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetNormalizedFiberLength() const
+	Real MuscleOpenSim4::GetNormalizedFiberLength() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 		return m_osMus.getNormalizedFiberLength( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetFiberVelocity() const
+	Real MuscleOpenSim4::GetCosPennationAngle() const
 	{
-		SCONE_PROFILE_FUNCTION;
+		return m_osMus.getCosPennationAngle( m_Model.GetTkState() );
+	}
+
+	Real MuscleOpenSim4::GetFiberVelocity() const
+	{
 		return m_osMus.getFiberVelocity( m_Model.GetTkState() );
 	}
 
-	scone::Real MuscleOpenSim4::GetNormalizedFiberVelocity() const
+	Real MuscleOpenSim4::GetNormalizedFiberVelocity() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getFiberVelocity( m_Model.GetTkState() ) / m_osMus.getOptimalFiberLength();
 	}
 
-	const Link& MuscleOpenSim4::GetOriginLink() const
+	const Body& MuscleOpenSim4::GetOriginBody() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
-		return m_Model.FindLink( pps.get( 0 ).getBodyName() );
+		return *FindByName( m_Model.GetBodies(), pps.get( 0 ).getBodyName() );
 	}
 
-	const Link& MuscleOpenSim4::GetInsertionLink() const
+	const Body& MuscleOpenSim4::GetInsertionBody() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		auto& pps = m_osMus.getGeometryPath().getPathPointSet();
-		return m_Model.FindLink( pps.get( pps.getSize() - 1 ).getBodyName() );
+		return *FindByName( m_Model.GetBodies(), pps.get( pps.getSize() - 1 ).getBodyName() );
 	}
 
-	scone::Real MuscleOpenSim4::GetMomentArm( const Dof& dof ) const
+	Real MuscleOpenSim4::GetMomentArm( const Dof& dof ) const
 	{
-		SCONE_PROFILE_FUNCTION;
-
-		auto iter = m_MomentArmCache.find( &dof );
-		if ( iter == m_MomentArmCache.end() )
+		auto t = GetModel().GetTime();
+		if ( m_MomentArmCacheTimeStamp != t )
 		{
-			const DofOpenSim4& dof_sb = dynamic_cast<const DofOpenSim4&>( dof );
-			auto moment = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
-			if ( fabs( moment ) < MOMENT_ARM_EPSILON || dof_sb.GetOsCoordinate().getLocked( m_Model.GetTkState() ) )
-				moment = 0;
-			m_MomentArmCache[ &dof ] = moment;
-			return moment;
+			for ( auto& d : GetDofs() )
+			{
+				const DofOpenSim4& dof_sb = dynamic_cast<const DofOpenSim4&>( *d );
+				auto mom = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+				if ( fabs( mom ) < MOMENT_ARM_EPSILON || dof_sb.GetOsCoordinate().getLocked( m_Model.GetTkState() ) )
+					mom = 0;
+				m_MomentArmCache[ &dof ] = mom;
+			}
 		}
-		else return iter->second;
+
+		return m_MomentArmCache[ &dof ];
 	}
 
-	const scone::Model& MuscleOpenSim4::GetModel() const
+	void MuscleOpenSim4::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
+	{
+		Muscle::StoreData( frame, flags );
+		if ( flags.get<StoreDataTypes::DebugData>() )
+		{
+			auto f_t = m_osMus.getTendonForce( m_Model.GetTkState() ) / m_osMus.getCosPennationAngle( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
+			auto f_pe = m_osMus.getPassiveFiberForce( m_Model.GetTkState() ) / m_osMus.getMaxIsometricForce();
+			auto f_ce = m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() ) * m_osMus.getActivation( m_Model.GetTkState() );
+			frame[ GetName() + ".inv_ce_vel" ] = ( f_t - f_pe ) / f_ce;
+			frame[ GetName() + ".ce_vel_norm" ] = m_osMus.getNormalizedFiberVelocity( m_Model.GetTkState() );
+			frame[ GetName() + ".ce_vel" ] = m_osMus.getFiberVelocity( m_Model.GetTkState() );
+			frame[ GetName() + ".inv_ce_vel_ft" ] = f_t;
+			frame[ GetName() + ".inv_ce_vel_fpe" ] = f_pe;
+			frame[ GetName() + ".inv_ce_vel_fce" ] = f_ce;
+		}
+	}
+
+	const Model& MuscleOpenSim4::GetModel() const
 	{
 		return m_Model;
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetTendonLength() const
+	Real MuscleOpenSim4::GetTendonLength() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getTendonLength( m_Model.GetTkState() );
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetActiveForceLengthMultipler() const
+	Real MuscleOpenSim4::GetNormalizedTendonLength() const
+	{
+		return m_osMus.getTendonLength( m_Model.GetTkState() ) / m_osMus.getTendonSlackLength();
+	}
+
+	Real MuscleOpenSim4::GetActiveForceLengthMultipler() const
 	{
 		return m_osMus.getActiveForceLengthMultiplier( m_Model.GetTkState() );
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetMaxContractionVelocity() const
+	Real MuscleOpenSim4::GetMaxContractionVelocity() const
 	{
 		return m_osMus.getMaxContractionVelocity();
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetMaxIsometricForce() const
+	Real MuscleOpenSim4::GetMaxIsometricForce() const
 	{
 		return m_osMus.getMaxIsometricForce();
 	}
 
-	std::vector< Vec3 > scone::MuscleOpenSim4::GetMusclePath() const
+	std::vector< Vec3 > MuscleOpenSim4::GetMusclePath() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		//m_Model.GetOsimModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 		//m_osMus.getGeometryPath().updateGeometry( m_Model.GetTkState() );
 		auto& pps = m_osMus.getGeometryPath().getCurrentPath( m_Model.GetTkState() );
@@ -190,18 +204,18 @@ namespace scone
 		{
 			const auto& mob = m_Model.GetOsimModel().getMultibodySystem().getMatterSubsystem().getMobilizedBody( pps[ i ]->getBody().getMobilizedBodyIndex() );
 			auto world_pos = mob.getBodyTransform( m_Model.GetTkState() ) * pps[ i ]->getLocation( m_Model.GetTkState() );
+
 			points[ i ] = from_osim( world_pos );
 		}
 		return points;
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetActivation() const
+	Real MuscleOpenSim4::GetActivation() const
 	{
-		SCONE_PROFILE_FUNCTION;
 		return m_osMus.getActivation( m_Model.GetTkState() );
 	}
 
-	scone::Real scone::MuscleOpenSim4::GetExcitation() const
+	Real MuscleOpenSim4::GetExcitation() const
 	{
 		// use our own control value, as OpenSim calls getControls()
 		// this could lead to infinite recursion
@@ -209,7 +223,7 @@ namespace scone
 		return xo::clamped( GetInput(), 0.0, 1.0 );
 	}
 
-	void scone::MuscleOpenSim4::SetExcitation( Real u )
+	void MuscleOpenSim4::SetExcitation( Real u )
 	{
 		m_osMus.setExcitation( m_Model.GetTkState(), u );
 	}
