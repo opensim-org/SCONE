@@ -176,6 +176,7 @@ namespace scone
 				auto mom = GetForce() * ma;
 				frame[ name + ".moment_arm" ] = ma;
 				frame[ name + ".moment" ] = mom;
+				frame[ name + ".power" ] = mom * d->GetVel();
 			}
 		}
 	}
