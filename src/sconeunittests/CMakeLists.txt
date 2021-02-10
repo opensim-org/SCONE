@@ -1,7 +1,6 @@
 set(FILES
     main.cpp
 	optimization_test.cpp
-	proxy_string_test.h
 	scenario_test.h
 	scenario_test.cpp
 	)

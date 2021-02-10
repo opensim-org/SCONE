@@ -13,9 +13,6 @@
 #include "xo/serialization/prop_node_serializer_zml.h"
 #include "scenario_test.h"
 #include "xo/utility/arg_parser.h"
-#ifdef SCONE_HYFYDY
-#	include "proxy_string_test.h"
-#endif
 
 int main( int argc, const char* argv[] )
 {
@@ -25,13 +22,13 @@ int main( int argc, const char* argv[] )
 	auto args = xo::arg_parser( argc, argv );
 	if ( !args.has_flag( "skip-tutorials" ) )
 		scone::add_scenario_tests( "scenarios/Tutorials" );
+#ifdef SCONE_OPENSIM_3
 	if ( !args.has_flag( "skip-opensim3" ) )
 		scone::add_scenario_tests( "scenarios/UnitTests/OpenSim3" );
+#endif
 #ifdef SCONE_HYFYDY
-	if ( !args.has_flag( "skip-hyfydy" ) ) {
+	if ( !args.has_flag( "skip-hyfydy" ) )
 		scone::add_scenario_tests( "scenarios/UnitTests/Hyfydy" );
-		xo::test::add_test_case( "proxy_string", &scone::proxy_string_test );
-	}
 #endif
 
 	return xo::test::run_tests_async();
