@@ -157,6 +157,7 @@ namespace scone
 			frame[ GetName() + ".mtu_velocity" ] = GetVelocity();
 			frame[ GetName() + ".mtu_force" ] = GetForce();
 			frame[ GetName() + ".mtu_force_norm" ] = GetNormalizedForce();
+			frame[ GetName() + ".mtu_power" ] = GetForce() * GetVelocity();
 
 			// fiber properties
 			frame[ GetName() + ".cos_pennation_angle" ] = GetCosPennationAngle();
@@ -175,8 +176,6 @@ namespace scone
 				auto mom = GetForce() * ma;
 				frame[ name + ".moment_arm" ] = ma;
 				frame[ name + ".moment" ] = mom;
-				frame[ name + ".moment_norm" ] = mom / GetModel().GetMass();
-				frame[ name + ".power" ] = mom * GetVelocity();
 			}
 		}
 	}
