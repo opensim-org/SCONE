@@ -99,6 +99,7 @@ namespace scone
 
 			if ( !has_baseline )
 			{
+				xo::create_directories( baseline_file.parent_path().str() );
 				auto ostr = std::ofstream( baseline_file.str(), std::ios_base::app );
 				if ( eval )
 					ostr << xo::stringf( "%-32s\t%8.2f\t%8.2f\n", bm.name_.c_str(), bm.time_.milliseconds(), bm.std_ * 1e-6 );
@@ -106,5 +107,8 @@ namespace scone
 					ostr << xo::stringf( "%-32s\t%8.0f\t%8.2f\n", bm.name_.c_str(), bm.time_.nanosecondsd(), bm.std_ );
 			}
 		}
+
+		if ( !has_baseline )
+			log::info( "Performance results written to ", baseline_file );
 	}
 }

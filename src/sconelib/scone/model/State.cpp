@@ -20,18 +20,17 @@ namespace scone
 		return names_.size() - 1;
 	}
 
-	index_t State::GetIndex( const String& name ) const
+	void State::SetValues( const std::vector<Real>& v )
+	{
+		SCONE_ASSERT( values_.size() <= v.size() );
+		xo::copy( v.begin(), v.begin() + values_.size(), values_.begin() );
+	}
+
+	index_t State::FindIndex( const String& name ) const
 	{
 		auto it = std::find( names_.begin(), names_.end(), name );
 		if ( it != names_.end() )
 			return it - names_.begin();
 		else return NoIndex;
-	}
-
-	Real State::GetValue( const String& name ) const
-	{
-		auto it = std::find( names_.begin(), names_.end(), name );
-		SCONE_THROW_IF( it == names_.end(), "Could not find state variable " + name );
-		return values_[ it - names_.begin() ];
 	}
 }

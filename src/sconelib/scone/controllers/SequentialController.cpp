@@ -41,6 +41,7 @@ namespace scone
 	{
 		auto name = GetName().empty() ? "SequentialController" : GetName();
 		frame[ name + ".active_index" ] = static_cast<double>( active_idx_ );
+		CompositeController::StoreData( frame, flags );
 	}
 
 	bool SequentialController::PerformAnalysis( const Model& model, double timestamp )

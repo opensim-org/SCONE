@@ -27,8 +27,8 @@ namespace scone
 		virtual Real GetVel() const = 0;
 		virtual Real GetAcc() const = 0;
 
-		virtual Real GetLimitForce() const = 0;
-		virtual Real GetMoment() const = 0;
+		virtual Real GetLimitMoment() const = 0;
+		virtual Real GetMuscleMoment() const;
 
 		virtual void SetPos( Real pos, bool enforce_constraints = true ) = 0;
 		virtual void SetVel( Real vel ) = 0;
@@ -42,6 +42,8 @@ namespace scone
 		virtual Real GetMaxInput() const override { return 1.0; }
 		virtual Real GetMinTorque() const { return 0.0; }
 		virtual Real GetMaxTorque() const { return 0.0; }
+
+		virtual const Model& GetModel() const = 0;
 
 	private:
 		const Joint* m_Joint;

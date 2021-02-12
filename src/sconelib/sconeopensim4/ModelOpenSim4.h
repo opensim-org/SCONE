@@ -15,19 +15,16 @@
 #include "MuscleOpenSim4.h"
 
 #include <memory>
-#include <map>
-
-#include "ConstantForce.h"
 
 namespace OpenSim
 {
 	class Object;
 	class Body;
-	class PhysicalFrame;
 	class Model;
 	class Manager;
 	class Probe;
 	class PointActuator;
+	class ConstantForce;
 }
 
 namespace SimTK
@@ -51,31 +48,41 @@ namespace scone
 	class SCONE_OPENSIM_4_API ModelOpenSim4 : public Model
 	{
 	public:
-		ModelOpenSim4( const PropNode& props, Params& par );
-		virtual ~ModelOpenSim4();
-
 		/// File containing the OpenSim model.
-		String model_file;
+		path model_file;
 
-		/// Integration method, options are:
-		/// RungeKutta2
-		///	RungeKutta3
-		/// RungeKuttaMerson
-		/// SemiExplicitEuler2 (default)
+		/// File containing the initial state (or pose) of the model.
+		path state_init_file;
+
+		/// Integration method, options are: SemiExplicitEuler, SemiExplicitEuler2 (default), RungeKutta2, RungeKutta3, RungeKuttaMerson.
 		String integration_method;
 
 		/// Accuracy parameter for integration; default = 0.001.
 		double integration_accuracy;
 
-		/// Name of the DOF that needs to be adjusted to find the required initial_load; default = /jointset/ground_pelvis/pelvis_ty/value.
-		String initial_load_dof;
-
 		/// Boolean that must be set before external forces can be added to the model; default = (automatic).
-		bool create_body_forces;
+		bool enable_external_forces;
+
+		/// Unsided name of the leg upper body (if any); default = femur
+		String leg_upper_body;
+
+		/// Unsided name of the leg lower body (if any), leave empty to use two bodies below leg_upper_body; default = ""
+		String leg_lower_body;
+
+		/// Unsided name of the leg contact force (if any); default = foot
+		String leg_contact_force;
+
+		ModelOpenSim4( const PropNode& props, Params& par );
+		virtual ~ModelOpenSim4();
+
+		virtual path GetModelFile() const override { return model_file; }
 
 		virtual Vec3 GetComPos() const override;
 		virtual Vec3 GetComVel() const override;
 		virtual Vec3 GetComAcc() const override;
+		virtual Vec3 GetLinMom() const override;
+		virtual Vec3 GetAngMom() const override;
+		virtual std::pair<Vec3, Vec3> GetLinAngMom() const override;
 		virtual Real GetTotalEnergyConsumption() const override;
 
 		virtual Real GetMass() const override final { return m_Mass; }
@@ -86,9 +93,8 @@ namespace scone
 
 		virtual double GetSimulationEndTime() const override;
 		virtual void SetSimulationEndTime( double t ) override;
-		virtual std::vector<xo::path> WriteResults( const path& file_base ) const override;
 
-		virtual void RequestTermination();
+		virtual void RequestTermination() override;
 
 		virtual double GetTime() const override;
 		virtual double GetPreviousTime() const override;
@@ -106,7 +112,6 @@ namespace scone
 		void SetTkState( SimTK::State& s ) { m_pTkState = &s; }
 
 		virtual const String& GetName() const override;
-		virtual std::ostream& ToStream( std::ostream& str ) const override;
 
 		void ValidateDofAxes();
 		void StoreCurrentFrame() override;
@@ -115,7 +120,6 @@ namespace scone
 		OpenSim::ConstantForce* GetOsimBodyForce( index_t idx ) { return idx < m_BodyForces.size() ? m_BodyForces.at( idx ) : nullptr; }
 
 		virtual const State& GetState() const override { return m_State; }
-		virtual State& GetState() override { return m_State; }
 		virtual void SetState( const State& state, TimeInSeconds timestamp ) override;
 		virtual void SetStateValues( const std::vector< Real >& state, TimeInSeconds timestamp ) override;
 
@@ -130,29 +134,27 @@ namespace scone
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 
 		void CreateModelWrappers( const PropNode& pn, Params& par );
-		void SetModelProperties( const PropNode &pn, Params& par );
-		void SetOpenSimProperties( const PropNode& pn, Params& par );
-		void SetOpenSimProperty( OpenSim::Object& os, const PropNode& pn, Params& par );
+		OpenSim::Object& FindOpenSimObject( const String& name );
+		void SetOpenSimObjectProperies( OpenSim::Object& os_obj, const PropNode& props, Params& par );
+		void SetProperties( const PropNode& pn, Params& par );
 
-		LinkUP CreateLinkHierarchy( const OpenSim::PhysicalFrame& osBody, Link* parent = nullptr );
-
-		int m_PrevIntStep;
-		double m_PrevTime;
-		double m_FinalTime;
-
+		// internal data
+		// #todo: leave storage to children and create wrappers on request instead
 		std::unique_ptr< OpenSim::Model > m_pOsimModel;
 		std::unique_ptr< OpenSim::Manager > m_pOsimManager;
 		std::unique_ptr< SimTK::Integrator > m_pTkIntegrator;
-		int m_integratorMethod = -1;
 		std::unique_ptr< SimTK::TimeStepper > m_pTkTimeStepper;
 		SimTK::State* m_pTkState; // non-owning state reference
 		OpenSim::Probe* m_pProbe; // owned by OpenSim::Model
-
 		std::vector< OpenSim::ConstantForce* > m_BodyForces;
-		State m_State; // model state
 
 		friend ControllerDispatcher;
 		ControllerDispatcher* m_pControllerDispatcher; // owned by OpenSim::Model
+
+		State m_State; // model state
+		int m_PrevIntStep;
+		double m_PrevTime;
+		TimeInSeconds m_EndTime;
 
 		// cached variables
 		Real m_Mass;

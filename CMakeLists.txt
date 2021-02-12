@@ -28,6 +28,9 @@ else()
     find_package(Qt5Widgets)
 endif()
 
+# Find TCLAP
+find_path( TCLAP_DIR NAMES "tclap/CmdLine.h" PATHS "${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include" )
+
 # Various settings
 # ----------------
 # Place build products (libraries, executables) in root

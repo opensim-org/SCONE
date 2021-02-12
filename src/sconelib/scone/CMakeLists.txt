@@ -32,6 +32,8 @@ set(CORE_MATH_FILES
 	core/SineWave.cpp
 	core/RaisedCosine.h
 	core/RaisedCosine.cpp
+	core/Bezier.h
+	core/Bezier.cpp
 	)
 set(CORE_SYSTEM_FILES
 	core/FactoryProps.h
@@ -72,6 +74,7 @@ set(CORE_TOOL_FILES
 	core/string_tools.h
 	core/GaitCycle.cpp
 	core/GaitCycle.h
+	core/CachedVar.h
 	)
 set(CS_CONTROLLERS_FILES
 	controllers/Controller.cpp

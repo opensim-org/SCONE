@@ -79,19 +79,18 @@ namespace OpenSim
 	{
 		const SimbodyEngine& engine = getModel().getSimbodyEngine();
 
-		if ( !_model || !body_ ) return;
+		if ( !_model || !body_ )
+			return;
 
 		const auto& ground = getModel().getGround();
 
 		// apply force
 		Vec3 forceVec = force_;
 		Vec3 lpoint = point_;
-		if ( !get_force_is_global() ) {
+		if ( !get_force_is_global() )
 			engine.transform( s, *body_, forceVec, ground, forceVec );
-		}
-		if ( get_point_is_global() ) {
+		if ( get_point_is_global() )
 			engine.transformPosition( s, ground, lpoint, *body_, lpoint );
-		}
 		applyForceToPoint( s, *body_, lpoint, forceVec, bodyForces );
 
 		// apply torque
@@ -103,7 +102,7 @@ namespace OpenSim
 
 	void ConstantForce::extendConnectToModel( Model& model )
 	{
-		Super::extendConnectToModel( model );
+		Super::connectToModel( model );
 
 		const std::string& bodyName = get_body();
 		if ( !model.updBodySet().contains( bodyName ) )

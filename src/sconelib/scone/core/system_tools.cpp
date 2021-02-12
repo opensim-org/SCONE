@@ -62,6 +62,11 @@ namespace scone
 		return xo::get_documents_dir() / "SCONE";
 	}
 
+	path GetApplicationFolder()
+	{
+		return xo::get_application_dir();
+	}
+
 	path GetFolder( SconeFolder folder )
 	{
 		switch ( folder )

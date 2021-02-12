@@ -20,11 +20,11 @@ namespace scone
 		m_Body.m_Joint = this;
 	}
 
-	Real Joint::GetLimitForce() const
+	Real Joint::GetLimitMoment() const
 	{
 		Real force{ 0 };
 		for ( const auto& dof : GetDofs() )
-			force += dof->GetLimitForce();
+			force += dof->GetLimitMoment();
 		return force;
 	}
 

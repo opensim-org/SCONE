@@ -40,6 +40,11 @@ namespace scone
 		else return mom;
 	}
 
+	Real Muscle::GetMoment( const Dof& dof ) const
+	{
+		return GetForce() * GetMomentArm( dof );
+	}
+
 	Real Muscle::GetMass( Real specific_tension, Real muscle_density ) const
 	{
 		// from OpenSim Umberger metabolic energy model docs
@@ -66,28 +71,21 @@ namespace scone
 
 	bool Muscle::HasMomentArm( const Dof& dof ) const
 	{
-		return GetMomentArm( dof ) != 0;
+		for ( const auto& d : m_Dofs )
+			if ( d == &dof )
+				return true;
+		return false;
 	}
 
 	const std::vector< const Joint* >& Muscle::GetJoints() const
 	{
-		if ( m_Joints.empty() )
-		{
-			const Body* orgBody = &GetOriginBody();
-			const Body* insBody = &GetInsertionBody();
-			for ( const Body* b = insBody; b && b != orgBody; b = b->GetParentBody() )
-				m_Joints.push_back( b->GetJoint() );
-		}
+		SCONE_ASSERT( !m_Joints.empty() ); // Initialize in derived class via InitJointsDofs()
 		return m_Joints;
 	}
 
 	const std::vector<const Dof*>& Muscle::GetDofs() const
 	{
-		if ( m_Dofs.empty() )
-			for ( auto& d : GetModel().GetDofs() )
-				if ( HasMomentArm( *d ) )
-					m_Dofs.push_back( d.get() );
-
+		SCONE_ASSERT( !m_Dofs.empty() ); // Initialize in derived class via InitJointsDofs()
 		return m_Dofs;
 	}
 
@@ -95,10 +93,9 @@ namespace scone
 	{
 		for ( auto& dof : GetModel().GetDofs() )
 		{
-			auto mom1 = GetMomentArm( *dof );
-			auto mom2 = other.GetMomentArm( *dof );
-			if ( mom1 != 0 && mom2 != 0 && Sign( mom1 ) != Sign( mom2 ) )
-				return true;
+			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
+				if ( Sign( GetMomentArm( *dof ) ) != Sign( other.GetMomentArm( *dof ) ) )
+					return true;
 		}
 		return false;
 	}
@@ -107,10 +104,9 @@ namespace scone
 	{
 		for ( auto& dof : GetModel().GetDofs() )
 		{
-			auto mom1 = GetMomentArm( *dof );
-			auto mom2 = other.GetMomentArm( *dof );
-			if ( mom1 != 0 && mom2 != 0 && Sign( mom1 ) == Sign( mom2 ) )
-				return true;
+			if ( HasMomentArm( *dof ) && other.HasMomentArm( *dof ) )
+				if ( Sign( GetMomentArm( *dof ) ) == Sign( other.GetMomentArm( *dof ) ) )
+					return true;
 		}
 		return false;
 	}
@@ -148,28 +144,40 @@ namespace scone
 	{
 		Actuator::StoreData( frame, flags );
 
-		if ( flags( StoreDataTypes::MuscleExcitation ) )
-			frame[ GetName() + ".excitation" ] = GetExcitation();
-
-		if ( flags( StoreDataTypes::MuscleActivation ) && !flags( StoreDataTypes::State ) )
-			frame[ GetName() + ".activation" ] = GetActivation();
-
-		if ( flags( StoreDataTypes::MuscleTendonProperties ) )
+		if ( flags( StoreDataTypes::MuscleProperties) )
 		{
+			frame[ GetName() + ".excitation" ] = GetExcitation();
+			if ( !flags( StoreDataTypes::State ) ) // activation is also part of state
+				frame[ GetName() + ".activation" ] = GetActivation();
+
+			// tendon / mtu properties
 			frame[ GetName() + ".tendon_length" ] = GetTendonLength();
 			frame[ GetName() + ".tendon_length_norm" ] = GetNormalizedTendonLength() - 1;
 			frame[ GetName() + ".mtu_length" ] = GetLength();
 			frame[ GetName() + ".mtu_velocity" ] = GetVelocity();
-		}
+			frame[ GetName() + ".mtu_force" ] = GetForce();
+			frame[ GetName() + ".mtu_force_norm" ] = GetNormalizedForce();
+			frame[ GetName() + ".mtu_power" ] = GetForce() * GetVelocity();
 
-		if ( flags( StoreDataTypes::MuscleFiberProperties ) )
-		{
+			// fiber properties
 			frame[ GetName() + ".cos_pennation_angle" ] = GetCosPennationAngle();
 			frame[ GetName() + ".force_length_multiplier" ] = GetActiveForceLengthMultipler();
 			frame[ GetName() + ".passive_fiber_force_norm" ] = GetPassiveFiberForce() / GetMaxIsometricForce();
-			frame[ GetName() + ".fiber_force_norm" ] = GetNormalizedForce();
 			frame[ GetName() + ".fiber_length_norm" ] = GetNormalizedFiberLength();
 			frame[ GetName() + ".fiber_velocity_norm" ] = GetNormalizedFiberVelocity();
+		}
+
+		if ( flags( StoreDataTypes::MuscleDofMomentPower ) )
+		{
+			for ( auto& d : GetDofs() )
+			{
+				auto name = GetName() + "." + d->GetName();
+				auto ma = GetMomentArm( *d );
+				auto mom = GetForce() * ma;
+				frame[ name + ".moment_arm" ] = ma;
+				frame[ name + ".moment" ] = mom;
+				frame[ name + ".power" ] = mom * d->GetVel();
+			}
 		}
 	}
 
@@ -180,5 +188,18 @@ namespace scone
 		pn[ "optimal_fiber_length" ] = GetOptimalFiberLength();
 		pn[ "tendon_slack_length" ] = GetTendonSlackLength();
 		return pn;
+	}
+
+	void Muscle::InitJointsDofs()
+	{
+		SCONE_ASSERT( m_Joints.empty() && m_Dofs.empty() );
+		const Body* orgBody = &GetOriginBody();
+		const Body* insBody = &GetInsertionBody();
+		for ( const Body* b = insBody; b && b != orgBody; b = b->GetParentBody() )
+		{
+			auto* j = b->GetJoint();
+			m_Joints.push_back( j );
+			xo::append( m_Dofs, j->GetDofs() );
+		}
 	}
 }

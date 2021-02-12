@@ -134,6 +134,7 @@ namespace scone
 		virtual std::pair<Vec3, Vec3> GetLinAngMom() const { return { GetLinMom(), GetAngMom() }; }
 		virtual Real GetTotalEnergyConsumption() const { SCONE_THROW_NOT_IMPLEMENTED; }
 		virtual Real GetTotalContactForce() const;
+		virtual Real GetTotalContactPower() const { return 0.0; }
 
 		// get static model info
 		virtual Real GetMass() const = 0;
@@ -207,7 +208,7 @@ namespace scone
 		/// Activation used to equilibrate muscles before control inputs are known; default = 0.05
 		Real initial_equilibration_activation;
 
-		void SetStoreData( bool store ) { m_StoreData = store; }
+		virtual void SetStoreData( bool store ) { m_StoreData = store; }
 		bool GetStoreData() const;
 		StoreDataFlags& GetStoreDataFlags() { return m_StoreDataFlags; }
 		const StoreDataFlags& GetStoreDataFlags() const { return m_StoreDataFlags; }
@@ -260,6 +261,7 @@ namespace scone
 		Storage< Real, TimeInSeconds > m_Data;
 		bool m_StoreData;
 		TimeInSeconds m_StoreDataInterval;
+		bool m_KeepAllFrames;
 		StoreDataFlags m_StoreDataFlags;
 	};
 }

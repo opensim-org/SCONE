@@ -31,15 +31,14 @@ namespace scone
 		virtual ~MuscleOpenSim4();
 
 		// access to bodies
-		virtual const Link& GetOriginLink() const override;
-		virtual const Link& GetInsertionLink() const override;
+		virtual const Body& GetOriginBody() const override;
+		virtual const Body& GetInsertionBody() const override;
 		virtual const Model& GetModel() const override;
 
 		// muscle parameters
 		virtual Real GetMaxIsometricForce() const override;
 		virtual Real GetOptimalFiberLength() const override;
 		virtual Real GetTendonSlackLength() const override;
-		virtual Real GetMass( Real specific_tension, Real muscle_density ) const override;
 
 		// current force / length / velocity
 		virtual Real GetForce() const override;
@@ -49,16 +48,19 @@ namespace scone
 		virtual Real GetVelocity() const override;
 
 		virtual Real GetFiberForce() const override;
-		virtual Real GetNormalizedFiberForce() const override;
 		virtual Real GetActiveFiberForce() const override;
+		virtual Real GetPassiveFiberForce() const override;
 
 		virtual Real GetFiberLength() const override;
 		virtual Real GetNormalizedFiberLength() const override;
+
+		virtual Real GetCosPennationAngle() const override;
 
 		virtual Real GetFiberVelocity() const override;
 		virtual Real GetNormalizedFiberVelocity() const override;
 
 		virtual Real GetTendonLength() const override;
+		virtual Real GetNormalizedTendonLength() const override;
 
 		virtual Real GetActiveForceLengthMultipler() const override;
 		virtual Real GetMaxContractionVelocity() const override;
@@ -74,9 +76,12 @@ namespace scone
 		virtual const String& GetName() const override;
 		virtual Real GetMomentArm( const Dof& dof ) const override;
 
+		void StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const override;
+
 	private:
-		OpenSim::Muscle& m_osMus;
 		ModelOpenSim4& m_Model;
+		OpenSim::Muscle& m_osMus;
+		mutable TimeInSeconds m_MomentArmCacheTimeStamp;
 		mutable xo::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }

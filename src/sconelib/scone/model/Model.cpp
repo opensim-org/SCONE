@@ -47,7 +47,7 @@ namespace scone
 		m_pModelProps( nullptr ),
 		m_pCustomProps( nullptr ),
 		m_StoreData( false ),
-		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::MuscleExcitation, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
+		m_StoreDataFlags( { StoreDataTypes::State, StoreDataTypes::ActuatorInput, StoreDataTypes::GroundReactionForce, StoreDataTypes::ContactForce } )
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
@@ -81,26 +81,25 @@ namespace scone
 		INIT_PROP( props, initial_equilibration_activation, 0.05 );
 
 		// set store data info from settings
+		m_KeepAllFrames = GetSconeSetting<bool>( "data.keep_all_frames" );
 		m_StoreDataInterval = 1.0 / GetSconeSetting<double>( "data.frequency" );
 		auto& flags = GetStoreDataFlags();
-		flags.set( { StoreDataTypes::MuscleExcitation, StoreDataTypes::MuscleFiberProperties }, GetSconeSetting<bool>( "data.muscle" ) );
-		flags.set( StoreDataTypes::MuscleTendonProperties, GetSconeSetting<bool>( "data.muscle" ) );
-		flags.set( { StoreDataTypes::BodyComPosition, StoreDataTypes::BodyOrientation }, GetSconeSetting<bool>( "data.body" ) );
+		flags.set( StoreDataTypes::BodyPosition, GetSconeSetting<bool>( "data.body" ) );
 		flags.set( StoreDataTypes::JointReactionForce, GetSconeSetting<bool>( "data.joint" ) );
-		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
-		//flags.set( StoreDataTypes::DofMoment, GetSconeSetting<bool>( "data.dof" ) );
-		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ActuatorInput, GetSconeSetting<bool>( "data.actuator" ) );
+		flags.set( StoreDataTypes::MuscleProperties, GetSconeSetting<bool>( "data.muscle" ) );
+		flags.set( StoreDataTypes::MuscleDofMomentPower, GetSconeSetting<bool>( "data.muscle_dof" ) );
+		flags.set( StoreDataTypes::GroundReactionForce, GetSconeSetting<bool>( "data.grf" ) );
+		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
+		flags.set( StoreDataTypes::SystemPower, GetSconeSetting<bool>( "data.power" ) );
+		flags.set( StoreDataTypes::SensorData, GetSconeSetting<bool>( "data.sensor" ) );
 		flags.set( StoreDataTypes::ControllerData, GetSconeSetting<bool>( "data.controller" ) );
 		flags.set( StoreDataTypes::MeasureData, GetSconeSetting<bool>( "data.measure" ) );
-		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
-		flags.set( StoreDataTypes::ContactForce, GetSconeSetting<bool>( "data.contact" ) );
 		flags.set( StoreDataTypes::SimulationStatistics, GetSconeSetting<bool>( "data.simulation" ) );
+		flags.set( StoreDataTypes::DebugData, GetSconeSetting<bool>( "data.debug" ) );
 	}
 
-	Model::~Model()
-	{
-	}
+	Model::~Model() {}
 
 	SensorDelayAdapter& Model::AcquireSensorDelayAdapter( Sensor& source )
 	{
@@ -129,8 +128,13 @@ namespace scone
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
-		//SCONE_THROW_IF( GetIntegrationStep() != GetPreviousIntegrationStep() + 1, "SensorDelayAdapters should only be updated at each new integration step" );
-		SCONE_ASSERT( m_SensorDelayStorage.IsEmpty() || GetPreviousTime() == m_SensorDelayStorage.Back().GetTime() );
+		if ( m_SensorDelayAdapters.empty() )
+			return;
+
+		const bool first_frame = m_SensorDelayStorage.IsEmpty() && GetTime() == 0;
+		const bool subsequent_frame = !m_SensorDelayStorage.IsEmpty() && GetTime() > GetPreviousTime() && GetPreviousTime() == m_SensorDelayStorage.Back().GetTime();
+
+		SCONE_ASSERT( first_frame || subsequent_frame );
 
 		// add a new frame and update
 		m_SensorDelayStorage.AddFrame( GetTime() );
@@ -161,7 +165,10 @@ namespace scone
 
 	bool Model::GetStoreData() const
 	{
-		return m_StoreData && ( m_Data.IsEmpty() || xo::greater_than_or_equal( GetTime() - m_Data.Back().GetTime(), m_StoreDataInterval, 1e-6 ) );
+		return m_StoreData &&
+			( m_Data.IsEmpty()
+				|| m_KeepAllFrames && GetTime() != m_Data.Back().GetTime()
+				|| xo::greater_than_or_equal( GetTime() - m_Data.Back().GetTime(), m_StoreDataInterval, 1e-6 ) );
 	}
 
 	void Model::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
@@ -195,11 +202,39 @@ namespace scone
 		for ( auto& j : GetJoints() )
 			j->StoreData( frame, flags );
 
-		// store dof data
-		if ( flags( StoreDataTypes::DofMoment ) )
+		// store dof moments and powers
+		if ( flags( StoreDataTypes::MuscleDofMomentPower ) )
 		{
 			for ( auto& d : GetDofs() )
-				frame[ d->GetName() + ".moment" ] = d->GetMoment();
+			{
+				auto mom = d->GetMuscleMoment();
+				frame[ d->GetName() + ".moment" ] = mom;
+				frame[ d->GetName() + ".moment_norm" ] = mom / GetMass();
+				frame[ d->GetName() + ".power" ] = mom * d->GetVel();
+				frame[ d->GetName() + ".power_norm" ] = mom * d->GetVel() / GetMass();
+				frame[ d->GetName() + ".acceleration" ] = d->GetAcc();
+			}
+		}
+
+		// powers
+		if ( flags( StoreDataTypes::SystemPower ) )
+		{
+			auto bp = xo::accumulate( GetBodies(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetPower(); } );
+			auto mp = xo::accumulate( GetMuscles(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetForce() * -obj->GetVelocity(); } );
+			auto jp = xo::accumulate( GetJoints(), 0.0,
+				[&]( auto val, auto& obj ) { return val + obj->GetLimitPower(); } );
+			auto cp = GetTotalContactPower();
+			auto gp = xo::dot_product( GetComVel(), GetMass() * GetGravity() );
+			auto external_power = jp + cp + mp + gp;
+			frame[ "total_body.power" ] = bp;
+			frame[ "total_muscle.power" ] = mp;
+			frame[ "total_joint_limit.power" ] = jp;
+			frame[ "total_contact.power" ] = cp;
+			frame[ "total_gravity.power" ] = gp;
+			frame[ "total_external.power" ] = external_power;
+			frame[ "total.power" ] = bp - external_power;
 		}
 
 		// store controller / measure data
@@ -217,7 +252,7 @@ namespace scone
 		}
 
 		// store COP data
-		if ( flags( StoreDataTypes::BodyComPosition ) )
+		if ( flags( StoreDataTypes::BodyPosition ) )
 		{
 			auto com = GetComPos();
 			auto com_u = GetComVel();
@@ -351,7 +386,7 @@ namespace scone
 	std::vector<scone::path> Model::WriteResults( const path& file ) const
 	{
 		std::vector<path> files;
-		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str() );
+		WriteStorageSto( m_Data, file + ".sto", ( file.parent_path().filename() / file.stem() ).str(), m_StoreDataInterval );
 		files.push_back( file + ".sto" );
 
 		if ( GetSconeSetting<bool>( "results.controller" ) )
@@ -410,7 +445,7 @@ namespace scone
 			auto t = xo::transformd( ground->GetPos(), ground->GetOri() );
 			return xo::intersection( r, std::get<xo::plane>( ground->GetShape() ), t );
 		}
-		else return point;
+		else return point - xo::multiply( point, up ); // default projects to plane defined by origin and up
 	}
 
 	PropNode Model::GetInfo() const

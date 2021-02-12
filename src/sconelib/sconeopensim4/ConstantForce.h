@@ -8,13 +8,11 @@
 
 #pragma once
 
-#include "OpenSim/Simulation/Model/Force.h"
-#include "OpenSim/Common/Property.h"
+#include <OpenSim/Simulation/Model/Force.h>
+#include <OpenSim/Common/Property.h>
 
 namespace OpenSim
 {
-	class Body;
-
 	class ConstantForce : public Force
 	{
 		OpenSim_DECLARE_CONCRETE_OBJECT( ConstantForce, Force );
@@ -57,7 +55,7 @@ namespace OpenSim
 		//--------------------------------------------------------------------------
 		void computeForce( const SimTK::State& state,
 			SimTK::Vector_<SimTK::SpatialVec>& bodyForces,
-			SimTK::Vector& mobilityForces ) const OVERRIDE_11;
+			SimTK::Vector& mobilityForces ) const override;
 
 		//--------------------------------------------------------------------------
 		// Implement ModelComponent interface
@@ -68,10 +66,10 @@ namespace OpenSim
 		//--------------------------------------------------------------------------
 		// Implement Object interface.
 		//--------------------------------------------------------------------------
-		void updateFromXMLNode( SimTK::Xml::Element& node, int versionNumber = -1 ) OVERRIDE_11;
+		void updateFromXMLNode( SimTK::Xml::Element& node, int versionNumber = -1 ) override;
 
 		// Corresponding Body to which the point actuator is applied.
-		SimTK::ReferencePtr<OpenSim::Body> body_;
+		SimTK::ReferencePtr<Body> body_;
 		SimTK::Vec3 force_;
 		SimTK::Vec3 point_;
 		SimTK::Vec3 torque_;

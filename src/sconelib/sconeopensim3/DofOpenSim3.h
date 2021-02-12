@@ -30,8 +30,7 @@ namespace scone
 		virtual Real GetVel() const override;
 		virtual Real GetAcc() const override;
 
-		virtual Real GetLimitForce() const override;
-		virtual Real GetMoment() const override;
+		virtual Real GetLimitMoment() const override;
 
 		virtual const String& GetName() const override;
 		const OpenSim::Coordinate& GetOsCoordinate() const { return m_osCoord; }
@@ -49,6 +48,8 @@ namespace scone
 		Real GetMaxInput() const override;
 		Real GetMinTorque() const override;
 		Real GetMaxTorque() const override;
+
+		const Model& GetModel() const override;
 
 	private:
 		friend class ModelOpenSim3;

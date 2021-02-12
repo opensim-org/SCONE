@@ -16,7 +16,7 @@
 
 namespace scone
 {
-	xo_smart_enum_class( penalty_mode, average, lowest, highest );
+	xo_smart_enum_class( penalty_mode, average, lowest, highest, sum );
 
 	/// Helper type to compute penalty if a value is outside a specific Range. The penalty corresponds to
 	/// ''abs_penalty * | _E_ | + squared_penalty * _E_^2'',
@@ -53,6 +53,7 @@ namespace scone
 
 		T GetResult() const {
 			switch ( mode_ ) {
+			case penalty_mode::sum: return penalty.GetTotal();
 			case penalty_mode::average: return penalty.GetAverage();
 			case penalty_mode::highest: return penalty.GetHighest();
 			case penalty_mode::lowest: return penalty.GetLowest();

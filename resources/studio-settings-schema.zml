@@ -25,17 +25,12 @@ video {
 
 progress {
 	label = "Optimization progress settings"
-	line_width {
-		type = float
-		default = 1.5
-		label = "Line width of progress graphs"
-		range = [ 1 10 ]
-	}
+	line_width { type = float default = 1 label = "Line width of progress graphs (WARNING: use 1 to avoid poor performance)" range = [ 1 10 ] }
 }
 
 analysis {
 	label = "Analysis settings"
-	line_width { type = float default = 1.5 label = "Line width of analysis graphs" range = [ 1 10 ] }
+	line_width { type = float default = 1 label = "Line width for analysis (WARNING: use 1 to avoid poor performance)" range = [ 1 10 ] }
 }
 
 viewer {

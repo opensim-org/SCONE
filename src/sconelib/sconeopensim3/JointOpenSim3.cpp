@@ -10,6 +10,7 @@
 #include "scone/core/Exception.h"
 #include "scone/core/Log.h"
 #include "ModelOpenSim3.h"
+#include "scone/model/Dof.h"
 
 #include <OpenSim/Simulation/SimbodyEngine/Joint.h>
 #include <OpenSim/Simulation/SimbodyEngine/Body.h>
@@ -62,6 +63,14 @@ namespace scone
 
 		return from_osim( forcesAtFInG[ 1 ] );
 #endif
+	}
+
+	Real JointOpenSim3::GetLimitPower() const
+	{
+		Real pow = 0.0;
+		for ( const auto& d : GetDofs() )
+			pow += d->GetVel() * d->GetLimitMoment();
+		return pow;
 	}
 
 	Vec3 JointOpenSim3::GetPos() const

@@ -11,6 +11,7 @@
 #include "xo/string/string_tools.h"
 #include "xo/filesystem/path.h"
 #include "xo/filesystem/filesystem.h"
+#include "xo/numerical/constants.h"
 #include <sstream>
 #include <fstream>
 
@@ -20,7 +21,28 @@
 
 namespace scone
 {
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& time_label )
+	constexpr double interval_epsilon = 1e-6;
+
+	size_t CountFrames( const Storage<Real, TimeInSeconds>& storage, TimeInSeconds min_interval )
+	{
+		if ( min_interval == 0.0 )
+			return storage.GetFrameCount();
+
+		size_t frames = 0;
+		auto prev_time = xo::constantsd::lowest();
+		for ( auto& frame : storage.GetData() )
+		{
+			auto t = frame->GetTime();
+			if ( xo::greater_than_or_equal( t - prev_time, min_interval, interval_epsilon ) )
+			{
+				++frames;
+				prev_time = t;
+			}
+		}
+		return frames;
+	}
+
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& time_label, TimeInSeconds min_interval )
 	{
 		// write data
 		str << time_label;
@@ -28,77 +50,89 @@ namespace scone
 			str << "\t" << label;
 		str << "\n";
 
+		auto prev_time = xo::constantsd::lowest();
 		for ( auto& frame : storage.GetData() )
 		{
-			str << frame->GetTime();
-			for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
-				str << "\t" << ( *frame )[idx];
-			str << "\n";
+			auto t = frame->GetTime();
+			if ( xo::greater_than_or_equal( t - prev_time, min_interval, interval_epsilon ) )
+			{
+				str << frame->GetTime();
+				for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
+					str << "\t" << ( *frame )[ idx ];
+				str << "\n";
+				prev_time = t;
+			}
 		}
 	}
 
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& time_label )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& time_label, TimeInSeconds min_interval )
 	{
 		fprintf( f, "%s", time_label.c_str() );
 		for ( const String& label : storage.GetLabels() )
 			fprintf( f, "\t%s", label.c_str() );
 		fprintf( f, "\n" );
 
+		auto prev_time = xo::constantsd::lowest();
 		for ( auto& frame : storage.GetData() )
 		{
-			fprintf( f, "%g", frame->GetTime() );
-			for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
-				fprintf( f, "\t%g", ( *frame )[ idx ] );
-			fprintf( f, "\n" );
+			auto t = frame->GetTime();
+			if ( xo::greater_than_or_equal( t - prev_time, min_interval, interval_epsilon ) )
+			{
+				fprintf( f, "%g", frame->GetTime() );
+				for ( size_t idx = 0; idx < storage.GetChannelCount(); ++idx )
+					fprintf( f, "\t%g", ( *frame )[ idx ] );
+				fprintf( f, "\n" );
+				prev_time = t;
+			}
 		}
 	}
 
-	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& time_label )
+	void WriteStorageTxt( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& time_label, TimeInSeconds min_interval )
 	{
 #ifdef XO_COMP_MSVC
 		FILE* f = fopen( file.c_str(), "w" );
 		SCONE_ERROR_IF( !f, "Could not open file " + file.str() );
-		WriteStorageTxt( storage, f, time_label );
+		WriteStorageTxt( storage, f, time_label, min_interval );
 		fclose( f );
 #else
 		std::ofstream ofs( file.str() );
 		SCONE_ASSERT_MSG( ofs.good(), "Could not open file " + file.str() );
-		WriteStorageTxt( storage, ofs, time_label );
+		WriteStorageTxt( storage, ofs, time_label, min_interval );
 #endif
 	}
 
-	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& name )
+	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::ostream& str, const String& name, TimeInSeconds min_interval )
 	{
 		// write header
 		str << name << std::endl;
 		str << "version=1" << std::endl;
-		str << "nRows=" << storage.GetFrameCount() << std::endl;
+		str << "nRows=" << CountFrames( storage, min_interval ) << std::endl;
 		str << "nColumns=" << storage.GetChannelCount() + 1 << std::endl;
 		str << "inDegrees=no" << std::endl;
 		str << "endheader" << std::endl;
 
 		// write data
-		WriteStorageTxt( storage, str );
+		WriteStorageTxt( storage, str, "time", min_interval );
 	}
 
-	void SCONE_API WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& name )
+	void SCONE_API WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, std::FILE* f, const String& name, TimeInSeconds min_interval )
 	{
 		fprintf( f, "%s\nversion=1\nnRows=%zd\nnColumns=%zd\ninDegrees=no\nendheader\n", 
-			name.c_str(), storage.GetFrameCount(), storage.GetChannelCount() + 1 );
-		WriteStorageTxt( storage, f );
+			name.c_str(), CountFrames( storage, min_interval ), storage.GetChannelCount() + 1 );
+		WriteStorageTxt( storage, f, "time", min_interval );
 	}
 
-	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& name )
+	void WriteStorageSto( const Storage<Real, TimeInSeconds>& storage, const xo::path& file, const String& name, TimeInSeconds min_interval )
 	{
 #ifdef XO_COMP_MSVC
 		FILE* f = fopen( file.c_str(), "w" );
 		SCONE_ERROR_IF( !f, "Could not open file " + file.str() );
-		WriteStorageSto( storage, f, name );
+		WriteStorageSto( storage, f, name, min_interval );
 		fclose( f );
 #else
 		std::ofstream ofs( file.str() );
 		SCONE_ASSERT_MSG( ofs.good(), "Could not open file " + file.str() );
-		WriteStorageSto( storage, ofs, name );
+		WriteStorageSto( storage, ofs, name, min_interval );
 #endif
 	}
 

@@ -44,10 +44,10 @@ namespace scone
 		for ( auto& body : model.GetBodies() )
 		{
 			bodies.push_back( vis::node( &root_node_ ) );
-			body_axes.push_back( vis::axes( bodies.back(), vis::vec3f( 0.1, 0.1, 0.1 ), 0.5f ) );
+			body_axes.push_back( vis::axes( bodies.back(), vis::axes_info{ vis::vec3f::diagonal( 0.1 ) } ) );
 			if ( body->GetMass() > 0 )
 			{
-				body_com.push_back( vis::mesh( bodies.back(), xo::sphere( 0.02f ), xo::color::green(), xo::vec3f::zero(), 0.75f ) );
+				body_com.push_back( vis::mesh( bodies.back(), vis::shape_info{ xo::sphere( 0.02f ), xo::color::green(), xo::vec3f::zero(), 0.75f } ) );
 				body_com.back().set_material( com_mat );
 				body_com.back().pos( xo::vec3f( body->GetLocalComPos() ) );
 			}
@@ -82,7 +82,7 @@ namespace scone
 			if ( !std::holds_alternative<xo::plane>( cg->GetShape() ) )
 			{
 				// #todo: add support for other shapes (i.e. planes)
-				contact_geoms.push_back( vis::mesh( parent, cg->GetShape(), xo::color::cyan(), xo::vec3f::zero(), 0.75f ) );
+				contact_geoms.push_back( vis::mesh( parent, vis::shape_info{ cg->GetShape(), xo::color::cyan(), xo::vec3f::zero(), 0.75f } ) );
 				contact_geoms.back().set_material( contact_mat );
 				contact_geoms.back().pos( vis::vec3f( cg->GetPos() ) );
 			}
@@ -90,19 +90,19 @@ namespace scone
 
 		for ( auto& muscle : model.GetMuscles() )
 		{
-			auto muscle_radius = GetStudioSetting<bool>( "viewer.auto_muscle_width" ) ?
-				GetStudioSetting<float>( "viewer.auto_muscle_width_factor" ) * sqrt( muscle->GetPCSA() / xo::constantsd::pi() ) :
+			float muscle_radius = GetStudioSetting<bool>( "viewer.auto_muscle_width" ) ?
+				GetStudioSetting<float>( "viewer.auto_muscle_width_factor" ) * float( sqrt( muscle->GetPCSA() / xo::constantsd::pi() ) ) :
 				GetStudioSetting<float>( "viewer.muscle_width" );
 
-			auto tendon_radius = GetStudioSetting<float>( "viewer.relative_tendon_width" ) * muscle_radius;
+			float tendon_radius = GetStudioSetting<float>( "viewer.relative_tendon_width" ) * muscle_radius;
 
 			// add path
 			MuscleVis mv;
-			mv.ten1 = vis::trail( root_node_, 1, tendon_radius, xo::color::yellow(), 0.3f );
-			mv.ten2 = vis::trail( root_node_, 1, tendon_radius, xo::color::yellow(), 0.3f );
+			mv.ten1 = vis::trail( root_node_, vis::trail_info{ tendon_radius, xo::color::yellow(), 0.3f } );
+			mv.ten2 = vis::trail( root_node_, vis::trail_info{ tendon_radius, xo::color::yellow(), 0.3f } );
 			mv.ten1.set_material( tendon_mat );
 			mv.ten2.set_material( tendon_mat );
-			mv.ce = vis::trail( root_node_, 1, muscle_radius, xo::color::red(), 0.5f );
+			mv.ce = vis::trail( root_node_, vis::trail_info{ muscle_radius, xo::color::red(), 0.5f } );
 			mv.mat = muscle_mat.clone();
 			mv.ce.set_material( mv.mat );
 			mv.ce_pos = GetStudioSetting<float>( "viewer.muscle_position" );
@@ -111,11 +111,11 @@ namespace scone
 
 		for ( auto& j : model.GetJoints() )
 		{
-			joints.push_back( vis::mesh( root_node_, xo::sphere( 0.02f ), xo::color::red(), xo::vec3f::zero(), 0.75f ) );
+			joints.push_back( vis::mesh( root_node_, vis::shape_info{ xo::sphere( 0.02f ), xo::color::red(), xo::vec3f::zero(), 0.75f } ) );
 			joints.back().set_material( joint_mat );
 		}
 
-		heading_ = vis::arrow( root_node_, 0.01f, 0.02f, xo::color::green() );
+		heading_ = vis::arrow( root_node_, vis::arrow_info{ 0.01f, 0.02f, xo::color::green() } );
 		heading_.set_material( com_mat );
 
 		ApplyViewSettings( view_flags );
@@ -182,7 +182,7 @@ namespace scone
 	{
 		while ( forces.size() <= force_idx )
 		{
-			forces.emplace_back( root_node_, 0.01f, 0.02f, xo::color::yellow(), 0.3f );
+			forces.emplace_back( root_node_, vis::arrow_info{ 0.01f, 0.02f, xo::color::yellow(), 0.3f } );
 			forces.back().set_material( arrow_mat );
 			forces.back().show( view_flags.get< ShowForces >() );
 		}

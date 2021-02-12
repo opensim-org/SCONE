@@ -19,6 +19,7 @@ namespace scone
 	SCONE_API path GetSettingsFolder();
 	SCONE_API const path& GetInstallFolder();
 	SCONE_API path GetDataFolder();
+	SCONE_API path GetApplicationFolder();
 	SCONE_API path GetFolder( SconeFolder folder );
 	SCONE_API path FindFile( const path& filename );
 }

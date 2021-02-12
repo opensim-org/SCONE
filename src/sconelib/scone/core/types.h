@@ -71,5 +71,6 @@ namespace scone
 
 	// time related types
 	using TimeInSeconds = double;
+	inline constexpr TimeInSeconds NoTime{ -1e12 };
 	using Frequency = double;
 }

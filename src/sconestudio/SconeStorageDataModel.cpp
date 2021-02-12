@@ -8,13 +8,40 @@
 
 #include "SconeStorageDataModel.h"
 #include "xo/numerical/math.h"
+#include "scone/core/Log.h"
 
-SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) : storage( s )
+SconeStorageDataModel::SconeStorageDataModel( const scone::Storage<>* s ) :
+	storage( s ),
+	index_cache(),
+	equidistant_delta_time( false )
 {}
 
 void SconeStorageDataModel::setStorage( const scone::Storage<>* s )
 {
+	index_cache = { 0.0, 0 };
 	storage = s;
+
+	// set equidistant_delta_time by checking all deltas
+	equidistant_delta_time = true;
+	if ( storage && storage->GetFrameCount() >= 3 )
+	{
+		auto tprev = s->GetFrame( 1 ).GetTime();
+		auto delta = tprev - s->GetFrame( 0 ).GetTime();
+
+		for ( xo::index_t i = 2; i < s->GetFrameCount(); ++i )
+		{
+			auto t = s->GetFrame( i ).GetTime();
+			auto dt = t - tprev;
+
+			if ( !xo::equal( delta, dt, 0.001 * delta ) )
+			{
+				equidistant_delta_time = false;
+				xo::log::trace( "Storage delta time is not equidistant, ", xo::stringf( "%.16f != %.16f", delta, dt ) );
+				break;
+			}
+			tprev = t;
+		}
+	}
 }
 
 size_t SconeStorageDataModel::seriesCount() const
@@ -64,12 +91,46 @@ double SconeStorageDataModel::timeStart() const
 
 xo::index_t SconeStorageDataModel::timeIndex( double time ) const
 {
-	if ( storage && !storage->IsEmpty() )
+	if ( !storage || storage->IsEmpty() )
+		return xo::no_index;
+
+	if ( equidistant_delta_time )
 	{
 		double reltime = time / storage->Back().GetTime();
 		return xo::index_t( xo::clamped( int( reltime * ( storage->GetFrameCount() - 1 ) + 0.5 ), 0, int( storage->GetFrameCount() - 1 ) ) );
 	}
-	else return xo::no_index;
+
+	if ( index_cache.first == time )
+		return index_cache.second;
+
+	// find index using binary search
+	int lower = 0, upper = storage->GetFrameCount() - 1;
+	int count = 0;
+	while ( lower != upper )
+	{
+		double lower_time = storage->GetFrame( lower ).GetTime();
+		double upper_time = storage->GetFrame( upper ).GetTime();
+		double reltime = ( time - lower_time ) / ( upper_time - lower_time );
+		auto idx = xo::clamped( xo::round_cast<int>( lower + reltime * ( upper - lower ) ), lower, upper );
+		auto idx_time = storage->GetFrame( idx ).GetTime();
+		if ( idx_time < time )
+		{
+			if ( idx == lower )
+				upper = lower; // found
+			else lower = idx;
+		}
+		else if ( idx_time > time )
+		{
+			if ( idx == upper )
+				lower = upper; // found
+			else upper = idx;
+		}
+		else lower = upper = idx;
+		++count;
+	}
+	scone::log::trace( "located time ", time, " in ", count, " steps" );
+	index_cache = { time, xo::index_t( lower ) };
+	return lower;
 }
 
 double SconeStorageDataModel::timeValue( xo::index_t idx ) const

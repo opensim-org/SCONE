@@ -1,7 +1,8 @@
 set(FILES
     main.cpp
 	optimization_test.cpp
-	tutorial_test.cpp
+	scenario_test.h
+	scenario_test.cpp
 	)
 
 add_executable(sconeunittests ${FILES})
@@ -28,6 +29,10 @@ endif()
 if (SCONE_OPENSIM_4)
 	target_link_libraries(sconeunittests sconeopensim4)
 	target_compile_definitions(sconeunittests PRIVATE SCONE_OPENSIM_4)
+endif()
+if (SCONE_HYFYDY)
+	target_link_libraries(sconeunittests sconehfd)
+	target_compile_definitions(sconeunittests PRIVATE SCONE_HYFYDY)
 endif()
 if (SCONE_LUA)
 	target_link_libraries(sconeunittests sconelua)

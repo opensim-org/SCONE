@@ -33,7 +33,7 @@ namespace scone
 	void Body::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		auto& name = GetName();
-		if ( flags( StoreDataTypes::BodyComPosition ) )
+		if ( flags( StoreDataTypes::BodyPosition ) )
 		{
 			auto pos = GetComPos();
 			frame[ name + ".com_pos_x" ] = pos.x;
@@ -43,9 +43,6 @@ namespace scone
 			frame[ name + ".lin_vel_x" ] = lin_vel.x;
 			frame[ name + ".lin_vel_y" ] = lin_vel.y;
 			frame[ name + ".lin_vel_z" ] = lin_vel.z;
-		}
-		if ( flags( StoreDataTypes::BodyOrientation ) )
-		{
 			auto ori = rotation_vector_from_quat( normalized( GetOrientation() ) );
 			frame[ name + ".ori_x" ] = ori.x;
 			frame[ name + ".ori_y" ] = ori.y;

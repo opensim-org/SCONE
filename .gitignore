@@ -1,21 +1,21 @@
 /_output/
 /bin/
-ignore/
 /doc/ref/
 /doc/html/
 /doc/xml/
 /doc/config/NaturalDocs/Working Data/
 /scenarios/Tutorials/*.sto
 /scenarios/UnitTests/*.sto
+/scenarios/UnitTests/Hyfydy
 /scenarios/Examples/
-/resources/unittestdata/Tutorials/
-/resources/unittestdata/UnitTests/
+/resources/unittestdata/
 /.version
 /doc/upload.bat
 /install/*.exe
 /*.bat
 *.log
 .cquery_cached_index/
+/.vs/
 /.dir-locals.el
 *~
 build/

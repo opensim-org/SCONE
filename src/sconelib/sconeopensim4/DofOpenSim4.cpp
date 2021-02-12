@@ -11,15 +11,25 @@
 #include "JointOpenSim4.h"
 #include "scone/core/Log.h"
 
-#include <OpenSim/OpenSim.h>
+#include <OpenSim/Simulation/Model/Model.h>
+#include <OpenSim/Simulation/Model/ForceSet.h>
+#include <OpenSim/Simulation/Model/CoordinateLimitForce.h>
+#include <OpenSim/Actuators/CoordinateActuator.h>
 
 namespace scone
 {
+	Joint* try_find_joint( ModelOpenSim4& model, OpenSim::Coordinate& coord ) {
+		if ( auto it = TryFindByName( model.GetJoints(), coord.getJoint().getName() ); it != model.GetJoints().end() )
+			return it->get();
+		else return nullptr;
+	}
+
 	DofOpenSim4::DofOpenSim4( ModelOpenSim4& model, OpenSim::Coordinate& coord ) :
-	Dof( *FindByName( model.GetJoints(), coord.getJoint().getName() ) ),
-	m_Model( model ),
-	m_osCoord( coord ),
-	m_pOsLimitForce( nullptr )
+		Dof( try_find_joint( model, coord ) ),
+		m_Model( model ),
+		m_osCoord( coord ),
+		m_pOsLimitForce( nullptr ),
+		m_OsCoordAct( nullptr )
 	{
 		// find corresponding CoordinateLimitForce
 		auto& forceSet = model.GetOsimModel().getForceSet();
@@ -30,7 +40,6 @@ namespace scone
 			if ( clf && clf->getProperty_coordinate().getValue() == coord.getName() )
 			{
 				// we have found a match!
-				//log::Trace( "Found limit force " + clf->getName() + " for coord " + coord.getName() );
 				m_pOsLimitForce = clf;
 				break;
 			}
@@ -39,14 +48,19 @@ namespace scone
 
 	DofOpenSim4::~DofOpenSim4() {}
 
-	scone::Real DofOpenSim4::GetPos() const
+	Real DofOpenSim4::GetPos() const
 	{
 		return m_osCoord.getValue( m_Model.GetTkState() );
 	}
 
-	scone::Real DofOpenSim4::GetVel() const
+	Real DofOpenSim4::GetVel() const
 	{
 		return m_osCoord.getSpeedValue( m_Model.GetTkState() );
+	}
+
+	Real DofOpenSim4::GetAcc() const
+	{
+		return m_osCoord.getAccelerationValue( m_Model.GetTkState() );
 	}
 
 	const String& DofOpenSim4::GetName() const
@@ -54,16 +68,11 @@ namespace scone
 		return m_osCoord.getName();
 	}
 
-	scone::Real DofOpenSim4::GetLimitForce() const
+	Real DofOpenSim4::GetLimitMoment() const
 	{
 		if ( m_pOsLimitForce )
 			return m_pOsLimitForce->calcLimitForce( m_Model.GetTkState() );
 		else return 0.0;
-	}
-
-	scone::Real DofOpenSim4::GetMoment() const
-	{
-		SCONE_THROW_NOT_IMPLEMENTED;
 	}
 
 	void DofOpenSim4::SetPos( Real pos, bool enforce_constraints )
@@ -86,5 +95,30 @@ namespace scone
 	Range< Real > DofOpenSim4::GetRange() const
 	{
 		return Range< Real >( m_osCoord.get_range( 0 ), m_osCoord.get_range( 1 ) );
+	}
+
+	Real DofOpenSim4::GetMinInput() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMinControl() : 0.0;
+	}
+
+	Real DofOpenSim4::GetMaxInput() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMaxControl() : 0.0;
+	}
+
+	Real DofOpenSim4::GetMinTorque() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMinControl() * m_OsCoordAct->getOptimalForce() : 0.0;
+	}
+
+	Real DofOpenSim4::GetMaxTorque() const
+	{
+		return m_OsCoordAct ? m_OsCoordAct->getMaxControl() * m_OsCoordAct->getOptimalForce() : 0.0;
+	}
+
+	const Model& DofOpenSim4::GetModel() const
+	{
+		return m_Model;
 	}
 }

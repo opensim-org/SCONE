@@ -37,6 +37,7 @@ namespace scone
 		status_( Status::Initializing )
 	{
 		// create the objective from par file or config file
+		xo::timer load_time;
 		filename_ = file;
 		scenario_filename_ = FindScenario( file );
 		scenario_pn_ = xo::load_file_with_include( FindScenario( file ), "INCLUDE" );
@@ -93,7 +94,7 @@ namespace scone
 			log::warning( "Not a model objective, disabling visualization" );
 		}
 
-		log::info( "Loaded ", file.filename(), "; dim=", objective_->dim() );
+		log::info( "Loaded ", file.filename(), "; dim=", objective_->dim(), "; time=", load_time() );
 	}
 
 	StudioModel::~StudioModel()
@@ -198,7 +199,7 @@ namespace scone
 				// write results to file(s)
 				xo::timer t;
 				auto result_files = model_->WriteResults( filename_ );
-				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().seconds(), "s" );
+				log::debug( "Results written to ", concatenate_str( result_files, ", " ), " in ", t().secondsd(), "s" );
 
 				// we're done!
 				status_ = Status::Ready;
@@ -238,6 +239,12 @@ namespace scone
 			vis_->ApplyViewSettings( flags );
 			vis_->Update( *model_ );
 		}
+	}
+
+	const ModelVis::ViewSettings& StudioModel::GetViewSettings() const
+	{
+		SCONE_ASSERT( vis_ );
+		return vis_->GetViewSettings();
 	}
 
 	Vec3 StudioModel::GetFollowPoint() const

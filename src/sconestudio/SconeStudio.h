@@ -89,6 +89,7 @@ public slots:
 	void modelAnalysis();
 	void muscleAnalysis();
 	void updateGaitAnalysis();
+	void activateAnalysisFilter();
 	void tabCloseRequested( int idx );
 	void updateViewSettings();
 	void showSettingsDialog();
@@ -159,6 +160,7 @@ private:
 	// analysis
 	SconeStorageDataModel analysisStorageModel;
 	QDataAnalysisView* analysisView;
+	QDockWidget* analysisDock;
 
 	// gait analysis
 	scone::GaitAnalysis* gaitAnalysis;

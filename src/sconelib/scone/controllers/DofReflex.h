@@ -26,13 +26,15 @@ namespace scone
 		/// Name of the DOF that is the source of this Reflex, append with _o for DOF on opposite side.
 		String source;
 
+		/// Optional name of the parent of the source DOF, which when defined will be added to source; default = "".
+		String source_parent;
+
 		/// Target position [rad or m] for sensor DOF; default = 0.
 		Real P0; 
 		/// Position feedback gain; default = 0.
 		Real KP;
 		/// Allow this reflex to be negative; default = 1.
 		bool allow_neg_P;
-
 
 		/// Target velocity [rad or m] for sensor DOF; default = 0.
 		Real V0; 

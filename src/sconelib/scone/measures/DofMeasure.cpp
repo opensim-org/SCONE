@@ -71,7 +71,7 @@ namespace scone
 		if ( !acceleration.IsNull() )
 			acceleration.AddSample( timestamp, Degree( Radian( dof.GetAcc() + ( parent ? parent->GetAcc() : 0 ) ) ) );
 		if ( !force.IsNull() )
-			force.AddSample( timestamp, dof.GetLimitForce() );
+			force.AddSample( timestamp, dof.GetLimitMoment() );
 		return false;
 	}
 

@@ -81,6 +81,7 @@ namespace scone
 	private:
 		ModelOpenSim3& m_Model;
 		OpenSim::Muscle& m_osMus;
+		mutable TimeInSeconds m_MomentArmCacheTimeStamp;
 		mutable xo::flat_map< const Dof*, Real > m_MomentArmCache;
 	};
 }

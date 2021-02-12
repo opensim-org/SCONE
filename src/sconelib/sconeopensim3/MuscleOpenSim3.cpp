@@ -26,8 +26,11 @@ namespace scone
 
 	MuscleOpenSim3::MuscleOpenSim3( ModelOpenSim3& model, OpenSim::Muscle& mus ) :
 		m_Model( model ),
-		m_osMus( mus )
-	{}
+		m_osMus( mus ),
+		m_MomentArmCacheTimeStamp( -1 )
+	{
+		InitJointsDofs();
+	}
 
 	MuscleOpenSim3::~MuscleOpenSim3()
 	{}
@@ -127,17 +130,20 @@ namespace scone
 
 	Real MuscleOpenSim3::GetMomentArm( const Dof& dof ) const
 	{
-		auto iter = m_MomentArmCache.find( &dof );
-		if ( iter == m_MomentArmCache.end() )
+		auto t = GetModel().GetTime();
+		if ( m_MomentArmCacheTimeStamp != t )
 		{
-			const DofOpenSim3& dof_sb = dynamic_cast<const DofOpenSim3&>( dof );
-			auto moment = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
-			if ( fabs( moment ) < MOMENT_ARM_EPSILON || dof_sb.GetOsCoordinate().getLocked( m_Model.GetTkState() ) )
-				moment = 0;
-			m_MomentArmCache[ &dof ] = moment;
-			return moment;
+			for ( auto& d : GetDofs() )
+			{
+				const DofOpenSim3& dof_sb = dynamic_cast<const DofOpenSim3&>( *d );
+				auto mom = m_osMus.getGeometryPath().computeMomentArm( m_Model.GetTkState(), dof_sb.GetOsCoordinate() );
+				if ( fabs( mom ) < MOMENT_ARM_EPSILON || dof_sb.GetOsCoordinate().getLocked( m_Model.GetTkState() ) )
+					mom = 0;
+				m_MomentArmCache[ &dof ] = mom;
+			}
 		}
-		else return iter->second;
+
+		return m_MomentArmCache[ &dof ];
 	}
 
 	void MuscleOpenSim3::StoreData( Storage<Real>::Frame& frame, const StoreDataFlags& flags ) const

@@ -30,11 +30,13 @@ namespace scone
 			ShowGroundPlane,
 			EnableShadows,
 			ShowBodyCom,
-			ShowModelComHeading
+			ShowModelComHeading,
+			StaticCamera
 		};
 		using ViewSettings = xo::flag_set< VisOpt >;
 
 		void ApplyViewSettings( const ViewSettings& f );
+		const ViewSettings& GetViewSettings() const { return view_flags; }
 
 	private:
 		struct MuscleVis

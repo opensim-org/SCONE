@@ -19,6 +19,8 @@ if(${Qt5Widgets_FOUND})
 		help_tools.h
 		help_tools.cpp
 		file_tools.h
+		model_conversion.cpp
+		model_conversion.h
 		SconeStudio.cpp
 		SconeStudio.h
 		ProgressDockWidget.h
@@ -63,6 +65,8 @@ if(${Qt5Widgets_FOUND})
 		${QTFX_PATH}/QPlayControl.cpp
 		${QTFX_PATH}/QFileBrowser.h
 		${QTFX_PATH}/QFileBrowser.cpp
+		${QTFX_PATH}/QFileEdit.h
+		${QTFX_PATH}/QFileEdit.cpp
 		${QTFX_PATH}/QLogSink.h
 		${QTFX_PATH}/QLogSink.cpp
 		${QTFX_PATH}/QValueSlider.h
@@ -80,20 +84,26 @@ if(${Qt5Widgets_FOUND})
 		../../contrib/qcustomplot/qcustomplot.cpp
 		)
 	
-	set(RESOURCEFILES
-		studio.rc
-		SconeStudio.qrc 
+	set (QT_UI_FILES
 		SconeStudio.ui
 		ProgressDockWidget.ui
 		SconeSettings.ui
+		ModelTool.ui
+		LicenseDialog.ui
+	)
+
+	set(RESOURCEFILES
+		studio.rc
+		SconeStudio.qrc 
 		../../resources/studio-settings-schema.zml
 		../../resources/gaitanalysis/default.zml
+		${QT_UI_FILES}
 		)
 
 	INCLUDE_DIRECTORIES( ../../contrib/qcustomplot )
 	INCLUDE_DIRECTORIES( ${QTFX_PATH} )
 
-	qt5_wrap_ui(UI_HEADERS SconeStudio.ui ProgressDockWidget.ui SconeSettings.ui)
+	qt5_wrap_ui(UI_HEADERS ${QT_UI_FILES})
 	qt5_add_resources(RESOURCES SconeStudio.qrc)
 
 	SET( SOURCE_FILES ${STUDIOFILES} ${QTFILES} ${RESOURCES} )
@@ -206,15 +216,15 @@ if(${Qt5Widgets_FOUND})
 			if(${CMAKE_SIZEOF_VOID_P} EQUAL 8) # check if x64
 				set(PTHREAD pthreadVC2_x64)
 				set(LIBGCC libgcc_s_sjlj-1)
-				set(NameSpace "")
-			else() # else x86
+				set(SIMBODY_NAMESPACE ${SIMBODY_LIBRARY_PREFIX})
+			else() # else x86k
 				set(PTHREAD pthreadVC2)
 				set(LIBGCC libgcc_s_dw2-1)
-				set(NameSpace "OpenSim_")
+				set(SIMBODY_NAMESPACE "OpenSim_")
 			endif()
 
-			SET(OPENSIM_DLLS osimTools osimAnalyses osimActuators osimSimulation osimLepton osimCommon 
-				${NameSpace}SimTKsimbody ${NameSpace}SimTKmath ${NameSpace}SimTKcommon)
+			SET(OPENSIM_DLLS ${OPENSIM_LIBRARY_PREFIX}Tools ${OPENSIM_LIBRARY_PREFIX}Analyses ${OPENSIM_LIBRARY_PREFIX}Actuators ${OPENSIM_LIBRARY_PREFIX}Simulation ${OPENSIM_LIBRARY_PREFIX}Lepton ${OPENSIM_LIBRARY_PREFIX}Common 
+				${SIMBODY_NAMESPACE}SimTKsimbody ${SIMBODY_NAMESPACE}SimTKmath ${SIMBODY_NAMESPACE}SimTKcommon)
 			foreach(opensimdll ${OPENSIM_DLLS})
 				add_custom_command(TARGET sconestudio POST_BUILD
 					COMMAND ${CMAKE_COMMAND} -E copy_if_different ${OPENSIM_INSTALL_DIR}/bin/${opensimdll}$<$<CONFIG:debug>:_d>.dll ${DLL_TARGET_DIR}

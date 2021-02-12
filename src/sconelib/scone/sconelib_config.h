@@ -13,7 +13,7 @@
 #endif
 
 #ifdef SCONE_OPENSIM_4
-#include "sconeopensim3/sconeopensim4.h"
+#include "sconeopensim4/sconeopensim4.h"
 #endif
 
 #ifdef SCONE_HYFYDY

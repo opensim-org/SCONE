@@ -75,7 +75,7 @@ namespace scone
 
 			if ( l.squared_force_penalty != 0 || l.abs_force_penalty != 0 )
 			{
-				double lf = l.dof.GetLimitForce() + ( l.parent ? l.parent->GetLimitForce() : 0 );
+				double lf = l.dof.GetLimitMoment() + ( l.parent ? l.parent->GetLimitMoment() : 0 );
 				double fps = l.squared_force_penalty * GetSquared( lf );
 				double fpa = l.abs_force_penalty * abs( lf );
 				l.penalty.AddSample( timestamp, fps + fpa );
