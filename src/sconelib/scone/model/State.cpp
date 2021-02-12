@@ -37,7 +37,6 @@ namespace scone
 
 	index_t State::FindIndexByPattern( const String& pattern, index_t idx ) const
 	{
-		auto s = pattern;
 		for ( ; idx < names_.size(); ++idx )
 			if ( xo::pattern_match( names_[ idx ], pattern ) )
 				return idx;
