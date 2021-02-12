@@ -238,6 +238,8 @@ namespace scone
 			DisplayGeometry g;
 			g.filename = mesh.get_mesh_file();
 			g.scale = from_osim( mesh.get_scale_factors() );
+
+			// #todo: use mesh.getFrame().findTransformInBaseFrame();
 			// #osim4: set pos and ori
 			// #osim4: Make sure it's "attached_geometry"?
 			geoms.emplace_back( g );

@@ -130,6 +130,7 @@ namespace scone
 		void InitStateFromTk();
 		void CopyStateFromTk();
 		void CopyStateToTk();
+		index_t FindStateIndex( const String& state_name, int version );
 		void ReadState( const path& file );
 		void FixTkState( double force_threshold = 0.1, double fix_accuracy = 0.1 );
 

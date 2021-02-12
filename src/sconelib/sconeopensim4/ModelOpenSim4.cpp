@@ -709,6 +709,21 @@ namespace scone
 		return GetOsimModel().getName();
 	}
 
+	index_t ModelOpenSim4::FindStateIndex( const String& state_name, int version )
+	{
+		if ( version == 1 )
+		{
+			// find state using old names
+			if ( xo::str_ends_with( state_name, "_u" ) )
+				return m_State.FindIndexByPattern( "/jointset/*/" + xo::left_str( state_name, -2 ) + "/speed" );
+			else if ( xo::str_ends_with( state_name, ".activation" ) || xo::str_ends_with( state_name, ".fiber_length" ) )
+				return m_State.FindIndex( "/forceset/" + xo::replace_char( String( state_name ), '.', '/' ) );
+			else // assume it is a dof value value
+				return m_State.FindIndexByPattern( "/jointset/*/" + state_name + "/value" );
+		}
+		else return m_State.FindIndex( state_name );
+	}
+
 	void ModelOpenSim4::ReadState( const path& file )
 	{
 		// create a copy of the storage
@@ -719,7 +734,7 @@ namespace scone
 		// for all storage channels, check if there's a matching state
 		for ( int i = 0; i < storeLabels.getSize(); i++ )
 		{
-			index_t idx = m_State.FindIndex( storeLabels[ i ] );
+			index_t idx = FindStateIndex( storeLabels[ i ], store->getFileVersion() );
 			if ( idx != NoIndex )
 				m_State[ idx ] = data[ store->getStateIndex( storeLabels[ i ] ) ];
 		}

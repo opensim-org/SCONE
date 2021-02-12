@@ -33,6 +33,7 @@ namespace scone
 		std::vector<Real>& GetValues() { return values_; }
 
 		index_t FindIndex( const String& name ) const;
+		index_t FindIndexByPattern( const String& pattern, index_t start_index = 0 ) const;
 		const String& GetName( index_t i ) const { return names_[ i ]; }
 
 		index_t AddVariable( const String& name, Real value = Real( 0 ) );
