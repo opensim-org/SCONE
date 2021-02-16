@@ -41,10 +41,11 @@ namespace scone
 		virtual ~RangePenalty() = default;
 
 		void AddSample( TimeInSeconds timestamp, const T& value ) {
-			auto range_violation = this->GetRangeViolation( value );
-			auto abs_pen = abs( range_violation );
-			auto pen = abs_penalty * abs( range_violation ) + squared_penalty * GetSquared( range_violation );
-			penalty.AddSample( timestamp, pen );
+			penalty.AddSample( timestamp, ComputePenalty( value ) );
+		}
+
+		void AddSample( const T& value ) {
+			penalty.AddSample( ComputePenalty( value ) );
 		}
 
 		bool IsNull() const { return abs_penalty == 0.0 && squared_penalty == 0.0; }
@@ -75,6 +76,10 @@ namespace scone
 		penalty_mode mode_;
 
 	private:
+		T ComputePenalty( const T& value ) {
+			auto range_violation = this->GetRangeViolation( value );
+			return abs_penalty * abs( range_violation ) + squared_penalty * GetSquared( range_violation );
+		}
 		Statistic< T > penalty;
 	};
 }

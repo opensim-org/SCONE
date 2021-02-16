@@ -58,33 +58,27 @@ namespace scone
 		for ( index_t idx = initiation_cycles; idx < cycles.size(); ++idx )
 		{
 			if ( !stride_length.IsNull() )
-				 stride_length.AddSample( 1.0, cycles[ idx ].length() );
+				 stride_length.AddSample( cycles[ idx ].length() );
 			if ( !stride_duration.IsNull() )
-				stride_duration.AddSample( 1.0, cycles[ idx ].duration() );
+				stride_duration.AddSample( cycles[ idx ].duration() );
 			if ( !stride_velocity.IsNull() )
-				stride_velocity.AddSample( 1.0, cycles[ idx ].velocity() );
+				stride_velocity.AddSample( cycles[ idx ].velocity() );
 		}
 
 		// calculate penalty
 		double penalty = 0;
 		if ( !stride_length.IsNull() )
 		{
-			if ( stride_length.IsEmpty() )
-				stride_length.AddSample( 1, 0 );
 			penalty += stride_length.GetResult();
 			GetReport().set( "stride_length_penalty", stride_length.GetResult() );
 		}
 		if ( !stride_duration.IsNull() )
 		{
-			if ( stride_duration.IsEmpty() )
-				stride_duration.AddSample( 1, 0 );
 			penalty += stride_duration.GetResult();
 			GetReport().set( "stride_duration_penalty", stride_duration.GetResult() );
 		}
 		if ( !stride_velocity.IsNull() )
 		{
-			if ( stride_velocity.IsEmpty() )
-				stride_velocity.AddSample( 1, 0 );
 			penalty += stride_velocity.GetResult();
 			GetReport().set( "stride_velocity_penalty", stride_velocity.GetResult() );
 		}

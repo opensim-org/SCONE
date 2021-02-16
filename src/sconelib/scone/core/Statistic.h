@@ -10,7 +10,7 @@
 
 #include "platform.h"
 #include "types.h"
-#include <assert.h>
+#include "Exception.h"
 
 namespace scone
 {
@@ -44,8 +44,7 @@ namespace scone
 				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
 			}
 
-			// SCONE_ASSERT( timestamp >= m_PrevTime );
-			assert(timestamp >= m_PrevTime);
+			SCONE_ASSERT( timestamp >= m_PrevTime );
 
 			// update min / max
 			m_Highest = std::max( m_Highest, value );
@@ -65,10 +64,30 @@ namespace scone
 			m_nSamples++;
 		}
 
+		// add an 'unweighted' value
+		void AddSample( const T& value )
+		{
+			// in 'unweighted mode', the number of samples always equals the end time.
+			SCONE_ASSERT( m_PrevTime == m_nSamples && m_StartTime == 0 );
+
+			if ( m_nSamples == 0 )
+				m_PrevValue = m_Initial = m_Highest = m_Lowest = value;
+
+			// update min / max
+			m_Highest = std::max( m_Highest, value );
+			m_Lowest = std::min( m_Lowest, value );
+
+			// update average
+			m_Total += value;
+			m_nSamples++;
+			m_PrevTime += 1.0;
+			m_PrevValue = value;
+		}
+
 		void Reset()
 		{
 			m_PrevValue = m_Total = m_Highest = m_Lowest = T(0);
-			m_PrevTime = 0.0;
+			m_PrevTime = m_StartTime = 0.0;
 			m_nSamples = 0;
 		}
 
