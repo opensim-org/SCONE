@@ -14,6 +14,7 @@
 namespace OpenSim
 {
 	class Body;
+	class PhysicalFrame;
 }
 
 namespace scone
@@ -21,7 +22,7 @@ namespace scone
 	class SCONE_OPENSIM_4_API BodyOpenSim4 : public Body
 	{
 	public:
-		BodyOpenSim4( class ModelOpenSim4& model, OpenSim::Body& body );
+		BodyOpenSim4( class ModelOpenSim4& model, const OpenSim::PhysicalFrame& body );
 		virtual ~BodyOpenSim4();
 
 		virtual Real GetMass() const override;
@@ -64,12 +65,13 @@ namespace scone
 		virtual Vec3 GetExternalMoment() const override;
 		virtual Vec3 GetExternalForcePoint() const override;
 
-		const OpenSim::Body& GetOsBody() const { return m_osBody; }
+		const OpenSim::PhysicalFrame& GetOsBody() const { return m_osBody; }
 
 		void AttachContactForce( ContactForce* cf ) { m_ContactForces.push_back( cf ); }
 
 	private:
-		OpenSim::Body& m_osBody;
+		const OpenSim::PhysicalFrame& m_osBody;
+		const OpenSim::Body* m_pBody;
 		class ModelOpenSim4& m_Model;
 		Vec3 m_LocalComPos;
 		std::vector< ContactForce* > m_ContactForces;

@@ -24,12 +24,13 @@
 
 namespace scone
 {
-	BodyOpenSim4::BodyOpenSim4( class ModelOpenSim4& model, OpenSim::Body& body ) :
+	BodyOpenSim4::BodyOpenSim4( class ModelOpenSim4& model, const OpenSim::PhysicalFrame& body ) :
 		Body(),
 		m_osBody( body ),
+		m_pBody( dynamic_cast<const OpenSim::Body*>( &m_osBody ) ),
 		m_Model( model )
 	{
-		m_LocalComPos = from_osim( m_osBody.getMassCenter() );
+		m_LocalComPos = m_pBody ? from_osim( m_pBody->getMassCenter() ) : Vec3::zero();
 	}
 
 	BodyOpenSim4::~BodyOpenSim4()
@@ -37,13 +38,17 @@ namespace scone
 
 	Real BodyOpenSim4::GetMass() const
 	{
-		return m_osBody.getMass();
+		return m_pBody ? m_pBody->getMass() : 0.0;
 	}
 
 	Vec3 BodyOpenSim4::GetInertiaTensorDiagonal() const
 	{
-		auto inertia = m_osBody.getInertia().toMat33();
-		return Vec3( inertia( 0, 0 ), inertia( 1, 1 ), inertia( 2, 2 ) );
+		if ( m_pBody )
+		{
+			auto inertia = m_pBody->getInertia().toMat33();
+			return Vec3( inertia( 0, 0 ), inertia( 1, 1 ), inertia( 2, 2 ) );
+		}
+		else return Vec3::zero();
 	}
 
 	const String& BodyOpenSim4::GetName() const
@@ -100,7 +105,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Position );
 
 		// #todo: OSIM: find what is the most efficient (compare to linvel)
-		SimTK::Vec3 com = m_osBody.getMassCenter();;
+		SimTK::Vec3 com = m_pBody ? m_pBody->getMassCenter() : SimTK::Vec3( 0 );
 		SimTK::Vec3 point;
 
 		// #todo: validate this!
@@ -138,7 +143,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Velocity );
 
 		// #todo: OSIM: find what is the most efficient (compare to linvel)
-		SimTK::Vec3 com = m_osBody.getMassCenter();
+		SimTK::Vec3 com = m_pBody ? m_pBody->getMassCenter() : SimTK::Vec3( 0 );
 		SimTK::Vec3 vel;
 
 		// #todo: validate this!
@@ -183,7 +188,7 @@ namespace scone
 		m_osBody.getModel().getMultibodySystem().realize( m_Model.GetTkState(), SimTK::Stage::Acceleration );
 
 		// #todo: OSIM: find what is the most efficient (compare to linvel)
-		SimTK::Vec3 com = m_osBody.getMassCenter();
+		SimTK::Vec3 com = m_pBody ? m_pBody->getMassCenter() : SimTK::Vec3( 0 );
 		SimTK::Vec3 acc;
 
 		// #todo: validate this!

@@ -276,11 +276,15 @@ namespace scone
 
 	ModelOpenSim4::~ModelOpenSim4() {}
 
-	const OpenSim::Body* find_osim_body( const OpenSim::BodySet& bodies, int mbidx ) {
-		for ( int idx = 0; idx < bodies.getSize(); ++idx )
-			if ( const auto& b = bodies.get( idx ); b.getMobilizedBodyIndex() == mbidx )
-				return &b;
-		return nullptr;
+	const OpenSim::PhysicalFrame* find_osim_body( const OpenSim::Model& model, int mbidx ) {
+		if ( mbidx > 0 ) {
+			auto& bodies = model.getBodySet();
+			for ( int idx = 0; idx < bodies.getSize(); ++idx )
+				if ( const auto& b = bodies.get( idx ); b.getMobilizedBodyIndex() == mbidx )
+					return &b;
+			return nullptr;
+		}
+		else return &model.getGround();
 	}
 
 	void ModelOpenSim4::CreateModelWrappers( const PropNode& pn, Params& par )
@@ -289,7 +293,8 @@ namespace scone
 
 		// Create wrappers for bodies
 		// #todo #osim4 OpenSim 4 has no ground body, create fake scone::Body?
-		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() );
+		m_Bodies.reserve( m_pOsimModel->getBodySet().getSize() + 1 );
+		m_Bodies.emplace_back( std::make_unique<BodyOpenSim4>( *this, m_pOsimModel->getGround() ) );
 		for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			m_Bodies.emplace_back( std::make_unique<BodyOpenSim4>( *this, m_pOsimModel->getBodySet().get( idx ) ) );
 		m_RootBody = m_Bodies.empty() ? nullptr : &*m_Bodies.front();
@@ -301,8 +306,8 @@ namespace scone
 			auto& joint_osim = m_pOsimModel->getJointSet().get( idx );
 			auto child_body_idx = joint_osim.getChildFrame().getMobilizedBodyIndex();
 			auto parent_body_idx = joint_osim.getParentFrame().getMobilizedBodyIndex();
-			auto child_body = find_osim_body( m_pOsimModel->getBodySet(), child_body_idx );
-			auto parent_body = find_osim_body( m_pOsimModel->getBodySet(), parent_body_idx );
+			auto child_body = find_osim_body( *m_pOsimModel, child_body_idx );
+			auto parent_body = find_osim_body( *m_pOsimModel, parent_body_idx );
 			auto body_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
 				{ return &dynamic_cast<BodyOpenSim4&>( *body ).GetOsBody() == child_body; } );
 			auto parent_it = xo::find_if( m_Bodies, [&]( BodyUP& body )
