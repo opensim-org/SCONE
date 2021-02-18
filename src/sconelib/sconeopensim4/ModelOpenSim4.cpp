@@ -47,7 +47,7 @@ using std::endl;
 
 namespace scone
 {
-	std::mutex g_SimBodyMutex;
+	std::mutex g_OpenSim4Mutex;
 
 	xo::file_resource_cache< OpenSim::Model, std::string > g_ModelCache;
 	xo::file_resource_cache< OpenSim::Storage, std::string > g_StorageCache;
@@ -58,7 +58,7 @@ namespace scone
 		OpenSim_DECLARE_CONCRETE_OBJECT( ControllerDispatcher, OpenSim::Controller );
 	public:
 		ControllerDispatcher( ModelOpenSim4& model ) : m_Model( &model ) { };
-		virtual void computeControls( const SimTK::State& s, SimTK::Vector &controls ) const override;
+		virtual void computeControls( const SimTK::State& s, SimTK::Vector& controls ) const override;
 		//virtual ControllerDispatcher* clone() const override { return new ControllerDispatcher( *this ); }
 		//virtual const std::string& getConcreteClassName() const override { SCONE_THROW_NOT_IMPLEMENTED; }
 
@@ -110,79 +110,86 @@ namespace scone
 		// update features
 		m_Features.allow_external_forces = enable_external_forces;
 
-		// create new OpenSim Model using resource cache
+		// The following section is wrapped inside a mutex, to prevent random crashes
+		// The cause of this uncertain, but relates to https://github.com/opensim-org/opensim-core/issues/2944
 		{
-			SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
-			model_file = FindFile( model_file );
-			m_pOsimModel = g_ModelCache( model_file.str() );
-			AddExternalResource( model_file );
-		}
+			SCONE_PROFILE_SCOPE( GetProfiler(), "LockedInit" );
+			std::scoped_lock opensim4_lock( g_OpenSim4Mutex ); // this prevents 
 
-		// create torque and point actuators
-		if ( enable_external_forces )
-		{
-			SCONE_PROFILE_SCOPE( GetProfiler(), "SetupBodyForces" );
-			for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 			{
-				OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
-				cf->set_point_is_global( false );
-				cf->set_force_is_global( true );
-				cf->set_torque_is_global( false );
-				m_BodyForces.push_back( cf );
-				m_pOsimModel->addForce( cf );
+				// create new OpenSim Model using resource cache
+				SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
+				model_file = FindFile( model_file );
+				m_pOsimModel = g_ModelCache( model_file.str() );
+				AddExternalResource( model_file );
 			}
-		}
 
-		{
-			//SCONE_PROFILE_SCOPE( GetProfiler(), "SetupOpenSimParameters" );
-
-			// change model properties
-			if ( auto* model_pars = props.try_get_child( "Properties" ) )
-				SetProperties( *model_pars, par );
-
-			// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
-			m_pControllerDispatcher = new ControllerDispatcher( *this );
-			m_pOsimModel->addController( m_pControllerDispatcher );
-
-			// create probe (ownership is automatically passed to OpenSim::Model)
-			// OpenSim: this doesn't work! It either crashes or gives inconsistent results
-			if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
+			// create torque and point actuators
+			if ( enable_external_forces )
 			{
-				auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
-				GetOsimModel().addProbe( probe );
-				for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
+				SCONE_PROFILE_SCOPE( GetProfiler(), "SetupBodyForces" );
+				for ( int idx = 0; idx < m_pOsimModel->getBodySet().getSize(); ++idx )
 				{
-					OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
-					double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
-					probe->addMuscle( mus.getName(), 0.5 );
+					OpenSim::ConstantForce* cf = new OpenSim::ConstantForce( m_pOsimModel->getBodySet().get( idx ).getName() );
+					cf->set_point_is_global( false );
+					cf->set_force_is_global( true );
+					cf->set_torque_is_global( false );
+					m_BodyForces.push_back( cf );
+					m_pOsimModel->addForce( cf );
 				}
-				probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
-				probe->setOperation( "integrate" );
-				m_pProbe = probe;
 			}
-		}
+
+			{
+				// change model properties
+				if ( auto* model_pars = props.try_get_child( "Properties" ) )
+					SetProperties( *model_pars, par );
+
+				// create controller dispatcher (ownership is automatically passed to OpenSim::Model)
+				m_pControllerDispatcher = new ControllerDispatcher( *this );
+				m_pOsimModel->addController( m_pControllerDispatcher );
+
+				// create probe (ownership is automatically passed to OpenSim::Model)
+				// OpenSim: this doesn't work! It either crashes or gives inconsistent results
+				if ( probe_class == "Umberger2010MuscleMetabolicsProbe" )
+				{
+					auto probe = new OpenSim::Umberger2010MuscleMetabolicsProbe( true, true, true, true );
+					GetOsimModel().addProbe( probe );
+					for ( int idx = 0; idx < GetOsimModel().getMuscles().getSize(); ++idx )
+					{
+						OpenSim::Muscle& mus = GetOsimModel().getMuscles().get( idx );
+						double mass = ( mus.getMaxIsometricForce() / 0.25e6 ) * 1059.7 * mus.getOptimalFiberLength(); // Derived from OpenSim doxygen
+						probe->addMuscle( mus.getName(), 0.5 );
+					}
+					probe->setInitialConditions( SimTK::Vector( 1, 0.0 ) );
+					probe->setOperation( "integrate" );
+					m_pProbe = probe;
+				}
+			}
 
 #ifdef ENABLE_STATE_COMPONENTS
-		{
-			// Find StateComponents inside of the model definition and add them
-			// into OpenSim's subsystem.
-			for (auto& cpn : props) {
-				if ( auto fp = MakeFactoryProps( GetStateComponentFactory(), cpn, "StateComponent" ) ) {
-					auto stateComponent = CreateStateComponent( fp, par, *this );
-					// modelComponent takes ownership of the stateComponent
-					auto modelComponent = new OpenSim::StateComponentOpenSim4(stateComponent.release());
-					m_pOsimModel->addComponent(modelComponent);
+			{
+				// Find StateComponents inside of the model definition and add them
+				// into OpenSim's subsystem.
+				for ( auto& cpn : props ) {
+					if ( auto fp = MakeFactoryProps( GetStateComponentFactory(), cpn, "StateComponent" ) ) {
+						auto stateComponent = CreateStateComponent( fp, par, *this );
+						// modelComponent takes ownership of the stateComponent
+						auto modelComponent = new OpenSim::StateComponentOpenSim4( stateComponent.release() );
+						m_pOsimModel->addComponent( modelComponent );
+					}
 				}
 			}
-		}
 #endif // ENABLE_STATE_COMPONENTS
 
-		// Initialize the system
-		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
-		{
-			SCONE_PROFILE_SCOPE( GetProfiler(), "InitSystem" );
-			std::scoped_lock lock( g_SimBodyMutex );
-			m_pTkState = &m_pOsimModel->initSystem();
+			// Initialize the system
+			// This is not thread-safe in case an exception is thrown (handled by opensim4_lock)
+			{
+				SCONE_PROFILE_SCOPE( GetProfiler(), "InitSystem" );
+				// std::scoped_lock lock( g_OpenSim4Mutex ); // handled by opensim4_lock
+				m_pTkState = &m_pOsimModel->initSystem();
+			}
+
+			// g_OpenSim4Mutex lock ends here!
 		}
 
 		// create model component wrappers and sensors
@@ -362,7 +369,7 @@ namespace scone
 				m_Muscles.emplace_back( std::make_unique<MuscleOpenSim4>( *this, *osMus ) );
 				m_Actuators.push_back( m_Muscles.back().get() );
 			}
-			else if ( auto* osCo = dynamic_cast< OpenSim::CoordinateActuator* >( &osAct ) )
+			else if ( auto* osCo = dynamic_cast<OpenSim::CoordinateActuator*>( &osAct ) )
 			{
 				// add corresponding dof to list of actuators
 				auto& dof = dynamic_cast<DofOpenSim4&>( *FindByName( m_Dofs, osCo->getCoordinate()->getName() ) );
@@ -457,7 +464,7 @@ namespace scone
 					os_prop.updValue<double>() = scenario_value;
 				else SCONE_ERROR( "Unsupported qualifier '" + prop_qualifier + "' for " + os_object.getName() + "." + prop_key + "" );
 			}
-			else if ( auto * vec3_prop = dynamic_cast<OpenSim::Property<SimTK::Vec3>*>( &os_prop ) )
+			else if ( auto* vec3_prop = dynamic_cast<OpenSim::Property<SimTK::Vec3>*>( &os_prop ) )
 			{
 				auto scenario_value = spot::try_get_par( par, prop_key, props, Vec3::zero() );
 				if ( prop_qualifier == "offset" )
@@ -466,7 +473,7 @@ namespace scone
 					vec3_prop->updValue() = to_osim( scenario_value );
 				else SCONE_ERROR( "Unsupported qualifier " + prop_qualifier + " for " + os_object.getName() + "." + prop_key + "" );
 			}
-			else if (os_prop.getTypeName() == "bool")
+			else if ( os_prop.getTypeName() == "bool" )
 			{
 				os_prop.updValue<bool>() = prop_val.get<bool>();
 			}
@@ -481,7 +488,7 @@ namespace scone
 
 	void ModelOpenSim4::SetProperties( const PropNode& properties_pn, Params& par )
 	{
-		for ( const auto& [ object_name, object_props ] : properties_pn )
+		for ( const auto& [object_name, object_props] : properties_pn )
 		{
 			ScopedParamSetPrefixer prefix( par, object_name + '.' );
 			auto& os_object = FindOpenSimObject( object_name );
@@ -506,12 +513,12 @@ namespace scone
 
 	Vec3 ModelOpenSim4::GetLinMom() const
 	{
-		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[1] );
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[ 1 ] );
 	}
 
 	Vec3 ModelOpenSim4::GetAngMom() const
 	{
-		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[0] );
+		return from_osim( m_pOsimModel->getMatterSubsystem().calcSystemCentralMomentum( GetTkState() )[ 0 ] );
 	}
 
 	std::pair<Vec3, Vec3> ModelOpenSim4::GetLinAngMom() const
@@ -525,7 +532,7 @@ namespace scone
 		return from_osim( m_pOsimModel->getGravity() );
 	}
 
-	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector &controls ) const
+	void ControllerDispatcher::computeControls( const SimTK::State& s, SimTK::Vector& controls ) const
 	{
 		// see 'catch' statement below for explanation try {} catch {} is needed
 		try
@@ -771,8 +778,7 @@ namespace scone
 		{
 			bottom -= step_size;
 			GetOsimModel().setStateVariableValue( GetTkState(), initial_load_dof, bottom );
-		}
-		while ( abs( GetTotalContactForce() ) <= force_threshold && ( bottom - initial_state > -max_range ) );
+		} while ( abs( GetTotalContactForce() ) <= force_threshold && ( bottom - initial_state > -max_range ) );
 
 		// find middle ground until we are close enough
 		double force;
