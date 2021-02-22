@@ -134,6 +134,7 @@ private:
 	std::unique_ptr< scone::StudioModel > scenario_;
 	bool createScenario( const QString& any_file );
 	bool createAndVerifyActiveScenario( bool always_create );
+	void updateModelDataWidgets();
 
 	// simulation
 	TimeInSeconds current_time;

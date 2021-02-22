@@ -62,7 +62,8 @@ namespace scone
 			cycles.erase( cycles.end() - skip_last, cycles.end() );
 
 			for ( auto* p : plots_ )
-				p->update( sto, cycles );
+				if ( auto em = p->update( sto, cycles ); em.bad() )
+					log::error( em.message() );
 
 			auto f = 1.0 / cycles.size();
 			auto avg_length = f * std::accumulate( cycles.begin(), cycles.end(), 0.0,
@@ -72,6 +73,6 @@ namespace scone
 			auto avg_speed = avg_length / avg_dur;
 			info_ = QString::asprintf( "Gait Analysis - %zu steps; %.2fm; %.2fs; %0.2fm/s", cycles.size(), avg_length, avg_dur, avg_speed );
 		}
-		else log::warning( "Could not extract enough gait cycles from " + filename.str() );
+		else log::error( "Could not extract enough gait cycles from ", filename.str() );
 	}
 }

@@ -102,10 +102,16 @@ namespace scone
 		plot_->replot();
 	}
 
-	void GaitPlot::update( const Storage<>& sto, const std::vector<GaitCycle>& cycles )
+	xo::error_message GaitPlot::update( const Storage<>& sto, const std::vector<GaitCycle>& cycles )
 	{
 		while ( plot_->graphCount() > 2 )
 			plot_->removeGraph( plot_->graphCount() - 1 );
+
+		// find channels, report error if not find
+		auto right_channel_idx = sto.GetChannelIndex( right_channel_ );
+		auto left_channel_idx = sto.GetChannelIndex( left_channel_ );
+		if ( right_channel_idx == no_index && left_channel_idx == no_index )
+			return "Could not find " + left_channel_ + " / " + right_channel_ + "; please verify Tools->Preferences->Data";
 
 		xo::flat_map< double, double > avg_data;
 		auto s = 1.0 / cycles.size();
@@ -116,11 +122,10 @@ namespace scone
 		{
 			bool right = cycle.side_ == RightSide;
 			const auto& channel_name = right ? right_channel_ : left_channel_;
-			auto channel_idx = sto.GetChannelIndex( channel_name );
+			auto channel_idx = right ? right_channel_idx : left_channel_idx;
 			if ( channel_idx != no_index )
 			{
 				auto* graph = plot_cycles ? plot_->addGraph() : nullptr;
-
 				if ( graph ) graph->setPen( QPen( right ? Qt::red : Qt::blue, 1 ) );
 				for ( Real perc : xo::frange<Real>( 0.0, 100.0, 0.5 ) )
 				{
@@ -130,7 +135,7 @@ namespace scone
 					avg_data[ perc ] += s * value;
 				}
 			}
-			else log::error( "Could not find channel for Gait Analysis: ", channel_name );
+			else log::warning( "Gait Analysis could not find: ", channel_name ); // only shown when *either* left / right is missing
 		}
 
 		// add average data plot
@@ -143,7 +148,7 @@ namespace scone
 		}
 
 		// compute average error in STD
-		if ( !norm_data_.empty() )
+		if ( !avg_data.empty() && !norm_data_.empty() )
 		{
 			double error = 0.0;
 			for ( const auto& [x, r] : norm_data_ )
@@ -154,5 +159,7 @@ namespace scone
 				plot_title_->setText( title_.c_str() + QString::asprintf( " (%.1f%%)", fit_perc ) );
 		}
 		plot_->replot();
+
+		return {};
 	}
 }

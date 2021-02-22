@@ -311,17 +311,11 @@ void SconeStudio::activateBrowserItem( QModelIndex idx )
 	auto str = info.path().toStdString();
 	if ( info.exists() )
 	{
-		ui.playControl->reset();
 		if ( createScenario( info.absoluteFilePath() ) )
 		{
 			if ( scenario_->IsEvaluating() ) // .par or .sto
 				evaluate();
-
-			ui.playControl->setRange( 0, scenario_->GetMaxTime() );
 			ui.playControl->play(); // automatic playback after evaluation
-
-			if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
-				updateGaitAnalysis(); // automatic gait analysis if visible
 		}
 	}
 }
@@ -401,8 +395,7 @@ void SconeStudio::evaluate()
 		auto real_dur = real_time().secondsd();
 		auto sim_time = scenario_->GetTime();
 		log::info( "Evaluation took ", real_dur, "s for ", sim_time, "s (", sim_time / real_dur, "x real-time)" );
-		analysisStorageModel.setStorage( &scenario_->GetData() );
-		analysisView->reset();
+		updateModelDataWidgets();
 	}
 
 	dlg.setValue( 1000 );
@@ -677,9 +670,11 @@ void SconeStudio::addProgressDock( ProgressDockWidget* pdw )
 bool SconeStudio::createScenario( const QString& any_file )
 {
 	ui.playControl->reset();
+	ui.playControl->setRange( 0, 0 );
 	scenario_.reset();
 	analysisStorageModel.setStorage( nullptr );
 	parModel->setObjectiveInfo( nullptr );
+	gaitAnalysis->reset();
 	parViewDock->setWindowTitle( "Optimization Parameters" );
 
 	try
@@ -691,6 +686,10 @@ bool SconeStudio::createScenario( const QString& any_file )
 		// update parview
 		parModel->setObjectiveInfo( &scenario_->GetOjective().info() );
 		parViewDock->setWindowTitle( QString( "Optimization Parameters (%1)" ).arg( scenario_->GetOjective().info().size() ) );
+
+		// set data, in case the file was an sto
+		if ( scenario_->HasData() )
+			updateModelDataWidgets();
 	}
 	catch ( std::exception& e )
 	{
@@ -700,8 +699,6 @@ bool SconeStudio::createScenario( const QString& any_file )
 	}
 
 	// always do this, also in case of error
-	ui.playControl->reset();
-	ui.playControl->setRange( 0, 0 );
 	ui.osgViewer->repaint();
 
 	return scenario_->IsValid();
@@ -820,6 +817,16 @@ bool SconeStudio::createAndVerifyActiveScenario( bool always_create )
 	}
 }
 
+void SconeStudio::updateModelDataWidgets()
+{
+	SCONE_ASSERT( scenario_ && scenario_->HasData() );
+	analysisStorageModel.setStorage( &scenario_->GetData() );
+	analysisView->reset();
+	ui.playControl->setRange( 0, scenario_->GetMaxTime() );
+	if ( !gaitAnalysisDock->visibleRegion().isEmpty() )
+		updateGaitAnalysis(); // automatic gait analysis if visible
+}
+
 void SconeStudio::optimizeScenario()
 {
 	try
@@ -871,7 +878,6 @@ void SconeStudio::evaluateActiveScenario()
 	{
 		if ( scenario_->IsEvaluating() )
 			evaluate();
-		ui.playControl->setRange( 0, scenario_->GetMaxTime() );
 		ui.playControl->play();
 	}
 }

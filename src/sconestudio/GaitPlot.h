@@ -9,6 +9,7 @@
 #include "scone/core/GaitCycle.h"
 #include "xo/container/flat_map.h"
 #include "xo/numerical/bounds.h"
+#include "xo/utility/result.h"
 
 class QCustomPlot;
 class QCPPlotTitle;
@@ -21,7 +22,7 @@ namespace scone
 		GaitPlot( const PropNode& pn, QWidget* parent = nullptr );
 		virtual ~GaitPlot() {}
 
-		void update( const Storage<>& sto, const std::vector<GaitCycle>& cycles );
+		xo::error_message update( const Storage<>& sto, const std::vector<GaitCycle>& cycles );
 
 		String title_;
 		String left_channel_;
