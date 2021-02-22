@@ -1,6 +1,55 @@
 ~~NOCACHE~~
 ====== SCONE Version History ======
 
+=== New Simulators ===
+  * OpenSim 4.2
+
+=== New User Interface Features ===
+  * Added support for computing and analyzing muscle moment arms and muscle moments.
+  * Added option "keep all data frames data frames for analysis", which keeps data at full resolution for analysis, but not for file storage.
+  * New settings for gait analysis (with defaults): skip_first (2), skip_last (1), force_threshold (0.001), min_stance_duration (0.1).
+  * New keyboard shortcut (Ctrl + L) to directly go to the filter input in the analysis window.
+  * The results file browser now allows selection and removal of multiple files or folders at once.
+  * Removing files now moves them to the recycle bin (requires Qt 5.15)
+  * Pressing ''<return>'' on a folder in the Optimization results automatically evaluates the most recent .par file in that folder.
+  * Editor now automatically adds closing characters for {}, [], () and ""
+  * Added option to reload the current document (Ctrl + R).
+  * Progress results graphs now scroll properly when zoomed in. 
+  * Viewer now supports static camera, toggle via the View menu.
+  * Added visualization of model COM and Heading.
+  * Added option to convert OpenSim models to Hyfydy using Tools -> Convert Model...
+
+=== New Scenario and Optimization Features ===
+  * New NeuralNetworkController (experimental).
+  * MimicMeasure now has time_offset.
+  * New muscle sensors: MuscleLengthVelocitySqrtSensor, MuscleSpindle2Sensor.
+  * New body sensors: BodyOriVelSensor, BodyOriVelLoadSensor.
+  * Scenario files now support inline macro expansion, e.g. "text${var}", which can be useful for adding a macro to a signature.
+  * Optimizers now have the option to filter specific parameters via ''init_file_include'' and ''init_file_exclude''.
+  * Controllers and Measures now have an extra 'signature' setting, that replaces the auto-generated signature with a custom one.
+  * CmaOptimizer now supports setting the maximum number of errors allowed during the evaluation of a single population, via 'max_errors' (default = 0).
+
+=== Updates and Fixes ===
+  * Analysis windows are now updated correctly after loading a .sto from the optimization results (#247).
+  * Updated warning message when gait analysis channels are missing, removed message: "lerp_map() was called on empty map" (#247).
+  * sconecmd now supports -r in combination with -o, closes #230.
+  * GaitStateController transition parameters are now optimized individually when symmetric = 0 (closes #214).
+  * GaitStateController shows an error message (instead of crashing) when an uneven number of legs has been detected.
+  * MimicMeasure::stop_time default is now set to match end of storage file.
+  * SequentialController now correctly stores Analysis data of child controllers.
+  * Fixed issue where evaluation would start automatically when loading while playback is active.
+  * Line widths in Analysis view and progress windows now default to 1. It turns out other values lead to poor performance.
+  * Fixed checking if document is modified, increasing editing performance.
+  * Editor now gets focus after opening file.
+  * MimicMeasure error limits are now disabled (0) by default, peak_error_limit is set to 2 * average_error_limit by default.
+  * Updated documentation for GaitStateController and GaitMeasure, closes #69.
+  * EffortMeasure computation is now correct again when use_cost_of_transport = 0.
+  * CmaPoolOptimizer now works again.
+  * Fixed inaccurate warning of unused parameters in CmaPoolOptimizer.
+  * Fixed progress graph zooming with pooled CmaPoolOptimizer.
+  * pooled_evaluator is now properly initialized so it doesn't need to restart all threads immediately.
+  * EffortMeasure now shows name in Analysis Window and .sto output.
+
 ==== SCONE 1.5.0 ====
 //Released June 19, 2020//
 
