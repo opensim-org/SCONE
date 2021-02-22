@@ -72,6 +72,9 @@ namespace scone
 		/// Unsided name of the leg contact force (if any); default = foot
 		String leg_contact_force;
 
+		/// ADVANCED: use extra thread safety, required due to issue with Millard2012EquilibriumMuscle; default = 1
+		bool safe_mode;
+
 		ModelOpenSim3( const PropNode& props, Params& par );
 		virtual ~ModelOpenSim3();
 

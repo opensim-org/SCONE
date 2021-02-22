@@ -44,7 +44,8 @@ using std::endl;
 
 namespace scone
 {
-	std::mutex g_SimBodyMutex;
+	std::mutex g_CloneModelMutex;
+	std::mutex g_InitSystemMutex;
 
 	xo::file_resource_cache< OpenSim::Model, std::string > g_ModelCache;
 	xo::file_resource_cache< OpenSim::Storage, std::string > g_StorageCache;
@@ -72,7 +73,8 @@ namespace scone
 		m_PrevIntStep( -1 ),
 		m_PrevTime( 0.0 ),
 		m_Mass( 0.0 ),
-		m_BW( 0.0 )
+		m_BW( 0.0 ),
+		INIT_MEMBER( props, safe_mode, true )
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
@@ -106,7 +108,15 @@ namespace scone
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "CreateModel" );
 			model_file = FindFile( model_file );
-			m_pOsimModel = g_ModelCache( model_file.str() );
+
+			{
+				// use lock if safe_mode
+				std::unique_lock model_lock( g_CloneModelMutex, std::defer_lock );
+				if ( safe_mode )
+					model_lock.lock();
+				m_pOsimModel = g_ModelCache( model_file.str() );
+			}
+
 			AddExternalResource( model_file );
 		}
 
@@ -171,7 +181,7 @@ namespace scone
 		// This is not thread-safe in case an exception is thrown, so we add a mutex guard
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "InitSystem" );
-			std::scoped_lock lock( g_SimBodyMutex );
+			std::scoped_lock lock( g_InitSystemMutex );
 			m_pTkState = &m_pOsimModel->initSystem();
 		}
 

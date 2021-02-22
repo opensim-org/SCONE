@@ -77,7 +77,8 @@ namespace scone
 		m_PrevTime( 0.0 ),
 		m_EndTime( xo::constants<TimeInSeconds>::max() ),
 		m_Mass( 0.0 ),
-		m_BW( 0.0 )
+		m_BW( 0.0 ),
+		INIT_MEMBER( props, safe_mode, true )
 	{
 		SCONE_PROFILE_FUNCTION( GetProfiler() );
 
@@ -110,11 +111,15 @@ namespace scone
 		// update features
 		m_Features.allow_external_forces = enable_external_forces;
 
-		// The following section is wrapped inside a mutex, to prevent random crashes
+		// The following section is wrapped inside a mutex (when safe_mode = 1 ), to prevent random crashes
 		// The cause of this uncertain, but relates to https://github.com/opensim-org/opensim-core/issues/2944
 		{
 			SCONE_PROFILE_SCOPE( GetProfiler(), "LockedInit" );
-			std::scoped_lock opensim4_lock( g_OpenSim4Mutex ); // this prevents 
+
+			// use lock if safe_mode
+			std::unique_lock model_lock( g_OpenSim4Mutex, std::defer_lock );
+			if ( safe_mode )
+				model_lock.lock();
 
 			{
 				// create new OpenSim Model using resource cache
