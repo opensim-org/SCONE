@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
-    <height>223</height>
+    <width>494</width>
+    <height>242</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Input OpenSim File</string>
+      <string>Input File (OpenSim3)</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -41,12 +41,24 @@
       <item row="0" column="0" colspan="2">
        <widget class="QCheckBox" name="fixCheckbox">
         <property name="text">
-         <string>Fix calcn and toe segments</string>
+         <string>Merge calcn and toe segments</string>
         </property>
         <property name="checked">
-         <bool>true</bool>
+         <bool>false</bool>
         </property>
        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Output File (Hyfydy)</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QFileEdit" name="outputFile" native="true"/>
       </item>
      </layout>
     </widget>

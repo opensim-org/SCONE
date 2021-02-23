@@ -18,21 +18,24 @@ namespace scone
 		Ui::ModelTool ui;
 		ui.setupUi( &dlg );
 		ui.inputFile->init( QFileEdit::OpenFile, "OpenSim Models (*.osim)", "", to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ) );
-		auto updateButtonBox = [&]() {
-			ui.buttonBox->button( QDialogButtonBox::Ok )->setEnabled( !ui.inputFile->text().isEmpty() );
+		auto updateInputFile = [&]() {
+			auto inputFile = xo::path( ui.inputFile->text().toStdString() );
+			ui.buttonBox->button( QDialogButtonBox::Ok )->setEnabled( !inputFile.empty() );
+			if ( !inputFile.empty() )
+				ui.outputFile->setText( to_qt( inputFile.replace_extension( "hfd" ) ) );
 		};
-		updateButtonBox();
-		QObject::connect( ui.inputFile, &QFileEdit::textChanged, updateButtonBox );
-
+		updateInputFile();
+		QObject::connect( ui.inputFile, &QFileEdit::textChanged, updateInputFile );
 
 		if ( QDialog::Accepted == dlg.exec() )
 		{
-			xo::path inputFile = xo::path( ui.inputFile->text().toStdString() );
+			const xo::path inputFile = xo::path( ui.inputFile->text().toStdString() );
+			const xo::path outputFile = xo::path( ui.outputFile->text().toStdString() );
 			log::info( "Converting model ", inputFile );
 
 			QString program = to_qt( GetApplicationFolder() / "hfdmodeltool" );
 			QStringList args;
-			args << to_qt( inputFile );
+			args << to_qt( inputFile ) << "-o" << to_qt( outputFile );
 			if ( ui.fixCheckbox->isChecked() )
 				args << "-f";
 
