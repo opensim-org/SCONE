@@ -1035,11 +1035,11 @@
 									<body>pelvis</body>
 								</PathPoint>
 								<PathPoint name="bifemlh_r-P2">
-									<location> -0.028 -0.02 0.029</location>
+									<location> -0.028 -0.02 0.02943</location>
 									<body>tibia_r</body>
 								</PathPoint>
 								<PathPoint name="bifemlh_r-P3">
-									<location> -0.021 -0.04 0.034</location>
+									<location> -0.021 -0.04 0.0343</location>
 									<body>tibia_r</body>
 								</PathPoint>
 							</objects>
@@ -1235,11 +1235,11 @@
 									<body>pelvis</body>
 								</PathPoint>
 								<PathPoint name="psoas_r-P4">
-									<location> 0.033 -0.035 0.004</location>
+									<location> 0.033 -0.035 0.0038</location>
 									<body>femur_r</body>
 								</PathPoint>
 								<PathPoint name="psoas_r-P5">
-									<location> -0.0188 -0.0597 0.01</location>
+									<location> -0.0188 -0.0597 0.0104</location>
 									<body>femur_r</body>
 								</PathPoint>
 							</objects>
@@ -1331,11 +1331,11 @@
 									<body>femur_r</body>
 								</PathPoint>
 								<PathPoint name="vas_int_r-P2">
-									<location> 0.0335 -0.2084 0.028</location>
+									<location> 0.0335 -0.2084 0.0285</location>
 									<body>femur_r</body>
 								</PathPoint>
 								<PathPoint name="default">
-									<location> 0.04 0.025 0.002</location>
+									<location> 0.04 0.025 0.0018</location>
 									<body>tibia_r</body>
 								</PathPoint>
 							</objects>
@@ -1703,7 +1703,7 @@
 						<PathPointSet>
 							<objects>
 								<PathPoint name="bifemlh_l-P1">
-									<location> -0.12596 -0.10257 -0.069</location>
+									<location> -0.12596 -0.10257 -0.06944</location>
 									<body>pelvis</body>
 								</PathPoint>
 								<PathPoint name="bifemlh_l-P2">
