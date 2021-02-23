@@ -1550,7 +1550,7 @@
 					<!--The maximum force this actuator can produce.-->
 					<optimal_force>1</optimal_force>
 					<!--Maximum isometric force that the fibers can generate-->
-					<max_isometric_force>5137</max_isometric_force>
+					<max_isometric_force>3549</max_isometric_force>
 					<!--Optimal length of the muscle fibers-->
 					<optimal_fiber_length>0.05</optimal_fiber_length>
 					<!--Resting length of the tendon-->
@@ -1703,7 +1703,7 @@
 						<PathPointSet>
 							<objects>
 								<PathPoint name="bifemlh_l-P1">
-									<location> -0.12596 -0.10257 -0.06944</location>
+									<location> -0.12596 -0.10257 -0.069</location>
 									<body>pelvis</body>
 								</PathPoint>
 								<PathPoint name="bifemlh_l-P2">
