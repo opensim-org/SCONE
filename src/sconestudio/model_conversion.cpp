@@ -36,6 +36,7 @@ namespace scone
 			QString program = to_qt( GetApplicationFolder() / "hfdmodeltool" );
 			QStringList args;
 			args << to_qt( inputFile ) << "-o" << to_qt( outputFile );
+			args << "--remote";
 			if ( ui.fixCheckbox->isChecked() )
 				args << "-f";
 
