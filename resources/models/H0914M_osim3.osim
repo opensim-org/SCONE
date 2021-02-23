@@ -197,7 +197,7 @@
 									<!--Transform function of the generalized coordinates used to        represent the amount of transformation along a specified axis.-->
 									<function>
 										<Constant>
-											<value>0.02</value>
+											<value>0</value>
 										</Constant>
 									</function>
 								</TransformAxis>
