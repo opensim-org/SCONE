@@ -9,6 +9,7 @@
 /scenarios/UnitTests/Hyfydy
 /scenarios/Examples/
 /resources/unittestdata/
+/install
 /.version
 /doc/upload.bat
 /install/*.exe
