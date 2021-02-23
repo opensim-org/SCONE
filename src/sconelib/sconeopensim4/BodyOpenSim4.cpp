@@ -243,34 +243,12 @@ namespace scone
 			DisplayGeometry g;
 			g.filename = mesh.get_mesh_file();
 			g.scale = from_osim( mesh.get_scale_factors() );
-
-			// #todo: use mesh.getFrame().findTransformInBaseFrame();
-			// #osim4: set pos and ori
-			// #osim4: Make sure it's "attached_geometry"?
+			auto trans = mesh.getFrame().findTransformInBaseFrame();
+			g.pos = from_osim( trans.p() );
+			g.ori = from_osim( SimTK::Quaternion( trans.R() ) );
 			geoms.emplace_back( g );
 		}
 		return geoms;
-
-		//std::vector< DisplayGeometry > geoms;
-
-		//auto* disp = m_osBody.getDisplayer();
-		//auto disp_pos = from_osim( disp->getTransform().p() );
-		//auto disp_ori = from_osim( SimTK::Quaternion( disp->getTransform().R() ) );
-		//SimTK::Vec3 disp_scale_tk;
-		//disp->getScaleFactors( disp_scale_tk );
-		//auto disp_scale = from_osim( disp_scale_tk );
-
-		//auto& gset = disp->getGeometrySet();
-		//for ( auto i = 0; i < gset.getSize(); ++i )
-		//{
-		//	geoms.emplace_back(
-		//		gset[ i ].getGeometryFile(),
-		//		disp_pos + from_osim( gset[ i ].getTransform().p() ),
-		//		disp_ori * from_osim( SimTK::Quaternion( gset[ i ].getTransform().R() ) ),
-		//		xo::multiply( disp_scale, from_osim( gset[ i ].getScaleFactors() ) ) );
-		//}
-
-		//return geoms;
 	}
 
 	void BodyOpenSim4::SetExternalForce( const Vec3& f )
