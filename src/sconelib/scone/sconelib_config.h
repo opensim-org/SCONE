@@ -60,7 +60,7 @@ namespace scone
 			RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ) );
 #endif
 
-#ifdef SCONE_LUA_ENABLED
+#if SCONE_LUA_ENABLED
 		RegisterSconeLua();
 #endif
 	}
