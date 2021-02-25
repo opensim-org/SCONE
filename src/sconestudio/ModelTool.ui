@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>494</width>
-    <height>242</height>
+    <width>600</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Input File (OpenSim3)</string>
+      <string>Input File (OpenSim)</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -33,12 +33,36 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="convertOsim4">
      <property name="title">
-      <string>Conversion Settings</string>
+      <string>Convert to OpenSim 4</string>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0" colspan="2">
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="QFileEdit" name="outputFileOsim4" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="convertHfd">
+     <property name="title">
+      <string>Convert to Hyfydy</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QFileEdit" name="outputFileHfd" native="true"/>
+      </item>
+      <item>
        <widget class="QCheckBox" name="fixCheckbox">
         <property name="text">
          <string>Merge calcn and toe segments</string>
@@ -47,18 +71,6 @@
          <bool>false</bool>
         </property>
        </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>Output File (Hyfydy)</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <item>
-       <widget class="QFileEdit" name="outputFile" native="true"/>
       </item>
      </layout>
     </widget>

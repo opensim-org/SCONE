@@ -9,6 +9,7 @@
 #include <QProcess>
 #include <QMessageBox>
 #include <QPushButton>
+#include "sconeopensim4/sconeopensim4.h"
 
 namespace scone
 {
@@ -19,52 +20,70 @@ namespace scone
 		ui.setupUi( &dlg );
 		ui.inputFile->init( QFileEdit::OpenFile, "OpenSim Models (*.osim)", "", to_qt( GetFolder( SCONE_SCENARIO_FOLDER ) ) );
 		auto updateInputFile = [&]() {
-			auto inputFile = xo::path( ui.inputFile->text().toStdString() );
+			const auto inputFile = xo::path( ui.inputFile->text().toStdString() );
 			ui.buttonBox->button( QDialogButtonBox::Ok )->setEnabled( !inputFile.empty() );
 			if ( !inputFile.empty() )
-				ui.outputFile->setText( to_qt( inputFile.replace_extension( "hfd" ) ) );
+			{
+				auto hfdFilename = xo::path( inputFile ).replace_extension( "hfd" );
+				auto osim4Filename = xo::path( inputFile ).replace_stem( inputFile.stem() + "_osim4" );
+				ui.outputFileHfd->setText( to_qt( hfdFilename ) );
+				ui.outputFileOsim4->setText( to_qt( osim4Filename ) );
+			}
 		};
+
 		updateInputFile();
 		QObject::connect( ui.inputFile, &QFileEdit::textChanged, updateInputFile );
 
 		if ( QDialog::Accepted == dlg.exec() )
 		{
+
 			const xo::path inputFile = xo::path( ui.inputFile->text().toStdString() );
-			const xo::path outputFile = xo::path( ui.outputFile->text().toStdString() );
-			log::info( "Converting model ", inputFile );
 
-			QString program = to_qt( GetApplicationFolder() / "hfdmodeltool" );
-			QStringList args;
-			args << to_qt( inputFile ) << "-o" << to_qt( outputFile );
-			args << "--remote";
-			if ( ui.fixCheckbox->isChecked() )
-				args << "-f";
-
-			auto proc = new QProcess( parent );
-			proc->start( program, args );
-			if ( !proc->waitForFinished() )
+			if ( ui.convertHfd->isChecked() )
 			{
-				QString msg = "Timeout waiting for " + program;
-				log::error( msg.toStdString() );
-				QMessageBox::critical( parent, "Error", msg );
-				return;
+				const xo::path outputFile = xo::path( ui.outputFileHfd->text().toStdString() );
+				log::info( "Converting model ", inputFile );
+
+				QString program = to_qt( GetApplicationFolder() / "hfdmodeltool" );
+				QStringList args;
+				args << to_qt( inputFile ) << "-o" << to_qt( outputFile );
+				args << "--remote";
+				if ( ui.fixCheckbox->isChecked() )
+					args << "-f";
+
+				auto proc = new QProcess( parent );
+				proc->start( program, args );
+				if ( !proc->waitForFinished() )
+				{
+					QString msg = "Timeout waiting for " + program;
+					log::error( msg.toStdString() );
+					QMessageBox::critical( parent, "Error", msg );
+					return;
+				}
+
+				// check return code and output
+				QString output = proc->readAllStandardOutput();
+				if ( proc->exitCode() == 0 )
+				{
+					QString title = "Successfully converted " + ui.inputFile->text();
+					log::info( title.toStdString() );
+					log::info( output.toStdString() );
+					QMessageBox::information( parent, title, output );
+				}
+				else
+				{
+					QString title = "Error converting " + ui.inputFile->text() + "\n\n" + output;
+					log::error( title.toStdString() );
+					log::error( output.toStdString() );
+					QMessageBox::critical( parent, title, output );
+				}
 			}
 
-			// check return code and output
-			QString output = proc->readAllStandardOutput();
-			if ( proc->exitCode() == 0 )
+			if ( ui.convertOsim4->isChecked() )
 			{
-				QString title = "Successfully converted " + ui.inputFile->text();
-				log::info( title.toStdString() );
-				log::info( output.toStdString() );
-				QMessageBox::information( parent, title, output );
-			}
-			else
-			{
-				QString title = "Error converting " + ui.inputFile->text() + "\n\n" + output;
-				log::error( title.toStdString() );
-				log::error( output.toStdString() );
-				QMessageBox::critical( parent, title, output );
+				// create os4 model (test)
+				const xo::path outputFile = xo::path( ui.outputFileOsim4->text().toStdString() );
+				ConvertModelOpenSim4( inputFile, outputFile );
 			}
 		}
 	}
