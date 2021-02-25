@@ -24,7 +24,8 @@ namespace scone
 
 		virtual double AddInput( double v ) { return m_ActuatorControlValue += v; }
 		virtual void ClearInput();
-		virtual double GetInput() const;
+		virtual double GetInput() const { return m_ActuatorControlValue; }
+		virtual double GetClampedInput() const { return xo::clamped( GetInput(), GetMinInput(), GetMaxInput() ); }
 		virtual Real GetMinInput() const = 0;
 		virtual Real GetMaxInput() const = 0;
 

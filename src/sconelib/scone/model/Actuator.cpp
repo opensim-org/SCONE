@@ -23,11 +23,6 @@ namespace scone
 		m_ActuatorControlValue = 0.0;
 	}
 
-	double Actuator::GetInput() const
-	{
-		return m_ActuatorControlValue;
-	}
-
 	void Actuator::StoreData( Storage< Real >::Frame& frame, const StoreDataFlags& flags ) const
 	{
 		if ( flags( StoreDataTypes::ActuatorInput ) )

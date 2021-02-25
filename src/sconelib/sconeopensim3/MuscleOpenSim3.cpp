@@ -27,9 +27,17 @@ namespace scone
 	MuscleOpenSim3::MuscleOpenSim3( ModelOpenSim3& model, OpenSim::Muscle& mus ) :
 		m_Model( model ),
 		m_osMus( mus ),
-		m_MomentArmCacheTimeStamp( -1 )
+		m_MomentArmCacheTimeStamp( -1 ),
+		m_MinActivation( 0 ) // will be set correctly below
 	{
 		InitJointsDofs();
+
+		// initialize m_MinActivation (#opensim Muscle does not have an interface for this)
+		if ( auto mus = dynamic_cast<OpenSim::Millard2012EquilibriumMuscle*>( &m_osMus ) )
+			m_MinActivation = mus->getMinimumActivation();
+		else if ( auto mus = dynamic_cast<OpenSim::Thelen2003Muscle*>( &m_osMus ) )
+			m_MinActivation = mus->getMinimumActivation();
+		else m_MinActivation = m_osMus.getMinControl();
 	}
 
 	MuscleOpenSim3::~MuscleOpenSim3()
