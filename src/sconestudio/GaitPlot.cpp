@@ -11,6 +11,7 @@
 #include "xo/numerical/math.h"
 #include "xo/utility/frange.h"
 #include "scone/core/Log.h"
+#include "xo/container/container_tools.h"
 
 namespace scone
 {
@@ -108,10 +109,11 @@ namespace scone
 			plot_->removeGraph( plot_->graphCount() - 1 );
 
 		// find channels, report error if not find
-		auto right_channel_idx = sto.GetChannelIndex( right_channel_ );
-		auto left_channel_idx = sto.GetChannelIndex( left_channel_ );
+		const auto& labels = sto.GetLabels();
+		auto right_channel_idx = xo::find_index_if( labels, [&]( auto& l ) { return right_channel_( l ); } );
+		auto left_channel_idx = xo::find_index_if( labels, [&]( auto& l ) { return left_channel_( l ); } );
 		if ( right_channel_idx == no_index && left_channel_idx == no_index )
-			return "Could not find " + left_channel_ + " / " + right_channel_ + "; please verify Tools->Preferences->Data";
+			return "Could not find " + left_channel_.str() + " / " + right_channel_.str() + "; please verify Tools->Preferences->Data";
 
 		xo::flat_map< double, double > avg_data;
 		auto s = 1.0 / cycles.size();

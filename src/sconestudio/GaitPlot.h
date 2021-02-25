@@ -10,6 +10,7 @@
 #include "xo/container/flat_map.h"
 #include "xo/numerical/bounds.h"
 #include "xo/utility/result.h"
+#include "xo/string/pattern_matcher.h"
 
 class QCustomPlot;
 class QCPPlotTitle;
@@ -25,8 +26,8 @@ namespace scone
 		xo::error_message update( const Storage<>& sto, const std::vector<GaitCycle>& cycles );
 
 		String title_;
-		String left_channel_;
-		String right_channel_;
+		xo::pattern_matcher left_channel_;
+		xo::pattern_matcher right_channel_;
 		int row_;
 		int column_;
 		String x_label_;
