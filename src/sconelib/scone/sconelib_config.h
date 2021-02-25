@@ -10,18 +10,30 @@
 
 #ifdef SCONE_OPENSIM_3
 #include "sconeopensim3/sconeopensim3.h"
+#define SCONE_OPENSIM_3_ENABLED 1
+#else
+#define SCONE_OPENSIM_3_ENABLED 0
 #endif
 
 #ifdef SCONE_OPENSIM_4
 #include "sconeopensim4/sconeopensim4.h"
+#define SCONE_OPENSIM_4_ENABLED 1
+#else
+#define SCONE_OPENSIM_4_ENABLED 0
 #endif
 
 #ifdef SCONE_HYFYDY
 #include "sconehfd/sconehfd.h"
+#define SCONE_HYFYDY_ENABLED 1
+#else
+#define SCONE_HYFYDY_ENABLED 0
 #endif
 
 #ifdef SCONE_LUA
 #include "sconelua/sconelua.h"
+#define SCONE_LUA_ENABLED 1
+#else
+#define SCONE_LUA_ENABLED 0
 #endif
 
 #include "xo/serialization/serialize.h"
@@ -35,20 +47,20 @@ namespace scone
 		// register .scone file format
 		xo::register_file_extension< xo::prop_node_serializer_zml >( "scone" );
 
-#ifdef SCONE_OPENSIM_3
+#if SCONE_OPENSIM_3_ENABLED
 		RegisterSconeOpenSim3();
 #endif
 
-#ifdef SCONE_OPENSIM_4
+#if SCONE_OPENSIM_4_ENABLED
 		RegisterSconeOpenSim4();
 #endif
 
-#ifdef SCONE_HYFYDY
+#if SCONE_HYFYDY_ENABLED
 		if ( GetSconeSetting<bool>( "hyfydy.enabled" ) )
 			RegisterSconeHfd( GetSconeSetting<String>( "hyfydy.license" ) );
 #endif
 
-#ifdef SCONE_LUA
+#ifdef SCONE_LUA_ENABLED
 		RegisterSconeLua();
 #endif
 	}

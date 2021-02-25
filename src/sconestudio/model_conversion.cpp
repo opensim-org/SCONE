@@ -5,11 +5,11 @@
 #include "scone/core/system_tools.h"
 #include "qt_convert.h"
 #include "xo/filesystem/path.h"
+#include "scone/sconelib_config.h"
 
 #include <QProcess>
 #include <QMessageBox>
 #include <QPushButton>
-#include "sconeopensim4/sconeopensim4.h"
 
 namespace scone
 {
@@ -34,11 +34,17 @@ namespace scone
 		updateInputFile();
 		QObject::connect( ui.inputFile, &QFileEdit::textChanged, updateInputFile );
 
+		ui.convertOsim4->setEnabled( SCONE_OPENSIM_4_ENABLED );
+		ui.convertOsim4->setChecked( false );
+		ui.convertHfd->setDisabled( SCONE_HYFYDY_ENABLED );
+		ui.convertHfd->setChecked( SCONE_HYFYDY_ENABLED );
+
 		if ( QDialog::Accepted == dlg.exec() )
 		{
 
 			const xo::path inputFile = xo::path( ui.inputFile->text().toStdString() );
 
+#if SCONE_HYFYDY_ENABLED
 			if ( ui.convertHfd->isChecked() )
 			{
 				const xo::path outputFile = xo::path( ui.outputFileHfd->text().toStdString() );
@@ -78,13 +84,16 @@ namespace scone
 					QMessageBox::critical( parent, title, output );
 				}
 			}
+#endif
 
+#if SCONE_OPENSIM_4_ENABLED
 			if ( ui.convertOsim4->isChecked() )
 			{
 				// create os4 model (test)
 				const xo::path outputFile = xo::path( ui.outputFileOsim4->text().toStdString() );
 				ConvertModelOpenSim4( inputFile, outputFile );
 			}
+#endif
 		}
 	}
 }
