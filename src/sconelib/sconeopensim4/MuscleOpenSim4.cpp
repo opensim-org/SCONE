@@ -9,6 +9,8 @@
 #include <OpenSim/Simulation/Model/Model.h>
 #include <OpenSim/Simulation/Model/Muscle.h>
 #include <OpenSim/Simulation/SimbodyEngine/Body.h>
+#include <OpenSim/Actuators/Millard2012EquilibriumMuscle.h>
+#include <OpenSim/Actuators/Thelen2003Muscle.h>
 
 #include "MuscleOpenSim4.h"
 #include "ModelOpenSim4.h"
