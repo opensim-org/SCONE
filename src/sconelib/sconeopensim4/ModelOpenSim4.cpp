@@ -247,7 +247,7 @@ namespace scone
 			if ( initial_state_offset )
 			{
 				auto inc_pat = xo::pattern_matcher( initial_state_offset_include, ";" );
-				auto ex_pat = xo::pattern_matcher( initial_state_offset_exclude + ";*.activation;*.fiber_length", ";" );
+				auto ex_pat = xo::pattern_matcher( initial_state_offset_exclude + ";*/activation;*/fiber_length", ";" );
 				for ( index_t i = 0; i < m_State.GetSize(); ++i )
 				{
 					const String& state_name = m_State.GetName( i );
