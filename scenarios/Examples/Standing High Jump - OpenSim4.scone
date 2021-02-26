@@ -1,0 +1,33 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	max_generations = 500
+	
+	SimulationObjective {
+		max_duration = 2
+		
+		# Model used in simulation
+		ModelOpenSim4 {
+			model_file = data/H0914M_osim4.osim
+			signature_postfix = OS4
+			fixed_control_step_size = 0.005
+		}
+		
+		# Controller for the Model
+		FeedForwardController {
+			symmetric = 1
+			
+			# Function for feed-forward pattern
+			PieceWiseConstant {
+				control_points = 2
+				control_point_y = 0.3~0.01<0,1> # Initial y value of control points
+				control_point_dt = 0.2~0.01<0.001,1> # Initial delta time between control points
+			}
+		}
+		
+		# Fitness measure for jumping
+		JumpMeasure {
+			termination_height = 0.75
+			prepare_time = 0.2
+		}
+	}
+}

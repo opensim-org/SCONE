@@ -1,0 +1,11 @@
+composite_force {
+	planar_joint_force_pnld = ""
+	simple_collision_detection = ""
+	contact_force_hunt_crossley { viscosity = 1e3 }
+	muscle_activation {
+		activation_rate = 100
+		deactivation_rate = 25
+	}
+	muscle_force_gh2010 { xi = 0.1 }
+}
+error_control_integrator_pse { accuracy = 0.01 }

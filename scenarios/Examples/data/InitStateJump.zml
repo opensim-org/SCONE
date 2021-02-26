@@ -1,0 +1,12 @@
+values {
+	pelvis_ty = 0.75
+	pelvis_tilt = -0.610865238198015
+	hip_flexion_l = 1.39626340159546
+	hip_flexion_r = 1.39626340159546
+	knee_angle_l = -1.22173047639603
+	knee_angle_r = -1.22173047639603
+	ankle_angle_l = 0.436332312998582
+	ankle_angle_r = 0.436332312998582
+}
+velocities {
+}

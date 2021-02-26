@@ -7,7 +7,6 @@
 /scenarios/Tutorials/*.sto
 /scenarios/UnitTests/*.sto
 /scenarios/UnitTests/Hyfydy
-/scenarios/Examples/
 /resources/unittestdata/
 /install
 /.version

@@ -1,0 +1,27 @@
+CmaOptimizer {
+	signature_prefix = DATE_TIME
+	min_progress = 1e-4
+	
+	SimulationObjective {
+		max_duration = 10
+		
+		# Model used in simulation
+		ModelHyfydy {
+			model_file = data/H0914.hfd
+			signature_postfix = HFD
+			
+			# Optimize initial state parameters
+			state_init_file = data/InitStateGait10.zml
+			initial_state_offset =	0~0.01<-0.5,0.5>
+			initial_state_offset_exclude = "*_tx;*_ty;*_u"
+			
+			<< data/HfdConfigM2012Planar.zml >>
+		}
+		
+		# Controller for gait, based on [Geyer & Herr 2010]
+		<< data/ControllerGH2010.scone >>
+		
+		# Measure for gait
+		<< data/MeasureGait10Grf.scone >>
+	}
+}

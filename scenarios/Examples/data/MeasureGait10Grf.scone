@@ -1,0 +1,38 @@
+# Measure for gait, minimum speed = 1.0 m/s
+CompositeMeasure {
+	GaitMeasure {
+		name = Gait
+		weight = 100
+		threshold = 0.05
+		termination_height = 0.85
+		min_velocity = 1.0
+	}
+	EffortMeasure {
+		name = Effort
+		weight = 0.1
+		measure_type = Wang2012
+		use_cost_of_transport = 1
+	}
+	CompositeMeasure {
+		name = DofLimits
+		symmetric = 1
+		DofMeasure {
+			weight = 0.1
+			dof = ankle_angle
+			position { min = -60 max = 60 squared_penalty = 1 }
+		}
+		DofMeasure {
+			weight = 0.01
+			threshold = 5
+			dof = knee_angle
+			force { min = 0 max = 0 abs_penalty = 1 }
+		}
+	}
+	ReactionForceMeasure {
+		name = GRF
+		start_time = 1
+		weight = 10
+		max = 1.4
+		abs_penalty = 1
+	}
+}

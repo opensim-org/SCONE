@@ -1,0 +1,440 @@
+model {
+	$stiffness = 1e6
+	$limit_stiffness = 500
+	material {
+		name = default_material
+		static_friction = 0.9
+		dynamic_friction = 0.9
+		stiffness = 5975.21
+		damping = 1
+	}
+	body {
+		name = ground
+		mass = 0
+		inertia { x = 0 y = 0 z = 0 }
+	}
+	body {
+		name = pelvis
+		mass = 11.777
+		inertia { x = 0.1028 y = 0.0871 z = 0.0579 }
+		pos { x = -0.0707 y = 0 z = 0 }
+		mesh { file = sacrum.vtp pos { x = 0.0707 y = 0 z = 0 } }
+		mesh { file = pelvis.vtp pos { x = 0.0707 y = 0 z = 0 } }
+		mesh { file = l_pelvis.vtp pos { x = 0.0707 y = 0 z = 0 } }
+	}
+	body {
+		name = femur_r
+		mass = 9.3014
+		inertia { x = 0.1339 y = 0.0351 z = 0.1412 }
+		joint {
+			name = hip_r
+			parent = pelvis
+			pos_in_parent { x = 0 y = -0.0661 z = 0.0835 }
+			pos_in_child { x = 0 y = 0.17 z = 0 }
+			stiffness = $stiffness
+			limit_stiffness = $limit_stiffness
+			limits { x = 0..0 y = 0..0 z = -120..120 }
+		}
+		mesh { file = femur.vtp pos { x = 0 y = 0.17 z = 0 } }
+	}
+	body {
+		name = tibia_r
+		mass = 3.7075
+		inertia { x = 0.0504 y = 0.0051 z = 0.0511 }
+		joint {
+			name = knee_r
+			parent = femur_r
+			pos_in_parent { x = 0 y = -0.226 z = 0 }
+			pos_in_child { x = 0 y = 0.1867 z = 0 }
+			stiffness = $stiffness
+			limit_stiffness = 114.592
+			limit_damping = 2.86479
+			limits { x = 0..0 y = 0..0 z = -120..-5 }
+		}
+		mesh { file = tibia.vtp pos { x = 0 y = 0.1867 z = 0 } }
+		mesh { file = fibula.vtp pos { x = 0 y = 0.1867 z = 0 } }
+	}
+	body {
+		name = calcn_r
+		mass = 1.25
+		inertia { x = 0.0014 y = 0.0039 z = 0.0041 }
+		joint {
+			name = ankle_r
+			parent = tibia_r
+			pos_in_parent { x = 0 y = -0.2433 z = 0 }
+			pos_in_child { x = -0.05123 y = 0.01195 z = -0.00792 }
+			stiffness = $stiffness
+			limit_stiffness = $limit_stiffness
+			limits { x = 0..0 y = 0..0 z = -120..120 }
+		}
+		mesh { file = foot.vtp pos { x = -0.1 y = -0.03 z = 0 } }
+		mesh { file = talus.vtp pos { x = -0.05123 y = 0.01195 z = -0.00792 } }
+		mesh { file = bofoot.vtp pos { x = 0.0788 y = -0.032 z = 0.00108 } }
+	}
+	body {
+		name = femur_l
+		mass = 9.3014
+		inertia { x = 0.1339 y = 0.0351 z = 0.1412 }
+		joint {
+			name = hip_l
+			parent = pelvis
+			pos_in_parent { x = 0 y = -0.0661 z = -0.0835 }
+			pos_in_child { x = 0 y = 0.17 z = 0 }
+			stiffness = $stiffness
+			limit_stiffness = $limit_stiffness
+			limits { x = 0..0 y = 0..0 z = -120..120 }
+		}
+		mesh { file = l_femur.vtp pos { x = 0 y = 0.17 z = 0 } }
+	}
+	body {
+		name = tibia_l
+		mass = 3.7075
+		inertia { x = 0.0504 y = 0.0051 z = 0.0511 }
+		joint {
+			name = knee_l
+			parent = femur_l
+			pos_in_parent { x = 0 y = -0.226 z = 0 }
+			pos_in_child { x = 0 y = 0.1867 z = 0 }
+			stiffness = $stiffness
+			limit_stiffness = 114.592
+			limit_damping = 2.86479
+			limits { x = 0..0 y = 0..0 z = -120..-5 }
+		}
+		mesh { file = l_tibia.vtp pos { x = 0 y = 0.1867 z = 0 } }
+		mesh { file = l_fibula.vtp pos { x = 0 y = 0.1867 z = 0 } }
+	}
+	body {
+		name = calcn_l
+		mass = 1.25
+		inertia { x = 0.0014 y = 0.0039 z = 0.0041 }
+		joint {
+			name = ankle_l
+			parent = tibia_l
+			pos_in_parent { x = 0 y = -0.2433 z = 0 }
+			pos_in_child { x = -0.05123 y = 0.01195 z = 0.00792 }
+			stiffness = $stiffness
+			limit_stiffness = $limit_stiffness
+			limits { x = 0..0 y = 0..0 z = -120..120 }
+		}
+		mesh { file = l_foot.vtp pos { x = -0.1 y = -0.03 z = 0 } }
+		mesh { file = l_talus.vtp pos { x = -0.05123 y = 0.01195 z = 0.00792 } }
+		mesh { file = l_bofoot.vtp pos { x = 0.0788 y = -0.032 z = -0.00108 } }
+	}
+	body {
+		name = torso
+		mass = 34.2366
+		inertia { x = 1.4745 y = 0.7555 z = 1.4314 }
+		joint {
+			name = back
+			parent = pelvis
+			pos_in_parent { x = -0.03 y = 0.0815 z = 0 }
+			pos_in_child { x = 0.03 y = -0.32 z = 0 }
+			stiffness = $stiffness
+			limit_stiffness = $limit_stiffness
+			limits { x = 0..0 y = 0..0 z = 0..0 }
+		}
+		mesh { file = hat_spine.vtp pos { x = 0.03 y = -0.32 z = 0 } }
+		mesh { file = hat_jaw.vtp pos { x = 0.03 y = -0.32 z = 0 } }
+		mesh { file = hat_skull.vtp pos { x = 0.03 y = -0.32 z = 0 } }
+		mesh { file = hat_ribs.vtp pos { x = 0.03 y = -0.32 z = 0 } }
+	}
+	point_path_muscle {
+		name = hamstrings_r
+		tendon_slack_length = 0.31
+		optimal_fiber_length = 0.109
+		max_isometric_force = 2594
+		pennation_angle = 0
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = -0.05526 y = -0.10257 z = 0.06944 } }
+			{ body = tibia_r pos { x = -0.028 y = 0.1667 z = 0.02943 } }
+			{ body = tibia_r pos { x = -0.021 y = 0.1467 z = 0.0343 } }
+		]
+	}
+	point_path_muscle {
+		name = bifemsh_r
+		tendon_slack_length = 0.071
+		optimal_fiber_length = 0.173
+		max_isometric_force = 804
+		pennation_angle = 0.401426
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_r pos { x = 0.005 y = -0.0411 z = 0.0234 } }
+			{ body = tibia_r pos { x = -0.028 y = 0.1667 z = 0.02943 } }
+			{ body = tibia_r pos { x = -0.021 y = 0.1467 z = 0.0343 } }
+		]
+	}
+	point_path_muscle {
+		name = glut_max_r
+		tendon_slack_length = 0.127
+		optimal_fiber_length = 0.147
+		max_isometric_force = 1944
+		pennation_angle = 0
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = -0.0642 y = 0.0176 z = 0.0563 } }
+			{ body = pelvis pos { x = -0.0669 y = -0.052 z = 0.0914 } }
+			{ body = femur_r pos { x = -0.0426 y = 0.117 z = 0.0293 } }
+			{ body = femur_r pos { x = -0.0156 y = 0.0684 z = 0.0419 } }
+		]
+	}
+	point_path_muscle {
+		name = iliopsoas_r
+		tendon_slack_length = 0.163
+		optimal_fiber_length = 0.1
+		max_isometric_force = 2342
+		pennation_angle = 0.139626
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = 0.006 y = 0.0887 z = 0.0289 } }
+			{ body = pelvis pos { x = 0.0407 y = -0.01 z = 0.076 } }
+			{ body = femur_r pos { x = 0.033 y = 0.135 z = 0.0038 } }
+			{ body = femur_r pos { x = -0.0188 y = 0.1103 z = 0.0104 } }
+		]
+	}
+	point_path_muscle {
+		name = rect_fem_r
+		tendon_slack_length = 0.305
+		optimal_fiber_length = 0.114
+		max_isometric_force = 1169
+		pennation_angle = 0.0872665
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = 0.0412 y = -0.0311 z = 0.0968 } }
+			{ body = tibia_r pos { x = 0.04 y = 0.2117 z = 0.0018 } }
+		]
+	}
+	point_path_muscle {
+		name = vasti_r
+		tendon_slack_length = 0.136
+		optimal_fiber_length = 0.087
+		max_isometric_force = 4530
+		pennation_angle = 0.0523599
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_r pos { x = 0.029 y = -0.0224 z = 0.031 } }
+			{ body = femur_r pos { x = 0.0335 y = -0.0384 z = 0.0285 } }
+			{ body = tibia_r pos { x = 0.04 y = 0.2117 z = 0.0018 } }
+		]
+	}
+	point_path_muscle {
+		name = gastroc_r
+		tendon_slack_length = 0.39
+		optimal_fiber_length = 0.06
+		max_isometric_force = 2241
+		pennation_angle = 0.296706
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_r pos { x = -0.02 y = -0.216 z = -0.024 } }
+			{ body = calcn_r pos { x = -0.1 y = 0.001 z = -0.0053 } }
+		]
+	}
+	point_path_muscle {
+		name = soleus_r
+		tendon_slack_length = 0.25
+		optimal_fiber_length = 0.05
+		max_isometric_force = 3549
+		pennation_angle = 0.436332
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = tibia_r pos { x = -0.0024 y = 0.0334 z = 0.0071 } }
+			{ body = calcn_r pos { x = -0.1 y = 0.001 z = -0.0053 } }
+		]
+	}
+	point_path_muscle {
+		name = tib_ant_r
+		tendon_slack_length = 0.223
+		optimal_fiber_length = 0.098
+		max_isometric_force = 1759
+		pennation_angle = 0.0872665
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = tibia_r pos { x = 0.0179 y = 0.0243 z = 0.0115 } }
+			{ body = tibia_r pos { x = 0.0329 y = -0.2084 z = -0.0177 } }
+			{ body = calcn_r pos { x = 0.0166 y = -0.0122 z = -0.0305 } }
+		]
+	}
+	point_path_muscle {
+		name = hamstrings_l
+		tendon_slack_length = 0.31
+		optimal_fiber_length = 0.109
+		max_isometric_force = 2594
+		pennation_angle = 0
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = -0.05526 y = -0.10257 z = -0.06944 } }
+			{ body = tibia_l pos { x = -0.028 y = 0.1667 z = -0.02943 } }
+			{ body = tibia_l pos { x = -0.021 y = 0.1467 z = -0.0343 } }
+		]
+	}
+	point_path_muscle {
+		name = bifemsh_l
+		tendon_slack_length = 0.071
+		optimal_fiber_length = 0.173
+		max_isometric_force = 804
+		pennation_angle = 0.401426
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_l pos { x = 0.005 y = -0.0411 z = -0.0234 } }
+			{ body = tibia_l pos { x = -0.028 y = 0.1667 z = -0.02943 } }
+			{ body = tibia_l pos { x = -0.021 y = 0.1467 z = -0.0343 } }
+		]
+	}
+	point_path_muscle {
+		name = glut_max_l
+		tendon_slack_length = 0.127
+		optimal_fiber_length = 0.147
+		max_isometric_force = 1944
+		pennation_angle = 0
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = -0.0642 y = 0.0176 z = -0.0563 } }
+			{ body = pelvis pos { x = -0.0669 y = -0.052 z = -0.0914 } }
+			{ body = femur_l pos { x = -0.0426 y = 0.117 z = -0.0293 } }
+			{ body = femur_l pos { x = -0.0156 y = 0.0684 z = -0.0419 } }
+		]
+	}
+	point_path_muscle {
+		name = iliopsoas_l
+		tendon_slack_length = 0.163
+		optimal_fiber_length = 0.1
+		max_isometric_force = 2342
+		pennation_angle = 0.139626
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = 0.006 y = 0.0887 z = -0.0289 } }
+			{ body = pelvis pos { x = 0.0407 y = -0.01 z = -0.076 } }
+			{ body = femur_l pos { x = 0.033 y = 0.135 z = -0.0038 } }
+			{ body = femur_l pos { x = -0.0188 y = 0.1103 z = -0.0104 } }
+		]
+	}
+	point_path_muscle {
+		name = rect_fem_l
+		tendon_slack_length = 0.305
+		optimal_fiber_length = 0.114
+		max_isometric_force = 1169
+		pennation_angle = 0.0872665
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = pelvis pos { x = 0.0412 y = -0.0311 z = -0.0968 } }
+			{ body = tibia_l pos { x = 0.04 y = 0.2117 z = -0.0018 } }
+		]
+	}
+	point_path_muscle {
+		name = vasti_l
+		tendon_slack_length = 0.136
+		optimal_fiber_length = 0.087
+		max_isometric_force = 4530
+		pennation_angle = 0.0523599
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_l pos { x = 0.029 y = -0.0224 z = -0.031 } }
+			{ body = femur_l pos { x = 0.0335 y = -0.0384 z = -0.0285 } }
+			{ body = tibia_l pos { x = 0.04 y = 0.2117 z = -0.0018 } }
+		]
+	}
+	point_path_muscle {
+		name = gastroc_l
+		tendon_slack_length = 0.39
+		optimal_fiber_length = 0.06
+		max_isometric_force = 2241
+		pennation_angle = 0.296706
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = femur_l pos { x = -0.02 y = -0.216 z = 0.024 } }
+			{ body = calcn_l pos { x = -0.1 y = 0.001 z = 0.0053 } }
+		]
+	}
+	point_path_muscle {
+		name = soleus_l
+		tendon_slack_length = 0.25
+		optimal_fiber_length = 0.05
+		max_isometric_force = 3549
+		pennation_angle = 0.436332
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = tibia_l pos { x = -0.0024 y = 0.0334 z = -0.0071 } }
+			{ body = calcn_l pos { x = -0.1 y = 0.001 z = 0.0053 } }
+		]
+	}
+	point_path_muscle {
+		name = tib_ant_l
+		tendon_slack_length = 0.223
+		optimal_fiber_length = 0.098
+		max_isometric_force = 1759
+		pennation_angle = 0.0872665
+		activation_rate = 100
+		deactivation_rate = 25
+		path [
+			{ body = tibia_l pos { x = 0.0179 y = 0.0243 z = -0.0115 } }
+			{ body = tibia_l pos { x = 0.0329 y = -0.2084 z = 0.0177 } }
+			{ body = calcn_l pos { x = 0.0166 y = -0.0122 z = 0.0305 } }
+		]
+	}
+	geometry {
+		name = platform
+		type = plane
+		normal { x = -1 y = 0 z = 0 }
+		body = ground
+		pos { x = 0 y = 0 z = 0 }
+		ori { x = 0 y = 0 z = -90 }
+	}
+	geometry {
+		name = r_heel
+		type = sphere
+		radius = 0.03
+		body = calcn_r
+		pos { x = -0.085 y = -0.015 z = -0.005 }
+		ori { x = 0 y = 0 z = 0 }
+	}
+	geometry {
+		name = r_toe
+		type = sphere
+		radius = 0.03
+		body = calcn_r
+		pos { x = 0.085 y = -0.015 z = 0 }
+		ori { x = 0 y = 0 z = 0 }
+	}
+	geometry {
+		name = l_heel
+		type = sphere
+		radius = 0.03
+		body = calcn_l
+		pos { x = -0.085 y = -0.015 z = 0.005 }
+		ori { x = 0 y = 0 z = 0 }
+	}
+	geometry {
+		name = l_toe
+		type = sphere
+		radius = 0.03
+		body = calcn_l
+		pos { x = 0.085 y = -0.015 z = 0 }
+		ori { x = 0 y = 0 z = 0 }
+	}
+	dof { pelvis_tilt = pelvis_rz }
+	dof { pelvis_tx = pelvis_tx }
+	dof { pelvis_ty = pelvis_ty }
+	dof { hip_flexion_r = hip_rz_r }
+	dof { knee_angle_r = knee_rz_r }
+	dof { ankle_angle_r = ankle_rz_r }
+	dof { hip_flexion_l = hip_rz_l }
+	dof { knee_angle_l = knee_rz_l }
+	dof { ankle_angle_l = ankle_rz_l }
+}
