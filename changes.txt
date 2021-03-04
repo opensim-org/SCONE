@@ -49,6 +49,7 @@
   * Fixed progress graph zooming with pooled CmaPoolOptimizer.
   * pooled_evaluator is now properly initialized so it doesn't need to restart all threads immediately.
   * EffortMeasure now shows name in Analysis Window and .sto output.
+  * Fixed incorrect optimization timing when optimizations took longer than 922 seconds.
 
 ==== SCONE 1.5.0 ====
 //Released June 19, 2020//
