@@ -18,14 +18,13 @@ option(SCONE_LUA "Support for lua scripting" OFF)
 option(SCONE_HYFYDY "Support Hyfydy - EXPERIMENTAL" OFF)
 option(SCONE_ENABLE_PROFILER "Enable SCONE profiler" ON)
 option(SCONE_SCONESTUDIO_REQUIRED "Require that sconestudio is built" OFF)
+option(SCONE_SCONESTUDIO "Build sconestudio" ON)
 option(SCONE_EXPERIMENTAL_FEATURES "Enable experimental features" OFF)
 
 # CMake has the ability to find Qt; we don't need to provide additional files.
 # http://doc.qt.io/qt-5/cmake-manual.html
-if(${SCONE_SCONESTUDIO_REQUIRED})
-    find_package(Qt5Widgets REQUIRED)
-else()
-    find_package(Qt5Widgets)
+if (SCONE_SCONESTUDIO)
+    find_package(Qt5 COMPONENTS Widgets OpenGL PrintSupport REQUIRED)
 endif()
 
 # Find TCLAP
@@ -43,13 +42,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 # Silence CMake warning on OSX.
 set(CMAKE_MACOSX_RPATH ON)
 
-# Process source code.
-# --------------------
-# Only build visualizer if Qt5 was found
-if(${Qt5Widgets_FOUND})
-    add_subdirectory(submodules/vis)
-endif()
-
 # Build lua if SCONE_LUA is set
 if (SCONE_LUA)
 	add_subdirectory(contrib/lua-5.3.5)
@@ -60,6 +52,9 @@ endif()
 #
 add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
+if (SCONE_SCONESTUDIO)
+    add_subdirectory(submodules/vis)
+endif()
 
 #
 # Add targets
@@ -67,10 +62,11 @@ add_subdirectory(submodules/spot)
 add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
 add_subdirectory(src/sconestudio)
-add_subdirectory(src/sconeunittests)
-
+if (SCONE_SCONESTUDIO)
+	add_subdirectory(src/sconeunittests)
+endif()
 if (SCONE_HYFYDY)
-	find_path( SCONE_HYFYDY_DIR "sconehfd/ModelHfd.h" HINTS "../sconehfd" )
+	find_path( SCONE_HYFYDY_DIR "sconehfd/sconehfd/ModelHfd.h" HINTS "../sconehfd" )
 	add_subdirectory("${SCONE_HYFYDY_DIR}" "${CMAKE_BINARY_DIR}/sconehfd")
 endif()
 
