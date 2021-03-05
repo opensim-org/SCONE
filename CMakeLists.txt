@@ -21,12 +21,6 @@ option(SCONE_SCONESTUDIO_REQUIRED "Require that sconestudio is built" OFF)
 option(SCONE_SCONESTUDIO "Build sconestudio" ON)
 option(SCONE_EXPERIMENTAL_FEATURES "Enable experimental features" OFF)
 
-# CMake has the ability to find Qt; we don't need to provide additional files.
-# http://doc.qt.io/qt-5/cmake-manual.html
-if (SCONE_SCONESTUDIO)
-    find_package(Qt5 COMPONENTS Widgets OpenGL PrintSupport REQUIRED)
-endif()
-
 # Find TCLAP
 find_path( TCLAP_DIR NAMES "tclap/CmdLine.h" PATHS "${CMAKE_SOURCE_DIR}/contrib/tclap-1.2.1/include" )
 
@@ -52,19 +46,20 @@ endif()
 #
 add_subdirectory(submodules/xo)
 add_subdirectory(submodules/spot)
-if (SCONE_SCONESTUDIO)
-    add_subdirectory(submodules/vis)
-endif()
 
 #
 # Add targets
 #
 add_subdirectory(src/sconelib)
 add_subdirectory(src/sconecmd)
-add_subdirectory(src/sconestudio)
+add_subdirectory(src/sconeunittests)
+
 if (SCONE_SCONESTUDIO)
-	add_subdirectory(src/sconeunittests)
+    find_package(Qt5 COMPONENTS Widgets OpenGL PrintSupport REQUIRED)
+    add_subdirectory(submodules/vis)
+	add_subdirectory(src/sconestudio)
 endif()
+
 if (SCONE_HYFYDY)
 	find_path( SCONE_HYFYDY_DIR "sconehfd/sconehfd/ModelHfd.h" HINTS "../sconehfd" )
 	add_subdirectory("${SCONE_HYFYDY_DIR}" "${CMAKE_BINARY_DIR}/sconehfd")
