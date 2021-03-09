@@ -27,7 +27,7 @@ jobs:
         path: ${{ env.OSG_INSTALL_PATH }}
         key: ${{ runner.os }}-osg-${{ hashFiles('OpenSceneGraph/src') }}
 
-    - name: Build openscenegraph
+    - name: Build openscenegraph (if not cached)
       if: steps.cache_osg.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE && ./tools/unix_2a_build-osg
 
@@ -38,11 +38,19 @@ jobs:
         path: ${{ env.SIMBODY_INSTALL_PATH }}
         key: ${{ runner.os }}-simbody-${{ hashFiles('simbody/Simbody') }}
 
-    - name: Build simbody
+    - name: Build simbody (if not cached)
       if: steps.cache_simbody.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE && ./tools/unix_2b_build-simbody
 
-    - name: Build opensim3
+    - name: Cache opensim3
+      id: cache_opensim3
+      uses: actions/cache@v1
+      with:
+        path: ${{ env.OPENSIM3_INSTALL_PATH }}
+        key: ${{ runner.os }}-opensim3-${{ hashFiles('opensim3-scone/OpenSim') }}
+
+    - name: Build opensim3 (if not cached)
+      if: steps.cache_opensim3.outputs.cache-hit != 'true'
       run: cd $GITHUB_WORKSPACE && ./tools/unix_2c_build-opensim3
 
     - name: Build SCONE
