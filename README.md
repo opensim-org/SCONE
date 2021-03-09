@@ -1,7 +1,6 @@
 # SCONE has moved!
 ![.github/workflows/continuous-integration-workflow.yml](https://github.com/opensim-org/SCONE/workflows/.github/workflows/continuous-integration-workflow.yml/badge.svg)
 
-<img align="right" width="112" height="90" src="https://github.com/opensim-org/SCONE/blob/master/resources/ui/scone_logo_notext.png">
 SCONE has been split up into two new repositories:
 
 * [scone-core](https://github.com/tgeijten/scone-core) contains the core SCONE functionality, licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
